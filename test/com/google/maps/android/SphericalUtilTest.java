@@ -10,7 +10,6 @@ import java.util.List;
 
 public class SphericalUtilTest {
     static final double EARTH_RADIUS = SphericalUtil.EARTH_RADIUS;
-
     // The vertices of an octahedron, for testing
     private final LatLng up = new LatLng(90, 0);
     private final LatLng down = new LatLng(-90, 0);
@@ -18,6 +17,25 @@ public class SphericalUtilTest {
     private final LatLng right = new LatLng(0, 90);
     private final LatLng back = new LatLng(0, -180);
     private final LatLng left = new LatLng(0, -90);
+
+    private static void expectEq(Object expected, Object actual) {
+        Assert.assertEquals(expected, actual);
+    }
+
+    /**
+     * Tests for approximate equality.
+     */
+    private static void expectLatLngApproxEquals(LatLng actual, LatLng expected) {
+        expectNearNumber(actual.latitude, expected.latitude, 1e-6);
+        // Account for the convergence of longitude lines at the poles
+        double cosLat = Math.cos(Math.toRadians(actual.latitude));
+        expectNearNumber(cosLat * actual.longitude, cosLat * expected.longitude, 1e-6);
+    }
+
+    private static void expectNearNumber(double actual, double expected, double epsilon) {
+        Assert.assertTrue(String.format("Expected %f to be near %f", actual, expected),
+                Math.abs(expected - actual) <= epsilon);
+    }
 
     @Test
     public void test_angles() {
@@ -271,10 +289,6 @@ public class SphericalUtilTest {
         expectEq(-1, SphericalUtil.isCCW(right, front, up));
     }
 
-    private static void expectEq(Object expected, Object actual) {
-        Assert.assertEquals(expected, actual);
-    }
-
     @Test
     public void test_computeTriangleArea() {
         expectNearNumber(SphericalUtil.computeTriangleArea(right, up, front), Math.PI / 2, 1e-6);
@@ -319,21 +333,6 @@ public class SphericalUtilTest {
         List<LatLng> path = Arrays.asList(right, up, front, down, right);
         List<LatLng> pathReversed = Arrays.asList(right, down, front, up, right);
         expectEq(-SphericalUtil.computeSignedArea(path), SphericalUtil.computeSignedArea(pathReversed));
-    }
-
-    /**
-     * Tests for approximate equality.
-     */
-    private static void expectLatLngApproxEquals(LatLng actual, LatLng expected) {
-        expectNearNumber(actual.latitude, expected.latitude, 1e-6);
-        // Account for the convergence of longitude lines at the poles
-        double cosLat = Math.cos(Math.toRadians(actual.latitude));
-        expectNearNumber(cosLat * actual.longitude, cosLat * expected.longitude, 1e-6);
-    }
-
-    private static void expectNearNumber(double actual, double expected, double epsilon) {
-        Assert.assertTrue(String.format("Expected %f to be near %f", actual, expected),
-                Math.abs(expected - actual) <= epsilon);
     }
 }
 
