@@ -26,7 +26,7 @@ public class PolyUtil {
     /**
      * Decodes an encoded path string into a sequence of LatLngs.
      */
-    public List<LatLng> decode(final String encodedPath) {
+    public static List<LatLng> decode(final String encodedPath) {
         int len = encodedPath.length();
 
         // For speed we preallocate to an upper bound on the final length, then
