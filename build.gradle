@@ -27,3 +27,17 @@ android {
         }
     }
 }
+
+task libproject(type: Zip) {
+    dependsOn 'packageReleaseJar'
+    into('android-maps-utils') {
+        from 'AndroidManifest.xml'
+        into('res') {
+            from 'res'
+        }
+        into('libs') {
+            from 'build/bundles/release/classes.jar'
+            rename 'classes.jar', 'android-maps-utils.jar'
+        }
+    }
+}
