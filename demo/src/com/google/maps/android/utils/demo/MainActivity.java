@@ -20,6 +20,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("PolyUtil.decode", PolyDecodeDemoActivity.class);
         addDemo("BubbleIconFactory", BubbleIconDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
+        addDemo("Clustering", ClusteringDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
