@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.google.maps.android.utils"
+          package="com.google.maps.android.utils.demo"
           android:versionCode="1"
           android:versionName="1.0">
 
     <uses-sdk
-            android:minSdkVersion="8"
+            android:minSdkVersion="14"
             android:targetSdkVersion="17"/>
 
     <permission
@@ -33,13 +33,18 @@
                 android:value="AIzaSyDCa5WRSMk3CrNSf3y5xbyQTvp1_zwuTtE"/>
 
         <activity
-                android:name="MainActivity"
+                android:name=".MainActivity"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".PolyDecodeDemoActivity"/>
+        <activity android:name=".BubbleIconDemoActivity"/>
+        <activity android:name=".DistanceDemoActivity"/>
+
     </application>
 
 </manifest>

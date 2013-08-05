@@ -1,17 +1,21 @@
-package com.google.maps.android.utils;
+package com.google.maps.android.utils.demo;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class MainActivity extends FragmentActivity {
+public abstract class BaseDemoActivity extends FragmentActivity {
     private GoogleMap mMap;
+
+    protected int getLayoutId() {
+        return R.layout.map;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(getLayoutId());
         setUpMapIfNeeded();
     }
 
@@ -19,6 +23,7 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        startDemo();
     }
 
     private void setUpMapIfNeeded() {
@@ -29,7 +34,15 @@ public class MainActivity extends FragmentActivity {
         if (mMap == null) {
             return;
         }
-        // Initialize map options. For example:
-        // mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+    }
+
+    /**
+     * Run the demo-specific code.
+     */
+    protected abstract void startDemo();
+
+    protected GoogleMap getMap() {
+        setUpMapIfNeeded();
+        return mMap;
     }
 }
