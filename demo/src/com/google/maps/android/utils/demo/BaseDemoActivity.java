@@ -31,9 +31,6 @@ public abstract class BaseDemoActivity extends FragmentActivity {
             return;
         }
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        if (mMap == null) {
-            return;
-        }
     }
 
     /**
