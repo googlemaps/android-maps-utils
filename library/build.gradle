@@ -70,6 +70,8 @@ uploadArchives {
             }
 
             pom.project {
+                name 'Google Maps Android API utility library'
+                description 'Handy extensions to the Google Maps Android API.'
                 url 'https://github.com/googlemaps/android-maps-utils'
 
                 scm {
@@ -83,6 +85,19 @@ uploadArchives {
                         name 'The Apache Software License, Version 2.0'
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                         distribution 'repo'
+                    }
+                }
+
+                organization {
+                    name 'Google Inc'
+                    url 'http://developers.google.com/maps'
+                }
+
+                developers {
+                    developer {
+                        id 'broady'
+                        name 'Chris Broadfoot'
+                        url 'http://google.com/+ChristopherBroadfoot'
                     }
                 }
             }
