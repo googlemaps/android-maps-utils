@@ -96,3 +96,9 @@ For your first contribution, you will need to fill out one of the contributor li
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+<p id="illustration">
+<a href="http://mkstvns.com">
+<img src="androidmaps-mkstvns.png" title="Illustration by Mike Stevens (mkstvns.com) - all rights reserved">
+</a>
+</p>
