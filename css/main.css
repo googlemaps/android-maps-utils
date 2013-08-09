@@ -1,0 +1,99 @@
+body {
+  background: #eee;
+  text-align: center;
+}
+
+#main {
+  max-width: 45em;
+  background: white;
+  color: #444;
+  padding: 2em;
+  margin: 2em auto;
+  text-align: left;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+}
+
+#content {
+  padding-left: 20px;
+}
+
+#content h1, #content h2, #content h3 {
+  margin-left: -20px;
+}
+
+h1, h2, h3 {
+  color: black;
+}
+
+h1 {
+  font-size: 2.2em;
+  font-weight: 100;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.2em;
+  text-transform: uppercase;
+  padding-top: 0.5em;
+}
+
+h3 {
+  color: #666;
+  font-weight: 500;
+}
+
+a:link, a:visited {
+  color: #c33;
+}
+
+.subtitle {
+  font-weight: 300;
+  font-style: italic;
+}
+
+.subtitle a:link, .subtitle a:visited {
+  text-decoration: none;
+}
+
+pre, code {
+  font-family: Inconsolata, monospace;
+}
+pre {
+  background: #eee;
+  border: 1px solid #ccc;
+  margin: 0;
+  padding: .5em;
+  display: inline-block;
+}
+
+a.button {
+  padding: 0.3em 1em;
+  background: #69c;
+  color: white;
+  text-decoration: none;
+}
+
+a.button:hover {
+  background: #369;
+}
+
+#nav {
+  margin-bottom: 1em;
+}
+
+#nav a.button {
+  padding: 0.3em 0.7em;
+  text-transform: uppercase;
+}
+
+#illustration img {
+  max-width: 100%;
+}
+
+#illustration {
+  text-align: center;
+}
+

@@ -1,0 +1,6 @@
+name: Google Maps Android API utility library
+markdown: redcarpet
+pygments: true
+
+baseurl: /android-maps-utils/
+include: ['javadoc']

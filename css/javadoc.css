@@ -1,0 +1,155 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto|Consolas);
+
+body {
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+  margin: 2em;
+}
+
+a:link, a:visited {
+  color: #369;
+  text-decoration: none;
+}
+
+a.back {
+  padding: 0.3em 1em;
+  background: #69c;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 1em;
+  display: inline-block;
+}
+
+a.back:hover {
+  background: #369;
+}
+
+pre, code {
+  font-family: Consolas, monospace;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.inheritance li li:first-child:before {
+  content: '\21B3 \A0';
+}
+
+.blockList, .blockListLast {
+  padding: 0;
+  margin: 0;
+}
+
+.summary > ul.blockList > ul.blockList {
+  border: 1px solid #ccc;
+  margin: 0 1em;
+}
+
+th, caption {
+  display: none;
+}
+
+.packageSummary {
+  margin-bottom: 1em;
+}
+
+table {
+  width: 100%;
+}
+
+.packageSummary td, .packageSummary caption {
+  white-space: nowrap;
+}
+
+table .colFirst {
+  white-space: nowrap;
+}
+
+table .colLast {
+  width: 100%;
+}
+
+.packageSummary caption {
+  display: inherit;
+  font-weight: bold;
+  padding: .5em;
+}
+
+.details .block {
+  padding-left: 50px;
+}
+
+.details ul ul ul {
+  border-bottom: 1px solid #ccc;
+  margin-top: 1em;
+  padding-bottom: 1em;
+}
+
+.details ul ul ul h4 {
+  margin: 0;
+  margin-top: .5em;
+  font-size: 1.5em;
+}
+
+table td {
+  vertical-align: top;
+}
+
+table {
+  border: 1px solid #ccc;
+}
+
+.rowColor tr, .rowColor td {
+  background: #f0f0f0;
+}
+
+.rowColor td, .altColor td {
+  padding: .4em;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.subTitle {
+  font-size: .8em;
+}
+
+.description pre {
+  margin-top: 0;
+  color: #999;
+}
+
+.description {
+  border-bottom: 1px solid #ccc;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-bottom: 0;
+}
+
+h1, h2 {
+  font-size: 1.4em;
+}
+
+.indexContainer ul, .indexContainer li {
+  margin: 0;
+  padding: 0;
+}
+
+h1.bar {
+  font-size: 1em;
+}
+
+.details h3 {
+  font-weight: normal;
+  text-transform: uppercase;
+  background: #69c;
+  color: white;
+  padding: .5em;
+}
