@@ -23,6 +23,8 @@ import java.util.ArrayList;
 
 public class PolyUtil {
 
+    private PolyUtil() {}
+
     /**
      * Decodes an encoded path string into a sequence of LatLngs.
      */
