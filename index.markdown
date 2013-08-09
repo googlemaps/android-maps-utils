@@ -31,14 +31,19 @@ The current version of the library is `0.1`.
 Add the following dependency to your Gradle build file:
 
     dependencies {
-      compile 'com.google.maps.android:android-maps-utils:0.1+'
+        compile 'com.google.maps.android:android-maps-utils:0.1+'
     }
 
 ### Eclipse/ADT
+
 The library is distributed as a Android library project.
 See the [guide on Android developers](http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject) for instructions on setting up a library project.
 
-<a class="button" href="android-maps-utils-0.1.zip">Download libproject zip</a>
+Check out the repository from [GitHub][github] and reference the `library` subdirectory.
+
+_(zip download is coming soon)_
+
+<!--a class="button" href="android-maps-utils-0.1.zip">Download libproject zip</a-->
 
 <p id="feedback"></p>
 ## Feedback
