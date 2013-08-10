@@ -16,3 +16,7 @@ Read more on the [website][website].
 [issues]: https://github.com/googlemaps/android-maps-utils/issues
 [website]: http://googlemaps.github.io/android-maps-utils/
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/googlemaps/android-maps-utils/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
