@@ -29,8 +29,15 @@ android {
             java.srcDirs = ['src']
             res.srcDirs = ['res']
         }
+
+        instrumentTest {
+            java.srcDirs = ['tests/src']
+        }
     }
 }
+
+// TODO: Add a task that prints the test results.
+task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
     dependsOn 'packageReleaseJar'

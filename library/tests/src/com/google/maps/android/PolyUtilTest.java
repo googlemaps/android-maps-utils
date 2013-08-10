@@ -4,12 +4,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
 import junit.framework.Assert;
-import org.junit.Test;
+import junit.framework.TestCase;
 
 import java.lang.String;
 import java.util.List;
 
-public class PolyUtilTest {
+public class PolyUtilTest extends TestCase {
     private static final String TEST_LINE = "_cqeFf~cjVf@p@fA}AtAoB`ArAx@hA`GbIvDiFv@gAh@t@X\\|@z@`@Z\\Xf@Vf@VpA\\tATJ@NBBkC";
 
     private static void expectNearNumber(double expected, double actual, double epsilon) {
@@ -17,7 +17,6 @@ public class PolyUtilTest {
                 Math.abs(expected - actual) <= epsilon);
     }
 
-    @Test
     public void test_decodePath() {
         List<LatLng> latLngs = PolyUtil.decode(TEST_LINE);
 
@@ -29,7 +28,6 @@ public class PolyUtilTest {
         expectNearNumber(-122.41488, lastPoint.longitude, 1e-6);
     }
 
-    @Test
     public void test_encodePath() {
         List<LatLng> path = PolyUtil.decode(TEST_LINE);
         String encoded = PolyUtil.encode(path);
