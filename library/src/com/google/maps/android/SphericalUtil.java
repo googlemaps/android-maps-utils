@@ -23,6 +23,9 @@ import java.util.List;
 import static java.lang.Math.*;
 
 public class SphericalUtil {
+
+    private SphericalUtil() {}
+
     /**
      * The earth's radius, in meters.
      */

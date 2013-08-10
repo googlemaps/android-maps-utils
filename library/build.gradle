@@ -9,9 +9,13 @@ buildscript {
 }
 
 apply plugin: 'android-library'
+apply plugin: 'maven'
+
+archivesBaseName = 'android-maps-utils'
+group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:3.1.36'
+    compile 'com.google.android.gms:play-services:3.1.36+'
 }
 
 android {
@@ -27,16 +31,33 @@ android {
     }
 }
 
-task libproject(type: Zip) {
+task apklib(type: Zip) {
     dependsOn 'packageReleaseJar'
-    into('android-maps-utils') {
+    into("android-maps-utils-${version}") {
         from 'AndroidManifest.xml'
         into('res') {
             from 'res'
         }
         into('libs') {
             from 'build/bundles/release/classes.jar'
-            rename 'classes.jar', 'android-maps-utils.jar'
+            rename 'classes.jar', "android-maps-utils-${version}.jar"
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("../testrepo")) // TODO: change to Sonatype.
+            pom.project {
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+            }
         }
     }
 }
