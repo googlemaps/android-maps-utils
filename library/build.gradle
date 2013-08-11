@@ -41,16 +41,20 @@ task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
     dependsOn 'packageReleaseJar'
-    into("android-maps-utils-${version}") {
-        from 'AndroidManifest.xml'
-        into('res') {
-            from 'res'
-        }
-        into('libs') {
-            from 'build/bundles/release/classes.jar'
-            rename 'classes.jar', "android-maps-utils-${version}.jar"
-        }
+    appendix = extension = 'apklib'
+
+    from 'AndroidManifest.xml'
+    into('res') {
+        from 'res'
     }
+    into('libs') {
+        from 'build/bundles/release/classes.jar'
+        rename 'classes.jar', "android-maps-utils-${version}.jar"
+    }
+}
+
+artifacts {
+    archives apklib
 }
 
 signing {
@@ -76,37 +80,47 @@ uploadArchives {
                 authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
 
-            pom.project {
-                name 'Google Maps Android API utility library'
-                description 'Handy extensions to the Google Maps Android API.'
-                url 'https://github.com/googlemaps/android-maps-utils'
+            modifyPom(addFilter('aar') { artifact, file ->
+                artifact.name == 'android-maps-utils'
+            })
 
-                scm {
-                    url 'scm:git@github.com:googlemaps/android-maps-utils.git'
-                    connection 'scm:git@github.com:googlemaps/android-maps-utils.git'
-                    developerConnection 'scm:git@github.com:googlemaps/android-maps-utils.git'
-                }
+            modifyPom(addFilter('apklib') { artifact, file ->
+                artifact.name == 'android-maps-utils-apklib'
+            })
+        }
+    }
+}
 
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
+def modifyPom(pom) {
+    pom.project {
+        name 'Google Maps Android API utility library'
+        description 'Handy extensions to the Google Maps Android API.'
+        url 'https://github.com/googlemaps/android-maps-utils'
 
-                organization {
-                    name 'Google Inc'
-                    url 'http://developers.google.com/maps'
-                }
+        scm {
+            url 'scm:git@github.com:googlemaps/android-maps-utils.git'
+            connection 'scm:git@github.com:googlemaps/android-maps-utils.git'
+            developerConnection 'scm:git@github.com:googlemaps/android-maps-utils.git'
+        }
 
-                developers {
-                    developer {
-                        id 'broady'
-                        name 'Chris Broadfoot'
-                        url 'http://google.com/+ChristopherBroadfoot'
-                    }
-                }
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+
+        organization {
+            name 'Google Inc'
+            url 'http://developers.google.com/maps'
+        }
+
+        developers {
+            developer {
+                id 'broady'
+                name 'Chris Broadfoot'
+                url 'http://google.com/+ChristopherBroadfoot'
             }
         }
     }
