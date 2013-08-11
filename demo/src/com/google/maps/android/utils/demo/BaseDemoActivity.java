@@ -23,7 +23,9 @@ public abstract class BaseDemoActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
-        startDemo();
+        if (getMap() != null) {
+          startDemo();
+        }
     }
 
     private void setUpMapIfNeeded() {
