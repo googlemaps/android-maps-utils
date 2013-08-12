@@ -52,12 +52,12 @@ public class PolyUtil {
     }
    
     /**
-     * Longitudes are offset by -lng1; the implicit lng1 becomes 0.
-     * Returns true if the vertical segment (lat3, lng3) to South Pole intersects the segment
+     * Computes whether the vertical segment (lat3, lng3) to South Pole intersects the segment
      * (lat1, lng1) to (lat2, lng2).
+     * Longitudes are offset by -lng1; the implicit lng1 becomes 0.
      */
-    static boolean Intersects(double lat1, double lat2, double lng2, double lat3, double lng3,
-                       boolean geodesic) {
+    static boolean intersects(double lat1, double lat2, double lng2, double lat3, double lng3,
+                              boolean geodesic) {
         // Both ends on the same side of lng3.
         if ((lng3 >= 0 && lng3 >= lng2) || (lng3 < 0 && lng3 < lng2)) {
             return false;
@@ -121,7 +121,7 @@ public class PolyUtil {
             double lat2 = toRadians(point2.latitude);
             double lng2 = toRadians(point2.longitude);
             // Offset longitudes by -lng1.
-            if (Intersects(lat1, lat2, wrap(lng2 - lng1, -PI, PI), lat3, dLng3, geodesic)) {
+            if (intersects(lat1, lat2, wrap(lng2 - lng1, -PI, PI), lat3, dLng3, geodesic)) {
                 ++nIntersect;
             }
             lat1 = lat2;
