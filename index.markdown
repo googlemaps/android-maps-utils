@@ -15,9 +15,16 @@ The library is under heavy development, but ready for use. Check the [issue trac
 
 ## Features/Overview
 
-  * **BubbleIconFactory** &mdash; display text on your Markers
+<img src="bubblemarker.png" style="float: right">
+
+  * **BubbleIconFactory** &mdash; display text on your Markers (see screenshot to the right)
+
   * **Poly decoding and encoding** &mdash; compact encoding for paths, [interoperability](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) with Maps API web services
+
   * **Spherical geometry** &mdash; for example: computeDistance, computeHeading, computeArea
+
+<br style="clear:both">
+An introductory video:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nb2X9IjjZpM" frameborder="0" allowfullscreen></iframe>
 
