@@ -47,9 +47,8 @@ task apklib(type: Zip) {
     into('res') {
         from 'res'
     }
-    into('libs') {
-        from 'build/bundles/release/classes.jar'
-        rename 'classes.jar', "android-maps-utils-${version}.jar"
+    into('src') {
+        from 'src'
     }
 }
 
@@ -87,6 +86,12 @@ uploadArchives {
             modifyPom(addFilter('apklib') { artifact, file ->
                 artifact.name == 'android-maps-utils-apklib'
             })
+
+            // There's no official apklib for Google Play services, so we
+            // can't really maintain that dependency for the apklib packaging.
+            pom('apklib').whenConfigured { pom ->
+                pom.dependencies = []
+            }
         }
     }
 }
