@@ -34,6 +34,20 @@ Add the following dependency to your Gradle build file:
         compile 'com.google.maps.android:android-maps-utils:0.1+'
     }
 
+### Maven
+
+Add the following to your `pom.xml`:
+
+    <dependency>
+        <groupId>com.google.maps.android</groupId>
+        <artifactId>android-maps-utils-apklib</artifactId>
+        <version>0.1+</version>
+        <type>apklib</type>
+    </dependency>
+
+_Note: you must have Google Play services included in your project already.
+See [JakeWharton/gms-mvn-install](https://github.com/JakeWharton/gms-mvn-install) for one way to do this._
+
 ### Eclipse/ADT
 
 The library is distributed as a Android library project.
