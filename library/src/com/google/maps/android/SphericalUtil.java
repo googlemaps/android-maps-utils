@@ -287,8 +287,8 @@ public class SphericalUtil {
      * @param min The minimum.
      * @param max The maximum.
      */
-    static double wrap(double n, int min, int max) {
-        return mod(n - min, max - min) + min;
+    static double wrap(double n, double min, double max) {
+        return (n >= min && n < max) ? n : (mod(n - min, max - min) + min);
     }
 
     /**
@@ -296,7 +296,7 @@ public class SphericalUtil {
      * @param x The operand.
      * @param m The modulus.
      */
-    static double mod(double x, int m) {
+    static double mod(double x, double m) {
         return ((x % m) + m) % m;
     }
 
