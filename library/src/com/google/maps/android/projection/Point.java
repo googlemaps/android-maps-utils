@@ -17,7 +17,7 @@
 package com.google.maps.android.projection;
 
 /**
- * @deprecated Use {@link com.google.maps.android.geometry.Point} instead.
+ * @deprecated since 0.2. Use {@link com.google.maps.android.geometry.Point} instead.
  */
 @Deprecated
 public class Point extends com.google.maps.android.geometry.Point {
