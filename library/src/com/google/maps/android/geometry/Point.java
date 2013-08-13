@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.projection;
+package com.google.maps.android.geometry;
 
-/**
- * Use {@link com.google.maps.android.geometry.Point} instead.
- */
-@Deprecated
-public class Point extends com.google.maps.android.geometry.Point {
+public class Point {
+    final public double x;
+    final public double y;
+
     public Point(double x, double y) {
-        super(x, y);
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }
