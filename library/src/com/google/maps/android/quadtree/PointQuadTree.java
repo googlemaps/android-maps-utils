@@ -32,7 +32,7 @@ import java.util.Set;
 @Deprecated // Experimental.
 public class PointQuadTree<T extends PointQuadTree.Item> {
 
-    public static interface Item {
+    public interface Item {
         Point getPoint();
     }
 
