@@ -39,7 +39,7 @@ public class PolyUtilTest extends TestCase {
         }
     }
 
-    public void test_containsLocation() {
+    public void testContainsLocation() {
         // Empty.
         containsCase(makeList(),
                      makeList(),
@@ -76,7 +76,7 @@ public class PolyUtilTest extends TestCase {
                      makeList(15, 10, 0, -15, 0, 25, -1, 0));
     }
     
-    public void test_decodePath() {
+    public void testDecodePath() {
         List<LatLng> latLngs = PolyUtil.decode(TEST_LINE);
 
         int expectedLength = 21;
@@ -87,7 +87,7 @@ public class PolyUtilTest extends TestCase {
         expectNearNumber(-122.41488, lastPoint.longitude, 1e-6);
     }
 
-    public void test_encodePath() {
+    public void testEncodePath() {
         List<LatLng> path = PolyUtil.decode(TEST_LINE);
         String encoded = PolyUtil.encode(path);
         Assert.assertEquals(TEST_LINE, encoded);
