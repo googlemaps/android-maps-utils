@@ -28,6 +28,10 @@ public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
         return mCenter;
     }
 
+    public boolean remove(T t) {
+        return mItems.remove(t);
+    }
+
     @Override
     public Set<T> getItems() {
         return mItems;

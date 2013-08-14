@@ -2,7 +2,6 @@ package com.google.maps.android.clustering.algo;
 
 import android.util.SparseArray;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Bounds;
@@ -11,20 +10,24 @@ import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
 import java.lang.ref.SoftReference;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * A simple clustering algorithm. Simply:
- * 1. Iterate over items in the order they were added (candidate clusters).
- * 2. Create a cluster with the center of the item.
- * 3. Add all items that are within a certain distance to the cluster.
+ * A simple clustering algorithm.
+ * <p>
+ * High level algorithm:
+ * 1. Iterate over items in the order they were added (candidate clusters).<br>
+ * 2. Create a cluster with the center of the item. <br>
+ * 3. Add all items that are within a certain distance to the cluster. <br>
  * 4. Remove those items from the list of candidate clusters.
- *
- * The zoom level is quantized to a discrete zoom level (integer).
+ * <p/>
  * This means that items that were added first will tend to have more items in their cluster.
  * Clusters have the center of the first element (not the centroid of the items within it).
+ * The zoom level is quantized to a discrete zoom level (integer).
  */
 public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 100;
@@ -43,9 +46,8 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
 
     @Override
     public void removeItem(T item) {
-        QuadItem<T> quadItem = new QuadItem<T>(item);
-        mItems.remove(quadItem);
-        mQuadTree.remove(quadItem);
+        // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item.
+        throw new UnsupportedOperationException("SimpleDistanceBased.remove not implemented");
     }
 
     @Override
@@ -63,21 +65,40 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
 
         Set<QuadItem<T>> visitedCandidates = new HashSet<QuadItem<T>>();
         HashSet<StaticCluster<T>> results = new HashSet<StaticCluster<T>>();
+        Map<QuadItem<T>, Double> distanceToCluster = new HashMap<QuadItem<T>, Double>();
+        Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
         // TODO: Investigate use of ConcurrentSkipListSet.
         for (QuadItem<T> candidate : mItems) {
             if (visitedCandidates.contains(candidate)) continue;
 
+            StaticCluster<T> cluster = new StaticCluster<T>(candidate.mClusterItem.getPosition());
+            results.add(cluster);
+
             Bounds searchBounds = createBoundsFromSpan(candidate.getPoint(), zoomSpecificSpan);
             Set<QuadItem<T>> clusterItems = mQuadTree.search(searchBounds);
-            // Don't add points twice.
-            // TODO: Move the point to the closest cluster.
-            clusterItems.removeAll(visitedCandidates);
+            for (QuadItem<T> clusterItem : clusterItems) {
+                Double existingDistance = distanceToCluster.get(clusterItem);
+                double distance = distanceSquared(clusterItem.getPoint(), candidate.getPoint());
+                if (existingDistance != null) {
+                    // Item already belongs to another cluster. Check if it's closer to this cluster.
+                    if (existingDistance < distance) {
+                        continue;
+                    }
+                    itemToCluster.get(clusterItem).remove(clusterItem.mClusterItem);
+                }
+                distanceToCluster.put(clusterItem, distance);
+                cluster.add(clusterItem.mClusterItem);
+                itemToCluster.put(clusterItem, cluster);
+            }
             visitedCandidates.addAll(clusterItems);
-            results.add(createCluster(candidate.mClusterItem.getPosition(), clusterItems));
         }
         cachedClusters.put(discreteZoom, new SoftReference<Set>(results));
         return results;
+    }
+
+    private double distanceSquared(Point a, Point b) {
+        return Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2);
     }
 
     private Bounds createBoundsFromSpan(Point p, double span) {
@@ -85,14 +106,6 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
         return new Bounds(
                 p.x - halfSpan, p.x + halfSpan,
                 p.y - halfSpan, p.y + halfSpan);
-    }
-
-    private StaticCluster<T> createCluster(LatLng position, Set<QuadItem<T>> clusterItems) {
-        StaticCluster<T> cluster = new StaticCluster<T>(position);
-        for (QuadItem<T> item : clusterItems) {
-            cluster.add(item.mClusterItem);
-        }
-        return cluster;
     }
 
     private static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item {
