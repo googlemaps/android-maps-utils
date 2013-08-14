@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ClusteringDemoActivity extends BaseDemoActivity {
+public class BigClusteringDemoActivity extends BaseDemoActivity {
     private ClusterManager<MyItem> mClusterManager;
 
     @Override
@@ -25,15 +25,16 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
         mClusterManager.setAlgorithm(new SimpleDistanceBased<MyItem>());
 
         getMap().setOnCameraChangeListener(mClusterManager);
-
-        try {
-            readItems();
-        } catch (IOException e) {
-            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+        for (int i = 0; i < 10; i++) {
+            try {
+                readItems(i / 60d);
+            } catch (IOException e) {
+                Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-    private void readItems() throws IOException {
+    private void readItems(double offset) throws IOException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
 
@@ -45,9 +46,9 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
             while (reader.hasNext()) {
                 String name = reader.nextName();
                 if ("lat".equals(name)) {
-                    lat = reader.nextDouble();
+                    lat = reader.nextDouble() + offset;
                 } else if ("lng".equals(name)) {
-                    lng = reader.nextDouble();
+                    lng = reader.nextDouble() + offset;
                 }
             }
             mClusterManager.addItem(new MyItem(lat, lng));
