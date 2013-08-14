@@ -1,6 +1,7 @@
 package com.google.maps.android.utils.demo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("BubbleIconFactory", BubbleIconDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
         addDemo("Clustering", ClusteringDemoActivity.class);
+        addDemo("2000 clustering", BigClusteringDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
