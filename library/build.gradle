@@ -10,6 +10,7 @@ buildscript {
 
 apply plugin: 'android-library'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
@@ -45,11 +46,38 @@ task apklib(type: Zip) {
     }
 }
 
+signing {
+    sign configurations.archives
+}
+
+if(!hasProperty("sonatypeUsername")){
+    sonatypeUsername = ""
+}
+if(!hasProperty("sonatypePassword")){
+    sonatypePassword = ""
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: uri("../testrepo")) // TODO: change to Sonatype.
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
             pom.project {
+                url 'https://github.com/googlemaps/android-maps-utils'
+
+                scm {
+                    url 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                    connection 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                    developerConnection 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                }
+
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
