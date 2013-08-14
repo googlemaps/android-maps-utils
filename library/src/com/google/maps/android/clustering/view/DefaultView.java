@@ -1,7 +1,6 @@
 package com.google.maps.android.clustering.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -13,14 +12,24 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.ui.BubbleIconFactory;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private final GoogleMap mMap;
     private final BubbleIconFactory mBubbleIconFactory;
-    private final Collection<Marker> mMarkers = new HashSet<Marker>();
+
+    // TODO: use weak references or bidi map.
+    private Map<T, Marker> mMarkerCache = new HashMap<T, Marker>();
+    private Map<Marker, T> mMarkerCacheReverse = new HashMap<Marker, T>();
+
+    /**
+     * Markers that are currently on the map.
+     */
+    private Set<Marker> mMarkers = new HashSet<Marker>();
+
     private SparseArray<BitmapDescriptor> mIcons = new SparseArray<BitmapDescriptor>();
     private Set<? extends Cluster<T>> mCurrentClusters;
 
@@ -32,8 +41,13 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
     private void onCreateCluster(Cluster<T> cluster) {
         if (cluster.getSize() < 4) {
-            for (ClusterItem item : cluster.getItems()) {
-                Marker marker = mMap.addMarker(item.getMarkerOptions());
+            for (T item : cluster.getItems()) {
+                Marker marker = mMarkerCache.get(item);
+                if (marker == null) {
+                    marker = mMap.addMarker(item.getMarkerOptions());
+                    mMarkerCache.put(item, marker);
+                    mMarkerCacheReverse.put(marker, item);
+                }
                 mMarkers.add(marker);
             }
             return;
@@ -92,12 +106,19 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             return;
         }
         mCurrentClusters = clusters;
-        for (Marker m : mMarkers) {
-            m.remove();
-        }
-        mMarkers.clear();
+        Set<Marker> oldMarkers = mMarkers;
+        mMarkers = new HashSet<Marker>();
         for (Cluster c : clusters) {
             onCreateCluster(c);
+        }
+        oldMarkers.removeAll(mMarkers);
+        for (Marker marker : oldMarkers) {
+            T item = mMarkerCacheReverse.get(marker);
+            if (item != null) {
+                mMarkerCache.remove(item);
+                mMarkerCacheReverse.remove(marker);
+            }
+            marker.remove();
         }
     }
 }
