@@ -1,19 +1,19 @@
 package com.google.maps.android.utils.demo;
 
-import android.util.JsonReader;
+import java.io.InputStream;
+import java.util.Scanner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.SimpleDistanceBased;
 import com.google.maps.android.utils.demo.model.MyItem;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class BigClusteringDemoActivity extends BaseDemoActivity {
     private ClusterManager<MyItem> mClusterManager;
@@ -29,32 +29,24 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
         for (int i = 0; i < 10; i++) {
             try {
                 readItems(i / 60d);
-            } catch (IOException e) {
+            } catch (JSONException e) {
                 Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void readItems(double offset) throws IOException {
+    private void readItems(double offset) throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
+        String json = new Scanner(inputStream).useDelimiter("\\A").next();
 
-        reader.beginArray();
+        JSONArray array = new JSONArray(json);
 
-        while (reader.hasNext()) {
-            reader.beginObject();
-            double lat = 0, lng = 0;
-            while (reader.hasNext()) {
-                String name = reader.nextName();
-                if ("lat".equals(name)) {
-                    lat = reader.nextDouble() + offset;
-                } else if ("lng".equals(name)) {
-                    lng = reader.nextDouble() + offset;
-                }
-            }
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            double lat = object.getDouble("lat") + offset;
+            double lng = object.getDouble("lng") + offset;
+
             mClusterManager.addItem(new MyItem(lat, lng));
-            reader.endObject();
         }
-        reader.endArray();
     }
 }
