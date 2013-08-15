@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.SimpleDistanceBased;
+import com.google.maps.android.utils.demo.model.MyItem;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,23 +56,5 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
             reader.endObject();
         }
         reader.endArray();
-    }
-
-    private class MyItem implements ClusterItem {
-        private final LatLng mPosition;
-
-        public MyItem(double lat, double lng) {
-            mPosition = new LatLng(lat, lng);
-        }
-
-        @Override
-        public LatLng getPosition() {
-            return mPosition;
-        }
-
-        @Override
-        public MarkerOptions getMarkerOptions() {
-            return new MarkerOptions().position(mPosition);
-        }
     }
 }
