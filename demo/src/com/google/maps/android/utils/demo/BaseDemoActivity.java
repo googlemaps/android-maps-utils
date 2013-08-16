@@ -23,9 +23,6 @@ public abstract class BaseDemoActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
-        if (getMap() != null) {
-          startDemo();
-        }
     }
 
     private void setUpMapIfNeeded() {
@@ -33,6 +30,9 @@ public abstract class BaseDemoActivity extends FragmentActivity {
             return;
         }
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        if (mMap != null) {
+            startDemo();
+        }
     }
 
     /**
