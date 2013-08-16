@@ -1,6 +1,7 @@
 package com.google.maps.android.utils.demo;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -26,27 +27,25 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
         mClusterManager.setAlgorithm(new SimpleDistanceBased<MyItem>());
 
         getMap().setOnCameraChangeListener(mClusterManager);
-        for (int i = 0; i < 10; i++) {
-            try {
-                readItems(i / 60d);
-            } catch (JSONException e) {
-                Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
-            }
+        try {
+            readItems();
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void readItems(double offset) throws JSONException {
+    private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        String json = new Scanner(inputStream).useDelimiter("\\A").next();
-
-        JSONArray array = new JSONArray(json);
-
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            double lat = object.getDouble("lat") + offset;
-            double lng = object.getDouble("lng") + offset;
-
-            mClusterManager.addItem(new MyItem(lat, lng));
+        List<MyItem> items = new MyItemReader().read(inputStream);
+        for (int i = 0; i < 10; i++) {
+            double offset = i / 60d;
+            for (MyItem item : items) {
+                LatLng position = item.getPosition();
+                double lat = position.latitude + offset;
+                double lng = position.longitude + offset;
+                MyItem offsetItem = new MyItem(lat, lng);
+                mClusterManager.addItem(offsetItem);
+            }
         }
     }
 }

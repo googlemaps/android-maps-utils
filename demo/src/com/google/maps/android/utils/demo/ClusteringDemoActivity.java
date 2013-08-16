@@ -1,6 +1,7 @@
 package com.google.maps.android.utils.demo;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -36,16 +37,9 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
 
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        String json = new Scanner(inputStream).useDelimiter("\\A").next();
-
-        JSONArray array = new JSONArray(json);
-
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            double lat = object.getDouble("lat");
-            double lng = object.getDouble("lng");
-
-            mClusterManager.addItem(new MyItem(lat, lng));
+        List<MyItem> items = new MyItemReader().read(inputStream);
+        for (MyItem item : items) {
+            mClusterManager.addItem(item);
         }
     }
 }
