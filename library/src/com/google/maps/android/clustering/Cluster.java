@@ -2,12 +2,12 @@ package com.google.maps.android.clustering;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface Cluster<T extends ClusterItem> {
     public LatLng getPosition();
 
-    Set<T> getItems();
+    Collection<T> getItems();
 
     int getSize();
 }

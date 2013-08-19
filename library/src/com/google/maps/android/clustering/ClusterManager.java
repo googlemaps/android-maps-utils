@@ -1,19 +1,23 @@
 package com.google.maps.android.clustering;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.GridBased;
+import com.google.maps.android.clustering.algo.PreCachingDecorator;
 import com.google.maps.android.clustering.view.ClusterView;
-import com.google.maps.android.clustering.view.DefaultView;
+import com.google.maps.android.clustering.view.HideUnhideMarkersView;
 
 import java.util.Set;
 
 @Deprecated // Experimental. Do not use.
 public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener {
     private static final String TAG = ClusterManager.class.getName();
+    private static final boolean ASYNC = true;
 
     private Algorithm<T> mAlgorithm;
     private ClusterView<T> mView;
@@ -21,12 +25,14 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
     private boolean mShouldCluster = true;
+    private ClusterTask mClusterTask;
 
     public ClusterManager(Context context,
                           GoogleMap map) {
         mMap = map;
-        mView = new DefaultView<T>(context, map);
+        mView = new HideUnhideMarkersView<T>(context, map);
         mAlgorithm = new GridBased<T>();
+        mClusterTask = new ClusterTask();
     }
 
     public void setView(ClusterView<T> view) {
@@ -34,7 +40,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     public void setAlgorithm(Algorithm<T> algorithm) {
-        mAlgorithm = algorithm;
+        mAlgorithm = new PreCachingDecorator<T>(algorithm);
     }
 
     public void addItem(T myItem) {
@@ -51,9 +57,14 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      * Force a re-cluster.
      */
     public void cluster() {
-        Set<? extends Cluster<T>> clusters = mAlgorithm.getClusters(mMap.getCameraPosition().zoom);
-        mView.onClustersChanged(clusters);
-        mShouldCluster = false;
+        mClusterTask.cancel(true);
+        mClusterTask = new ClusterTask();
+        if (ASYNC) {
+            mClusterTask.execute(mMap.getCameraPosition().zoom);
+        } else {
+            Set<? extends Cluster<T>> clusters = mClusterTask.doInBackground(mMap.getCameraPosition().zoom);
+            mClusterTask.onPostExecute(clusters);
+        }
     }
 
     /**
@@ -72,5 +83,25 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mPreviousCameraPosition = mMap.getCameraPosition();
 
         cluster();
+    }
+
+    /**
+     * Runs the clustering algorithm in a background thread, then re-paints when results come
+     * back..
+     */
+    private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
+        @Override
+        protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
+            mShouldCluster = false;
+            long start = System.currentTimeMillis();
+            Set<? extends Cluster<T>> clusters = mAlgorithm.getClusters(zoom[0]);
+            Log.d(getClass().getName(), "clustering took " + (System.currentTimeMillis() - start));
+            return clusters;
+        }
+
+        @Override
+        protected void onPostExecute(Set<? extends Cluster<T>> clusters) {
+            mView.onClustersChanged(clusters);
+        }
     }
 }
