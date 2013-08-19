@@ -5,7 +5,7 @@ import android.util.SparseArray;
 
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.projection.Point;
+import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 
 import java.util.HashSet;
