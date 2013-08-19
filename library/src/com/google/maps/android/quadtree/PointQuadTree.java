@@ -20,9 +20,8 @@ import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A quad tree which tracks items with a Point geometry.
@@ -176,13 +175,13 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Search for all items within a given bounds.
      */
-    public Set<T> search(Bounds searchBounds) {
-        final HashSet<T> results = new HashSet<T>();
+    public Collection<T> search(Bounds searchBounds) {
+        final List<T> results = new ArrayList<T>();
         search(searchBounds, results);
         return results;
     }
 
-    private void search(Bounds searchBounds, Set<T> results) {
+    private void search(Bounds searchBounds, Collection<T> results) {
         if (!mBounds.intersects(searchBounds)) {
             return;
         }
@@ -192,9 +191,13 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
                 quad.search(searchBounds, results);
             }
         } else if (mItems != null && !mItems.isEmpty()) {
-            for (T item : mItems) {
-                if (searchBounds.contains(item.getPoint())) {
-                    results.add(item);
+            if (searchBounds.contains(mBounds)) {
+                results.addAll(mItems);
+            } else {
+                for (T item : mItems) {
+                    if (searchBounds.contains(item.getPoint())) {
+                        results.add(item);
+                    }
                 }
             }
         }
