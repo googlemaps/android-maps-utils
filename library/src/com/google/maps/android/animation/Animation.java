@@ -16,6 +16,7 @@
 
 package com.google.maps.android.animation;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -41,7 +42,7 @@ public class Animation {
      * @param propertyName The property being animated.
      * @param latLngs A set of locations that the animation will animate between over time.
      */
-    public static ObjectAnimator ofLatLng(Object target, String propertyName, LatLng... latLngs) {
+    public static ValueAnimator ofLatLng(Object target, String propertyName, LatLng... latLngs) {
         return ObjectAnimator.ofObject(target, propertyName, new LatLngTypeEvaluator(), latLngs);
     }
 
@@ -52,7 +53,7 @@ public class Animation {
      * @param latLngs A set of locations that the marker will animate between over time.
      * @return An ObjectAnimator object that is set up to animate between the given values.
      */
-    public static ObjectAnimator ofMarkerPosition(Marker target, LatLng... latLngs) {
+    public static ValueAnimator ofMarkerPosition(Marker target, LatLng... latLngs) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return ObjectAnimator.ofObject(target, new PositionProperty(), new LatLngTypeEvaluator(), latLngs);
         }
