@@ -53,6 +53,9 @@ public class SphericalAnimation {
      * @return An ObjectAnimator object that is set up to animate between the given values.
      */
     public static ObjectAnimator ofMarkerPosition(Marker target, LatLng... latLngs) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return ObjectAnimator.ofObject(target, new PositionProperty(), new SphericalLatLngTypeEvaluator(), latLngs);
+        }
         return ofLatLng(target, "position", latLngs);
     }
 }
