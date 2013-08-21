@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.google.maps.android.R;
 
 /**
@@ -45,6 +46,9 @@ public class TextIconGenerator {
     private View mContentView;
 
     private int mRotation;
+
+    private float mAnchorU = 0.5f;
+    private float mAnchorV = 1f;
 
     /**
      * Creates a new TextIconGenerator with the default style.
@@ -147,6 +151,38 @@ public class TextIconGenerator {
         mRotation = ((degrees + 360) % 360) / 90;
     }
 
+
+    /**
+     * @return u coordinate of the anchor, with rotation applied.
+     */
+    public float getAnchorU() {
+        return rotateAnchor(mAnchorU, mAnchorV);
+    }
+
+    /**
+     * @return v coordinate of the anchor, with rotation applied.
+     */
+    public float getAnchorV() {
+        return rotateAnchor(mAnchorV, mAnchorU);
+    }
+
+    /**
+     * Rotates the anchor around (u, v) = (0, 0).
+     */
+    private float rotateAnchor(float u, float v) {
+        switch (mRotation) {
+            case 0:
+                return u;
+            case 1:
+                return 1 - v;
+            case 2:
+                return 1 - u;
+            case 3:
+                return v;
+        }
+        throw new IllegalStateException();
+    }
+
     /**
      * Sets the text color, size, style, hint color, and highlight color from the specified
      * <code>TextAppearance</code> resource.
@@ -222,7 +258,7 @@ public class TextIconGenerator {
     public static final int STYLE_ORANGE = 7;
 
     private static int getBackground(int style) {
-        switch(style) {
+        switch (style) {
             case STYLE_DEFAULT:
             case STYLE_WHITE:
                 return R.drawable.bubble_white;
@@ -241,7 +277,7 @@ public class TextIconGenerator {
     }
 
     private static int getTextStyle(int style) {
-        switch(style) {
+        switch (style) {
             case STYLE_DEFAULT:
             case STYLE_WHITE:
                 return R.drawable.bubble_white;
