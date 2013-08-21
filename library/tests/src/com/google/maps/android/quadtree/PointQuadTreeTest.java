@@ -5,7 +5,7 @@ import com.google.maps.android.geometry.Point;
 
 import junit.framework.TestCase;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class PointQuadTreeTest extends TestCase {
 
@@ -16,7 +16,7 @@ public class PointQuadTreeTest extends TestCase {
     }
 
     public void testEmpty() {
-        Set<Item> items = searchAll();
+        Collection<Item> items = searchAll();
         assertEquals(0, items.size());
     }
 
@@ -28,7 +28,7 @@ public class PointQuadTreeTest extends TestCase {
         Item item3 = new Item(.2, .2);
         mTree.add(item3);
 
-        Set<Item> items = searchAll();
+        Collection<Item> items = searchAll();
         assertEquals(3, items.size());
 
         assertTrue(items.contains(item1));
@@ -78,7 +78,7 @@ public class PointQuadTreeTest extends TestCase {
         assertEquals(0, mTree.search(new Bounds(.1, 1, .1, 1)).size());
     }
 
-    private Set<Item> searchAll() {
+    private Collection<Item> searchAll() {
         return mTree.search(new Bounds(0, 1, 0, 1));
     }
 
