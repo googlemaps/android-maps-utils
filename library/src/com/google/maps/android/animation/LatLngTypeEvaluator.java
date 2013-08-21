@@ -26,8 +26,14 @@ import com.google.android.gms.maps.model.LatLng;
 class LatLngTypeEvaluator implements TypeEvaluator<LatLng> {
     @Override
     public LatLng evaluate(float v, LatLng a, LatLng b) {
-        // TODO: handle world wrapping.
-        return new LatLng(interp(v, a.latitude, b.latitude), interp(v, a.longitude, b.longitude));
+        double lat = interp(v, a.latitude, b.latitude);
+
+        // Take the shortest path across the 180th meridian.
+        double lngDelta = a.longitude - b.longitude;
+        if (Math.abs(lngDelta) < 180) {
+            return new LatLng(lat, interp(v, a.longitude, b.longitude));
+        }
+        return new LatLng(lat, interp(v, a.longitude, b.longitude + Math.signum(lngDelta) * 360));
     }
 
     private double interp(float v, double a, double b) {
