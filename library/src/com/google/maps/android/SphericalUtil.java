@@ -28,8 +28,9 @@ public class SphericalUtil {
 
     /**
      * The earth's radius, in meters.
+     * Mean radius as defined by IUGG.
      */
-    static final double EARTH_RADIUS = 6378137;
+    static final double EARTH_RADIUS = 6371009;
 
     /**
      * Returns the heading from one LatLng to another LatLng. Headings are
@@ -93,7 +94,8 @@ public class SphericalUtil {
         // There are two solutions for b. b = n2 * n4 +/- sqrt(), one solution results
         // in the latitude outside the [-90, 90] range. We first try one solution and
         // back off to the other if we are outside that range.
-        double discriminant = n2 * n2 * n1 * n1 + n1 * n1 * n1 * n1 - n1 * n1 * n4 * n4;
+        double n12 = n1 * n1;
+        double discriminant = n2 * n2 * n12 + n12 * n12 - n12 * n4 * n4;
         if (discriminant < 0) {
             // No real solution which would make sense in LatLng-space.
             return null;
