@@ -204,9 +204,8 @@ public class SphericalUtilTest extends TestCase {
         start = SphericalUtil.computeOffsetOrigin(new LatLng(90, 0),
                 Math.PI * EARTH_RADIUS / 4, 0);
         expectLatLngApproxEquals(
-                new LatLng(90, 0),
-                SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
-
+            new LatLng(90, 0),
+            SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
     }
 
     public void testInterpolate() {
