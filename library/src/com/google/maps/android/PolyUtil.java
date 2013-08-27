@@ -32,14 +32,14 @@ public class PolyUtil {
      * Returns mercator Y corresponding to latitude.
      * See http://en.wikipedia.org/wiki/Mercator_projection .
      */
-    static double mercator(double lat) {
+    private static double mercator(double lat) {
         return log(tan(lat * 0.5 + PI/4));
     }
 
     /**
      * Returns latitude from mercator Y.
      */
-    static double inverseMercator(double y) {
+    private static double inverseMercator(double y) {
         return 2 * atan(exp(y)) - PI / 2;
     }
 
@@ -47,7 +47,7 @@ public class PolyUtil {
      * Returns haversine(angle-in-radians).
      * hav(x) == (1 - cos(x)) / 2 == sin(x / 2)^2.
      */
-    static double hav(double x) {
+    private static double hav(double x) {
         double sinHalf = sin(x * 0.5);
         return sinHalf * sinHalf;
     }
@@ -55,27 +55,27 @@ public class PolyUtil {
     /**
      * Returns hav() of distance from (lat1, lng1) to (lat2, lng2).
      */
-    static double havDistance(double lat1, double lat2, double dLng) {
+    private static double havDistance(double lat1, double lat2, double dLng) {
         return hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2);
     }
 
-    static double clamp(double x, double low, double high) {
+    private static double clamp(double x, double low, double high) {
         return x < low ? low : (x > high ? high : x);
     }
 
     // Given h==hav(x), returns sin(abs(x)).
-    static double sinFromHav(double h) {
+    private static double sinFromHav(double h) {
         return 2 * sqrt(h * (1 - h));
     }
 
     // Returns hav(asin(x)).
-    static double havFromSin(double x) {
+    private static double havFromSin(double x) {
         double x2 = x * x;
         return x2 / (1 + sqrt(1 - x2)) * .5;
     }
 
     // Returns sin(arcHav(x) + arcHav(y)).
-    static double sinSumFromHav(double x, double y) {
+    private static double sinSumFromHav(double x, double y) {
         double a = sqrt(x * (1 - x));
         double b = sqrt(y * (1 - y));
         return 2 * (a + b - 2 * (a * y + b * x));
@@ -85,8 +85,8 @@ public class PolyUtil {
      * Returns sin(initial bearing from (lat1,lng1) to (lat3,lng3) minus initial bearing
      * from (lat1, lng1) to (lat2,lng2)).
      */
-    static double sinDeltaBearing(double lat1, double lng1, double lat2, double lng2,
-                                  double lat3, double lng3) {
+    private static double sinDeltaBearing(double lat1, double lng1, double lat2, double lng2,
+                                          double lat3, double lng3) {
         double sinLat1 = sin(lat1);
         double cosLat2 = cos(lat2);
         double cosLat3 = cos(lat3);
@@ -106,14 +106,14 @@ public class PolyUtil {
      * Returns tan(latitude-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
      * See http://williams.best.vwh.net/avform.htm .
      */
-    static double tanLatGC(double lat1, double lat2, double lng2, double lng3) {
+    private static double tanLatGC(double lat1, double lat2, double lng2, double lng3) {
         return (tan(lat1) * sin(lng2 - lng3) + tan(lat2) * sin(lng3)) / sin(lng2);
     }
 
     /**
      * Returns mercator(latitude-at-lng3) on the Rhumb line (lat1, lng1) to (lat2, lng2). lng1==0.
      */        
-    static double mercatorLatRhumb(double lat1, double lat2, double lng2, double lng3) {
+    private static double mercatorLatRhumb(double lat1, double lat2, double lng2, double lng3) {
         return (mercator(lat1) * (lng2 - lng3) + mercator(lat2) * lng3) / lng2;
     }
    
@@ -122,8 +122,8 @@ public class PolyUtil {
      * (lat1, lng1) to (lat2, lng2).
      * Longitudes are offset by -lng1; the implicit lng1 becomes 0.
      */
-    static boolean intersects(double lat1, double lat2, double lng2, double lat3, double lng3,
-                              boolean geodesic) {
+    private static boolean intersects(double lat1, double lat2, double lng2,
+                                      double lat3, double lng3, boolean geodesic) {
         // Both ends on the same side of lng3.
         if ((lng3 >= 0 && lng3 >= lng2) || (lng3 < 0 && lng3 < lng2)) {
             return false;
@@ -196,7 +196,7 @@ public class PolyUtil {
         return (nIntersect & 1) != 0;
     }
 
-    static final double DEFAULT_TOLERANCE = 0.1;  // meters.
+    private static final double DEFAULT_TOLERANCE = 0.1;  // meters.
 
     /**
      * Computes whether the given point lies on or near the edge of a polygon, within a specified
@@ -206,12 +206,12 @@ public class PolyUtil {
      */
     public static boolean isLocationOnEdge(LatLng point, List<LatLng> polygon, boolean geodesic,
                                            double tolerance) {
-        return isLocationOnPath(point, polygon, true, geodesic, tolerance);
+        return isLocationOnEdgeOrPath(point, polygon, true, geodesic, tolerance);
     }
 
     /**
-     * Same as isLocationOnEdge(point, polygon, geodesic, tolerance), with a default tolerance of
-     * 0.1 meters.
+     * Same as {@link isLocationOnEdge(LatLng, List<LatLng>, boolean, double)}
+     * with a default tolerance of 0.1 meters.
      */
     public static boolean isLocationOnEdge(LatLng point, List<LatLng> polygon, boolean geodesic) {
         return isLocationOnEdge(point, polygon, geodesic, DEFAULT_TOLERANCE);
@@ -223,22 +223,22 @@ public class PolyUtil {
      * is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
      * segment between the first point and the last point is not included.
      */
-    public static boolean isLocationOnPolyline(LatLng point, List<LatLng> polyline,
-                                               boolean geodesic, double tolerance) {
-        return isLocationOnPath(point, polyline, false, geodesic, tolerance);
+    public static boolean isLocationOnPath(LatLng point, List<LatLng> polyline,
+                                           boolean geodesic, double tolerance) {
+        return isLocationOnEdgeOrPath(point, polyline, false, geodesic, tolerance);
     }
 
     /**
-     * Same as isLocationOnPolyline(point, polyline, geodesic, tolerance), with a default tolerance
-     * of 0.1 meters.
+     * Same as {@link isLocationOnPath(LatLng, List<LatLng>, boolean, double)}
+     * with a default tolerance of 0.1 meters.
      */
-    public static boolean isLocationOnPolyline(LatLng point, List<LatLng> polyline,
-                                               boolean geodesic) {
-        return isLocationOnPolyline(point, polyline, geodesic, DEFAULT_TOLERANCE);
+    public static boolean isLocationOnPath(LatLng point, List<LatLng> polyline,
+                                           boolean geodesic) {
+        return isLocationOnPath(point, polyline, geodesic, DEFAULT_TOLERANCE);
     }
 
-    static boolean isLocationOnPath(LatLng point, List<LatLng> poly, boolean closed,
-                                    boolean geodesic, double toleranceEarth) {
+    private static boolean isLocationOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
+                                                  boolean geodesic, double toleranceEarth) {
         int size = poly.size();
         if (size == 0) {
             return false;
@@ -304,7 +304,7 @@ public class PolyUtil {
         return false;
     }
 
-    static boolean isOnSegmentGC(double lat1, double lng1, double lat2, double lng2,
+    private static boolean isOnSegmentGC(double lat1, double lng1, double lat2, double lng2,
                           double lat3, double lng3, double havTolerance) {
         double havDist13 = havDistance(lat1, lat3, lng1 - lng3);
         if (havDist13 <= havTolerance) {

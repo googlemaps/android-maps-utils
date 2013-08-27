@@ -43,9 +43,11 @@ public class PolyUtilTest extends TestCase {
                                    List<LatLng> poly, List<LatLng> yes, List<LatLng> no) {
         for (LatLng point : yes) {
             Assert.assertTrue(PolyUtil.isLocationOnEdge(point, poly, geodesic));
+            Assert.assertTrue(PolyUtil.isLocationOnPath(point, poly, geodesic));
         }
         for (LatLng point : no) {
             Assert.assertFalse(PolyUtil.isLocationOnEdge(point, poly, geodesic));
+            Assert.assertFalse(PolyUtil.isLocationOnPath(point, poly, geodesic));
         }
     }
     
