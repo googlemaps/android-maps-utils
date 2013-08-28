@@ -48,16 +48,14 @@ public class Bounds {
     }
 
     public boolean intersects(double minX, double maxX, double minY, double maxY) {
-        if (minX >= this.maxX) return false;
-        if (this.minX >= maxX) return false;
-
-        if (minY >= this.maxY) return false;
-        if (this.minY >= maxY) return false;
-
-        return true;
+        return minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY;
     }
 
-    public boolean intersects(Bounds searchBounds) {
-        return intersects(searchBounds.minX, searchBounds.maxX, searchBounds.minY, searchBounds.maxY);
+    public boolean intersects(Bounds bounds) {
+        return intersects(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY);
+    }
+
+    public boolean contains(Bounds bounds) {
+        return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY;
     }
 }

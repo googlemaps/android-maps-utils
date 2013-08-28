@@ -33,7 +33,7 @@ public class SphericalMercatorProjection {
         return new Point(x * mWorldWidth, y * mWorldWidth);
     }
 
-    public LatLng toLatLng(Point point) {
+    public LatLng toLatLng(com.google.maps.android.geometry.Point point) {
         final double x = point.x / mWorldWidth - 0.5;
         final double lng = x * 360;
 

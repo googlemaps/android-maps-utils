@@ -5,7 +5,7 @@
           android:versionName="1.0">
 
     <uses-sdk
-            android:minSdkVersion="14"
+            android:minSdkVersion="8"
             android:targetSdkVersion="17"/>
 
     <permission
@@ -42,7 +42,7 @@
         </activity>
 
         <activity android:name=".PolyDecodeDemoActivity"/>
-        <activity android:name=".BubbleIconDemoActivity"/>
+        <activity android:name=".TextIconDemoActivity"/>
         <activity android:name=".DistanceDemoActivity"/>
 
     </application>

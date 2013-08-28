@@ -20,9 +20,8 @@ import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A quad tree which tracks items with a Point geometry.
@@ -31,7 +30,6 @@ import java.util.Set;
  */
 @Deprecated // Experimental.
 public class PointQuadTree<T extends PointQuadTree.Item> {
-
     public interface Item {
         Point getPoint();
     }
@@ -49,7 +47,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Maximum number of elements to store in a quad before splitting.
      */
-    private final static int MAX_ELEMENTS = 10;
+    private final static int MAX_ELEMENTS = 60;
 
     /**
      * The elements inside this quad, if any.
@@ -68,6 +66,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
 
     /**
      * Creates a new quad tree with specified bounds.
+     *
      * @param minX
      * @param maxX
      * @param minY
@@ -81,7 +80,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
         this(bounds, 0);
     }
 
-    private PointQuadTree(double minX, double minY, double maxX, double maxY, int depth) {
+    private PointQuadTree(double minX, double maxX, double minY, double maxY, int depth) {
         this(new Bounds(minX, maxX, minY, maxY), depth);
     }
 
@@ -126,10 +125,10 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
      */
     private void split() {
         mChildren = new PointQuadTree[]{
-                new PointQuadTree(mBounds.minX, mBounds.minY, mBounds.midX, mBounds.midY, mDepth + 1),
-                new PointQuadTree(mBounds.midX, mBounds.minY, mBounds.maxX, mBounds.midY, mDepth + 1),
-                new PointQuadTree(mBounds.minX, mBounds.midY, mBounds.midX, mBounds.maxY, mDepth + 1),
-                new PointQuadTree(mBounds.midX, mBounds.midY, mBounds.maxX, mBounds.maxY, mDepth + 1)
+                new PointQuadTree(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1),
+                new PointQuadTree(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1),
+                new PointQuadTree(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1),
+                new PointQuadTree(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1)
         };
 
         List<T> items = mItems;
@@ -143,6 +142,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
 
     /**
      * Remove the given item from the set.
+     *
      * @return whether the item was removed.
      */
     public boolean remove(T item) {
@@ -176,13 +176,13 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Search for all items within a given bounds.
      */
-    public Set<T> search(Bounds searchBounds) {
-        final HashSet<T> results = new HashSet<T>();
+    public Collection<T> search(Bounds searchBounds) {
+        final List<T> results = new ArrayList<T>();
         search(searchBounds, results);
         return results;
     }
 
-    private void search(Bounds searchBounds, Set<T> results) {
+    private void search(Bounds searchBounds, Collection<T> results) {
         if (!mBounds.intersects(searchBounds)) {
             return;
         }
@@ -191,11 +191,11 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
             for (PointQuadTree<T> quad : mChildren) {
                 quad.search(searchBounds, results);
             }
-        } else if (mItems != null && !mItems.isEmpty()) {
-            for (T item : mItems) {
-                if (searchBounds.contains(item.getPoint())) {
-                    results.add(item);
-                }
+            return;
+        }
+        for (T item : mItems) {
+            if (searchBounds.contains(item.getPoint())) {
+                results.add(item);
             }
         }
     }
