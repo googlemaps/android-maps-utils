@@ -44,6 +44,7 @@
         <activity android:name=".PolyDecodeDemoActivity"/>
         <activity android:name=".TextIconDemoActivity"/>
         <activity android:name=".DistanceDemoActivity"/>
+        <activity android:name=".AnimationDemoActivity"/>
 
     </application>
 
