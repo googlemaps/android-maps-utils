@@ -191,11 +191,11 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
             for (PointQuadTree<T> quad : mChildren) {
                 quad.search(searchBounds, results);
             }
-            return;
-        }
-        for (T item : mItems) {
-            if (searchBounds.contains(item.getPoint())) {
-                results.add(item);
+        } else if (mItems != null) {
+            for (T item : mItems) {
+                if (searchBounds.contains(item.getPoint())) {
+                    results.add(item);
+                }
             }
         }
     }
