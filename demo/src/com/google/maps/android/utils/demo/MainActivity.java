@@ -1,7 +1,6 @@
 package com.google.maps.android.utils.demo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +20,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("PolyUtil.decode", PolyDecodeDemoActivity.class);
         addDemo("TextIconGenerator", TextIconDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
+        addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Clustering", ClusteringDemoActivity.class);
         addDemo("2000 clustering", BigClusteringDemoActivity.class);
     }

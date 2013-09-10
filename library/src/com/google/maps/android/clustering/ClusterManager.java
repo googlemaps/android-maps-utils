@@ -95,7 +95,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             mShouldCluster = false;
             long start = System.currentTimeMillis();
             Set<? extends Cluster<T>> clusters = mAlgorithm.getClusters(zoom[0]);
-            Log.d(getClass().getName(), "clustering took " + (System.currentTimeMillis() - start));
+            Log.d(TAG, "clustering took " + (System.currentTimeMillis() - start));
             return clusters;
         }
 
