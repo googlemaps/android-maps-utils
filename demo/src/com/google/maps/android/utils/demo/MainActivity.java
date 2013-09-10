@@ -19,7 +19,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mListView = (ViewGroup) findViewById(R.id.list);
 
         addDemo("PolyUtil.decode", PolyDecodeDemoActivity.class);
-        addDemo("BubbleIconFactory", BubbleIconDemoActivity.class);
+        addDemo("TextIconGenerator", TextIconDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
         addDemo("Clustering", ClusteringDemoActivity.class);
         addDemo("2000 clustering", BigClusteringDemoActivity.class);
