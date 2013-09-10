@@ -19,6 +19,7 @@ import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.ui.BubbleIconFactory;
+import com.google.maps.android.ui.TextIconGenerator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,7 @@ import java.util.Set;
 public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private final GoogleMap mMap;
     private float mZoom;
-    private final BubbleIconFactory mBubbleIconFactory;
+    private final TextIconGenerator mBubbleIconFactory;
 
     /**
      * Markers that are currently on the map.
@@ -49,8 +50,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
     public DefaultView(Context context, GoogleMap map) {
         mMap = map;
-        mBubbleIconFactory = new BubbleIconFactory(context);
-        mBubbleIconFactory.setStyle(BubbleIconFactory.Style.BLUE);
+        mBubbleIconFactory = new TextIconGenerator(context);
+        mBubbleIconFactory.setStyle(TextIconGenerator.STYLE_BLUE);
     }
 
     private boolean onCreateCluster(Cluster<T> cluster, Collection<Marker> markersAdded, LatLng animateFrom, boolean visible) {
@@ -83,8 +84,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         return true;
     }
 
-    private BitmapDescriptor getIcon(Cluster<T> size) {
-        int bucket = getBucket(mClusters.size());
+    private BitmapDescriptor getIcon(Cluster<T> cluster) {
+        int bucket = getBucket(cluster.getSize());
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
             descriptor = BitmapDescriptorFactory.fromBitmap(mBubbleIconFactory.makeIcon(bucket + (bucket >= 10 ? "+" : "")));
