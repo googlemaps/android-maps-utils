@@ -20,6 +20,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("PolyUtil.decode", PolyDecodeDemoActivity.class);
         addDemo("TextIconGenerator", TextIconDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
+        addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
