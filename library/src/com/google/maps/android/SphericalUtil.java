@@ -198,14 +198,6 @@ public class SphericalUtil {
     }
 
     /**
-     * Returns the area of a closed path on a sphere of given radius. The computed area
-     * uses the same units as the radius squared.
-     */
-    public static double computeArea(List<LatLng> path, double radius) {
-        return abs(computeSignedArea(path, radius));
-    }
-
-    /**
      * Returns the signed area of a closed path on Earth. The sign of the area may be used to
      * determine the orientation of the path.
      * "inside" is the surface that does not contain the South Pole.
@@ -219,8 +211,9 @@ public class SphericalUtil {
     /**
      * Returns the signed area of a closed path on a sphere of given radius.
      * The computed area uses the same units as the radius squared.
+     * Used by SphericalUtilTest.
      */
-    public static double computeSignedArea(List<LatLng> path, double radius) {
+    static double computeSignedArea(List<LatLng> path, double radius) {
         int size = path.size();
         if (size < 3) { return 0; }
         double total = 0;
