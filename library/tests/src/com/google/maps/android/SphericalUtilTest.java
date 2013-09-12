@@ -311,13 +311,12 @@ public class SphericalUtilTest extends TestCase {
                 computeSignedTriangleArea(
                         new LatLng(0, 0), new LatLng(0, 0.1), new LatLng(0.1, 0.1)),
                 Math.toRadians(0.1) * Math.toRadians(0.1) / 2, 1e-6);
-        /*
+
         expectNearNumber(computeSignedTriangleArea(right, up, front),
                 Math.PI / 2, 1e-6);
 
         expectNearNumber(computeSignedTriangleArea(front, up, right),
                 -Math.PI / 2, 1e-6);
-        */
     }
 
     public void testComputeArea() {
