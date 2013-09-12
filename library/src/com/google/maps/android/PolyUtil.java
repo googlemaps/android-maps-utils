@@ -53,9 +53,18 @@ public class PolyUtil {
     }
 
     /**
-     * Returns hav() of distance from (lat1, lng1) to (lat2, lng2).
+     * Computes inverse haversine. Has good numerical stability around 0.
+     * arcHav(x) == acos(1 - 2 * x) == 2 * asin(sqrt(x)).
+     * The argument must be in [0, 1], and the result is positive.
      */
-    private static double havDistance(double lat1, double lat2, double dLng) {
+    static double arcHav(double x) {
+        return 2 * asin(sqrt(x));
+    }
+    
+    /**
+     * Returns hav() of distance from (lat1, lng1) to (lat2, lng2) on the unit sphere.
+     */
+    static double havDistance(double lat1, double lat2, double dLng) {
         return hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2);
     }
 

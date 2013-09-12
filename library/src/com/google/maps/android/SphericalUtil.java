@@ -156,18 +156,14 @@ public class SphericalUtil {
     }
 
     /**
-     * Returns the angle between two LatLngs, in radians.
+     * Returns the angle between two LatLngs, in radians. This is the same as the distance
+     * on the unit sphere.
      */
     static double computeAngleBetween(LatLng from, LatLng to) {
-        // Haversine's formula
         double fromLat = toRadians(from.latitude);
-        double fromLng = toRadians(from.longitude);
         double toLat = toRadians(to.latitude);
-        double toLng = toRadians(to.longitude);
-        double dLat = fromLat - toLat;
-        double dLng = fromLng - toLng;
-        return 2 * asin(sqrt(pow(sin(dLat / 2), 2) +
-                cos(fromLat) * cos(toLat) * pow(sin(dLng / 2), 2)));
+        double dLng = toRadians(from.longitude - to.longitude);
+        return PolyUtil.arcHav(PolyUtil.havDistance(fromLat, toLat, dLng));
     }
 
     /**
