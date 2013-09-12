@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SphericalUtilTest extends TestCase {
-    static final double EARTH_RADIUS = SphericalUtil.EARTH_RADIUS;
+    static final double EARTH_RADIUS = MathUtil.EARTH_RADIUS;
     // The vertices of an octahedron, for testing
     private final LatLng up = new LatLng(90, 0);
     private final LatLng down = new LatLng(-90, 0);
