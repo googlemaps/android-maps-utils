@@ -156,14 +156,19 @@ public class SphericalUtil {
     }
 
     /**
+     * Returns distance on the unit sphere; the arguments are in radians.
+     */
+    private static double distanceRadians(double lat1, double lng1, double lat2, double lng2) {
+        return PolyUtil.arcHav(PolyUtil.havDistance(lat1, lat2, lng1 - lng2));
+    }
+    
+    /**
      * Returns the angle between two LatLngs, in radians. This is the same as the distance
      * on the unit sphere.
      */
     static double computeAngleBetween(LatLng from, LatLng to) {
-        double fromLat = toRadians(from.latitude);
-        double toLat = toRadians(to.latitude);
-        double dLng = toRadians(from.longitude - to.longitude);
-        return PolyUtil.arcHav(PolyUtil.havDistance(fromLat, toLat, dLng));
+        return distanceRadians(toRadians(from.latitude), toRadians(from.longitude),
+                               toRadians(to.latitude), toRadians(to.longitude));
     }
 
     /**
@@ -174,14 +179,24 @@ public class SphericalUtil {
     }
 
     /**
-     * Returns the length of the given path.
+     * Returns the length of the given path, in meters, on Earth.
      */
     public static double computeLength(List<LatLng> path) {
-        double length = 0;
-        for (int i = 0, I = path.size() - 1; i < I; ++i) {
-            length += computeDistanceBetween(path.get(i), path.get(i + 1));
+        if (path.size() < 2) {
+            return 0;
         }
-        return length;
+        double length = 0;
+        LatLng prev = path.get(0);
+        double prevLat = toRadians(prev.latitude);
+        double prevLng = toRadians(prev.longitude);
+        for (LatLng point : path) {
+            double lat = toRadians(point.latitude);
+            double lng = toRadians(point.longitude);
+            length += distanceRadians(prevLat, prevLng, lat, lng);
+            prevLat = lat;
+            prevLng = lng;
+        }
+        return length * EARTH_RADIUS;
     }
 
     /**
