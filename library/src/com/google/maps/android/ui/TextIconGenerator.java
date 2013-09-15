@@ -255,6 +255,7 @@ public class TextIconGenerator {
 
     private static int getBackground(int style) {
         switch (style) {
+            default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
                 return R.drawable.bubble_white;
@@ -269,11 +270,11 @@ public class TextIconGenerator {
             case STYLE_ORANGE:
                 return R.drawable.bubble_orange;
         }
-        return getBackground(STYLE_DEFAULT);
     }
 
     private static int getTextStyle(int style) {
         switch (style) {
+            default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
                 return R.drawable.bubble_white;
@@ -284,6 +285,5 @@ public class TextIconGenerator {
             case STYLE_ORANGE:
                 return R.style.Bubble_TextAppearance_Light;
         }
-        return getTextStyle(STYLE_DEFAULT);
     }
 }
