@@ -125,11 +125,8 @@ public class TextIconGenerator {
         mRotationLayout.removeAllViews();
         mRotationLayout.addView(contentView);
         mContentView = contentView;
-        try {
-            mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
-        } catch (Exception e) {
-            mTextView = null;
-        }
+        final View view = mRotationLayout.findViewById(R.id.text);
+        mTextView = view instanceof TextView ? (TextView) view : null;
     }
 
     /**
