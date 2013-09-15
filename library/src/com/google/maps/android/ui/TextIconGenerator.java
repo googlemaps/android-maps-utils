@@ -280,7 +280,7 @@ public class TextIconGenerator {
         switch (style) {
             case STYLE_DEFAULT:
             case STYLE_WHITE:
-                return R.drawable.bubble_white;
+                return R.style.Bubble_TextAppearance_Dark;
             case STYLE_RED:
             case STYLE_BLUE:
             case STYLE_GREEN:
