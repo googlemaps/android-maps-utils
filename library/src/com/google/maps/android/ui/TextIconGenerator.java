@@ -225,8 +225,7 @@ public class TextIconGenerator {
      */
     private void ensureViewsSetUp() {
         if (mContainer == null) {
-            final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mContainer = (ViewGroup) inflater.inflate(R.layout.text_bubble, null);
+            mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
             mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
             mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
         }
