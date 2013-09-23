@@ -31,7 +31,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
                           GoogleMap map) {
         mMap = map;
         mView = new DefaultView<T>(context, map);
-        mAlgorithm = new SimpleDistanceBased<T>();
+        setAlgorithm(new SimpleDistanceBased<T>());
         mClusterTask = new ClusterTask();
     }
 
