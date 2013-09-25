@@ -1,16 +1,18 @@
 package com.google.maps.android.clustering.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.os.MessageQueue;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,25 +25,34 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.ui.TextIconGenerator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private final GoogleMap mMap;
-    private float mZoom;
     private final TextIconGenerator mBubbleIconFactory;
 
     /**
      * Markers that are currently on the map.
      */
-    private Set<Marker> mMarkers = new HashSet<Marker>();
+    private Set<MarkerWithPosition> mMarkers = new HashSet<MarkerWithPosition>();
 
+    /**
+     * Icons for each bucket.
+     */
     private SparseArray<BitmapDescriptor> mIcons = new SparseArray<BitmapDescriptor>();
-    private Set<? extends Cluster<T>> mClusters;
+
+    /**
+     * Markers for single ClusterItems.
+     */
     private MarkerCache<T> mMarkerCache = new MarkerCache<T>();
 
     /**
@@ -49,40 +60,22 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
      */
     public static final int MIN_CLUSTER_SIZE = 4;
 
+    /**
+     * The currently displayed set of clusters.
+     */
+    private Set<? extends Cluster<T>> mClusters;
+
+    /**
+     * The target zoom level for the current set of clusters.
+     */
+    private float mZoom;
+
+    private final ViewModifier mViewModifier = new ViewModifier();
+
     public DefaultView(Context context, GoogleMap map) {
         mMap = map;
         mBubbleIconFactory = new TextIconGenerator(context);
         mBubbleIconFactory.setStyle(TextIconGenerator.STYLE_BLUE);
-    }
-
-    private boolean onCreateCluster(Cluster<T> cluster, Collection<Marker> markersAdded, LatLng animateFrom, boolean visible) {
-        if (cluster.getSize() <= MIN_CLUSTER_SIZE) {
-            for (T item : cluster.getItems()) {
-                Marker marker = mMarkerCache.get(item);
-                if (marker == null) {
-                    marker = mMap.addMarker(item.getMarkerOptions());
-                    mMarkerCache.put(item, marker);
-                    if (animateFrom != null) {
-                        marker.setVisible(visible);
-                        animate(marker, animateFrom, marker.getPosition());
-                    }
-                }
-                markersAdded.add(marker);
-            }
-            return false;
-        }
-
-        Marker marker = mMap.addMarker(new MarkerOptions().
-                icon(getIcon(cluster)).
-                title("Items: " + cluster.getSize()).
-                position(cluster.getPosition()));
-
-        if (animateFrom != null) {
-            animate(marker, animateFrom, marker.getPosition());
-        }
-        markersAdded.add(marker);
-        marker.setVisible(visible);
-        return true;
     }
 
     private BitmapDescriptor getIcon(Cluster<T> cluster) {
@@ -118,12 +111,18 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     private class ViewModifier extends Handler {
+        public static final int RUN_TASK = 0;
+        public static final int TASK_FINISHED = 1;
         private boolean mViewModificationInProgress = false;
         private ClusterTask mNextClusters = null;
 
         @Override
         public void handleMessage(Message msg) {
-            removeMessages(0);
+            if (msg.what == TASK_FINISHED) {
+                mViewModificationInProgress = false;
+                return;
+            }
+            removeMessages(RUN_TASK);
 
             if (mViewModificationInProgress) {
                 // Busy - wait for the callback.
@@ -142,14 +141,15 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                 mViewModificationInProgress = true;
             }
 
-            clusterTask.process(new Runnable() {
+            clusterTask.setCallback(new Runnable() {
                 @Override
                 public void run() {
-
-                    mViewModificationInProgress = false;
-                    sendEmptyMessage(0);
+                    sendEmptyMessage(TASK_FINISHED);
                 }
             });
+            clusterTask.setProjection(mMap.getProjection());
+            clusterTask.setMapZoom(mMap.getCameraPosition().zoom);
+            new Thread(clusterTask).start();
         }
 
         public void queue(Set<? extends Cluster<T>> clusters) {
@@ -157,15 +157,16 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                 // Overwrite any pending cluster tasks - we don't care about intermediate states.
                 mNextClusters = new ClusterTask(mMap.getCameraPosition().zoom, clusters);
             }
-            sendEmptyMessage(0);
+            sendEmptyMessage(RUN_TASK);
         }
     }
 
-    private final ViewModifier mViewModifier = new ViewModifier();
-
-    private class ClusterTask {
+    private class ClusterTask implements Runnable {
         final float zoom;
         final Set<? extends Cluster<T>> clusters;
+        private Runnable mCallback;
+        private Projection mProjection;
+        private float mMapZoom;
 
         private ClusterTask(float zoom, Set<? extends Cluster<T>> clusters) {
             this.zoom = zoom;
@@ -173,16 +174,19 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
 
         @SuppressLint("NewApi")
-        public void process(final Runnable callback) {
+        public void run() {
             if (clusters.equals(mClusters)) {
-                callback.run();
+                mCallback.run();
                 return;
             }
-            float zoom = mMap.getCameraPosition().zoom;
-            boolean zoomingIn = zoom > mZoom;
 
-            Set<Marker> oldMarkers = mMarkers;
-            LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+            final MarkerModifier markerModifier = new MarkerModifier();
+
+            final float zoom = mMapZoom;
+            final boolean zoomingIn = zoom > mZoom;
+
+            final Set<MarkerWithPosition> oldMarkers = mMarkers;
+            final LatLngBounds visibleBounds = mProjection.getVisibleRegion().latLngBounds;
             // TODO: Add some padding.
             List<LatLng> existingClustersOnScreen = new ArrayList<LatLng>();
             if (mClusters != null) {
@@ -194,20 +198,26 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             }
 
             // Create the new markers and animate them to their new positions.
-            final Set<Marker> newMarkers = new HashSet<Marker>();
+            final Set<MarkerWithPosition> newMarkers = new HashSet<MarkerWithPosition>();
             for (Cluster<T> c : clusters) {
-                if (zoomingIn && visibleBounds.contains(c.getPosition())) {
+                boolean onScreen = visibleBounds.contains(c.getPosition());
+                if (zoomingIn && onScreen) {
                     LatLng closest = findClosestCluster(existingClustersOnScreen, c.getPosition());
                     if (closest != null) {
                         // TODO: only animate a limited distance. Otherwise Markers fly out of screen.
-                        onCreateCluster(c, newMarkers, closest, true);
+                        markerModifier.addOnScreen(c, newMarkers, closest, true);
                     } else {
-                        onCreateCluster(c, newMarkers, null, true);
+                        markerModifier.addOnScreen(c, newMarkers, null, true);
                     }
+                } else if (onScreen) {
+                    markerModifier.addOnScreen(c, newMarkers, null, false);
                 } else {
-                    onCreateCluster(c, newMarkers, null, zoomingIn);
+                    markerModifier.add(c, newMarkers, null, zoomingIn);
                 }
             }
+
+            // Wait for all markers to be added.
+            markerModifier.waitUntilFree();
 
             oldMarkers.removeAll(newMarkers);
 
@@ -219,21 +229,26 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                     newClustersOnScreen.add(c.getPosition());
                 }
             }
-            for (Marker marker : oldMarkers) {
-                if (!zoomingIn && visibleBounds.contains(marker.getPosition())) {
-                    LatLng closest = findClosestCluster(newClustersOnScreen, marker.getPosition());
+
+            for (final MarkerWithPosition marker : oldMarkers) {
+                boolean onScreen = visibleBounds.contains(marker.position);
+                if (!zoomingIn && onScreen) {
+                    final LatLng closest = findClosestCluster(newClustersOnScreen, marker.position);
                     if (closest != null) {
-                        animate(marker, marker.getPosition(), closest);
-                        animatedOldClusters.add(marker);
+                        // Animate
+                        markerModifier.animate(marker.marker, marker.position, closest);
+                        animatedOldClusters.add(marker.marker);
                     } else {
-                        mMarkerCache.remove(marker);
-                        marker.remove();
+                        markerModifier.removeOnScreen(marker.marker);
                     }
+                } else if (onScreen) {
+                    markerModifier.removeOnScreen(marker.marker);
                 } else {
-                    mMarkerCache.remove(marker);
-                    marker.remove();
+                    markerModifier.remove(marker.marker);
                 }
             }
+
+            markerModifier.waitUntilFree();
 
             mMarkers = newMarkers;
             mClusters = clusters;
@@ -241,43 +256,52 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
             // Remove any of the markers that were combining into a cluster.
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                onAnimationComplete(animatedOldClusters, newMarkers);
-                callback.run();
+                onAnimationComplete(animatedOldClusters, newMarkers, markerModifier);
+                markerModifier.waitUntilFree();
+                mCallback.run();
             } else if (!zoomingIn && !animatedOldClusters.isEmpty()) {
                 // After the animation is complete, remove the animated markers.
-
-                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-                valueAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        onAnimationComplete(animatedOldClusters, newMarkers);
-                        callback.run();
-                    }
-                });
-                valueAnimator.start();
+                // TODO: wait properly, instead of sleeping.
+                try {
+                    Thread.sleep(1000, 0);
+                } catch (InterruptedException e) {
+                }
+                onAnimationComplete(animatedOldClusters, newMarkers, markerModifier);
+                markerModifier.waitUntilFree();
+                mCallback.run();
             } else {
-                callback.run();
+                mCallback.run();
             }
+        }
+
+        public void setCallback(Runnable callback) {
+            mCallback = callback;
+        }
+
+        public void setProjection(Projection projection) {
+            this.mProjection = projection;
+        }
+
+        public void setMapZoom(float zoom) {
+            this.mMapZoom = zoom;
         }
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onClustersChanged(Set<? extends Cluster<T>> clusters) {
         mViewModifier.queue(clusters);
     }
 
-    private void onAnimationComplete(List<Marker> animatedOldClusters, Set<Marker> newMarkers) {
+    private void onAnimationComplete(List<Marker> animatedOldClusters, Set<MarkerWithPosition> newMarkers, MarkerModifier markerModifier) {
         for (Marker m : animatedOldClusters) {
-            mMarkerCache.remove(m);
-            m.remove();
+            markerModifier.removeOnScreen(m);
         }
-        for (Marker m : newMarkers) {
-            m.setVisible(true);
+        for (MarkerWithPosition m : newMarkers) {
+            markerModifier.setVisible(m.marker);
         }
     }
 
-    private LatLng findClosestCluster(List<LatLng> markers, LatLng point) {
+    private static LatLng findClosestCluster(List<LatLng> markers, LatLng point) {
         if (markers.isEmpty()) return null;
 
         double minDist = SphericalUtil.computeDistanceBetween(markers.get(0), point);
@@ -290,6 +314,137 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             }
         }
         return closest;
+    }
+
+    private class MarkerModifier extends Handler implements MessageQueue.IdleHandler {
+        private static final int BLANK = 0;
+        private final Lock lock = new ReentrantLock();
+        private final Condition busyCondition = lock.newCondition();
+        private Queue<CreateMarkerTask> mCreateMarkerTasks = new LinkedList<CreateMarkerTask>();
+        private Queue<CreateMarkerTask> mOnScreenCreateMarkerTasks = new LinkedList<CreateMarkerTask>();
+        private Queue<Marker> mRemoveMarkerTasks = new LinkedList<Marker>();
+        private Queue<Marker> mOnScreenRemoveMarkerTasks = new LinkedList<Marker>();
+        private Queue<Marker> mSetVisibleTasks = new LinkedList<Marker>();
+        private boolean mListenerAdded;
+        private Queue<AnimationTask> mAnimationTasks = new LinkedList<AnimationTask>();
+
+
+        private MarkerModifier() {
+            super(Looper.getMainLooper());
+        }
+
+        public void add(Cluster<T> c, Set<MarkerWithPosition> newMarkers, LatLng closest, boolean visible) {
+            lock.lock();
+            sendEmptyMessage(BLANK);
+            mCreateMarkerTasks.add(new CreateMarkerTask(c, newMarkers, closest, visible));
+            lock.unlock();
+        }
+
+        public void addOnScreen(Cluster<T> c, Set<MarkerWithPosition> newMarkers, LatLng closest, boolean visible) {
+            lock.lock();
+            sendEmptyMessage(BLANK);
+            mCreateMarkerTasks.add(new CreateMarkerTask(c, newMarkers, closest, visible));
+            lock.unlock();
+        }
+
+        public void remove(Marker m) {
+            lock.lock();
+            sendEmptyMessage(BLANK);
+            mRemoveMarkerTasks.add(m);
+            lock.unlock();
+        }
+
+        public void removeOnScreen(Marker m) {
+            lock.lock();
+            sendEmptyMessage(BLANK);
+            mOnScreenRemoveMarkerTasks.add(m);
+            lock.unlock();
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (!mListenerAdded) {
+                Looper.myQueue().addIdleHandler(this);
+                mListenerAdded = true;
+            }
+            removeMessages(BLANK);
+
+            lock.lock();
+            try {
+
+                if (!mOnScreenCreateMarkerTasks.isEmpty()) {
+                    CreateMarkerTask task = mOnScreenCreateMarkerTasks.poll();
+                    task.perform(this);
+                } else if (!mCreateMarkerTasks.isEmpty()) {
+                    CreateMarkerTask task = mCreateMarkerTasks.poll();
+                    task.perform(this);
+                } else if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
+                    Marker m = mOnScreenRemoveMarkerTasks.poll();
+                    mMarkerCache.remove(m);
+                    m.remove();
+                } else if (!mRemoveMarkerTasks.isEmpty()) {
+                    Marker m = mRemoveMarkerTasks.poll();
+                    mMarkerCache.remove(m);
+                    m.remove();
+                } else if (!mSetVisibleTasks.isEmpty()) {
+                    Marker m = mSetVisibleTasks.poll();
+                    m.setVisible(true);
+                } else if (!mAnimationTasks.isEmpty()) {
+                    AnimationTask animationTask = mAnimationTasks.poll();
+                    animationTask.perform();
+                }
+
+                if (!isBusy()) {
+                    mListenerAdded = false;
+                    Looper.myQueue().removeIdleHandler(this);
+                } else {
+                    sendEmptyMessageDelayed(BLANK, 10);
+                }
+                busyCondition.signalAll();
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        public boolean isBusy() {
+            return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
+                    mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
+                    mSetVisibleTasks.isEmpty() && mAnimationTasks.isEmpty()
+            );
+        }
+
+        public void waitUntilFree() {
+            while (isBusy()) {
+                sendEmptyMessage(BLANK);
+                lock.lock();
+                try {
+                    if (isBusy()) {
+                        busyCondition.await();
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    lock.unlock();
+                }
+            }
+        }
+
+        @Override
+        public boolean queueIdle() {
+            sendEmptyMessage(BLANK);
+            return true;
+        }
+
+        public void setVisible(final Marker m) {
+            lock.lock();
+            sendEmptyMessage(BLANK);
+            mSetVisibleTasks.add(m);
+            lock.unlock();
+        }
+
+        public void animate(Marker marker, LatLng from, LatLng to) {
+            mAnimationTasks.add(new AnimationTask(marker, from, to));
+        }
     }
 
     private static class MarkerCache<T> {
@@ -316,18 +471,97 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
     }
 
-    @SuppressLint("NewApi")
-    public static void animate(final Marker marker, final LatLng from, final LatLng to) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            return;
+    private class CreateMarkerTask {
+        private final boolean visible;
+        private final Cluster<T> cluster;
+        private final Set<MarkerWithPosition> newMarkers;
+        private final LatLng animateFrom;
+
+        public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom, boolean visible) {
+            this.cluster = c;
+            this.newMarkers = markersAdded;
+            this.animateFrom = animateFrom;
+            this.visible = visible;
         }
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                marker.setPosition(SphericalUtil.interpolate(from, to, valueAnimator.getAnimatedFraction()));
+
+        private void perform(MarkerModifier markerModifier) {
+            if (cluster.getSize() <= MIN_CLUSTER_SIZE) {
+                for (T item : cluster.getItems()) {
+                    Marker marker = mMarkerCache.get(item);
+                    if (marker == null) {
+                        marker = mMap.addMarker(item.getMarkerOptions());
+                        mMarkerCache.put(item, marker);
+                        if (animateFrom != null) {
+                            marker.setVisible(visible);
+                            markerModifier.animate(marker, animateFrom, marker.getPosition());
+                        }
+                    }
+                    newMarkers.add(new MarkerWithPosition(marker));
+                }
+                return;
             }
-        });
-        valueAnimator.start();
+
+            Marker marker = mMap.addMarker(new MarkerOptions().
+                    icon(getIcon(cluster)).
+                    title("Items: " + cluster.getSize()).
+                    position(cluster.getPosition()));
+
+            if (animateFrom != null) {
+                markerModifier.animate(marker, animateFrom, marker.getPosition());
+            }
+            newMarkers.add(new MarkerWithPosition(marker));
+            marker.setVisible(visible);
+        }
+    }
+
+    private static class MarkerWithPosition {
+        private final Marker marker;
+        private final LatLng position;
+
+        private MarkerWithPosition(Marker marker) {
+            this.marker = marker;
+            position = marker.getPosition();
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other instanceof MarkerWithPosition) {
+                return marker.equals(((MarkerWithPosition) other).marker);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return marker.hashCode();
+        }
+    }
+
+    private static class AnimationTask {
+        private final Marker marker;
+        private final LatLng from;
+        private final LatLng to;
+
+        private AnimationTask(Marker marker, LatLng from, LatLng to) {
+            this.marker = marker;
+            this.from = from;
+            this.to = to;
+        }
+
+        @SuppressLint("NewApi")
+        public void perform() {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                marker.setPosition(to);
+                return;
+            }
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    marker.setPosition(SphericalUtil.interpolate(from, to, valueAnimator.getAnimatedFraction()));
+                }
+            });
+            valueAnimator.start();
+        }
     }
 }
