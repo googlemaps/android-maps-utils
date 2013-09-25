@@ -21,16 +21,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import static java.lang.Math.*;
+import static com.google.maps.android.MathUtil.*;
 
 public class SphericalUtil {
 
     private SphericalUtil() {}
-
-    /**
-     * The earth's radius, in meters.
-     * Mean radius as defined by IUGG.
-     */
-    static final double EARTH_RADIUS = 6371009;
 
     /**
      * Returns the heading from one LatLng to another LatLng. Headings are
@@ -159,7 +154,7 @@ public class SphericalUtil {
      * Returns distance on the unit sphere; the arguments are in radians.
      */
     private static double distanceRadians(double lat1, double lng1, double lat2, double lng2) {
-        return PolyUtil.arcHav(PolyUtil.havDistance(lat1, lat2, lng1 - lng2));
+        return arcHav(havDistance(lat1, lat2, lng1 - lng2));
     }
     
     /**
@@ -293,24 +288,4 @@ public class SphericalUtil {
         // Threshold to sign
         return det > 0 ? 1 : -1;
     }
-
-    /**
-     * Wraps the given value into the inclusive-exclusive interval between min and max.
-     * @param n   The value to wrap.
-     * @param min The minimum.
-     * @param max The maximum.
-     */
-    static double wrap(double n, double min, double max) {
-        return (n >= min && n < max) ? n : (mod(n - min, max - min) + min);
-    }
-
-    /**
-     * Returns the non-negative remainder of x / m.
-     * @param x The operand.
-     * @param m The modulus.
-     */
-    static double mod(double x, double m) {
-        return ((x % m) + m) % m;
-    }
-
 }
