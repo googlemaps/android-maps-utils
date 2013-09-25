@@ -6,6 +6,8 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.util.SparseArray;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -18,7 +20,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.ui.BubbleIconFactory;
 import com.google.maps.android.ui.TextIconGenerator;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
     private SparseArray<BitmapDescriptor> mIcons = new SparseArray<BitmapDescriptor>();
     private Set<? extends Cluster<T>> mClusters;
-    private MarkerCache mMarkerCache = new MarkerCache();
+    private MarkerCache<T> mMarkerCache = new MarkerCache<T>();
 
     /**
      * If cluster size is less than this size, display individual markers.
@@ -116,85 +117,154 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         return 500;
     }
 
-    @SuppressLint("NewApi")
-    @Override
-    public void onClustersChanged(Set<? extends Cluster<T>> clusters) {
-        if (clusters.equals(mClusters)) {
-            return;
-        }
-        float zoom = mMap.getCameraPosition().zoom;
-        boolean zoomingIn = zoom > mZoom;
+    private class ViewModifier extends Handler {
+        private boolean mViewModificationInProgress = false;
+        private ClusterTask mNextClusters = null;
 
-        Set<Marker> oldMarkers = mMarkers;
-        LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-        // TODO: Add some padding.
-        List<LatLng> existingClustersOnScreen = new ArrayList<LatLng>();
-        if (mClusters != null) {
-            for (Cluster<T> c : mClusters) {
-                if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
-                    existingClustersOnScreen.add(c.getPosition());
+        @Override
+        public void handleMessage(Message msg) {
+            removeMessages(0);
+
+            if (mViewModificationInProgress) {
+                // Busy - wait for the callback.
+                return;
+            }
+
+            if (mNextClusters == null) {
+                // Nothing to do.
+                return;
+            }
+
+            ClusterTask clusterTask;
+            synchronized (this) {
+                clusterTask = mNextClusters;
+                mNextClusters = null;
+                mViewModificationInProgress = true;
+            }
+
+            clusterTask.process(new Runnable() {
+                @Override
+                public void run() {
+
+                    mViewModificationInProgress = false;
+                    sendEmptyMessage(0);
+                }
+            });
+        }
+
+        public void queue(Set<? extends Cluster<T>> clusters) {
+            synchronized (this) {
+                // Overwrite any pending cluster tasks - we don't care about intermediate states.
+                mNextClusters = new ClusterTask(mMap.getCameraPosition().zoom, clusters);
+            }
+            sendEmptyMessage(0);
+        }
+    }
+
+    private final ViewModifier mViewModifier = new ViewModifier();
+
+    private class ClusterTask {
+        final float zoom;
+        final Set<? extends Cluster<T>> clusters;
+
+        private ClusterTask(float zoom, Set<? extends Cluster<T>> clusters) {
+            this.zoom = zoom;
+            this.clusters = clusters;
+        }
+
+        @SuppressLint("NewApi")
+        public void process(final Runnable callback) {
+            if (clusters.equals(mClusters)) {
+                callback.run();
+                return;
+            }
+            float zoom = mMap.getCameraPosition().zoom;
+            boolean zoomingIn = zoom > mZoom;
+
+            Set<Marker> oldMarkers = mMarkers;
+            LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+            // TODO: Add some padding.
+            List<LatLng> existingClustersOnScreen = new ArrayList<LatLng>();
+            if (mClusters != null) {
+                for (Cluster<T> c : mClusters) {
+                    if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
+                        existingClustersOnScreen.add(c.getPosition());
+                    }
                 }
             }
-        }
 
-        final Set<Marker> newMarkers = new HashSet<Marker>();
-        for (Cluster<T> c : clusters) {
-            if (zoomingIn && visibleBounds.contains(c.getPosition())) {
-                LatLng closest = findClosestCluster(existingClustersOnScreen, c.getPosition());
-                if (closest != null) {
-                    // TODO: only animate a limited distance. Otherwise Markers fly out of screen.
-                    onCreateCluster(c, newMarkers, closest, true);
+            // Create the new markers and animate them to their new positions.
+            final Set<Marker> newMarkers = new HashSet<Marker>();
+            for (Cluster<T> c : clusters) {
+                if (zoomingIn && visibleBounds.contains(c.getPosition())) {
+                    LatLng closest = findClosestCluster(existingClustersOnScreen, c.getPosition());
+                    if (closest != null) {
+                        // TODO: only animate a limited distance. Otherwise Markers fly out of screen.
+                        onCreateCluster(c, newMarkers, closest, true);
+                    } else {
+                        onCreateCluster(c, newMarkers, null, true);
+                    }
                 } else {
-                    onCreateCluster(c, newMarkers, null, true);
+                    onCreateCluster(c, newMarkers, null, zoomingIn);
                 }
-            } else {
-                onCreateCluster(c, newMarkers, null, zoomingIn);
             }
-        }
 
-        oldMarkers.removeAll(newMarkers);
+            oldMarkers.removeAll(newMarkers);
 
-        final List<Marker> animatedOldClusters = new ArrayList<Marker>();
-        List<LatLng> newClustersOnScreen = new ArrayList<LatLng>();
-        for (Cluster<T> c : clusters) {
-            if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
-                newClustersOnScreen.add(c.getPosition());
+            // Remove the old markers, animating them into clusters if zooming out.
+            final List<Marker> animatedOldClusters = new ArrayList<Marker>();
+            List<LatLng> newClustersOnScreen = new ArrayList<LatLng>();
+            for (Cluster<T> c : clusters) {
+                if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
+                    newClustersOnScreen.add(c.getPosition());
+                }
             }
-        }
-        for (Marker marker : oldMarkers) {
-            if (!zoomingIn && visibleBounds.contains(marker.getPosition())) {
-                LatLng closest = findClosestCluster(newClustersOnScreen, marker.getPosition());
-                if (closest != null) {
-                    animate(marker, marker.getPosition(), closest);
-                    animatedOldClusters.add(marker);
+            for (Marker marker : oldMarkers) {
+                if (!zoomingIn && visibleBounds.contains(marker.getPosition())) {
+                    LatLng closest = findClosestCluster(newClustersOnScreen, marker.getPosition());
+                    if (closest != null) {
+                        animate(marker, marker.getPosition(), closest);
+                        animatedOldClusters.add(marker);
+                    } else {
+                        mMarkerCache.remove(marker);
+                        marker.remove();
+                    }
                 } else {
                     mMarkerCache.remove(marker);
                     marker.remove();
                 }
+            }
+
+            mMarkers = newMarkers;
+            mClusters = clusters;
+            mZoom = zoom;
+
+            // Remove any of the markers that were combining into a cluster.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                onAnimationComplete(animatedOldClusters, newMarkers);
+                callback.run();
+            } else if (!zoomingIn && !animatedOldClusters.isEmpty()) {
+                // After the animation is complete, remove the animated markers.
+
+                ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+                valueAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        onAnimationComplete(animatedOldClusters, newMarkers);
+                        callback.run();
+                    }
+                });
+                valueAnimator.start();
             } else {
-                mMarkerCache.remove(marker);
-                marker.remove();
+                callback.run();
             }
         }
+    }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            onAnimationComplete(animatedOldClusters, newMarkers);
-        } else if (!zoomingIn && !animatedOldClusters.isEmpty()) {
-            // After the animation is complete, remove the animated markers.
-
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-            valueAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    onAnimationComplete(animatedOldClusters, newMarkers);
-                }
-            });
-            valueAnimator.start();
-        }
-
-        mMarkers = newMarkers;
-        mClusters = clusters;
-        mZoom = zoom;
+    @SuppressLint("NewApi")
+    @Override
+    public void onClustersChanged(Set<? extends Cluster<T>> clusters) {
+        mViewModifier.queue(clusters);
     }
 
     private void onAnimationComplete(List<Marker> animatedOldClusters, Set<Marker> newMarkers) {
@@ -222,7 +292,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         return closest;
     }
 
-    private class MarkerCache {
+    private static class MarkerCache<T> {
         private Map<T, Marker> mMarkerCache = new HashMap<T, Marker>();
         private Map<Marker, T> mMarkerCacheReverse = new HashMap<Marker, T>();
 
