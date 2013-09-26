@@ -1,18 +1,19 @@
 package com.google.maps.android.utils.demo;
 
-import java.io.InputStream;
-import java.util.List;
-
-import org.json.JSONException;
-
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 
-public class ClusteringDemoActivity extends BaseDemoActivity {
+import org.json.JSONException;
+
+import java.io.InputStream;
+import java.util.List;
+
+public class ClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<MyItem>, ClusterManager.OnClusterItemClickListener<MyItem> {
     private ClusterManager<MyItem> mClusterManager;
 
     @Override
@@ -20,6 +21,9 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
+        getMap().setOnMarkerClickListener(mClusterManager.getMarkerManager());
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
 
         getMap().setOnCameraChangeListener(mClusterManager);
 
@@ -33,8 +37,18 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
-        for (MyItem item : items) {
-            mClusterManager.addItem(item);
-        }
+        mClusterManager.addAllItems(items);
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<MyItem> cluster) {
+        Toast.makeText(this, "items in this cluster: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @Override
+    public boolean onClusterItemClick(MyItem item) {
+        Toast.makeText(this, "clicked! " + item.toString(), Toast.LENGTH_SHORT).show();
+        return true;
     }
 }

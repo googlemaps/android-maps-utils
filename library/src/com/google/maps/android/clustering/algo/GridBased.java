@@ -8,6 +8,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,16 @@ public class GridBased<T extends ClusterItem> implements Algorithm<T> {
     @Override
     public void addItem(T item) {
         mItems.add(item);
+    }
+
+    @Override
+    public void addAllItems(Collection<T> items) {
+        mItems.addAll(items);
+    }
+
+    @Override
+    public void clearItems() {
+        mItems.clear();
     }
 
     @Override
@@ -50,6 +61,11 @@ public class GridBased<T extends ClusterItem> implements Algorithm<T> {
         }
 
         return clusters;
+    }
+
+    @Override
+    public Collection<T> getItems() {
+        return mItems;
     }
 
     private static int getCoord(long numCells, double x, double y) {

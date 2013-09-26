@@ -8,6 +8,7 @@ import android.util.LruCache;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -28,6 +29,18 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
         clearCache();
     }
 
+    @Override
+    public void addAllItems(Collection<T> items) {
+        mAlgorithm.addAllItems(items);
+        clearCache();
+    }
+
+    @Override
+    public void clearItems() {
+        mAlgorithm.clearItems();
+        clearCache();
+    }
+
     public void removeItem(T item) {
         mAlgorithm.removeItem(item);
         clearCache();
@@ -44,6 +57,11 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
         new Thread(new PrecacheRunnable(discreteZoom + 1)).start();
         new Thread(new PrecacheRunnable(discreteZoom - 1)).start();
         return results;
+    }
+
+    @Override
+    public Collection<T> getItems() {
+        return null;
     }
 
     public Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {

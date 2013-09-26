@@ -2,6 +2,7 @@ package com.google.maps.android.clustering.view;
 
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.Set;
 
@@ -15,4 +16,8 @@ public interface ClusterView<T extends ClusterItem> {
      * @param clusters the clusters to be displayed.
      */
     void onClustersChanged(Set<? extends Cluster<T>> clusters);
+
+    void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener);
+
+    void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
 }

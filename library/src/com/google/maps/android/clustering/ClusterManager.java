@@ -6,18 +6,26 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.PreCachingDecorator;
 import com.google.maps.android.clustering.algo.SimpleDistanceBased;
 import com.google.maps.android.clustering.view.ClusterView;
 import com.google.maps.android.clustering.view.DefaultView;
 
+import java.util.Collection;
 import java.util.Set;
 
-@Deprecated // Experimental. Do not use.
+/**
+ * Groups many items on a map based on zoom level.
+ */
 public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener {
     private static final String TAG = ClusterManager.class.getName();
     private static final boolean ASYNC = true;
+
+    private final MarkerManager mMarkerManager;
+    private final MarkerManager.Collection mMarkers;
+    private final MarkerManager.Collection mClusterMarkers;
 
     private Algorithm<T> mAlgorithm;
     private ClusterView<T> mView;
@@ -26,21 +34,67 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private CameraPosition mPreviousCameraPosition;
     private boolean mShouldCluster = true;
     private ClusterTask mClusterTask;
+    private OnClusterItemClickListener<T> mOnClusterItemClickListener;
+    private OnClusterClickListener<T> mOnClusterClickListener;
 
-    public ClusterManager(Context context,
-                          GoogleMap map) {
+    public ClusterManager(Context context, GoogleMap map) {
+        this(context, map, new MarkerManager(map));
+    }
+
+    public ClusterManager(Context context, GoogleMap map, MarkerManager markerManager) {
         mMap = map;
-        mView = new DefaultView<T>(context, map);
+        mMarkerManager = markerManager;
+        mClusterMarkers = markerManager.newCollection();
+        mMarkers = markerManager.newCollection();
+        mView = new DefaultView<T>(context, map, this);
         setAlgorithm(new SimpleDistanceBased<T>());
         mClusterTask = new ClusterTask();
     }
 
+    public MarkerManager.Collection getMarkerCollection() {
+        return mMarkers;
+    }
+
+    public MarkerManager.Collection getClusterMarkerCollection() {
+        return mClusterMarkers;
+    }
+
+    public MarkerManager getMarkerManager() {
+        return mMarkerManager;
+    }
+
     public void setView(ClusterView<T> view) {
+        view.setOnClusterClickListener(null);
+        view.setOnClusterItemClickListener(null);
+        mClusterMarkers.clear();
+        mMarkers.clear();
         mView = view;
+        mView.setOnClusterClickListener(mOnClusterClickListener);
+        mView.setOnClusterItemClickListener(mOnClusterItemClickListener);
     }
 
     public void setAlgorithm(Algorithm<T> algorithm) {
+        Collection<T> items = null;
+        if (mAlgorithm != null) {
+            items = mAlgorithm.getItems();
+            mAlgorithm.clearItems();
+        }
+
         mAlgorithm = new PreCachingDecorator<T>(algorithm);
+        if (items != null) {
+            mAlgorithm.addAllItems(items);
+        }
+        mShouldCluster = true;
+    }
+
+    public void clearItems() {
+        mAlgorithm.clearItems();
+        mShouldCluster = true;
+    }
+
+    public void addAllItems(Collection<T> items) {
+        mAlgorithm.addAllItems(items);
+        mShouldCluster = true;
     }
 
     public void addItem(T myItem) {
@@ -103,5 +157,23 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         protected void onPostExecute(Set<? extends Cluster<T>> clusters) {
             mView.onClustersChanged(clusters);
         }
+    }
+
+    public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
+        this.mOnClusterClickListener = listener;
+        mView.setOnClusterClickListener(listener);
+    }
+
+    public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
+        this.mOnClusterItemClickListener = listener;
+        mView.setOnClusterItemClickListener(listener);
+    }
+
+    public interface OnClusterClickListener<T extends ClusterItem> {
+        public boolean onClusterClick(Cluster<T> cluster);
+    }
+
+    public interface OnClusterItemClickListener<T extends ClusterItem> {
+        public boolean onClusterItemClick(T item);
     }
 }

@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.TextIconGenerator;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private final GoogleMap mMap;
     private final TextIconGenerator mBubbleIconFactory;
+    private final ClusterManager<T> mClusterManager;
 
     /**
      * Markers that are currently on the map.
@@ -68,16 +70,39 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private Set<? extends Cluster<T>> mClusters;
 
     /**
+     * Lookup between markers and the associated cluster.
+     */
+    private Map<Marker, Cluster<T>> mMarkerToCluster = new HashMap<Marker, Cluster<T>>();
+
+    /**
      * The target zoom level for the current set of clusters.
      */
     private float mZoom;
 
     private final ViewModifier mViewModifier = new ViewModifier();
 
-    public DefaultView(Context context, GoogleMap map) {
+    private ClusterManager.OnClusterClickListener<T> mClickListener;
+    private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
+
+    public DefaultView(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
         mBubbleIconFactory = new TextIconGenerator(context);
         mBubbleIconFactory.setStyle(TextIconGenerator.STYLE_BLUE);
+        mClusterManager = clusterManager;
+
+        clusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker));
+            }
+        });
+
+        clusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return mClickListener != null && mClickListener.onClusterClick(mMarkerToCluster.get(marker));
+            }
+        });
     }
 
     /**
@@ -339,6 +364,16 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         mViewModifier.queue(clusters);
     }
 
+    @Override
+    public void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener) {
+        mClickListener = listener;
+    }
+
+    @Override
+    public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
+        mItemClickListener = listener;
+    }
+
     private void onAnimationComplete(List<Marker> animatedOldClusters, Set<MarkerWithPosition> newMarkers, MarkerModifier markerModifier) {
         for (Marker m : animatedOldClusters) {
             markerModifier.remove(true, m);
@@ -471,11 +506,11 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                 } else if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
                     Marker m = mOnScreenRemoveMarkerTasks.poll();
                     mMarkerCache.remove(m);
-                    m.remove();
+                    mClusterManager.getMarkerManager().remove(m);
                 } else if (!mRemoveMarkerTasks.isEmpty()) {
                     Marker m = mRemoveMarkerTasks.poll();
                     mMarkerCache.remove(m);
-                    m.remove();
+                    mClusterManager.getMarkerManager().remove(m);
                 } else if (!mSetVisibleTasks.isEmpty()) {
                     Marker m = mSetVisibleTasks.poll();
                     m.setVisible(true);
@@ -600,7 +635,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                         if (animateFrom != null) {
                             markerOptions.position(animateFrom).visible(visible);
                         }
-                        marker = mMap.addMarker(markerOptions);
+                        marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
                         mMarkerCache.put(item, marker);
                         if (animateFrom != null) {
                             markerModifier.animate(marker, animateFrom, animateTo);
@@ -617,7 +652,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                     visible(visible).
                     position(animateFrom == null ? cluster.getPosition() : animateFrom);
 
-            Marker marker = mMap.addMarker(markerOptions);
+            Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
+            mMarkerToCluster.put(marker, cluster);
             if (animateFrom != null) {
                 markerModifier.animate(marker, animateFrom, cluster.getPosition());
             }

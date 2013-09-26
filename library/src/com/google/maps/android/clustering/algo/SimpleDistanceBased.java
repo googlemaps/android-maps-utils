@@ -8,11 +8,13 @@ import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +42,19 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
         QuadItem<T> quadItem = new QuadItem<T>(item);
         mItems.add(quadItem);
         mQuadTree.add(quadItem);
+    }
+
+    @Override
+    public void addAllItems(Collection<T> items) {
+        for (T item : items) {
+            addItem(item);
+        }
+    }
+
+    @Override
+    public void clearItems() {
+        mItems.clear();
+        mQuadTree.clear();
     }
 
     @Override
@@ -91,6 +106,15 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
             visitedCandidates.addAll(clusterItems);
         }
         return results;
+    }
+
+    @Override
+    public Collection<T> getItems() {
+        final List<T> items = new ArrayList<T>();
+        for (QuadItem<T> quadItem : mItems) {
+            items.add(quadItem.mClusterItem);
+        }
+        return items;
     }
 
     private double distanceSquared(Point a, Point b) {
