@@ -2,18 +2,14 @@ package com.google.maps.android.utils.demo;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Scanner;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.SimpleDistanceBased;
 import com.google.maps.android.utils.demo.model.MyItem;
 
 public class BigClusteringDemoActivity extends BaseDemoActivity {
