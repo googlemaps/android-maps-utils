@@ -591,11 +591,15 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                 for (T item : cluster.getItems()) {
                     Marker marker = mMarkerCache.get(item);
                     if (marker == null) {
-                        marker = mMap.addMarker(item.getMarkerOptions());
+                        MarkerOptions markerOptions = item.getMarkerOptions();
+                        LatLng animateTo = markerOptions.getPosition();
+                        if (animateFrom != null) {
+                            markerOptions.position(animateFrom).visible(visible);
+                        }
+                        marker = mMap.addMarker(markerOptions);
                         mMarkerCache.put(item, marker);
                         if (animateFrom != null) {
-                            marker.setVisible(visible);
-                            markerModifier.animate(marker, animateFrom, marker.getPosition());
+                            markerModifier.animate(marker, animateFrom, animateTo);
                         }
                     }
                     newMarkers.add(new MarkerWithPosition(marker));
@@ -603,16 +607,17 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                 return;
             }
 
-            Marker marker = mMap.addMarker(new MarkerOptions().
+            MarkerOptions markerOptions = new MarkerOptions().
                     icon(getIcon(cluster)).
                     title("Items: " + cluster.getSize()).
-                    position(cluster.getPosition()));
+                    visible(visible).
+                    position(animateFrom == null ? cluster.getPosition() : animateFrom);
 
+            Marker marker = mMap.addMarker(markerOptions);
             if (animateFrom != null) {
-                markerModifier.animate(marker, animateFrom, marker.getPosition());
+                markerModifier.animate(marker, animateFrom, cluster.getPosition());
             }
             newMarkers.add(new MarkerWithPosition(marker));
-            marker.setVisible(visible);
         }
     }
 
