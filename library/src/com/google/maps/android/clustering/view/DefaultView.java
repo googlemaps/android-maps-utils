@@ -133,6 +133,10 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         public void handleMessage(Message msg) {
             if (msg.what == TASK_FINISHED) {
                 mViewModificationInProgress = false;
+                if (mNextClusters != null) {
+                    // Run the task that was queued up.
+                    sendEmptyMessage(RUN_TASK);
+                }
                 return;
             }
             removeMessages(RUN_TASK);
