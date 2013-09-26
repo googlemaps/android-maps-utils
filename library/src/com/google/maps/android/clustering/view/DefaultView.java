@@ -438,7 +438,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
          * @param to     the position to animate to.
          */
         public void animate(Marker marker, LatLng from, LatLng to) {
+            lock.lock();
             mAnimationTasks.add(new AnimationTask(marker, from, to));
+            lock.unlock();
         }
 
         @Override
