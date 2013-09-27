@@ -169,11 +169,7 @@ public class PolyUtil {
         if (size == 0) {
             return false;
         }
-<<<<<<< HEAD
         double tolerance = toleranceEarth / EARTH_RADIUS;
-=======
-        double tolerance = toleranceEarth / SphericalUtil.EARTH_RADIUS;
->>>>>>> 9f40fd008e0fdcc8b73bb23aacd8d0f1d11abf23
         double havTolerance = hav(tolerance);
         double lat3 = toRadians(point.latitude);
         double lng3 = toRadians(point.longitude);
@@ -234,30 +230,6 @@ public class PolyUtil {
         return false;
     }
 
-<<<<<<< HEAD
-    /**
-     * Returns sin(initial bearing from (lat1,lng1) to (lat3,lng3) minus initial bearing
-     * from (lat1, lng1) to (lat2,lng2)).
-     */
-    private static double sinDeltaBearing(double lat1, double lng1, double lat2, double lng2,
-                                          double lat3, double lng3) {
-        double sinLat1 = sin(lat1);
-        double cosLat2 = cos(lat2);
-        double cosLat3 = cos(lat3);
-        double lat31 = lat3 - lat1;
-        double lng31 = lng3 - lng1;
-        double lat21 = lat2 - lat1;
-        double lng21 = lng2 - lng1;
-        double a = sin(lng31) * cosLat3;
-        double c = sin(lng21) * cosLat2;
-        double b = sin(lat31) + 2 * sinLat1 * cosLat3 * hav(lng31);
-        double d = sin(lat21) + 2 * sinLat1 * cosLat2 * hav(lng21);
-        double denom = (a * a + b * b) * (c * c + d * d);
-        return denom <= 0 ? 1 : (a * d - b * c) / sqrt(denom);
-    }
-    
-=======
->>>>>>> 9f40fd008e0fdcc8b73bb23aacd8d0f1d11abf23
     private static boolean isOnSegmentGC(double lat1, double lng1, double lat2, double lng2,
                           double lat3, double lng3, double havTolerance) {
         double havDist13 = havDistance(lat1, lat3, lng1 - lng3);
