@@ -250,7 +250,7 @@ public class SphericalUtil {
         double t = tan1 * tan2;
         return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng));
     }
-
+    
     /**
      * Wraps the given value into the inclusive-exclusive interval between min and max.
      * @param n   The value to wrap.
