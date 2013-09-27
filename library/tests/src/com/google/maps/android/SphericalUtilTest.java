@@ -33,7 +33,7 @@ public class SphericalUtilTest extends TestCase {
     }
 
     private static void expectNearNumber(double actual, double expected, double epsilon) {
-        Assert.assertTrue(String.format("Expected %f to be near %f", actual, expected),
+        Assert.assertTrue(String.format("Expected %g to be near %g", actual, expected),
                 Math.abs(expected - actual) <= epsilon);
     }
 
@@ -269,23 +269,35 @@ public class SphericalUtilTest extends TestCase {
         expectNearNumber(SphericalUtil.computeLength(latLngs), Math.PI * EARTH_RADIUS, 1e-6);
     }
 
+    private static double computeSignedTriangleArea(LatLng a, LatLng b, LatLng c) {
+        List<LatLng> path = Arrays.asList(a, b, c);
+        return SphericalUtil.computeSignedArea(path, 1);
+    }
+
+    private static double computeTriangleArea(LatLng a, LatLng b, LatLng c) {
+        return Math.abs(computeSignedTriangleArea(a, b, c));
+    }
+    
+    private static int isCCW(LatLng a, LatLng b, LatLng c) {
+        return computeSignedTriangleArea(a, b, c) > 0 ? 1 : -1;
+    }
+    
     public void testIsCCW() {
         // One face of the octahedron
-        expectEq(1, SphericalUtil.isCCW(right, up, front));
-        expectEq(1, SphericalUtil.isCCW(up, front, right));
-        expectEq(1, SphericalUtil.isCCW(front, right, up));
-        expectEq(-1, SphericalUtil.isCCW(front, up, right));
-        expectEq(-1, SphericalUtil.isCCW(up, right, front));
-        expectEq(-1, SphericalUtil.isCCW(right, front, up));
+        expectEq(1, isCCW(right, up, front));
+        expectEq(1, isCCW(up, front, right));
+        expectEq(1, isCCW(front, right, up));
+        expectEq(-1, isCCW(front, up, right));
+        expectEq(-1, isCCW(up, right, front));
+        expectEq(-1, isCCW(right, front, up));
     }
 
     public void testComputeTriangleArea() {
-        expectNearNumber(SphericalUtil.computeTriangleArea(right, up, front), Math.PI / 2, 1e-6);
-
-        expectNearNumber(SphericalUtil.computeTriangleArea(front, up, right), Math.PI / 2, 1e-6);
+        expectNearNumber(computeTriangleArea(right, up, front), Math.PI / 2, 1e-6);
+        expectNearNumber(computeTriangleArea(front, up, right), Math.PI / 2, 1e-6);
 
         // computeArea returns area of zero on small polys
-        double area = SphericalUtil.computeTriangleArea(
+        double area = computeTriangleArea(
                 new LatLng(0, 0),
                 new LatLng(0, Math.toDegrees(1E-6)),
                 new LatLng(Math.toDegrees(1E-6), 0));
@@ -296,14 +308,14 @@ public class SphericalUtilTest extends TestCase {
 
     public void testComputeSignedTriangleArea() {
         expectNearNumber(
-                SphericalUtil.computeSignedTriangleArea(
+                computeSignedTriangleArea(
                         new LatLng(0, 0), new LatLng(0, 0.1), new LatLng(0.1, 0.1)),
                 Math.toRadians(0.1) * Math.toRadians(0.1) / 2, 1e-6);
 
-        expectNearNumber(SphericalUtil.computeSignedTriangleArea(right, up, front),
+        expectNearNumber(computeSignedTriangleArea(right, up, front),
                 Math.PI / 2, 1e-6);
 
-        expectNearNumber(SphericalUtil.computeSignedTriangleArea(front, up, right),
+        expectNearNumber(computeSignedTriangleArea(front, up, right),
                 -Math.PI / 2, 1e-6);
     }
 
