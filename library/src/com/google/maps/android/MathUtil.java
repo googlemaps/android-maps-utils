@@ -16,8 +16,6 @@
 
 package com.google.maps.android;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import static java.lang.Math.*;
 
 /**
