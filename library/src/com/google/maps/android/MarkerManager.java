@@ -49,13 +49,10 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
     @Override
     public View getInfoWindow(Marker marker) {
         Collection collection = mAllMarkers.get(marker);
-        if (collection == null) {
-            return null;
+        if (collection != null && collection.mInfoWindowAdapter != null) {
+            return collection.mInfoWindowAdapter.getInfoWindow(marker);
         }
-        if (collection.mInfoWindowAdapter == null) {
-            return null;
-        }
-        return collection.mInfoWindowAdapter.getInfoWindow(marker);
+        return null;
     }
 
     @Override
