@@ -14,7 +14,7 @@ dependencies {
     compile project(':library')
     // Or, fetch from Maven:
     // compile 'com.google.maps.android:android-maps-utils:0.1+'
-    compile 'com.google.android.gms:play-services:3.1.36+'
+    compile 'com.google.android.gms:play-services:3.2+'
 }
 
 android {
