@@ -22,8 +22,8 @@ import java.util.Set;
 public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.InfoWindowAdapter {
     private final GoogleMap mMap;
 
-    private Map<String, Collection> mNamedCollections = new HashMap<String, Collection>();
-    private Map<Marker, Collection> mAllMarkers = new HashMap<Marker, Collection>();
+    private final Map<String, Collection> mNamedCollections = new HashMap<String, Collection>();
+    private final Map<Marker, Collection> mAllMarkers = new HashMap<Marker, Collection>();
 
     public MarkerManager(GoogleMap map) {
         this.mMap = map;
@@ -33,6 +33,10 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         return new Collection();
     }
 
+    /**
+     * Create a new named collection, which can later be looked up by {@link #getCollection(String)}
+     * @param id a unique id for this collection.
+     */
     public Collection newCollection(String id) {
         if (mNamedCollections.get(id) != null) {
             throw new IllegalArgumentException("collection id is not unique: " + id);
@@ -42,6 +46,10 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         return collection;
     }
 
+    /**
+     * Gets a named collection that was created by {@link #newCollection(String)}
+     * @param id the unique id for this collection.
+     */
     public Collection getCollection(String id) {
         return mNamedCollections.get(id);
     }
