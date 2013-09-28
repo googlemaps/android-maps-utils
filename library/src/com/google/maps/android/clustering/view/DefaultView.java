@@ -107,7 +107,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
     /**
      * Produce an icon for a particular cluster. Subclasses should override this to customize the
-     * displayed cluster marker.
+     * displayed cluster markerWithPosition.
      */
     protected BitmapDescriptor getIcon(Cluster<T> cluster) {
         int bucket = getBucket(cluster.getSize());
@@ -320,15 +320,13 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                     final LatLng closest = findClosestCluster(newClustersOnScreen, marker.position);
                     if (closest != null) {
                         // Animate
-                        markerModifier.animate(marker.marker, marker.position, closest);
+                        markerModifier.animate(marker, marker.position, closest);
                         animatedOldClusters.add(marker.marker);
                     } else {
                         markerModifier.remove(true, marker.marker);
                     }
-                } else if (onScreen) {
-                    markerModifier.remove(true, marker.marker);
                 } else {
-                    markerModifier.remove(false, marker.marker);
+                    markerModifier.remove(onScreen, marker.marker);
                 }
             }
 
@@ -399,8 +397,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Handles all marker manipulations on the map. Work (such as adding, removing, or animating a
-     * marker) is performed while trying not to block the rest of the app's UI.
+     * Handles all markerWithPosition manipulations on the map. Work (such as adding, removing, or animating a
+     * markerWithPosition) is performed while trying not to block the rest of the app's UI.
      */
     private class MarkerModifier extends Handler implements MessageQueue.IdleHandler {
         private static final int BLANK = 0;
@@ -441,10 +439,10 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
 
         /**
-         * Removes a marker some time in the future.
+         * Removes a markerWithPosition some time in the future.
          *
          * @param priority whether this operation should have priority.
-         * @param m        the marker to remove.
+         * @param m        the markerWithPosition to remove.
          */
         public void remove(boolean priority, Marker m) {
             lock.lock();
@@ -458,9 +456,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
 
         /**
-         * Makes a marker visible some time in the future
+         * Makes a markerWithPosition visible some time in the future
          *
-         * @param m the marker to make visible.
+         * @param m the markerWithPosition to make visible.
          */
         public void setVisible(final Marker m) {
             lock.lock();
@@ -470,9 +468,22 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
 
         /**
-         * Animates a marker some time in the future.
+         * Animates a markerWithPosition some time in the future.
          *
-         * @param marker the marker to animate.
+         * @param marker the markerWithPosition to animate.
+         * @param from   the position to animate from.
+         * @param to     the position to animate to.
+         */
+        public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
+            lock.lock();
+            mAnimationTasks.add(new AnimationTask(marker, from, to));
+            lock.unlock();
+        }
+
+        /**
+         * Animates a markerWithPosition some time in the future.
+         *
+         * @param marker the markerWithPosition to animate.
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
@@ -492,7 +503,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
             lock.lock();
             try {
-                // Process the queue of marker operations.
+                // Process the queue of markerWithPosition operations.
                 // Prioritise any "on screen" work.
                 if (!mOnScreenCreateMarkerTasks.isEmpty()) {
                     CreateMarkerTask task = mOnScreenCreateMarkerTasks.poll();
@@ -602,7 +613,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Creates marker(s) for a particular cluster, animating it if necessary.
+     * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
      */
     private class CreateMarkerTask {
         private final boolean visible;
@@ -613,9 +624,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         /**
          * @param c            the cluster to render.
          * @param markersAdded a collection of markers to append any created markers.
-         * @param animateFrom  the location to animate the marker from, or null if no animation is
+         * @param animateFrom  the location to animate the markerWithPosition from, or null if no animation is
          *                     required.
-         * @param visible      whether the marker should be initially visible.
+         * @param visible      whether the markerWithPosition should be initially visible.
          */
         public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom, boolean visible) {
             this.cluster = c;
@@ -629,6 +640,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             if (cluster.getSize() <= MIN_CLUSTER_SIZE) {
                 for (T item : cluster.getItems()) {
                     Marker marker = mMarkerCache.get(item);
+                    MarkerWithPosition markerWithPosition;
                     if (marker == null) {
                         MarkerOptions markerOptions = item.getMarkerOptions();
                         LatLng animateTo = markerOptions.getPosition();
@@ -636,12 +648,15 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                             markerOptions.position(animateFrom).visible(visible);
                         }
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
+                        markerWithPosition = new MarkerWithPosition(marker);
                         mMarkerCache.put(item, marker);
                         if (animateFrom != null) {
-                            markerModifier.animate(marker, animateFrom, animateTo);
+                            markerModifier.animate(markerWithPosition, animateFrom, animateTo);
                         }
+                    } else {
+                        markerWithPosition = new MarkerWithPosition(marker);
                     }
-                    newMarkers.add(new MarkerWithPosition(marker));
+                    newMarkers.add(markerWithPosition);
                 }
                 return;
             }
@@ -654,10 +669,11 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
             Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
             mMarkerToCluster.put(marker, cluster);
+            MarkerWithPosition markerWithPosition = new MarkerWithPosition(marker);
             if (animateFrom != null) {
-                markerModifier.animate(marker, animateFrom, cluster.getPosition());
+                markerModifier.animate(markerWithPosition, animateFrom, cluster.getPosition());
             }
-            newMarkers.add(new MarkerWithPosition(marker));
+            newMarkers.add(markerWithPosition);
         }
     }
 
@@ -667,7 +683,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
      */
     private static class MarkerWithPosition {
         private final Marker marker;
-        private final LatLng position;
+        private LatLng position;
 
         private MarkerWithPosition(Marker marker) {
             this.marker = marker;
@@ -689,15 +705,24 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Animates a marker from one position to another. TODO: improve performance for slow devices
+     * Animates a markerWithPosition from one position to another. TODO: improve performance for slow devices
      * (e.g. Nexus S).
      */
     private static class AnimationTask {
+        private final MarkerWithPosition markerWithPosition;
         private final Marker marker;
         private final LatLng from;
         private final LatLng to;
 
-        private AnimationTask(Marker marker, LatLng from, LatLng to) {
+        private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
+            this.markerWithPosition = markerWithPosition;
+            this.marker = markerWithPosition.marker;
+            this.from = from;
+            this.to = to;
+        }
+
+        public AnimationTask(Marker marker, LatLng from, LatLng to) {
+            this.markerWithPosition = null;
             this.marker = marker;
             this.from = from;
             this.to = to;
@@ -708,13 +733,20 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                 // TODO: perform this check outside of the task, preventing two calls to setPosition().
                 marker.setPosition(to);
+                if (markerWithPosition != null) {
+                    markerWithPosition.position = to;
+                }
                 return;
             }
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    marker.setPosition(SphericalUtil.interpolate(from, to, valueAnimator.getAnimatedFraction()));
+                    LatLng position = SphericalUtil.interpolate(from, to, valueAnimator.getAnimatedFraction());
+                    marker.setPosition(position);
+                    if (markerWithPosition != null) {
+                        markerWithPosition.position = position;
+                    }
                 }
             });
             valueAnimator.start();
