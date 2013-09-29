@@ -1,7 +1,11 @@
 package com.google.maps.android.clustering.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -9,6 +13,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.util.SparseArray;
+import android.view.animation.DecelerateInterpolator;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
@@ -40,6 +45,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
 public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
+    public static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private final GoogleMap mMap;
     private final TextIconGenerator mBubbleIconFactory;
     private final ClusterManager<T> mClusterManager;
@@ -268,9 +274,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
-            // TODO: only perform this calculation when zooming in.
-            List<LatLng> existingClustersOnScreen = new ArrayList<LatLng>();
-            if (mClusters != null) {
+            List<LatLng> existingClustersOnScreen = null;
+            if (mClusters != null && SHOULD_ANIMATE) {
+                existingClustersOnScreen = new ArrayList<LatLng>();
                 for (Cluster<T> c : mClusters) {
                     if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
                         existingClustersOnScreen.add(c.getPosition());
@@ -282,16 +288,16 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             final Set<MarkerWithPosition> newMarkers = new HashSet<MarkerWithPosition>();
             for (Cluster<T> c : clusters) {
                 boolean onScreen = visibleBounds.contains(c.getPosition());
-                if (zoomingIn && onScreen) {
+                if (zoomingIn && onScreen && SHOULD_ANIMATE) {
                     LatLng closest = findClosestCluster(existingClustersOnScreen, c.getPosition());
                     if (closest != null) {
                         // TODO: only animate a limited distance. Otherwise Markers fly out of screen.
-                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, closest, true));
+                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, closest));
                     } else {
-                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null, true));
+                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null));
                     }
                 } else {
-                    markerModifier.add(onScreen, new CreateMarkerTask(c, newMarkers, null, zoomingIn));
+                    markerModifier.add(onScreen, new CreateMarkerTask(c, newMarkers, null));
                 }
             }
 
@@ -304,24 +310,23 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
             // Find all of the new clusters that were added on-screen. These are candidates for
             // markers to animate from.
-            // TODO: only perform this calculation when zooming out.
-            final List<Marker> animatedOldClusters = new ArrayList<Marker>();
-            List<LatLng> newClustersOnScreen = new ArrayList<LatLng>();
-            for (Cluster<T> c : clusters) {
-                if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
-                    newClustersOnScreen.add(c.getPosition());
+            List<LatLng> newClustersOnScreen = null;
+            if (SHOULD_ANIMATE) {
+                newClustersOnScreen = new ArrayList<LatLng>();
+                for (Cluster<T> c : clusters) {
+                    if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
+                        newClustersOnScreen.add(c.getPosition());
+                    }
                 }
             }
 
             // Remove the old markers, animating them into clusters if zooming out.
             for (final MarkerWithPosition marker : markersToRemove) {
                 boolean onScreen = visibleBounds.contains(marker.position);
-                if (!zoomingIn && onScreen) {
+                if (!zoomingIn && onScreen && SHOULD_ANIMATE) {
                     final LatLng closest = findClosestCluster(newClustersOnScreen, marker.position);
                     if (closest != null) {
-                        // Animate
-                        markerModifier.animate(marker, marker.position, closest);
-                        animatedOldClusters.add(marker.marker);
+                        markerModifier.animateThenRemove(marker, marker.position, closest);
                     } else {
                         markerModifier.remove(true, marker.marker);
                     }
@@ -336,24 +341,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             mClusters = clusters;
             mZoom = zoom;
 
-            // Remove any of the markers that were animating (i.e. combining into a cluster).
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                onAnimationComplete(animatedOldClusters, newMarkers, markerModifier);
-                markerModifier.waitUntilFree();
-                mCallback.run();
-            } else if (!zoomingIn && !animatedOldClusters.isEmpty()) {
-                // After the animation is complete, remove the animated markers.
-                // TODO: wait properly, instead of sleeping.
-                try {
-                    Thread.sleep(1000, 0);
-                } catch (InterruptedException e) {
-                }
-                onAnimationComplete(animatedOldClusters, newMarkers, markerModifier);
-                markerModifier.waitUntilFree();
-                mCallback.run();
-            } else {
-                mCallback.run();
-            }
+            mCallback.run();
         }
     }
 
@@ -372,17 +360,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         mItemClickListener = listener;
     }
 
-    private void onAnimationComplete(List<Marker> animatedOldClusters, Set<MarkerWithPosition> newMarkers, MarkerModifier markerModifier) {
-        for (Marker m : animatedOldClusters) {
-            markerModifier.remove(true, m);
-        }
-        for (MarkerWithPosition m : newMarkers) {
-            markerModifier.setVisible(m.marker);
-        }
-    }
-
     private static LatLng findClosestCluster(List<LatLng> markers, LatLng point) {
-        if (markers.isEmpty()) return null;
+        if (markers == null || markers.isEmpty()) return null;
 
         double minDist = SphericalUtil.computeDistanceBetween(markers.get(0), point);
         LatLng closest = markers.get(0);
@@ -410,7 +389,6 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         private Queue<CreateMarkerTask> mOnScreenCreateMarkerTasks = new LinkedList<CreateMarkerTask>();
         private Queue<Marker> mRemoveMarkerTasks = new LinkedList<Marker>();
         private Queue<Marker> mOnScreenRemoveMarkerTasks = new LinkedList<Marker>();
-        private Queue<Marker> mSetVisibleTasks = new LinkedList<Marker>();
         private Queue<AnimationTask> mAnimationTasks = new LinkedList<AnimationTask>();
 
         /**
@@ -456,18 +434,6 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
 
         /**
-         * Makes a markerWithPosition visible some time in the future
-         *
-         * @param m the markerWithPosition to make visible.
-         */
-        public void setVisible(final Marker m) {
-            lock.lock();
-            sendEmptyMessage(BLANK);
-            mSetVisibleTasks.add(m);
-            lock.unlock();
-        }
-
-        /**
          * Animates a markerWithPosition some time in the future.
          *
          * @param marker the markerWithPosition to animate.
@@ -481,15 +447,18 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         }
 
         /**
-         * Animates a markerWithPosition some time in the future.
+         * Animates a markerWithPosition some time in the future, and removes it when the animation
+         * is complete.
          *
          * @param marker the markerWithPosition to animate.
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
-        public void animate(Marker marker, LatLng from, LatLng to) {
+        public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            mAnimationTasks.add(new AnimationTask(marker, from, to));
+            AnimationTask animationTask = new AnimationTask(marker, from, to);
+            animationTask.removeOnAnimationComplete(mMarkerCache);
+            mAnimationTasks.add(animationTask);
             lock.unlock();
         }
 
@@ -522,9 +491,6 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                     Marker m = mRemoveMarkerTasks.poll();
                     mMarkerCache.remove(m);
                     mClusterManager.getMarkerManager().remove(m);
-                } else if (!mSetVisibleTasks.isEmpty()) {
-                    Marker m = mSetVisibleTasks.poll();
-                    m.setVisible(true);
                 }
 
                 if (!isBusy()) {
@@ -551,7 +517,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         public boolean isBusy() {
             return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
                     mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
-                    mSetVisibleTasks.isEmpty() && mAnimationTasks.isEmpty()
+                    mAnimationTasks.isEmpty()
             );
         }
 
@@ -616,7 +582,6 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
      */
     private class CreateMarkerTask {
-        private final boolean visible;
         private final Cluster<T> cluster;
         private final Set<MarkerWithPosition> newMarkers;
         private final LatLng animateFrom;
@@ -626,13 +591,11 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
          * @param markersAdded a collection of markers to append any created markers.
          * @param animateFrom  the location to animate the markerWithPosition from, or null if no animation is
          *                     required.
-         * @param visible      whether the markerWithPosition should be initially visible.
          */
-        public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom, boolean visible) {
+        public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom) {
             this.cluster = c;
             this.newMarkers = markersAdded;
             this.animateFrom = animateFrom;
-            this.visible = visible;
         }
 
         private void perform(MarkerModifier markerModifier) {
@@ -645,7 +608,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
                         MarkerOptions markerOptions = item.getMarkerOptions();
                         LatLng animateTo = markerOptions.getPosition();
                         if (animateFrom != null) {
-                            markerOptions.position(animateFrom).visible(visible);
+                            markerOptions.position(animateFrom);
                         }
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
                         markerWithPosition = new MarkerWithPosition(marker);
@@ -664,7 +627,6 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             MarkerOptions markerOptions = new MarkerOptions().
                     icon(getIcon(cluster)).
                     title("Items: " + cluster.getSize()).
-                    visible(visible).
                     position(animateFrom == null ? cluster.getPosition() : animateFrom);
 
             Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
@@ -708,11 +670,15 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
      * Animates a markerWithPosition from one position to another. TODO: improve performance for slow devices
      * (e.g. Nexus S).
      */
-    private static class AnimationTask {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    private static class AnimationTask extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener {
+        private static final TimeInterpolator INTERP = new DecelerateInterpolator();
         private final MarkerWithPosition markerWithPosition;
         private final Marker marker;
+        private MarkerCache mMarkerCache;
         private final LatLng from;
         private final LatLng to;
+        private boolean mRemoveOnComplete;
 
         private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
             this.markerWithPosition = markerWithPosition;
@@ -721,35 +687,41 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             this.to = to;
         }
 
-        public AnimationTask(Marker marker, LatLng from, LatLng to) {
-            this.markerWithPosition = null;
-            this.marker = marker;
-            this.from = from;
-            this.to = to;
+        public void perform() {
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.setInterpolator(INTERP);
+            valueAnimator.addUpdateListener(this);
+            valueAnimator.addListener(this);
+            valueAnimator.start();
         }
 
-        @SuppressLint("NewApi")
-        public void perform() {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                // TODO: perform this check outside of the task, preventing two calls to setPosition().
-                marker.setPosition(to);
-                if (markerWithPosition != null) {
-                    markerWithPosition.position = to;
-                }
-                return;
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (mRemoveOnComplete) {
+                mMarkerCache.remove(marker);
+                marker.remove();
             }
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    LatLng position = SphericalUtil.interpolate(from, to, valueAnimator.getAnimatedFraction());
-                    marker.setPosition(position);
-                    if (markerWithPosition != null) {
-                        markerWithPosition.position = position;
-                    }
-                }
-            });
-            valueAnimator.start();
+            markerWithPosition.position = to;
+        }
+
+        public void removeOnAnimationComplete(MarkerCache markerCache) {
+            mMarkerCache = markerCache;
+            mRemoveOnComplete = true;
+        }
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            float fraction = valueAnimator.getAnimatedFraction();
+            double lat = (to.latitude - from.latitude) * fraction + from.latitude;
+            double lngDelta = to.longitude - from.longitude;
+
+            // Take the shortest path across the 180th meridian.
+            if (Math.abs(lngDelta) > 180) {
+                lngDelta -= Math.signum(lngDelta) * 360;
+            }
+            double lng = lngDelta * fraction + from.longitude;
+            LatLng position = new LatLng(lat, lng);
+            marker.setPosition(position);
         }
     }
 }
