@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
@@ -210,6 +211,13 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
+     * Determine whether the cluster should be rendered as individual markers or a cluster.
+     */
+    private static boolean shouldRenderAsCluster(Cluster cluster) {
+        return cluster.getSize() > MIN_CLUSTER_SIZE;
+    }
+
+    /**
      * Transforms the current view (represented by DefaultView.mClusters and DefaultView.mZoom) to a
      * new zoom level and set of clusters.
      * <p/>
@@ -278,7 +286,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             if (mClusters != null && SHOULD_ANIMATE) {
                 existingClustersOnScreen = new ArrayList<LatLng>();
                 for (Cluster<T> c : mClusters) {
-                    if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
+                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
                         existingClustersOnScreen.add(c.getPosition());
                     }
                 }
@@ -314,7 +322,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             if (SHOULD_ANIMATE) {
                 newClustersOnScreen = new ArrayList<LatLng>();
                 for (Cluster<T> c : clusters) {
-                    if (visibleBounds.contains(c.getPosition()) && c.getSize() > MIN_CLUSTER_SIZE) {
+                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
                         newClustersOnScreen.add(c.getPosition());
                     }
                 }
@@ -457,7 +465,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
-            animationTask.removeOnAnimationComplete(mMarkerCache);
+            animationTask.removeOnAnimationComplete(mMarkerCache, mClusterManager.getMarkerManager());
             mAnimationTasks.add(animationTask);
             lock.unlock();
         }
@@ -474,19 +482,19 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             try {
                 // Process the queue of markerWithPosition operations.
                 // Prioritise any "on screen" work.
-                if (!mOnScreenCreateMarkerTasks.isEmpty()) {
+                if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
+                    Marker m = mOnScreenRemoveMarkerTasks.poll();
+                    mMarkerCache.remove(m);
+                    mClusterManager.getMarkerManager().remove(m);
+                } else if (!mAnimationTasks.isEmpty()) {
+                    AnimationTask animationTask = mAnimationTasks.poll();
+                    animationTask.perform();
+                } else if (!mOnScreenCreateMarkerTasks.isEmpty()) {
                     CreateMarkerTask task = mOnScreenCreateMarkerTasks.poll();
                     task.perform(this);
                 } else if (!mCreateMarkerTasks.isEmpty()) {
                     CreateMarkerTask task = mCreateMarkerTasks.poll();
                     task.perform(this);
-                } else if (!mAnimationTasks.isEmpty()) {
-                    AnimationTask animationTask = mAnimationTasks.poll();
-                    animationTask.perform();
-                } else if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
-                    Marker m = mOnScreenRemoveMarkerTasks.poll();
-                    mMarkerCache.remove(m);
-                    mClusterManager.getMarkerManager().remove(m);
                 } else if (!mRemoveMarkerTasks.isEmpty()) {
                     Marker m = mRemoveMarkerTasks.poll();
                     mMarkerCache.remove(m);
@@ -600,7 +608,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
         private void perform(MarkerModifier markerModifier) {
             // Don't show small clusters. Render the markers inside, instead.
-            if (cluster.getSize() <= MIN_CLUSTER_SIZE) {
+            if (!shouldRenderAsCluster(cluster)) {
                 for (T item : cluster.getItems()) {
                     Marker marker = mMarkerCache.get(item);
                     MarkerWithPosition markerWithPosition;
@@ -679,6 +687,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         private final LatLng from;
         private final LatLng to;
         private boolean mRemoveOnComplete;
+        private MarkerManager mMarkerManager;
 
         private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
             this.markerWithPosition = markerWithPosition;
@@ -699,13 +708,14 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         public void onAnimationEnd(Animator animation) {
             if (mRemoveOnComplete) {
                 mMarkerCache.remove(marker);
-                marker.remove();
+                mMarkerManager.remove(marker);
             }
             markerWithPosition.position = to;
         }
 
-        public void removeOnAnimationComplete(MarkerCache markerCache) {
+        public void removeOnAnimationComplete(MarkerCache markerCache, MarkerManager markerManager) {
             mMarkerCache = markerCache;
+            mMarkerManager = markerManager;
             mRemoveOnComplete = true;
         }
 
