@@ -117,7 +117,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
      * displayed cluster markerWithPosition.
      */
     protected BitmapDescriptor getIcon(Cluster<T> cluster) {
-        int bucket = getBucket(cluster.getSize());
+        int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
             descriptor = BitmapDescriptorFactory.fromBitmap(mBubbleIconFactory.makeIcon(bucket + (bucket >= 10 ? "+" : "")));
@@ -127,9 +127,11 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Gets the "bucket" for a particular cluster size.
+     * Gets the "bucket" for a particular cluster.
+     * By default, uses the number of points within the cluster, bucketed to some set points.
      */
-    protected int getBucket(int size) {
+    protected int getBucket(Cluster<T> cluster) {
+        int size = cluster.getSize();
         if (size < 10) {
             return size;
         }
