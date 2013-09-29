@@ -125,11 +125,8 @@ public class TextIconGenerator {
         mRotationLayout.removeAllViews();
         mRotationLayout.addView(contentView);
         mContentView = contentView;
-        try {
-            mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
-        } catch (Exception e) {
-            mTextView = null;
-        }
+        final View view = mRotationLayout.findViewById(R.id.text);
+        mTextView = view instanceof TextView ? (TextView) view : null;
     }
 
     /**
@@ -228,8 +225,7 @@ public class TextIconGenerator {
      */
     private void ensureViewsSetUp() {
         if (mContainer == null) {
-            final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mContainer = (ViewGroup) inflater.inflate(R.layout.text_bubble, null);
+            mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
             mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
             mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
         }
@@ -259,6 +255,7 @@ public class TextIconGenerator {
 
     private static int getBackground(int style) {
         switch (style) {
+            default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
                 return R.drawable.bubble_white;
@@ -273,14 +270,14 @@ public class TextIconGenerator {
             case STYLE_ORANGE:
                 return R.drawable.bubble_orange;
         }
-        return getBackground(STYLE_DEFAULT);
     }
 
     private static int getTextStyle(int style) {
         switch (style) {
+            default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
-                return R.drawable.bubble_white;
+                return R.style.Bubble_TextAppearance_Dark;
             case STYLE_RED:
             case STYLE_BLUE:
             case STYLE_GREEN:
@@ -288,6 +285,5 @@ public class TextIconGenerator {
             case STYLE_ORANGE:
                 return R.style.Bubble_TextAppearance_Light;
         }
-        return getTextStyle(STYLE_DEFAULT);
     }
 }

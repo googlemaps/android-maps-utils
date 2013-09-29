@@ -21,16 +21,11 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 import static java.lang.Math.*;
+import static com.google.maps.android.MathUtil.*;
 
 public class SphericalUtil {
 
     private SphericalUtil() {}
-
-    /**
-     * The earth's radius, in meters.
-     * Mean radius as defined by IUGG.
-     */
-    static final double EARTH_RADIUS = 6371009;
 
     /**
      * Returns the heading from one LatLng to another LatLng. Headings are
@@ -156,18 +151,19 @@ public class SphericalUtil {
     }
 
     /**
-     * Returns the angle between two LatLngs, in radians.
+     * Returns distance on the unit sphere; the arguments are in radians.
+     */
+    private static double distanceRadians(double lat1, double lng1, double lat2, double lng2) {
+        return arcHav(havDistance(lat1, lat2, lng1 - lng2));
+    }
+    
+    /**
+     * Returns the angle between two LatLngs, in radians. This is the same as the distance
+     * on the unit sphere.
      */
     static double computeAngleBetween(LatLng from, LatLng to) {
-        // Haversine's formula
-        double fromLat = toRadians(from.latitude);
-        double fromLng = toRadians(from.longitude);
-        double toLat = toRadians(to.latitude);
-        double toLng = toRadians(to.longitude);
-        double dLat = fromLat - toLat;
-        double dLng = fromLng - toLng;
-        return 2 * asin(sqrt(pow(sin(dLat / 2), 2) +
-                cos(fromLat) * cos(toLat) * pow(sin(dLng / 2), 2)));
+        return distanceRadians(toRadians(from.latitude), toRadians(from.longitude),
+                               toRadians(to.latitude), toRadians(to.longitude));
     }
 
     /**
@@ -178,111 +174,83 @@ public class SphericalUtil {
     }
 
     /**
-     * Returns the length of the given path.
+     * Returns the length of the given path, in meters, on Earth.
      */
     public static double computeLength(List<LatLng> path) {
-        double length = 0;
-        for (int i = 0, I = path.size() - 1; i < I; ++i) {
-            length += computeDistanceBetween(path.get(i), path.get(i + 1));
+        if (path.size() < 2) {
+            return 0;
         }
-        return length;
+        double length = 0;
+        LatLng prev = path.get(0);
+        double prevLat = toRadians(prev.latitude);
+        double prevLng = toRadians(prev.longitude);
+        for (LatLng point : path) {
+            double lat = toRadians(point.latitude);
+            double lng = toRadians(point.longitude);
+            length += distanceRadians(prevLat, prevLng, lat, lng);
+            prevLat = lat;
+            prevLng = lng;
+        }
+        return length * EARTH_RADIUS;
     }
 
     /**
-     * Returns the area of a closed path. The computed area uses the same units as
-     * the radius.
+     * Returns the area of a closed path on Earth.
      * @param path A closed path.
-     * @return The loop's area in square meters.
+     * @return The path's area in square meters.
      */
     public static double computeArea(List<LatLng> path) {
         return abs(computeSignedArea(path));
     }
 
     /**
-     * Returns the signed area of a closed path. The signed area may be used to
-     * determine the orientation of the path. The computed area uses the same
-     * units as the radius.
+     * Returns the signed area of a closed path on Earth. The sign of the area may be used to
+     * determine the orientation of the path.
+     * "inside" is the surface that does not contain the South Pole.
      * @param loop A closed path.
      * @return The loop's area in square meters.
      */
-    public static double computeSignedArea(List<LatLng> loop) {
-        // For each edge, accumulate the signed area of the triangle formed with
-        // the first point. We can skip the first and last edge as they form
-        // triangles of zero area.
-        LatLng origin = loop.get(0);
+    public static double computeSignedArea(List<LatLng> path) {
+        return computeSignedArea(path, EARTH_RADIUS);
+    }
+
+    /**
+     * Returns the signed area of a closed path on a sphere of given radius.
+     * The computed area uses the same units as the radius squared.
+     * Used by SphericalUtilTest.
+     */
+    static double computeSignedArea(List<LatLng> path, double radius) {
+        int size = path.size();
+        if (size < 3) { return 0; }
         double total = 0;
-        for (int i = 1, I = loop.size() - 1; i < I; ++i) {
-            total += computeSignedTriangleArea(origin, loop.get(i), loop.get(i + 1));
+        LatLng prev = path.get(size - 1);
+        double prevTanLat = tan((PI / 2 - toRadians(prev.latitude)) / 2);
+        double prevLng = toRadians(prev.longitude);
+        // For each edge, accumulate the signed area of the triangle formed by the North Pole
+        // and that edge ("polar triangle").
+        for (LatLng point : path) {
+            double tanLat = tan((PI / 2 - toRadians(point.latitude)) / 2);
+            double lng = toRadians(point.longitude);
+            total += polarTriangleArea(tanLat, lng, prevTanLat, prevLng);
+            prevTanLat = tanLat;
+            prevLng = lng;
         }
-        return total * EARTH_RADIUS * EARTH_RADIUS;
+        return total * (radius * radius);
     }
 
     /**
-     * Compute the signed area of the triangle [a, b, c] on the unit sphere.
+     * Returns the signed area of a triangle which has North Pole as a vertex.
+     * Formula derived from "Area of a spherical triangle given two edges and the included angle"
+     * as per "Spherical Trigonometry" by Todhunter, page 71, section 103, point 2.
+     * See http://books.google.com/books?id=3uBHAAAAIAAJ&pg=PA71
+     * The arguments named "tan" are tan((pi/2 - latitude)/2).
      */
-    static double computeSignedTriangleArea(LatLng a, LatLng b, LatLng c) {
-        return computeTriangleArea(a, b, c) * isCCW(a, b, c);
+    private static double polarTriangleArea(double tan1, double lng1, double tan2, double lng2) {
+        double deltaLng = lng1 - lng2;
+        double t = tan1 * tan2;
+        return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng));
     }
-
-    /**
-     * Compute the area of the triangle [a, b, c] on the unit sphere.
-     * We use l'Huilier's theorem, which is the Spherical analogue of Heron's
-     * theorem for the area of a triangle in R2.
-     * @return The area.
-     */
-    static double computeTriangleArea(LatLng a, LatLng b, LatLng c) {
-        LatLng[] points = new LatLng[]{a, b, c, a};  // Simplify cyclic indexing
-
-        // Compute the length of each edge, and s which is half the perimeter.
-        double[] angles = new double[3];
-        double s = 0;
-        for (int i = 0; i < 3; ++i) {
-            angles[i] = computeAngleBetween(points[i], points[i + 1]);
-            s += angles[i];
-        }
-        s /= 2;
-
-        // Apply l'Huilier's theorem
-        double product = tan(s / 2);
-        for (int i = 0; i < 3; ++i) {
-            product *= tan((s - angles[i]) / 2);
-        }
-        return 4 * atan(sqrt(abs(product)));
-    }
-
-    /**
-     * Compute the ordering of 3 points in a triangle:
-     * Counter ClockWise (CCW) vs ClockWise (CW).
-     * Results are indeterminate for triangles of area 0.
-     * @return +1 if CCW, -1 if CW.
-     */
-    static int isCCW(LatLng a, LatLng b, LatLng c) {
-        // Convert the 3 points to 3 unit vectors on the sphere.
-        LatLng[] points = new LatLng[]{a, b, c};
-        double[][] pointsR3 = new double[3][];
-        for (int i = 0; i < 3; ++i) {
-            LatLng latLng = points[i];
-            double lat = toRadians(latLng.latitude);
-            double lng = toRadians(latLng.longitude);
-            double[] r3 = new double[3];
-            r3[0] = cos(lat) * cos(lng);
-            r3[1] = cos(lat) * sin(lng);
-            r3[2] = sin(lat);
-            pointsR3[i] = r3;
-        }
-
-        // Compute the determinant of the matrix formed by the 3 unit vectors.
-        double det = pointsR3[0][0] * pointsR3[1][1] * pointsR3[2][2] +
-                pointsR3[1][0] * pointsR3[2][1] * pointsR3[0][2] +
-                pointsR3[2][0] * pointsR3[0][1] * pointsR3[1][2] -
-                pointsR3[0][0] * pointsR3[2][1] * pointsR3[1][2] -
-                pointsR3[1][0] * pointsR3[0][1] * pointsR3[2][2] -
-                pointsR3[2][0] * pointsR3[1][1] * pointsR3[0][2];
-
-        // Threshold to sign
-        return det > 0 ? 1 : -1;
-    }
-
+    
     /**
      * Wraps the given value into the inclusive-exclusive interval between min and max.
      * @param n   The value to wrap.
@@ -301,5 +269,4 @@ public class SphericalUtil {
     static double mod(double x, double m) {
         return ((x % m) + m) % m;
     }
-
 }
