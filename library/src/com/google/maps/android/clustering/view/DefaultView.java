@@ -275,6 +275,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
             final float zoom = mMapZoom;
             final boolean zoomingIn = zoom > mZoom;
+            final float zoomDelta = zoom - mZoom;
 
             final Set<MarkerWithPosition> markersToRemove = mMarkers;
             final LatLngBounds visibleBounds = mProjection.getVisibleRegion().latLngBounds;
@@ -331,7 +332,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             // Remove the old markers, animating them into clusters if zooming out.
             for (final MarkerWithPosition marker : markersToRemove) {
                 boolean onScreen = visibleBounds.contains(marker.position);
-                if (!zoomingIn && onScreen && SHOULD_ANIMATE) {
+                // Don't animate when zooming out more than 3 zoom levels.
+                // TODO: drop animation based on speed of device & number of markers to animate.
+                if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE) {
                     final LatLng closest = findClosestCluster(newClustersOnScreen, marker.position);
                     if (closest != null) {
                         markerModifier.animateThenRemove(marker, marker.position, closest);
