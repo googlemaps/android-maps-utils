@@ -2,8 +2,7 @@ package com.google.maps.android.clustering.algo;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.util.Log;
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
 
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
@@ -61,11 +60,10 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
 
     @Override
     public Collection<T> getItems() {
-        return null;
+        return mAlgorithm.getItems();
     }
 
     public Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
-        Log.d(TAG, "getClusters: zoom " + discreteZoom);
         Set<? extends Cluster<T>> results;
         mCacheLock.readLock().lock();
         results = mCache.get(discreteZoom);
@@ -75,15 +73,10 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
             mCacheLock.writeLock().lock();
             results = mCache.get(discreteZoom);
             if (results == null) {
-                Log.d(TAG, "cache miss for zoom " + discreteZoom);
                 results = mAlgorithm.getClusters(discreteZoom);
                 mCache.put(discreteZoom, results);
-            } else {
-                Log.d(TAG, "cache hit for zoom " + discreteZoom);
             }
             mCacheLock.writeLock().unlock();
-        } else {
-            Log.d(TAG, "cache hit for zoom " + discreteZoom);
         }
         return results;
     }
@@ -98,13 +91,12 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
         @Override
         public void run() {
             try {
-                Thread.sleep(1000);
+                // Wait between 500 - 1000 ms.
+                Thread.sleep((long) (Math.random() * 500 + 500));
             } catch (InterruptedException e) {
                 // ignore. keep going.
             }
-            long start = System.currentTimeMillis();
             getClustersInternal(mZoom);
-            Log.d(TAG, "pre-filling cache for zoom " + mZoom + " took " + (System.currentTimeMillis() - start));
         }
     }
 }
