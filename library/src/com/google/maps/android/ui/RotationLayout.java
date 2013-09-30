@@ -19,14 +19,14 @@ package com.google.maps.android.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 /**
  * RotationLayout rotates the contents of the layout by multiples of 90 degrees.
- *
+ * <p/>
  * May not work with padding.
  */
-class RotationLayout extends RelativeLayout {
+class RotationLayout extends FrameLayout {
     private int mRotation;
 
     public RotationLayout(Context context) {
@@ -44,7 +44,7 @@ class RotationLayout extends RelativeLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (mRotation == 1 || mRotation == 3) {
-            super.onMeasure(heightMeasureSpec, widthMeasureSpec);
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -68,12 +68,14 @@ class RotationLayout extends RelativeLayout {
 
         if (mRotation == 1) {
             canvas.translate(getWidth(), 0);
-            canvas.rotate(90);
+            canvas.rotate(90, getWidth() / 2, 0);
+            canvas.translate(getHeight() / 2, getWidth() / 2);
         } else if (mRotation == 2) {
             canvas.rotate(180, getWidth() / 2, getHeight() / 2);
         } else {
             canvas.translate(0, getHeight());
-            canvas.rotate(270);
+            canvas.rotate(270, getWidth() / 2, 0);
+            canvas.translate(getHeight() / 2, -getWidth() / 2);
         }
 
         super.dispatchDraw(canvas);
