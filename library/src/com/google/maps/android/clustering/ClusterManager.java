@@ -147,10 +147,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         @Override
         protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
             mShouldCluster = false;
-            long start = System.currentTimeMillis();
-            Set<? extends Cluster<T>> clusters = mAlgorithm.getClusters(zoom[0]);
-            Log.d(TAG, "clustering took " + (System.currentTimeMillis() - start));
-            return clusters;
+            return mAlgorithm.getClusters(zoom[0]);
         }
 
         @Override
