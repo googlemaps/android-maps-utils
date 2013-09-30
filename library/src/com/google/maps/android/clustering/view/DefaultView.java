@@ -7,12 +7,16 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.util.SparseArray;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -24,10 +28,12 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.MarkerManager;
+import com.google.maps.android.R;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.ui.SquareTextView;
 import com.google.maps.android.ui.TextIconGenerator;
 
 import java.util.ArrayList;
@@ -48,8 +54,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     public static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private final GoogleMap mMap;
-    private final TextIconGenerator mBubbleIconFactory;
+    private final TextIconGenerator mTextIconGenerator;
     private final ClusterManager<T> mClusterManager;
+    private final float mDensity;
+    private final ShapeDrawable mClusterBackground;
 
     /**
      * Markers that are currently on the map.
@@ -93,8 +101,13 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
 
     public DefaultView(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
-        mBubbleIconFactory = new TextIconGenerator(context);
-        mBubbleIconFactory.setStyle(TextIconGenerator.STYLE_BLUE);
+        mDensity = context.getResources().getDisplayMetrics().density;
+        mTextIconGenerator = new TextIconGenerator(context);
+        mTextIconGenerator.setContentView(makeSquareTextView(context));
+        mClusterBackground = new ShapeDrawable(new OvalShape());
+        mTextIconGenerator.setTextAppearance(R.style.Bubble_TextAppearance_Light);
+        mTextIconGenerator.setBackground(mClusterBackground);
+
         mClusterManager = clusterManager;
 
         clusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -112,23 +125,44 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         });
     }
 
+    private SquareTextView makeSquareTextView(Context context) {
+        SquareTextView squareTextView = new SquareTextView(context);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        squareTextView.setLayoutParams(layoutParams);
+        squareTextView.setId(R.id.text);
+        int fiveDp = (int) (5 * mDensity);
+        squareTextView.setPadding(fiveDp, fiveDp, fiveDp, fiveDp);
+        return squareTextView;
+    }
+
     /**
      * Produce an icon for a particular cluster. Subclasses should override this to customize the
      * displayed cluster markerWithPosition.
      */
-    protected BitmapDescriptor getIcon(Cluster<T> cluster) {
+    protected MarkerOptions applyIcon(MarkerOptions markerOptions, Cluster<T> cluster) {
         int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
-            descriptor = BitmapDescriptorFactory.fromBitmap(mBubbleIconFactory.makeIcon(bucket + (bucket >= 10 ? "+" : "")));
+            mClusterBackground.getPaint().setColor(getColor(bucket));
+            descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(bucket + (bucket >= 10 ? "+" : "")));
             mIcons.put(bucket, descriptor);
         }
-        return descriptor;
+        return markerOptions.icon(descriptor);
+    }
+
+    private int getColor(int clusterSize) {
+        final float hueRange = 220;
+        final float sizeRange = 300;
+        final float size = Math.min(clusterSize, sizeRange);
+        final float hue = (sizeRange - size) * (sizeRange - size) / (sizeRange * sizeRange) * hueRange;
+        return Color.HSVToColor(new float[]{
+                hue, 1f, .6f
+        });
     }
 
     /**
-     * Gets the "bucket" for a particular cluster.
-     * By default, uses the number of points within the cluster, bucketed to some set points.
+     * Gets the "bucket" for a particular cluster. By default, uses the number of points within the
+     * cluster, bucketed to some set points.
      */
     protected int getBucket(Cluster<T> cluster) {
         int size = cluster.getSize();
@@ -389,8 +423,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Handles all markerWithPosition manipulations on the map. Work (such as adding, removing, or animating a
-     * markerWithPosition) is performed while trying not to block the rest of the app's UI.
+     * Handles all markerWithPosition manipulations on the map. Work (such as adding, removing, or
+     * animating a markerWithPosition) is performed while trying not to block the rest of the app's
+     * UI.
      */
     private class MarkerModifier extends Handler implements MessageQueue.IdleHandler {
         private static final int BLANK = 0;
@@ -613,8 +648,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         /**
          * @param c            the cluster to render.
          * @param markersAdded a collection of markers to append any created markers.
-         * @param animateFrom  the location to animate the markerWithPosition from, or null if no animation is
-         *                     required.
+         * @param animateFrom  the location to animate the markerWithPosition from, or null if no
+         *                     animation is required.
          */
         public CreateMarkerTask(Cluster<T> c, Set<MarkerWithPosition> markersAdded, LatLng animateFrom) {
             this.cluster = c;
@@ -649,9 +684,10 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
             }
 
             MarkerOptions markerOptions = new MarkerOptions().
-                    icon(getIcon(cluster)).
                     title("Items: " + cluster.getSize()).
                     position(animateFrom == null ? cluster.getPosition() : animateFrom);
+
+            markerOptions = applyIcon(markerOptions, cluster);
 
             Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
             mMarkerToCluster.put(marker, cluster);
@@ -691,8 +727,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Animates a markerWithPosition from one position to another. TODO: improve performance for slow devices
-     * (e.g. Nexus S).
+     * Animates a markerWithPosition from one position to another. TODO: improve performance for
+     * slow devices (e.g. Nexus S).
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     private static class AnimationTask extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener {
