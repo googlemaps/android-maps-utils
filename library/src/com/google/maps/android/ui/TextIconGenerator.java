@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -194,6 +195,16 @@ public class TextIconGenerator {
     }
 
     /**
+     * Sets the text color, size, style, hint color, and highlight color from the specified
+     * <code>TextAppearance</code> resource.
+     *
+     * @param resid the identifier of the resource.
+     */
+    public void setTextAppearance(int resid) {
+        setTextAppearance(mContext, resid);
+    }
+
+    /**
      * Sets the style of the icon. The style consists of a background and text appearance.
      */
     public void setStyle(int style) {
@@ -210,6 +221,12 @@ public class TextIconGenerator {
     // View#setBackgroundDrawable is compatible with pre-API level 16 (Jelly Bean).
     public void setBackground(Drawable background) {
         getContainer().setBackgroundDrawable(background);
+
+        // Force setting of padding.
+        // setBackgroundDrawable does not call setPadding if the background has 0 padding.
+        Rect rect = new Rect();
+        background.getPadding(rect);
+        getContainer().setPadding(rect.left, rect.top, rect.right, rect.bottom);
     }
 
     /**
