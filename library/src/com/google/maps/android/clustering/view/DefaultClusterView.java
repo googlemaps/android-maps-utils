@@ -53,7 +53,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
-public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
+public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T> {
     public static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private final GoogleMap mMap;
     private final TextIconGenerator mTextIconGenerator;
@@ -103,7 +103,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private ClusterManager.OnClusterClickListener<T> mClickListener;
     private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
 
-    public DefaultView(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
+    public DefaultClusterView(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
         mDensity = context.getResources().getDisplayMetrics().density;
         mTextIconGenerator = new TextIconGenerator(context);
@@ -264,7 +264,7 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     }
 
     /**
-     * Transforms the current view (represented by DefaultView.mClusters and DefaultView.mZoom) to a
+     * Transforms the current view (represented by DefaultClusterView.mClusters and DefaultClusterView.mZoom) to a
      * new zoom level and set of clusters.
      * <p/>
      * This must be run off the UI thread. Work is coordinated in the RenderTask, then queued up to

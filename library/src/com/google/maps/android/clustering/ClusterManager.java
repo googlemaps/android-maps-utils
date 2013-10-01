@@ -2,7 +2,6 @@ package com.google.maps.android.clustering;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -11,7 +10,7 @@ import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.PreCachingDecorator;
 import com.google.maps.android.clustering.algo.SimpleDistanceBased;
 import com.google.maps.android.clustering.view.ClusterView;
-import com.google.maps.android.clustering.view.DefaultView;
+import com.google.maps.android.clustering.view.DefaultClusterView;
 
 import java.util.Collection;
 import java.util.Set;
@@ -46,7 +45,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mMarkerManager = markerManager;
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
-        mView = new DefaultView<T>(context, map, this);
+        mView = new DefaultClusterView<T>(context, map, this);
         setAlgorithm(new SimpleDistanceBased<T>());
         mClusterTask = new ClusterTask();
     }
