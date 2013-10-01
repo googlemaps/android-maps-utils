@@ -8,6 +8,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -57,7 +59,9 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
     private final TextIconGenerator mTextIconGenerator;
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
-    private final ShapeDrawable mClusterBackground;
+
+    public static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
+    private ShapeDrawable mColoredCircleBackground;
 
     /**
      * Markers that are currently on the map.
@@ -104,9 +108,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         mDensity = context.getResources().getDisplayMetrics().density;
         mTextIconGenerator = new TextIconGenerator(context);
         mTextIconGenerator.setContentView(makeSquareTextView(context));
-        mClusterBackground = new ShapeDrawable(new OvalShape());
-        mTextIconGenerator.setTextAppearance(R.style.Bubble_TextAppearance_Light);
-        mTextIconGenerator.setBackground(mClusterBackground);
+        mTextIconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
+        mTextIconGenerator.setBackground(makeClusterBackground());
 
         mClusterManager = clusterManager;
 
@@ -125,13 +128,23 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         });
     }
 
+    private LayerDrawable makeClusterBackground() {
+        mColoredCircleBackground = new ShapeDrawable(new OvalShape());
+        ShapeDrawable outline = new ShapeDrawable(new OvalShape());
+        outline.getPaint().setColor(0x80ffffff); // Transparent white.
+        LayerDrawable background = new LayerDrawable(new Drawable[]{outline, mColoredCircleBackground});
+        int strokeWidth = (int) (mDensity * 3);
+        background.setLayerInset(1, strokeWidth, strokeWidth, strokeWidth, strokeWidth);
+        return background;
+    }
+
     private SquareTextView makeSquareTextView(Context context) {
         SquareTextView squareTextView = new SquareTextView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         squareTextView.setLayoutParams(layoutParams);
         squareTextView.setId(R.id.text);
-        int fiveDp = (int) (5 * mDensity);
-        squareTextView.setPadding(fiveDp, fiveDp, fiveDp, fiveDp);
+        int twelveDpi = (int) (12 * mDensity);
+        squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
     }
 
@@ -143,8 +156,8 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
-            mClusterBackground.getPaint().setColor(getColor(bucket));
-            descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(bucket + (bucket >= 10 ? "+" : "")));
+            mColoredCircleBackground.getPaint().setColor(getColor(bucket));
+            descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
         return markerOptions.icon(descriptor);
@@ -160,31 +173,28 @@ public class DefaultView<T extends ClusterItem> implements ClusterView<T> {
         });
     }
 
+    protected String getClusterText(int bucket) {
+        if (bucket <= 10) {
+            return String.valueOf(bucket);
+        }
+        return String.valueOf(bucket) + "+";
+    }
+
     /**
      * Gets the "bucket" for a particular cluster. By default, uses the number of points within the
      * cluster, bucketed to some set points.
      */
     protected int getBucket(Cluster<T> cluster) {
         int size = cluster.getSize();
-        if (size < 10) {
+        if (size <= BUCKETS[0]) {
             return size;
         }
-        if (size < 20) {
-            return 10;
+        for (int i = 0; i < BUCKETS.length - 1; i++) {
+            if (size < BUCKETS[i + 1]) {
+                return BUCKETS[i];
+            }
         }
-        if (size < 40) {
-            return 20;
-        }
-        if (size < 100) {
-            return 40;
-        }
-        if (size < 200) {
-            return 100;
-        }
-        if (size < 500) {
-            return 200;
-        }
-        return 500;
+        return BUCKETS[BUCKETS.length - 1];
     }
 
     /**
