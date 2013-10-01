@@ -515,7 +515,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
-            animationTask.removeOnAnimationComplete(mMarkerCache, mClusterManager.getMarkerManager());
+            animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
             mAnimationTasks.add(animationTask);
             lock.unlock();
         }
@@ -563,6 +563,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
             if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
                 Marker m = mOnScreenRemoveMarkerTasks.poll();
                 mMarkerCache.remove(m);
+                mMarkerToCluster.remove(m);
                 mClusterManager.getMarkerManager().remove(m);
             } else if (!mAnimationTasks.isEmpty()) {
                 AnimationTask animationTask = mAnimationTasks.poll();
@@ -576,6 +577,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
             } else if (!mRemoveMarkerTasks.isEmpty()) {
                 Marker m = mRemoveMarkerTasks.poll();
                 mMarkerCache.remove(m);
+                mMarkerToCluster.remove(m);
                 mClusterManager.getMarkerManager().remove(m);
             }
         }
@@ -624,26 +626,26 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
      * A cache of markers representing individual ClusterItems.
      */
     private static class MarkerCache<T> {
-        private Map<T, Marker> mMarkerCache = new HashMap<T, Marker>();
-        private Map<Marker, T> mMarkerCacheReverse = new HashMap<Marker, T>();
+        private Map<T, Marker> mCache = new HashMap<T, Marker>();
+        private Map<Marker, T> mCacheReverse = new HashMap<Marker, T>();
 
         public Marker get(T item) {
-            return mMarkerCache.get(item);
+            return mCache.get(item);
         }
 
         public T get(Marker m) {
-            return mMarkerCacheReverse.get(m);
+            return mCacheReverse.get(m);
         }
 
         public void put(T item, Marker m) {
-            mMarkerCache.put(item, m);
-            mMarkerCacheReverse.put(m, item);
+            mCache.put(item, m);
+            mCacheReverse.put(m, item);
         }
 
         public void remove(Marker m) {
-            T item = mMarkerCacheReverse.get(m);
-            mMarkerCacheReverse.remove(m);
-            mMarkerCache.remove(item);
+            T item = mCacheReverse.get(m);
+            mCacheReverse.remove(m);
+            mCache.remove(item);
         }
     }
 
@@ -736,16 +738,16 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
         }
     }
 
+    private static final TimeInterpolator ANIMATION_INTERP = new DecelerateInterpolator();
+
     /**
      * Animates a markerWithPosition from one position to another. TODO: improve performance for
      * slow devices (e.g. Nexus S).
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    private static class AnimationTask extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener {
-        private static final TimeInterpolator INTERP = new DecelerateInterpolator();
+    private class AnimationTask extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener {
         private final MarkerWithPosition markerWithPosition;
         private final Marker marker;
-        private MarkerCache mMarkerCache;
         private final LatLng from;
         private final LatLng to;
         private boolean mRemoveOnComplete;
@@ -760,7 +762,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
 
         public void perform() {
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-            valueAnimator.setInterpolator(INTERP);
+            valueAnimator.setInterpolator(ANIMATION_INTERP);
             valueAnimator.addUpdateListener(this);
             valueAnimator.addListener(this);
             valueAnimator.start();
@@ -770,13 +772,13 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
         public void onAnimationEnd(Animator animation) {
             if (mRemoveOnComplete) {
                 mMarkerCache.remove(marker);
+                mMarkerToCluster.remove(marker);
                 mMarkerManager.remove(marker);
             }
             markerWithPosition.position = to;
         }
 
-        public void removeOnAnimationComplete(MarkerCache markerCache, MarkerManager markerManager) {
-            mMarkerCache = markerCache;
+        public void removeOnAnimationComplete(MarkerManager markerManager) {
             mMarkerManager = markerManager;
             mRemoveOnComplete = true;
         }
