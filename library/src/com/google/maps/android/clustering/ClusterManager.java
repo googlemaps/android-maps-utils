@@ -70,6 +70,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mView = view;
         mView.setOnClusterClickListener(mOnClusterClickListener);
         mView.setOnClusterItemClickListener(mOnClusterItemClickListener);
+        cluster();
     }
 
     public void setAlgorithm(Algorithm<T> algorithm) {
