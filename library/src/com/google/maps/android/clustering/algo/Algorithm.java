@@ -13,7 +13,7 @@ import java.util.Set;
 public interface Algorithm<T extends ClusterItem> {
     void addItem(T item);
 
-    void addAllItems(Collection<T> items);
+    void addItems(Collection<T> items);
 
     void clearItems();
 

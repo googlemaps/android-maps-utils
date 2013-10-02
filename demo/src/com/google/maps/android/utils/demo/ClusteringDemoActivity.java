@@ -37,7 +37,7 @@ public class ClusteringDemoActivity extends BaseDemoActivity implements ClusterM
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
-        mClusterManager.addAllItems(items);
+        mClusterManager.addItems(items);
     }
 
     @Override

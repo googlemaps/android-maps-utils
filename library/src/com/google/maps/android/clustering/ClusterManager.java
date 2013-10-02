@@ -81,7 +81,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
         mAlgorithm = new PreCachingDecorator<T>(algorithm);
         if (items != null) {
-            mAlgorithm.addAllItems(items);
+            mAlgorithm.addItems(items);
         }
         mShouldCluster = true;
     }
@@ -91,8 +91,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mShouldCluster = true;
     }
 
-    public void addAllItems(Collection<T> items) {
-        mAlgorithm.addAllItems(items);
+    public void addItems(Collection<T> items) {
+        mAlgorithm.addItems(items);
         mShouldCluster = true;
     }
 

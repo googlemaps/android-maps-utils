@@ -34,7 +34,7 @@ import java.util.Set;
 public class NonHierarchicalDistanceBased<T extends ClusterItem> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
-    private final LinkedHashSet<QuadItem<T>> mItems = new LinkedHashSet<QuadItem<T>>();
+    private final Collection<QuadItem<T>> mItems = new ArrayList<QuadItem<T>>();
     private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
@@ -46,7 +46,7 @@ public class NonHierarchicalDistanceBased<T extends ClusterItem> implements Algo
     }
 
     @Override
-    public void addAllItems(Collection<T> items) {
+    public void addItems(Collection<T> items) {
         for (T item : items) {
             addItem(item);
         }

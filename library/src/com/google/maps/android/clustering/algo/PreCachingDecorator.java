@@ -29,8 +29,8 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
     }
 
     @Override
-    public void addAllItems(Collection<T> items) {
-        mAlgorithm.addAllItems(items);
+    public void addItems(Collection<T> items) {
+        mAlgorithm.addItems(items);
         clearCache();
     }
 

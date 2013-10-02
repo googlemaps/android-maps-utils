@@ -1,6 +1,5 @@
 package com.google.maps.android.clustering.algo;
 
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.maps.android.clustering.Cluster;
@@ -14,7 +13,8 @@ import java.util.Set;
 
 public class GridBased<T extends ClusterItem> implements Algorithm<T> {
     private static final String TAG = GridBased.class.getName();
-    Set<T> mItems = new HashSet<T>();
+    private static final int GRID_SIZE = 100;
+    private final Set<T> mItems = new HashSet<T>();
 
     @Override
     public void addItem(T item) {
@@ -22,7 +22,7 @@ public class GridBased<T extends ClusterItem> implements Algorithm<T> {
     }
 
     @Override
-    public void addAllItems(Collection<T> items) {
+    public void addItems(Collection<T> items) {
         mItems.addAll(items);
     }
 
@@ -38,8 +38,7 @@ public class GridBased<T extends ClusterItem> implements Algorithm<T> {
 
     @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
-        int numCells = (int) Math.ceil(256 * Math.pow(2, zoom) / 100);
-        Log.d(TAG, "zoom: " + zoom + " | numCells: " + numCells);
+        int numCells = (int) Math.ceil(256 * Math.pow(2, zoom) / GRID_SIZE);
         SphericalMercatorProjection proj = new SphericalMercatorProjection(numCells);
 
         HashSet<Cluster<T>> clusters = new HashSet<Cluster<T>>();
@@ -51,7 +50,6 @@ public class GridBased<T extends ClusterItem> implements Algorithm<T> {
             int coord = getCoord(numCells, p.x, p.y);
 
             StaticCluster<T> cluster = sparseArray.get(coord);
-            Log.d(TAG, String.format("coord: %d, cluster: %s", coord, cluster));
             if (cluster == null) {
                 cluster = new StaticCluster<T>(proj.toLatLng(new Point(Math.floor(p.x) + .5, Math.floor(p.y) + .5)));
                 sparseArray.put(coord, cluster);
