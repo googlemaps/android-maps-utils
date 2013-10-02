@@ -160,6 +160,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
             descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
+        // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         return markerOptions.icon(descriptor);
     }
 
@@ -174,7 +175,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
     }
 
     protected String getClusterText(int bucket) {
-        if (bucket <= 10) {
+        if (bucket < BUCKETS[0]) {
             return String.valueOf(bucket);
         }
         return String.valueOf(bucket) + "+";
