@@ -28,7 +28,6 @@ import java.util.List;
  * See http://en.wikipedia.org/wiki/Quadtree for details on the data structure.
  * This class is not thread safe.
  */
-@Deprecated // Experimental.
 public class PointQuadTree<T extends PointQuadTree.Item> {
     public interface Item {
         Point getPoint();
@@ -62,7 +61,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Child quads.
      */
-    private PointQuadTree[] mChildren = null;
+    private PointQuadTree<T>[] mChildren = null;
 
     /**
      * Creates a new quad tree with specified bounds.
@@ -125,10 +124,10 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
      */
     private void split() {
         mChildren = new PointQuadTree[]{
-                new PointQuadTree(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1),
-                new PointQuadTree(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1),
-                new PointQuadTree(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1),
-                new PointQuadTree(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1)
+                new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1),
+                new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1),
+                new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1),
+                new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1)
         };
 
         List<T> items = mItems;

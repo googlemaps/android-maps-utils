@@ -19,19 +19,20 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A simple clustering algorithm.
+ * A simple clustering algorithm with O(nlog n) performance. Resulting clusters are not
+ * hierarchical.
  * <p>
  * High level algorithm:
  * 1. Iterate over items in the order they were added (candidate clusters).<br>
  * 2. Create a cluster with the center of the item. <br>
  * 3. Add all items that are within a certain distance to the cluster. <br>
- * 4. Remove those items from the list of candidate clusters.
+ * 4. Move any items out of an existing cluster if they are closer to another cluster. <br>
+ * 5. Remove those items from the list of candidate clusters.
  * <p/>
- * This means that items that were added first will tend to have more items in their cluster.
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> {
-    public static final int MAX_DISTANCE_AT_ZOOM = 100;
+public class NonHierarchicalDistanceBased<T extends ClusterItem> implements Algorithm<T> {
+    public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
     private final LinkedHashSet<QuadItem<T>> mItems = new LinkedHashSet<QuadItem<T>>();
     private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
@@ -60,30 +61,33 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
     @Override
     public void removeItem(T item) {
         // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item.
-        throw new UnsupportedOperationException("SimpleDistanceBased.remove not implemented");
+        throw new UnsupportedOperationException("NonHierarchicalDistanceBased.remove not implemented");
     }
 
     @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
-        int discreteZoom = (int) zoom;
+        final int discreteZoom = (int) zoom;
 
-        double zoomSpecificSpan = MAX_DISTANCE_AT_ZOOM / Math.pow(2, discreteZoom) / 256;
+        final double zoomSpecificSpan = MAX_DISTANCE_AT_ZOOM / Math.pow(2, discreteZoom) / 256;
 
-        Set<QuadItem<T>> visitedCandidates = new HashSet<QuadItem<T>>();
-        HashSet<Cluster<T>> results = new HashSet<Cluster<T>>();
-        Map<QuadItem<T>, Double> distanceToCluster = new HashMap<QuadItem<T>, Double>();
-        Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
+        final Set<QuadItem<T>> visitedCandidates = new HashSet<QuadItem<T>>();
+        final Set<Cluster<T>> results = new HashSet<Cluster<T>>();
+        final Map<QuadItem<T>, Double> distanceToCluster = new HashMap<QuadItem<T>, Double>();
+        final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
-        // TODO: Investigate use of ConcurrentSkipListSet.
         for (QuadItem<T> candidate : mItems) {
-            if (visitedCandidates.contains(candidate)) continue;
+            if (visitedCandidates.contains(candidate)) {
+                // Candidate is already part of another cluster.
+                continue;
+            }
 
             Bounds searchBounds = createBoundsFromSpan(candidate.getPoint(), zoomSpecificSpan);
             Collection<QuadItem<T>> clusterItems = mQuadTree.search(searchBounds);
             if (clusterItems.size() == 1) {
-                // Only the current market is in range.
+                // Only the current marker is in range. Just add the single item to the results.
                 results.add(candidate);
                 visitedCandidates.add(candidate);
+                distanceToCluster.put(candidate, 0d);
                 continue;
             }
             StaticCluster<T> cluster = new StaticCluster<T>(candidate.mClusterItem.getPosition());
@@ -97,6 +101,7 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
                     if (existingDistance < distance) {
                         continue;
                     }
+                    // Move item to the closer cluster.
                     itemToCluster.get(clusterItem).remove(clusterItem.mClusterItem);
                 }
                 distanceToCluster.put(clusterItem, distance);
@@ -122,6 +127,8 @@ public class SimpleDistanceBased<T extends ClusterItem> implements Algorithm<T> 
     }
 
     private Bounds createBoundsFromSpan(Point p, double span) {
+        // TODO: Use a span that takes into account the visual size of the marker, not just its
+        // LatLng.
         double halfSpan = span / 2;
         return new Bounds(
                 p.x - halfSpan, p.x + halfSpan,

@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.PreCachingDecorator;
-import com.google.maps.android.clustering.algo.SimpleDistanceBased;
+import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBased;
 import com.google.maps.android.clustering.view.ClusterView;
 import com.google.maps.android.clustering.view.DefaultClusterView;
 
@@ -20,7 +20,6 @@ import java.util.Set;
  */
 public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener {
     private static final String TAG = ClusterManager.class.getName();
-    private static final boolean ASYNC = true;
 
     private final MarkerManager mMarkerManager;
     private final MarkerManager.Collection mMarkers;
@@ -46,7 +45,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
         mView = new DefaultClusterView<T>(context, map, this);
-        setAlgorithm(new SimpleDistanceBased<T>());
+        setAlgorithm(new NonHierarchicalDistanceBased<T>());
         mClusterTask = new ClusterTask();
     }
 
@@ -113,12 +112,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     public void cluster() {
         mClusterTask.cancel(true);
         mClusterTask = new ClusterTask();
-        if (ASYNC) {
-            mClusterTask.execute(mMap.getCameraPosition().zoom);
-        } else {
-            Set<? extends Cluster<T>> clusters = mClusterTask.doInBackground(mMap.getCameraPosition().zoom);
-            mClusterTask.onPostExecute(clusters);
-        }
+        mClusterTask.execute(mMap.getCameraPosition().zoom);
     }
 
     /**
@@ -141,7 +135,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     /**
      * Runs the clustering algorithm in a background thread, then re-paints when results come
-     * back..
+     * back.
      */
     private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
         @Override
@@ -157,12 +151,12 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
-        this.mOnClusterClickListener = listener;
+        mOnClusterClickListener = listener;
         mView.setOnClusterClickListener(listener);
     }
 
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
-        this.mOnClusterItemClickListener = listener;
+        mOnClusterItemClickListener = listener;
         mView.setOnClusterItemClickListener(listener);
     }
 
