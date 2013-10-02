@@ -536,22 +536,20 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
                 // Consider only performing 10 remove tasks, not adds and animations.
                 // Removes are relatively slow and are much better when batched.
                 for (int i = 0; i < 10; i++) {
-                    performTask();
+                    performNextTask();
                 }
 
                 if (!isBusy()) {
                     mListenerAdded = false;
                     Looper.myQueue().removeIdleHandler(this);
+                    // Signal any other threads that are waiting.
+                    busyCondition.signalAll();
                 } else {
                     // Sometimes the idle queue may not be called - schedule up some work regardless
                     // of whether the UI thread is busy or not.
                     // TODO: try to remove this.
                     sendEmptyMessageDelayed(BLANK, 10);
                 }
-
-                // Signal any other threads that are waiting.
-                // TODO: only signal when the queue has finished processing.
-                busyCondition.signalAll();
             } finally {
                 lock.unlock();
             }
@@ -560,27 +558,24 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
         /**
          * Perform the next task. Prioritise any on-screen work.
          */
-        private void performTask() {
+        private void performNextTask() {
             if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
-                Marker m = mOnScreenRemoveMarkerTasks.poll();
-                mMarkerCache.remove(m);
-                mMarkerToCluster.remove(m);
-                mClusterManager.getMarkerManager().remove(m);
+                removeMarker(mOnScreenRemoveMarkerTasks.poll());
             } else if (!mAnimationTasks.isEmpty()) {
-                AnimationTask animationTask = mAnimationTasks.poll();
-                animationTask.perform();
+                mAnimationTasks.poll().perform();
             } else if (!mOnScreenCreateMarkerTasks.isEmpty()) {
-                CreateMarkerTask task = mOnScreenCreateMarkerTasks.poll();
-                task.perform(this);
+                mOnScreenCreateMarkerTasks.poll().perform(this);
             } else if (!mCreateMarkerTasks.isEmpty()) {
-                CreateMarkerTask task = mCreateMarkerTasks.poll();
-                task.perform(this);
+                mCreateMarkerTasks.poll().perform(this);
             } else if (!mRemoveMarkerTasks.isEmpty()) {
-                Marker m = mRemoveMarkerTasks.poll();
-                mMarkerCache.remove(m);
-                mMarkerToCluster.remove(m);
-                mClusterManager.getMarkerManager().remove(m);
+                removeMarker(mRemoveMarkerTasks.poll());
             }
+        }
+
+        private void removeMarker(Marker m) {
+            mMarkerCache.remove(m);
+            mMarkerToCluster.remove(m);
+            mClusterManager.getMarkerManager().remove(m);
         }
 
         /**
