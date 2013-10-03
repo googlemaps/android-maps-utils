@@ -35,6 +35,9 @@ import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
+import com.google.maps.android.geometry.Point;
+import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.ui.SquareTextView;
 import com.google.maps.android.ui.IconGenerator;
 
@@ -279,11 +282,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         final Set<? extends Cluster<T>> clusters;
         private Runnable mCallback;
         private Projection mProjection;
+        private SphericalMercatorProjection mSphericalMercatorProjection;
         private float mMapZoom;
 
         private RenderTask(float zoom, Set<? extends Cluster<T>> clusters) {
             this.zoom = zoom;
             this.clusters = clusters;
+            this.mSphericalMercatorProjection = new SphericalMercatorProjection(zoom);
         }
 
         /**
@@ -322,12 +327,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
-            List<LatLng> existingClustersOnScreen = null;
+            List<Point> existingClustersOnScreen = null;
             if (mClusters != null && SHOULD_ANIMATE) {
-                existingClustersOnScreen = new ArrayList<LatLng>();
+                existingClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : mClusters) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
-                        existingClustersOnScreen.add(c.getPosition());
+                        Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
+                        existingClustersOnScreen.add(point);
                     }
                 }
             }
@@ -337,10 +343,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             for (Cluster<T> c : clusters) {
                 boolean onScreen = visibleBounds.contains(c.getPosition());
                 if (zoomingIn && onScreen && SHOULD_ANIMATE) {
-                    LatLng closest = findClosestCluster(existingClustersOnScreen, c.getPosition());
+                    Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
+                    Point closest = findClosestCluster(existingClustersOnScreen, point);
                     if (closest != null) {
-                        // TODO: only animate a limited distance. Otherwise Markers fly out of screen.
-                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, closest));
+                        LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
+                        markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateTo));
                     } else {
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null));
                     }
@@ -358,12 +365,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
             // Find all of the new clusters that were added on-screen. These are candidates for
             // markers to animate from.
-            List<LatLng> newClustersOnScreen = null;
+            List<Point> newClustersOnScreen = null;
             if (SHOULD_ANIMATE) {
-                newClustersOnScreen = new ArrayList<LatLng>();
+                newClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : clusters) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
-                        newClustersOnScreen.add(c.getPosition());
+                        Point p = mSphericalMercatorProjection.toPoint(c.getPosition());
+                        newClustersOnScreen.add(p);
                     }
                 }
             }
@@ -374,9 +382,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
                 if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE) {
-                    final LatLng closest = findClosestCluster(newClustersOnScreen, marker.position);
+                    final Point point = mSphericalMercatorProjection.toPoint(marker.position);
+                    final Point closest = findClosestCluster(newClustersOnScreen, point);
                     if (closest != null) {
-                        markerModifier.animateThenRemove(marker, marker.position, closest);
+                        LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
+                        markerModifier.animateThenRemove(marker, marker.position, animateTo);
                     } else {
                         markerModifier.remove(true, marker.marker);
                     }
@@ -409,16 +419,36 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
         mItemClickListener = listener;
     }
+//
+//    private static LatLng findClosestCluster(List<LatLng> markers, LatLng point) {
+//        if (markers == null || markers.isEmpty()) return null;
+//
+//        double minDist = SphericalUtil.computeDistanceBetween(markers.get(0), point);
+//        LatLng closest = markers.get(0);
+//        for (LatLng latLng : markers) {
+//            double dist = SphericalUtil.computeDistanceBetween(latLng, point);
+//            if (dist < minDist) {
+//                closest = latLng;
+//                minDist = dist;
+//            }
+//        }
+//        return closest;
+//    }
 
-    private static LatLng findClosestCluster(List<LatLng> markers, LatLng point) {
+    private static double distanceSquared(Point a, Point b) {
+        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+    }
+
+    private static Point findClosestCluster(List<Point> markers, Point point) {
         if (markers == null || markers.isEmpty()) return null;
 
-        double minDist = SphericalUtil.computeDistanceBetween(markers.get(0), point);
-        LatLng closest = markers.get(0);
-        for (LatLng latLng : markers) {
-            double dist = SphericalUtil.computeDistanceBetween(latLng, point);
+        // TODO: make this configurable.
+        double minDist = NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
+        Point closest = null;
+        for (Point candidate : markers) {
+            double dist = distanceSquared(candidate, point);
             if (dist < minDist) {
-                closest = latLng;
+                closest = candidate;
                 minDist = dist;
             }
         }
