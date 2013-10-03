@@ -18,7 +18,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mListView = (ViewGroup) findViewById(R.id.list);
 
         addDemo("PolyUtil.decode", PolyDecodeDemoActivity.class);
-        addDemo("TextIconGenerator", TextIconDemoActivity.class);
+        addDemo("IconGenerator", IconGeneratorDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Clustering", ClusteringDemoActivity.class);

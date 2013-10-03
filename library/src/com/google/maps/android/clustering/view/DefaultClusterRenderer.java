@@ -36,7 +36,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.SquareTextView;
-import com.google.maps.android.ui.TextIconGenerator;
+import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRenderer<T> {
     private static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private final GoogleMap mMap;
-    private final TextIconGenerator mTextIconGenerator;
+    private final IconGenerator mIconGenerator;
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
 
@@ -106,10 +106,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
         mDensity = context.getResources().getDisplayMetrics().density;
-        mTextIconGenerator = new TextIconGenerator(context);
-        mTextIconGenerator.setContentView(makeSquareTextView(context));
-        mTextIconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
-        mTextIconGenerator.setBackground(makeClusterBackground());
+        mIconGenerator = new IconGenerator(context);
+        mIconGenerator.setContentView(makeSquareTextView(context));
+        mIconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
+        mIconGenerator.setBackground(makeClusterBackground());
         mClusterManager = clusterManager;
     }
 
@@ -652,7 +652,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
             mColoredCircleBackground.getPaint().setColor(getColor(bucket));
-            descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(getClusterText(bucket)));
+            descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)

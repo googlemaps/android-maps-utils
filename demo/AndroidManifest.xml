@@ -42,7 +42,7 @@
         </activity>
 
         <activity android:name=".PolyDecodeDemoActivity"/>
-        <activity android:name=".TextIconDemoActivity"/>
+        <activity android:name=".IconGeneratorDemoActivity"/>
         <activity android:name=".DistanceDemoActivity"/>
         <activity android:name=".ClusteringDemoActivity"/>
         <activity android:name=".BigClusteringDemoActivity"/>

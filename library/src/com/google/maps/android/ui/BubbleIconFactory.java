@@ -1,7 +1,7 @@
 package com.google.maps.android.ui;
 
 /**
- * Use {@link TextIconGenerator} instead.
+ * Use {@link IconGenerator} instead.
  */
 @Deprecated
 public class BubbleIconFactory {

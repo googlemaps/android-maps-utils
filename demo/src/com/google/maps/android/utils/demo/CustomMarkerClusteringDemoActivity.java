@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import com.google.maps.android.ui.TextIconGenerator;
+import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.utils.demo.model.Person;
 
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
     private Random mRandom = new Random(1984);
 
     /**
-     * Draws profile photos inside markers (using TextIconGenerator).
+     * Draws profile photos inside markers (using IconGenerator).
      * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
      */
     private class PersonRenderer extends DefaultClusterRenderer<Person> {
-        private final TextIconGenerator mIconGenerator = new TextIconGenerator(getApplicationContext());
-        private final TextIconGenerator mClusterIconGenerator = new TextIconGenerator(getApplicationContext());
+        private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
+        private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
         private final ImageView mImageView;
         private final ImageView mClusterImageView;
         private final int mDimension;
