@@ -31,11 +31,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.R;
-import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.ui.SquareTextView;
@@ -52,6 +50,8 @@ import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
 
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
@@ -303,7 +303,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         public void setMapZoom(float zoom) {
             this.mMapZoom = zoom;
-            this.mSphericalMercatorProjection = new SphericalMercatorProjection(Math.pow(2, zoom));
+            this.mSphericalMercatorProjection = new SphericalMercatorProjection(256 * Math.pow(2, zoom));
         }
 
         @SuppressLint("NewApi")
@@ -417,21 +417,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
         mItemClickListener = listener;
     }
-//
-//    private static LatLng findClosestCluster(List<LatLng> markers, LatLng point) {
-//        if (markers == null || markers.isEmpty()) return null;
-//
-//        double minDist = SphericalUtil.computeDistanceBetween(markers.get(0), point);
-//        LatLng closest = markers.get(0);
-//        for (LatLng latLng : markers) {
-//            double dist = SphericalUtil.computeDistanceBetween(latLng, point);
-//            if (dist < minDist) {
-//                closest = latLng;
-//                minDist = dist;
-//            }
-//        }
-//        return closest;
-//    }
 
     private static double distanceSquared(Point a, Point b) {
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
@@ -441,13 +426,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         if (markers == null || markers.isEmpty()) return null;
 
         // TODO: make this configurable.
-        double minDist = NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
+        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM;
         Point closest = null;
         for (Point candidate : markers) {
             double dist = distanceSquared(candidate, point);
-            if (dist < minDist) {
+            if (dist < minDistSquared) {
                 closest = candidate;
-                minDist = dist;
+                minDistSquared = dist;
             }
         }
         return closest;
