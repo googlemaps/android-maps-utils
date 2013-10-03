@@ -67,7 +67,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         return mMarkerManager;
     }
 
-    public void setView(ClusterRenderer<T> view) {
+    public void setRenderer(ClusterRenderer<T> view) {
         view.setOnClusterClickListener(null);
         view.setOnClusterItemClickListener(null);
         mClusterMarkers.clear();
