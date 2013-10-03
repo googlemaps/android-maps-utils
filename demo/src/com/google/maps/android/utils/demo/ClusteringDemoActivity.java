@@ -13,7 +13,10 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.List;
 
-public class ClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<MyItem>, ClusterManager.OnClusterItemClickListener<MyItem> {
+/**
+ * Simple activity demonstrating ClusterManager.
+ */
+public class ClusteringDemoActivity extends BaseDemoActivity {
     private ClusterManager<MyItem> mClusterManager;
 
     @Override
@@ -22,9 +25,6 @@ public class ClusteringDemoActivity extends BaseDemoActivity implements ClusterM
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
         getMap().setOnCameraChangeListener(mClusterManager);
-        getMap().setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setOnClusterItemClickListener(this);
 
         try {
             readItems();
@@ -37,17 +37,5 @@ public class ClusteringDemoActivity extends BaseDemoActivity implements ClusterM
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
         mClusterManager.addItems(items);
-    }
-
-    @Override
-    public boolean onClusterClick(Cluster<MyItem> cluster) {
-        Toast.makeText(this, "items in this cluster: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
-        return true;
-    }
-
-    @Override
-    public boolean onClusterItemClick(MyItem item) {
-        Toast.makeText(this, "clicked! " + item.toString(), Toast.LENGTH_SHORT).show();
-        return true;
     }
 }

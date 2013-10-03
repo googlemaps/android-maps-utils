@@ -22,7 +22,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Clustering", ClusteringDemoActivity.class);
-        addDemo("2000 clustering", BigClusteringDemoActivity.class);
+        addDemo("Clustering: Custom Look", CustomMarkerClusteringDemoActivity.class);
+        addDemo("Clustering: 2K markers", BigClusteringDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
