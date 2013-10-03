@@ -246,7 +246,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         public void queue(Set<? extends Cluster<T>> clusters) {
             synchronized (this) {
                 // Overwrite any pending cluster tasks - we don't care about intermediate states.
-                mNextClusters = new RenderTask(mMap.getCameraPosition().zoom, clusters);
+                mNextClusters = new RenderTask(clusters);
             }
             sendEmptyMessage(RUN_TASK);
         }
@@ -278,17 +278,14 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * out, existing clusters are animated to the nearest new cluster.
      */
     private class RenderTask implements Runnable {
-        final float zoom;
         final Set<? extends Cluster<T>> clusters;
         private Runnable mCallback;
         private Projection mProjection;
         private SphericalMercatorProjection mSphericalMercatorProjection;
         private float mMapZoom;
 
-        private RenderTask(float zoom, Set<? extends Cluster<T>> clusters) {
-            this.zoom = zoom;
+        private RenderTask(Set<? extends Cluster<T>> clusters) {
             this.clusters = clusters;
-            this.mSphericalMercatorProjection = new SphericalMercatorProjection(zoom);
         }
 
         /**
@@ -306,11 +303,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         public void setMapZoom(float zoom) {
             this.mMapZoom = zoom;
+            this.mSphericalMercatorProjection = new SphericalMercatorProjection(Math.pow(2, zoom));
         }
 
         @SuppressLint("NewApi")
         public void run() {
-            if (clusters.equals(mClusters)) {
+            if (clusters.equals(DefaultClusterRenderer.this.mClusters)) {
                 mCallback.run();
                 return;
             }
@@ -328,9 +326,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
             List<Point> existingClustersOnScreen = null;
-            if (mClusters != null && SHOULD_ANIMATE) {
+            if (DefaultClusterRenderer.this.mClusters != null && SHOULD_ANIMATE) {
                 existingClustersOnScreen = new ArrayList<Point>();
-                for (Cluster<T> c : mClusters) {
+                for (Cluster<T> c : DefaultClusterRenderer.this.mClusters) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
                         Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                         existingClustersOnScreen.add(point);
@@ -398,7 +396,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             markerModifier.waitUntilFree();
 
             mMarkers = newMarkers;
-            mClusters = clusters;
+            DefaultClusterRenderer.this.mClusters = clusters;
             mZoom = zoom;
 
             mCallback.run();
