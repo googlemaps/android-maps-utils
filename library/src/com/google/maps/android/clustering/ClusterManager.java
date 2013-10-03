@@ -10,8 +10,8 @@ import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
-import com.google.maps.android.clustering.view.ClusterView;
-import com.google.maps.android.clustering.view.DefaultClusterView;
+import com.google.maps.android.clustering.view.ClusterRenderer;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.Collection;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private final MarkerManager.Collection mClusterMarkers;
 
     private Algorithm<T> mAlgorithm;
-    private ClusterView<T> mView;
+    private ClusterRenderer<T> mRenderer;
 
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
@@ -50,7 +50,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mMarkerManager = markerManager;
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
-        mView = new DefaultClusterView<T>(context, map, this);
+        mRenderer = new DefaultClusterRenderer<T>(context, map, this);
         mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
     }
@@ -67,16 +67,16 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         return mMarkerManager;
     }
 
-    public void setView(ClusterView<T> view) {
+    public void setView(ClusterRenderer<T> view) {
         view.setOnClusterClickListener(null);
         view.setOnClusterItemClickListener(null);
         mClusterMarkers.clear();
         mMarkers.clear();
-        mView.onRemove();
-        mView = view;
-        mView.onAdd();
-        mView.setOnClusterClickListener(mOnClusterClickListener);
-        mView.setOnClusterItemClickListener(mOnClusterItemClickListener);
+        mRenderer.onRemove();
+        mRenderer = view;
+        mRenderer.onAdd();
+        mRenderer.setOnClusterClickListener(mOnClusterClickListener);
+        mRenderer.setOnClusterItemClickListener(mOnClusterItemClickListener);
         cluster();
     }
 
@@ -127,8 +127,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        if (mView instanceof GoogleMap.OnCameraChangeListener) {
-            ((GoogleMap.OnCameraChangeListener) mView).onCameraChange(cameraPosition);
+        if (mRenderer instanceof GoogleMap.OnCameraChangeListener) {
+            ((GoogleMap.OnCameraChangeListener) mRenderer).onCameraChange(cameraPosition);
         }
 
         // Don't re-compute clusters if the map has just been panned/tilted/rotated.
@@ -158,7 +158,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
         @Override
         protected void onPostExecute(Set<? extends Cluster<T>> clusters) {
-            mView.onClustersChanged(clusters);
+            mRenderer.onClustersChanged(clusters);
         }
     }
 
@@ -168,7 +168,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
         mOnClusterClickListener = listener;
-        mView.setOnClusterClickListener(listener);
+        mRenderer.setOnClusterClickListener(listener);
     }
 
     /**
@@ -177,7 +177,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
         mOnClusterItemClickListener = listener;
-        mView.setOnClusterItemClickListener(listener);
+        mRenderer.setOnClusterItemClickListener(listener);
     }
 
     /**

@@ -15,9 +15,4 @@ public class MyItem implements ClusterItem {
     public LatLng getPosition() {
         return mPosition;
     }
-
-    @Override
-    public MarkerOptions getMarkerOptions() {
-        return new MarkerOptions().position(mPosition);
-    }
 }

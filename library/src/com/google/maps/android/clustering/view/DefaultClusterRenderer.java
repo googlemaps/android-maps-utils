@@ -53,7 +53,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
-public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T> {
+public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRenderer<T> {
     private static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private final GoogleMap mMap;
     private final TextIconGenerator mTextIconGenerator;
@@ -103,7 +103,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
     private ClusterManager.OnClusterClickListener<T> mClickListener;
     private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
 
-    public DefaultClusterView(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
+    public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
         mDensity = context.getResources().getDisplayMetrics().density;
         mTextIconGenerator = new TextIconGenerator(context);
@@ -154,22 +154,6 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
         int twelveDpi = (int) (12 * mDensity);
         squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
-    }
-
-    /**
-     * Produce an icon for a particular cluster. Subclasses should override this to customize the
-     * displayed cluster markerWithPosition.
-     */
-    protected MarkerOptions applyIcon(MarkerOptions markerOptions, Cluster<T> cluster) {
-        int bucket = getBucket(cluster);
-        BitmapDescriptor descriptor = mIcons.get(bucket);
-        if (descriptor == null) {
-            mColoredCircleBackground.getPaint().setColor(getColor(bucket));
-            descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(getClusterText(bucket)));
-            mIcons.put(bucket, descriptor);
-        }
-        // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
-        return markerOptions.icon(descriptor);
     }
 
     private int getColor(int clusterSize) {
@@ -273,7 +257,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
     }
 
     /**
-     * Transforms the current view (represented by DefaultClusterView.mClusters and DefaultClusterView.mZoom) to a
+     * Transforms the current view (represented by DefaultClusterRenderer.mClusters and DefaultClusterRenderer.mZoom) to a
      * new zoom level and set of clusters.
      * <p/>
      * This must be run off the UI thread. Work is coordinated in the RenderTask, then queued up to
@@ -654,6 +638,40 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
     }
 
     /**
+     * Called before the marker for a ClusterItem is added to the map.
+     */
+    protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
+    }
+
+    /**
+     * Called before the marker for a Cluster is added to the map.
+     * The default implementation draws a circle with a rough count of the number of items.
+     */
+    protected void onBeforeClusterRendered(Cluster<T> cluster, MarkerOptions markerOptions) {
+        int bucket = getBucket(cluster);
+        BitmapDescriptor descriptor = mIcons.get(bucket);
+        if (descriptor == null) {
+            mColoredCircleBackground.getPaint().setColor(getColor(bucket));
+            descriptor = BitmapDescriptorFactory.fromBitmap(mTextIconGenerator.makeIcon(getClusterText(bucket)));
+            mIcons.put(bucket, descriptor);
+        }
+        // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
+        markerOptions.icon(descriptor);
+    }
+
+    /**
+     * Called after the marker for a Cluster has been added to the map.
+     */
+    protected void onClusterRendered(Cluster<T> cluster, Marker marker) {
+    }
+
+    /**
+     * Called after the marker for a ClusterItem has been added to the map.
+     */
+    protected void onClusterItemRendered(T clusterItem, Marker marker) {
+    }
+
+    /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
      */
     private class CreateMarkerTask {
@@ -680,20 +698,23 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
                     Marker marker = mMarkerCache.get(item);
                     MarkerWithPosition markerWithPosition;
                     if (marker == null) {
-                        MarkerOptions markerOptions = item.getMarkerOptions();
-                        LatLng animateTo = markerOptions.getPosition();
+                        MarkerOptions markerOptions = new MarkerOptions();
                         if (animateFrom != null) {
                             markerOptions.position(animateFrom);
+                        } else {
+                            markerOptions.position(item.getPosition());
                         }
+                        onBeforeClusterItemRendered(item, markerOptions);
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
                         markerWithPosition = new MarkerWithPosition(marker);
                         mMarkerCache.put(item, marker);
                         if (animateFrom != null) {
-                            markerModifier.animate(markerWithPosition, animateFrom, animateTo);
+                            markerModifier.animate(markerWithPosition, animateFrom, item.getPosition());
                         }
                     } else {
                         markerWithPosition = new MarkerWithPosition(marker);
                     }
+                    onClusterItemRendered(item, marker);
                     newMarkers.add(markerWithPosition);
                 }
                 return;
@@ -702,7 +723,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
             MarkerOptions markerOptions = new MarkerOptions().
                     position(animateFrom == null ? cluster.getPosition() : animateFrom);
 
-            markerOptions = applyIcon(markerOptions, cluster);
+            onBeforeClusterRendered(cluster, markerOptions);
 
             Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
             mMarkerToCluster.put(marker, cluster);
@@ -710,6 +731,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
             if (animateFrom != null) {
                 markerModifier.animate(markerWithPosition, animateFrom, cluster.getPosition());
             }
+            onClusterRendered(cluster, marker);
             newMarkers.add(markerWithPosition);
         }
     }

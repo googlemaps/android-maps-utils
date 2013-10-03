@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Renders clusters.
  */
-public interface ClusterView<T extends ClusterItem> {
+public interface ClusterRenderer<T extends ClusterItem> {
 
     /**
      * Called when the view needs to be updated because new clusters need to be displayed.
