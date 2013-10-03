@@ -37,7 +37,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
-    private boolean mShouldCluster = true;
     private ClusterTask mClusterTask;
     private OnClusterItemClickListener<T> mOnClusterItemClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
@@ -52,7 +51,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
         mView = new DefaultClusterView<T>(context, map, this);
-        setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<T>());
+        mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
     }
 
@@ -92,27 +91,23 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         if (items != null) {
             mAlgorithm.addItems(items);
         }
-        mShouldCluster = true;
+        cluster();
     }
 
     public void clearItems() {
         mAlgorithm.clearItems();
-        mShouldCluster = true;
     }
 
     public void addItems(Collection<T> items) {
         mAlgorithm.addItems(items);
-        mShouldCluster = true;
     }
 
     public void addItem(T myItem) {
         mAlgorithm.addItem(myItem);
-        mShouldCluster = true;
     }
 
     public void removeItem(T item) {
         mAlgorithm.removeItem(item);
-        mShouldCluster = true;
     }
 
     /**
@@ -136,10 +131,9 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             ((GoogleMap.OnCameraChangeListener) mView).onCameraChange(cameraPosition);
         }
 
-        // Don't re-compute clusters if the map has just been panned.
+        // Don't re-compute clusters if the map has just been panned/tilted/rotated.
         CameraPosition position = mMap.getCameraPosition();
-        if (!mShouldCluster && mPreviousCameraPosition != null &&
-                mPreviousCameraPosition.zoom == position.zoom) {
+        if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
             return;
         }
         mPreviousCameraPosition = mMap.getCameraPosition();
@@ -159,7 +153,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
         @Override
         protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
-            mShouldCluster = false;
             return mAlgorithm.getClusters(zoom[0]);
         }
 
