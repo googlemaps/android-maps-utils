@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
-import com.google.maps.android.clustering.algo.PreCachingDecorator;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.view.ClusterView;
 import com.google.maps.android.clustering.view.DefaultClusterView;
@@ -88,7 +88,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             mAlgorithm.clearItems();
         }
 
-        mAlgorithm = new PreCachingDecorator<T>(algorithm);
+        mAlgorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
         if (items != null) {
             mAlgorithm.addItems(items);
         }
@@ -139,7 +139,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         // Don't re-compute clusters if the map has just been panned.
         CameraPosition position = mMap.getCameraPosition();
         if (!mShouldCluster && mPreviousCameraPosition != null &&
-                mPreviousCameraPosition.zoom == position.zoom && mPreviousCameraPosition.tilt == position.tilt) {
+                mPreviousCameraPosition.zoom == position.zoom) {
             return;
         }
         mPreviousCameraPosition = mMap.getCameraPosition();

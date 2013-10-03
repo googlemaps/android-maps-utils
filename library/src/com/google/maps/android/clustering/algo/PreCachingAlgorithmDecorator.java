@@ -13,15 +13,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
  */
-public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> {
-    private final static String TAG = PreCachingDecorator.class.getName();
+public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algorithm<T> {
+    private final static String TAG = PreCachingAlgorithmDecorator.class.getName();
     private final Algorithm<T> mAlgorithm;
 
     // TODO: evaluate maxSize parameter for LruCache.
     private final LruCache<Integer, Set<? extends Cluster<T>>> mCache = new LruCache<Integer, Set<? extends Cluster<T>>>(5);
     private final ReadWriteLock mCacheLock = new ReentrantReadWriteLock();
 
-    public PreCachingDecorator(Algorithm<T> algorithm) {
+    public PreCachingAlgorithmDecorator(Algorithm<T> algorithm) {
         mAlgorithm = algorithm;
     }
 
@@ -56,8 +56,12 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
         int discreteZoom = (int) zoom;
         Set<? extends Cluster<T>> results = getClustersInternal(discreteZoom);
         // TODO: Check if requests are already in-flight.
-        new Thread(new PrecacheRunnable(discreteZoom + 1)).start();
-        new Thread(new PrecacheRunnable(discreteZoom - 1)).start();
+        if (mCache.get(discreteZoom + 1) == null) {
+            new Thread(new PrecacheRunnable(discreteZoom + 1)).start();
+        }
+        if (mCache.get(discreteZoom - 1) == null) {
+            new Thread(new PrecacheRunnable(discreteZoom - 1)).start();
+        }
         return results;
     }
 
