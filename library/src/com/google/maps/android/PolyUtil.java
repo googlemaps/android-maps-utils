@@ -136,7 +136,7 @@ public class PolyUtil {
     }
 
     /**
-     * Same as {@link isLocationOnEdge(LatLng, List<LatLng>, boolean, double)}
+     * Same as {@link #isLocationOnEdge(LatLng, List, boolean, double)}
      * with a default tolerance of 0.1 meters.
      */
     public static boolean isLocationOnEdge(LatLng point, List<LatLng> polygon, boolean geodesic) {
@@ -155,7 +155,8 @@ public class PolyUtil {
     }
 
     /**
-     * Same as {@link isLocationOnPath(LatLng, List<LatLng>, boolean, double)}
+     * Same as {@link #isLocationOnPath(LatLng, List, boolean, double)}
+     *
      * with a default tolerance of 0.1 meters.
      */
     public static boolean isLocationOnPath(LatLng point, List<LatLng> polyline,

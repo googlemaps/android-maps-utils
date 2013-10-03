@@ -21,11 +21,10 @@ public class ClusteringDemoActivity extends BaseDemoActivity implements ClusterM
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
-        getMap().setOnMarkerClickListener(mClusterManager.getMarkerManager());
+        getMap().setOnCameraChangeListener(mClusterManager);
+        getMap().setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
-
-        getMap().setOnCameraChangeListener(mClusterManager);
 
         try {
             readItems();

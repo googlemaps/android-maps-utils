@@ -20,4 +20,14 @@ public interface ClusterView<T extends ClusterItem> {
     void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener);
 
     void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
+
+    /**
+     * Called when the view is added.
+     */
+    void onAdd();
+
+    /**
+     * Called when the view is removed.
+     */
+    void onRemove();
 }

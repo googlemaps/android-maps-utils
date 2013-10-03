@@ -207,7 +207,7 @@ public class SphericalUtil {
      * Returns the signed area of a closed path on Earth. The sign of the area may be used to
      * determine the orientation of the path.
      * "inside" is the surface that does not contain the South Pole.
-     * @param loop A closed path.
+     * @param path A closed path.
      * @return The loop's area in square meters.
      */
     public static double computeSignedArea(List<LatLng> path) {

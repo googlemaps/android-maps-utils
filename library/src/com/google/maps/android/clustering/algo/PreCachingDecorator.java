@@ -1,7 +1,5 @@
 package com.google.maps.android.clustering.algo;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.support.v4.util.LruCache;
 
 import com.google.maps.android.clustering.Cluster;
@@ -12,10 +10,14 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+/**
+ * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
+ */
 public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> {
     private final static String TAG = PreCachingDecorator.class.getName();
     private final Algorithm<T> mAlgorithm;
+
+    // TODO: evaluate maxSize parameter for LruCache.
     private final LruCache<Integer, Set<? extends Cluster<T>>> mCache = new LruCache<Integer, Set<? extends Cluster<T>>>(5);
     private final ReadWriteLock mCacheLock = new ReentrantReadWriteLock();
 
@@ -53,6 +55,7 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         int discreteZoom = (int) zoom;
         Set<? extends Cluster<T>> results = getClustersInternal(discreteZoom);
+        // TODO: Check if requests are already in-flight.
         new Thread(new PrecacheRunnable(discreteZoom + 1)).start();
         new Thread(new PrecacheRunnable(discreteZoom - 1)).start();
         return results;
@@ -63,7 +66,7 @@ public class PreCachingDecorator<T extends ClusterItem> implements Algorithm<T> 
         return mAlgorithm.getItems();
     }
 
-    public Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
+    private Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
         Set<? extends Cluster<T>> results;
         mCacheLock.readLock().lock();
         results = mCache.get(discreteZoom);

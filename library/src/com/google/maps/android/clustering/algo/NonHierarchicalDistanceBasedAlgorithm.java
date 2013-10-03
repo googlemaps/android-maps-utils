@@ -22,7 +22,7 @@ import java.util.Set;
  * A simple clustering algorithm with O(nlog n) performance. Resulting clusters are not
  * hierarchical.
  * <p>
- * High level algorithm:
+ * High level algorithm:<br>
  * 1. Iterate over items in the order they were added (candidate clusters).<br>
  * 2. Create a cluster with the center of the item. <br>
  * 3. Add all items that are within a certain distance to the cluster. <br>
@@ -31,7 +31,7 @@ import java.util.Set;
  * <p/>
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-public class NonHierarchicalDistanceBased<T extends ClusterItem> implements Algorithm<T> {
+public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
     private final Collection<QuadItem<T>> mItems = new ArrayList<QuadItem<T>>();
@@ -61,7 +61,7 @@ public class NonHierarchicalDistanceBased<T extends ClusterItem> implements Algo
     @Override
     public void removeItem(T item) {
         // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item.
-        throw new UnsupportedOperationException("NonHierarchicalDistanceBased.remove not implemented");
+        throw new UnsupportedOperationException("NonHierarchicalDistanceBasedAlgorithm.remove not implemented");
     }
 
     @Override

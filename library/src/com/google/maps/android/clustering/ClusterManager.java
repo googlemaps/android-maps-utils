@@ -5,10 +5,11 @@ import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.PreCachingDecorator;
-import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBased;
+import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.view.ClusterView;
 import com.google.maps.android.clustering.view.DefaultClusterView;
 
@@ -17,8 +18,14 @@ import java.util.Set;
 
 /**
  * Groups many items on a map based on zoom level.
+ * <p/>
+ * ClusterManager should be added to the map as an:
+ * <ul>
+ * <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraChangeListener}</li>
+ * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li>
+ * </ul>
  */
-public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener {
+public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener {
     private static final String TAG = ClusterManager.class.getName();
 
     private final MarkerManager mMarkerManager;
@@ -45,7 +52,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
         mView = new DefaultClusterView<T>(context, map, this);
-        setAlgorithm(new NonHierarchicalDistanceBased<T>());
+        setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
     }
 
@@ -66,7 +73,9 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         view.setOnClusterItemClickListener(null);
         mClusterMarkers.clear();
         mMarkers.clear();
+        mView.onRemove();
         mView = view;
+        mView.onAdd();
         mView.setOnClusterClickListener(mOnClusterClickListener);
         mView.setOnClusterItemClickListener(mOnClusterItemClickListener);
         cluster();
@@ -107,9 +116,10 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
-     * Force a re-cluster.
+     * Force a re-cluster. You may want to call this after adding new item(s).
      */
     public void cluster() {
+        // Attempt to cancel the in-flight request.
         mClusterTask.cancel(true);
         mClusterTask = new ClusterTask();
         mClusterTask.execute(mMap.getCameraPosition().zoom);
@@ -122,6 +132,10 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
+        if (mView instanceof GoogleMap.OnCameraChangeListener) {
+            ((GoogleMap.OnCameraChangeListener) mView).onCameraChange(cameraPosition);
+        }
+
         // Don't re-compute clusters if the map has just been panned.
         CameraPosition position = mMap.getCameraPosition();
         if (!mShouldCluster && mPreviousCameraPosition != null &&
@@ -131,6 +145,11 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mPreviousCameraPosition = mMap.getCameraPosition();
 
         cluster();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return getMarkerManager().onMarkerClick(marker);
     }
 
     /**
@@ -150,20 +169,34 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         }
     }
 
+    /**
+     * Sets a callback that's invoked when a Cluster is tapped.
+     * Note: For this listener to function, the ClusterManager must be added as a click listener to the map.
+     */
     public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
         mOnClusterClickListener = listener;
         mView.setOnClusterClickListener(listener);
     }
 
+    /**
+     * Sets a callback that's invoked when an individual ClusterItem is tapped.
+     * Note: For this listener to function, the ClusterManager must be added as a click listener to the map.
+     */
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
         mOnClusterItemClickListener = listener;
         mView.setOnClusterItemClickListener(listener);
     }
 
+    /**
+     * Called when a Cluster is clicked.
+     */
     public interface OnClusterClickListener<T extends ClusterItem> {
         public boolean onClusterClick(Cluster<T> cluster);
     }
 
+    /**
+     * Called when an individual ClusterItem is clicked.
+     */
     public interface OnClusterItemClickListener<T extends ClusterItem> {
         public boolean onClusterItemClick(T item);
     }

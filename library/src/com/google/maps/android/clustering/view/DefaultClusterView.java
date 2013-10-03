@@ -54,13 +54,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
 public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T> {
-    public static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    private static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     private final GoogleMap mMap;
     private final TextIconGenerator mTextIconGenerator;
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
 
-    public static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
+    private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
 
     /**
@@ -81,7 +81,7 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
     /**
      * If cluster size is less than this size, display individual markers.
      */
-    public static final int MIN_CLUSTER_SIZE = 4;
+    private static final int MIN_CLUSTER_SIZE = 4;
 
     /**
      * The currently displayed set of clusters.
@@ -110,22 +110,30 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
         mTextIconGenerator.setContentView(makeSquareTextView(context));
         mTextIconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
         mTextIconGenerator.setBackground(makeClusterBackground());
-
         mClusterManager = clusterManager;
+    }
 
-        clusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+    @Override
+    public void onAdd() {
+        mClusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 return mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker));
             }
         });
 
-        clusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 return mClickListener != null && mClickListener.onClusterClick(mMarkerToCluster.get(marker));
             }
         });
+    }
+
+    @Override
+    public void onRemove() {
+        mClusterManager.getMarkerCollection().setOnMarkerClickListener(null);
+        mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(null);
     }
 
     private LayerDrawable makeClusterBackground() {
@@ -203,8 +211,8 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
      * re-rendering, which is performed by the RenderTask.
      */
     private class ViewModifier extends Handler {
-        public static final int RUN_TASK = 0;
-        public static final int TASK_FINISHED = 1;
+        private static final int RUN_TASK = 0;
+        private static final int TASK_FINISHED = 1;
         private boolean mViewModificationInProgress = false;
         private RenderTask mNextClusters = null;
 
@@ -692,7 +700,6 @@ public class DefaultClusterView<T extends ClusterItem> implements ClusterView<T>
             }
 
             MarkerOptions markerOptions = new MarkerOptions().
-                    title("Items: " + cluster.getSize()).
                     position(animateFrom == null ? cluster.getPosition() : animateFrom);
 
             markerOptions = applyIcon(markerOptions, cluster);
