@@ -303,7 +303,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         public void setMapZoom(float zoom) {
             this.mMapZoom = zoom;
-            this.mSphericalMercatorProjection = new SphericalMercatorProjection(256 * Math.pow(2, zoom));
+            this.mSphericalMercatorProjection = new SphericalMercatorProjection(256 * Math.pow(2, Math.min(zoom, mZoom)));
         }
 
         @SuppressLint("NewApi")
@@ -426,7 +426,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         if (markers == null || markers.isEmpty()) return null;
 
         // TODO: make this configurable.
-        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM * 1.2;
+        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM;
         Point closest = null;
         for (Point candidate : markers) {
             double dist = distanceSquared(candidate, point);
