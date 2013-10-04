@@ -426,7 +426,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         if (markers == null || markers.isEmpty()) return null;
 
         // TODO: make this configurable.
-        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM;
+        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM * 1.2;
         Point closest = null;
         for (Point candidate : markers) {
             double dist = distanceSquared(candidate, point);
