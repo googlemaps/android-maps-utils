@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * A simple clustering algorithm with O(nlog n) performance. Resulting clusters are not
  * hierarchical.
- * <p>
+ * <p/>
  * High level algorithm:<br>
  * 1. Iterate over items in the order they were added (candidate clusters).<br>
  * 2. Create a cluster with the center of the item. <br>
@@ -34,15 +34,25 @@ import java.util.Set;
 public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
     public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
+    /**
+     * Any modifications should be synchronized on mQuadTree.
+     */
     private final Collection<QuadItem<T>> mItems = new ArrayList<QuadItem<T>>();
+
+    /**
+     * Any modifications should be synchronized on mQuadTree.
+     */
     private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
+
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
     @Override
     public void addItem(T item) {
-        QuadItem<T> quadItem = new QuadItem<T>(item);
-        mItems.add(quadItem);
-        mQuadTree.add(quadItem);
+        final QuadItem<T> quadItem = new QuadItem<T>(item);
+        synchronized (mQuadTree) {
+            mItems.add(quadItem);
+            mQuadTree.add(quadItem);
+        }
     }
 
     @Override
@@ -54,8 +64,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
 
     @Override
     public void clearItems() {
-        mItems.clear();
-        mQuadTree.clear();
+        synchronized (mQuadTree) {
+            mItems.clear();
+            mQuadTree.clear();
+        }
     }
 
     @Override
@@ -82,7 +94,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
             }
 
             Bounds searchBounds = createBoundsFromSpan(candidate.getPoint(), zoomSpecificSpan);
-            Collection<QuadItem<T>> clusterItems = mQuadTree.search(searchBounds);
+            Collection<QuadItem<T>> clusterItems;
+            synchronized (mQuadTree) {
+                clusterItems = mQuadTree.search(searchBounds);
+            }
             if (clusterItems.size() == 1) {
                 // Only the current marker is in range. Just add the single item to the results.
                 results.add(candidate);
@@ -116,8 +131,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     @Override
     public Collection<T> getItems() {
         final List<T> items = new ArrayList<T>();
-        for (QuadItem<T> quadItem : mItems) {
-            items.add(quadItem.mClusterItem);
+        synchronized (mQuadTree) {
+            for (QuadItem<T> quadItem : mItems) {
+                items.add(quadItem.mClusterItem);
+            }
         }
         return items;
     }
