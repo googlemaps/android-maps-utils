@@ -28,10 +28,7 @@ import java.util.List;
  * See http://en.wikipedia.org/wiki/Quadtree for details on the data structure.
  * This class is not thread safe.
  */
-public class PointQuadTree<T extends PointQuadTree.Item> {
-    public interface Item {
-        Point getPoint();
-    }
+public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> {
 
     /**
      * The bounds of this quad.
@@ -91,6 +88,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Insert an item.
      */
+    @Override
     public void add(T item) {
         Point point = item.getPoint();
         insert(point.x, point.y, item);
@@ -144,6 +142,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
      *
      * @return whether the item was removed.
      */
+    @Override
     public boolean remove(T item) {
         Point point = item.getPoint();
         return remove(point.x, point.y, item);
@@ -165,6 +164,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
         }
     }
 
+    @Override
     public void clear() {
         mChildren = null;
         if (mItems != null) {
@@ -175,6 +175,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Search for all items within a given bounds.
      */
+    @Override
     public Collection<T> search(Bounds searchBounds) {
         final List<T> results = new ArrayList<T>();
         search(searchBounds, results);
