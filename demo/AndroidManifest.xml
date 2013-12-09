@@ -32,7 +32,7 @@
 
         <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyDCa5WRSMk3CrNSf3y5xbyQTvp1_zwuTtE"/>
+                android:value="AIzaSyDm4v-khBr-nqzOJvVQxaULNIHdj9WdtLM"/>
 
         <activity
                 android:name=".MainActivity"
@@ -50,6 +50,7 @@
         <activity android:name=".BigClusteringDemoActivity"/>
         <activity android:name=".CustomMarkerClusteringDemoActivity"/>
         <activity android:name=".TileProviderAndProjectionDemo"/>
+        <activity android:name=".HeatmapsDemoActivity"/>
 
     </application>
 
