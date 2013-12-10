@@ -5,13 +5,14 @@ import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * Created by irisu on 12/9/13.
  */
 public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T> {
 
-    private class Node {
+    private class Node implements Comparable<Node> {
         public final int base = 5;
         public int location;
         public T t;
@@ -29,17 +30,17 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
                     if (p.x < currBounds.midX) {   // left = 0
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.minY, currBounds.midY);
-                    } else {                    // right = 1
+                    } else {                       // right = 1
                         location += 1 * base^currPrecision;
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.minY, currBounds.midY);
                     }
-                } else {                        // bottom
+                } else {                           // bottom
                     if (p.x < currBounds.midX) {   // left = 2
                         location += 2 * base^currPrecision;
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.midY, currBounds.maxY);
-                    } else {                    // right = 3
+                    } else {                       // right = 3
                         location += 3 * base^currPrecision;
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.midY, currBounds.maxY);
@@ -49,7 +50,9 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
             return location;
         }
 
-        // TODO: write compare
+        public int compareTo(Node node) {
+            return this.location - node.location;
+        }
 
     }
 
@@ -75,6 +78,8 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     }
 
     public LinearQuadTree(Bounds bounds, int precision) {
+        if (precision > 25) precision = 25; // arbitrary maximum precision
+        if (precision < 3)  precision = 3;  // arbitrary minimum precision
         mPoints = new ArrayList<Node>();
         mBounds = bounds;
         mPrecision = precision;
@@ -82,9 +87,22 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
 
     @Override
     public void add(T item) {
-        int index = 0;
-        //TODO: set index
-        mPoints.add(index, new Node(item));
+        Node node = new Node(item);
+        int index = binSearch(mPoints, node);
+        mPoints.add(index, node);
+    }
+
+    private int binSearch(ArrayList<Node> array, Node node) {
+        int min = 0;
+        int max = array.size();
+        while (min < max) {
+            if (0 < node.compareTo(array.get(min + ((max - min) / 2)))) {
+                max = (min + max) / 2;
+            } else {
+                min = (min + max) / 2;
+            }
+        }
+        return min;
     }
 
     @Override
