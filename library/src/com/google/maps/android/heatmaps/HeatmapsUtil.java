@@ -1,9 +1,5 @@
 package com.google.maps.android.heatmaps;
 
-import android.util.Log;
-
-import java.util.Arrays;
-
 /**
  * Utility functions for heatmaps.
  */
@@ -99,15 +95,5 @@ public class HeatmapsUtil {
         return outputGrid;
     }
 
-    /**
-     * Helper function for testing - print grid to Log.i
-     * @param grid Grid to print
-     */
-    public static void printGrid(double[][] grid) {
-        int i;
-        for (i = 0; i < grid.length; i ++) {
-            Log.e("grid"+i, Arrays.toString(grid[i]));
-        }
-    }
 
 }
