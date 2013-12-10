@@ -107,8 +107,8 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
 
     @Override
     public boolean remove(T item) {
-        //TODO
-        return false;
+        Node node = new Node(item);
+        return mPoints.remove(node);
     }
 
     @Override
