@@ -13,7 +13,7 @@ import java.util.Collections;
 public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T> {
 
     private class Node implements Comparable<Node> {
-        public final int base = 5;
+        public final int base = 4;
         public int location;
         public T t;
 
