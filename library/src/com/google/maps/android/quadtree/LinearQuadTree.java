@@ -105,7 +105,8 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
 
     @Override
     public Collection<T> search(Bounds searchBounds) {
-        //TODO
-        return null;
+        Collection<T> collection = new ArrayList<T>();
+        // TODO: write the actual search
+        return collection;
     }
 }
