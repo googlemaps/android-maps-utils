@@ -11,10 +11,29 @@ import java.util.Collection;
  */
 public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T> {
 
+    private class Node {
+        public int location;
+        public Point point;
+
+        public Node(Item item) {
+            location = getLocation(item.getPoint());
+            this.point = item.getPoint();
+        }
+
+        private int getLocation(Point p) {
+            return 0;
+        }
+
+    }
+
     /**
      * The bounds of this quad.
      */
     private final Bounds mBounds;
+
+    private ArrayList<Node> mPoints;
+
+    public int precision = 10;
 
     /**
      * Creates a new quad tree with specified bounds.
