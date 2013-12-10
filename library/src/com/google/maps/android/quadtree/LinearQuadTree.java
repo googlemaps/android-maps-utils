@@ -5,7 +5,7 @@ import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.Collections;
 
 /**
  * Created by irisu on 12/9/13.
@@ -88,21 +88,8 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     @Override
     public void add(T item) {
         Node node = new Node(item);
-        int index = binSearch(mPoints, node);
+        int index = Collections.binarySearch(mPoints, node);
         mPoints.add(index, node);
-    }
-
-    private int binSearch(ArrayList<Node> array, Node node) {
-        int min = 0;
-        int max = array.size();
-        while (min < max) {
-            if (0 < node.compareTo(array.get(min + ((max - min) / 2)))) {
-                max = (min + max) / 2;
-            } else {
-                min = (min + max) / 2;
-            }
-        }
-        return min;
     }
 
     @Override
