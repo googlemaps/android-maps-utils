@@ -118,7 +118,6 @@ public class HeatmapUtil {
         // Evenly space out gradient colors with a constant interval (interval = "space" between
         // colors given in the gradient)
         // With defaults, this is 1000/10 = 100
-        // TODO - this breaks if it doesnt divide evenly (ie size = 100, length = 11)
         int interval = (size - 1) / (gradient.length - 1);
 
         // Go through gradient and insert into values/colors
@@ -134,11 +133,17 @@ public class HeatmapUtil {
         // lowColorStop = closest color stop (value from gradient) below current position
         int lowColorStop = 0;
         for (i = 0; i < size; i++) {
-            // if i is larger than next color stop value, increment to next color stop
             Log.e("i", "i = "+i+" lCS = "+lowColorStop);
-            if (i > values[lowColorStop + 1]) lowColorStop++;
+            // if i is larger than next color stop value, increment to next color stop
+            // Check that it is safe to access lowColorStop + 1 first!
+            // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice
+            if (lowColorStop + 1 < values.length) {
+                if (i > values[lowColorStop + 1]) lowColorStop++;
+            }
             // In between two color stops: interpolate
             if (lowColorStop < values.length - 1) {
+                // Check that it is safe to access lowColorStop + 1
+               if (i > values[lowColorStop + 1]) lowColorStop++;
                colorMap[i] = interpolateColor(interval * lowColorStop, i,
                        interval * (lowColorStop + 1),
                        colors[lowColorStop], colors[lowColorStop + 1]);

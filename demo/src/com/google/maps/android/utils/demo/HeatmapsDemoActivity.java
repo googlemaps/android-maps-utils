@@ -39,7 +39,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         printGrid(convolved);
 
-        int[] colorMapTest = HeatmapUtil.generateColorMap(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, 101, 1);
+        int[] colorMapTest = HeatmapUtil.generateColorMap(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, 102, 1);
         Log.e("map", Arrays.toString(colorMapTest));
 
         Bitmap colorMap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
