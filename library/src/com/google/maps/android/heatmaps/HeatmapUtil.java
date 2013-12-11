@@ -5,7 +5,7 @@ import android.graphics.Color;
 /**
  * Utility functions for heatmaps.
  */
-public class HeatmapsUtil {
+public class HeatmapUtil {
 
     /**
      * Generates 1D Gaussian kernel density function, as a double array of size radius * 2  + 1

@@ -2,14 +2,14 @@ package com.google.maps.android.utils.demo;
 
 import android.util.Log;
 
-import com.google.maps.android.heatmaps.HeatmapsUtil;
+import com.google.maps.android.heatmaps.HeatmapUtil;
 
 import java.util.Arrays;
 
 public class HeatmapsDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
-        double[] kernel = HeatmapsUtil.generateKernel(5, 1.5);
+        double[] kernel = HeatmapUtil.generateKernel(5, 1.5);
         Log.e("kernel", Arrays.toString(kernel));
 
         // test with radius 2
@@ -20,7 +20,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         grid[2][3] = 1;
         grid[3][2] = 1;
         double[] testKernel = {0.5, 1, 0.5};
-        double[][] convolved = HeatmapsUtil.convolve(grid, testKernel);
+        double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         printGrid(convolved);
     }
 

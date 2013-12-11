@@ -1,6 +1,6 @@
 package com.google.maps.android.heatmaps;
 
-import com.google.maps.android.heatmaps.HeatmapsUtil;
+import com.google.maps.android.heatmaps.HeatmapUtil;
 import junit.framework.TestCase;
 
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class UtilTest extends TestCase {
 
     public void testGenerateKernel() {
-        double[] testKernel = HeatmapsUtil.generateKernel(5, 1.5);
+        double[] testKernel = HeatmapUtil.generateKernel(5, 1.5);
         double[] expectedKernel = {0.0038659201394728076, 0.028565500784550377, 0.1353352832366127,
                 0.41111229050718745, 0.8007374029168081, 1.0, 0.8007374029168081,
                 0.41111229050718745, 0.1353352832366127, 0.028565500784550377,
@@ -35,7 +35,7 @@ public class UtilTest extends TestCase {
         grid[4][0] = 1;
         grid[0][4] = 1;
         double[] testKernel = {0.5, 1, 0.5};
-        double[][] convolved = HeatmapsUtil.convolve(grid, testKernel);
+        double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         double[][] expected = {{0.25, 0, 0.25}, {0, 0, 0}, {0.25, 0, 0.25}};
         assertTrue(Arrays.deepEquals(convolved, expected));
     }
@@ -54,7 +54,7 @@ public class UtilTest extends TestCase {
         grid[2][4] = 1;
         grid[4][2] = 1;
         double[] testKernel = {0.5, 1, 0.5};
-        double[][] convolved = HeatmapsUtil.convolve(grid, testKernel);
+        double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         double[][] expected = {{0.5, 0.5, 0.5}, {0.5, 0, 0.5}, {0.5, 0.5, 0.5}};
         assertTrue(Arrays.deepEquals(convolved, expected));
     }
@@ -74,7 +74,7 @@ public class UtilTest extends TestCase {
         grid[2][3] = 1;
         grid[3][2] = 1;
         double[] testKernel = {0.5, 1, 0.5};
-        double[][] convolved = HeatmapsUtil.convolve(grid, testKernel);
+        double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         double[][] expected = {{1.5, 2.5, 1.5}, {2.5, 4.0, 2.5}, {1.5, 2.5, 1.5}};
         assertTrue(Arrays.deepEquals(convolved, expected));
     }
