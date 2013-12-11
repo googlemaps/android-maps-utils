@@ -12,8 +12,25 @@ import java.util.Collections;
  */
 public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T> {
 
+    private enum mQuadrant {
+        TOP_LEFT(0),
+        TOP_RIGHT(1),
+        BOTTOM_LEFT(2),
+        BOTTOM_RIGHT(3);
+
+        final int numQuad;
+
+        private mQuadrant(int i) {
+            this.numQuad = i;
+        }
+
+        public int getValue(){
+            return this.numQuad;
+        }
+    }
+
     private class Node implements Comparable<Node> {
-        public final int base = 4;
+        public final int base = 4; // TODO change to binary?
         public int location;
         public T t;
 
@@ -31,17 +48,17 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.minY, currBounds.midY);
                     } else {                       // right = 1
-                        location += 1 * base^currPrecision;
+                        location += mQuadrant.TOP_RIGHT.getValue() * base^currPrecision;
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.minY, currBounds.midY);
                     }
                 } else {                           // bottom
                     if (p.x < currBounds.midX) {   // left = 2
-                        location += 2 * base^currPrecision;
+                        location += mQuadrant.BOTTOM_LEFT.getValue() * base^currPrecision;
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.midY, currBounds.maxY);
                     } else {                       // right = 3
-                        location += 3 * base^currPrecision;
+                        location += mQuadrant.BOTTOM_RIGHT.getValue() * base^currPrecision;
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.midY, currBounds.maxY);
                     }
@@ -95,7 +112,12 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     @Override
     public boolean remove(T item) {
         Node node = new Node(item);
-        return mPoints.remove(node);
+        int index = Collections.binarySearch(mPoints, node);
+        if (mPoints.get(index) == node) {
+            mPoints.remove(index);
+            return true;
+        }
+        return false;
     }
 
     @Override
