@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 /**
  * Utility functions for heatmaps.
+ * Based off the javascript heatmaps code
  */
 public class HeatmapUtil {
 
@@ -97,6 +98,61 @@ public class HeatmapUtil {
         return outputGrid;
     }
 
+    /**
+     * Generates the color map to use with a provided gradient.
+     * @param gradient Array of colors (int format)
+     * @param size Number of elements in the color map
+     * @param opacity Overall opacity of entire image: every individual alpha value will be
+     *                multiplied by this opacity.
+     * @return the generated color map based on the gradient
+     */
+    public static int[] generateColorMap(int[] gradient, int size, double opacity) {
+        // Convert gradient into parallel arrays
+        int[] values = new int[gradient.length];
+        int[] colors = new int[gradient.length];
+
+        // Evenly space out gradient colors with a constant interval (interval = "space" between
+        // colors given in the gradient)
+        // With defaults, this is 1000/10 = 100
+        int interval = (size - 1) / (gradient.length - 1);
+
+        // Go through gradient and insert into values/colors
+        int i;
+        for(i = 0; i < gradient.length; i++) {
+            values[i] = i * interval;
+            colors[i] = gradient[i];
+        }
+
+        int[] colorMap = new int[size];
+        // lowColorStop = closest color stop (value from gradient) below current position
+        int lowColorStop = 0;
+        for (i = 0; i < size; i++) {
+            // if i is larger than next color stop value, increment to next color stop
+            if (i > values[lowColorStop + 1]) lowColorStop++;
+            // In between two color stops: interpolate
+            if (lowColorStop < values.length + 1) {
+               colorMap[i] = interpolateColor(interval * lowColorStop, i,
+                       interval * (lowColorStop + 1),
+                       colors[lowColorStop], colors[lowColorStop + 1]);
+            }
+            // above highest color stop: use that
+            else {
+                colorMap[i] = colors[colors.length - 1];
+            }
+            // Deal with changing the opacity if required
+            if (opacity != 1) {
+                int c = colorMap[i];
+                // TODO: make this better later?
+                colorMap[i] = Color.argb((int)(Color.alpha(c) * opacity),
+                        Color.red(c), Color.green(c), Color.blue(c));
+            }
+        }
+
+
+
+        return colorMap;
+    }
+
 
     /**
      * Helper function for creation of color map - interpolates between given colors
@@ -107,7 +163,7 @@ public class HeatmapUtil {
      * @param color2 Color associated with x3
      * @return Color associated with x2
      */
-    private int interpolateColor(double x1, double x2, double x3, int color1, int color2) {
+    private static int interpolateColor(double x1, double x2, double x3, int color1, int color2) {
         // no need to interpolate
         if (x1 == x3) return color1;
         // interpolate on R, G, B and A

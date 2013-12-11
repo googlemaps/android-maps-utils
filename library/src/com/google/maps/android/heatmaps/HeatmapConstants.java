@@ -1,7 +1,9 @@
 package com.google.maps.android.heatmaps;
 
+import android.graphics.Color;
+
 /**
- * Created by minicat on 12/11/13.
+ * Constants for heatmaps
  */
 public class HeatmapConstants {
 
@@ -14,20 +16,21 @@ public class HeatmapConstants {
     /**
      * Default gradient for heatmap.
      * Copied from Javascript version.
+     * Array of colors, in int form.
      */
-    public final static int[][] DEFAULT_HEATMAP_GRADIENT = {
-            //r, g, b, a
-            {102, 255, 0, 0},  // green (invisible)
-            {102, 255, 0, 1},  // green
-            {147, 255, 0, 1},
-            {193, 255, 0, 1},
-            {238, 255, 0, 1},  // yellow
-            {244, 227, 0, 1},
-            {249, 198, 0, 1},
-            {255, 170, 0, 1},  // orange
-            {255, 113, 0, 1},
-            {255, 57, 0, 1},
-            {255, 0, 0, 1}     // red
+    public final static int[] DEFAULT_HEATMAP_GRADIENT = {
+            //a, r, g, b / r, g, b
+            Color.argb(0, 102, 255, 0),  // green (invisible)
+            Color.rgb(102, 255, 0),  // green
+            Color.rgb(147, 255, 0),
+            Color.rgb(193, 255, 0),
+            Color.rgb(238, 255, 0),  // yellow
+            Color.rgb(244, 227, 0),
+            Color.rgb(249, 198, 0),
+            Color.rgb(255, 170, 0),  // orange
+            Color.rgb(255, 113, 0),
+            Color.rgb(255, 57, 0),
+            Color.rgb(255, 0, 0)     // red
             };
 
 }
