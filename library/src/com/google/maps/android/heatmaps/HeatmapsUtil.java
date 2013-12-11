@@ -1,5 +1,7 @@
 package com.google.maps.android.heatmaps;
 
+import android.graphics.Color;
+
 /**
  * Utility functions for heatmaps.
  */
@@ -96,4 +98,27 @@ public class HeatmapsUtil {
     }
 
 
+    /**
+     * Helper function for creation of color map - interpolates between given colors
+     * @param x1 First color "coordinate"
+     * @param x2 Middle color "coordinate" - interpolating to this point
+     * @param x3 Last color "coordinate"
+     * @param color1 Color associated with x1
+     * @param color2 Color associated with x3
+     * @return Color associated with x2
+     */
+    private int interpolateColor(double x1, double x2, double x3, int color1, int color2) {
+        // no need to interpolate
+        if (x1 == x3) return color1;
+        // interpolate on R, G, B and A
+        double ratio = (x2 - x1)/(double)(x3 - x1);
+
+        // + 0.5: want to round correctly
+        double red = (Color.red(color2) - Color.red(color1) * ratio) + Color.red(color1);
+        double green = (Color.green(color2) - Color.green(color1) * ratio) + Color.green(color1);
+        double blue = (Color.blue(color2) - Color.blue(color1) * ratio) + Color.blue(color1);
+        double alpha = (Color.alpha(color2) - Color.alpha(color1) * ratio) + Color.alpha(color1);
+
+        return Color.argb((int) alpha, (int) red, (int) green, (int) blue);
+    }
 }
