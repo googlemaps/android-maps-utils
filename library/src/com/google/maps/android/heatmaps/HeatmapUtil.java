@@ -2,6 +2,10 @@ package com.google.maps.android.heatmaps;
 
 import android.graphics.Color;
 
+import android.util.Log;
+
+import java.util.Arrays;
+
 /**
  * Utility functions for heatmaps.
  * Based off the javascript heatmaps code
@@ -114,6 +118,7 @@ public class HeatmapUtil {
         // Evenly space out gradient colors with a constant interval (interval = "space" between
         // colors given in the gradient)
         // With defaults, this is 1000/10 = 100
+        // TODO - this breaks if it doesnt divide evenly (ie size = 100, length = 11)
         int interval = (size - 1) / (gradient.length - 1);
 
         // Go through gradient and insert into values/colors
@@ -123,14 +128,17 @@ public class HeatmapUtil {
             colors[i] = gradient[i];
         }
 
+        Log.e("values", Arrays.toString(values));
+
         int[] colorMap = new int[size];
         // lowColorStop = closest color stop (value from gradient) below current position
         int lowColorStop = 0;
         for (i = 0; i < size; i++) {
             // if i is larger than next color stop value, increment to next color stop
+            Log.e("i", "i = "+i+" lCS = "+lowColorStop);
             if (i > values[lowColorStop + 1]) lowColorStop++;
             // In between two color stops: interpolate
-            if (lowColorStop < values.length + 1) {
+            if (lowColorStop < values.length - 1) {
                colorMap[i] = interpolateColor(interval * lowColorStop, i,
                        interval * (lowColorStop + 1),
                        colors[lowColorStop], colors[lowColorStop + 1]);
@@ -170,10 +178,10 @@ public class HeatmapUtil {
         double ratio = (x2 - x1)/(double)(x3 - x1);
 
         // + 0.5: want to round correctly
-        double red = (Color.red(color2) - Color.red(color1) * ratio) + Color.red(color1);
-        double green = (Color.green(color2) - Color.green(color1) * ratio) + Color.green(color1);
-        double blue = (Color.blue(color2) - Color.blue(color1) * ratio) + Color.blue(color1);
-        double alpha = (Color.alpha(color2) - Color.alpha(color1) * ratio) + Color.alpha(color1);
+        double red = (Color.red(color2) - Color.red(color1)) * ratio + Color.red(color1);
+        double green = (Color.green(color2) - Color.green(color1)) * ratio + Color.green(color1);
+        double blue = (Color.blue(color2) - Color.blue(color1)) * ratio + Color.blue(color1);
+        double alpha = (Color.alpha(color2) - Color.alpha(color1)) * ratio + Color.alpha(color1);
 
         return Color.argb((int) alpha, (int) red, (int) green, (int) blue);
     }
