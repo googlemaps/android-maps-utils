@@ -21,8 +21,8 @@ public class HeatmapConstants {
     public final static int[] DEFAULT_HEATMAP_GRADIENT = {
             //a, r, g, b / r, g, b
             Color.argb(0, 102, 255, 0),  // green (invisible)
-            Color.rgb(102, 255, 0),  // green
-            Color.rgb(147, 255, 0),
+            Color.argb(255/3 ,102, 255, 0),  // 1/3rd invisible
+            Color.argb(255/3*2, 147, 255, 0), // 2/3rd invisible
             Color.rgb(193, 255, 0),
             Color.rgb(238, 255, 0),  // yellow
             Color.rgb(244, 227, 0),

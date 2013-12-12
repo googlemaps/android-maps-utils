@@ -2,6 +2,7 @@ package com.google.maps.android.utils.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
@@ -27,7 +28,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
 
-        double[] kernel = HeatmapUtil.generateKernel(5, 1.5);
+        double[] kernel = HeatmapUtil.generateKernel(5, 5/3);
         Log.e("kernel", Arrays.toString(kernel));
 
         // test with radius 2
@@ -41,8 +42,10 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         printGrid(convolved);
 
-        int[] colorMapTest = HeatmapUtil.generateColorMap(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, 102, 1);
+        int[] colorMapTest = HeatmapUtil.generateColorMap(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, 1001, 1);
         Log.e("map", Arrays.toString(colorMapTest));
+
+        Log.d("alpha", ""+Color.alpha(Color.TRANSPARENT));
 
         //Bitmap colorMap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
 
@@ -61,17 +64,23 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         // set paint to null
         colorMap.setPixels(colours,0, 256,0, 0, 256, 256); */
 
-        int dim = 256;
-        int radius = 5;
+        int dim = 256*2;
+        int radius = 20;
         double[][] bigGrid = new double[dim + 2*radius][dim + 2*radius];
         bigGrid[100][100] = 10;
+        bigGrid[100][110] = 10;
+        bigGrid[100][120] = 10;
+        bigGrid[150][110] = 10;
+        bigGrid[150][115] = 10;
+        bigGrid[137][110] = 10;
         bigGrid[200][200] = 10;
         bigGrid[200][100] = 10;
         bigGrid[240][240] = 10;
         double[] bigKernel = HeatmapUtil.generateKernel(radius, radius/3.0);
         double[][] bigConvolved = HeatmapUtil.convolve(bigGrid, bigKernel);
         //printGrid(bigConvolved);
-        Bitmap colorMap = HeatmapUtil.colorize(bigConvolved, colorMapTest, 10);
+        Bitmap colorMap = HeatmapUtil.colorize(bigConvolved, colorMapTest,
+                HeatmapUtil.getMaxVal(bigConvolved));
 
         BitmapDescriptor image = BitmapDescriptorFactory.fromBitmap(colorMap);
         LatLng northeast = new LatLng(-33.865, 151.196);

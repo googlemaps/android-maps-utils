@@ -147,6 +147,20 @@ public class HeatmapUtil {
         return tile;
     }
 
+    /** Given a grid, find max val (for colorize, if full colour spectrum desired)
+     * @param grid grid to find max for. Assumed to be square
+     * @return max value in grid
+     */
+    public static double getMaxVal(double[][] grid) {
+        int i, j;
+        double max = 0;
+        for (i = 0; i < grid.length; i++) {
+            for (j = 0; j < grid.length; j++) {
+                if (grid[i][j] > max) max = grid[i][j];
+            }
+        }
+        return max;
+    }
 
     /**
      * Generates the color map to use with a provided gradient.
@@ -211,6 +225,7 @@ public class HeatmapUtil {
 
         return colorMap;
     }
+
 
 
     /**
