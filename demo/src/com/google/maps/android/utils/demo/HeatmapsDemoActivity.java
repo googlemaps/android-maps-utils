@@ -66,6 +66,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         double[][] bigGrid = new double[dim + 2*radius][dim + 2*radius];
         bigGrid[100][100] = 10;
         bigGrid[200][200] = 10;
+        bigGrid[200][100] = 10;
+        bigGrid[240][240] = 10;
         double[] bigKernel = HeatmapUtil.generateKernel(radius, radius/3.0);
         double[][] bigConvolved = HeatmapUtil.convolve(bigGrid, bigKernel);
         //printGrid(bigConvolved);

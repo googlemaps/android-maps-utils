@@ -112,12 +112,13 @@ public class HeatmapUtil {
      */
     public static Bitmap colorize(double[][] grid, int[] colorMap, double max) {
         // Maximum color value
-        int maxColor = colorMap[colorMap.length - 1];
+        //int maxColor = colorMap[colorMap.length - 1];
         // Multiplier to "scale" intensity values with, to map to appropriate color
         // TODO: is this change (-1 to length) ok? Reasoning: otherwise max will break it
         double colorMapScaling = (colorMap.length - 1) / max;
         // Dimension of the input grid (and dimension of output bitmap)
         int dim = grid.length;
+
 
         int i, j, index;
         double val;
@@ -125,10 +126,14 @@ public class HeatmapUtil {
         int colors[] = new int[dim * dim];
         for (i = 0; i < dim; i++) {
             for (j = 0; j < dim; j++) {
-                val = grid[i][j];
+                // [x][y]
+                // need to enter each row of x coordinates sequentally (x first)
+                // -> [j][i]
+                val = grid[j][i];
                 index = i * dim + j;
+
                 if ((int)val != 0) {
-                    colors[index] = colorMap[(int)(grid[i][j] * colorMapScaling)];
+                    colors[index] = colorMap[(int)(grid[j][i] * colorMapScaling)];
                 } else {
                     colors[index] = Color.TRANSPARENT;
                 }
