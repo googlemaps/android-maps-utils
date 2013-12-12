@@ -12,6 +12,20 @@ public class HeatmapConstants {
      */
     public final static int HEATMAP_COLOR_MAP_SIZE = 1001;
 
+    /**
+     * Default tile dimensions
+     */
+    public final static int HEATMAP_TILE_SIZE = 256;
+
+    /**
+     * Default radius for convolution
+     */
+    public static final int DEFAULT_HEATMAP_RADIUS = 10;
+
+    /**
+     * Default opacity of heatmap overlay
+     */
+    public static final double DEFAULT_HEATMAP_OPACITY = 0.7;
 
     /**
      * Default gradient for heatmap.
