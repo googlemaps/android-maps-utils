@@ -1,6 +1,8 @@
 package com.google.maps.android.utils.demo;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,8 +44,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         int[] colorMapTest = HeatmapUtil.generateColorMap(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, 102, 1);
         Log.e("map", Arrays.toString(colorMapTest));
 
-        Bitmap colorMap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
+        //Bitmap colorMap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
 
+        /*
         int colours[] = new int[256*256];
 
         int i, j, count = 0;
@@ -56,16 +59,39 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
         // public void drawBitmap (int[] colors, int offset, int stride, float x, float y, int width, int height, boolean hasAlpha, Paint paint)
         // set paint to null
-        colorMap.setPixels(colours,0, 256,0, 0, 256, 256);
+        colorMap.setPixels(colours,0, 256,0, 0, 256, 256); */
 
+        int dim = 256;
+        int radius = 5;
+        double[][] bigGrid = new double[dim + 2*radius][dim + 2*radius];
+        bigGrid[100][100] = 10;
+        bigGrid[200][200] = 10;
+        double[] bigKernel = HeatmapUtil.generateKernel(radius, radius/3.0);
+        double[][] bigConvolved = HeatmapUtil.convolve(bigGrid, bigKernel);
+        //printGrid(bigConvolved);
+        Bitmap colorMap = HeatmapUtil.colorize(bigConvolved, colorMapTest, 10);
 
         BitmapDescriptor image = BitmapDescriptorFactory.fromBitmap(colorMap);
-        LatLng northeast = new LatLng(-33.865429, 151.196766);
-        LatLng southwest = new LatLng(-33.866209, 151.195216);
+        LatLng northeast = new LatLng(-33.865, 151.196);
+        LatLng southwest = new LatLng(-33.866, 151.195);
         LatLngBounds bounds = new LatLngBounds(southwest, northeast);
         getMap().addGroundOverlay (new GroundOverlayOptions()
                 .image(image)
                 .positionFromBounds(bounds));
+
+
+        Bitmap square = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(square);
+        // left top right bottom
+        Paint paint = new Paint();
+        canvas.drawRect(0,0,1,256, paint);
+        canvas.drawRect(0,0,256,1, paint);
+
+        BitmapDescriptor bSquare = BitmapDescriptorFactory.fromBitmap(square);
+        getMap().addGroundOverlay (new GroundOverlayOptions()
+                .image(bSquare)
+                .positionFromBounds(bounds));
+
     }
 
 

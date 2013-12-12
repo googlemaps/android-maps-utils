@@ -1,5 +1,6 @@
 package com.google.maps.android.heatmaps;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import android.util.Log;
@@ -103,6 +104,46 @@ public class HeatmapUtil {
     }
 
     /**
+     * Converts a grid of intensity values to a colored Bitmap, using a given color map
+     * @param grid the input grid (assumed to be square)
+     * @param colorMap color map (created by generateColorMap)
+     * @param max Maximum intensity value: maps to 100$ on gradient
+     * @return the colorized grid in Bitmap form, with same dimensions as grid
+     */
+    public static Bitmap colorize(double[][] grid, int[] colorMap, double max) {
+        // Maximum color value
+        int maxColor = colorMap[colorMap.length - 1];
+        // Multiplier to "scale" intensity values with, to map to appropriate color
+        // TODO: is this change (-1 to length) ok? Reasoning: otherwise max will break it
+        double colorMapScaling = (colorMap.length - 1) / max;
+        // Dimension of the input grid (and dimension of output bitmap)
+        int dim = grid.length;
+
+        int i, j, index;
+        double val;
+        // Array of colours
+        int colors[] = new int[dim * dim];
+        for (i = 0; i < dim; i++) {
+            for (j = 0; j < dim; j++) {
+                val = grid[i][j];
+                index = i * dim + j;
+                if ((int)val != 0) {
+                    colors[index] = colorMap[(int)(grid[i][j] * colorMapScaling)];
+                } else {
+                    colors[index] = Color.TRANSPARENT;
+                }
+            }
+        }
+
+        // Now turn these colors into a bitmap
+        Bitmap tile = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
+        // (int[] pixels, int offset, int stride, int x, int y, int width, int height)
+        tile.setPixels(colors, 0, dim, 0, 0, dim, dim);
+        return tile;
+    }
+
+
+    /**
      * Generates the color map to use with a provided gradient.
      * @param gradient Array of colors (int format)
      * @param size Number of elements in the color map
@@ -127,13 +168,13 @@ public class HeatmapUtil {
             colors[i] = gradient[i];
         }
 
-        Log.e("values", Arrays.toString(values));
+        //Log.e("values", Arrays.toString(values));
 
         int[] colorMap = new int[size];
         // lowColorStop = closest color stop (value from gradient) below current position
         int lowColorStop = 0;
         for (i = 0; i < size; i++) {
-            Log.e("i", "i = "+i+" lCS = "+lowColorStop);
+            //Log.e("i", "i = "+i+" lCS = "+lowColorStop);
             // if i is larger than next color stop value, increment to next color stop
             // Check that it is safe to access lowColorStop + 1 first!
             // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice
@@ -182,7 +223,7 @@ public class HeatmapUtil {
         // interpolate on R, G, B and A
         double ratio = (x2 - x1)/(double)(x3 - x1);
 
-        // + 0.5: want to round correctly
+        // Interpolate using calculated ratio
         double red = (Color.red(color2) - Color.red(color1)) * ratio + Color.red(color1);
         double green = (Color.green(color2) - Color.green(color1)) * ratio + Color.green(color1);
         double blue = (Color.blue(color2) - Color.blue(color1)) * ratio + Color.blue(color1);
