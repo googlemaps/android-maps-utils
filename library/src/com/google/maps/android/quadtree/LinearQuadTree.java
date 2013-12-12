@@ -30,7 +30,6 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     }
 
     private class Node implements Comparable<Node> {
-        public final int base = 4; // TODO change to binary?
         public int location;
         public T t;
 
@@ -39,26 +38,31 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
             this.t = item;
         }
 
+        public Node(int location) {
+            this.location = location;
+            this.t = null;
+        }
+
         private int getLocation(Point p) {
             int location = 0;
             Bounds currBounds = mBounds;
-            for (int currPrecision = mPrecision-1; currPrecision >= 0; currPrecision--) {
+            for (int order = mPrecision-1; order >= 0; order--) {
                 if (p.y < currBounds.midY) {       // top
                     if (p.x < currBounds.midX) {   // left = 0
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.minY, currBounds.midY);
                     } else {                       // right = 1
-                        location += mQuadrant.TOP_RIGHT.getValue() * base^currPrecision;
+                        location += mQuadrant.TOP_RIGHT.getValue() * mBase ^order;
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.minY, currBounds.midY);
                     }
                 } else {                           // bottom
                     if (p.x < currBounds.midX) {   // left = 2
-                        location += mQuadrant.BOTTOM_LEFT.getValue() * base^currPrecision;
+                        location += mQuadrant.BOTTOM_LEFT.getValue() * mBase ^order;
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.midY, currBounds.maxY);
                     } else {                       // right = 3
-                        location += mQuadrant.BOTTOM_RIGHT.getValue() * base^currPrecision;
+                        location += mQuadrant.BOTTOM_RIGHT.getValue() * mBase ^order;
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.midY, currBounds.maxY);
                     }
@@ -81,6 +85,8 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     private ArrayList<Node> mPoints;
 
     public int mPrecision;
+
+    public final int mBase = 4; // TODO change to binary?
 
     /**
      * Creates a new quad tree with specified bounds.
@@ -128,7 +134,40 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     @Override
     public Collection<T> search(Bounds searchBounds) {
         Collection<T> collection = new ArrayList<T>();
-        // TODO: write the actual search
+        search(searchBounds, mBounds, 0, mPrecision-1, collection);
         return collection;
+    }
+
+    // TODO: write the actual search
+    private void search(Bounds searchBounds, Bounds currBounds,
+                         int location, int depth, Collection<T> results) {
+        if (searchBounds.contains(currBounds)) {
+            // all the points in these bounds are in searchBounds
+            Node node = new Node(location);
+            int index = Collections.binarySearch(mPoints, node);
+            for (; mPoints.get(index).location < location + (mBase^depth); index++) {
+                results.add(mPoints.get(index).t);
+            }
+        } else if (searchBounds.intersects(currBounds) && depth>0) {
+            // some of the points in these bounds are in searchBounds, can be split into quads
+            search(searchBounds,
+                    new Bounds(currBounds.minX, currBounds.midX, currBounds.minY, currBounds.midY),
+                    location + mQuadrant.TOP_LEFT.getValue()*(mBase^depth), depth - 1, results);
+            search(searchBounds,
+                    new Bounds(currBounds.midX, currBounds.maxX, currBounds.minY, currBounds.midY),
+                    location + mQuadrant.TOP_RIGHT.getValue()*(mBase^depth), depth - 1, results);
+            search(searchBounds,
+                    new Bounds(currBounds.minX, currBounds.midX, currBounds.midY, currBounds.maxY),
+                    location + mQuadrant.BOTTOM_LEFT.getValue()*(mBase^depth), depth - 1, results);
+            search(searchBounds,
+                    new Bounds(currBounds.midX, currBounds.maxX, currBounds.midY, currBounds.maxY),
+                    location + mQuadrant.BOTTOM_RIGHT.getValue()*(mBase^depth), depth - 1, results);
+
+        } else if (searchBounds.intersects(currBounds)) {
+            // some of the points in bounds are in searchBounds, quads can't be split
+            for (Node node : mPoints) { // TODO change to only those in given quad
+                results.add(node.t);
+            }
+        }
     }
 }
