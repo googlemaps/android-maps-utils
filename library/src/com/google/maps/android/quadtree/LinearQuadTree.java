@@ -138,7 +138,6 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
         return collection;
     }
 
-    // TODO: write the actual search
     private void search(Bounds searchBounds, Bounds currBounds,
                          int location, int depth, Collection<T> results) {
         if (searchBounds.contains(currBounds)) {
@@ -165,8 +164,13 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
 
         } else if (searchBounds.intersects(currBounds)) {
             // some of the points in bounds are in searchBounds, quads can't be split
-            for (Node node : mPoints) { // TODO change to only those in given quad
-                results.add(node.t);
+            Node node = new Node(location);
+            int index = Collections.binarySearch(mPoints, node);
+            for (; mPoints.get(index).location < location + (mBase^depth); index++) {
+                if (searchBounds.contains(mPoints.get(index).t.getPoint().x,
+                                              mPoints.get(index).t.getPoint().y)) {
+                    results.add(mPoints.get(index).t);
+                }
             }
         }
     }
