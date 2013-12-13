@@ -128,8 +128,8 @@ public class HeatmapTileProvider implements TileProvider{
         double[][] convolved = HeatmapUtil.convolve(intensity, mKernel);
 
         // Color it into a bitmap
-        double max = HeatmapUtil.getMaxVal(convolved);
-        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, max);
+        //TODO: THIS IS A TEMPORARY FIX
+        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, 10);
 
         return convertBitmap(bitmap);
     }

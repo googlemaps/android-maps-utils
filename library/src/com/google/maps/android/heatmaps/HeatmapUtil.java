@@ -151,6 +151,7 @@ public class HeatmapUtil {
      * @param grid grid to find max for. Assumed to be square
      * @return max value in grid
      */
+    // TODO: THIS IS STUPID YOU NEED ONE FOR _EVERYTHING_ otherwise colors will mess up when stuff is split across tiles
     public static double getMaxVal(double[][] grid) {
         int i, j;
         double max = 0;
@@ -251,4 +252,6 @@ public class HeatmapUtil {
 
         return Color.argb((int) alpha, (int) red, (int) green, (int) blue);
     }
+
+
 }
