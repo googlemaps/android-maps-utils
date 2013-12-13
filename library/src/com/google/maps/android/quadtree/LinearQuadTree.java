@@ -1,7 +1,11 @@
 package com.google.maps.android.quadtree;
 
+import android.util.Log;
+
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
+
+import junit.framework.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -110,18 +114,32 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
 
     @Override
     public void add(T item) {
+        int size = mPoints.size();
         Node node = new Node(item);
         int index = Collections.binarySearch(mPoints, node);
-        mPoints.add(index, node);
+        if (index < 0) {
+            if (-index-1 < mPoints.size())
+                mPoints.add(-index-1, node);
+            else
+                mPoints.add(node);
+        } else {
+            mPoints.add(index+1, node);
+        }
     }
 
     @Override
     public boolean remove(T item) {
         Node node = new Node(item);
         int index = Collections.binarySearch(mPoints, node);
-        if (mPoints.get(index) == node) {
-            mPoints.remove(index);
-            return true;
+        if (index >=0) { // found
+            while (index < mPoints.size() && mPoints.get(index).location == node.location
+                    && mPoints.get(index).t != item) {
+                index++;
+            }
+            if (mPoints.get(index).t == item) {
+                mPoints.remove(index);
+                return true;
+            }
         }
         return false;
     }
@@ -134,16 +152,26 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     @Override
     public Collection<T> search(Bounds searchBounds) {
         Collection<T> collection = new ArrayList<T>();
-        search(searchBounds, mBounds, 0, mPrecision-1, collection);
+        if (mPoints.size() > 0) {
+            search(searchBounds, mBounds, 0, mPrecision-1, collection);
+            Log.d("LinearQuadTree.search() collection", "array size = " + mPoints.size());
+        }
         return collection;
     }
 
     private void search(Bounds searchBounds, Bounds currBounds,
                          int location, int depth, Collection<T> results) {
+        /*
         if (searchBounds.contains(currBounds)) {
             // all the points in these bounds are in searchBounds
             Node node = new Node(location);
             int index = Collections.binarySearch(mPoints, node);
+            if (index < 0) index = -1-index;
+            Log.d("LinearQuadTree.search() void", "index = " + index);
+            Log.d("LinearQuadTree.search() void", "array size = " + mPoints.size());
+            Log.d("LinearQuadTree.search() void",
+                    "item coords = (" + mPoints.get(index).t.getPoint().x + ", "
+                    +  + mPoints.get(index).t.getPoint().y + ")");
             for (; mPoints.get(index).location < location + (mBase^depth); index++) {
                 results.add(mPoints.get(index).t);
             }
@@ -166,6 +194,9 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
             // some of the points in bounds are in searchBounds, quads can't be split
             Node node = new Node(location);
             int index = Collections.binarySearch(mPoints, node);
+            if (index < 0) index = -1-index;
+            Log.d("LinearQuadTree.search() void", "index = " + index);
+            Log.d("LinearQuadTree.search() void", "array size = " + mPoints.size());
             for (; mPoints.get(index).location < location + (mBase^depth); index++) {
                 if (searchBounds.contains(mPoints.get(index).t.getPoint().x,
                                               mPoints.get(index).t.getPoint().y)) {
@@ -173,5 +204,12 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
                 }
             }
         }
+        */
+
+        for (Node node : mPoints) {
+            if (searchBounds.contains(node.t.getPoint().x, node.t.getPoint().y))
+                results.add(node.t);
+        }
+
     }
 }
