@@ -81,7 +81,7 @@ public class HeatmapTileProvider implements TileProvider{
         //basically arbitrarily chosen scale (based off the demo)
         double worldWidth = HeatmapConstants.HEATMAP_TILE_SIZE;
 
-        // calculate width of one tile, given thee are 2 ^ zoom tiles in that zoom level
+        // calculate width of one tile, given there are 2 ^ zoom tiles in that zoom level
         double tileWidth = worldWidth / Math.pow(2, zoom);
 
         // how much padding to include in search
@@ -91,7 +91,7 @@ public class HeatmapTileProvider implements TileProvider{
         double tileWidthPadded = tileWidth + 2 * padding;
 
         // padded bucket width
-        double bucketWidth = tileWidthPadded / TILE_DIM;
+        double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
 
         Log.e("stuff", tileWidth + " " + tileWidthPadded);
 
