@@ -7,12 +7,20 @@ import junit.framework.TestCase;
 
 import java.util.Collection;
 
-public class PointQuadTreeTest extends TestCase {
+public class QuadTreeTest extends TestCase {
 
-    private PointQuadTree<Item> mTree;
+    private QuadTree<Item> mTree;
 
     public void setUp() {
-        mTree = new PointQuadTree<Item>(0, 1, 0, 1);
+        //mTree = new PointQuadTree<Item>(0, 1, 0, 1);
+        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 5);
+    }
+
+    public void testAddOnePoint() {
+        Item item = new Item(0,0);
+        mTree.add(item);
+        Collection<Item> items = searchAll();
+        assertEquals(1, items.size());
     }
 
     public void testEmpty() {
@@ -82,7 +90,7 @@ public class PointQuadTreeTest extends TestCase {
         return mTree.search(new Bounds(0, 1, 0, 1));
     }
 
-    private static class Item implements PointQuadTree.Item {
+    private static class Item implements QuadTree.Item {
         private final Point mPoint;
 
         private Item(double x, double y) {
