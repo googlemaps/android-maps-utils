@@ -8,11 +8,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
-import com.google.maps.android.geometry.Point;
 import com.google.maps.android.heatmaps.HeatmapConstants;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.LatLngWrapper;
-import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
 public class HeatmapsDemoActivity extends BaseDemoActivity {
@@ -23,34 +21,26 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     /** Quad tree of points*/
     private PointQuadTree mTree;
 
-    private SphericalMercatorProjection mProjection =
-            new SphericalMercatorProjection(HeatmapConstants.HEATMAP_TILE_SIZE);
-
     @Override
     protected void startDemo() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
 
+        // TODO: move a lot of this into a nicer HeatmapLayer class?
         Bounds treeBounds = new Bounds(230, 240, 150, 160);
         mTree = new PointQuadTree(treeBounds);
 
         // E/sydneyPoint﹕ Point{x=235.51707804444442, y=153.62117985807495}
 
-        Point sydneyPoint = mProjection.toPoint(SYDNEY);
-        Log.e("sydneyPoint", sydneyPoint.toString());
+        LatLngWrapper[] list = {
+                new LatLngWrapper(SYDNEY, 20),
+                new LatLngWrapper(new LatLng(-33.865955, 151.195991)),
+                new LatLngWrapper(new LatLng(-33.865955, 151.196891))
+        };
 
-        Log.e("mercator", mProjection.toPoint(new LatLng(-89.999999, 0)).toString());
-        Log.e("mercator", mProjection.toPoint(new LatLng(89.999999, 0)).toString());
-        Log.e("mercator", mProjection.toPoint(new LatLng(-89.99999999, 0)).toString());
-        Log.e("mercator", mProjection.toPoint(new LatLng(89.99999999, 0)).toString());
 
-        LatLngWrapper sydneyWrapped = new LatLngWrapper(SYDNEY, 10, mProjection);
-
-        LatLngWrapper secondWrapped = new LatLngWrapper(new LatLng(-33.865955, 151.195991), 10, mProjection);
-        LatLngWrapper secondWrapped2 = new LatLngWrapper(new LatLng(-33.865955, 151.196891), 10, mProjection);
-
-        mTree.add(sydneyWrapped);
-        mTree.add(secondWrapped);
-        mTree.add(secondWrapped2);
+        for(LatLngWrapper l: list) {
+            mTree.add(l);
+        }
 
         // Create a heatmap tile provider, that will generate the overlay tiles
         TileProvider heatmapTileProvider = new HeatmapTileProvider(mTree, treeBounds,

@@ -129,7 +129,7 @@ public class HeatmapTileProvider implements TileProvider{
 
         // Color it into a bitmap
         //TODO: THIS IS A TEMPORARY FIX
-        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, 30);
+        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, 40);
 
         return convertBitmap(bitmap);
     }
