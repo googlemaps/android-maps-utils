@@ -121,7 +121,7 @@ public class HeatmapTileProvider implements TileProvider{
             Point p= w.getPoint();
             int bucketX = (int)((p.x - minX) / bucketWidth);
             int bucketY = (int)((p.y - minY) / bucketWidth);
-            intensity[bucketX][bucketY] = w.getIntensity();
+            intensity[bucketX][bucketY] += w.getIntensity();
         }
 
         // Convolve it ("smoothen" it out)
@@ -129,7 +129,7 @@ public class HeatmapTileProvider implements TileProvider{
 
         // Color it into a bitmap
         //TODO: THIS IS A TEMPORARY FIX
-        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, 10);
+        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, 30);
 
         return convertBitmap(bitmap);
     }

@@ -44,7 +44,13 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         Log.e("mercator", mProjection.toPoint(new LatLng(89.99999999, 0)).toString());
 
         LatLngWrapper sydneyWrapped = new LatLngWrapper(SYDNEY, 10, mProjection);
+
+        LatLngWrapper secondWrapped = new LatLngWrapper(new LatLng(-33.865955, 151.195991), 10, mProjection);
+        LatLngWrapper secondWrapped2 = new LatLngWrapper(new LatLng(-33.865955, 151.196891), 10, mProjection);
+
         mTree.add(sydneyWrapped);
+        mTree.add(secondWrapped);
+        mTree.add(secondWrapped2);
 
         // Create a heatmap tile provider, that will generate the overlay tiles
         TileProvider heatmapTileProvider = new HeatmapTileProvider(mTree, treeBounds,
@@ -54,8 +60,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         getMap().addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
 
         //draw marker where the stuff is supposed to be
-        getMap().addMarker(new MarkerOptions()
-                .position(SYDNEY));
+        //getMap().addMarker(new MarkerOptions()
+                //.position(SYDNEY));
     }
 
 }
