@@ -59,8 +59,7 @@ public class HeatmapTileProvider implements TileProvider{
         mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
 
         // Generate color map from gradient
-        mColorMap = HeatmapUtil.generateColorMap(gradient, HeatmapConstants.HEATMAP_COLOR_MAP_SIZE,
-                mOpacity);
+        setColorMap(gradient);
 
         // Set up blank tile
         Bitmap blank = Bitmap.createBitmap(TILE_DIM, TILE_DIM, Bitmap.Config.ARGB_8888);
@@ -75,7 +74,6 @@ public class HeatmapTileProvider implements TileProvider{
         // Each zoom level multiplies number of tiles by 2
         // Width of the world = 256 (Spherical Mercator Projection)
         // x ranges from 0 to 1 * world width
-        // y ranges from
 
         //basically arbitrarily chosen scale (based off the demo)
         double worldWidth = HeatmapConstants.HEATMAP_TILE_SIZE;
@@ -131,6 +129,25 @@ public class HeatmapTileProvider implements TileProvider{
         Log.d("getTile", "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
 
         return convertBitmap(bitmap);
+    }
+
+    /**
+     * Setter for color map.
+     * Important: tile overlay cache must be cleared after this for it to be effective
+     * outside of initialisation
+     * @param gradient Gradient to set
+     */
+    public void setColorMap(int[] gradient) {
+        mColorMap = HeatmapUtil.generateColorMap(gradient, HeatmapConstants.HEATMAP_COLOR_MAP_SIZE,
+                mOpacity);
+    }
+
+    /**
+     * Setter for radius
+     * @param radius Radius to set
+     */
+    public void setRadius(int radius) {
+        mRadius = radius;
     }
 
     /**

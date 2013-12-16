@@ -66,10 +66,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
                 HeatmapConstants.DEFAULT_HEATMAP_OPACITY, maxIntensity);
         // Add the tile overlay to the map
         getMap().addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
-
-        //draw marker where the stuff is supposed to be
-        //getMap().addMarker(new MarkerOptions()
-                //.position(SYDNEY));
     }
 
 
