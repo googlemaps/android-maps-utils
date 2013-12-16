@@ -36,7 +36,7 @@ public class Bounds {
         this.maxY = maxY;
 
         midX = (minX + maxX) / 2;
-        midY = (minY + minY) / 2;
+        midY = (minY + maxY) / 2;
     }
 
     public boolean contains(double x, double y) {
