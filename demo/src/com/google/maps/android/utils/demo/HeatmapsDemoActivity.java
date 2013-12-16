@@ -27,7 +27,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private PointQuadTree mTree;
 
     @Override
-    // TODO: move a lot of this into a nicer HeatmapLayer class?
+    // TODO: move a lot of this into a nicer HeatmapLayer class (handler)?
     protected void startDemo() {
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
 
@@ -78,12 +78,24 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
 
-        LatLngWrapper[] list = new LatLngWrapper[items.size()];
-        int i;
+        LatLngWrapper[] list = new LatLngWrapper[items.size() * 11];
+        int i, j;
         for (i = 0; i < items.size(); i++) {
             MyItem temp = items.get(i);
             list[i] = new LatLngWrapper(temp.getPosition());
         }
+
+        for (j = 0; j < 10; j++) {
+            double offset = j / 60d;
+            for (MyItem item : items) {
+                LatLng position = item.getPosition();
+                double lat = position.latitude + offset;
+                double lng = position.longitude + offset;
+                list[i] = new LatLngWrapper(new LatLng(lat, lng));
+                i++;
+            }
+        }
+
         return list;
     }
 
