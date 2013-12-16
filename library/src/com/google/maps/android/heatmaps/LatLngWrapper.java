@@ -25,8 +25,6 @@ public class LatLngWrapper implements PointQuadTree.Item {
 
     private double mIntensity;
 
-
-
     /**
      * Constructor
      * @param latLng LatLng to add to wrapper

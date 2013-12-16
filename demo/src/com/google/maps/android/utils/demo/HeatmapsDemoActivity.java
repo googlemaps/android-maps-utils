@@ -2,6 +2,7 @@ package com.google.maps.android.utils.demo;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,6 +14,12 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.HeatmapUtil;
 import com.google.maps.android.heatmaps.LatLngWrapper;
 import com.google.maps.android.quadtree.PointQuadTree;
+import com.google.maps.android.utils.demo.model.MyItem;
+
+import org.json.JSONException;
+
+import java.io.InputStream;
+import java.util.List;
 
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
@@ -23,18 +30,19 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private PointQuadTree mTree;
 
     @Override
+    // TODO: move a lot of this into a nicer HeatmapLayer class?
     protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
+        //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
 
-        // TODO: move a lot of this into a nicer HeatmapLayer class?
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
-        // E/sydneyPoint﹕ Point{x=235.51707804444442, y=153.62117985807495}
+        LatLngWrapper[] list = new LatLngWrapper[10];
 
-        LatLngWrapper[] list = {
-                new LatLngWrapper(SYDNEY, 20),
-                new LatLngWrapper(new LatLng(-33.865955, 151.195991)),
-                new LatLngWrapper(new LatLng(-33.865955, 151.196891))
-        };
+        try {
+            list = readItems();
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+        }
 
         // Calculate appropriate quadtree bounds
         int minX = (int)list[0].getPoint().x;
@@ -42,6 +50,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         int minY = (int)list[0].getPoint().y;
         int maxY = (int)list[0].getPoint().y + 1;
 
+        //TODO: Are int bounds accurate enough? (small heatmaps + max val calc?)
         for (LatLngWrapper l: list) {
             int x = (int)l.getPoint().x;
             int y = (int)l.getPoint().y;
@@ -82,6 +91,21 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         //draw marker where the stuff is supposed to be
         //getMap().addMarker(new MarkerOptions()
                 //.position(SYDNEY));
+    }
+
+
+    // Copied from ClusteringDemoActivity
+    private LatLngWrapper[] readItems() throws JSONException {
+        InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
+        List<MyItem> items = new MyItemReader().read(inputStream);
+
+        LatLngWrapper[] list = new LatLngWrapper[items.size()];
+        int i;
+        for (i = 0; i < items.size(); i++) {
+            MyItem temp = items.get(i);
+            list[i] = new LatLngWrapper(temp.getPosition());
+        }
+        return list;
     }
 
 }
