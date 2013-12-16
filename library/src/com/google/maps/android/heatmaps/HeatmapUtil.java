@@ -3,9 +3,7 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import android.util.Log;
-
-import java.util.Arrays;
+import com.google.maps.android.geometry.Bounds;
 
 /**
  * Utility functions for heatmaps.
@@ -150,17 +148,46 @@ public class HeatmapUtil {
         return tile;
     }
 
-    /** Given a grid, find max val (for colorize, if full colour spectrum desired)
-     * @param grid grid to find max for. Assumed to be square
-     * @return max value in grid
+    /**
+     * Calculate a reasonable maximum intensity value to map to maximum color intensity
+     * @param list List of LatLngs to put into buckets
+     * @param bounds Bucket boundaries
+     * @param radius radius of convolution
+     * @param screenDim larger dimension of screen in pixels (for scale)
+     * @return Approximate max value
      */
-    // TODO: THIS IS STUPID YOU NEED ONE FOR _EVERYTHING_ otherwise colors will mess up when stuff is split across tiles
-    public static double getMaxVal(double[][] grid) {
+    public static double getMaxVal(LatLngWrapper[] list, Bounds bounds, int radius, int screenDim) {
+        // Approximate scale as if entire heatmap is on the screen
+        // ie scale dimensions to larger of width or height (screenDim)
+        double minX = bounds.minX;
+        double maxX = bounds.maxX;
+        double minY = bounds.minY;
+        double maxY = bounds.maxY;
+        double boundsDim = (maxX - minX > maxY - minY) ? maxX - minX : maxY - minY;
+
+        // Number of buckets: have diameter sized buckets
+        int nBuckets = (int) (screenDim / ( 2 * radius) + 0.5);
+        // Scaling factor to convert width in terms of point distance, to which bucket
+        double scale = nBuckets / boundsDim;
+
+        // Make buckets
+        double[][] buckets = new double[nBuckets][nBuckets];
+
+        // Assign into buckets
+        double x, y;
+        for (LatLngWrapper l : list) {
+            x = l.getPoint().x;
+            y = l.getPoint().y;
+
+            buckets[(int)((x - minX) * scale)][(int)((y - minY) * scale)] += l.getIntensity();
+        }
+
+        // Find maximum bucket value
         int i, j;
         double max = 0;
-        for (i = 0; i < grid.length; i++) {
-            for (j = 0; j < grid.length; j++) {
-                if (grid[i][j] > max) max = grid[i][j];
+        for (i = 0; i < nBuckets; i++) {
+            for (j = 0; j < nBuckets; j++) {
+                if (buckets[i][j] > max) max = buckets[i][j];
             }
         }
         return max;
@@ -191,13 +218,10 @@ public class HeatmapUtil {
             colors[i] = gradient[i];
         }
 
-        //Log.e("values", Arrays.toString(values));
-
         int[] colorMap = new int[size];
         // lowColorStop = closest color stop (value from gradient) below current position
         int lowColorStop = 0;
         for (i = 0; i < size; i++) {
-            //Log.e("i", "i = "+i+" lCS = "+lowColorStop);
             // if i is larger than next color stop value, increment to next color stop
             // Check that it is safe to access lowColorStop + 1 first!
             // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice

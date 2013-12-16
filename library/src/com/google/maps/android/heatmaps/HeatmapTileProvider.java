@@ -1,16 +1,13 @@
 package com.google.maps.android.heatmaps;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.heatmaps.HeatmapUtil;
 import com.google.maps.android.heatmaps.HeatmapConstants;
-import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
 import java.io.ByteArrayOutputStream;
@@ -42,18 +39,22 @@ public class HeatmapTileProvider implements TileProvider{
     /** Opacity of the overall heatmap overlay (0...1) */
     private double mOpacity;
 
+    /** Maximum intensity estimate for heatmap */
+    private double mMaxIntensity;
+
     /** Blank tile */
     private Tile mBlankTile;
 
     // TODO: make radius, gradient, opacity etc changeable after creation?
     // TODO: have default that are optionally editable?
     public HeatmapTileProvider(PointQuadTree<PointQuadTree.Item> tree, Bounds bounds,
-                               int radius, int[] gradient, double opacity) {
+                               int radius, int[] gradient, double opacity, double maxIntensity) {
         // Assign function arguments to fields
         mTree = tree;
         mBounds = bounds;
         mRadius = radius;
         mOpacity = opacity;
+        mMaxIntensity = maxIntensity;
 
         // Compute kernel density function (sigma = 1/3rd of radius)
         mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
@@ -66,7 +67,6 @@ public class HeatmapTileProvider implements TileProvider{
         // Set up blank tile
         Bitmap blank = Bitmap.createBitmap(TILE_DIM, TILE_DIM, Bitmap.Config.ARGB_8888);
         mBlankTile = convertBitmap(blank);
-
 
     }
 
@@ -93,7 +93,6 @@ public class HeatmapTileProvider implements TileProvider{
         // padded bucket width
         double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
 
-        Log.e("stuff", tileWidth + " " + tileWidthPadded);
 
         // Make bounds: minX, maxX, minY, maxY
         // TODO: is this OK for Y? ... I THINK IT WORKS (???)
@@ -109,8 +108,6 @@ public class HeatmapTileProvider implements TileProvider{
         if (!tileBounds.intersects(mBounds)) {
             return mBlankTile;
         }
-
-        Log.e("tilebounds", minX + " " + maxX + " " + minY + " " + maxY + " padding"+padding );
 
         // Search for all points within tile bounds
         ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>)mTree.search(tileBounds);
@@ -129,7 +126,7 @@ public class HeatmapTileProvider implements TileProvider{
 
         // Color it into a bitmap
         //TODO: THIS IS A TEMPORARY FIX
-        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, 40);
+        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity);
 
         return convertBitmap(bitmap);
     }

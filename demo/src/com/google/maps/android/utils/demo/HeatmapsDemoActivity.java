@@ -1,15 +1,16 @@
 package com.google.maps.android.utils.demo;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.heatmaps.HeatmapConstants;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.HeatmapUtil;
 import com.google.maps.android.heatmaps.LatLngWrapper;
 import com.google.maps.android.quadtree.PointQuadTree;
 
@@ -54,20 +55,27 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         // Make the quad tree
         //Bounds treeBounds = new Bounds(230, 240, 150, 160);
         Bounds treeBounds = new Bounds(minX, maxX, minY, maxY);
-        Log.e("bounds", minX + " " + maxX + " " + minY + " " + maxY);
-        mTree = new PointQuadTree(treeBounds);
+        mTree = new PointQuadTree<LatLngWrapper>(treeBounds);
 
         // Add points to quad tree
-
-
         for (LatLngWrapper l: list) {
             mTree.add(l);
         }
 
+        // Calculate reasonable maximum intensity for color scale (user can also specify)
+        // Get screen dimensions
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenDim = dm.widthPixels > dm.heightPixels ? dm.widthPixels : dm.heightPixels;
+
+        double maxIntensity = HeatmapUtil.getMaxVal(list, treeBounds,
+                HeatmapConstants.DEFAULT_HEATMAP_RADIUS, screenDim);
+        Log.e("MAX", "MaxIntensity = " + maxIntensity);
+
         // Create a heatmap tile provider, that will generate the overlay tiles
         TileProvider heatmapTileProvider = new HeatmapTileProvider(mTree, treeBounds,
                 HeatmapConstants.DEFAULT_HEATMAP_RADIUS, HeatmapConstants.DEFAULT_HEATMAP_GRADIENT,
-                HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
+                HeatmapConstants.DEFAULT_HEATMAP_OPACITY, maxIntensity);
         // Add the tile overlay to the map
         getMap().addTileOverlay(new TileOverlayOptions().tileProvider(heatmapTileProvider));
 
