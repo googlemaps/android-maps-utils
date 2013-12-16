@@ -45,20 +45,21 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Calculate appropriate quadtree bounds
-        int minX = (int)list[0].getPoint().x;
-        int maxX = (int)list[0].getPoint().x + 1;
-        int minY = (int)list[0].getPoint().y;
-        int maxY = (int)list[0].getPoint().y + 1;
+        double sigma = 0.0000001;
+        double minX = list[0].getPoint().x;
+        double maxX = list[0].getPoint().x + sigma;
+        double minY = list[0].getPoint().y;
+        double maxY = list[0].getPoint().y + sigma;
 
         //TODO: Are int bounds accurate enough? (small heatmaps + max val calc?)
         for (LatLngWrapper l: list) {
-            int x = (int)l.getPoint().x;
-            int y = (int)l.getPoint().y;
+            double x = l.getPoint().x;
+            double y = l.getPoint().y;
             // Extend bounds if necessary
             if (x < minX) minX = x;
-            if (x + 1 > maxX) maxX = x + 1;
+            if (x + sigma> maxX) maxX = x+ sigma;
             if (y < minY) minY = y;
-            if (y + 1 > maxY) maxY = y + 1;
+            if (y + sigma > maxY) maxY = y+ sigma;
         }
 
         // Make the quad tree
