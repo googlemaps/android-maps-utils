@@ -45,7 +45,7 @@ public class HeatmapConstants {
     public final static int[] DEFAULT_HEATMAP_GRADIENT = {
             //a, r, g, b / r, g, b
             Color.argb(0, 102, 255, 0),  // green (invisible)
-            Color.argb(255/2 ,102, 255, 0),  // 1/2th invisible
+            Color.argb(255/3*2 ,102, 255, 0),  // 2/3rds invisible
             Color.rgb(147, 255, 0),
             Color.rgb(193, 255, 0),
             Color.rgb(238, 255, 0),  // yellow
@@ -63,7 +63,7 @@ public class HeatmapConstants {
      */
     public final static int[] ALT_HEATMAP_GRADIENT = {
             Color.argb(0, 0, 255, 255),// transparent
-            Color.argb(255/2, 0, 255, 255),
+            Color.argb(255/3*2, 0, 255, 255),
             Color.rgb(0, 191, 255),
             Color.rgb(0, 127, 255),
             Color.rgb(0, 63, 255),

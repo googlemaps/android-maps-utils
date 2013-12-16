@@ -47,7 +47,15 @@ public class HeatmapTileProvider implements TileProvider{
     /** Blank tile */
     private Tile mBlankTile;
 
-    // TODO: have default that are optionally editable?
+    /**
+     * Constuctor for the heatmap with all options.
+     * @param tree The quadtree of heatmap points
+     * @param bounds bounds of the quadtree
+     * @param radius Radius of convolution to use
+     * @param gradient Gradient to color heatmap with
+     * @param opacity Opacity of the entire heatmap
+     * @param maxIntensity Intensity value that maps to maximum gradient color
+     */
     public HeatmapTileProvider(PointQuadTree<PointQuadTree.Item> tree, Bounds bounds,
                                int radius, int[] gradient, double opacity, double maxIntensity) {
         // Assign function arguments to fields
@@ -92,7 +100,6 @@ public class HeatmapTileProvider implements TileProvider{
 
         // padded bucket width
         double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
-
 
         // Make bounds: minX, maxX, minY, maxY
         double minX = x * tileWidth - padding;

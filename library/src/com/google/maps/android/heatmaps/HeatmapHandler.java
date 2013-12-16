@@ -14,6 +14,7 @@ import com.google.maps.android.quadtree.PointQuadTree;
  * Handles the heatmap layer, creating the tile overlay, provider, and so on.
  */
 public class HeatmapHandler {
+
     /** Quad tree of points*/
     private PointQuadTree mTree;
 
@@ -27,6 +28,15 @@ public class HeatmapHandler {
 
     private int mScreenDim;
 
+    /**
+     * Constructor for the handler
+     * @param list List of all LatLngWrappers to put into quadtree
+     * @param radius Radius of convolution to use
+     * @param gradient Gradient to color heatmap with
+     * @param opacity Opacity of the entire heatmap
+     * @param activity pass the activity to obtain dimensions
+     * @param map pass the map so we can draw the heatmap onto it
+     */
     public HeatmapHandler(LatLngWrapper[] list, int radius, int[] gradient, double opacity,
                           Activity activity, GoogleMap map) {
         // Assignments
@@ -56,6 +66,18 @@ public class HeatmapHandler {
 
         // Add the overlay to the map
         mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mTileProvider));
+    }
+
+    /**
+     * Alternative constructor that uses default values for radius, gradient and opacity
+     * @param list List of all LatLngWrappers to put into quadtree
+     * @param activity pass the activity to obtain dimensions
+     * @param map pass the map so we can draw the heatmap onto it
+     */
+    public HeatmapHandler(LatLngWrapper[] list, Activity activity, GoogleMap map) {
+        this(list, HeatmapConstants.DEFAULT_HEATMAP_RADIUS,
+                HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, HeatmapConstants.DEFAULT_HEATMAP_OPACITY,
+                activity, map);
     }
 
     /**

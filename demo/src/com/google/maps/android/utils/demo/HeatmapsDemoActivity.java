@@ -43,11 +43,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Make the handler deal with the map
-        mHeatmapHandler = new HeatmapHandler(list, HeatmapConstants.DEFAULT_HEATMAP_RADIUS,
-                HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, HeatmapConstants.DEFAULT_HEATMAP_OPACITY,
-                this, getMap());
+        mHeatmapHandler = new HeatmapHandler(list, this, getMap());
     }
-
 
     public void changeRadius(View view) {
         if (defaultRadius) {
