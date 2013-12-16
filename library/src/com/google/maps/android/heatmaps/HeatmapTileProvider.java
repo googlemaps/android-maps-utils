@@ -151,6 +151,14 @@ public class HeatmapTileProvider implements TileProvider{
     }
 
     /**
+     * Setter for opacity
+     * @param opacity opacity to set
+     */
+    public void setOpacity(double opacity) {
+        mOpacity = opacity;
+    }
+
+    /**
      * helper function - convert a bitmap into a tile
      * @param bitmap bitmap to convert into a tile
      * @return the tile
