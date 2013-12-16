@@ -23,9 +23,6 @@ import java.util.List;
 
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
-    /** where sydney is */
-    private final LatLng SYDNEY = new LatLng(-33.865955, 151.195891);
-
     /** Quad tree of points*/
     private PointQuadTree mTree;
 
@@ -44,27 +41,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
 
-        // Calculate appropriate quadtree bounds
-        double sigma = 0.0000001;
-        double minX = list[0].getPoint().x;
-        double maxX = list[0].getPoint().x + sigma;
-        double minY = list[0].getPoint().y;
-        double maxY = list[0].getPoint().y + sigma;
-
-        //TODO: Are int bounds accurate enough? (small heatmaps + max val calc?)
-        for (LatLngWrapper l: list) {
-            double x = l.getPoint().x;
-            double y = l.getPoint().y;
-            // Extend bounds if necessary
-            if (x < minX) minX = x;
-            if (x + sigma> maxX) maxX = x+ sigma;
-            if (y < minY) minY = y;
-            if (y + sigma > maxY) maxY = y+ sigma;
-        }
-
         // Make the quad tree
-        //Bounds treeBounds = new Bounds(230, 240, 150, 160);
-        Bounds treeBounds = new Bounds(minX, maxX, minY, maxY);
+        Bounds treeBounds = HeatmapUtil.getBounds(list);
         mTree = new PointQuadTree<LatLngWrapper>(treeBounds);
 
         // Add points to quad tree

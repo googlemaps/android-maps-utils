@@ -12,6 +12,30 @@ import com.google.maps.android.geometry.Bounds;
 public class HeatmapUtil {
 
     /**
+     * Helper function for quadtree creation
+     * @param list List of LatLngWrapper to calculate bounds for
+     * @return Bounds that enclose the listed LatLngWrapper points
+     */
+    public static Bounds getBounds(LatLngWrapper[] list) {
+        double sigma = 0.0000001;
+        double minX = list[0].getPoint().x;
+        double maxX = list[0].getPoint().x + sigma;
+        double minY = list[0].getPoint().y;
+        double maxY = list[0].getPoint().y + sigma;
+
+        for (LatLngWrapper l: list) {
+            double x = l.getPoint().x;
+            double y = l.getPoint().y;
+            // Extend bounds if necessary
+            if (x < minX) minX = x;
+            if (x + sigma> maxX) maxX = x+ sigma;
+            if (y < minY) minY = y;
+            if (y + sigma > maxY) maxY = y+ sigma;
+        }
+        return new Bounds(minX, maxX, minY, maxY);
+    }
+
+    /**
      * Generates 1D Gaussian kernel density function, as a double array of size radius * 2  + 1
      * Normalised with central value of 1.
      * @param radius radius of the kernel
@@ -253,8 +277,6 @@ public class HeatmapUtil {
 
         return colorMap;
     }
-
-
 
     /**
      * Helper function for creation of color map - interpolates between given colors

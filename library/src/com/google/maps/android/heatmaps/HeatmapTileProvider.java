@@ -1,13 +1,12 @@
 package com.google.maps.android.heatmaps;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
-import com.google.maps.android.heatmaps.HeatmapUtil;
-import com.google.maps.android.heatmaps.HeatmapConstants;
 import com.google.maps.android.quadtree.PointQuadTree;
 
 import java.io.ByteArrayOutputStream;
@@ -60,7 +59,6 @@ public class HeatmapTileProvider implements TileProvider{
         mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
 
         // Generate color map from gradient
-        // TODO: make size an option? is that needed?
         mColorMap = HeatmapUtil.generateColorMap(gradient, HeatmapConstants.HEATMAP_COLOR_MAP_SIZE,
                 mOpacity);
 
@@ -71,6 +69,7 @@ public class HeatmapTileProvider implements TileProvider{
     }
 
     public Tile getTile(int x, int y, int zoom) {
+        long startTime = getTime();
         // Convert tile coordinates and zoom into Point/Bounds format
         // Know that at zoom level 0, there is one tile: (0, 0) (arbitrary width 256)
         // Each zoom level multiplies number of tiles by 2
@@ -125,8 +124,11 @@ public class HeatmapTileProvider implements TileProvider{
         double[][] convolved = HeatmapUtil.convolve(intensity, mKernel);
 
         // Color it into a bitmap
-        //TODO: THIS IS A TEMPORARY FIX
         Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity);
+
+        long endTime = getTime();
+
+        Log.d("getTile", "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
 
         return convertBitmap(bitmap);
     }
@@ -145,4 +147,7 @@ public class HeatmapTileProvider implements TileProvider{
     }
 
 
+    private long getTime() {
+        return System.currentTimeMillis();
+    }
 }
