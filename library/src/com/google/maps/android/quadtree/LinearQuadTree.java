@@ -51,22 +51,27 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
             int location = 0;
             Bounds currBounds = mBounds;
             for (int order = mPrecision-1; order >= 0; order--) {
+                /*
+                Log.d("LinearQuadTree.Node", "mBase = " + mBase + " order = " + order);
+                Log.d("LinearQuadTree.Node", "mBase ^ order = " + Math.pow(mBase, order));
+                */
                 if (p.y < currBounds.midY) {       // top
                     if (p.x < currBounds.midX) {   // left = 0
+                        location += mQuadrant.TOP_LEFT.getValue() * Math.pow(mBase, order);
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.minY, currBounds.midY);
                     } else {                       // right = 1
-                        location += mQuadrant.TOP_RIGHT.getValue() * mBase ^order;
+                        location += mQuadrant.TOP_RIGHT.getValue() * Math.pow(mBase, order);
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.minY, currBounds.midY);
                     }
                 } else {                           // bottom
                     if (p.x < currBounds.midX) {   // left = 2
-                        location += mQuadrant.BOTTOM_LEFT.getValue() * mBase ^order;
+                        location += mQuadrant.BOTTOM_LEFT.getValue() * Math.pow(mBase, order);
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.midY, currBounds.maxY);
                     } else {                       // right = 3
-                        location += mQuadrant.BOTTOM_RIGHT.getValue() * mBase ^order;
+                        location += mQuadrant.BOTTOM_RIGHT.getValue() * Math.pow(mBase, order);
                         currBounds = new Bounds(currBounds.midX, currBounds.maxX,
                                                      currBounds.midY, currBounds.maxY);
                     }
@@ -131,7 +136,7 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     public boolean remove(T item) {
         Node node = new Node(item);
         int index = Collections.binarySearch(mPoints, node);
-        if (index >=0) { // found
+        if (index >= 0) { // found
             while (index < mPoints.size() && mPoints.get(index).location == node.location
                     && mPoints.get(index).t != item) {
                 index++;
@@ -153,62 +158,70 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
     public Collection<T> search(Bounds searchBounds) {
         Collection<T> collection = new ArrayList<T>();
         if (mPoints.size() > 0) {
-            search(searchBounds, mBounds, 0, mPrecision-1, collection);
-            Log.d("LinearQuadTree.search() collection", "array size = " + mPoints.size());
+            search(searchBounds, mBounds, 0, mPrecision, collection);
+            /*
+            Log.d("LinearQuadTree.search() collection", "mPoints size = " + mPoints.size());
+            Log.d("LinearQuadTree.search() collection", "results size = " + collection.size());
+            */
         }
         return collection;
     }
 
     private void search(Bounds searchBounds, Bounds currBounds,
                          int location, int depth, Collection<T> results) {
-        /*
         if (searchBounds.contains(currBounds)) {
             // all the points in these bounds are in searchBounds
             Node node = new Node(location);
             int index = Collections.binarySearch(mPoints, node);
             if (index < 0) index = -1-index;
+            /*
             Log.d("LinearQuadTree.search() void", "index = " + index);
             Log.d("LinearQuadTree.search() void", "array size = " + mPoints.size());
             Log.d("LinearQuadTree.search() void",
                     "item coords = (" + mPoints.get(index).t.getPoint().x + ", "
                     +  + mPoints.get(index).t.getPoint().y + ")");
-            for (; mPoints.get(index).location < location + (mBase^depth); index++) {
+            Log.d("LinearQuadTree.search() void", "Point location " + mPoints.get(index).location);
+            Log.d("LinearQuadTree.search() void", "End point location " + (location + Math.pow(mBase, depth)));
+            Log.d("LinearQuadTree.search() void", "mBase = " + mBase + " depth = " + depth);
+            Log.d("LinearQuadTree.search() void", "mBase ^ depth = " + Math.pow(mBase, depth));
+            */
+            for (; index < mPoints.size()
+                    && mPoints.get(index).location < location + Math.pow(mBase, depth); index++) {
                 results.add(mPoints.get(index).t);
+                Log.d("LinearQuadTree.search() void", "added!");
             }
         } else if (searchBounds.intersects(currBounds) && depth>0) {
             // some of the points in these bounds are in searchBounds, can be split into quads
+            int multiplier = (int) Math.pow(mBase, depth);
             search(searchBounds,
                     new Bounds(currBounds.minX, currBounds.midX, currBounds.minY, currBounds.midY),
-                    location + mQuadrant.TOP_LEFT.getValue()*(mBase^depth), depth - 1, results);
+                    location + mQuadrant.TOP_LEFT.getValue()*multiplier, depth - 1, results);
             search(searchBounds,
                     new Bounds(currBounds.midX, currBounds.maxX, currBounds.minY, currBounds.midY),
-                    location + mQuadrant.TOP_RIGHT.getValue()*(mBase^depth), depth - 1, results);
+                    location + mQuadrant.TOP_RIGHT.getValue()*multiplier, depth - 1, results);
             search(searchBounds,
                     new Bounds(currBounds.minX, currBounds.midX, currBounds.midY, currBounds.maxY),
-                    location + mQuadrant.BOTTOM_LEFT.getValue()*(mBase^depth), depth - 1, results);
+                    location + mQuadrant.BOTTOM_LEFT.getValue()*multiplier, depth - 1, results);
             search(searchBounds,
                     new Bounds(currBounds.midX, currBounds.maxX, currBounds.midY, currBounds.maxY),
-                    location + mQuadrant.BOTTOM_RIGHT.getValue()*(mBase^depth), depth - 1, results);
+                    location + mQuadrant.BOTTOM_RIGHT.getValue()*multiplier, depth - 1, results);
 
         } else if (searchBounds.intersects(currBounds)) {
             // some of the points in bounds are in searchBounds, quads can't be split
             Node node = new Node(location);
             int index = Collections.binarySearch(mPoints, node);
             if (index < 0) index = -1-index;
+            /*
             Log.d("LinearQuadTree.search() void", "index = " + index);
             Log.d("LinearQuadTree.search() void", "array size = " + mPoints.size());
-            for (; mPoints.get(index).location < location + (mBase^depth); index++) {
+            */
+            for (; index < mPoints.size()
+                    && mPoints.get(index).location < location + Math.pow(mBase, depth); index++) {
                 if (searchBounds.contains(mPoints.get(index).t.getPoint().x,
                                               mPoints.get(index).t.getPoint().y)) {
                     results.add(mPoints.get(index).t);
                 }
             }
-        }
-        */
-
-        for (Node node : mPoints) {
-            if (searchBounds.contains(node.t.getPoint().x, node.t.getPoint().y))
-                results.add(node.t);
         }
 
     }
