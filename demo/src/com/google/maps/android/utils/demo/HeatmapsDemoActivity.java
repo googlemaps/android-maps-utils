@@ -26,8 +26,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
 
         // TODO: move a lot of this into a nicer HeatmapLayer class?
-        Bounds treeBounds = new Bounds(230, 240, 150, 160);
-        mTree = new PointQuadTree(treeBounds);
 
         // E/sydneyPoint﹕ Point{x=235.51707804444442, y=153.62117985807495}
 
@@ -37,8 +35,32 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
                 new LatLngWrapper(new LatLng(-33.865955, 151.196891))
         };
 
+        // Calculate appropriate quadtree bounds
+        int minX = (int)list[0].getPoint().x;
+        int maxX = (int)list[0].getPoint().x + 1;
+        int minY = (int)list[0].getPoint().y;
+        int maxY = (int)list[0].getPoint().y + 1;
 
-        for(LatLngWrapper l: list) {
+        for (LatLngWrapper l: list) {
+            int x = (int)l.getPoint().x;
+            int y = (int)l.getPoint().y;
+            // Extend bounds if necessary
+            if (x < minX) minX = x;
+            if (x + 1 > maxX) maxX = x + 1;
+            if (y < minY) minY = y;
+            if (y + 1 > maxY) maxY = y + 1;
+        }
+
+        // Make the quad tree
+        //Bounds treeBounds = new Bounds(230, 240, 150, 160);
+        Bounds treeBounds = new Bounds(minX, maxX, minY, maxY);
+        Log.e("bounds", minX + " " + maxX + " " + minY + " " + maxY);
+        mTree = new PointQuadTree(treeBounds);
+
+        // Add points to quad tree
+
+
+        for (LatLngWrapper l: list) {
             mTree.add(l);
         }
 
