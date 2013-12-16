@@ -22,10 +22,20 @@ public class HeatmapConstants {
      */
     public static final int DEFAULT_HEATMAP_RADIUS = 10;
 
+     /**
+     * Alternative radius for convolution
+     */
+    public static final int ALT_HEATMAP_RADIUS = 25;
+
     /**
      * Default opacity of heatmap overlay
      */
     public static final double DEFAULT_HEATMAP_OPACITY = 0.7;
+
+    /**
+     * Alternative opacity of heatmap overlay
+     */
+    public static final double ALT_HEATMAP_OPACITY = 0.2;
 
     /**
      * Default gradient for heatmap.
@@ -47,4 +57,24 @@ public class HeatmapConstants {
             Color.rgb(255, 0, 0)     // red
             };
 
+    /**
+     * Alternative heatmap gradient (blue -> red)
+     * Copied from Javascript version
+     */
+    public final static int[] ALT_HEATMAP_GRADIENT = {
+            Color.argb(0, 0, 255, 255),// transparent
+            Color.argb(255/2, 0, 255, 255),
+            Color.rgb(0, 191, 255),
+            Color.rgb(0, 127, 255),
+            Color.rgb(0, 63, 255),
+            Color.rgb(0, 0, 255),
+            Color.rgb(0, 0, 223),
+            Color.rgb(0, 0, 191),
+            Color.rgb(0, 0, 159),
+            Color.rgb(0, 0, 127),
+            Color.rgb(63, 0, 91),
+            Color.rgb(127, 0, 63),
+            Color.rgb(191, 0, 31),
+            Color.rgb(255, 0, 0)
+            };
 }

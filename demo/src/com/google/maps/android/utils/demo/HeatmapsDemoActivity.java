@@ -1,5 +1,6 @@
 package com.google.maps.android.utils.demo;
 
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +18,16 @@ import java.util.List;
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     private HeatmapHandler mHeatmapHandler;
+
+    private boolean defaultGradient = true;
+    private boolean defaultRadius = true;
+    private boolean defaultOpacity = true;
+
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.heatmaps_demo;
+    }
 
     @Override
     protected void startDemo() {
@@ -38,6 +49,36 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
                 this, getMap());
     }
 
+
+    public void changeRadius(View view) {
+        if (defaultRadius) {
+            mHeatmapHandler.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
+            defaultRadius = false;
+        } else {
+            mHeatmapHandler.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
+            defaultRadius = true;
+        }
+    }
+
+    public void changeGradient(View view) {
+        if (defaultGradient) {
+            mHeatmapHandler.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
+            defaultGradient = false;
+        } else {
+            mHeatmapHandler.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
+            defaultGradient = true;
+        }
+    }
+
+    public void changeOpacity(View view) {
+        if (defaultOpacity) {
+            mHeatmapHandler.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
+            defaultOpacity = false;
+        } else {
+            mHeatmapHandler.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
+            defaultOpacity = true;
+        }
+    }
 
     // Copied from ClusteringDemoActivity
     private LatLngWrapper[] readItems() throws JSONException {
