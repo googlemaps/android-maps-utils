@@ -29,6 +29,9 @@ public class HeatmapTileProvider implements TileProvider{
     /**  Heatmap point radius. */
     private int mRadius;
 
+    /** Gradient of the color map */
+    private int[] mGradient;
+
     /** Color map to use to color tiles */
     private int[] mColorMap;
 
@@ -44,7 +47,6 @@ public class HeatmapTileProvider implements TileProvider{
     /** Blank tile */
     private Tile mBlankTile;
 
-    // TODO: make radius, gradient, opacity etc changeable after creation?
     // TODO: have default that are optionally editable?
     public HeatmapTileProvider(PointQuadTree<PointQuadTree.Item> tree, Bounds bounds,
                                int radius, int[] gradient, double opacity, double maxIntensity) {
@@ -52,6 +54,7 @@ public class HeatmapTileProvider implements TileProvider{
         mTree = tree;
         mBounds = bounds;
         mRadius = radius;
+        mGradient = gradient;
         mOpacity = opacity;
         mMaxIntensity = maxIntensity;
 
@@ -92,7 +95,6 @@ public class HeatmapTileProvider implements TileProvider{
 
 
         // Make bounds: minX, maxX, minY, maxY
-        // TODO: is this OK for Y? ... I THINK IT WORKS (???)
         double minX = x * tileWidth - padding;
         double maxX = (x + 1) * tileWidth + padding;
         double minY = y * tileWidth - padding;
@@ -138,6 +140,7 @@ public class HeatmapTileProvider implements TileProvider{
      * @param gradient Gradient to set
      */
     public void setColorMap(int[] gradient) {
+        mGradient = gradient;
         mColorMap = HeatmapUtil.generateColorMap(gradient, HeatmapConstants.HEATMAP_COLOR_MAP_SIZE,
                 mOpacity);
     }
@@ -148,6 +151,8 @@ public class HeatmapTileProvider implements TileProvider{
      */
     public void setRadius(int radius) {
         mRadius = radius;
+        // need to recompute kernel
+        mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
     }
 
     /**
@@ -156,6 +161,12 @@ public class HeatmapTileProvider implements TileProvider{
      */
     public void setOpacity(double opacity) {
         mOpacity = opacity;
+        // need to recompute kernel color map
+        setColorMap(mGradient);
+    }
+
+    public void setMaxIntensity(double intensity) {
+        mMaxIntensity = intensity;
     }
 
     /**

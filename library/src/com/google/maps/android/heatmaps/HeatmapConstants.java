@@ -25,7 +25,7 @@ public class HeatmapConstants {
      /**
      * Alternative radius for convolution
      */
-    public static final int ALT_HEATMAP_RADIUS = 25;
+    public static final int ALT_HEATMAP_RADIUS = 5;
 
     /**
      * Default opacity of heatmap overlay

@@ -23,7 +23,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private boolean defaultRadius = true;
     private boolean defaultOpacity = true;
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.heatmaps_demo;
