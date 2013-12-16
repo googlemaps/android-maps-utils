@@ -98,6 +98,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
                 double lat = position.latitude + offset;
                 double lng = position.longitude + offset;
                 mList.add(new LatLngWrapper(new LatLng(lat, lng)));
+                mList.add(new LatLngWrapper(new LatLng(lat, lng - 2 * offset)));
+                mList.add(new LatLngWrapper(new LatLng(lat - 2 * offset, lng)));
+                mList.add(new LatLngWrapper(new LatLng(lat - 2 * offset, lng - 2 * offset)));
             }
         }
 
