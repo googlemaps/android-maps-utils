@@ -5,6 +5,8 @@ import android.graphics.Color;
 
 import com.google.maps.android.geometry.Bounds;
 
+import java.util.ArrayList;
+
 /**
  * Utility functions for heatmaps.
  * Based off the javascript heatmaps code
@@ -16,12 +18,12 @@ public class HeatmapUtil {
      * @param list List of LatLngWrapper to calculate bounds for
      * @return Bounds that enclose the listed LatLngWrapper points
      */
-    public static Bounds getBounds(LatLngWrapper[] list) {
+    public static Bounds getBounds(ArrayList<LatLngWrapper> list) {
         double sigma = 0.0000001;
-        double minX = list[0].getPoint().x;
-        double maxX = list[0].getPoint().x + sigma;
-        double minY = list[0].getPoint().y;
-        double maxY = list[0].getPoint().y + sigma;
+        double minX = list.get(0).getPoint().x;
+        double maxX = list.get(0).getPoint().x + sigma;
+        double minY = list.get(0).getPoint().y;
+        double maxY = list.get(0).getPoint().y + sigma;
 
         for (LatLngWrapper l: list) {
             double x = l.getPoint().x;
@@ -180,7 +182,8 @@ public class HeatmapUtil {
      * @param screenDim larger dimension of screen in pixels (for scale)
      * @return Approximate max value
      */
-    public static double getMaxVal(LatLngWrapper[] list, Bounds bounds, int radius, int screenDim) {
+    public static double getMaxVal(ArrayList<LatLngWrapper> list, Bounds bounds, int radius,
+                                   int screenDim) {
         // Approximate scale as if entire heatmap is on the screen
         // ie scale dimensions to larger of width or height (screenDim)
         double minX = bounds.minX;

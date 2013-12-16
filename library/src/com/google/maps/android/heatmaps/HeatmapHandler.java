@@ -10,6 +10,8 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.quadtree.PointQuadTree;
 
+import java.util.ArrayList;
+
 /**
  * Handles the heatmap layer, creating the tile overlay, provider, and so on.
  */
@@ -22,7 +24,7 @@ public class HeatmapHandler {
 
     private HeatmapTileProvider mTileProvider;
 
-    private LatLngWrapper[] mList;
+    private ArrayList<LatLngWrapper> mList;
 
     private Bounds mTreeBounds;
 
@@ -37,7 +39,7 @@ public class HeatmapHandler {
      * @param activity pass the activity to obtain dimensions
      * @param map pass the map so we can draw the heatmap onto it
      */
-    public HeatmapHandler(LatLngWrapper[] list, int radius, int[] gradient, double opacity,
+    public HeatmapHandler(ArrayList<LatLngWrapper> list, int radius, int[] gradient, double opacity,
                           Activity activity, GoogleMap map) {
         // Assignments
         mList = list;
@@ -74,7 +76,7 @@ public class HeatmapHandler {
      * @param activity pass the activity to obtain dimensions
      * @param map pass the map so we can draw the heatmap onto it
      */
-    public HeatmapHandler(LatLngWrapper[] list, Activity activity, GoogleMap map) {
+    public HeatmapHandler(ArrayList<LatLngWrapper> list, Activity activity, GoogleMap map) {
         this(list, HeatmapConstants.DEFAULT_HEATMAP_RADIUS,
                 HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, HeatmapConstants.DEFAULT_HEATMAP_OPACITY,
                 activity, map);

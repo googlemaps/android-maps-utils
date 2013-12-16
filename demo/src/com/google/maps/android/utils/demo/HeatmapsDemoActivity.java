@@ -13,6 +13,7 @@ import com.google.maps.android.utils.demo.model.MyItem;
 import org.json.JSONException;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HeatmapsDemoActivity extends BaseDemoActivity {
@@ -23,6 +24,11 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private boolean defaultRadius = true;
     private boolean defaultOpacity = true;
 
+    /**
+     * List of LatLngWrappers
+     */
+    private ArrayList<LatLngWrapper> mList;
+
     @Override
     protected int getLayoutId() {
         return R.layout.heatmaps_demo;
@@ -30,20 +36,18 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-        //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 16));
-
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
-        LatLngWrapper[] list = new LatLngWrapper[10];
+        mList = new ArrayList<LatLngWrapper>();
 
         try {
-            list = readItems();
+            readItems();
         } catch (JSONException e) {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
 
         // Make the handler deal with the map
-        mHeatmapHandler = new HeatmapHandler(list, this, getMap());
+        mHeatmapHandler = new HeatmapHandler(mList, this, getMap());
     }
 
     public void changeRadius(View view) {
@@ -77,29 +81,26 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     // Copied from ClusteringDemoActivity
-    private LatLngWrapper[] readItems() throws JSONException {
+    private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
 
-        LatLngWrapper[] list = new LatLngWrapper[items.size() * 11];
-        int i, j;
+        int i;
         for (i = 0; i < items.size(); i++) {
             MyItem temp = items.get(i);
-            list[i] = new LatLngWrapper(temp.getPosition());
+            mList.add(new LatLngWrapper(temp.getPosition()));
         }
 
-        for (j = 0; j < 10; j++) {
-            double offset = j / 60d;
+        for (i = 0; i < 10; i++) {
+            double offset = i / 60d;
             for (MyItem item : items) {
                 LatLng position = item.getPosition();
                 double lat = position.latitude + offset;
                 double lng = position.longitude + offset;
-                list[i] = new LatLngWrapper(new LatLng(lat, lng));
-                i++;
+                mList.add(new LatLngWrapper(new LatLng(lat, lng)));
             }
         }
 
-        return list;
     }
 
 }
