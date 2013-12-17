@@ -16,12 +16,13 @@ public class QuadTreeTest extends TestCase {
 
     public void setUp() {
         //mTree = new PointQuadTree<Item>(0, 1, 0, 1);
-        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 8);
+        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 7);
         startTime = System.currentTimeMillis();
     }
 
     public void tearDown() {
-        Log.d("LOL", "Running time = " + ((System.currentTimeMillis() - startTime)/1000.0));
+        Log.d("QuadTreeTest", "Running time = "
+                + ((System.currentTimeMillis() - startTime)/1000.0) + "s");
     }
 
     public void testAddOnePoint() {
@@ -104,16 +105,25 @@ public class QuadTreeTest extends TestCase {
     }
 
     public void testManyPoints() {
-        for (double i=0; i < 200; i++) {
-            for (double j=0; j < 200; j++) {
-                mTree.add(new Item(i/200.0, j/200.0));
+        for (double i=0; i < 100; i++) {
+            for (double j=0; j < 2000; j++) {
+                mTree.add(new Item(i/100.0, j/2000.0));
             }
+            //Log.d("QuadTreeTest", "Added " + ((i+1)*2000) + " points");
         }
 
-        assertEquals(40000, searchAll().size());
-        assertEquals(10000, mTree.search(new Bounds(0, .5, 0, .5)).size());
-        assertEquals(2500, mTree.search(new Bounds(0, .25, 0, .25)).size());
-        assertEquals(1, mTree.search(new Bounds(0,.001, 0, .001)).size());
+        Log.d("QuadTreeTest", "Added all the points.");
+        Log.d("QuadTreeTest", "Done in " + (System.currentTimeMillis() - startTime) + " ms");
+        Log.d("QuadTreeTest", "Searching ...");
+
+        assertEquals(200000, searchAll().size());
+        Log.d("QuadTreeTest", "Search all successful");
+        assertEquals(50000, mTree.search(new Bounds(0, .5, 0, .5)).size());
+        Log.d("QuadTreeTest", "Search quarter successful");
+        assertEquals(12500, mTree.search(new Bounds(0, .25, 0, .25)).size());
+        Log.d("QuadTreeTest", "Search eighth successful");
+        assertEquals(1, mTree.search(new Bounds(0,.001, 0, .0001)).size());
+        Log.d("QuadTreeTest", "Search a bit successful");
 
         mTree.clear();
         assertEquals(0, searchAll().size());

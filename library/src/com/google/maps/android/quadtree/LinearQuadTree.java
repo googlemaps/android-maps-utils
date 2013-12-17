@@ -53,7 +53,7 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
             for (int order = mPrecision-1; order >= 0; order--) {
                 if (p.y < currBounds.midY) {       // top
                     if (p.x < currBounds.midX) {   // left = 0
-                        //location += mQuadrant.TOP_LEFT.getValue() * Math.pow(mBase, order);
+                        location += mQuadrant.TOP_LEFT.getValue() * Math.pow(mBase, order);
                         currBounds = new Bounds(currBounds.minX, currBounds.midX,
                                                      currBounds.minY, currBounds.midY);
                     } else {                       // right = 1
@@ -208,6 +208,5 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
                 }
             }
         }
-
     }
 }
