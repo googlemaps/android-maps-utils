@@ -181,16 +181,16 @@ public class LinearQuadTree<T extends LinearQuadTree.Item> implements QuadTree<T
             int multiplier = (int) Math.pow(mBase, depth-1);
             search(searchBounds,
                     new Bounds(currBounds.minX, currBounds.midX, currBounds.minY, currBounds.midY),
-                    location + mQuadrant.TOP_LEFT.getValue()*multiplier, depth - 1, results);
+                    location + mQuadrant.TOP_LEFT.getValue() * multiplier, depth - 1, results);
             search(searchBounds,
                     new Bounds(currBounds.midX, currBounds.maxX, currBounds.minY, currBounds.midY),
-                    location + mQuadrant.TOP_RIGHT.getValue()*multiplier, depth - 1, results);
+                    location + mQuadrant.TOP_RIGHT.getValue() * multiplier, depth - 1, results);
             search(searchBounds,
                     new Bounds(currBounds.minX, currBounds.midX, currBounds.midY, currBounds.maxY),
                     location + mQuadrant.BOTTOM_LEFT.getValue() * multiplier, depth - 1, results);
             search(searchBounds,
                     new Bounds(currBounds.midX, currBounds.maxX, currBounds.midY, currBounds.maxY),
-                    location + mQuadrant.BOTTOM_RIGHT.getValue()*multiplier, depth - 1, results);
+                    location + mQuadrant.BOTTOM_RIGHT.getValue() * multiplier, depth - 1, results);
 
         } else if (searchBounds.intersects(currBounds)) {
             // some of the points in bounds are in searchBounds, quads can't be split
