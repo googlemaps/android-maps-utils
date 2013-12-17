@@ -88,6 +88,11 @@ public class HeatmapHandler {
             for (int i = 3; i < bestZoomLevel; i ++) {
                 maxIntensityArray[i] = HeatmapUtil.getMaxVal(mList, mTreeBounds, radius,
                         (int)(HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
+                if (i == 3) {
+                    maxIntensityArray[2] = maxIntensityArray[3];
+                    maxIntensityArray[1] = maxIntensityArray[3];
+                    maxIntensityArray[0] = maxIntensityArray[3];
+                }
             }
             for (int i = bestZoomLevel; i < 22; i ++) {
                 maxIntensityArray[i] = maxIntensityArray[bestZoomLevel - 1];
