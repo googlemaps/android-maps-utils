@@ -42,7 +42,7 @@ public class HeatmapTileProvider implements TileProvider{
     private double mOpacity;
 
     /** Maximum intensity estimate for heatmap */
-    private double mMaxIntensity;
+    private double[] mMaxIntensity;
 
     /** Blank tile */
     private Tile mBlankTile;
@@ -57,7 +57,7 @@ public class HeatmapTileProvider implements TileProvider{
      * @param maxIntensity Intensity value that maps to maximum gradient color
      */
     public HeatmapTileProvider(PointQuadTree<PointQuadTree.Item> tree, Bounds bounds,
-                               int radius, int[] gradient, double opacity, double maxIntensity) {
+                               int radius, int[] gradient, double opacity, double[] maxIntensity) {
         // Assign function arguments to fields
         mTree = tree;
         mBounds = bounds;
@@ -131,7 +131,7 @@ public class HeatmapTileProvider implements TileProvider{
         double[][] convolved = HeatmapUtil.convolve(intensity, mKernel);
 
         // Color it into a bitmap
-        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity);
+        Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity[zoom]);
 
         long endTime = getTime();
 
@@ -172,7 +172,7 @@ public class HeatmapTileProvider implements TileProvider{
         setColorMap(mGradient);
     }
 
-    public void setMaxIntensity(double intensity) {
+    public void setMaxIntensity(double[] intensity) {
         mMaxIntensity = intensity;
     }
 

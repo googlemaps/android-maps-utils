@@ -2,7 +2,6 @@ package com.google.maps.android.heatmaps;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
  */
 public class HeatmapHandler {
 
-    /** Quad tree of points*/
+    /** Quad tree of points */
     private PointQuadTree mTree;
 
     private TileOverlay mOverlay;
@@ -30,19 +29,26 @@ public class HeatmapHandler {
 
     private int mScreenDim;
 
+    /** True if max intensity changes at different zoom levels: false otherwise */
+    private boolean mIntensityFlag;
+
+    private double[] mMaxIntensity;
+
     /**
      * Constructor for the handler
      * @param list List of all LatLngWrappers to put into quadtree
      * @param radius Radius of convolution to use
      * @param gradient Gradient to color heatmap with
      * @param opacity Opacity of the entire heatmap
+     * @param intensityFlag whether max intensity changes at zoom level or not
      * @param activity pass the activity to obtain dimensions
      * @param map pass the map so we can draw the heatmap onto it
      */
     public HeatmapHandler(ArrayList<LatLngWrapper> list, int radius, int[] gradient, double opacity,
-                          Activity activity, GoogleMap map) {
+                          boolean intensityFlag, Activity activity, GoogleMap map) {
         // Assignments
         mList = list;
+        mIntensityFlag = intensityFlag;
 
         // Make the quad tree
         mTreeBounds = HeatmapUtil.getBounds(list);
@@ -59,12 +65,12 @@ public class HeatmapHandler {
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         mScreenDim = dm.widthPixels > dm.heightPixels ? dm.widthPixels : dm.heightPixels;
 
-        double maxIntensity = HeatmapUtil.getMaxVal(list, mTreeBounds, radius, mScreenDim);
-        Log.e("MAX", "MaxIntensity = " + maxIntensity);
+        // Get max intensities
+        mMaxIntensity = getMaxIntensities(radius);
 
         // Create a heatmap tile provider, that will generate the overlay tiles
         mTileProvider = new HeatmapTileProvider(mTree, mTreeBounds, radius,
-                gradient, opacity, maxIntensity);
+                gradient, opacity, mMaxIntensity);
 
         // Add the overlay to the map
         mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mTileProvider));
@@ -73,13 +79,37 @@ public class HeatmapHandler {
     /**
      * Alternative constructor that uses default values for radius, gradient and opacity
      * @param list List of all LatLngWrappers to put into quadtree
+     * @param intensityFlag whether max intensity changes at zoom level or not
      * @param activity pass the activity to obtain dimensions
      * @param map pass the map so we can draw the heatmap onto it
      */
-    public HeatmapHandler(ArrayList<LatLngWrapper> list, Activity activity, GoogleMap map) {
+    public HeatmapHandler(ArrayList<LatLngWrapper> list, boolean intensityFlag, Activity activity,
+                          GoogleMap map) {
         this(list, HeatmapConstants.DEFAULT_HEATMAP_RADIUS,
                 HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, HeatmapConstants.DEFAULT_HEATMAP_OPACITY,
-                activity, map);
+                intensityFlag, activity, map);
+    }
+
+
+    private double[] getMaxIntensities(int radius) {
+        // Can go from zoom level 3 to zoom level 22
+        double[] maxIntensityArray = new double[22];
+        if (mIntensityFlag) {
+            // Calculate max intensity for each zoom level
+            for (int i = 3; i < 8; i ++) {
+                maxIntensityArray[i] = HeatmapUtil.getMaxVal(mList, mTreeBounds, radius,
+                        (int)(mScreenDim * Math.pow(2, i - 3)));
+            }
+            for (int i = 8; i < 22; i ++) {
+                maxIntensityArray[i] = maxIntensityArray[7];
+            }
+        } else {
+            double maxIntensity = HeatmapUtil.getMaxVal(mList, mTreeBounds, radius, mScreenDim);
+            for (int i = 3; i < 22; i ++) {
+                maxIntensityArray[i] = maxIntensity;
+            }
+        }
+        return maxIntensityArray;
     }
 
     /**
@@ -89,7 +119,7 @@ public class HeatmapHandler {
     public void setRadius(int radius) {
         mTileProvider.setRadius(radius);
         // need to re calculate max intensity and change in provider
-        double maxIntensity = HeatmapUtil.getMaxVal(mList, mTreeBounds, radius, mScreenDim);
+        double[] maxIntensity = getMaxIntensities(radius);
         mTileProvider.setMaxIntensity(maxIntensity);
         repaint();
     }

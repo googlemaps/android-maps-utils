@@ -8,13 +8,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.HeatmapConstants;
 import com.google.maps.android.heatmaps.HeatmapHandler;
 import com.google.maps.android.heatmaps.LatLngWrapper;
-import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
@@ -36,7 +35,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37, -120), 5));
 
         mList = new ArrayList<LatLngWrapper>();
 
@@ -47,7 +46,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Make the handler deal with the map
-        mHeatmapHandler = new HeatmapHandler(mList, this, getMap());
+        mHeatmapHandler = new HeatmapHandler(mList, true, this, getMap());
     }
 
     public void changeRadius(View view) {
@@ -80,30 +79,19 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
     }
 
-    // Copied from ClusteringDemoActivity
+    // https://explore.data.gov/Geography-and-Environment/EPA-FRS-Facilities-Combined-File-CSV-Download-for-/y38d-q6kk
+    // 130k points
     private void readItems() throws JSONException {
-        InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        List<MyItem> items = new MyItemReader().read(inputStream);
+        double latitude, longitude;
+        InputStream inputStream = getResources().openRawResource(R.raw.lat_long_small);
+        Scanner s = new Scanner(inputStream);
 
-        int i;
-        for (i = 0; i < items.size(); i++) {
-            MyItem temp = items.get(i);
-            mList.add(new LatLngWrapper(temp.getPosition()));
+        while (s.hasNextDouble()) {
+            latitude = s.nextDouble();
+            longitude = s.nextDouble();
+            mList.add(new LatLngWrapper(new LatLng(latitude, longitude)));
         }
-
-        for (i = 0; i < 10; i++) {
-            double offset = i / 60d;
-            for (MyItem item : items) {
-                LatLng position = item.getPosition();
-                double lat = position.latitude + offset;
-                double lng = position.longitude + offset;
-                mList.add(new LatLngWrapper(new LatLng(lat, lng)));
-                mList.add(new LatLngWrapper(new LatLng(lat, lng - 2 * offset)));
-                mList.add(new LatLngWrapper(new LatLng(lat - 2 * offset, lng)));
-                mList.add(new LatLngWrapper(new LatLng(lat - 2 * offset, lng - 2 * offset)));
-            }
-        }
-
+        s.close();
     }
 
 }
