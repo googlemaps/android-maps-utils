@@ -46,7 +46,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Make the handler deal with the map
-        mHeatmapHandler = new HeatmapHandler(mList, true, this, getMap());
+        mHeatmapHandler = new HeatmapHandler(mList, true, getMap());
     }
 
     public void changeRadius(View view) {
@@ -83,7 +83,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     // 130k points
     private void readItems() throws JSONException {
         double latitude, longitude;
-        InputStream inputStream = getResources().openRawResource(R.raw.lat_long_small);
+        InputStream inputStream = getResources().openRawResource(R.raw.lat_long_micro);
         Scanner s = new Scanner(inputStream);
 
         while (s.hasNextDouble()) {

@@ -8,6 +8,11 @@ import android.graphics.Color;
 public class HeatmapConstants {
 
     /**
+     * Assumed map size
+     */
+    public static final int SCREEN_SIZE = 1280;
+
+    /**
      * Default size of a color map for the heatmap
      */
     public final static int HEATMAP_COLOR_MAP_SIZE = 1001;
