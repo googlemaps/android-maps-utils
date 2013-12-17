@@ -1,5 +1,7 @@
 package com.google.maps.android.quadtree;
 
+import android.util.Log;
+
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
@@ -10,10 +12,16 @@ import java.util.Collection;
 public class QuadTreeTest extends TestCase {
 
     private QuadTree<Item> mTree;
+    private long startTime;
 
     public void setUp() {
         //mTree = new PointQuadTree<Item>(0, 1, 0, 1);
-        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 5);
+        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 8);
+        startTime = System.currentTimeMillis();
+    }
+
+    public void tearDown() {
+        Log.d("LOL", "Running time = " + ((System.currentTimeMillis() - startTime)/1000.0));
     }
 
     public void testAddOnePoint() {
@@ -76,6 +84,15 @@ public class QuadTreeTest extends TestCase {
         assertEquals(0, mTree.search(new Bounds(.7, .8, .7, .8)).size());
     }
 
+    public void testFourPoints() {
+        mTree.add(new Item(0.2, 0.2));
+        mTree.add(new Item(0.7, 0.2));
+        mTree.add(new Item(0.2, 0.7));
+        mTree.add(new Item(0.7, 0.7));
+
+        assertEquals(2, mTree.search(new Bounds(0.0, 0.5, 0.0, 1.0)).size());
+    }
+
     public void testVeryDeepTree() {
         for (int i = 0; i < 3000; i++) {
             mTree.add(new Item(0, 0));
@@ -84,6 +101,22 @@ public class QuadTreeTest extends TestCase {
         assertEquals(3000, searchAll().size());
         assertEquals(3000, mTree.search(new Bounds(0, .1, 0, .1)).size());
         assertEquals(0, mTree.search(new Bounds(.1, 1, .1, 1)).size());
+    }
+
+    public void testManyPoints() {
+        for (double i=0; i < 200; i++) {
+            for (double j=0; j < 200; j++) {
+                mTree.add(new Item(i/200.0, j/200.0));
+            }
+        }
+
+        assertEquals(40000, searchAll().size());
+        assertEquals(10000, mTree.search(new Bounds(0, .5, 0, .5)).size());
+        assertEquals(2500, mTree.search(new Bounds(0, .25, 0, .25)).size());
+        assertEquals(1, mTree.search(new Bounds(0,.001, 0, .001)).size());
+
+        mTree.clear();
+        assertEquals(0, searchAll().size());
     }
 
     private Collection<Item> searchAll() {
