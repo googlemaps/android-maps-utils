@@ -16,7 +16,7 @@ public class QuadTreeTest extends TestCase {
 
     public void setUp() {
         //mTree = new PointQuadTree<Item>(0, 1, 0, 1);
-        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 7);
+        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 5);
         startTime = System.currentTimeMillis();
     }
 
@@ -116,14 +116,22 @@ public class QuadTreeTest extends TestCase {
         Log.d("QuadTreeTest", "Done in " + (System.currentTimeMillis() - startTime) + " ms");
         Log.d("QuadTreeTest", "Searching ...");
 
+        long start = System.currentTimeMillis();
         assertEquals(200000, searchAll().size());
         Log.d("QuadTreeTest", "Search all successful");
+        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
         assertEquals(50000, mTree.search(new Bounds(0, .5, 0, .5)).size());
         Log.d("QuadTreeTest", "Search quarter successful");
+        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
         assertEquals(12500, mTree.search(new Bounds(0, .25, 0, .25)).size());
         Log.d("QuadTreeTest", "Search eighth successful");
+        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
         assertEquals(1, mTree.search(new Bounds(0,.001, 0, .0001)).size());
         Log.d("QuadTreeTest", "Search a bit successful");
+        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
 
         mTree.clear();
         assertEquals(0, searchAll().size());
