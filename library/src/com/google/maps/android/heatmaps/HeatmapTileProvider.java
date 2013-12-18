@@ -118,6 +118,11 @@ public class HeatmapTileProvider implements TileProvider{
         // Search for all points within tile bounds
         ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>)mTree.search(tileBounds);
 
+        // If no points, return blank tile
+        if (points.isEmpty()) {
+            return mBlankTile;
+        }
+
         // Bucket points into buckets
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
         for(LatLngWrapper w: points) {
