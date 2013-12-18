@@ -20,12 +20,12 @@ public class HeatmapConstants {
     /**
      * Default tile dimensions
      */
-    public final static int HEATMAP_TILE_SIZE = 256;
+    public final static int HEATMAP_TILE_SIZE = 512;
 
     /**
      * Default radius for convolution
      */
-    public static final int DEFAULT_HEATMAP_RADIUS = 10;
+    public static final int DEFAULT_HEATMAP_RADIUS = 15;
 
      /**
      * Alternative radius for convolution
