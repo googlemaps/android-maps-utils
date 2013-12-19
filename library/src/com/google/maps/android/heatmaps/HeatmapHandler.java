@@ -1,5 +1,7 @@
 package com.google.maps.android.heatmaps;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
@@ -44,22 +46,36 @@ public class HeatmapHandler {
         mList = list;
         mIntensityFlag = intensityFlag;
 
+        long start = getTime();
         // Make the quad tree
         mTreeBounds = HeatmapUtil.getBounds(list);
+        long end = getTime();
+        Log.e("Time getBounds", (end - start) + "ms");
+
+        start = getTime();
         mTree = new PointQuadTree<LatLngWrapper>(mTreeBounds);
 
         // Add points to quad tree
         for (LatLngWrapper l: list) {
             mTree.add(l);
         }
+        end = getTime();
+
+        Log.e("Time Make Quadtree", (end - start) + "ms");
 
         // Calculate reasonable maximum intensity for color scale (user can also specify)
         // Get max intensities
+        start = getTime();
         mMaxIntensity = getMaxIntensities(radius);
+        end = getTime();
+        Log.e("Time getMaxIntensities", (end - start) + "ms");
 
         // Create a heatmap tile provider, that will generate the overlay tiles
+        start = getTime();
         mTileProvider = new HeatmapTileProvider(mTree, mTreeBounds, radius,
                 gradient, opacity, mMaxIntensity);
+        end = getTime();
+        Log.e("Time new HeatmapTileProvider", (end - start) + "ms");
 
         // Add the overlay to the map
         mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mTileProvider));
@@ -142,6 +158,11 @@ public class HeatmapHandler {
      */
     private void repaint() {
         mOverlay.clearTileCache();
+    }
+
+
+    private long getTime() {
+        return System.currentTimeMillis();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.google.maps.android.utils.demo;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,7 +10,9 @@ import com.google.maps.android.heatmaps.HeatmapConstants;
 import com.google.maps.android.heatmaps.HeatmapHandler;
 import com.google.maps.android.heatmaps.LatLngWrapper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -82,16 +85,24 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     // https://explore.data.gov/Geography-and-Environment/EPA-FRS-Facilities-Combined-File-CSV-Download-for-/y38d-q6kk
     // 130k points
     private void readItems() throws JSONException {
-        double latitude, longitude;
-        InputStream inputStream = getResources().openRawResource(R.raw.lat_long_micro);
-        Scanner s = new Scanner(inputStream);
-
-        while (s.hasNextDouble()) {
-            latitude = s.nextDouble();
-            longitude = s.nextDouble();
-            mList.add(new LatLngWrapper(new LatLng(latitude, longitude)));
+        long start = getTime();
+        InputStream inputStream = getResources().openRawResource(R.raw.latlong_500);
+        String json = new Scanner(inputStream).useDelimiter("\\A").next();
+        JSONArray array = new JSONArray(json);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            double lat = object.getDouble("lat");
+            double lng = object.getDouble("lng");
+            mList.add(new LatLngWrapper(new LatLng(lat, lng)));
         }
-        s.close();
+
+        long end = getTime();
+        Log.e("Time readItems", (end-start)+"ms");
+    }
+
+
+    private long getTime() {
+        return System.currentTimeMillis();
     }
 
 }

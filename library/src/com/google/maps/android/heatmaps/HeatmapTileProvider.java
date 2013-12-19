@@ -116,7 +116,10 @@ public class HeatmapTileProvider implements TileProvider{
         }
 
         // Search for all points within tile bounds
+        long start = getTime();
         ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>)mTree.search(tileBounds);
+        long end = getTime();
+        Log.e("getTile Search", (end-start)+"ms");
 
         // If no points, return blank tile
         if (points.isEmpty()) {
@@ -140,7 +143,7 @@ public class HeatmapTileProvider implements TileProvider{
 
         long endTime = getTime();
 
-        Log.d("getTile", "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
+        Log.e("getTile Total", "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
 
         return convertBitmap(bitmap);
     }
