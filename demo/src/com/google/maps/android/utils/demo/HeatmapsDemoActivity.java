@@ -38,7 +38,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37, -120), 5));
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(34.0522300, -118.2436800), 7));
 
         mList = new ArrayList<LatLngWrapper>();
 
@@ -49,7 +49,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Make the handler deal with the map
-        mHeatmapHandler = new HeatmapHandler(mList, true, getMap());
+        mHeatmapHandler = new HeatmapHandler(mList, 5, 8, getMap());
     }
 
     public void changeRadius(View view) {

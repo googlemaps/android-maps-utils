@@ -119,7 +119,7 @@ public class HeatmapTileProvider implements TileProvider{
         long start = getTime();
         ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>)mTree.search(tileBounds);
         long end = getTime();
-        Log.e("getTile Search", (end-start)+"ms");
+        Log.e("getTile Search "+x+","+y, (end-start)+"ms");
 
         // If no points, return blank tile
         if (points.isEmpty()) {
@@ -127,6 +127,7 @@ public class HeatmapTileProvider implements TileProvider{
         }
 
         // Bucket points into buckets
+        start = getTime();
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
         for(LatLngWrapper w: points) {
             Point p= w.getPoint();
@@ -134,16 +135,22 @@ public class HeatmapTileProvider implements TileProvider{
             int bucketY = (int)((p.y - minY) / bucketWidth);
             intensity[bucketX][bucketY] += w.getIntensity();
         }
+        end = getTime();
+        Log.e("getTile Bucketing "+x+","+y, (end-start)+"ms");
 
+        start = getTime();
         // Convolve it ("smoothen" it out)
         double[][] convolved = HeatmapUtil.convolve(intensity, mKernel);
+        end = getTime();
+        Log.e("getTile Convolving "+x+","+y, (end-start)+"ms");
 
         // Color it into a bitmap
+        start = getTime();
         Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity[zoom]);
-
         long endTime = getTime();
+        Log.e("getTile Colorize "+x+","+y, (endTime-start)+"ms");
 
-        Log.e("getTile Total", "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
+        Log.e("getTile Total "+x+","+y, "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
 
         return convertBitmap(bitmap);
     }
