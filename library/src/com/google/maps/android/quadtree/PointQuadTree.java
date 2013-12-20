@@ -28,7 +28,7 @@ import java.util.List;
  * See http://en.wikipedia.org/wiki/Quadtree for details on the data structure.
  * This class is not thread safe.
  */
-public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> {
+public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
 
     /**
      * The bounds of this quad.
@@ -43,7 +43,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> 
     /**
      * Maximum number of elements to store in a quad before splitting.
      */
-    private final static int MAX_ELEMENTS = 60;
+    private final static int MAX_ELEMENTS = 40;
 
     /**
      * The elements inside this quad, if any.
@@ -53,7 +53,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> 
     /**
      * Maximum depth.
      */
-    private final static int MAX_DEPTH = 30;
+    private final static int MAX_DEPTH = 40;
 
     /**
      * Child quads.
@@ -91,30 +91,37 @@ public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> 
     @Override
     public void add(T item) {
         Point point = item.getPoint();
-        insert(point.x, point.y, item);
+        if (this.mBounds.contains(point.x, point.y)) {
+            insert(point.x, point.y, item);
+        }
     }
 
-    private boolean insert(double x, double y, T item) {
-        if (!this.mBounds.contains(x, y)) {
-            return false;
-        }
+    private void insert(double x, double y, T item) {
         if (this.mChildren != null) {
-            for (PointQuadTree<T> quad : mChildren) {
-                if (quad.insert(x, y, item)) {
-                    return true;
+            if (y < mBounds.midY) {
+                if (x < mBounds.midX) { // top left
+                    mChildren[0].insert(x, y, item);
+                } else { // top right
+                    mChildren[1].insert(x, y, item);
+                }
+            } else {
+                if (x < mBounds.midX) { // bottom left
+                    mChildren[2].insert(x, y, item);
+                } else {
+                    mChildren[3].insert(x, y, item);
                 }
             }
-            return false; // should not happen
+            return;
         }
-
         if (mItems == null) {
-            mItems = new ArrayList<T>();
+            //mItems = new ArrayList<T>();
+	    mItems = new LinkedList<T>();
         }
         mItems.add(item);
         if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
             split();
         }
-        return true;
+        return;
     }
 
     /**
@@ -133,7 +140,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> 
 
         for (T item : items) {
             // re-insert items into child quads.
-            add(item);
+            insert(item.getPoint().x, item.getPoint().y, item);
         }
     }
 
@@ -145,21 +152,30 @@ public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> 
     @Override
     public boolean remove(T item) {
         Point point = item.getPoint();
-        return remove(point.x, point.y, item);
+        if (this.mBounds.contains(point.x, point.y)) {
+            return remove(point.x, point.y, item);
+        } else {
+            return false;
+        }
     }
 
     private boolean remove(double x, double y, T item) {
-        if (!this.mBounds.contains(x, y)) {
-            return false;
-        }
-        if (mChildren != null) {
-            for (PointQuadTree<T> quad : mChildren) {
-                if (quad.remove(x, y, item)) {
-                    return true;
+        if (this.mChildren != null) {
+            if (y < mBounds.midY) {
+                if (x < mBounds.midX) { // top left
+                    return mChildren[0].remove(x, y, item);
+                } else { // top right
+                    return mChildren[1].remove(x, y, item);
+                }
+            } else {
+                if (x < mBounds.midX) { // bottom left
+                    return mChildren[2].remove(x, y, item);
+                } else {
+                    return mChildren[3].remove(x, y, item);
                 }
             }
-            return false;
-        } else {
+        }
+        else {
             return mItems.remove(item);
         }
     }
@@ -183,18 +199,42 @@ public class PointQuadTree<T extends PointQuadTree.Item> implements QuadTree<T> 
     }
 
     private void search(Bounds searchBounds, Collection<T> results) {
+	/*
         if (!mBounds.intersects(searchBounds)) {
             return;
         }
+	*/
 
         if (this.mChildren != null) {
+	    /*
             for (PointQuadTree<T> quad : mChildren) {
                 quad.search(searchBounds, results);
             }
+	    */
+	    if (searchBounds.minY < mBounds.midY) {
+		if (searchBounds.minX < mBounds.midX) {
+		    mChildren[0].search(searchBounds, results);
+		}
+		if (searchBounds.maxX >= mBounds.midX) {
+		    mChildren[1].search(searchBounds, results);
+		}
+	    }
+	    if (searchBounds.maxY >= mBounds.midY) {
+		if (searchBounds.minX < mBounds.midX) {
+		    mChildren[2].search(searchBounds, results);
+		}
+		if (searchBounds.maxX >= mBounds.midX) {
+		    mChildren[3].search(searchBounds, results);
+		}
+	    }
         } else if (mItems != null) {
-            for (T item : mItems) {
-                if (searchBounds.contains(item.getPoint())) {
-                    results.add(item);
+            if (searchBounds.contains(mBounds)) {
+	       results.addAll(mItems);
+            } else {
+                for (T item : mItems) {
+                    if (searchBounds.contains(item.getPoint())) {
+                        results.add(item);
+                    }
                 }
             }
         }

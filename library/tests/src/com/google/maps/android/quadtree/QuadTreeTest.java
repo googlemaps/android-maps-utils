@@ -15,8 +15,10 @@ public class QuadTreeTest extends TestCase {
     private long startTime;
 
     public void setUp() {
-        //mTree = new PointQuadTree<Item>(0, 1, 0, 1);
-        mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 5);
+        //mTree = new CbroQuadTree<Item>(0, 1, 0, 1);
+        //mTree = new LinearQuadTree<Item>(0, 1, 0, 1, 3);
+        mTree = new PointQuadTree<Item>(0, 1, 0, 1);
+        Log.d("QuadTreeTest", "--------------------------------------");
         startTime = System.currentTimeMillis();
     }
 
@@ -25,7 +27,9 @@ public class QuadTreeTest extends TestCase {
                 + ((System.currentTimeMillis() - startTime)/1000.0) + "s");
     }
 
+    /*
     public void testAddOnePoint() {
+        Log.d("QuadTreeTest", "Running testAddOnePoint");
         Item item = new Item(0,0);
         mTree.add(item);
         Collection<Item> items = searchAll();
@@ -33,11 +37,13 @@ public class QuadTreeTest extends TestCase {
     }
 
     public void testEmpty() {
+        Log.d("QuadTreeTest", "Running testEmpty");
         Collection<Item> items = searchAll();
         assertEquals(0, items.size());
     }
 
     public void testMultiplePoints() {
+        Log.d("QuadTreeTest", "Running testMultiplePoints");
         Item item1 = new Item(0, 0);
         mTree.add(item1);
         Item item2 = new Item(.1, .1);
@@ -60,6 +66,7 @@ public class QuadTreeTest extends TestCase {
     }
 
     public void testSameLocationDifferentPoint() {
+        Log.d("QuadTreeTest", "Running testSameLocationDifferentPoint");
         mTree.add(new Item(0, 0));
         mTree.add(new Item(0, 0));
 
@@ -67,6 +74,7 @@ public class QuadTreeTest extends TestCase {
     }
 
     public void testClear() {
+        Log.d("QuadTreeTest", "Running testClear");
         mTree.add(new Item(.1, .1));
         mTree.add(new Item(.2, .2));
         mTree.add(new Item(.3, .3));
@@ -76,16 +84,18 @@ public class QuadTreeTest extends TestCase {
     }
 
     public void testSearch() {
-        for (int i = 0; i < 1000; i++) {
-            mTree.add(new Item(i / 2000.0, i / 2000.0));
+        Log.d("QuadTreeTest", "Running testSearch");
+        for (int i = 0; i < 10000; i++) {
+            mTree.add(new Item(i / 20000.0, i / 20000.0));
         }
 
-        assertEquals(1000, searchAll().size());
-        assertEquals(1, mTree.search(new Bounds((double) 0, 0.0001, (double) 0, 0.0001)).size());
+        assertEquals(10000, searchAll().size());
+        assertEquals(1, mTree.search(new Bounds((double) 0, 0.00001, (double) 0, 0.00001)).size());
         assertEquals(0, mTree.search(new Bounds(.7, .8, .7, .8)).size());
     }
 
     public void testFourPoints() {
+        Log.d("QuadTreeTest", "Running testFourPoint");
         mTree.add(new Item(0.2, 0.2));
         mTree.add(new Item(0.7, 0.2));
         mTree.add(new Item(0.2, 0.7));
@@ -95,6 +105,7 @@ public class QuadTreeTest extends TestCase {
     }
 
     public void testVeryDeepTree() {
+        Log.d("QuadTreeTest", "Running testVeryDeepTree");
         for (int i = 0; i < 3000; i++) {
             mTree.add(new Item(0, 0));
         }
@@ -103,35 +114,26 @@ public class QuadTreeTest extends TestCase {
         assertEquals(3000, mTree.search(new Bounds(0, .1, 0, .1)).size());
         assertEquals(0, mTree.search(new Bounds(.1, 1, .1, 1)).size());
     }
+    */
 
     public void testManyPoints() {
-        for (double i=0; i < 100; i++) {
-            for (double j=0; j < 2000; j++) {
-                mTree.add(new Item(i/100.0, j/2000.0));
-            }
-            //Log.d("QuadTreeTest", "Added " + ((i+1)*2000) + " points");
-        }
-
-        Log.d("QuadTreeTest", "Added all the points.");
-        Log.d("QuadTreeTest", "Done in " + (System.currentTimeMillis() - startTime) + " ms");
-        Log.d("QuadTreeTest", "Searching ...");
-
+        Log.d("QuadTreeTest", "Running testManyPoints");
         long start = System.currentTimeMillis();
-        assertEquals(200000, searchAll().size());
-        Log.d("QuadTreeTest", "Search all successful");
-        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
+        for (double i=0; i < 200; i++) {
+            for (double j=0; j < 2000; j++) {
+                mTree.add(new Item(i/200.0, j/2000.0));
+            }
+        }
+        Log.d("QuadTreeTest", "adding points time: " + (System.currentTimeMillis() - start));
+
         start = System.currentTimeMillis();
-        assertEquals(50000, mTree.search(new Bounds(0, .5, 0, .5)).size());
-        Log.d("QuadTreeTest", "Search quarter successful");
-        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
-        start = System.currentTimeMillis();
-        assertEquals(12500, mTree.search(new Bounds(0, .25, 0, .25)).size());
-        Log.d("QuadTreeTest", "Search eighth successful");
-        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
-        start = System.currentTimeMillis();
-        assertEquals(1, mTree.search(new Bounds(0,.001, 0, .0001)).size());
-        Log.d("QuadTreeTest", "Search a bit successful");
-        Log.d("QuadTreeTest", "Running time = " + (System.currentTimeMillis() - start));
+        assertEquals(400000, searchAll().size());
+        assertEquals(100000, mTree.search(new Bounds(0, .5, 0, .5)).size());
+        assertEquals(100000, mTree.search(new Bounds(.5, 1, 0, .5)).size());
+        assertEquals(25000, mTree.search(new Bounds(0, .25, 0, .25)).size());
+        assertEquals(25000, mTree.search(new Bounds(.75, 1, .75, 1)).size());
+        assertEquals(1, mTree.search(new Bounds(0, .001, 0, .0001)).size());
+        Log.d("QuadTreeTest", "searching tree time: " + (System.currentTimeMillis() - start));
 
         mTree.clear();
         assertEquals(0, searchAll().size());

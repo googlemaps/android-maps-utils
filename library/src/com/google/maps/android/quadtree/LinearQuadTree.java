@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by irisu on 12/9/13.
@@ -66,6 +67,7 @@ public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
                 } else if (location / divisor == mQuadrant.BOTTOM_RIGHT.getValue()) {
                     currBounds = currBounds.getBottomRight();
                 }
+                location -= (location / divisor)*divisor;
             }
             return new Point(currBounds.midX,currBounds.midY);
         }
@@ -76,13 +78,15 @@ public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
      */
     private final Bounds mBounds;
 
-    private ArrayList<T> mPoints;
+    private List<T> mPoints;
 
     public int mPrecision;
 
     public final int mBase = 10; // TODO change to binary?
 
     private final Comparator<Item> comparator = new PointLocationComparator();
+
+    private boolean sorted = false;
 
     /**
      * Creates a new quad tree with specified bounds.
@@ -106,6 +110,7 @@ public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
 
     @Override
     public void add(T item) {
+        /*
         int size = mPoints.size();
         int index = Collections.binarySearch(mPoints, item, comparator);
         if (index < 0) {
@@ -116,10 +121,17 @@ public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
         } else {
             mPoints.add(index+1, item);
         }
+        */
+        mPoints.add(item);
+        sorted = false;
     }
 
     @Override
     public boolean remove(T item) {
+        if (!sorted) {
+            Collections.sort(mPoints, comparator);
+            sorted = true;
+        }
         int index = Collections.binarySearch(mPoints, item, comparator);
         while(index < mPoints.size() && index > 0
                 && getLocation(mPoints.get(index-1).getPoint()) == getLocation(item.getPoint())) {
@@ -148,6 +160,10 @@ public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
     public Collection<T> search(Bounds searchBounds) {
         Collection<T> collection = new ArrayList<T>();
         if (mPoints.size() > 0) {
+            if (!sorted) {
+                Collections.sort(mPoints, comparator);
+                sorted = true;
+            }
             search(searchBounds, mBounds, 0, mPrecision, collection);
         }
         return collection;

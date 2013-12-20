@@ -18,6 +18,6 @@ public interface QuadTree<T extends QuadTree.Item> {
     Collection<T> search(Bounds searchBounds);
 
     public interface Item {
-        Point getPoint();
+        public Point getPoint();
     }
 }
