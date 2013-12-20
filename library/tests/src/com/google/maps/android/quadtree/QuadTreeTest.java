@@ -132,7 +132,10 @@ public class QuadTreeTest extends TestCase {
         assertEquals(100000, mTree.search(new Bounds(.5, 1, 0, .5)).size());
         assertEquals(25000, mTree.search(new Bounds(0, .25, 0, .25)).size());
         assertEquals(25000, mTree.search(new Bounds(.75, 1, .75, 1)).size());
+        Log.d("QuadTreeTest", "searching subtrees time: " + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
         assertEquals(1, mTree.search(new Bounds(0, .001, 0, .0001)).size());
+        assertEquals(26574, mTree.search(new Bounds(0.356, 0.574, 0.678, 0.987)).size());
         Log.d("QuadTreeTest", "searching tree time: " + (System.currentTimeMillis() - start));
 
         mTree.clear();
