@@ -114,8 +114,7 @@ public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
             return;
         }
         if (mItems == null) {
-            //mItems = new ArrayList<T>();
-	    mItems = new LinkedList<T>();
+            mItems = new ArrayList<T>();
         }
         mItems.add(item);
         if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
@@ -199,34 +198,14 @@ public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
     }
 
     private void search(Bounds searchBounds, Collection<T> results) {
-	/*
         if (!mBounds.intersects(searchBounds)) {
             return;
         }
-	*/
 
         if (this.mChildren != null) {
-	    /*
             for (PointQuadTree<T> quad : mChildren) {
                 quad.search(searchBounds, results);
             }
-	    */
-	    if (searchBounds.minY < mBounds.midY) {
-		if (searchBounds.minX < mBounds.midX) {
-		    mChildren[0].search(searchBounds, results);
-		}
-		if (searchBounds.maxX >= mBounds.midX) {
-		    mChildren[1].search(searchBounds, results);
-		}
-	    }
-	    if (searchBounds.maxY >= mBounds.midY) {
-		if (searchBounds.minX < mBounds.midX) {
-		    mChildren[2].search(searchBounds, results);
-		}
-		if (searchBounds.maxX >= mBounds.midX) {
-		    mChildren[3].search(searchBounds, results);
-		}
-	    }
         } else if (mItems != null) {
             if (searchBounds.contains(mBounds)) {
 	       results.addAll(mItems);
