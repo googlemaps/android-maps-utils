@@ -23,7 +23,7 @@ public interface QuadTree<T extends QuadTree.Item> {
     boolean remove(T item);
 
     /**
-     * Remove all items from the tree
+     * Removes all items from the quadTree
      */
     void clear();
 

@@ -178,6 +178,9 @@ public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
         }
     }
 
+    /**
+     * Removes all points from the quadTree
+     */
     @Override
     public void clear() {
         mChildren = null;
