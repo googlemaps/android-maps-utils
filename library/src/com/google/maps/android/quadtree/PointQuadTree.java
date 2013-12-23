@@ -120,7 +120,6 @@ public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
         if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
             split();
         }
-        return;
     }
 
     /**
