@@ -63,33 +63,21 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     public void changeRadius(View view) {
-        if (defaultRadius) {
-            mHeatmapHandler.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
-            defaultRadius = false;
-        } else {
-            mHeatmapHandler.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
-            defaultRadius = true;
-        }
+        if (defaultRadius) mHeatmapHandler.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
+        else mHeatmapHandler.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
+        defaultRadius =!defaultRadius;
     }
 
     public void changeGradient(View view) {
-        if (defaultGradient) {
-            mHeatmapHandler.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
-            defaultGradient = false;
-        } else {
-            mHeatmapHandler.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
-            defaultGradient = true;
-        }
+        if (defaultGradient) mHeatmapHandler.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
+        else mHeatmapHandler.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
+        defaultGradient = !defaultGradient;
     }
 
     public void changeOpacity(View view) {
-        if (defaultOpacity) {
-            mHeatmapHandler.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
-            defaultOpacity = false;
-        } else {
-            mHeatmapHandler.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
-            defaultOpacity = true;
-        }
+        if (defaultOpacity) mHeatmapHandler.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
+        else mHeatmapHandler.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
+        defaultOpacity = !defaultOpacity;
     }
 
     // https://explore.data.gov/Geography-and-Environment/EPA-FRS-Facilities-Combined-File-CSV-Download-for-/y38d-q6kk
