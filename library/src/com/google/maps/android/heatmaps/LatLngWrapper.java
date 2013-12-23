@@ -6,7 +6,9 @@ import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
 /**
- * Created by minicat on 12/13/13.
+ * A wrapper class that can be used in a PointQuadTree
+ * Created from a LatLng and optional intensity: point coordinates of the LatLng and the intensity
+ * value can be accessed from it later.
  */
 public class LatLngWrapper implements PointQuadTree.Item {
 
@@ -17,6 +19,7 @@ public class LatLngWrapper implements PointQuadTree.Item {
 
     /**
      * Projection to use for points
+     * Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection
      */
     public static final SphericalMercatorProjection mProjection =
             new SphericalMercatorProjection(HeatmapConstants.HEATMAP_TILE_SIZE);
@@ -29,6 +32,11 @@ public class LatLngWrapper implements PointQuadTree.Item {
      * Constructor
      * @param latLng LatLng to add to wrapper
      * @param intensity Intensity to use: should be greater than 0
+     *                  Default value is 10.
+     *                  This represents the "importance" or "value" of this particular point
+     *                  Higher intensity values map to higher colours.
+     *                  Intensity is additive: having two points of intensity 10 at the same
+     *                      location is identical to having one of intensity 20.
      */
     public LatLngWrapper(LatLng latLng, double intensity) {
         mPoint = mProjection.toPoint(latLng);
@@ -41,8 +49,7 @@ public class LatLngWrapper implements PointQuadTree.Item {
      * @param latLng LatLng to add to wrapper
      */
     public LatLngWrapper(LatLng latLng) {
-        mPoint = mProjection.toPoint(latLng);
-        mIntensity = DEFAULT_INTENSITY;
+        this(latLng, DEFAULT_INTENSITY);
     }
 
     public Point getPoint() { return mPoint; }

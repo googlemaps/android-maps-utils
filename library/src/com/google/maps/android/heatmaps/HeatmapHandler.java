@@ -38,8 +38,10 @@ public class HeatmapHandler {
      * Constructor for the handler
      * @param list List of all LatLngWrappers to put into quadtree
      * @param radius Radius of convolution to use
-     * @param gradient Gradient to color heatmap with
-     * @param opacity Opacity of the entire heatmap
+     * @param gradient Gradient to color heatmap with. This is usually about 10 different colours.
+     *                 Ordered from least to highest corresponding intensity.
+     *                 A larger colour map is interpolated from these "colour stops".
+     * @param opacity Opacity of the entire heatmap in range (0, 1]
      * @param minZoom minimum zoom level to calculate max intensity for
      *                recommended/default is 5
      * @param maxZoom maximum zoom level to calculate max intensity for

@@ -18,6 +18,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * A demo of the Heatmaps library. Demonstates how the HeatmapHandler can be used to create
+ * a coloured map overlay that visualises many points of weighted importance/intensity, with
+ * different colours representing areas of high and low concentration/combined intensity of points.
+ */
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     private HeatmapHandler mHeatmapHandler;
@@ -28,6 +33,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     /**
      * List of LatLngWrappers
+     * Each LatLngWrapper contains a LatLng as well as corresponding intensity value (which
+     * represents "importance" of this LatLng) - see the class for more detail
      */
     private ArrayList<LatLngWrapper> mList;
 
@@ -49,6 +56,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Make the handler deal with the map
+        // Input: list of LatLngWrappers, minimum and maximum zoom levels to calculate custom
+        // intensity from, and the map to draw the heatmap on
+        // radius, gradient and opacity not specified, so default are used
         mHeatmapHandler = new HeatmapHandler(mList, 5, 8, getMap());
     }
 
