@@ -59,19 +59,19 @@ public class Bounds {
         return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY;
     }
 
-    public Bounds getTopLeft() {
+    public Bounds getTopLeftQuad() {
         return new Bounds(minX, midX, minY, midY);
     }
 
-    public Bounds getTopRight() {
+    public Bounds getTopRightQuad() {
         return new Bounds(midX, maxX, minY, midY);
     }
 
-    public Bounds getBottomLeft() {
+    public Bounds getBottomLeftQuad() {
         return new Bounds(minX, midX, midY, maxY);
     }
 
-    public Bounds getBottomRight() {
+    public Bounds getBottomRightQuad() {
         return new Bounds(midX, maxX, midY, maxY);
     }
 }
