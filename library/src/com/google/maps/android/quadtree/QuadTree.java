@@ -9,12 +9,27 @@ import java.util.Collection;
  * Created by irisu on 12/9/13.
  */
 public interface QuadTree<T extends QuadTree.Item> {
+
+    /**
+     * Insert an item.
+     */
     void add(T item);
 
+    /**
+     * Remove the given item from the set.
+     *
+     * @return whether the item was removed.
+     */
     boolean remove(T item);
 
+    /**
+     * Remove all items from the tree
+     */
     void clear();
 
+    /**
+     * Search for all items within a given bounds.
+     */
     Collection<T> search(Bounds searchBounds);
 
     public interface Item {
