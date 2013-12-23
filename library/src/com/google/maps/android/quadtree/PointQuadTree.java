@@ -128,10 +128,10 @@ public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
      */
     private void split() {
         mChildren = new PointQuadTree[]{
-                new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1),
-                new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1),
-                new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1),
-                new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1)
+                new PointQuadTree<T>(mBounds.getTopLeftQuad(), mDepth + 1),
+                new PointQuadTree<T>(mBounds.getTopRightQuad(), mDepth + 1),
+                new PointQuadTree<T>(mBounds.getBottomLeftQuad(), mDepth + 1),
+                new PointQuadTree<T>(mBounds.getBottomRightQuad(), mDepth + 1)
         };
 
         List<T> items = mItems;
@@ -208,7 +208,7 @@ public class PointQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
             }
         } else if (mItems != null) {
             if (searchBounds.contains(mBounds)) {
-	       results.addAll(mItems);
+	            results.addAll(mItems);
             } else {
                 for (T item : mItems) {
                     if (searchBounds.contains(item.getPoint())) {
