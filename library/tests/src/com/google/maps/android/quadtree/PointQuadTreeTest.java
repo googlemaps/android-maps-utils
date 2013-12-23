@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import java.util.Collection;
 
-public class QuadTreeTest extends TestCase {
+public class PointQuadTreeTest extends TestCase {
 
     private QuadTree<Item> mTree;
     private long startTime;

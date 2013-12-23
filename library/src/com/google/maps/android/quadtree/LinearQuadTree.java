@@ -1,12 +1,7 @@
 package com.google.maps.android.quadtree;
 
-import android.util.Log;
-
-import com.google.android.gms.internal.cu;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
-
-import junit.framework.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,13 +54,13 @@ public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
             for (int order = mPrecision-1; order >= 0; order--) {
                 int divisor = (int) Math.pow(mBase, order);
                 if (location / divisor == mQuadrant.TOP_LEFT.getValue()) {
-                    currBounds = currBounds.getTopLeft();
+                    currBounds = currBounds.getTopLeftQuad();
                 } else if (location / divisor == mQuadrant.TOP_RIGHT.getValue()) {
-                    currBounds = currBounds.getTopRight();
+                    currBounds = currBounds.getTopRightQuad();
                 } else if (location / divisor == mQuadrant.BOTTOM_LEFT.getValue()) {
-                    currBounds = currBounds.getBottomLeft();
+                    currBounds = currBounds.getBottomLeftQuad();
                 } else if (location / divisor == mQuadrant.BOTTOM_RIGHT.getValue()) {
-                    currBounds = currBounds.getBottomRight();
+                    currBounds = currBounds.getBottomRightQuad();
                 }
                 location -= (location / divisor)*divisor;
             }
