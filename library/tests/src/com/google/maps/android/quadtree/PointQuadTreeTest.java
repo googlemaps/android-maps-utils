@@ -11,11 +11,11 @@ import java.util.Collection;
 
 public class PointQuadTreeTest extends TestCase {
 
-    private QuadTree<Item> mTree;
+    private PointQuadTree<Item> mTree;
     private long startTime;
 
     public void setUp() {
-        mTree = new PointQuadTree<Item>(0, 1, 0, 1);
+        mTree = new PointQuadTreeImpl<Item>(0, 1, 0, 1);
         Log.d("QuadTreeTest", "--------------------------------------");
         startTime = System.currentTimeMillis();
     }
@@ -155,7 +155,7 @@ public class PointQuadTreeTest extends TestCase {
         return mTree.search(new Bounds(0, 1, 0, 1));
     }
 
-    private static class Item implements QuadTree.Item {
+    private static class Item implements PointQuadTree.Item {
         private final Point mPoint;
 
         private Item(double x, double y) {

@@ -28,7 +28,7 @@ import java.util.List;
  * See http://en.wikipedia.org/wiki/Quadtree for details on the data structure.
  * This class is not thread safe.
  */
-public class PointQuadTreeImpl<T extends QuadTree.Item> implements QuadTree<T> {
+public class PointQuadTreeImpl<T extends PointQuadTree.Item> implements PointQuadTree<T> {
 
     /**
      * The bounds of this quad.

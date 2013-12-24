@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by irisu on 12/9/13.
  */
-public class LinearQuadTree<T extends QuadTree.Item> implements QuadTree<T> {
+public class LinearQuadTree<T extends PointQuadTree.Item> implements PointQuadTree<T> {
 
     private enum mQuadrant {
         TOP_LEFT(0),

@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * Created by irisu on 12/9/13.
  */
-public interface QuadTree<T extends QuadTree.Item> {
+public interface PointQuadTree<T extends PointQuadTree.Item> {
 
     /**
      * Insert an item.
