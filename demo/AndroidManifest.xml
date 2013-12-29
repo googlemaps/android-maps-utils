@@ -6,7 +6,7 @@
 
     <uses-sdk
             android:minSdkVersion="8"
-            android:targetSdkVersion="18"/>
+            android:targetSdkVersion="19"/>
 
     <permission
             android:name="com.google.maps.android.utils.permission.MAPS_RECEIVE"
