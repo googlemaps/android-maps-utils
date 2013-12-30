@@ -157,7 +157,8 @@ public class PointQuadTreeTest extends TestCase {
     public void testRandomPoints() {
         Log.d("QuadTreeTest", "Running testRandomPoints");
         long addTime = 0, searchTime = 0;
-        for (int run = 0; run < 10; run ++) {
+        final int TOTAL_RUNS = 10;
+        for (int run = 0; run < TOTAL_RUNS; run ++) {
             long start = System.currentTimeMillis();
             Random random = new Random();
             for (int i = 0; i<100000; i++) {
@@ -180,8 +181,8 @@ public class PointQuadTreeTest extends TestCase {
 
             mTree.clear();
         }
-        Log.d("QuadTreeTest", "Avg. adding points time: " + (addTime / 10));
-        Log.d("QuadTreeTest", "Avg. search time: " + (searchTime / 10));
+        Log.d("QuadTreeTest", "Avg. adding points time: " + (addTime / TOTAL_RUNS));
+        Log.d("QuadTreeTest", "Avg. search time: " + (searchTime / TOTAL_RUNS));
     }
 
     private Collection<Item> searchAll() {
