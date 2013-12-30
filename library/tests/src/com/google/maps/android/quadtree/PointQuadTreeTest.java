@@ -8,6 +8,7 @@ import com.google.maps.android.geometry.Point;
 import junit.framework.TestCase;
 
 import java.util.Collection;
+import java.util.Random;
 
 public class PointQuadTreeTest extends TestCase {
 
@@ -15,7 +16,9 @@ public class PointQuadTreeTest extends TestCase {
     private long startTime;
 
     public void setUp() {
-        mTree = new PointQuadTreeImpl<Item>(0, 1, 0, 1);
+        //mTree = new PointQuadTreeImpl<Item>(0, 1, 0, 1);
+        mTree = new CbroQuadTree<Item>(0,1,0,1);
+        //mTree = new LinearQuadTree<Item>(0,1,0,1, 5);
         Log.d("QuadTreeTest", "--------------------------------------");
         startTime = System.currentTimeMillis();
     }
@@ -149,6 +152,36 @@ public class PointQuadTreeTest extends TestCase {
 
         mTree.clear();
         assertEquals(0, searchAll().size());
+    }
+
+    public void testRandomPoints() {
+        Log.d("QuadTreeTest", "Running testRandomPoints");
+        long addTime = 0, searchTime = 0;
+        for (int run = 0; run < 10; run ++) {
+            long start = System.currentTimeMillis();
+            Random random = new Random();
+            for (int i = 0; i<100000; i++) {
+                mTree.add(new Item(random.nextDouble(), random.nextDouble()));
+            }
+            addTime += System.currentTimeMillis() - start;
+
+            start = System.currentTimeMillis();
+            searchAll();
+            mTree.search(new Bounds(0, 0.5, 0, 0.5));
+            mTree.search(new Bounds(0, 0.25, 0, 0.25));
+            mTree.search(new Bounds(0, 0.125, 0, 0.125));
+            mTree.search(new Bounds(0, 0.999, 0, 0.999));
+            mTree.search(new Bounds(0, 1, 0, 0.01));
+            mTree.search(new Bounds(0.4, 0.6, 0.4, 0.6));
+            mTree.search(new Bounds(0.356, 0.574, 0.678, 0.987));
+            mTree.search(new Bounds(0.123, 0.456, 0.456, 0.789));
+            mTree.search(new Bounds(0.111, 0.222, 0.333, 0.444));
+            searchTime += System.currentTimeMillis() - start;
+
+            mTree.clear();
+        }
+        Log.d("QuadTreeTest", "Avg. adding points time: " + (addTime / 10));
+        Log.d("QuadTreeTest", "Avg. search time: " + (searchTime / 10));
     }
 
     private Collection<Item> searchAll() {
