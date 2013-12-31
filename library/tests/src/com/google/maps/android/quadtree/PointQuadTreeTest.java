@@ -14,18 +14,17 @@ public class PointQuadTreeTest extends TestCase {
 
     private PointQuadTree<Item> mTree;
     private long startTime;
+    final int TOTAL_RUNS = 4;
 
     public void setUp() {
-        //mTree = new PointQuadTreeImpl<Item>(0, 1, 0, 1);
-        mTree = new CbroQuadTree<Item>(0,1,0,1);
-        //mTree = new LinearQuadTree<Item>(0,1,0,1, 5);
+        mTree = new PointQuadTreeImpl<Item>(0, 1, 0, 1);
         Log.d("QuadTreeTest", "--------------------------------------");
         startTime = System.currentTimeMillis();
     }
 
     public void tearDown() {
         Log.d("QuadTreeTest", "Running time = "
-                + ((System.currentTimeMillis() - startTime)/1000.0) + "s");
+                + ((System.currentTimeMillis() - startTime) / 1000.0) + "s");
     }
 
     public void testAddOnePoint() {
@@ -104,61 +103,84 @@ public class PointQuadTreeTest extends TestCase {
         assertEquals(2, mTree.search(new Bounds(0.0, 0.5, 0.0, 1.0)).size());
     }
 
+    /**
+     * Tests 30,000 items at the same point.
+     * Timing results are averaged.
+     */
     public void testVeryDeepTree() {
         Log.d("QuadTreeTest", "Running testVeryDeepTree");
-        for (int i = 0; i < 3000; i++) {
-            mTree.add(new Item(0, 0));
-        }
+        long addTime = 0, searchTime = 0;
+        for (int runs = 0; runs < TOTAL_RUNS; runs++) {
+            long start = System.currentTimeMillis();
+            for (int i = 0; i < 30000; i++) {
+                mTree.add(new Item(0, 0));
+            }
+            addTime += System.currentTimeMillis() - start;
 
-        assertEquals(3000, searchAll().size());
-        assertEquals(3000, mTree.search(new Bounds(0, .1, 0, .1)).size());
-        assertEquals(0, mTree.search(new Bounds(.1, 1, .1, 1)).size());
+            start = System.currentTimeMillis();
+            assertEquals(30000, searchAll().size());
+            assertEquals(30000, mTree.search(new Bounds(0, .1, 0, .1)).size());
+            assertEquals(0, mTree.search(new Bounds(.1, 1, .1, 1)).size());
+            searchTime += System.currentTimeMillis() - start;
+
+            mTree.clear();
+        }
+        Log.d("QuadTreeTest", "Avg. adding time = " + (addTime / TOTAL_RUNS));
+        Log.d("QuadTreeTest", "Avg. search time = " + (searchTime / TOTAL_RUNS));
     }
 
+    /**
+     * Tests 400,000 points relatively uniformly distributed across the space.
+     * Timing results are averaged.
+     */
     public void testManyPoints() {
         Log.d("QuadTreeTest", "Running testManyPoints");
-        long start = System.currentTimeMillis();
-        for (double i=0; i < 200; i++) {
-            for (double j=0; j < 2000; j++) {
-                mTree.add(new Item(i/200.0, j/2000.0));
+        long addTime = 0, searchTime = 0;
+        for (int runs = 0; runs < TOTAL_RUNS; runs++) {
+            long start = System.currentTimeMillis();
+            for (double i=0; i < 200; i++) {
+                for (double j=0; j < 2000; j++) {
+                    mTree.add(new Item(i/200.0, j/2000.0));
+                }
             }
+            addTime += System.currentTimeMillis() - start;
+
+            // searching bounds that are exact subtrees of the main quadTree
+            start = System.currentTimeMillis();
+            assertEquals(400000, searchAll().size());
+            assertEquals(100000, mTree.search(new Bounds(0, .5, 0, .5)).size());
+            assertEquals(100000, mTree.search(new Bounds(.5, 1, 0, .5)).size());
+            assertEquals(25000, mTree.search(new Bounds(0, .25, 0, .25)).size());
+            assertEquals(25000, mTree.search(new Bounds(.75, 1, .75, 1)).size());
+
+            // searching bounds that do not line up with main quadTree
+            assertEquals(399600, mTree.search(new Bounds(0, 0.999, 0, 0.999)).size());
+            assertEquals(4000, mTree.search(new Bounds(0.8, 0.9, 0.8, 0.9)).size());
+            assertEquals(4000, mTree.search(new Bounds(0, 1, 0, 0.01)).size());
+            assertEquals(16000, mTree.search(new Bounds(0.4, 0.6, 0.4, 0.6)).size());
+
+            // searching bounds that are small / have very exact end points
+            assertEquals(1, mTree.search(new Bounds(0, .001, 0, .0001)).size());
+            assertEquals(26574, mTree.search(new Bounds(0.356, 0.574, 0.678, 0.987)).size());
+            assertEquals(44622, mTree.search(new Bounds(0.123, 0.456, 0.456, 0.789)).size());
+            assertEquals(4884, mTree.search(new Bounds(0.111, 0.222, 0.333, 0.444)).size());
+
+            mTree.clear();
+            assertEquals(0, searchAll().size());
+            searchTime += System.currentTimeMillis() - start;
         }
-        Log.d("QuadTreeTest", "adding points time: " + (System.currentTimeMillis() - start));
-
-        // searching bounds that are exact subtrees of the main quadTree
-        start = System.currentTimeMillis();
-        assertEquals(400000, searchAll().size());
-        assertEquals(100000, mTree.search(new Bounds(0, .5, 0, .5)).size());
-        assertEquals(100000, mTree.search(new Bounds(.5, 1, 0, .5)).size());
-        assertEquals(25000, mTree.search(new Bounds(0, .25, 0, .25)).size());
-        assertEquals(25000, mTree.search(new Bounds(.75, 1, .75, 1)).size());
-        Log.d("QuadTreeTest", "search base2 bounds time: " + (System.currentTimeMillis() - start));
-
-        // searching bounds that do not line up with main quadTree
-        start = System.currentTimeMillis();
-        assertEquals(399600, mTree.search(new Bounds(0, 0.999, 0, 0.999)).size());
-        assertEquals(4000, mTree.search(new Bounds(0.8, 0.9, 0.8, 0.9)).size());
-        assertEquals(4000, mTree.search(new Bounds(0, 1, 0, 0.01)).size());
-        assertEquals(16000, mTree.search(new Bounds(0.4, 0.6, 0.4, 0.6)).size());
-        Log.d("QuadTreeTest", "search strange bounds time: " + (System.currentTimeMillis() - start));
-
-        // searching bounds that are small / have very exact end points
-        start = System.currentTimeMillis();
-        assertEquals(1, mTree.search(new Bounds(0, .001, 0, .0001)).size());
-        assertEquals(26574, mTree.search(new Bounds(0.356, 0.574, 0.678, 0.987)).size());
-        assertEquals(44622, mTree.search(new Bounds(0.123, 0.456, 0.456, 0.789)).size());
-        assertEquals(4884, mTree.search(new Bounds(0.111, 0.222, 0.333, 0.444)).size());
-        Log.d("QuadTreeTest", "search small bounds time: " + (System.currentTimeMillis() - start));
-
-        mTree.clear();
-        assertEquals(0, searchAll().size());
+        Log.d("QuadTreeTest", "Avg. adding time = " + (addTime / TOTAL_RUNS));
+        Log.d("QuadTreeTest", "Avg. search time = " + (searchTime / TOTAL_RUNS));
     }
 
+    /**
+     * Runs a test with 100,000 points.
+     * Timing results are averaged.
+     */
     public void testRandomPoints() {
         Log.d("QuadTreeTest", "Running testRandomPoints");
         long addTime = 0, searchTime = 0;
-        final int TOTAL_RUNS = 10;
-        for (int run = 0; run < TOTAL_RUNS; run ++) {
+        for (int run = 0; run < TOTAL_RUNS*3; run ++) {
             long start = System.currentTimeMillis();
             Random random = new Random();
             for (int i = 0; i<100000; i++) {
@@ -181,8 +203,8 @@ public class PointQuadTreeTest extends TestCase {
 
             mTree.clear();
         }
-        Log.d("QuadTreeTest", "Avg. adding points time: " + (addTime / TOTAL_RUNS));
-        Log.d("QuadTreeTest", "Avg. search time: " + (searchTime / TOTAL_RUNS));
+        Log.d("QuadTreeTest", "Avg. adding time: " + (addTime / TOTAL_RUNS / 3));
+        Log.d("QuadTreeTest", "Avg. search time: " + (searchTime / TOTAL_RUNS / 3));
     }
 
     private Collection<Item> searchAll() {
