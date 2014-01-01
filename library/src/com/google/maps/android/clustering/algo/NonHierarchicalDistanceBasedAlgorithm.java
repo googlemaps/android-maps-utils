@@ -7,6 +7,7 @@ import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
+import com.google.maps.android.quadtree.PointQuadTreeImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +43,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
+    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTreeImpl<QuadItem<T>>(0, 1, 0, 1);
 
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
