@@ -36,7 +36,7 @@ public class Bounds {
         this.maxY = maxY;
 
         midX = (minX + maxX) / 2;
-        midY = (minY + minY) / 2;
+        midY = (minY + maxY) / 2;
     }
 
     public boolean contains(double x, double y) {
@@ -57,5 +57,21 @@ public class Bounds {
 
     public boolean contains(Bounds bounds) {
         return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY;
+    }
+
+    public Bounds getTopLeftQuad() {
+        return new Bounds(minX, midX, minY, midY);
+    }
+
+    public Bounds getTopRightQuad() {
+        return new Bounds(midX, maxX, minY, midY);
+    }
+
+    public Bounds getBottomLeftQuad() {
+        return new Bounds(minX, midX, midY, maxY);
+    }
+
+    public Bounds getBottomRightQuad() {
+        return new Bounds(midX, maxX, midY, maxY);
     }
 }
