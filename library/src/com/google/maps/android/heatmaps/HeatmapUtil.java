@@ -200,23 +200,20 @@ public class HeatmapUtil {
         // Make buckets
         double[][] buckets = new double[nBuckets][nBuckets];
 
-        // Assign into buckets
+        // Assign into buckets + find max value as we go along
         double x, y;
+        double max = 0;
         for (LatLngWrapper l : list) {
             x = l.getPoint().x;
             y = l.getPoint().y;
 
-            buckets[(int)((x - minX) * scale)][(int)((y - minY) * scale)] += l.getIntensity();
+            int xBucket = (int)((x - minX) * scale);
+            int yBucket = (int)((y - minY) * scale);
+
+            buckets[xBucket][yBucket] += l.getIntensity();
+            if (buckets[xBucket][yBucket] > max) max = buckets[xBucket][yBucket];
         }
 
-        // Find maximum bucket value
-        int i, j;
-        double max = 0;
-        for (i = 0; i < nBuckets; i++) {
-            for (j = 0; j < nBuckets; j++) {
-                if (buckets[i][j] > max) max = buckets[i][j];
-            }
-        }
         return max;
     }
 

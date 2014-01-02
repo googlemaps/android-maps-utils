@@ -6,8 +6,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.geometry.Bounds;
-import com.google.maps.android.quadtree.LinearQuadTree;
 import com.google.maps.android.quadtree.PointQuadTree;
+import com.google.maps.android.quadtree.PointQuadTreeImpl;
 
 import java.util.ArrayList;
 
@@ -64,9 +64,7 @@ public class HeatmapHandler {
         Log.e("Time getBounds", (end - start) + "ms");
 
         start = getTime();
-        // What depth is good to use?
-        mTree = new LinearQuadTree(mTreeBounds, 10);
-        //mTree = new PointQuadTreeImpl(mTreeBounds);
+        mTree = new PointQuadTreeImpl(mTreeBounds);
 
         // Add points to quad tree
         for (LatLngWrapper l: list) {
