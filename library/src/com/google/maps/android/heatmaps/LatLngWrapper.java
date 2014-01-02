@@ -52,6 +52,15 @@ public class LatLngWrapper implements PointQuadTree.Item {
         this(latLng, DEFAULT_INTENSITY);
     }
 
+    /**
+     * Constructor for use in TileProvider that adds to the x coordinate of another LatLngWapper
+     * Use in TileProvider only (for wraparound tiles)
+     */
+    protected LatLngWrapper(LatLngWrapper w, double offset) {
+        mPoint = new Point(w.getPoint().x + offset, w.getPoint().y);
+        mIntensity = w.getIntensity();
+    }
+
     public Point getPoint() { return mPoint; }
 
     public double getIntensity() { return mIntensity; }

@@ -55,6 +55,12 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
 
+        /* Testing wraparound
+        mList.add(new LatLngWrapper(new LatLng(0, -179.99)));
+        mList.add(new LatLngWrapper(new LatLng(2, -180)));
+        mList.add(new LatLngWrapper(new LatLng(0, 179)));
+        mList.add(new LatLngWrapper(new LatLng(1, 179.99))); */
+
         // Make the handler deal with the map
         // Input: list of LatLngWrappers, minimum and maximum zoom levels to calculate custom
         // intensity from, and the map to draw the heatmap on

@@ -83,8 +83,8 @@ public class HeatmapTileProvider implements TileProvider{
         // Convert tile coordinates and zoom into Point/Bounds format
         // Know that at zoom level 0, there is one tile: (0, 0) (arbitrary width 256)
         // Each zoom level multiplies number of tiles by 2
-        // Width of the world = 256 (Spherical Mercator Projection)
-        // x ranges from 0 to 1 * world width
+        // Width of the world = 512 (Spherical Mercator Projection)
+        // x = [0, 512) [-180, 180)
 
         //basically arbitrarily chosen scale (based off the demo)
         double worldWidth = HeatmapConstants.HEATMAP_TILE_SIZE;
@@ -102,16 +102,45 @@ public class HeatmapTileProvider implements TileProvider{
         double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
 
         // Make bounds: minX, maxX, minY, maxY
+        // Sigma because search is non inclusive
+        double sigma = 0.00000001;
         double minX = x * tileWidth - padding;
-        double maxX = (x + 1) * tileWidth + padding;
+        double maxX = (x + 1) * tileWidth + padding + sigma;
         double minY = y * tileWidth - padding;
-        double maxY = (y + 1) * tileWidth + padding;
+        double maxY = (y + 1) * tileWidth + padding + sigma;
 
+        // Deal with overlap across lat = 180
+        // Need to make it wrap around both ways
+        // However, maximum tile size is such that you wont ever have to deal with both, so
+        // hence, the else
+        // Note: Tile must remain square, so cant optimise by editing bounds
+        double xOffset = 0;
+        ArrayList<LatLngWrapper> wrappedPoints = new ArrayList<LatLngWrapper>();
+        if (minX < 0) {
+            // Need to consider "negative" points
+            // (minX to 0) ->  (512+minX to 512) ie +512
+            // add 512 to search bounds and subtract 512 from actual points
+            Bounds overlapBounds = new Bounds(minX+worldWidth, worldWidth, minY, maxY);
+            xOffset = -worldWidth;
+            wrappedPoints = (ArrayList<LatLngWrapper>)mTree.search(overlapBounds);
+            //Log.e("negative points", ""+wrappedPoints.size());
+        } else if (maxX > worldWidth) {
+            // Need to consider "overflow" points
+            // (512 to maxX) -> (0 to maxX-512) ie -512
+            // subtract 512 from search bounds and add 512 to actual points
+            Bounds overlapBounds = new Bounds(0, maxX - worldWidth, minY, maxY);
+            xOffset = worldWidth;
+            wrappedPoints = (ArrayList<LatLngWrapper>)mTree.search(overlapBounds);
+            //Log.e("overflow points", ""+wrappedPoints.size());
+        }
+
+        // Main tile bounds to search
         Bounds tileBounds = new Bounds(minX, maxX, minY, maxY);
 
-
-        // If outside of quadtree bounds, return blank tile
-        if (!tileBounds.intersects(mBounds)) {
+        // If outside of *padded* quadtree bounds, return blank tile
+        Bounds paddedBounds = new Bounds(mBounds.minX - padding, mBounds.maxX + padding,
+                mBounds.minY - padding, mBounds.maxY + padding);
+        if (!tileBounds.intersects(paddedBounds)) {
             return mBlankTile;
         }
 
@@ -120,6 +149,14 @@ public class HeatmapTileProvider implements TileProvider{
         ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>)mTree.search(tileBounds);
         long end = getTime();
         Log.e("getTile Search "+x+","+y, (end-start)+"ms");
+
+        // Add wrapped (wraparound) points if necessary
+        if (!wrappedPoints.isEmpty()) {
+            Log.e("ping", "ping");
+            for (LatLngWrapper l:wrappedPoints) {
+                points.add(new LatLngWrapper(l, xOffset));
+            }
+        }
 
         // If no points, return blank tile
         if (points.isEmpty()) {
