@@ -37,7 +37,8 @@ public class HeatmapHandler {
 
     /**
      * Constructor for the handler
-     * @param list List of all LatLngWrappers to put into quadtree
+     * @param list List of all LatLngWrappers to put into quadtree. Assumed to be non-empty.
+     *             TODO: check that its non empty
      * @param radius Radius of convolution to use
      * @param gradient Gradient to color heatmap with. This is usually about 10 different colours.
      *                 Ordered from least to highest corresponding intensity.
@@ -185,6 +186,12 @@ public class HeatmapHandler {
         mOverlay.clearTileCache();
     }
 
+    /**
+     * Removes the tile overlay from the map.
+     */
+    public void remove() {
+        mOverlay.remove();
+    }
 
     private long getTime() {
         return System.currentTimeMillis();
