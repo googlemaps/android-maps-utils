@@ -194,17 +194,11 @@ public class HeatmapHandler {
     }
 
     /**
-     * Show the overlay.
+     * Use to change visibility of overlay without changing opacity.
+     * @param visibility Boolean: true for visible, false for not
      */
-    public void showOverlay() {
-        mOverlay.setVisible(true);
-    }
-
-    /**
-     * Hide the overlay.
-     */
-    public void hideOverlay() {
-        mOverlay.setVisible(true);
+    public void setVisible(boolean visibility) {
+        mOverlay.setVisible(visibility);
     }
 
     private long getTime() {
