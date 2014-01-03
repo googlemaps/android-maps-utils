@@ -193,6 +193,20 @@ public class HeatmapHandler {
         mOverlay.remove();
     }
 
+    /**
+     * Show the overlay.
+     */
+    public void showOverlay() {
+        mOverlay.setVisible(true);
+    }
+
+    /**
+     * Hide the overlay.
+     */
+    public void hideOverlay() {
+        mOverlay.setVisible(true);
+    }
+
     private long getTime() {
         return System.currentTimeMillis();
     }
