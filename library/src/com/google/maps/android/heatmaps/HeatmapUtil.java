@@ -5,7 +5,8 @@ import android.graphics.Color;
 
 import com.google.maps.android.geometry.Bounds;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Utility functions for heatmaps.
@@ -15,17 +16,24 @@ public class HeatmapUtil {
 
     /**
      * Helper function for quadtree creation
-     * @param list List of LatLngWrapper to calculate bounds for
+     * @param points Collection of LatLngWrapper to calculate bounds for
      * @return Bounds that enclose the listed LatLngWrapper points
      */
-    public static Bounds getBounds(ArrayList<LatLngWrapper> list) {
+    public static Bounds getBounds(Collection<LatLngWrapper> points) {
         double sigma = 0.0000001;
-        double minX = list.get(0).getPoint().x;
-        double maxX = list.get(0).getPoint().x + sigma;
-        double minY = list.get(0).getPoint().y;
-        double maxY = list.get(0).getPoint().y + sigma;
 
-        for (LatLngWrapper l: list) {
+        // Use an iterator, need to access any one point of the collection for starting bounds
+        Iterator<LatLngWrapper> iter = points.iterator();
+
+        LatLngWrapper first = iter.next();
+
+        double minX = first.getPoint().x;
+        double maxX = first.getPoint().x + sigma;
+        double minY = first.getPoint().y;
+        double maxY = first.getPoint().y + sigma;
+
+        while (iter.hasNext()) {
+            LatLngWrapper l = iter.next();
             double x = l.getPoint().x;
             double y = l.getPoint().y;
             // Extend bounds if necessary
@@ -34,6 +42,7 @@ public class HeatmapUtil {
             if (y < minY) minY = y;
             if (y + sigma > maxY) maxY = y+ sigma;
         }
+
         return new Bounds(minX, maxX, minY, maxY);
     }
 
@@ -176,13 +185,13 @@ public class HeatmapUtil {
 
     /**
      * Calculate a reasonable maximum intensity value to map to maximum color intensity
-     * @param list List of LatLngs to put into buckets
+     * @param points Collection of LatLngs to put into buckets
      * @param bounds Bucket boundaries
      * @param radius radius of convolution
      * @param screenDim larger dimension of screen in pixels (for scale)
      * @return Approximate max value
      */
-    public static double getMaxVal(ArrayList<LatLngWrapper> list, Bounds bounds, int radius,
+    public static double getMaxVal(Collection<LatLngWrapper> points, Bounds bounds, int radius,
                                    int screenDim) {
         // Approximate scale as if entire heatmap is on the screen
         // ie scale dimensions to larger of width or height (screenDim)
@@ -203,7 +212,7 @@ public class HeatmapUtil {
         // Assign into buckets + find max value as we go along
         double x, y;
         double max = 0;
-        for (LatLngWrapper l : list) {
+        for (LatLngWrapper l : points) {
             x = l.getPoint().x;
             y = l.getPoint().y;
 

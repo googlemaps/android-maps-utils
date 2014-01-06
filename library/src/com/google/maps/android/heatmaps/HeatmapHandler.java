@@ -10,6 +10,7 @@ import com.google.maps.android.quadtree.PointQuadTree;
 import com.google.maps.android.quadtree.PointQuadTreeImpl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Handles the heatmap layer, creating the tile overlay, provider, and so on.
@@ -25,7 +26,7 @@ public class HeatmapHandler {
 
     private HeatmapTileProvider mTileProvider;
 
-    private ArrayList<LatLngWrapper> mList;
+    private Collection<LatLngWrapper> mList;
 
     private Bounds mTreeBounds;
 
@@ -37,7 +38,7 @@ public class HeatmapHandler {
 
     /**
      * Constructor for the handler
-     * @param list List of all LatLngWrappers to put into quadtree. Assumed to be non-empty.
+     * @param points Collection of all LatLngWrappers to put into quadtree. Assumed to be non-empty.
      *             TODO: check that its non empty
      * @param radius Radius of convolution to use
      * @param gradient Gradient to color heatmap with. This is usually about 10 different colours.
@@ -51,16 +52,16 @@ public class HeatmapHandler {
      *                if minZoom >= maxZoom, only one default max intensity value is calculated
      * @param map pass the map so we can draw the heatmap onto it
      */
-    public HeatmapHandler(ArrayList<LatLngWrapper> list, int radius, int[] gradient, double opacity,
+    public HeatmapHandler(Collection<LatLngWrapper> points, int radius, int[] gradient, double opacity,
                           int minZoom, int maxZoom, GoogleMap map) {
         // Assignments
-        mList = list;
+        mList = points;
         mMinZoom = minZoom;
         mMaxZoom = maxZoom;
 
         long start = getTime();
         // Make the quad tree
-        mTreeBounds = HeatmapUtil.getBounds(list);
+        mTreeBounds = HeatmapUtil.getBounds(points);
         long end = getTime();
         Log.e("Time getBounds", (end - start) + "ms");
 
@@ -68,7 +69,7 @@ public class HeatmapHandler {
         mTree = new PointQuadTreeImpl(mTreeBounds);
 
         // Add points to quad tree
-        for (LatLngWrapper l: list) {
+        for (LatLngWrapper l: points) {
             mTree.add(l);
         }
         end = getTime();
