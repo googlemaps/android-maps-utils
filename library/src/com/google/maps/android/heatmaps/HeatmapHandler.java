@@ -104,7 +104,7 @@ public class HeatmapHandler {
      *                if minZoom >= maxZoom, only one default max intensity value is calculated
      * @param map pass the map so we can draw the heatmap onto it
      */
-    public HeatmapHandler(ArrayList<LatLngWrapper> list, int minZoom, int maxZoom, GoogleMap map) {
+    public HeatmapHandler(Collection<LatLngWrapper> list, int minZoom, int maxZoom, GoogleMap map) {
         this(list, HeatmapConstants.DEFAULT_HEATMAP_RADIUS,
                 HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, HeatmapConstants.DEFAULT_HEATMAP_OPACITY,
                 minZoom, maxZoom, map);
@@ -116,7 +116,7 @@ public class HeatmapHandler {
      * @param list List of all LatLngWrappers to put into quadtree
      * @param map pass the map so we can draw the heatmap onto it
      */
-    public HeatmapHandler(ArrayList<LatLngWrapper> list, GoogleMap map) {
+    public HeatmapHandler(Collection<LatLngWrapper> list, GoogleMap map) {
         this(list, HeatmapConstants.DEFAULT_HEATMAP_RADIUS,
                 HeatmapConstants.DEFAULT_HEATMAP_GRADIENT, HeatmapConstants.DEFAULT_HEATMAP_OPACITY,
                 0, 0, map);
@@ -205,5 +205,4 @@ public class HeatmapHandler {
     private long getTime() {
         return System.currentTimeMillis();
     }
-
 }
