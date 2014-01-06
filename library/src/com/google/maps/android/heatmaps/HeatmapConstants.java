@@ -15,12 +15,12 @@ public class HeatmapConstants {
     /**
      * Default size of a color map for the heatmap
      */
-    public final static int HEATMAP_COLOR_MAP_SIZE = 1001;
+    public static final int HEATMAP_COLOR_MAP_SIZE = 1001;
 
     /**
      * Default tile dimensions
      */
-    public final static int HEATMAP_TILE_SIZE = 512;
+    public static final int HEATMAP_TILE_SIZE = 512;
 
     /**
      * Default radius for convolution
@@ -47,7 +47,7 @@ public class HeatmapConstants {
      * Copied from Javascript version.
      * Array of colors, in int form.
      */
-    public final static int[] DEFAULT_HEATMAP_GRADIENT = {
+    public static final int[] DEFAULT_HEATMAP_GRADIENT = {
             //a, r, g, b / r, g, b
             Color.argb(0, 102, 255, 0),  // green (invisible)
             Color.argb(255/3*2 ,102, 255, 0),  // 2/3rds invisible
@@ -66,7 +66,7 @@ public class HeatmapConstants {
      * Alternative heatmap gradient (blue -> red)
      * Copied from Javascript version
      */
-    public final static int[] ALT_HEATMAP_GRADIENT = {
+    public static final int[] ALT_HEATMAP_GRADIENT = {
             Color.argb(0, 0, 255, 255),// transparent
             Color.argb(255/3*2, 0, 255, 255),
             Color.rgb(0, 191, 255),
@@ -82,4 +82,24 @@ public class HeatmapConstants {
             Color.rgb(191, 0, 31),
             Color.rgb(255, 0, 0)
             };
+
+    /**
+     * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
+     */
+    public static final int DEFAULT_MIN_ZOOM = 5;
+
+    /**
+     * Default (and maximum possible) maximum zoom level at which to calculate maximum intensities
+     */
+    public static final int DEFAULT_MAX_ZOOM = 8;
+
+    /**
+     * Minimum radius value.
+     */
+    public static final int MIN_RADIUS = 1;
+
+    /**
+     * Maximum radius value.
+     */
+    public static final int MAX_RADIUS = 50;
 }

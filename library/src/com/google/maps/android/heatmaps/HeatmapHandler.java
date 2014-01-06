@@ -58,18 +58,29 @@ public class HeatmapHandler {
          *               Should be non-empty.
          * @param map Map on which heatmap will be drawn.
          */
-        public Builder(Collection<LatLngWrapper> points, GoogleMap map) {
+        public Builder(Collection<LatLngWrapper> points, GoogleMap map)
+                throws IllegalArgumentException{
             this.points = points;
             this.map = map;
+
+            // Check that points is non empty
+            if (this.points.isEmpty()) {
+                throw new IllegalArgumentException("No input points.");
+            }
         }
 
         /**
          * Setter for radius in builder
-         * @param val Radius of convolution to use, in terms of pixels
+         * @param val Radius of convolution to use, in terms of pixels.
+         *            Must be within minimum and maximum values as found in HeatmapConstants.
          * @return updated builder object
          */
-        public Builder radius(int val) {
+        public Builder radius(int val) throws IllegalArgumentException {
             radius = val;
+            // Check that radius is within bounds.
+            if (radius < HeatmapConstants.MIN_RADIUS || radius > HeatmapConstants.MAX_RADIUS) {
+                throw new IllegalArgumentException("Radius not within bounds.");
+            }
             return this;
         }
 
@@ -80,40 +91,64 @@ public class HeatmapHandler {
          *                 A larger colour map is interpolated from these "colour stops".
          * @return updated builder object
          */
-        public Builder gradient(int[] val) {
+        public Builder gradient(int[] val) throws IllegalArgumentException {
             gradient = val;
+            // Check that gradient is not empty
+            if (gradient.length == 0) {
+                throw new IllegalArgumentException("Gradient is empty.");
+            }
             return this;
         }
 
         /**
          * Setter for opacity in builder
-         * @param val Opacity of the entire heatmap in range (0, 1]
+         * @param val Opacity of the entire heatmap in range [0, 1]
          * @return updated builder object
          */
-        public Builder opacity(double val) {
+        public Builder opacity(double val) throws IllegalArgumentException {
             opacity = val;
+            // Check that opacity is in range
+            if (opacity < 0 || opacity > 1) {
+                throw new IllegalArgumentException("Opacity must be in range [0, 1]");
+            }
             return this;
         }
 
         /**
          * Setter for which zoom levels to calculate max intensity for
+         * Cannot have custom outside of defaults (too slow)
+         * Max intensity will be set to that of min at zoom levels lower than min,
+         * and similarly for those above max.
+         * These should be the zoom levels at which your heatmap is intended to be viewed at.
          * @param min minimum zoom level to calculate max intensity for
          *                recommended/default is 5
          * @param max maximum zoom level to calculate max intensity for
          *                recommended/default is 8
+         *                Must be greater than or equal to min
          * @return updated builder object
          */
-        public Builder zoom(int min, int max) {
+        public Builder zoom(int min, int max) throws IllegalArgumentException {
             minZoom = min;
             maxZoom = max;
+            // Check min and max are OK
+            if (min > max) {
+                throw new IllegalArgumentException("Min must be smaller than or equal to max");
+            }
+            if (min < HeatmapConstants.DEFAULT_MIN_ZOOM) {
+                throw new IllegalArgumentException("Min smaller than allowed");
+            }
+            if (max > HeatmapConstants.DEFAULT_MAX_ZOOM) {
+                throw new IllegalArgumentException("Max larger than allowed");
+            }
             return this;
         }
 
         /**
-         * Call when all desired options have been set,
+         * Call when all desired options have been set.
          * @return HeatmapHandler created with desired options.
          */
         public HeatmapHandler build() {
+            // Check
             return new HeatmapHandler(this);
         }
     }
