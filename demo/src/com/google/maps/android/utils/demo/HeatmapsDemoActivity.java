@@ -30,6 +30,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private boolean defaultGradient = true;
     private boolean defaultRadius = true;
     private boolean defaultOpacity = true;
+    private boolean origData = true;
 
     /**
      * List of LatLngWrappers
@@ -37,6 +38,11 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
      * represents "importance" of this LatLng) - see the class for more detail
      */
     private ArrayList<LatLngWrapper> mList;
+
+    /**
+     * Alternative data set
+     */
+    private ArrayList<LatLngWrapper> mListThinned;
 
     @Override
     protected int getLayoutId() {
@@ -48,6 +54,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(34.0522300, -118.2436800), 7));
 
         mList = new ArrayList<LatLngWrapper>();
+        mListThinned = new ArrayList<LatLngWrapper>();
 
         try {
             readItems();
@@ -102,6 +109,17 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         defaultOpacity = !defaultOpacity;
     }
 
+    public void changeData(View view) {
+        if (origData) {
+            mHeatmapHandler.setData(mListThinned);
+        }
+        else {
+            mHeatmapHandler.setData(mList);
+        }
+        origData = !origData;
+
+    }
+
     // https://explore.data.gov/Geography-and-Environment/EPA-FRS-Facilities-Combined-File-CSV-Download-for-/y38d-q6kk
     // 130k points
     private void readItems() throws JSONException {
@@ -114,6 +132,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             double lat = object.getDouble("lat");
             double lng = object.getDouble("lng");
             mList.add(new LatLngWrapper(new LatLng(lat, lng)));
+            if (i % 10 == 0) {
+                mListThinned.add(new LatLngWrapper(new LatLng(lat, lng)));
+            }
         }
 
         long end = getTime();

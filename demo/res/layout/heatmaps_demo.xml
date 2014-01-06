@@ -30,6 +30,13 @@
             android:id="@+id/Opacity_Button"
             android:text="Opacity"
             android:onClick="changeOpacity"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/Data_Button"
+            android:text="Dataset"
+            android:onClick="changeData"/>
     </LinearLayout>
 
     <fragment android:id="@+id/map"

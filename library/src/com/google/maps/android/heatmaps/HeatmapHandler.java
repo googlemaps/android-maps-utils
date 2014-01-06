@@ -29,9 +29,17 @@ public class HeatmapHandler {
 
     private Bounds mTreeBounds;
 
+    private int mRadius;
+
+    private int[] mGradient;
+
+    private double mOpacity;
+
     private int mMinZoom;
 
     private int mMaxZoom;
+
+    private GoogleMap mMap;
 
     private double[] mMaxIntensity;
 
@@ -159,11 +167,37 @@ public class HeatmapHandler {
         mMinZoom = builder.minZoom;
         mMaxZoom = builder.maxZoom;
 
-        int radius = builder.radius;
-        int[] gradient = builder.gradient;
-        double opacity = builder.opacity;
+        mRadius = builder.radius;
+        mGradient = builder.gradient;
+        mOpacity = builder.opacity;
 
-        GoogleMap map = builder.map;
+        mMap = builder.map;
+
+        setData(mPoints);
+    }
+
+    /**
+     * Changes the dataset the heatmap is portraying.
+     * @param points Points to use in the heatmap.
+     */
+    public void setData(Collection<LatLngWrapper> points) throws IllegalArgumentException {
+        // Change point set
+        mPoints = points;
+
+        // Check point set is OK
+        if (mPoints.isEmpty()) {
+            throw new IllegalArgumentException("No input points.");
+        }
+
+        // Remove old overlay if required
+        if (mOverlay != null) {
+            mOverlay.remove();
+        }
+
+        // Because quadtree bounds are final once the quadtree is created, we cannot add
+        // points outside of those bounds to the quadtree after creation.
+        // As quadtree creation is actually quite lightweight/fast as compared to other functions
+        // called in heatmap creation, re-creating the quadtree is an acceptable solution here.
 
         long start = getTime();
         // Make the quad tree
@@ -185,47 +219,19 @@ public class HeatmapHandler {
         // Calculate reasonable maximum intensity for color scale (user can also specify)
         // Get max intensities
         start = getTime();
-        mMaxIntensity = getMaxIntensities(radius, mMinZoom, mMaxZoom);
+        mMaxIntensity = getMaxIntensities(mRadius, mMinZoom, mMaxZoom);
         end = getTime();
         Log.e("Time getMaxIntensities", (end - start) + "ms");
 
         // Create a heatmap tile provider, that will generate the overlay tiles
         start = getTime();
-        mProvider = new HeatmapTileProvider(mTree, mTreeBounds, radius,
-                gradient, opacity, mMaxIntensity);
+        mProvider = new HeatmapTileProvider(mTree, mTreeBounds, mRadius, mGradient, mOpacity,
+                mMaxIntensity);
         end = getTime();
         Log.e("Time new HeatmapTileProvider", (end - start) + "ms");
 
         // Add the overlay to the map
-        mOverlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-    }
-
-    private double[] getMaxIntensities(int radius, int min_zoom, int max_zoom) {
-        // Can go from zoom level 3 to zoom level 22
-        double[] maxIntensityArray = new double[MAX_ZOOM_LEVEL];
-
-        if (min_zoom < max_zoom) {
-            // Calculate max intensity for each zoom level
-            for (int i = min_zoom; i < max_zoom; i ++) {
-                // Each zoom level multiplies viewable size by 2
-                maxIntensityArray[i] = HeatmapUtil.getMaxVal(mPoints, mTreeBounds, radius,
-                        (int)(HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
-                if (i == min_zoom) {
-                    for(int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
-                }
-            }
-            for (int i = max_zoom; i < MAX_ZOOM_LEVEL; i ++) {
-                maxIntensityArray[i] = maxIntensityArray[max_zoom - 1];
-            }
-        } else {
-            // Just calculate one max intensity across whole map
-            double maxIntensity = HeatmapUtil.getMaxVal(mPoints, mTreeBounds, radius,
-                    HeatmapConstants.SCREEN_SIZE);
-            for (int i = 0; i < MAX_ZOOM_LEVEL; i ++) {
-                maxIntensityArray[i] = maxIntensity;
-            }
-        }
-        return maxIntensityArray;
+        mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
 
     /**
@@ -278,6 +284,34 @@ public class HeatmapHandler {
      */
     public void setVisible(boolean visibility) {
         mOverlay.setVisible(visibility);
+    }
+
+    private double[] getMaxIntensities(int radius, int min_zoom, int max_zoom) {
+        // Can go from zoom level 3 to zoom level 22
+        double[] maxIntensityArray = new double[MAX_ZOOM_LEVEL];
+
+        if (min_zoom < max_zoom) {
+            // Calculate max intensity for each zoom level
+            for (int i = min_zoom; i < max_zoom; i ++) {
+                // Each zoom level multiplies viewable size by 2
+                maxIntensityArray[i] = HeatmapUtil.getMaxVal(mPoints, mTreeBounds, radius,
+                        (int)(HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
+                if (i == min_zoom) {
+                    for(int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
+                }
+            }
+            for (int i = max_zoom; i < MAX_ZOOM_LEVEL; i ++) {
+                maxIntensityArray[i] = maxIntensityArray[max_zoom - 1];
+            }
+        } else {
+            // Just calculate one max intensity across whole map
+            double maxIntensity = HeatmapUtil.getMaxVal(mPoints, mTreeBounds, radius,
+                    HeatmapConstants.SCREEN_SIZE);
+            for (int i = 0; i < MAX_ZOOM_LEVEL; i ++) {
+                maxIntensityArray[i] = maxIntensity;
+            }
+        }
+        return maxIntensityArray;
     }
 
     private long getTime() {
