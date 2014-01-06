@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.HeatmapConstants;
-import com.google.maps.android.heatmaps.HeatmapHandler;
+import com.google.maps.android.heatmaps.HeatmapHelper;
 import com.google.maps.android.heatmaps.LatLngWrapper;
 
 import org.json.JSONArray;
@@ -25,7 +25,7 @@ import java.util.Scanner;
  */
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
-    private HeatmapHandler mHeatmapHandler;
+    private HeatmapHelper mHeatmapHandler;
 
     private boolean defaultGradient = true;
     private boolean defaultRadius = true;
@@ -62,18 +62,12 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
 
-        /* Testing wraparound
-        mList.add(new LatLngWrapper(new LatLng(0, -179.99)));
-        mList.add(new LatLngWrapper(new LatLng(2, -180)));
-        mList.add(new LatLngWrapper(new LatLng(0, 179)));
-        mList.add(new LatLngWrapper(new LatLng(1, 179.99))); */
-
         // Make the handler deal with the map
         // Input: list of LatLngWrappers, minimum and maximum zoom levels to calculate custom
         // intensity from, and the map to draw the heatmap on
         // radius, gradient and opacity not specified, so default are used
         try {
-            mHeatmapHandler = new HeatmapHandler.Builder(mList, getMap()).zoom(5, 8).build();
+            mHeatmapHandler = new HeatmapHelper.Builder(mList, getMap()).zoom(5, 8).build();
         } catch(IllegalArgumentException e) {
             Log.e("IllegalArgumentException in Builder", e.getMessage());
         }
@@ -121,7 +115,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     // https://explore.data.gov/Geography-and-Environment/EPA-FRS-Facilities-Combined-File-CSV-Download-for-/y38d-q6kk
-    // 130k points
     private void readItems() throws JSONException {
         long start = getTime();
         InputStream inputStream = getResources().openRawResource(R.raw.latlong_500);

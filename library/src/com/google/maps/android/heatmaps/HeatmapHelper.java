@@ -14,7 +14,7 @@ import java.util.Collection;
 /**
  * Handles the heatmap layer, creating the tile overlay, provider, and so on.
  */
-public class HeatmapHandler {
+public class HeatmapHelper {
 
     public static final int MAX_ZOOM_LEVEL = 22;
 
@@ -155,13 +155,13 @@ public class HeatmapHandler {
          * Call when all desired options have been set.
          * @return HeatmapHandler created with desired options.
          */
-        public HeatmapHandler build() {
+        public HeatmapHelper build() {
             // Check
-            return new HeatmapHandler(this);
+            return new HeatmapHelper(this);
         }
     }
 
-    private HeatmapHandler(Builder builder) {
+    private HeatmapHelper(Builder builder) {
         //Get parameters from builder
         mPoints = builder.points;
         mMinZoom = builder.minZoom;
