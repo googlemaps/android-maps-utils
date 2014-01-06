@@ -65,7 +65,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         // Input: list of LatLngWrappers, minimum and maximum zoom levels to calculate custom
         // intensity from, and the map to draw the heatmap on
         // radius, gradient and opacity not specified, so default are used
-        mHeatmapHandler = new HeatmapHandler(mList, 5, 8, getMap());
+        mHeatmapHandler = new HeatmapHandler.Builder(mList, getMap()).zoom(5, 8).build();
     }
 
     public void changeRadius(View view) {
