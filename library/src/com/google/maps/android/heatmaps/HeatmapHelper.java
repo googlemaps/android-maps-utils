@@ -56,9 +56,9 @@ public class HeatmapHelper {
         private int radius = HeatmapConstants.DEFAULT_HEATMAP_RADIUS;
         private int[] gradient = HeatmapConstants.DEFAULT_HEATMAP_GRADIENT;
         private double opacity = HeatmapConstants.DEFAULT_HEATMAP_OPACITY;
-        // Only custom min/max if they differ so initialise both to 0
+        // Only custom min/max if they differ so initialise both to 5
         private int minZoom = 5;
-        private int maxZoom = 8;
+        private int maxZoom = 5;
 
         /**
          * Constructor for builder, which contains the required parameters for a heatmap.
