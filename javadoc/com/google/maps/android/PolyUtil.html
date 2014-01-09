@@ -56,15 +56,62 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#containsLocation(LatLng, java.util.List, boolean)">containsLocation</a></strong>(LatLng&nbsp;point,
+                java.util.List&lt;LatLng&gt;&nbsp;polygon,
+                boolean&nbsp;geodesic)</code>
+<div class="block">Computes whether the given point lies inside the specified polygon.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static java.util.List&lt;LatLng&gt;</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#decode(java.lang.String)">decode</a></strong>(java.lang.String&nbsp;encodedPath)</code>
 <div class="block">Decodes an encoded path string into a sequence of LatLngs.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#encode(java.util.List)">encode</a></strong>(java.util.List&lt;LatLng&gt;&nbsp;path)</code>
 <div class="block">Encodes a sequence of LatLngs into an encoded path string.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnEdge(LatLng, java.util.List, boolean)">isLocationOnEdge</a></strong>(LatLng&nbsp;point,
+                java.util.List&lt;LatLng&gt;&nbsp;polygon,
+                boolean&nbsp;geodesic)</code>
+<div class="block">Same as <a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnEdge(LatLng, java.util.List, boolean, double)"><code>isLocationOnEdge(LatLng, List, boolean, double)</code></a>
+ with a default tolerance of 0.1 meters.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnEdge(LatLng, java.util.List, boolean, double)">isLocationOnEdge</a></strong>(LatLng&nbsp;point,
+                java.util.List&lt;LatLng&gt;&nbsp;polygon,
+                boolean&nbsp;geodesic,
+                double&nbsp;tolerance)</code>
+<div class="block">Computes whether the given point lies on or near the edge of a polygon, within a specified
+ tolerance in meters.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnPath(LatLng, java.util.List, boolean)">isLocationOnPath</a></strong>(LatLng&nbsp;point,
+                java.util.List&lt;LatLng&gt;&nbsp;polyline,
+                boolean&nbsp;geodesic)</code>
+<div class="block">Same as <a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnPath(LatLng, java.util.List, boolean, double)"><code>isLocationOnPath(LatLng, List, boolean, double)</code></a>
+
+ with a default tolerance of 0.1 meters.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnPath(LatLng, java.util.List, boolean, double)">isLocationOnPath</a></strong>(LatLng&nbsp;point,
+                java.util.List&lt;LatLng&gt;&nbsp;polyline,
+                boolean&nbsp;geodesic,
+                double&nbsp;tolerance)</code>
+<div class="block">Computes whether the given point lies on or near a polyline, within a specified
+ tolerance in meters.</div>
 </td>
 </tr>
 </table>
@@ -89,6 +136,23 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="containsLocation(LatLng, java.util.List, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>containsLocation</h4>
+<pre>public static&nbsp;boolean&nbsp;containsLocation(LatLng&nbsp;point,
+                       java.util.List&lt;LatLng&gt;&nbsp;polygon,
+                       boolean&nbsp;geodesic)</pre>
+<div class="block">Computes whether the given point lies inside the specified polygon.
+ The polygon is always cosidered closed, regardless of whether the last point equals
+ the first or not.
+ Inside is defined as not containing the South Pole -- the South Pole is always outside.
+ The polygon is formed of great circle segments if geodesic is true, and of rhumb
+ (loxodromic) segments otherwise.</div>
+</li>
+</ul>
 <a name="decode(java.lang.String)">
 <!--   -->
 </a>
@@ -102,11 +166,70 @@ extends java.lang.Object</pre>
 <a name="encode(java.util.List)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
 <pre>public static&nbsp;java.lang.String&nbsp;encode(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
 <div class="block">Encodes a sequence of LatLngs into an encoded path string.</div>
+</li>
+</ul>
+<a name="isLocationOnEdge(LatLng, java.util.List, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isLocationOnEdge</h4>
+<pre>public static&nbsp;boolean&nbsp;isLocationOnEdge(LatLng&nbsp;point,
+                       java.util.List&lt;LatLng&gt;&nbsp;polygon,
+                       boolean&nbsp;geodesic)</pre>
+<div class="block">Same as <a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnEdge(LatLng, java.util.List, boolean, double)"><code>isLocationOnEdge(LatLng, List, boolean, double)</code></a>
+ with a default tolerance of 0.1 meters.</div>
+</li>
+</ul>
+<a name="isLocationOnEdge(LatLng, java.util.List, boolean, double)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isLocationOnEdge</h4>
+<pre>public static&nbsp;boolean&nbsp;isLocationOnEdge(LatLng&nbsp;point,
+                       java.util.List&lt;LatLng&gt;&nbsp;polygon,
+                       boolean&nbsp;geodesic,
+                       double&nbsp;tolerance)</pre>
+<div class="block">Computes whether the given point lies on or near the edge of a polygon, within a specified
+ tolerance in meters. The polygon edge is composed of great circle segments if geodesic
+ is true, and of Rhumb segments otherwise. The polygon edge is implicitly closed -- the
+ closing segment between the first point and the last point is included.</div>
+</li>
+</ul>
+<a name="isLocationOnPath(LatLng, java.util.List, boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isLocationOnPath</h4>
+<pre>public static&nbsp;boolean&nbsp;isLocationOnPath(LatLng&nbsp;point,
+                       java.util.List&lt;LatLng&gt;&nbsp;polyline,
+                       boolean&nbsp;geodesic)</pre>
+<div class="block">Same as <a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnPath(LatLng, java.util.List, boolean, double)"><code>isLocationOnPath(LatLng, List, boolean, double)</code></a>
+
+ with a default tolerance of 0.1 meters.</div>
+</li>
+</ul>
+<a name="isLocationOnPath(LatLng, java.util.List, boolean, double)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>isLocationOnPath</h4>
+<pre>public static&nbsp;boolean&nbsp;isLocationOnPath(LatLng&nbsp;point,
+                       java.util.List&lt;LatLng&gt;&nbsp;polyline,
+                       boolean&nbsp;geodesic,
+                       double&nbsp;tolerance)</pre>
+<div class="block">Computes whether the given point lies on or near a polyline, within a specified
+ tolerance in meters. The polyline is composed of great circle segments if geodesic
+ is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
+ segment between the first point and the last point is not included.</div>
 </li>
 </ul>
 </li>

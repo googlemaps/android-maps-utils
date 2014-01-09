@@ -58,7 +58,7 @@ extends java.lang.Object</pre>
 <tr class="altColor">
 <td class="colFirst"><code>static double</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/maps/android/SphericalUtil.html#computeArea(java.util.List)">computeArea</a></strong>(java.util.List&lt;LatLng&gt;&nbsp;path)</code>
-<div class="block">Returns the area of a closed path.</div>
+<div class="block">Returns the area of a closed path on Earth.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -78,7 +78,7 @@ extends java.lang.Object</pre>
 <tr class="rowColor">
 <td class="colFirst"><code>static double</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/google/maps/android/SphericalUtil.html#computeLength(java.util.List)">computeLength</a></strong>(java.util.List&lt;LatLng&gt;&nbsp;path)</code>
-<div class="block">Returns the length of the given path.</div>
+<div class="block">Returns the length of the given path, in meters, on Earth.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -101,8 +101,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static double</code></td>
-<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/SphericalUtil.html#computeSignedArea(java.util.List)">computeSignedArea</a></strong>(java.util.List&lt;LatLng&gt;&nbsp;loop)</code>
-<div class="block">Returns the signed area of a closed path.</div>
+<td class="colLast"><code><strong><a href="../../../../com/google/maps/android/SphericalUtil.html#computeSignedArea(java.util.List)">computeSignedArea</a></strong>(java.util.List&lt;LatLng&gt;&nbsp;path)</code>
+<div class="block">Returns the signed area of a closed path on Earth.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -136,6 +136,29 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="computeArea(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>computeArea</h4>
+<pre>public static&nbsp;double&nbsp;computeArea(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
+<div class="block">Returns the area of a closed path on Earth.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - A closed path.</dd>
+<dt><span class="strong">Returns:</span></dt><dd>The path's area in square meters.</dd></dl>
+</li>
+</ul>
+<a name="computeDistanceBetween(LatLng, LatLng)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>computeDistanceBetween</h4>
+<pre>public static&nbsp;double&nbsp;computeDistanceBetween(LatLng&nbsp;from,
+                            LatLng&nbsp;to)</pre>
+<div class="block">Returns the distance between two LatLngs, in meters.</div>
+</li>
+</ul>
 <a name="computeHeading(LatLng, LatLng)">
 <!--   -->
 </a>
@@ -147,6 +170,16 @@ extends java.lang.Object</pre>
 <div class="block">Returns the heading from one LatLng to another LatLng. Headings are
  expressed in degrees clockwise from North within the range [-180,180).</div>
 <dl><dt><span class="strong">Returns:</span></dt><dd>The heading in degrees clockwise from north.</dd></dl>
+</li>
+</ul>
+<a name="computeLength(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>computeLength</h4>
+<pre>public static&nbsp;double&nbsp;computeLength(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
+<div class="block">Returns the length of the given path, in meters, on Earth.</div>
 </li>
 </ul>
 <a name="computeOffset(LatLng, double, double)">
@@ -179,10 +212,24 @@ extends java.lang.Object</pre>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>to</code> - The destination LatLng.</dd><dd><code>distance</code> - The distance travelled, in meters.</dd><dd><code>heading</code> - The heading in degrees clockwise from north.</dd></dl>
 </li>
 </ul>
-<a name="interpolate(LatLng, LatLng, double)">
+<a name="computeSignedArea(java.util.List)">
 <!--   -->
 </a>
 <ul class="blockList">
+<li class="blockList">
+<h4>computeSignedArea</h4>
+<pre>public static&nbsp;double&nbsp;computeSignedArea(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
+<div class="block">Returns the signed area of a closed path on Earth. The sign of the area may be used to
+ determine the orientation of the path.
+ "inside" is the surface that does not contain the South Pole.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - A closed path.</dd>
+<dt><span class="strong">Returns:</span></dt><dd>The loop's area in square meters.</dd></dl>
+</li>
+</ul>
+<a name="interpolate(LatLng, LatLng, double)">
+<!--   -->
+</a>
+<ul class="blockListLast">
 <li class="blockList">
 <h4>interpolate</h4>
 <pre>public static&nbsp;LatLng&nbsp;interpolate(LatLng&nbsp;from,
@@ -192,54 +239,6 @@ extends java.lang.Object</pre>
  origin LatLng and the destination LatLng.</div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>from</code> - The LatLng from which to start.</dd><dd><code>to</code> - The LatLng toward which to travel.</dd><dd><code>fraction</code> - A fraction of the distance to travel.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>The interpolated LatLng.</dd></dl>
-</li>
-</ul>
-<a name="computeDistanceBetween(LatLng, LatLng)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>computeDistanceBetween</h4>
-<pre>public static&nbsp;double&nbsp;computeDistanceBetween(LatLng&nbsp;from,
-                            LatLng&nbsp;to)</pre>
-<div class="block">Returns the distance between two LatLngs, in meters.</div>
-</li>
-</ul>
-<a name="computeLength(java.util.List)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>computeLength</h4>
-<pre>public static&nbsp;double&nbsp;computeLength(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
-<div class="block">Returns the length of the given path.</div>
-</li>
-</ul>
-<a name="computeArea(java.util.List)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>computeArea</h4>
-<pre>public static&nbsp;double&nbsp;computeArea(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
-<div class="block">Returns the area of a closed path. The computed area uses the same units as
- the radius.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>path</code> - A closed path.</dd>
-<dt><span class="strong">Returns:</span></dt><dd>The loop's area in square meters.</dd></dl>
-</li>
-</ul>
-<a name="computeSignedArea(java.util.List)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>computeSignedArea</h4>
-<pre>public static&nbsp;double&nbsp;computeSignedArea(java.util.List&lt;LatLng&gt;&nbsp;loop)</pre>
-<div class="block">Returns the signed area of a closed path. The signed area may be used to
- determine the orientation of the path. The computed area uses the same
- units as the radius.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>loop</code> - A closed path.</dd>
-<dt><span class="strong">Returns:</span></dt><dd>The loop's area in square meters.</dd></dl>
 </li>
 </ul>
 </li>

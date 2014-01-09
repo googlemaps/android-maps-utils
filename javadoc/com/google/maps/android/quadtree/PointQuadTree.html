@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>PointQuadTree</title>
+<link rel="stylesheet" type="text/css" href="../../../../../javadoc-base.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="PointQuadTree";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.maps.android.quadtree</div>
+<h2 title="Class PointQuadTree" class="title">Class PointQuadTree&lt;T extends <a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a>&gt;</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>com.google.maps.android.quadtree.PointQuadTree&lt;T&gt;</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>public class <span class="strong">PointQuadTree&lt;T extends <a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a>&gt;</span>
+extends java.lang.Object</pre>
+<div class="block">A quad tree which tracks items with a Point geometry.
+ See http://en.wikipedia.org/wiki/Quadtree for details on the data structure.
+ This class is not thread safe.</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="nested_class_summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static interface&nbsp;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a></strong></code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html#PointQuadTree(com.google.maps.android.geometry.Bounds)">PointQuadTree</a></strong>(<a href="../../../../../com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a>&nbsp;bounds)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html#PointQuadTree(double, double, double, double)">PointQuadTree</a></strong>(double&nbsp;minX,
+             double&nbsp;maxX,
+             double&nbsp;minY,
+             double&nbsp;maxY)</code>
+<div class="block">Creates a new quad tree with specified bounds.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html#add(T)">add</a></strong>(<a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html" title="type parameter in PointQuadTree">T</a>&nbsp;item)</code>
+<div class="block">Insert an item.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html#clear()">clear</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html#remove(T)">remove</a></strong>(<a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html" title="type parameter in PointQuadTree">T</a>&nbsp;item)</code>
+<div class="block">Remove the given item from the set.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.Collection&lt;<a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html" title="type parameter in PointQuadTree">T</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html#search(com.google.maps.android.geometry.Bounds)">search</a></strong>(<a href="../../../../../com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a>&nbsp;searchBounds)</code>
+<div class="block">Search for all items within a given bounds.</div>
+</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="PointQuadTree(com.google.maps.android.geometry.Bounds)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>PointQuadTree</h4>
+<pre>public&nbsp;PointQuadTree(<a href="../../../../../com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a>&nbsp;bounds)</pre>
+</li>
+</ul>
+<a name="PointQuadTree(double, double, double, double)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>PointQuadTree</h4>
+<pre>public&nbsp;PointQuadTree(double&nbsp;minX,
+             double&nbsp;maxX,
+             double&nbsp;minY,
+             double&nbsp;maxY)</pre>
+<div class="block">Creates a new quad tree with specified bounds.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>minX</code> - </dd><dd><code>maxX</code> - </dd><dd><code>minY</code> - </dd><dd><code>maxY</code> - </dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="add(com.google.maps.android.quadtree.PointQuadTree.Item)">
+<!--   -->
+</a><a name="add(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>add</h4>
+<pre>public&nbsp;void&nbsp;add(<a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html" title="type parameter in PointQuadTree">T</a>&nbsp;item)</pre>
+<div class="block">Insert an item.</div>
+</li>
+</ul>
+<a name="clear()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clear</h4>
+<pre>public&nbsp;void&nbsp;clear()</pre>
+</li>
+</ul>
+<a name="remove(com.google.maps.android.quadtree.PointQuadTree.Item)">
+<!--   -->
+</a><a name="remove(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>remove</h4>
+<pre>public&nbsp;boolean&nbsp;remove(<a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html" title="type parameter in PointQuadTree">T</a>&nbsp;item)</pre>
+<div class="block">Remove the given item from the set.</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>whether the item was removed.</dd></dl>
+</li>
+</ul>
+<a name="search(com.google.maps.android.geometry.Bounds)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>search</h4>
+<pre>public&nbsp;java.util.Collection&lt;<a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.html" title="type parameter in PointQuadTree">T</a>&gt;&nbsp;search(<a href="../../../../../com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a>&nbsp;searchBounds)</pre>
+<div class="block">Search for all items within a given bounds.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
+</body>
+</html>

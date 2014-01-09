@@ -21,7 +21,12 @@
 <span class="strong">Package Hierarchies:</span>
 <ul class="horizontal">
 <li><a href="com/google/maps/android/package-tree.html">com.google.maps.android</a>, </li>
+<li><a href="com/google/maps/android/clustering/package-tree.html">com.google.maps.android.clustering</a>, </li>
+<li><a href="com/google/maps/android/clustering/algo/package-tree.html">com.google.maps.android.clustering.algo</a>, </li>
+<li><a href="com/google/maps/android/clustering/view/package-tree.html">com.google.maps.android.clustering.view</a>, </li>
+<li><a href="com/google/maps/android/geometry/package-tree.html">com.google.maps.android.geometry</a>, </li>
 <li><a href="com/google/maps/android/projection/package-tree.html">com.google.maps.android.projection</a>, </li>
+<li><a href="com/google/maps/android/quadtree/package-tree.html">com.google.maps.android.quadtree</a>, </li>
 <li><a href="com/google/maps/android/ui/package-tree.html">com.google.maps.android.ui</a></li>
 </ul>
 </div>
@@ -30,25 +35,38 @@
 <ul>
 <li type="circle">java.lang.Object
 <ul>
-<li type="circle">com.google.maps.android.ui.<a href="com/google/maps/android/ui/BubbleIconFactory.html" title="class in com.google.maps.android.ui"><span class="strong">BubbleIconFactory</span></a></li>
-<li type="circle">com.google.maps.android.projection.<a href="com/google/maps/android/projection/Point.html" title="class in com.google.maps.android.projection"><span class="strong">Point</span></a></li>
+<li type="circle">com.google.maps.android.geometry.<a href="com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry"><span class="strong">Bounds</span></a></li>
+<li type="circle">com.google.maps.android.clustering.<a href="com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering"><span class="strong">ClusterManager</span></a>&lt;T&gt;</li>
+<li type="circle">com.google.maps.android.clustering.view.<a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view"><span class="strong">DefaultClusterRenderer</span></a>&lt;T&gt; (implements com.google.maps.android.clustering.view.<a href="com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a>&lt;T&gt;)</li>
+<li type="circle">com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo"><span class="strong">GridBasedAlgorithm</span></a>&lt;T&gt; (implements com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;T&gt;)</li>
+<li type="circle">com.google.maps.android.ui.<a href="com/google/maps/android/ui/IconGenerator.html" title="class in com.google.maps.android.ui"><span class="strong">IconGenerator</span></a></li>
+<li type="circle">com.google.maps.android.<a href="com/google/maps/android/MarkerManager.html" title="class in com.google.maps.android"><span class="strong">MarkerManager</span></a></li>
+<li type="circle">com.google.maps.android.<a href="com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android"><span class="strong">MarkerManager.Collection</span></a></li>
+<li type="circle">com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo"><span class="strong">NonHierarchicalDistanceBasedAlgorithm</span></a>&lt;T&gt; (implements com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;T&gt;)</li>
+<li type="circle">com.google.maps.android.geometry.<a href="com/google/maps/android/geometry/Point.html" title="class in com.google.maps.android.geometry"><span class="strong">Point</span></a></li>
+<li type="circle">com.google.maps.android.quadtree.<a href="com/google/maps/android/quadtree/PointQuadTree.html" title="class in com.google.maps.android.quadtree"><span class="strong">PointQuadTree</span></a>&lt;T&gt;</li>
 <li type="circle">com.google.maps.android.<a href="com/google/maps/android/PolyUtil.html" title="class in com.google.maps.android"><span class="strong">PolyUtil</span></a></li>
+<li type="circle">com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/PreCachingAlgorithmDecorator.html" title="class in com.google.maps.android.clustering.algo"><span class="strong">PreCachingAlgorithmDecorator</span></a>&lt;T&gt; (implements com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;T&gt;)</li>
 <li type="circle">com.google.maps.android.projection.<a href="com/google/maps/android/projection/SphericalMercatorProjection.html" title="class in com.google.maps.android.projection"><span class="strong">SphericalMercatorProjection</span></a></li>
 <li type="circle">com.google.maps.android.<a href="com/google/maps/android/SphericalUtil.html" title="class in com.google.maps.android"><span class="strong">SphericalUtil</span></a></li>
-</ul>
-</li>
-</ul>
-<h2 title="Enum Hierarchy">Enum Hierarchy</h2>
+<li type="circle">com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/StaticCluster.html" title="class in com.google.maps.android.clustering.algo"><span class="strong">StaticCluster</span></a>&lt;T&gt; (implements com.google.maps.android.clustering.<a href="com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;T&gt;)</li>
+<li type="circle">TextView
 <ul>
-<li type="circle">java.lang.Object
-<ul>
-<li type="circle">java.lang.Enum&lt;E&gt; (implements java.lang.Comparable&lt;T&gt;, java.io.Serializable)
-<ul>
-<li type="circle">com.google.maps.android.ui.<a href="com/google/maps/android/ui/BubbleIconFactory.Style.html" title="enum in com.google.maps.android.ui"><span class="strong">BubbleIconFactory.Style</span></a></li>
+<li type="circle">com.google.maps.android.ui.<a href="com/google/maps/android/ui/SquareTextView.html" title="class in com.google.maps.android.ui"><span class="strong">SquareTextView</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+<h2 title="Interface Hierarchy">Interface Hierarchy</h2>
+<ul>
+<li type="circle">com.google.maps.android.clustering.algo.<a href="com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo"><span class="strong">Algorithm</span></a>&lt;T&gt;</li>
+<li type="circle">com.google.maps.android.clustering.<a href="com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering"><span class="strong">Cluster</span></a>&lt;T&gt;</li>
+<li type="circle">com.google.maps.android.clustering.<a href="com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering"><span class="strong">ClusterItem</span></a></li>
+<li type="circle">com.google.maps.android.clustering.<a href="com/google/maps/android/clustering/ClusterManager.OnClusterClickListener.html" title="interface in com.google.maps.android.clustering"><span class="strong">ClusterManager.OnClusterClickListener</span></a>&lt;T&gt;</li>
+<li type="circle">com.google.maps.android.clustering.<a href="com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering"><span class="strong">ClusterManager.OnClusterItemClickListener</span></a>&lt;T&gt;</li>
+<li type="circle">com.google.maps.android.clustering.view.<a href="com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view"><span class="strong">ClusterRenderer</span></a>&lt;T&gt;</li>
+<li type="circle">com.google.maps.android.quadtree.<a href="com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree"><span class="strong">PointQuadTree.Item</span></a></li>
 </ul>
 </div>
 <p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>

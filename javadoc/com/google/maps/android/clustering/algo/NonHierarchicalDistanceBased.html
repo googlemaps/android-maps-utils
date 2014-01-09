@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>NonHierarchicalDistanceBased</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../javadoc-base.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="NonHierarchicalDistanceBased";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.maps.android.clustering.algo</div>
+<h2 title="Class NonHierarchicalDistanceBased" class="title">Class NonHierarchicalDistanceBased&lt;T extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>com.google.maps.android.clustering.algo.NonHierarchicalDistanceBased&lt;T&gt;</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;T&gt;</dd>
+</dl>
+<hr>
+<br>
+<pre>public class <span class="strong">NonHierarchicalDistanceBased&lt;T extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</span>
+extends java.lang.Object
+implements <a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;T&gt;</pre>
+<div class="block">A simple clustering algorithm with O(nlog n) performance. Resulting clusters are not
+ hierarchical.
+ <p>
+ High level algorithm:
+ 1. Iterate over items in the order they were added (candidate clusters).<br>
+ 2. Create a cluster with the center of the item. <br>
+ 3. Add all items that are within a certain distance to the cluster. <br>
+ 4. Move any items out of an existing cluster if they are closer to another cluster. <br>
+ 5. Remove those items from the list of candidate clusters.
+ <p/>
+ Clusters have the center of the first element (not the centroid of the items within it).</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#MAX_DISTANCE_AT_ZOOM">MAX_DISTANCE_AT_ZOOM</a></strong></code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#NonHierarchicalDistanceBased()">NonHierarchicalDistanceBased</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#addItem(T)">addItem</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&nbsp;item)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#addItems(java.util.Collection)">addItems</a></strong>(java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&gt;&nbsp;items)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#clearItems()">clearItems</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.Set&lt;? extends <a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&gt;&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#getClusters(double)">getClusters</a></strong>(double&nbsp;zoom)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#getItems()">getItems</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html#removeItem(T)">removeItem</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&nbsp;item)</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="MAX_DISTANCE_AT_ZOOM">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>MAX_DISTANCE_AT_ZOOM</h4>
+<pre>public static final&nbsp;int MAX_DISTANCE_AT_ZOOM</pre>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../../constant-values.html#com.google.maps.android.clustering.algo.NonHierarchicalDistanceBased.MAX_DISTANCE_AT_ZOOM">Constant Field Values</a></dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="NonHierarchicalDistanceBased()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>NonHierarchicalDistanceBased</h4>
+<pre>public&nbsp;NonHierarchicalDistanceBased()</pre>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="addItem(com.google.maps.android.clustering.ClusterItem)">
+<!--   -->
+</a><a name="addItem(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addItem</h4>
+<pre>public&nbsp;void&nbsp;addItem(<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&nbsp;item)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html#addItem(T)">addItem</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="addItems(java.util.Collection)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addItems</h4>
+<pre>public&nbsp;void&nbsp;addItems(java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&gt;&nbsp;items)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html#addItems(java.util.Collection)">addItems</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="clearItems()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clearItems</h4>
+<pre>public&nbsp;void&nbsp;clearItems()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html#clearItems()">clearItems</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="removeItem(com.google.maps.android.clustering.ClusterItem)">
+<!--   -->
+</a><a name="removeItem(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>removeItem</h4>
+<pre>public&nbsp;void&nbsp;removeItem(<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&nbsp;item)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html#removeItem(T)">removeItem</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getClusters(double)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClusters</h4>
+<pre>public&nbsp;java.util.Set&lt;? extends <a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&gt;&gt;&nbsp;getClusters(double&nbsp;zoom)</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html#getClusters(double)">getClusters</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getItems()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getItems</h4>
+<pre>public&nbsp;java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a>&gt;&nbsp;getItems()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html#getItems()">getItems</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/NonHierarchicalDistanceBased.html" title="type parameter in NonHierarchicalDistanceBased">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
+</body>
+</html>

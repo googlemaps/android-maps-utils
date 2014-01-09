@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>StaticCluster</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../javadoc-base.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="StaticCluster";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.maps.android.clustering.algo</div>
+<h2 title="Class StaticCluster" class="title">Class StaticCluster&lt;T extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>com.google.maps.android.clustering.algo.StaticCluster&lt;T&gt;</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;T&gt;</dd>
+</dl>
+<hr>
+<br>
+<pre>public class <span class="strong">StaticCluster&lt;T extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</span>
+extends java.lang.Object
+implements <a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;T&gt;</pre>
+<div class="block">A cluster whose center is determined upon creation.</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#StaticCluster(LatLng)">StaticCluster</a></strong>(LatLng&nbsp;center)</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#add(T)">add</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#getItems()">getItems</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>LatLng</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#getPosition()">getPosition</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#getSize()">getSize</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#remove(T)">remove</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#toString()">toString</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="StaticCluster(LatLng)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>StaticCluster</h4>
+<pre>public&nbsp;StaticCluster(LatLng&nbsp;center)</pre>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="add(com.google.maps.android.clustering.ClusterItem)">
+<!--   -->
+</a><a name="add(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>add</h4>
+<pre>public&nbsp;boolean&nbsp;add(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</pre>
+</li>
+</ul>
+<a name="getItems()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getItems</h4>
+<pre>public&nbsp;java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&gt;&nbsp;getItems()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html#getItems()">getItems</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getPosition()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPosition</h4>
+<pre>public&nbsp;LatLng&nbsp;getPosition()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html#getPosition()">getPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getSize()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSize</h4>
+<pre>public&nbsp;int&nbsp;getSize()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html#getSize()">getSize</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="remove(com.google.maps.android.clustering.ClusterItem)">
+<!--   -->
+</a><a name="remove(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>remove</h4>
+<pre>public&nbsp;boolean&nbsp;remove(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</pre>
+</li>
+</ul>
+<a name="toString()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>toString</h4>
+<pre>public&nbsp;java.lang.String&nbsp;toString()</pre>
+<dl>
+<dt><strong>Overrides:</strong></dt>
+<dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
+</body>
+</html>

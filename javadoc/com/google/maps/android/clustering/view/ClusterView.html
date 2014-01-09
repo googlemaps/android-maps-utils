@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>ClusterView</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../javadoc-base.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="ClusterView";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.maps.android.clustering.view</div>
+<h2 title="Interface ClusterView" class="title">Interface ClusterView&lt;T extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Known Implementing Classes:</dt>
+<dd><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterView.html" title="class in com.google.maps.android.clustering.view">DefaultClusterView</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public interface <span class="strong">ClusterView&lt;T extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</span></pre>
+<div class="block">Renders clusters.</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html#onAdd()">onAdd</a></strong>()</code>
+<div class="block">Called when the view is added.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html#onClustersChanged(java.util.Set)">onClustersChanged</a></strong>(java.util.Set&lt;? extends <a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html" title="type parameter in ClusterView">T</a>&gt;&gt;&nbsp;clusters)</code>
+<div class="block">Called when the view needs to be updated because new clusters need to be displayed.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html#onRemove()">onRemove</a></strong>()</code>
+<div class="block">Called when the view is removed.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html#setOnClusterClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterClickListener)">setOnClusterClickListener</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterClickListener</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html" title="type parameter in ClusterView">T</a>&gt;&nbsp;listener)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html#setOnClusterItemClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener)">setOnClusterItemClickListener</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterItemClickListener</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html" title="type parameter in ClusterView">T</a>&gt;&nbsp;listener)</code>&nbsp;</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="onAdd()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onAdd</h4>
+<pre>void&nbsp;onAdd()</pre>
+<div class="block">Called when the view is added.</div>
+</li>
+</ul>
+<a name="onClustersChanged(java.util.Set)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onClustersChanged</h4>
+<pre>void&nbsp;onClustersChanged(java.util.Set&lt;? extends <a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html" title="type parameter in ClusterView">T</a>&gt;&gt;&nbsp;clusters)</pre>
+<div class="block">Called when the view needs to be updated because new clusters need to be displayed.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>clusters</code> - the clusters to be displayed.</dd></dl>
+</li>
+</ul>
+<a name="onRemove()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onRemove</h4>
+<pre>void&nbsp;onRemove()</pre>
+<div class="block">Called when the view is removed.</div>
+</li>
+</ul>
+<a name="setOnClusterClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterClickListener)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setOnClusterClickListener</h4>
+<pre>void&nbsp;setOnClusterClickListener(<a href="../../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterClickListener</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html" title="type parameter in ClusterView">T</a>&gt;&nbsp;listener)</pre>
+</li>
+</ul>
+<a name="setOnClusterItemClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setOnClusterItemClickListener</h4>
+<pre>void&nbsp;setOnClusterItemClickListener(<a href="../../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterItemClickListener</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/ClusterView.html" title="type parameter in ClusterView">T</a>&gt;&nbsp;listener)</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
+</body>
+</html>
