@@ -29,6 +29,12 @@ android {
             res.srcDirs = ['res']
         }
     }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+        }
+    }
 }
 
 task startDemo(type: Exec) {
