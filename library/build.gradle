@@ -16,7 +16,7 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:3.1+'
+    compile 'com.google.android.gms:play-services:3+'
 }
 
 android {
@@ -36,7 +36,6 @@ android {
     }
 }
 
-// TODO: Add a task that prints the test results.
 task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
