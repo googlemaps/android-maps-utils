@@ -1,6 +1,7 @@
 package com.google.maps.android.clustering.algo;
 
-import android.util.SparseArray;
+import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
@@ -8,6 +9,7 @@ import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +19,8 @@ import java.util.Set;
 public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
     private static final String TAG = GridBasedAlgorithm.class.getName();
     private static final int GRID_SIZE = 100;
-    private final Set<T> mItems = new HashSet<T>();
+
+    private final Set<T> mItems = Collections.synchronizedSet(new HashSet<T>());
 
     @Override
     public void addItem(T item) {
@@ -41,24 +44,26 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
 
     @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
-        int numCells = (int) Math.ceil(256 * Math.pow(2, zoom) / GRID_SIZE);
+        long numCells = (long) Math.ceil(256 * Math.pow(2, zoom) / GRID_SIZE);
         SphericalMercatorProjection proj = new SphericalMercatorProjection(numCells);
 
         HashSet<Cluster<T>> clusters = new HashSet<Cluster<T>>();
-        SparseArray<StaticCluster<T>> sparseArray = new SparseArray<StaticCluster<T>>();
+        LongSparseArray<StaticCluster<T>> sparseArray = new LongSparseArray<StaticCluster<T>>();
 
-        for (T item : mItems) {
-            Point p = proj.toPoint(item.getPosition());
+        synchronized (mItems) {
+            for (T item : mItems) {
+                Point p = proj.toPoint(item.getPosition());
 
-            int coord = getCoord(numCells, p.x, p.y);
+                long coord = getCoord(numCells, p.x, p.y);
 
-            StaticCluster<T> cluster = sparseArray.get(coord);
-            if (cluster == null) {
-                cluster = new StaticCluster<T>(proj.toLatLng(new Point(Math.floor(p.x) + .5, Math.floor(p.y) + .5)));
-                sparseArray.put(coord, cluster);
-                clusters.add(cluster);
+                StaticCluster<T> cluster = sparseArray.get(coord);
+                if (cluster == null) {
+                    cluster = new StaticCluster<T>(proj.toLatLng(new Point(Math.floor(p.x) + .5, Math.floor(p.y) + .5)));
+                    sparseArray.put(coord, cluster);
+                    clusters.add(cluster);
+                }
+                cluster.add(item);
             }
-            cluster.add(item);
         }
 
         return clusters;
@@ -69,7 +74,7 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
         return mItems;
     }
 
-    private static int getCoord(long numCells, double x, double y) {
-        return (int) (numCells * Math.floor(x) + Math.floor(y));
+    private static long getCoord(long numCells, double x, double y) {
+        return (long) (numCells * Math.floor(x) + Math.floor(y));
     }
 }
