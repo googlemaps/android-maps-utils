@@ -8,22 +8,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
-import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Groups many items on a map based on zoom level.
  * <p/>
- * ClusterManager should be added to the map as an:
- * <ul>
- * <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraChangeListener}</li>
- * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li>
- * </ul>
+ * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraChangeListener}</li>
+ * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
 public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener {
     private static final String TAG = ClusterManager.class.getName();
@@ -33,11 +32,14 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private final MarkerManager.Collection mClusterMarkers;
 
     private Algorithm<T> mAlgorithm;
+    private final ReadWriteLock mAlgorithmLock = new ReentrantReadWriteLock();
     private ClusterRenderer<T> mRenderer;
 
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
     private ClusterTask mClusterTask;
+    private final ReadWriteLock mClusterTaskLock = new ReentrantReadWriteLock();
+
     private OnClusterItemClickListener<T> mOnClusterItemClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
 
@@ -68,8 +70,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     public void setRenderer(ClusterRenderer<T> view) {
-        view.setOnClusterClickListener(null);
-        view.setOnClusterItemClickListener(null);
+        mRenderer.setOnClusterClickListener(null);
+        mRenderer.setOnClusterItemClickListener(null);
         mClusterMarkers.clear();
         mMarkers.clear();
         mRenderer.onRemove();
@@ -81,43 +83,68 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     public void setAlgorithm(Algorithm<T> algorithm) {
-        Collection<T> items = null;
-        if (mAlgorithm != null) {
-            items = mAlgorithm.getItems();
-            mAlgorithm.clearItems();
-        }
-
-        mAlgorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
-        if (items != null) {
-            mAlgorithm.addItems(items);
+        mAlgorithmLock.writeLock().lock();
+        try {
+            if (mAlgorithm != null) {
+                algorithm.addItems(mAlgorithm.getItems());
+            }
+            mAlgorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
         }
         cluster();
     }
 
     public void clearItems() {
-        mAlgorithm.clearItems();
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.clearItems();
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
     }
 
     public void addItems(Collection<T> items) {
-        mAlgorithm.addItems(items);
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.addItems(items);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
+
     }
 
     public void addItem(T myItem) {
-        mAlgorithm.addItem(myItem);
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.addItem(myItem);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
     }
 
     public void removeItem(T item) {
-        mAlgorithm.removeItem(item);
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.removeItem(item);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
     }
 
     /**
      * Force a re-cluster. You may want to call this after adding new item(s).
      */
     public void cluster() {
-        // Attempt to cancel the in-flight request.
-        mClusterTask.cancel(true);
-        mClusterTask = new ClusterTask();
-        mClusterTask.execute(mMap.getCameraPosition().zoom);
+        mClusterTaskLock.writeLock().lock();
+        try {
+            // Attempt to cancel the in-flight request.
+            mClusterTask.cancel(true);
+            mClusterTask = new ClusterTask();
+            mClusterTask.execute(mMap.getCameraPosition().zoom);
+        } finally {
+            mClusterTaskLock.writeLock().unlock();
+        }
     }
 
     /**
@@ -147,13 +174,17 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
-     * Runs the clustering algorithm in a background thread, then re-paints when results come
-     * back.
+     * Runs the clustering algorithm in a background thread, then re-paints when results come back.
      */
     private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
         @Override
         protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
-            return mAlgorithm.getClusters(zoom[0]);
+            mAlgorithmLock.readLock().lock();
+            try {
+                return mAlgorithm.getClusters(zoom[0]);
+            } finally {
+                mAlgorithmLock.readLock().unlock();
+            }
         }
 
         @Override
@@ -163,8 +194,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
-     * Sets a callback that's invoked when a Cluster is tapped.
-     * Note: For this listener to function, the ClusterManager must be added as a click listener to the map.
+     * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
+     * the ClusterManager must be added as a click listener to the map.
      */
     public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
         mOnClusterClickListener = listener;
@@ -172,8 +203,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
-     * Sets a callback that's invoked when an individual ClusterItem is tapped.
-     * Note: For this listener to function, the ClusterManager must be added as a click listener to the map.
+     * Sets a callback that's invoked when an individual ClusterItem is tapped. Note: For this
+     * listener to function, the ClusterManager must be added as a click listener to the map.
      */
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
         mOnClusterItemClickListener = listener;
