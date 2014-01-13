@@ -43,7 +43,7 @@ public class PointQuadTreeImpl<T extends PointQuadTree.Item> implements PointQua
     /**
      * Maximum number of elements to store in a quad before splitting.
      */
-    private final static int MAX_ELEMENTS = 40;
+    private final static int MAX_ELEMENTS = 50;
 
     /**
      * The elements inside this quad, if any.
