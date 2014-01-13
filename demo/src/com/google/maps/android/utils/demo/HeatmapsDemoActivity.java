@@ -10,8 +10,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapConstants;
-import com.google.maps.android.heatmaps.HeatmapHelper;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.LatLngWrapper;
 
 import org.json.JSONArray;
@@ -30,12 +32,12 @@ import java.util.Scanner;
  */
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
-    private HeatmapHelper mHeatmapHelper;
+    private HeatmapTileProvider mProvider;
+    private TileOverlay mOverlay;
 
     private boolean defaultGradient = true;
     private boolean defaultRadius = true;
     private boolean defaultOpacity = true;
-    private boolean origData = true;
 
 
     /**
@@ -76,8 +78,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         // intensity from, and the map to draw the heatmap on
         // radius, gradient and opacity not specified, so default are used
         try {
-            mHeatmapHelper = new HeatmapHelper.Builder(
-                    mLists.get(getString(R.string.police_stations)), getMap()).build();
+            mProvider = new HeatmapTileProvider.Builder(
+                    mLists.get(getString(R.string.police_stations))).build();
+            mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
         } catch(IllegalArgumentException e) {
             Log.e("IllegalArgumentException in Builder", e.getMessage());
         }
@@ -85,31 +88,34 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     public void changeRadius(View view) {
         if (defaultRadius) {
-            mHeatmapHelper.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
+            mProvider.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
         }
         else {
-            mHeatmapHelper.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
+            mProvider.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
         }
+        mOverlay.clearTileCache();
         defaultRadius =!defaultRadius;
     }
 
     public void changeGradient(View view) {
         if (defaultGradient) {
-            mHeatmapHelper.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
+            mProvider.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
         }
         else {
-            mHeatmapHelper.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
+            mProvider.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
         }
+        mOverlay.clearTileCache();
         defaultGradient = !defaultGradient;
     }
 
     public void changeOpacity(View view) {
         if (defaultOpacity) {
-            mHeatmapHelper.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
+            mProvider.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
         }
         else {
-            mHeatmapHelper.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
+            mProvider.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
         }
+        mOverlay.clearTileCache();
         defaultOpacity = !defaultOpacity;
     }
 
@@ -118,9 +124,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         public void onItemSelected(AdapterView<?> parent, View view,
                                    int pos, long id) {
             String dataset = parent.getItemAtPosition(pos).toString();
-            mHeatmapHelper.setData(mLists.get(dataset));
+            mProvider.setData(mLists.get(dataset));
+            mOverlay.clearTileCache();
         }
-
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
         }

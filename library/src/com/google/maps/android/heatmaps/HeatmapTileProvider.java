@@ -8,20 +8,25 @@ import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.quadtree.PointQuadTree;
+import com.google.maps.android.quadtree.PointQuadTreeImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
  * Tile provider that creates heatmap tiles.
  */
-public class HeatmapTileProvider implements TileProvider{
+public class HeatmapTileProvider implements TileProvider {
     /** Tile dimension */
     private static final int TILE_DIM = HeatmapConstants.HEATMAP_TILE_SIZE;
 
     /** Quad tree of all the points to display in the heatmap */
     private PointQuadTree mTree;
+
+    /** Collection of all the points. */
+    private Collection<LatLngWrapper> mPoints;
 
     /** Bounds of the quad tree */
     private Bounds mBounds;
@@ -41,43 +46,207 @@ public class HeatmapTileProvider implements TileProvider{
     /** Opacity of the overall heatmap overlay (0...1) */
     private double mOpacity;
 
-    /** Maximum intensity estimate for heatmap */
+    /** Minimum zoom level to calculate custom intensity estimate for */
+    private int mMinZoom;
+
+    /** Maximum zoom level to calculate custom intensity estimate for */
+    private int mMaxZoom;
+
+    /** Maximum intensity estimates for heatmap */
     private double[] mMaxIntensity;
 
     /** Blank tile */
     private Tile mBlankTile;
 
     /**
-     * Constuctor for the heatmap with all options.
-     * @param tree The quadtree of heatmap points
-     * @param bounds bounds of the quadtree
-     * @param radius Radius of convolution to use
-     * @param gradient Gradient to color heatmap with
-     * @param opacity Opacity of the entire heatmap
-     * @param maxIntensity Intensity value that maps to maximum gradient color
+     * Builder class for the HeatmapTileProvider.
+     *
      */
-    public HeatmapTileProvider(PointQuadTree<PointQuadTree.Item> tree, Bounds bounds,
-                               int radius, int[] gradient, double opacity, double[] maxIntensity) {
-        // Assign function arguments to fields
-        mTree = tree;
-        mBounds = bounds;
-        mRadius = radius;
-        mGradient = gradient;
-        mOpacity = opacity;
-        mMaxIntensity = maxIntensity;
+    public static class Builder {
+        // Required parameters
+        private final Collection<LatLngWrapper> points;
+
+        // Optional, initialised to default values
+        private int radius = HeatmapConstants.DEFAULT_HEATMAP_RADIUS;
+        private int[] gradient = HeatmapConstants.DEFAULT_HEATMAP_GRADIENT;
+        private double opacity = HeatmapConstants.DEFAULT_HEATMAP_OPACITY;
+        // Only custom min/max if they differ so initialise both to 5
+        private int minZoom = 5;
+        private int maxZoom = 9;
+
+        /**
+         * Constructor for builder, which contains the required parameters for a heatmap.
+         * @param points Collection of all LatLngWrappers to put into quadtree.
+         *               Should be non-empty.
+         */
+        public Builder(Collection<LatLngWrapper> points)
+                throws IllegalArgumentException{
+            this.points = points;
+
+            // Check that points is non empty
+            if (this.points.isEmpty()) {
+                throw new IllegalArgumentException("No input points.");
+            }
+        }
+
+        /**
+         * Setter for radius in builder
+         * @param val Radius of convolution to use, in terms of pixels.
+         *            Must be within minimum and maximum values as found in HeatmapConstants.
+         * @return updated builder object
+         */
+        public Builder radius(int val) throws IllegalArgumentException {
+            radius = val;
+            // Check that radius is within bounds.
+            if (radius < HeatmapConstants.MIN_RADIUS || radius > HeatmapConstants.MAX_RADIUS) {
+                throw new IllegalArgumentException("Radius not within bounds.");
+            }
+            return this;
+        }
+
+        /**
+         * Setter for gradient in builder
+         * @param val Gradient to color heatmap with. This is usually about 10 different colours.
+         *                 Ordered from least to highest corresponding intensity.
+         *                 A larger colour map is interpolated from these "colour stops".
+         * @return updated builder object
+         */
+        public Builder gradient(int[] val) throws IllegalArgumentException {
+            gradient = val;
+            // Check that gradient is not empty
+            if (gradient.length == 0) {
+                throw new IllegalArgumentException("Gradient is empty.");
+            }
+            return this;
+        }
+
+        /**
+         * Setter for opacity in builder
+         * @param val Opacity of the entire heatmap in range [0, 1]
+         * @return updated builder object
+         */
+        public Builder opacity(double val) throws IllegalArgumentException {
+            opacity = val;
+            // Check that opacity is in range
+            if (opacity < 0 || opacity > 1) {
+                throw new IllegalArgumentException("Opacity must be in range [0, 1]");
+            }
+            return this;
+        }
+
+        /**
+         * Setter for which zoom levels to calculate max intensity for
+         * Cannot have custom outside of defaults (too slow)
+         * Max intensity will be set to that of min at zoom levels lower than min,
+         * and similarly for those above max.
+         * These should be the zoom levels at which your heatmap is intended to be viewed at.
+         * @param min minimum zoom level to calculate max intensity for
+         *                recommended/default is 5
+         * @param max maximum zoom level to calculate max intensity for
+         *                recommended/default is 8
+         *                Must be greater than or equal to min
+         * @return updated builder object
+         */
+        public Builder zoom(int min, int max) throws IllegalArgumentException {
+            minZoom = min;
+            maxZoom = max;
+            // Check min and max are OK
+            if (min > max) {
+                throw new IllegalArgumentException("Min must be smaller than or equal to max");
+            }
+            if (min < HeatmapConstants.DEFAULT_MIN_ZOOM) {
+                throw new IllegalArgumentException("Min smaller than allowed");
+            }
+            if (max > HeatmapConstants.DEFAULT_MAX_ZOOM) {
+                throw new IllegalArgumentException("Max larger than allowed");
+            }
+            return this;
+        }
+
+        /**
+         * Call when all desired options have been set.
+         * @return HeatmapTileProvider created with desired options.
+         */
+        public HeatmapTileProvider build() {
+            // Check
+            return new HeatmapTileProvider(this);
+        }
+    }
+
+    private HeatmapTileProvider(Builder builder) {
+        // Get parameters from builder
+        mPoints = builder.points;
+        mMinZoom = builder.minZoom;
+        mMaxZoom = builder.maxZoom;
+
+        mRadius = builder.radius;
+        mGradient = builder.gradient;
+        mOpacity = builder.opacity;
 
         // Compute kernel density function (sigma = 1/3rd of radius)
         mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
 
-        // Generate color map from gradient
-        setColorMap(gradient);
+        // Generate color map
+        setGradient(mGradient);
 
         // Set up blank tile
         Bitmap blank = Bitmap.createBitmap(TILE_DIM, TILE_DIM, Bitmap.Config.ARGB_8888);
         mBlankTile = convertBitmap(blank);
 
+        // Set the data
+        setData(mPoints);
     }
 
+    /**
+     * Changes the dataset the heatmap is portraying.
+     * @param points Points to use in the heatmap.
+     */
+    public void setData(Collection<LatLngWrapper> points) throws IllegalArgumentException {
+        // Change point set
+        mPoints = points;
+
+        // Check point set is OK
+        if (mPoints.isEmpty()) {
+            throw new IllegalArgumentException("No input points.");
+        }
+
+        // Because quadtree bounds are final once the quadtree is created, we cannot add
+        // points outside of those bounds to the quadtree after creation.
+        // As quadtree creation is actually quite lightweight/fast as compared to other functions
+        // called in heatmap creation, re-creating the quadtree is an acceptable solution here.
+
+        long start = getTime();
+        // Make the quad tree
+        mBounds = HeatmapUtil.getBounds(mPoints);
+        long end = getTime();
+        Log.e("Time getBounds", (end - start) + "ms");
+
+        start = getTime();
+        mTree = new PointQuadTreeImpl(mBounds);
+
+        // Add points to quad tree
+        for (LatLngWrapper l: mPoints) {
+            mTree.add(l);
+        }
+        end = getTime();
+
+        Log.e("Time Make Quadtree", (end - start) + "ms");
+
+        // Calculate reasonable maximum intensity for color scale (user can also specify)
+        // Get max intensities
+        start = getTime();
+        mMaxIntensity = getMaxIntensities(mRadius, mMinZoom, mMaxZoom);
+        end = getTime();
+        Log.e("Time getMaxIntensities", (end - start) + "ms");
+    }
+
+    /**
+     * Creates tile.
+     * @param x X coordinate of tile.
+     * @param y Y coordinate of tile.
+     * @param zoom Zoom level.
+     * @return image in Tile format
+     */
     public Tile getTile(int x, int y, int zoom) {
         long startTime = getTime();
         // Convert tile coordinates and zoom into Point/Bounds format
@@ -193,39 +362,67 @@ public class HeatmapTileProvider implements TileProvider{
     }
 
     /**
-     * Setter for color map.
+     * Setter for gradient/color map.
      * Important: tile overlay cache must be cleared after this for it to be effective
      * outside of initialisation
      * @param gradient Gradient to set
      */
-    public void setColorMap(int[] gradient) {
+    public void setGradient(int[] gradient) {
         mGradient = gradient;
         mColorMap = HeatmapUtil.generateColorMap(gradient, HeatmapConstants.HEATMAP_COLOR_MAP_SIZE,
                 mOpacity);
     }
 
     /**
-     * Setter for radius
+     * Setter for radius.
+     * User should clear overlay's tile cache after calling this.
      * @param radius Radius to set
      */
     public void setRadius(int radius) {
         mRadius = radius;
         // need to recompute kernel
         mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
+        // need to recalculate max intensity
+        mMaxIntensity = getMaxIntensities(mRadius, mMinZoom, mMaxZoom);
     }
 
     /**
      * Setter for opacity
+     * User should clear overlay's tile cache after calling this.
      * @param opacity opacity to set
      */
     public void setOpacity(double opacity) {
         mOpacity = opacity;
         // need to recompute kernel color map
-        setColorMap(mGradient);
+        setGradient(mGradient);
     }
 
-    public void setMaxIntensity(double[] intensity) {
-        mMaxIntensity = intensity;
+    private double[] getMaxIntensities(int radius, int min_zoom, int max_zoom) {
+        // Can go from zoom level 3 to zoom level 22
+        double[] maxIntensityArray = new double[HeatmapConstants.MAX_ZOOM_LEVEL];
+
+        if (min_zoom < max_zoom) {
+            // Calculate max intensity for each zoom level
+            for (int i = min_zoom; i < max_zoom; i ++) {
+                // Each zoom level multiplies viewable size by 2
+                maxIntensityArray[i] = HeatmapUtil.getMaxVal(mPoints, mBounds, radius,
+                        (int)(HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
+                if (i == min_zoom) {
+                    for(int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
+                }
+            }
+            for (int i = max_zoom; i < HeatmapConstants.MAX_ZOOM_LEVEL; i ++) {
+                maxIntensityArray[i] = maxIntensityArray[max_zoom - 1];
+            }
+        } else {
+            // Just calculate one max intensity across whole map
+            double maxIntensity = HeatmapUtil.getMaxVal(mPoints, mBounds, radius,
+                    HeatmapConstants.SCREEN_SIZE);
+            for (int i = 0; i < HeatmapConstants.MAX_ZOOM_LEVEL; i ++) {
+                maxIntensityArray[i] = maxIntensity;
+            }
+        }
+        return maxIntensityArray;
     }
 
     /**

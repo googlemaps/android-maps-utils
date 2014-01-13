@@ -94,6 +94,11 @@ public class HeatmapConstants {
     public static final int DEFAULT_MAX_ZOOM = 9;
 
     /**
+     * Maximum zoom level possible on a map.
+     */
+    public static final int MAX_ZOOM_LEVEL = 22;
+
+    /**
      * Minimum radius value.
      */
     public static final int MIN_RADIUS = 10;
