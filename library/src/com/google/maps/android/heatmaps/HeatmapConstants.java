@@ -25,12 +25,12 @@ public class HeatmapConstants {
     /**
      * Default radius for convolution
      */
-    public static final int DEFAULT_HEATMAP_RADIUS = 15;
+    public static final int DEFAULT_HEATMAP_RADIUS = 20;
 
      /**
      * Alternative radius for convolution
      */
-    public static final int ALT_HEATMAP_RADIUS = 7;
+    public static final int ALT_HEATMAP_RADIUS = 10;
 
     /**
      * Default opacity of heatmap overlay
@@ -40,7 +40,7 @@ public class HeatmapConstants {
     /**
      * Alternative opacity of heatmap overlay
      */
-    public static final double ALT_HEATMAP_OPACITY = 0.2;
+    public static final double ALT_HEATMAP_OPACITY = 0.4;
 
     /**
      * Default gradient for heatmap.
@@ -91,12 +91,12 @@ public class HeatmapConstants {
     /**
      * Default (and maximum possible) maximum zoom level at which to calculate maximum intensities
      */
-    public static final int DEFAULT_MAX_ZOOM = 8;
+    public static final int DEFAULT_MAX_ZOOM = 9;
 
     /**
      * Minimum radius value.
      */
-    public static final int MIN_RADIUS = 5;
+    public static final int MIN_RADIUS = 10;
 
     /**
      * Maximum radius value.
