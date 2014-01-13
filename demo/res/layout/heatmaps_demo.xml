@@ -7,17 +7,20 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/Radius_Button"
-                android:text="Radius"
-                android:onClick="changeRadius"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/Radius_Button"
+            android:text="Radius"
+            android:onClick="changeRadius"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:id="@+id/Gradient_Button"
             android:text="Gradient"
@@ -25,19 +28,19 @@
 
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:id="@+id/Opacity_Button"
             android:text="Opacity"
             android:onClick="changeOpacity"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/Data_Button"
-            android:text="Dataset"
-            android:onClick="changeData"/>
     </LinearLayout>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
     <fragment android:id="@+id/map"
               android:layout_width="match_parent"
