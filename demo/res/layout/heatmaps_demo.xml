@@ -14,7 +14,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/Radius_Button"
             android:text="Radius"
             android:onClick="changeRadius"/>
 
@@ -22,7 +21,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/Gradient_Button"
             android:text="Gradient"
             android:onClick="changeGradient"/>
 
@@ -31,7 +29,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/Opacity_Button"
             android:text="Opacity"
             android:onClick="changeOpacity"/>
 

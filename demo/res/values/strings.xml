@@ -5,7 +5,7 @@
     <string name="police_stations">Police Stations</string>
     <string name="red_lights">Red Light Cameras</string>
 
-    <string-array name = "heatmaps_datasets_array">
+    <string-array name="heatmaps_datasets_array">
         <item>@string/police_stations</item>
         <item>@string/red_lights</item>
     </string-array>
