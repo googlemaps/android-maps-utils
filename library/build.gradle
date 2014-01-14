@@ -4,13 +4,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 
 apply plugin: 'android-library'
 apply plugin: 'maven'
-apply plugin: 'signing'
+//apply plugin: 'signing'
 
 archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
@@ -34,6 +34,12 @@ android {
             java.srcDirs = ['tests/src']
         }
     }
+
+//    signingConfigs {
+//        debug {
+//            storeFile file(System.getProperty("user.home") + "/.android/debug.keystore")
+//        }
+//    }
 }
 
 task instrumentTest(dependsOn: connectedCheck)
@@ -55,28 +61,16 @@ artifacts {
     archives apklib
 }
 
-signing {
-    sign configurations.archives
-}
-
-if(!hasProperty("sonatypeUsername")){
-    sonatypeUsername = ""
-}
-if(!hasProperty("sonatypePassword")){
-    sonatypePassword = ""
-}
+//signing {
+//    sign configurations.archives
+//}
 
 uploadArchives {
     repositories {
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "file://"+System.getProperty("user.home") +'/.m2/repository')
 
-            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-            snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             modifyPom(addFilter('aar') { artifact, file ->
                 artifact.name == 'android-maps-utils'

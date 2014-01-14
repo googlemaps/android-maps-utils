@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 
@@ -31,7 +31,8 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
+            storeFile file("debug.keystore")
+//            storeFile file(System.getProperty("user.home") + "/.android/debug.keystore")
         }
     }
 }
