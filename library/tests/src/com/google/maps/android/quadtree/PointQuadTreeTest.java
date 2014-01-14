@@ -17,7 +17,7 @@ public class PointQuadTreeTest extends TestCase {
     final int TOTAL_RUNS = 4;
 
     public void setUp() {
-        mTree = new PointQuadTreeImpl<Item>(0, 1, 0, 1);
+        mTree = new PointQuadTree<Item>(0, 1, 0, 1);
         Log.d("QuadTreeTest", "--------------------------------------");
         startTime = System.currentTimeMillis();
     }
