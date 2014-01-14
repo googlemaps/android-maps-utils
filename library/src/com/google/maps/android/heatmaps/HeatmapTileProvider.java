@@ -445,7 +445,7 @@ public class HeatmapTileProvider implements TileProvider {
             // Calculate max intensity for each zoom level
             for (int i = min_zoom; i < max_zoom; i++) {
                 // Each zoom level multiplies viewable size by 2
-                maxIntensityArray[i] = HeatmapUtil.getMaxVal(mData, mBounds, radius,
+                maxIntensityArray[i] = HeatmapUtil.getMaxValue(mData, mBounds, radius,
                         (int) (SCREEN_SIZE * Math.pow(2, i - 3)));
                 if (i == min_zoom) {
                     for (int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
@@ -456,7 +456,7 @@ public class HeatmapTileProvider implements TileProvider {
             }
         } else {
             // Just calculate one max intensity across whole map
-            double maxIntensity = HeatmapUtil.getMaxVal(mData, mBounds, radius, SCREEN_SIZE);
+            double maxIntensity = HeatmapUtil.getMaxValue(mData, mBounds, radius, SCREEN_SIZE);
             for (int i = 0; i < HeatmapConstants.MAX_ZOOM_LEVEL; i++) {
                 maxIntensityArray[i] = maxIntensity;
             }
