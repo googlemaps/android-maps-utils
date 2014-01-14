@@ -5,11 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -24,7 +25,12 @@ import java.util.Random;
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
  */
-public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person> {
+public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity
+        implements ClusterManager.OnClusterClickListener<Person>,
+        ClusterManager.OnClusterItemClickListener<Person>,
+        ClusterManager.InfoWindowAdapter<Person>,
+        ClusterManager.OnInfoWindowClickListener<Person>
+{
     private ClusterManager<Person> mClusterManager;
     private Random mRandom = new Random(1984);
 
@@ -55,7 +61,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+        public void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
             // Draw a single person.
             // Set the info window to show their name.
             mImageView.setImageResource(person.profilePhoto);
@@ -64,7 +70,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+        public void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
@@ -107,6 +113,41 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         return false;
     }
 
+    // InfoWindowAdapter
+    @Override
+    public View getInfoWindow(Person item, Marker marker) {
+       return null;
+    }
+
+    @Override
+    public View getInfoWindow(Cluster<Person> cluster, Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Person item, Marker marker) {
+        View view = getLayoutInflater().inflate(R.layout.item_info_window, null);
+        ((TextView)view.findViewById(R.id.tvPerson)).setText(getString(R.string.person_says_hello, item.name));
+        ((ImageView)view.findViewById(R.id.ivPerson)).setImageResource(item.profilePhoto);
+        return view;
+    }
+
+    @Override
+    public View getInfoContents(Cluster<Person> cluster, Marker marker) {
+        return null;
+    }
+
+    // OnInfoWindowClickListener
+    @Override
+    public void onInfoWindowClick(Person item, Marker marker) {
+        Toast.makeText(getApplicationContext(), item.name+"s page is not ready yet", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onInfoWindowClick(Cluster<Person> cluster, Marker marker) {
+
+    }
+
     @Override
     protected void startDemo() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
@@ -114,9 +155,10 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         mClusterManager = new ClusterManager<Person>(this, getMap());
         mClusterManager.setRenderer(new PersonRenderer());
         getMap().setOnCameraChangeListener(mClusterManager);
-        getMap().setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnInfoWindowClickListener(this);
+        mClusterManager.setInfoWindowAdapter(this);
 
         addItems();
         mClusterManager.cluster();

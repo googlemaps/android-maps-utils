@@ -12,4 +12,8 @@ public interface ClusterItem {
      * The position of this marker. This must always return the same value.
      */
     LatLng getPosition();
+
+    void setPosition(LatLng position);
+
+    void OnCreate(MarkerOptions markerOptions);
 }

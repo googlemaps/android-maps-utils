@@ -1,8 +1,9 @@
 package com.google.maps.android.clustering.view;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.Set;
 
@@ -17,17 +18,11 @@ public interface ClusterRenderer<T extends ClusterItem> {
      */
     void onClustersChanged(Set<? extends Cluster<T>> clusters);
 
-    void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener);
+    void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions);
 
-    void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
+    void onBeforeClusterRendered(Cluster<T> cluster, MarkerOptions markerOptions);
 
-    /**
-     * Called when the view is added.
-     */
-    void onAdd();
+    void onClusterRendered(Cluster<T> cluster, Marker marker);
 
-    /**
-     * Called when the view is removed.
-     */
-    void onRemove();
+    void onClusterItemRendered(T clusterItem, Marker marker);
 }
