@@ -64,6 +64,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Color.rgb(255, 0, 0)
     };
 
+    private static final String TAG = HeatmapsDemoActivity.class.getName();
+
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
 
@@ -167,7 +169,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     // Red Lights: all red lights across Australia from http://poidb.com
     private ArrayList<LatLngWrapper> readItems(int resource) throws JSONException {
         ArrayList<LatLngWrapper> list = new ArrayList<LatLngWrapper>();
-        long start = getTime();
+        long start = System.currentTimeMillis();
         InputStream inputStream = getResources().openRawResource(resource);
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
         JSONArray array = new JSONArray(json);
@@ -178,14 +180,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             list.add(new LatLngWrapper(new LatLng(lat, lng)));
         }
 
-        long end = getTime();
-        Log.e("Time readItems", (end - start) + "ms");
+        long end = System.currentTimeMillis();
+        Log.d(TAG, "readItems: " + (end - start) + "ms");
         return list;
     }
-
-
-    private long getTime() {
-        return System.currentTimeMillis();
-    }
-
 }

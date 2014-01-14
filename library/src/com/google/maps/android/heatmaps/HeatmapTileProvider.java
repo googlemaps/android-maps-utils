@@ -29,6 +29,8 @@ public class HeatmapTileProvider implements TileProvider {
      */
     private static final int SCREEN_SIZE = 1280;
 
+    private static final String TAG = HeatmapTileProvider.class.getName();
+
     /**
      * Quad tree of all the points to display in the heatmap
      */
@@ -252,29 +254,29 @@ public class HeatmapTileProvider implements TileProvider {
         // As quadtree creation is actually quite lightweight/fast as compared to other functions
         // called in heatmap creation, re-creating the quadtree is an acceptable solution here.
 
-        long start = getTime();
+        long start = System.currentTimeMillis();
         // Make the quad tree
         mBounds = HeatmapUtil.getBounds(mPoints);
-        long end = getTime();
-        Log.e("Time getBounds", (end - start) + "ms");
+        long end = System.currentTimeMillis();
+        Log.d(TAG, "getBounds: " + (end - start) + "ms");
 
-        start = getTime();
+        start = System.currentTimeMillis();
         mTree = new PointQuadTreeImpl(mBounds);
 
         // Add points to quad tree
         for (LatLngWrapper l : mPoints) {
             mTree.add(l);
         }
-        end = getTime();
+        end = System.currentTimeMillis();
 
-        Log.e("Time Make Quadtree", (end - start) + "ms");
+        Log.d(TAG, "make quadtree: " + (end - start) + "ms");
 
         // Calculate reasonable maximum intensity for color scale (user can also specify)
         // Get max intensities
-        start = getTime();
+        start = System.currentTimeMillis();
         mMaxIntensity = getMaxIntensities(mRadius, mMinZoom, mMaxZoom);
-        end = getTime();
-        Log.e("Time getMaxIntensities", (end - start) + "ms");
+        end = System.currentTimeMillis();
+        Log.d(TAG, "getMaxIntensities: " + (end - start) + "ms");
     }
 
     /**
@@ -286,7 +288,7 @@ public class HeatmapTileProvider implements TileProvider {
      * @return image in Tile format
      */
     public Tile getTile(int x, int y, int zoom) {
-        long startTime = getTime();
+        long startTime = System.currentTimeMillis();
         // Convert tile coordinates and zoom into Point/Bounds format
         // Know that at zoom level 0, there is one tile: (0, 0) (arbitrary width 256)
         // Each zoom level multiplies number of tiles by 2
@@ -352,14 +354,13 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Search for all points within tile bounds
-        long start = getTime();
+        long start = System.currentTimeMillis();
         ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>) mTree.search(tileBounds);
-        long end = getTime();
-        Log.e("getTile Search " + x + "," + y, (end - start) + "ms");
+        long end = System.currentTimeMillis();
+        Log.d(TAG, "getTile Search (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // Add wrapped (wraparound) points if necessary
         if (!wrappedPoints.isEmpty()) {
-            Log.e("ping", "ping");
             for (LatLngWrapper l : wrappedPoints) {
                 points.add(new LatLngWrapper(l, xOffset));
             }
@@ -371,7 +372,7 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Bucket points into buckets
-        start = getTime();
+        start = System.currentTimeMillis();
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
         for (LatLngWrapper w : points) {
             Point p = w.getPoint();
@@ -379,22 +380,22 @@ public class HeatmapTileProvider implements TileProvider {
             int bucketY = (int) ((p.y - minY) / bucketWidth);
             intensity[bucketX][bucketY] += w.getIntensity();
         }
-        end = getTime();
-        Log.e("getTile Bucketing " + x + "," + y, (end - start) + "ms");
+        end = System.currentTimeMillis();
+        Log.d(TAG, "getTile Bucketing (" + x + "," + y + ") : " + (end - start) + "ms");
 
-        start = getTime();
+        start = System.currentTimeMillis();
         // Convolve it ("smoothen" it out)
         double[][] convolved = HeatmapUtil.convolve(intensity, mKernel);
-        end = getTime();
-        Log.e("getTile Convolving " + x + "," + y, (end - start) + "ms");
+        end = System.currentTimeMillis();
+        Log.d(TAG, "getTile Convolving (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // Color it into a bitmap
-        start = getTime();
+        start = System.currentTimeMillis();
         Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity[zoom]);
-        long endTime = getTime();
-        Log.e("getTile Colorize " + x + "," + y, (endTime - start) + "ms");
+        long endTime = System.currentTimeMillis();
+        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (endTime - start) + "ms");
 
-        Log.e("getTile Total " + x + "," + y, "Time: " + (endTime - startTime) + " Points: " + points.size() + " Zoom: " + zoom);
+        Log.d(TAG, "getTile Total (" + x + "," + y + ") : " + (endTime - startTime) + "ms, Points: " + points.size() + ", Zoom: " + zoom);
 
         return convertBitmap(bitmap);
     }
@@ -478,8 +479,4 @@ public class HeatmapTileProvider implements TileProvider {
         return new Tile(TILE_DIM, TILE_DIM, bitmapdata);
     }
 
-
-    private long getTime() {
-        return System.currentTimeMillis();
-    }
 }
