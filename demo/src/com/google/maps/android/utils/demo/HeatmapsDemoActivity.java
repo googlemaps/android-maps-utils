@@ -1,6 +1,7 @@
 package com.google.maps.android.utils.demo;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,11 +27,44 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * A demo of the Heatmaps library. Demonstates how the HeatmapHandler can be used to create
- * a coloured map overlay that visualises many points of weighted importance/intensity, with
- * different colours representing areas of high and low concentration/combined intensity of points.
+ * A demo of the Heatmaps library. Demonstates how the HeatmapTileProvider can be used to create
+ * a colored map overlay that visualises many points of weighted importance/intensity, with
+ * different colors representing areas of high and low concentration/combined intensity of points.
  */
 public class HeatmapsDemoActivity extends BaseDemoActivity {
+
+    /**
+     * Alternative radius for convolution
+     */
+    private static final int ALT_HEATMAP_RADIUS = 10;
+
+    /**
+     * Alternative opacity of heatmap overlay
+     */
+    private static final double ALT_HEATMAP_OPACITY = 0.4;
+
+    /**
+     * Alternative heatmap gradient (blue -> red)
+     * Copied from Javascript version
+     */
+    private static final int[] ALT_HEATMAP_GRADIENT = {
+            Color.argb(0, 0, 255, 255),// transparent
+            Color.argb(255 / 3 * 2, 0, 255, 255),
+            Color.rgb(0, 191, 255),
+            Color.rgb(0, 127, 255),
+            Color.rgb(0, 63, 255),
+            Color.rgb(0, 0, 255),
+            Color.rgb(0, 0, 223),
+            Color.rgb(0, 0, 191),
+            Color.rgb(0, 0, 159),
+            Color.rgb(0, 0, 127),
+            Color.rgb(63, 0, 91),
+            Color.rgb(127, 0, 63),
+            Color.rgb(191, 0, 31),
+            Color.rgb(255, 0, 0)
+    };
+
+    private static final String TAG = HeatmapsDemoActivity.class.getName();
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -43,7 +77,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     /**
      * Maps name of data set to data (list of LatLngWrappers)
      * Each LatLngWrapper contains a LatLng as well as corresponding intensity value (which
-     * represents "importance" of this LatLng) - see the class for more detail
+     * represents "importance" of this LatLng) - see the class for more details
      */
     private HashMap<String, ArrayList<LatLngWrapper>> mLists =
             new HashMap<String, ArrayList<LatLngWrapper>>();
@@ -55,8 +89,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-        // getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.8140000, 144.9633200), 5));
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 135), 3 ));
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 135), 3));
 
         // Set up the spinner/dropdown list
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -81,27 +114,25 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             mProvider = new HeatmapTileProvider.Builder(
                     mLists.get(getString(R.string.police_stations))).build();
             mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             Log.e("IllegalArgumentException in Builder", e.getMessage());
         }
     }
 
     public void changeRadius(View view) {
         if (defaultRadius) {
-            mProvider.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
-        }
-        else {
+            mProvider.setRadius(ALT_HEATMAP_RADIUS);
+        } else {
             mProvider.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
         }
         mOverlay.clearTileCache();
-        defaultRadius =!defaultRadius;
+        defaultRadius = !defaultRadius;
     }
 
     public void changeGradient(View view) {
         if (defaultGradient) {
-            mProvider.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
-        }
-        else {
+            mProvider.setGradient(ALT_HEATMAP_GRADIENT);
+        } else {
             mProvider.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
         }
         mOverlay.clearTileCache();
@@ -110,9 +141,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     public void changeOpacity(View view) {
         if (defaultOpacity) {
-            mProvider.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
-        }
-        else {
+            mProvider.setOpacity(ALT_HEATMAP_OPACITY);
+        } else {
             mProvider.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
         }
         mOverlay.clearTileCache();
@@ -120,13 +150,14 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     // Dealing with spinner choices
-    public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
+    public class SpinnerActivity implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view,
                                    int pos, long id) {
             String dataset = parent.getItemAtPosition(pos).toString();
             mProvider.setData(mLists.get(dataset));
             mOverlay.clearTileCache();
         }
+
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
         }
@@ -134,9 +165,10 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     // Datasets:
     // Police Stations: all police stations across Australia from http://poidb.com
+    // Red Lights: all red lights across Australia from http://poidb.com
     private ArrayList<LatLngWrapper> readItems(int resource) throws JSONException {
         ArrayList<LatLngWrapper> list = new ArrayList<LatLngWrapper>();
-        long start = getTime();
+        long start = System.currentTimeMillis();
         InputStream inputStream = getResources().openRawResource(resource);
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
         JSONArray array = new JSONArray(json);
@@ -147,14 +179,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             list.add(new LatLngWrapper(new LatLng(lat, lng)));
         }
 
-        long end = getTime();
-        Log.e("Time readItems", (end-start)+"ms");
+        long end = System.currentTimeMillis();
+        Log.d(TAG, "readItems: " + (end - start) + "ms");
         return list;
     }
-
-
-    private long getTime() {
-        return System.currentTimeMillis();
-    }
-
 }

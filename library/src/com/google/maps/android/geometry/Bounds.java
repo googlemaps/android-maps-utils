@@ -58,20 +58,4 @@ public class Bounds {
     public boolean contains(Bounds bounds) {
         return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY;
     }
-
-    public Bounds getTopLeftQuad() {
-        return new Bounds(minX, midX, minY, midY);
-    }
-
-    public Bounds getTopRightQuad() {
-        return new Bounds(midX, maxX, minY, midY);
-    }
-
-    public Bounds getBottomLeftQuad() {
-        return new Bounds(minX, midX, midY, maxY);
-    }
-
-    public Bounds getBottomRightQuad() {
-        return new Bounds(midX, maxX, midY, maxY);
-    }
 }

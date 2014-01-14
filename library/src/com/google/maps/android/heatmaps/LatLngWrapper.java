@@ -30,13 +30,14 @@ public class LatLngWrapper implements PointQuadTree.Item {
 
     /**
      * Constructor
-     * @param latLng LatLng to add to wrapper
+     *
+     * @param latLng    LatLng to add to wrapper
      * @param intensity Intensity to use: should be greater than 0
      *                  Default value is 10.
      *                  This represents the "importance" or "value" of this particular point
      *                  Higher intensity values map to higher colours.
      *                  Intensity is additive: having two points of intensity 10 at the same
-     *                      location is identical to having one of intensity 20.
+     *                  location is identical to having one of intensity 20.
      */
     public LatLngWrapper(LatLng latLng, double intensity) {
         mPoint = mProjection.toPoint(latLng);
@@ -46,6 +47,7 @@ public class LatLngWrapper implements PointQuadTree.Item {
 
     /**
      * Constructor that uses default value for intensity
+     *
      * @param latLng LatLng to add to wrapper
      */
     public LatLngWrapper(LatLng latLng) {
@@ -56,13 +58,17 @@ public class LatLngWrapper implements PointQuadTree.Item {
      * Constructor for use in TileProvider that adds to the x coordinate of another LatLngWapper
      * Use in TileProvider only (for wraparound tiles)
      */
-    protected LatLngWrapper(LatLngWrapper w, double offset) {
-        mPoint = new Point(w.getPoint().x + offset, w.getPoint().y);
+    LatLngWrapper(LatLngWrapper w, double xOffset) {
+        mPoint = new Point(w.getPoint().x + xOffset, w.getPoint().y);
         mIntensity = w.getIntensity();
     }
 
-    public Point getPoint() { return mPoint; }
+    public Point getPoint() {
+        return mPoint;
+    }
 
-    public double getIntensity() { return mIntensity; }
+    public double getIntensity() {
+        return mIntensity;
+    }
 
 }
