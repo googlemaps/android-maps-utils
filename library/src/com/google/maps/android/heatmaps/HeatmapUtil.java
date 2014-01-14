@@ -15,6 +15,11 @@ import java.util.Iterator;
 public class HeatmapUtil {
 
     /**
+     * Default size of a color map for the heatmap
+     */
+    private static final int COLOR_MAP_SIZE = 1001;
+
+    /**
      * Helper function for quadtree creation
      *
      * @param points Collection of LatLngWrapper to calculate bounds for
@@ -235,12 +240,11 @@ public class HeatmapUtil {
      * Generates the color map to use with a provided gradient.
      *
      * @param gradient Array of colors (int format)
-     * @param size     Number of elements in the color map
      * @param opacity  Overall opacity of entire image: every individual alpha value will be
      *                 multiplied by this opacity.
      * @return the generated color map based on the gradient
      */
-    public static int[] generateColorMap(int[] gradient, int size, double opacity) {
+    public static int[] generateColorMap(int[] gradient, double opacity) {
         // Convert gradient into parallel arrays
         int[] values = new int[gradient.length];
         int[] colors = new int[gradient.length];
@@ -248,7 +252,7 @@ public class HeatmapUtil {
         // Evenly space out gradient colors with a constant interval (interval = "space" between
         // colors given in the gradient)
         // With defaults, this is 1000/10 = 100
-        int interval = (size - 1) / (gradient.length - 1);
+        int interval = (COLOR_MAP_SIZE - 1) / (gradient.length - 1);
 
         // Go through gradient and insert into values/colors
         int i;
@@ -257,10 +261,10 @@ public class HeatmapUtil {
             colors[i] = gradient[i];
         }
 
-        int[] colorMap = new int[size];
+        int[] colorMap = new int[COLOR_MAP_SIZE];
         // lowColorStop = closest color stop (value from gradient) below current position
         int lowColorStop = 0;
-        for (i = 0; i < size; i++) {
+        for (i = 0; i < COLOR_MAP_SIZE; i++) {
             // if i is larger than next color stop value, increment to next color stop
             // Check that it is safe to access lowColorStop + 1 first!
             // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice

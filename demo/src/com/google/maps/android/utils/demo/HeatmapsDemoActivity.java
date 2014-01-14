@@ -1,6 +1,7 @@
 package com.google.maps.android.utils.demo;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +32,37 @@ import java.util.Scanner;
  * different colours representing areas of high and low concentration/combined intensity of points.
  */
 public class HeatmapsDemoActivity extends BaseDemoActivity {
+
+    /**
+     * Alternative radius for convolution
+     */
+    private static final int ALT_HEATMAP_RADIUS = 10;
+
+    /**
+     * Alternative opacity of heatmap overlay
+     */
+    private static final double ALT_HEATMAP_OPACITY = 0.4;
+
+    /**
+     * Alternative heatmap gradient (blue -> red)
+     * Copied from Javascript version
+     */
+    private static final int[] ALT_HEATMAP_GRADIENT = {
+            Color.argb(0, 0, 255, 255),// transparent
+            Color.argb(255 / 3 * 2, 0, 255, 255),
+            Color.rgb(0, 191, 255),
+            Color.rgb(0, 127, 255),
+            Color.rgb(0, 63, 255),
+            Color.rgb(0, 0, 255),
+            Color.rgb(0, 0, 223),
+            Color.rgb(0, 0, 191),
+            Color.rgb(0, 0, 159),
+            Color.rgb(0, 0, 127),
+            Color.rgb(63, 0, 91),
+            Color.rgb(127, 0, 63),
+            Color.rgb(191, 0, 31),
+            Color.rgb(255, 0, 0)
+    };
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -88,7 +120,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     public void changeRadius(View view) {
         if (defaultRadius) {
-            mProvider.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
+            mProvider.setRadius(ALT_HEATMAP_RADIUS);
         } else {
             mProvider.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
         }
@@ -98,7 +130,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     public void changeGradient(View view) {
         if (defaultGradient) {
-            mProvider.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
+            mProvider.setGradient(ALT_HEATMAP_GRADIENT);
         } else {
             mProvider.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
         }
@@ -108,7 +140,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     public void changeOpacity(View view) {
         if (defaultOpacity) {
-            mProvider.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
+            mProvider.setOpacity(ALT_HEATMAP_OPACITY);
         } else {
             mProvider.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
         }
@@ -132,6 +164,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     // Datasets:
     // Police Stations: all police stations across Australia from http://poidb.com
+    // Red Lights: all red lights across Australia from http://poidb.com
     private ArrayList<LatLngWrapper> readItems(int resource) throws JSONException {
         ArrayList<LatLngWrapper> list = new ArrayList<LatLngWrapper>();
         long start = getTime();

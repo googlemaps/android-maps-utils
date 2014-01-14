@@ -25,6 +25,11 @@ public class HeatmapTileProvider implements TileProvider {
     private static final int TILE_DIM = HeatmapConstants.HEATMAP_TILE_SIZE;
 
     /**
+     * Assumed screen size
+     */
+    private static final int SCREEN_SIZE = 1280;
+
+    /**
      * Quad tree of all the points to display in the heatmap
      */
     private PointQuadTree mTree;
@@ -403,8 +408,7 @@ public class HeatmapTileProvider implements TileProvider {
      */
     public void setGradient(int[] gradient) {
         mGradient = gradient;
-        mColorMap = HeatmapUtil.generateColorMap(gradient, HeatmapConstants.HEATMAP_COLOR_MAP_SIZE,
-                mOpacity);
+        mColorMap = HeatmapUtil.generateColorMap(gradient, mOpacity);
     }
 
     /**
@@ -442,7 +446,7 @@ public class HeatmapTileProvider implements TileProvider {
             for (int i = min_zoom; i < max_zoom; i++) {
                 // Each zoom level multiplies viewable size by 2
                 maxIntensityArray[i] = HeatmapUtil.getMaxVal(mPoints, mBounds, radius,
-                        (int) (HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
+                        (int) (SCREEN_SIZE * Math.pow(2, i - 3)));
                 if (i == min_zoom) {
                     for (int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
                 }
@@ -452,8 +456,7 @@ public class HeatmapTileProvider implements TileProvider {
             }
         } else {
             // Just calculate one max intensity across whole map
-            double maxIntensity = HeatmapUtil.getMaxVal(mPoints, mBounds, radius,
-                    HeatmapConstants.SCREEN_SIZE);
+            double maxIntensity = HeatmapUtil.getMaxVal(mPoints, mBounds, radius, SCREEN_SIZE);
             for (int i = 0; i < HeatmapConstants.MAX_ZOOM_LEVEL; i++) {
                 maxIntensityArray[i] = maxIntensity;
             }
