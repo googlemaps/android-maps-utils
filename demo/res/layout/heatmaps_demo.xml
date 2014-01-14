@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -15,14 +15,14 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Radius"
-            android:onClick="changeRadius"/>
+            android:onClick="changeRadius" />
 
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Gradient"
-            android:onClick="changeGradient"/>
+            android:onClick="changeGradient" />
 
 
         <Button
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Opacity"
-            android:onClick="changeOpacity"/>
+            android:onClick="changeOpacity" />
 
     </LinearLayout>
 
@@ -39,8 +39,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <fragment android:id="@+id/map"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:name="com.google.android.gms.maps.SupportMapFragment"/>
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
 </LinearLayout>

@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * A demo of the Heatmaps library. Demonstates how the HeatmapHandler can be used to create
- * a coloured map overlay that visualises many points of weighted importance/intensity, with
- * different colours representing areas of high and low concentration/combined intensity of points.
+ * A demo of the Heatmaps library. Demonstates how the HeatmapTileProvider can be used to create
+ * a colored map overlay that visualises many points of weighted importance/intensity, with
+ * different colors representing areas of high and low concentration/combined intensity of points.
  */
 public class HeatmapsDemoActivity extends BaseDemoActivity {
 
@@ -77,7 +77,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     /**
      * Maps name of data set to data (list of LatLngWrappers)
      * Each LatLngWrapper contains a LatLng as well as corresponding intensity value (which
-     * represents "importance" of this LatLng) - see the class for more detail
+     * represents "importance" of this LatLng) - see the class for more details
      */
     private HashMap<String, ArrayList<LatLngWrapper>> mLists =
             new HashMap<String, ArrayList<LatLngWrapper>>();
@@ -89,7 +89,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-        // getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.8140000, 144.9633200), 5));
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 135), 3));
 
         // Set up the spinner/dropdown list
@@ -151,7 +150,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     // Dealing with spinner choices
-    public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
+    public class SpinnerActivity implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view,
                                    int pos, long id) {
             String dataset = parent.getItemAtPosition(pos).toString();
