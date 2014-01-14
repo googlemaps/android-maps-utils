@@ -127,10 +127,10 @@ public class PointQuadTreeImpl<T extends PointQuadTree.Item> implements PointQua
      */
     private void split() {
         mChildren = new PointQuadTreeImpl[]{
-                new PointQuadTreeImpl<T>(mBounds.getTopLeftQuad(), mDepth + 1),
-                new PointQuadTreeImpl<T>(mBounds.getTopRightQuad(), mDepth + 1),
-                new PointQuadTreeImpl<T>(mBounds.getBottomLeftQuad(), mDepth + 1),
-                new PointQuadTreeImpl<T>(mBounds.getBottomRightQuad(), mDepth + 1)
+                new PointQuadTreeImpl<T>(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1),
+                new PointQuadTreeImpl<T>(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1),
+                new PointQuadTreeImpl<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1),
+                new PointQuadTreeImpl<T>(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1)
         };
 
         List<T> items = mItems;
