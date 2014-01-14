@@ -19,48 +19,73 @@ import java.util.Collection;
  * Tile provider that creates heatmap tiles.
  */
 public class HeatmapTileProvider implements TileProvider {
-    /** Tile dimension */
+    /**
+     * Tile dimension
+     */
     private static final int TILE_DIM = HeatmapConstants.HEATMAP_TILE_SIZE;
 
-    /** Quad tree of all the points to display in the heatmap */
+    /**
+     * Quad tree of all the points to display in the heatmap
+     */
     private PointQuadTree mTree;
 
-    /** Collection of all the points. */
+    /**
+     * Collection of all the points.
+     */
     private Collection<LatLngWrapper> mPoints;
 
-    /** Bounds of the quad tree */
+    /**
+     * Bounds of the quad tree
+     */
     private Bounds mBounds;
 
-    /**  Heatmap point radius. */
+    /**
+     * Heatmap point radius.
+     */
     private int mRadius;
 
-    /** Gradient of the color map */
+    /**
+     * Gradient of the color map
+     */
     private int[] mGradient;
 
-    /** Color map to use to color tiles */
+    /**
+     * Color map to use to color tiles
+     */
     private int[] mColorMap;
 
-    /** Kernel to use for convolution */
+    /**
+     * Kernel to use for convolution
+     */
     private double[] mKernel;
 
-    /** Opacity of the overall heatmap overlay (0...1) */
+    /**
+     * Opacity of the overall heatmap overlay (0...1)
+     */
     private double mOpacity;
 
-    /** Minimum zoom level to calculate custom intensity estimate for */
+    /**
+     * Minimum zoom level to calculate custom intensity estimate for
+     */
     private int mMinZoom;
 
-    /** Maximum zoom level to calculate custom intensity estimate for */
+    /**
+     * Maximum zoom level to calculate custom intensity estimate for
+     */
     private int mMaxZoom;
 
-    /** Maximum intensity estimates for heatmap */
+    /**
+     * Maximum intensity estimates for heatmap
+     */
     private double[] mMaxIntensity;
 
-    /** Blank tile */
+    /**
+     * Blank tile
+     */
     private Tile mBlankTile;
 
     /**
      * Builder class for the HeatmapTileProvider.
-     *
      */
     public static class Builder {
         // Required parameters
@@ -76,11 +101,12 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Constructor for builder, which contains the required parameters for a heatmap.
+         *
          * @param points Collection of all LatLngWrappers to put into quadtree.
          *               Should be non-empty.
          */
         public Builder(Collection<LatLngWrapper> points)
-                throws IllegalArgumentException{
+                throws IllegalArgumentException {
             this.points = points;
 
             // Check that points is non empty
@@ -91,6 +117,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for radius in builder
+         *
          * @param val Radius of convolution to use, in terms of pixels.
          *            Must be within minimum and maximum values as found in HeatmapConstants.
          * @return updated builder object
@@ -106,9 +133,10 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for gradient in builder
+         *
          * @param val Gradient to color heatmap with. This is usually about 10 different colours.
-         *                 Ordered from least to highest corresponding intensity.
-         *                 A larger colour map is interpolated from these "colour stops".
+         *            Ordered from least to highest corresponding intensity.
+         *            A larger colour map is interpolated from these "colour stops".
          * @return updated builder object
          */
         public Builder gradient(int[] val) throws IllegalArgumentException {
@@ -122,6 +150,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for opacity in builder
+         *
          * @param val Opacity of the entire heatmap in range [0, 1]
          * @return updated builder object
          */
@@ -140,11 +169,12 @@ public class HeatmapTileProvider implements TileProvider {
          * Max intensity will be set to that of min at zoom levels lower than min,
          * and similarly for those above max.
          * These should be the zoom levels at which your heatmap is intended to be viewed at.
+         *
          * @param min minimum zoom level to calculate max intensity for
-         *                recommended/default is 5
+         *            recommended/default is 5
          * @param max maximum zoom level to calculate max intensity for
-         *                recommended/default is 8
-         *                Must be greater than or equal to min
+         *            recommended/default is 8
+         *            Must be greater than or equal to min
          * @return updated builder object
          */
         public Builder zoom(int min, int max) throws IllegalArgumentException {
@@ -165,6 +195,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Call when all desired options have been set.
+         *
          * @return HeatmapTileProvider created with desired options.
          */
         public HeatmapTileProvider build() {
@@ -184,7 +215,7 @@ public class HeatmapTileProvider implements TileProvider {
         mOpacity = builder.opacity;
 
         // Compute kernel density function (sigma = 1/3rd of radius)
-        mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
+        mKernel = HeatmapUtil.generateKernel(mRadius, mRadius / 3.0);
 
         // Generate color map
         setGradient(mGradient);
@@ -199,6 +230,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Changes the dataset the heatmap is portraying.
+     *
      * @param points Points to use in the heatmap.
      */
     public void setData(Collection<LatLngWrapper> points) throws IllegalArgumentException {
@@ -225,7 +257,7 @@ public class HeatmapTileProvider implements TileProvider {
         mTree = new PointQuadTreeImpl(mBounds);
 
         // Add points to quad tree
-        for (LatLngWrapper l: mPoints) {
+        for (LatLngWrapper l : mPoints) {
             mTree.add(l);
         }
         end = getTime();
@@ -242,8 +274,9 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Creates tile.
-     * @param x X coordinate of tile.
-     * @param y Y coordinate of tile.
+     *
+     * @param x    X coordinate of tile.
+     * @param y    Y coordinate of tile.
      * @param zoom Zoom level.
      * @return image in Tile format
      */
@@ -262,7 +295,7 @@ public class HeatmapTileProvider implements TileProvider {
         double tileWidth = worldWidth / Math.pow(2, zoom);
 
         // how much padding to include in search
-        double padding = tileWidth * mRadius/TILE_DIM;
+        double padding = tileWidth * mRadius / TILE_DIM;
 
         // padded tile width
         double tileWidthPadded = tileWidth + 2 * padding;
@@ -289,9 +322,9 @@ public class HeatmapTileProvider implements TileProvider {
             // Need to consider "negative" points
             // (minX to 0) ->  (512+minX to 512) ie +512
             // add 512 to search bounds and subtract 512 from actual points
-            Bounds overlapBounds = new Bounds(minX+worldWidth, worldWidth, minY, maxY);
+            Bounds overlapBounds = new Bounds(minX + worldWidth, worldWidth, minY, maxY);
             xOffset = -worldWidth;
-            wrappedPoints = (ArrayList<LatLngWrapper>)mTree.search(overlapBounds);
+            wrappedPoints = (ArrayList<LatLngWrapper>) mTree.search(overlapBounds);
             //Log.e("negative points", ""+wrappedPoints.size());
         } else if (maxX > worldWidth) {
             // Need to consider "overflow" points
@@ -299,7 +332,7 @@ public class HeatmapTileProvider implements TileProvider {
             // subtract 512 from search bounds and add 512 to actual points
             Bounds overlapBounds = new Bounds(0, maxX - worldWidth, minY, maxY);
             xOffset = worldWidth;
-            wrappedPoints = (ArrayList<LatLngWrapper>)mTree.search(overlapBounds);
+            wrappedPoints = (ArrayList<LatLngWrapper>) mTree.search(overlapBounds);
             //Log.e("overflow points", ""+wrappedPoints.size());
         }
 
@@ -315,14 +348,14 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Search for all points within tile bounds
         long start = getTime();
-        ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>)mTree.search(tileBounds);
+        ArrayList<LatLngWrapper> points = (ArrayList<LatLngWrapper>) mTree.search(tileBounds);
         long end = getTime();
-        Log.e("getTile Search "+x+","+y, (end-start)+"ms");
+        Log.e("getTile Search " + x + "," + y, (end - start) + "ms");
 
         // Add wrapped (wraparound) points if necessary
         if (!wrappedPoints.isEmpty()) {
             Log.e("ping", "ping");
-            for (LatLngWrapper l:wrappedPoints) {
+            for (LatLngWrapper l : wrappedPoints) {
                 points.add(new LatLngWrapper(l, xOffset));
             }
         }
@@ -335,28 +368,28 @@ public class HeatmapTileProvider implements TileProvider {
         // Bucket points into buckets
         start = getTime();
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
-        for(LatLngWrapper w: points) {
-            Point p= w.getPoint();
-            int bucketX = (int)((p.x - minX) / bucketWidth);
-            int bucketY = (int)((p.y - minY) / bucketWidth);
+        for (LatLngWrapper w : points) {
+            Point p = w.getPoint();
+            int bucketX = (int) ((p.x - minX) / bucketWidth);
+            int bucketY = (int) ((p.y - minY) / bucketWidth);
             intensity[bucketX][bucketY] += w.getIntensity();
         }
         end = getTime();
-        Log.e("getTile Bucketing "+x+","+y, (end-start)+"ms");
+        Log.e("getTile Bucketing " + x + "," + y, (end - start) + "ms");
 
         start = getTime();
         // Convolve it ("smoothen" it out)
         double[][] convolved = HeatmapUtil.convolve(intensity, mKernel);
         end = getTime();
-        Log.e("getTile Convolving "+x+","+y, (end-start)+"ms");
+        Log.e("getTile Convolving " + x + "," + y, (end - start) + "ms");
 
         // Color it into a bitmap
         start = getTime();
         Bitmap bitmap = HeatmapUtil.colorize(convolved, mColorMap, mMaxIntensity[zoom]);
         long endTime = getTime();
-        Log.e("getTile Colorize "+x+","+y, (endTime-start)+"ms");
+        Log.e("getTile Colorize " + x + "," + y, (endTime - start) + "ms");
 
-        Log.e("getTile Total "+x+","+y, "Time: "+(endTime-startTime)+" Points: "+points.size()+" Zoom: "+zoom);
+        Log.e("getTile Total " + x + "," + y, "Time: " + (endTime - startTime) + " Points: " + points.size() + " Zoom: " + zoom);
 
         return convertBitmap(bitmap);
     }
@@ -365,6 +398,7 @@ public class HeatmapTileProvider implements TileProvider {
      * Setter for gradient/color map.
      * Important: tile overlay cache must be cleared after this for it to be effective
      * outside of initialisation
+     *
      * @param gradient Gradient to set
      */
     public void setGradient(int[] gradient) {
@@ -376,12 +410,13 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Setter for radius.
      * User should clear overlay's tile cache after calling this.
+     *
      * @param radius Radius to set
      */
     public void setRadius(int radius) {
         mRadius = radius;
         // need to recompute kernel
-        mKernel = HeatmapUtil.generateKernel(mRadius, mRadius/3.0);
+        mKernel = HeatmapUtil.generateKernel(mRadius, mRadius / 3.0);
         // need to recalculate max intensity
         mMaxIntensity = getMaxIntensities(mRadius, mMinZoom, mMaxZoom);
     }
@@ -389,6 +424,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Setter for opacity
      * User should clear overlay's tile cache after calling this.
+     *
      * @param opacity opacity to set
      */
     public void setOpacity(double opacity) {
@@ -403,22 +439,22 @@ public class HeatmapTileProvider implements TileProvider {
 
         if (min_zoom < max_zoom) {
             // Calculate max intensity for each zoom level
-            for (int i = min_zoom; i < max_zoom; i ++) {
+            for (int i = min_zoom; i < max_zoom; i++) {
                 // Each zoom level multiplies viewable size by 2
                 maxIntensityArray[i] = HeatmapUtil.getMaxVal(mPoints, mBounds, radius,
-                        (int)(HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
+                        (int) (HeatmapConstants.SCREEN_SIZE * Math.pow(2, i - 3)));
                 if (i == min_zoom) {
-                    for(int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
+                    for (int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
                 }
             }
-            for (int i = max_zoom; i < HeatmapConstants.MAX_ZOOM_LEVEL; i ++) {
+            for (int i = max_zoom; i < HeatmapConstants.MAX_ZOOM_LEVEL; i++) {
                 maxIntensityArray[i] = maxIntensityArray[max_zoom - 1];
             }
         } else {
             // Just calculate one max intensity across whole map
             double maxIntensity = HeatmapUtil.getMaxVal(mPoints, mBounds, radius,
                     HeatmapConstants.SCREEN_SIZE);
-            for (int i = 0; i < HeatmapConstants.MAX_ZOOM_LEVEL; i ++) {
+            for (int i = 0; i < HeatmapConstants.MAX_ZOOM_LEVEL; i++) {
                 maxIntensityArray[i] = maxIntensity;
             }
         }
@@ -427,6 +463,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * helper function - convert a bitmap into a tile
+     *
      * @param bitmap bitmap to convert into a tile
      * @return the tile
      */

@@ -27,7 +27,7 @@ public class HeatmapConstants {
      */
     public static final int DEFAULT_HEATMAP_RADIUS = 20;
 
-     /**
+    /**
      * Alternative radius for convolution
      */
     public static final int ALT_HEATMAP_RADIUS = 10;
@@ -50,7 +50,7 @@ public class HeatmapConstants {
     public static final int[] DEFAULT_HEATMAP_GRADIENT = {
             //a, r, g, b / r, g, b
             Color.argb(0, 102, 255, 0),  // green (invisible)
-            Color.argb(255/3*2 ,102, 255, 0),  // 2/3rds invisible
+            Color.argb(255 / 3 * 2, 102, 255, 0),  // 2/3rds invisible
             Color.rgb(147, 255, 0),
             Color.rgb(193, 255, 0),
             Color.rgb(238, 255, 0),  // yellow
@@ -60,7 +60,7 @@ public class HeatmapConstants {
             Color.rgb(255, 113, 0),
             Color.rgb(255, 57, 0),
             Color.rgb(255, 0, 0)     // red
-            };
+    };
 
     /**
      * Alternative heatmap gradient (blue -> red)
@@ -68,7 +68,7 @@ public class HeatmapConstants {
      */
     public static final int[] ALT_HEATMAP_GRADIENT = {
             Color.argb(0, 0, 255, 255),// transparent
-            Color.argb(255/3*2, 0, 255, 255),
+            Color.argb(255 / 3 * 2, 0, 255, 255),
             Color.rgb(0, 191, 255),
             Color.rgb(0, 127, 255),
             Color.rgb(0, 63, 255),
@@ -81,7 +81,7 @@ public class HeatmapConstants {
             Color.rgb(127, 0, 63),
             Color.rgb(191, 0, 31),
             Color.rgb(255, 0, 0)
-            };
+    };
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities

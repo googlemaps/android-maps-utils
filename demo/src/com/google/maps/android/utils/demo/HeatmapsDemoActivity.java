@@ -56,7 +56,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         // getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.8140000, 144.9633200), 5));
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 135), 3 ));
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 135), 3));
 
         // Set up the spinner/dropdown list
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -81,7 +81,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             mProvider = new HeatmapTileProvider.Builder(
                     mLists.get(getString(R.string.police_stations))).build();
             mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             Log.e("IllegalArgumentException in Builder", e.getMessage());
         }
     }
@@ -89,19 +89,17 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     public void changeRadius(View view) {
         if (defaultRadius) {
             mProvider.setRadius(HeatmapConstants.ALT_HEATMAP_RADIUS);
-        }
-        else {
+        } else {
             mProvider.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
         }
         mOverlay.clearTileCache();
-        defaultRadius =!defaultRadius;
+        defaultRadius = !defaultRadius;
     }
 
     public void changeGradient(View view) {
         if (defaultGradient) {
             mProvider.setGradient(HeatmapConstants.ALT_HEATMAP_GRADIENT);
-        }
-        else {
+        } else {
             mProvider.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
         }
         mOverlay.clearTileCache();
@@ -111,8 +109,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     public void changeOpacity(View view) {
         if (defaultOpacity) {
             mProvider.setOpacity(HeatmapConstants.ALT_HEATMAP_OPACITY);
-        }
-        else {
+        } else {
             mProvider.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
         }
         mOverlay.clearTileCache();
@@ -127,6 +124,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             mProvider.setData(mLists.get(dataset));
             mOverlay.clearTileCache();
         }
+
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
         }
@@ -148,7 +146,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         long end = getTime();
-        Log.e("Time readItems", (end-start)+"ms");
+        Log.e("Time readItems", (end - start) + "ms");
         return list;
     }
 

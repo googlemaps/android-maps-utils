@@ -16,6 +16,7 @@ public class HeatmapUtil {
 
     /**
      * Helper function for quadtree creation
+     *
      * @param points Collection of LatLngWrapper to calculate bounds for
      * @return Bounds that enclose the listed LatLngWrapper points
      */
@@ -38,9 +39,9 @@ public class HeatmapUtil {
             double y = l.getPoint().y;
             // Extend bounds if necessary
             if (x < minX) minX = x;
-            if (x + sigma> maxX) maxX = x+ sigma;
+            if (x + sigma > maxX) maxX = x + sigma;
             if (y < minY) minY = y;
-            if (y + sigma > maxY) maxY = y+ sigma;
+            if (y + sigma > maxY) maxY = y + sigma;
         }
 
         return new Bounds(minX, maxX, minY, maxY);
@@ -49,8 +50,9 @@ public class HeatmapUtil {
     /**
      * Generates 1D Gaussian kernel density function, as a double array of size radius * 2  + 1
      * Normalised with central value of 1.
+     *
      * @param radius radius of the kernel
-     * @param sigma standard deviation of the Gaussian function
+     * @param sigma  standard deviation of the Gaussian function
      * @return generated Gaussian kernel
      */
     public static double[] generateKernel(int radius, double sigma) {
@@ -63,14 +65,15 @@ public class HeatmapUtil {
 
     /**
      * Applies a 2D Gaussian convolution to the input grid, returning a 2D grid cropped of padding.
-     * @param grid Raw input grid to convolve: dimension dim+2*radius x dim + 2*radius
-     *             ie dim * dim with padding of size radius
+     *
+     * @param grid   Raw input grid to convolve: dimension dim+2*radius x dim + 2*radius
+     *               ie dim * dim with padding of size radius
      * @param kernel Pre-computed Gaussian kernel of size radius*2+1
      * @return the smoothened grid
      */
     public static double[][] convolve(double[][] grid, double[] kernel) {
         // Calculate radius size
-        int radius = (int)Math.floor((double)kernel.length/2.0);
+        int radius = (int) Math.floor((double) kernel.length / 2.0);
         // Padded dimension
         int dimOld = grid.length;
         // Calculate final (non padded) dimension
@@ -95,8 +98,8 @@ public class HeatmapUtil {
                 if (val != 0) {
                     // need to "apply" convolution from that point to every point in
                     // (max(lowerLimit, x - radius), y) to (min(upperLimit, x + radius), y)
-                    for(x2 = Math.max(lowerLimit, x - radius);
-                            x2 < Math.min(upperLimit, x + radius) + 1; x2 ++) {
+                    for (x2 = Math.max(lowerLimit, x - radius);
+                         x2 < Math.min(upperLimit, x + radius) + 1; x2++) {
                         // multiplier for x2 = x - radius is kernel[0]
                         // x2 = x + radius is kernel[radius * 2]
                         // so multiplier for x2 in general is kernel[x2 - (x - radius)]
@@ -119,12 +122,12 @@ public class HeatmapUtil {
                 // for each point (x, y)
                 val = intermediate[x][y];
                 // only bother if something there
-                    if (val != 0) {
+                if (val != 0) {
                     // need to "apply" convolution from that point to every point in
                     // (x, max(lowerLimit, y - radius) to (x, min(upperLimit, y + radius))
                     // Dont care about
-                    for(y2 = Math.max(lowerLimit, y - radius);
-                            y2 < Math.min(upperLimit, y + radius) + 1; y2 ++) {
+                    for (y2 = Math.max(lowerLimit, y - radius);
+                         y2 < Math.min(upperLimit, y + radius) + 1; y2++) {
                         // Similar logic to above
                         // subtract, as adding to a smaller grid
                         outputGrid[x - radius][y2 - radius] += val * kernel[y2 - (y - radius)];
@@ -138,9 +141,10 @@ public class HeatmapUtil {
 
     /**
      * Converts a grid of intensity values to a colored Bitmap, using a given color map
-     * @param grid the input grid (assumed to be square)
+     *
+     * @param grid     the input grid (assumed to be square)
      * @param colorMap color map (created by generateColorMap)
-     * @param max Maximum intensity value: maps to 100$ on gradient
+     * @param max      Maximum intensity value: maps to 100$ on gradient
      * @return the colorized grid in Bitmap form, with same dimensions as grid
      */
     public static Bitmap colorize(double[][] grid, int[] colorMap, double max) {
@@ -164,9 +168,9 @@ public class HeatmapUtil {
                 // -> [j][i]
                 val = grid[j][i];
                 index = i * dim + j;
-                col = (int)(val * colorMapScaling);
+                col = (int) (val * colorMapScaling);
 
-                if ((int)val != 0) {
+                if ((int) val != 0) {
                     // Make it more resilient: cant go outside colorMap
                     if (col < colorMap.length) colors[index] = colorMap[col];
                     else colors[index] = maxColor;
@@ -185,9 +189,10 @@ public class HeatmapUtil {
 
     /**
      * Calculate a reasonable maximum intensity value to map to maximum color intensity
-     * @param points Collection of LatLngs to put into buckets
-     * @param bounds Bucket boundaries
-     * @param radius radius of convolution
+     *
+     * @param points    Collection of LatLngs to put into buckets
+     * @param bounds    Bucket boundaries
+     * @param radius    radius of convolution
      * @param screenDim larger dimension of screen in pixels (for scale)
      * @return Approximate max value
      */
@@ -202,7 +207,7 @@ public class HeatmapUtil {
         double boundsDim = (maxX - minX > maxY - minY) ? maxX - minX : maxY - minY;
 
         // Number of buckets: have diameter sized buckets
-        int nBuckets = (int) (screenDim / ( 2 * radius) + 0.5);
+        int nBuckets = (int) (screenDim / (2 * radius) + 0.5);
         // Scaling factor to convert width in terms of point distance, to which bucket
         double scale = nBuckets / boundsDim;
 
@@ -216,8 +221,8 @@ public class HeatmapUtil {
             x = l.getPoint().x;
             y = l.getPoint().y;
 
-            int xBucket = (int)((x - minX) * scale);
-            int yBucket = (int)((y - minY) * scale);
+            int xBucket = (int) ((x - minX) * scale);
+            int yBucket = (int) ((y - minY) * scale);
 
             buckets[xBucket][yBucket] += l.getIntensity();
             if (buckets[xBucket][yBucket] > max) max = buckets[xBucket][yBucket];
@@ -228,10 +233,11 @@ public class HeatmapUtil {
 
     /**
      * Generates the color map to use with a provided gradient.
+     *
      * @param gradient Array of colors (int format)
-     * @param size Number of elements in the color map
-     * @param opacity Overall opacity of entire image: every individual alpha value will be
-     *                multiplied by this opacity.
+     * @param size     Number of elements in the color map
+     * @param opacity  Overall opacity of entire image: every individual alpha value will be
+     *                 multiplied by this opacity.
      * @return the generated color map based on the gradient
      */
     public static int[] generateColorMap(int[] gradient, int size, double opacity) {
@@ -246,7 +252,7 @@ public class HeatmapUtil {
 
         // Go through gradient and insert into values/colors
         int i;
-        for(i = 0; i < gradient.length; i++) {
+        for (i = 0; i < gradient.length; i++) {
             values[i] = i * interval;
             colors[i] = gradient[i];
         }
@@ -264,10 +270,10 @@ public class HeatmapUtil {
             // In between two color stops: interpolate
             if (lowColorStop < values.length - 1) {
                 // Check that it is safe to access lowColorStop + 1
-               if (i > values[lowColorStop + 1]) lowColorStop++;
-               colorMap[i] = interpolateColor(interval * lowColorStop, i,
-                       interval * (lowColorStop + 1),
-                       colors[lowColorStop], colors[lowColorStop + 1]);
+                if (i > values[lowColorStop + 1]) lowColorStop++;
+                colorMap[i] = interpolateColor(interval * lowColorStop, i,
+                        interval * (lowColorStop + 1),
+                        colors[lowColorStop], colors[lowColorStop + 1]);
             }
             // above highest color stop: use that
             else {
@@ -277,11 +283,10 @@ public class HeatmapUtil {
             if (opacity != 1) {
                 int c = colorMap[i];
                 // TODO: make this better later?
-                colorMap[i] = Color.argb((int)(Color.alpha(c) * opacity),
+                colorMap[i] = Color.argb((int) (Color.alpha(c) * opacity),
                         Color.red(c), Color.green(c), Color.blue(c));
             }
         }
-
 
 
         return colorMap;
@@ -289,9 +294,10 @@ public class HeatmapUtil {
 
     /**
      * Helper function for creation of color map - interpolates between given colors
-     * @param x1 First color "coordinate"
-     * @param x2 Middle color "coordinate" - interpolating to this point
-     * @param x3 Last color "coordinate"
+     *
+     * @param x1     First color "coordinate"
+     * @param x2     Middle color "coordinate" - interpolating to this point
+     * @param x3     Last color "coordinate"
      * @param color1 Color associated with x1
      * @param color2 Color associated with x3
      * @return Color associated with x2
@@ -300,7 +306,7 @@ public class HeatmapUtil {
         // no need to interpolate
         if (x1 == x3) return color1;
         // interpolate on R, G, B and A
-        double ratio = (x2 - x1)/(double)(x3 - x1);
+        double ratio = (x2 - x1) / (double) (x3 - x1);
 
         // Interpolate using calculated ratio
         double red = (Color.red(color2) - Color.red(color1)) * ratio + Color.red(color1);
