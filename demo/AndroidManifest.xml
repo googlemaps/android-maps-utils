@@ -50,6 +50,7 @@
         <activity android:name=".BigClusteringDemoActivity"/>
         <activity android:name=".CustomMarkerClusteringDemoActivity"/>
         <activity android:name=".TileProviderAndProjectionDemo"/>
+        <activity android:name=".HeatmapsDemoActivity"/>
 
     </application>
 
