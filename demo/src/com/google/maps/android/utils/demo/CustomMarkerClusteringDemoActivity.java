@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.clustering.ClusterRendererAdapter;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.utils.demo.model.Person;
 
@@ -38,7 +38,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity
      * Draws profile photos inside markers (using IconGenerator).
      * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
      */
-    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+    private class PersonRenderer extends ClusterRendererAdapter<Person> {
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
         private final ImageView mImageView;
@@ -46,8 +46,6 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity
         private final int mDimension;
 
         public PersonRenderer() {
-            super(getApplicationContext(), getMap(), mClusterManager);
-
             View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile, null);
             mClusterIconGenerator.setContentView(multiProfile);
             mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
@@ -93,7 +91,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity
         }
 
         @Override
-        protected boolean shouldRenderAsCluster(Cluster cluster) {
+        public boolean shouldRenderAsCluster(Cluster cluster) {
             // Always render clusters.
             return cluster.getSize() > 1;
         }
@@ -153,8 +151,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
 
         mClusterManager = new ClusterManager<Person>(this, getMap());
-        mClusterManager.setRenderer(new PersonRenderer());
-        getMap().setOnCameraChangeListener(mClusterManager);
+        mClusterManager.setCustomRenderer(new PersonRenderer());
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnInfoWindowClickListener(this);
