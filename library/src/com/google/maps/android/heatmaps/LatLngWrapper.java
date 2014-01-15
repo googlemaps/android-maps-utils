@@ -22,7 +22,7 @@ public class LatLngWrapper implements PointQuadTree.Item {
      * Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection
      */
     public static final SphericalMercatorProjection mProjection =
-            new SphericalMercatorProjection(HeatmapConstants.HEATMAP_TILE_SIZE);
+            new SphericalMercatorProjection(HeatmapTileProvider.TILE_DIM);
 
     private Point mPoint;
 
