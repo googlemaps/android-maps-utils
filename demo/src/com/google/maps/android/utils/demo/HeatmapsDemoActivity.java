@@ -1,6 +1,5 @@
 package com.google.maps.android.utils.demo;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.maps.android.heatmaps.HeatmapConstants;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.LatLngWrapper;
 
@@ -123,7 +121,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         if (defaultRadius) {
             mProvider.setRadius(ALT_HEATMAP_RADIUS);
         } else {
-            mProvider.setRadius(HeatmapConstants.DEFAULT_HEATMAP_RADIUS);
+            mProvider.setRadius(HeatmapTileProvider.DEFAULT_HEATMAP_RADIUS);
         }
         mOverlay.clearTileCache();
         defaultRadius = !defaultRadius;
@@ -133,7 +131,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         if (defaultGradient) {
             mProvider.setGradient(ALT_HEATMAP_GRADIENT);
         } else {
-            mProvider.setGradient(HeatmapConstants.DEFAULT_HEATMAP_GRADIENT);
+            mProvider.setGradient(HeatmapTileProvider.DEFAULT_HEATMAP_GRADIENT);
         }
         mOverlay.clearTileCache();
         defaultGradient = !defaultGradient;
@@ -143,7 +141,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         if (defaultOpacity) {
             mProvider.setOpacity(ALT_HEATMAP_OPACITY);
         } else {
-            mProvider.setOpacity(HeatmapConstants.DEFAULT_HEATMAP_OPACITY);
+            mProvider.setOpacity(HeatmapTileProvider.DEFAULT_HEATMAP_OPACITY);
         }
         mOverlay.clearTileCache();
         defaultOpacity = !defaultOpacity;

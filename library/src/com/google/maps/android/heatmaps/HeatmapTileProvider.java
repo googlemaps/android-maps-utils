@@ -1,6 +1,7 @@
 package com.google.maps.android.heatmaps;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.Tile;
@@ -19,14 +20,68 @@ import java.util.Collection;
  */
 public class HeatmapTileProvider implements TileProvider {
     /**
-     * Tile dimension
+     * Tile dimension. Package access - LatLngWrapper
      */
-    private static final int TILE_DIM = HeatmapConstants.HEATMAP_TILE_SIZE;
+    static final int TILE_DIM = 512;
 
     /**
      * Assumed screen size
      */
     private static final int SCREEN_SIZE = 1280;
+    /**
+     * Default radius for convolution
+     */
+    public static final int DEFAULT_HEATMAP_RADIUS = 20;
+
+    /**
+     * Default opacity of heatmap overlay
+     */
+    public static final double DEFAULT_HEATMAP_OPACITY = 0.7;
+
+    /**
+     * Default gradient for heatmap.
+     * Copied from Javascript version.
+     * Array of colors, in int form.
+     */
+    public static final int[] DEFAULT_HEATMAP_GRADIENT = {
+            //a, r, g, b / r, g, b
+            Color.argb(0, 102, 255, 0),  // green (invisible)
+            Color.argb(255 / 3 * 2, 102, 255, 0),  // 2/3rds invisible
+            Color.rgb(147, 255, 0),
+            Color.rgb(193, 255, 0),
+            Color.rgb(238, 255, 0),  // yellow
+            Color.rgb(244, 227, 0),
+            Color.rgb(249, 198, 0),
+            Color.rgb(255, 170, 0),  // orange
+            Color.rgb(255, 113, 0),
+            Color.rgb(255, 57, 0),
+            Color.rgb(255, 0, 0)     // red
+    };
+
+    /**
+     * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
+     */
+    private static final int DEFAULT_MIN_ZOOM = 5;
+
+    /**
+     * Default (and maximum possible) maximum zoom level at which to calculate maximum intensities
+     */
+    private static final int DEFAULT_MAX_ZOOM = 9;
+
+    /**
+     * Maximum zoom level possible on a map.
+     */
+    private static final int MAX_ZOOM_LEVEL = 22;
+
+    /**
+     * Minimum radius value.
+     */
+    private static final int MIN_RADIUS = 10;
+
+    /**
+     * Maximum radius value.
+     */
+    private static final int MAX_RADIUS = 50;
 
     /**
      * Blank tile
@@ -98,9 +153,9 @@ public class HeatmapTileProvider implements TileProvider {
         private final Collection<LatLngWrapper> data;
 
         // Optional, initialised to default values
-        private int radius = HeatmapConstants.DEFAULT_HEATMAP_RADIUS;
-        private int[] gradient = HeatmapConstants.DEFAULT_HEATMAP_GRADIENT;
-        private double opacity = HeatmapConstants.DEFAULT_HEATMAP_OPACITY;
+        private int radius = DEFAULT_HEATMAP_RADIUS;
+        private int[] gradient = DEFAULT_HEATMAP_GRADIENT;
+        private double opacity = DEFAULT_HEATMAP_OPACITY;
         // Only custom min/max if they differ so initialise both to 5
         private int minZoom = 5;
         private int maxZoom = 9;
@@ -125,13 +180,13 @@ public class HeatmapTileProvider implements TileProvider {
          * Setter for radius in builder
          *
          * @param val Radius of convolution to use, in terms of pixels.
-         *            Must be within minimum and maximum values as found in HeatmapConstants.
+         *            Must be within minimum and maximum values of 10 to 50 inclusive.
          * @return updated builder object
          */
         public Builder radius(int val) {
             radius = val;
             // Check that radius is within bounds.
-            if (radius < HeatmapConstants.MIN_RADIUS || radius > HeatmapConstants.MAX_RADIUS) {
+            if (radius < MIN_RADIUS || radius > MAX_RADIUS) {
                 throw new IllegalArgumentException("Radius not within bounds.");
             }
             return this;
@@ -191,10 +246,10 @@ public class HeatmapTileProvider implements TileProvider {
             if (min > max) {
                 throw new IllegalArgumentException("Min must be smaller than or equal to max");
             }
-            if (min < HeatmapConstants.DEFAULT_MIN_ZOOM) {
+            if (min < DEFAULT_MIN_ZOOM) {
                 throw new IllegalArgumentException("Min smaller than allowed");
             }
-            if (max > HeatmapConstants.DEFAULT_MAX_ZOOM) {
+            if (max > DEFAULT_MAX_ZOOM) {
                 throw new IllegalArgumentException("Max larger than allowed");
             }
             return this;
@@ -437,7 +492,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     private double[] getMaxIntensities(int radius, int min_zoom, int max_zoom) {
         // Can go from zoom level 3 to zoom level 22
-        double[] maxIntensityArray = new double[HeatmapConstants.MAX_ZOOM_LEVEL];
+        double[] maxIntensityArray = new double[MAX_ZOOM_LEVEL];
 
         if (min_zoom < max_zoom) {
             // Calculate max intensity for each zoom level
@@ -449,13 +504,13 @@ public class HeatmapTileProvider implements TileProvider {
                     for (int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
                 }
             }
-            for (int i = max_zoom; i < HeatmapConstants.MAX_ZOOM_LEVEL; i++) {
+            for (int i = max_zoom; i < MAX_ZOOM_LEVEL; i++) {
                 maxIntensityArray[i] = maxIntensityArray[max_zoom - 1];
             }
         } else {
             // Just calculate one max intensity across whole map
             double maxIntensity = HeatmapUtil.getMaxValue(mData, mBounds, radius, SCREEN_SIZE);
-            for (int i = 0; i < HeatmapConstants.MAX_ZOOM_LEVEL; i++) {
+            for (int i = 0; i < MAX_ZOOM_LEVEL; i++) {
                 maxIntensityArray[i] = maxIntensity;
             }
         }
