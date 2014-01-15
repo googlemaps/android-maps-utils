@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7+'
+        classpath 'com.android.tools.build:gradle:0.7.+'
     }
 }
 
@@ -16,12 +16,12 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:3.1+'
+    compile 'com.google.android.gms:play-services:3+'
 }
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.0"
+    buildToolsVersion "19.0.1"
 
     sourceSets {
         main {
@@ -36,7 +36,6 @@ android {
     }
 }
 
-// TODO: Add a task that prints the test results.
 task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {

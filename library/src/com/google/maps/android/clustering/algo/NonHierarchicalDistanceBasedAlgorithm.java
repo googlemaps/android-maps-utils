@@ -7,7 +7,6 @@ import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
-import com.google.maps.android.quadtree.PointQuadTreeImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +42,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTreeImpl<QuadItem<T>>(0, 1, 0, 1);
+    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
 
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
@@ -88,43 +87,43 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         final Map<QuadItem<T>, Double> distanceToCluster = new HashMap<QuadItem<T>, Double>();
         final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
-        for (QuadItem<T> candidate : mItems) {
-            if (visitedCandidates.contains(candidate)) {
-                // Candidate is already part of another cluster.
-                continue;
-            }
-
-            Bounds searchBounds = createBoundsFromSpan(candidate.getPoint(), zoomSpecificSpan);
-            Collection<QuadItem<T>> clusterItems;
-            synchronized (mQuadTree) {
-                clusterItems = mQuadTree.search(searchBounds);
-            }
-            if (clusterItems.size() == 1) {
-                // Only the current marker is in range. Just add the single item to the results.
-                results.add(candidate);
-                visitedCandidates.add(candidate);
-                distanceToCluster.put(candidate, 0d);
-                continue;
-            }
-            StaticCluster<T> cluster = new StaticCluster<T>(candidate.mClusterItem.getPosition());
-            results.add(cluster);
-
-            for (QuadItem<T> clusterItem : clusterItems) {
-                Double existingDistance = distanceToCluster.get(clusterItem);
-                double distance = distanceSquared(clusterItem.getPoint(), candidate.getPoint());
-                if (existingDistance != null) {
-                    // Item already belongs to another cluster. Check if it's closer to this cluster.
-                    if (existingDistance < distance) {
-                        continue;
-                    }
-                    // Move item to the closer cluster.
-                    itemToCluster.get(clusterItem).remove(clusterItem.mClusterItem);
+        synchronized (mQuadTree) {
+            for (QuadItem<T> candidate : mItems) {
+                if (visitedCandidates.contains(candidate)) {
+                    // Candidate is already part of another cluster.
+                    continue;
                 }
-                distanceToCluster.put(clusterItem, distance);
-                cluster.add(clusterItem.mClusterItem);
-                itemToCluster.put(clusterItem, cluster);
+
+                Bounds searchBounds = createBoundsFromSpan(candidate.getPoint(), zoomSpecificSpan);
+                Collection<QuadItem<T>> clusterItems;
+                clusterItems = mQuadTree.search(searchBounds);
+                if (clusterItems.size() == 1) {
+                    // Only the current marker is in range. Just add the single item to the results.
+                    results.add(candidate);
+                    visitedCandidates.add(candidate);
+                    distanceToCluster.put(candidate, 0d);
+                    continue;
+                }
+                StaticCluster<T> cluster = new StaticCluster<T>(candidate.mClusterItem.getPosition());
+                results.add(cluster);
+
+                for (QuadItem<T> clusterItem : clusterItems) {
+                    Double existingDistance = distanceToCluster.get(clusterItem);
+                    double distance = distanceSquared(clusterItem.getPoint(), candidate.getPoint());
+                    if (existingDistance != null) {
+                        // Item already belongs to another cluster. Check if it's closer to this cluster.
+                        if (existingDistance < distance) {
+                            continue;
+                        }
+                        // Move item to the closer cluster.
+                        itemToCluster.get(clusterItem).remove(clusterItem.mClusterItem);
+                    }
+                    distanceToCluster.put(clusterItem, distance);
+                    cluster.add(clusterItem.mClusterItem);
+                    itemToCluster.put(clusterItem, cluster);
+                }
+                visitedCandidates.addAll(clusterItems);
             }
-            visitedCandidates.addAll(clusterItems);
         }
         return results;
     }
