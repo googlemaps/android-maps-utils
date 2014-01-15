@@ -3,6 +3,7 @@ package com.google.maps.android.utils.demo;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.*;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.ClusterItem;
@@ -12,12 +13,15 @@ import java.util.Arrays;
 
 public class DistanceDemoActivity extends BaseDemoActivity
         implements ClusterManager.OnClusterItemDragListener<DistanceDemoActivity.MyMarker>,
-        ClusterManager.OnClusterItemClickListener<DistanceDemoActivity.MyMarker>{
+        ClusterManager.OnClusterItemClickListener<DistanceDemoActivity.MyMarker>,
+        GoogleMap.OnCameraChangeListener {
     private TextView mTextView;
     private MyMarker mMarkerA;
     private MyMarker mMarkerB;
     private Polyline mPolyline;
     private ClusterManager<MyMarker> mClusterManager;
+    private LatLng mCameraPosition;
+
 
     static class MyMarker implements ClusterItem {
         private final String name;
@@ -63,6 +67,9 @@ public class DistanceDemoActivity extends BaseDemoActivity
         mClusterManager = new ClusterManager(getApplicationContext(), getMap());
         mClusterManager.addItem(mMarkerA);
         mClusterManager.addItem(mMarkerB);
+        mClusterManager.addCameraChangeListeners(this);
+        mCameraPosition = getMap().getCameraPosition().target;
+
         mPolyline = getMap().addPolyline(new PolylineOptions().geodesic(true));
 
         mClusterManager.setOnItemMarkerDragListener(this);
@@ -74,7 +81,12 @@ public class DistanceDemoActivity extends BaseDemoActivity
 
     private void showDistance() {
         double distance = SphericalUtil.computeDistanceBetween(mMarkerA.getPosition(), mMarkerB.getPosition());
-        mTextView.setText(String.format("The marker %s and %s are %s apart", mMarkerA.getName(), mMarkerB.getName(), formatNumber(distance)));
+        String centerToA = "";
+        if(mCameraPosition != null){
+            double distanceToA = SphericalUtil.computeDistanceBetween(mMarkerA.getPosition(), mCameraPosition);
+            centerToA = String.format("%n %s is %s away from map center", mMarkerA.getName(),formatNumber(distanceToA));
+        }
+        mTextView.setText(String.format("The marker %s and %s are %s apart %s", mMarkerA.getName(), mMarkerB.getName(), formatNumber(distance),centerToA));
     }
 
     private void updatePolyline() {
@@ -83,15 +95,12 @@ public class DistanceDemoActivity extends BaseDemoActivity
 
     private String formatNumber(double distance) {
         String unit = "m";
-        if (distance < 1) {
-            distance *= 1000;
-            unit = "mm";
-        } else if (distance > 1000) {
+        if (distance > 1000) {
             distance /= 1000;
             unit = "km";
         }
 
-        return String.format("%4.3f%s", distance, unit);
+        return String.format("%4.1f %s", distance, unit);
     }
 
     @Override
@@ -116,5 +125,11 @@ public class DistanceDemoActivity extends BaseDemoActivity
         showDistance();
         updatePolyline();
         return true;
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        mCameraPosition = cameraPosition.target;
+        showDistance();
     }
 }
