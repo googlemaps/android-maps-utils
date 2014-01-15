@@ -8,7 +8,6 @@ import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.quadtree.PointQuadTree;
-import com.google.maps.android.quadtree.PointQuadTreeImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -259,7 +258,7 @@ public class HeatmapTileProvider implements TileProvider {
         Log.d(TAG, "getBounds: " + (end - start) + "ms");
 
         start = System.currentTimeMillis();
-        mTree = new PointQuadTreeImpl(mBounds);
+        mTree = new PointQuadTree(mBounds);
 
         // Add points to quad tree
         for (LatLngWrapper l : mData) {
