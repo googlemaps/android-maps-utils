@@ -19,6 +19,11 @@ public class HeatmapUtil {
      */
     private static final int COLOR_MAP_SIZE = 1001;
 
+
+    // Sigma is used to ensure search is inclusive of upper bounds (eg if a point
+    // is on exactly the upper bound, it should be returned)
+    static double sigma = 0.0000001;
+
     /**
      * Helper function for quadtree creation
      *
@@ -26,9 +31,6 @@ public class HeatmapUtil {
      * @return Bounds that enclose the listed LatLngWrapper points
      */
     public static Bounds getBounds(Collection<LatLngWrapper> points) {
-        // Sigma is used to ensure search is inclusive of upper bounds (eg if a point
-        // is on exactly the upper bound, it should be returned)
-        double sigma = 0.0000001;
 
         // Use an iterator, need to access any one point of the collection for starting bounds
         Iterator<LatLngWrapper> iter = points.iterator();

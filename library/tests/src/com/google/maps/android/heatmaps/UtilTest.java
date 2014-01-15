@@ -1,8 +1,11 @@
 package com.google.maps.android.heatmaps;
 
-import com.google.maps.android.heatmaps.HeatmapUtil;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.geometry.Bounds;
+
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -77,5 +80,47 @@ public class UtilTest extends TestCase {
         double[][] convolved = HeatmapUtil.convolve(grid, testKernel);
         double[][] expected = {{1.5, 2.5, 1.5}, {2.5, 4.0, 2.5}, {1.5, 2.5, 1.5}};
         assertTrue(Arrays.deepEquals(convolved, expected));
+    }
+
+    public void testGetBounds() {
+
+        /*
+        y
+        ^
+        |  3
+        |     1
+        |        2
+        ------------> x
+         */
+
+        ArrayList<LatLngWrapper> data = new ArrayList<LatLngWrapper>();
+        LatLngWrapper first = new LatLngWrapper(new LatLng(10, 20));
+        data.add(first);
+        double x1 = first.getPoint().x;
+        double y1 = first.getPoint().y;
+
+        Bounds bounds = HeatmapUtil.getBounds(data);
+        Bounds expected = new Bounds(x1, x1 + HeatmapUtil.sigma, y1, y1 + HeatmapUtil.sigma);
+
+        assertTrue(bounds.contains(expected) && expected.contains(bounds));
+
+        LatLngWrapper second = new LatLngWrapper(new LatLng(20, 30));
+        data.add(second);
+        double x2 = second.getPoint().x;
+        double y2 = second.getPoint().y;
+
+        bounds = HeatmapUtil.getBounds(data);
+        expected = new Bounds(x1, x2 + HeatmapUtil.sigma, y2, y1 + HeatmapUtil.sigma);
+
+        assertTrue(bounds.contains(expected) && expected.contains(bounds));
+
+        LatLngWrapper third = new LatLngWrapper(new LatLng(5, 10));
+        data.add(third);
+        double x3 = third.getPoint().x;
+        double y3 = third.getPoint().y;
+
+        bounds = HeatmapUtil.getBounds(data);
+        expected = new Bounds(x3, x2 + HeatmapUtil.sigma, y2, y3 + HeatmapUtil.sigma);
+        assertTrue(bounds.contains(expected) && expected.contains(bounds));
     }
 }
