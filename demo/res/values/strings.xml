@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Maps Utils Demo</string>
+    <string name="person_says_hello">Hello i am %1$s</string>
 </resources>

@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 
 public class MyItem implements ClusterItem {
-    private final LatLng mPosition;
+    private LatLng mPosition;
 
     public MyItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
@@ -14,5 +14,14 @@ public class MyItem implements ClusterItem {
     @Override
     public LatLng getPosition() {
         return mPosition;
+    }
+
+    @Override
+    public void setPosition(LatLng position) {
+        mPosition = position;
+    }
+
+    @Override
+    public void OnCreate(MarkerOptions markerOptions) {
     }
 }
