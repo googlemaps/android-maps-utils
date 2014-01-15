@@ -26,6 +26,8 @@ public class HeatmapUtil {
      * @return Bounds that enclose the listed LatLngWrapper points
      */
     public static Bounds getBounds(Collection<LatLngWrapper> points) {
+        // Sigma is used to ensure search is inclusive of upper bounds (eg if a point
+        // is on exactly the upper bound, it should be returned)
         double sigma = 0.0000001;
 
         // Use an iterator, need to access any one point of the collection for starting bounds
@@ -149,7 +151,7 @@ public class HeatmapUtil {
      *
      * @param grid     the input grid (assumed to be square)
      * @param colorMap color map (created by generateColorMap)
-     * @param max      Maximum intensity value: maps to 100$ on gradient
+     * @param max      Maximum intensity value: maps to 100% on gradient
      * @return the colorized grid in Bitmap form, with same dimensions as grid
      */
     public static Bitmap colorize(double[][] grid, int[] colorMap, double max) {
@@ -201,8 +203,8 @@ public class HeatmapUtil {
      * @param screenDim larger dimension of screen in pixels (for scale)
      * @return Approximate max value
      */
-    public static double getMaxVal(Collection<LatLngWrapper> points, Bounds bounds, int radius,
-                                   int screenDim) {
+    public static double getMaxValue(Collection<LatLngWrapper> points, Bounds bounds, int radius,
+                                     int screenDim) {
         // Approximate scale as if entire heatmap is on the screen
         // ie scale dimensions to larger of width or height (screenDim)
         double minX = bounds.minX;
@@ -255,8 +257,7 @@ public class HeatmapUtil {
         int interval = (COLOR_MAP_SIZE - 1) / (gradient.length - 1);
 
         // Go through gradient and insert into values/colors
-        int i;
-        for (i = 0; i < gradient.length; i++) {
+        for (int i = 0; i < gradient.length; i++) {
             values[i] = i * interval;
             colors[i] = gradient[i];
         }
@@ -264,7 +265,7 @@ public class HeatmapUtil {
         int[] colorMap = new int[COLOR_MAP_SIZE];
         // lowColorStop = closest color stop (value from gradient) below current position
         int lowColorStop = 0;
-        for (i = 0; i < COLOR_MAP_SIZE; i++) {
+        for (int i = 0; i < COLOR_MAP_SIZE; i++) {
             // if i is larger than next color stop value, increment to next color stop
             // Check that it is safe to access lowColorStop + 1 first!
             // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice
@@ -275,9 +276,10 @@ public class HeatmapUtil {
             if (lowColorStop < values.length - 1) {
                 // Check that it is safe to access lowColorStop + 1
                 if (i > values[lowColorStop + 1]) lowColorStop++;
-                colorMap[i] = interpolateColor(interval * lowColorStop, i,
-                        interval * (lowColorStop + 1),
-                        colors[lowColorStop], colors[lowColorStop + 1]);
+
+                float ratio = (i - interval * lowColorStop) / ((float) interval);
+                colorMap[i] = interpolateColor(colors[lowColorStop], colors[lowColorStop + 1],
+                        ratio);
             }
             // above highest color stop: use that
             else {
@@ -298,19 +300,12 @@ public class HeatmapUtil {
 
     /**
      * Helper function for creation of color map - interpolates between given colors
-     *
-     * @param x1     First color "coordinate"
-     * @param x2     Middle color "coordinate" - interpolating to this point
-     * @param x3     Last color "coordinate"
-     * @param color1 Color associated with x1
-     * @param color2 Color associated with x3
+     * @param color1 First color
+     * @param color2 Second color
+     * @param ratio Between 0 to 1. Fraction of the distance between color1 and color2
      * @return Color associated with x2
      */
-    private static int interpolateColor(double x1, double x2, double x3, int color1, int color2) {
-        // no need to interpolate
-        if (x1 == x3) return color1;
-        // interpolate on R, G, B and A
-        double ratio = (x2 - x1) / (double) (x3 - x1);
+    private static int interpolateColor(int color1, int color2, float ratio) {
 
         // Interpolate using calculated ratio
         double red = (Color.red(color2) - Color.red(color1)) * ratio + Color.red(color1);
