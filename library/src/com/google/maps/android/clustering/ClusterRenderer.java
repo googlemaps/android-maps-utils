@@ -1,9 +1,7 @@
-package com.google.maps.android.clustering.view;
+package com.google.maps.android.clustering;
 
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Set;
 
@@ -25,4 +23,6 @@ public interface ClusterRenderer<T extends ClusterItem> {
     void onClusterRendered(Cluster<T> cluster, Marker marker);
 
     void onClusterItemRendered(T clusterItem, Marker marker);
+
+    boolean shouldRenderAsCluster(Cluster cluster);
 }

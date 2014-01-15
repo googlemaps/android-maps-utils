@@ -8,8 +8,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
-import com.google.maps.android.clustering.view.ClusterRenderer;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.Collection;
 import java.util.Set;
@@ -30,7 +28,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     private Algorithm<T> mAlgorithm;
     private final ReadWriteLock mAlgorithmLock = new ReentrantReadWriteLock();
-    private ClusterRenderer<T> mRenderer;
+    private final ClusterRendereEngine<T> mRendererEngine;
 
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
@@ -48,24 +46,22 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     public ClusterManager(Context context, GoogleMap map) {
         mMap = map;
-        mMarkerManager = new MarkerManager(map);
-        mRenderer = new DefaultClusterRenderer<T>(context, map, this);
+        mMarkerManager = new MarkerManager();
+        mRendererEngine = new ClusterRendereEngine<T>(context, map, this);
         mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
         mMapFeedbackController = new MapFeedbackController();
         mCameraChangeListeners = new CopyOnWriteArraySet<GoogleMap.OnCameraChangeListener>();
         mMap.setOnCameraChangeListener(this);
-//        mMap.setOnMarkerClickListener(mMapFeedbackController);
     }
 
-    public MarkerManager getMarkerManager() {
+    MarkerManager getMarkerManager() {
         return mMarkerManager;
     }
 
-    public void setRenderer(ClusterRenderer<T> view) {
+    public void setCustomRenderer(ClusterRenderer<T> renderer) {
         mMarkerManager.clear();
-        mRenderer = view;
-
+        mRendererEngine.setCustomClusterRenderer(renderer);
         cluster();
     }
 
@@ -176,7 +172,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
         @Override
         protected void onPostExecute(Set<? extends Cluster<T>> clusters) {
-            mRenderer.onClustersChanged(clusters);
+            mRendererEngine.onClustersChanged(clusters);
         }
     }
 
@@ -387,16 +383,4 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         void onInfoWindowClick(Cluster<T> cluster, Marker marker);
     }
 
-    public static interface MarkerStorage<T  extends ClusterItem> {
-        void putItem(T item, Marker marker);
-        void putCluster(Cluster<T> cluster, Marker marker);
-
-        Marker getMarkerFor(T item);
-        Marker getMarkerFor(Cluster<T> cluster);
-
-        T getItemFor(Marker marker);
-        Cluster<T> getClusterFor(Marker marker);
-
-        void remove(Marker marker);
-    }
 }

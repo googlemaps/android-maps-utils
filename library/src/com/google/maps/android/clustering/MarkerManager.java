@@ -1,10 +1,9 @@
 package com.google.maps.android.clustering;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -15,91 +14,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * All marker operations (adds and removes) should occur via its collection class. That is, don't
  * add a marker via a collection, then remove it via Marker.remove()
  */
-public class MarkerManager<T extends ClusterItem> implements GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
-    private final GoogleMap mMap;
+class MarkerManager<T extends ClusterItem>  {
 
     private final MarkerCache<T> itemMarkerCache = new MarkerCache<T>();
     private final MarkerCache<Cluster<T>> clusterMarkerCache = new MarkerCache<Cluster<T>>();
 
-    private final Map<String, Collection> mNamedCollections = new HashMap<String, Collection>();
-    private final Map<Marker, Collection> mAllMarkers = new HashMap<Marker, Collection>();
-
-
-
-    public MarkerManager(GoogleMap map) {
-        this.mMap = map;
-    }
-
-    /**
-     * Gets a named collection that was created by {@link #newCollection(String)}
-     * @param id the unique id for this collection.
-     */
-    public Collection getCollection(String id) {
-        return mNamedCollections.get(id);
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerClickListener != null) {
-            return collection.mMarkerClickListener.onMarkerClick(marker);
-        }
-        return false;
-    }
-
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener.onMarkerDragStart(marker);
-        }
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener.onMarkerDrag(marker);
-        }
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener.onMarkerDragEnd(marker);
-        }
-    }
-
-    public class Collection {
-        private final Set<Marker> mMarkers = new HashSet<Marker>();
-        private GoogleMap.OnMarkerClickListener mMarkerClickListener;
-        private GoogleMap.OnMarkerDragListener mMarkerDragListener;
-
-        public Collection() {
-        }
-
-
-        public void clear() {
-            for (Marker marker : mMarkers) {
-                marker.remove();
-                mAllMarkers.remove(marker);
-            }
-            mMarkers.clear();
-        }
-
-        public java.util.Collection<Marker> getMarkers() {
-            return Collections.unmodifiableCollection(mMarkers);
-        }
-
-        public void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener markerClickListener) {
-            mMarkerClickListener = markerClickListener;
-        }
-
-        public void setOnMarkerDragListener(GoogleMap.OnMarkerDragListener markerDragListener) {
-            mMarkerDragListener = markerDragListener;
-        }
-
+    MarkerManager() {
     }
 
     public void clear() {
@@ -112,16 +32,12 @@ public class MarkerManager<T extends ClusterItem> implements GoogleMap.OnMarkerC
         }
     }
 
-    public Marker putItem(T item, MarkerOptions opts) {
-        final Marker marker = mMap.addMarker(opts);
+    public void putItem(T item, Marker marker) {
         itemMarkerCache.put(item, marker);
-        return marker;
     }
 
-    public Marker putCluster(Cluster<T> cluster, MarkerOptions opts) {
-        final Marker marker = mMap.addMarker(opts);
+    public void putCluster(Cluster<T> cluster, Marker marker) {
         clusterMarkerCache.put(cluster, marker);
-        return marker;
     }
 
     public Marker getMarkerFor(T item) {
