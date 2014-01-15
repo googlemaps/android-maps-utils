@@ -31,8 +31,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Blank tile
      */
-    private static final Tile mBlankTile = convertBitmap(Bitmap.createBitmap(TILE_DIM, TILE_DIM,
-            Bitmap.Config.ARGB_8888));
+    private static final Tile mBlankTile = TileProvider.NO_TILE;
 
     private static final String TAG = HeatmapTileProvider.class.getName();
 
@@ -129,7 +128,7 @@ public class HeatmapTileProvider implements TileProvider {
          *            Must be within minimum and maximum values as found in HeatmapConstants.
          * @return updated builder object
          */
-        public Builder radius(int val) throws IllegalArgumentException {
+        public Builder radius(int val) {
             radius = val;
             // Check that radius is within bounds.
             if (radius < HeatmapConstants.MIN_RADIUS || radius > HeatmapConstants.MAX_RADIUS) {
@@ -148,7 +147,7 @@ public class HeatmapTileProvider implements TileProvider {
          *            best results.
          * @return updated builder object
          */
-        public Builder gradient(int[] val) throws IllegalArgumentException {
+        public Builder gradient(int[] val) {
             gradient = val;
             // Check that gradient is not empty
             if (gradient.length == 0) {
@@ -163,7 +162,7 @@ public class HeatmapTileProvider implements TileProvider {
          * @param val Opacity of the entire heatmap in range [0, 1]
          * @return updated builder object
          */
-        public Builder opacity(double val) throws IllegalArgumentException {
+        public Builder opacity(double val) {
             opacity = val;
             // Check that opacity is in range
             if (opacity < 0 || opacity > 1) {
@@ -185,7 +184,7 @@ public class HeatmapTileProvider implements TileProvider {
          *            Must be greater than or equal to min
          * @return updated builder object
          */
-        public Builder zoom(int min, int max) throws IllegalArgumentException {
+        public Builder zoom(int min, int max) {
             minZoom = min;
             maxZoom = max;
             // Check min and max are OK
@@ -237,7 +236,7 @@ public class HeatmapTileProvider implements TileProvider {
      *
      * @param points Points to use in the heatmap.
      */
-    public void setData(Collection<LatLngWrapper> points) throws IllegalArgumentException {
+    public void setData(Collection<LatLngWrapper> points) {
         // Change point set
         mData = points;
 
