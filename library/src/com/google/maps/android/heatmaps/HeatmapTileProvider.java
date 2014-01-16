@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
@@ -20,7 +21,7 @@ import java.util.Collection;
  */
 public class HeatmapTileProvider implements TileProvider {
     /**
-     * Tile dimension. Package access - LatLngWrapper
+     * Tile dimension. Package access - WeightedLatLng
      */
     static final int TILE_DIM = 512;
 
@@ -98,7 +99,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Collection of all the data.
      */
-    private Collection<LatLngWrapper> mData;
+    private Collection<WeightedLatLng> mData;
 
     /**
      * Bounds of the quad tree
@@ -139,8 +140,8 @@ public class HeatmapTileProvider implements TileProvider {
      * Builder class for the HeatmapTileProvider.
      */
     public static class Builder {
-        // Required parameters
-        private final Collection<LatLngWrapper> data;
+        // Required parameters - not final, as there are 2 ways to set it
+        private Collection<WeightedLatLng> data;
 
         // Optional, initialised to default values
         private int radius = DEFAULT_HEATMAP_RADIUS;
@@ -148,20 +149,42 @@ public class HeatmapTileProvider implements TileProvider {
         private double opacity = DEFAULT_HEATMAP_OPACITY;
 
         /**
-         * Constructor for builder, which contains the required parameters for a heatmap.
+         * Constructor for builder.
          *
-         * @param points Collection of all LatLngWrappers to put into quadtree.
-         *               Should be non-empty.
+         * No required parameters here, but user must call either data() or weightedData().
          */
-        public Builder(Collection<LatLngWrapper> points)
-                throws IllegalArgumentException {
-            this.data = points;
+        public Builder() {
+
+        }
+
+        /**
+         * Setter for data in builder. Must call this or weightedData
+         * @param val Collection of LatLngs to put into quadtree.
+         *               Should be non-empty.
+         * @return updated builder object
+         */
+        public Builder data(Collection<LatLng> val) {
+            return weightedData(wrapData(val));
+        }
+
+
+        /**
+         * Setter for data in builder. Must call this or data
+         *
+         * @param val Collection of WeightedLatLngs to put into quadtree.
+         *            Should be non-empty.
+         * @return updated builder object
+         */
+        public Builder weightedData(Collection<WeightedLatLng> val) {
+            this.data = val;
 
             // Check that points is non empty
             if (this.data.isEmpty()) {
                 throw new IllegalArgumentException("No input points.");
             }
+            return this;
         }
+
 
         /**
          * Setter for radius in builder
@@ -215,11 +238,17 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Call when all desired options have been set.
+         * Note: you must set data using data or weightedData before this!
          *
          * @return HeatmapTileProvider created with desired options.
          */
         public HeatmapTileProvider build() {
-            // Check
+            // Check if data or weightedData has been called
+            if (data == null) {
+                throw new IllegalStateException("No input data: you must use either .data or " +
+                        ".weightedData before building");
+            }
+
             return new HeatmapTileProvider(this);
         }
     }
@@ -239,17 +268,17 @@ public class HeatmapTileProvider implements TileProvider {
         setGradient(mGradient);
 
         // Set the data
-        setData(mData);
+        setWeightedData(mData);
     }
 
     /**
-     * Changes the dataset the heatmap is portraying.
+     * Changes the dataset the heatmap is portraying. Weighted.
      *
-     * @param points Points to use in the heatmap.
+     * @param data Data set of points to use in the heatmap, as LatLngs.
      */
-    public void setData(Collection<LatLngWrapper> points) {
+    public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
-        mData = points;
+        mData = data;
 
         // Check point set is OK
         if (mData.isEmpty()) {
@@ -271,7 +300,7 @@ public class HeatmapTileProvider implements TileProvider {
         mTree = new PointQuadTree(mBounds);
 
         // Add points to quad tree
-        for (LatLngWrapper l : mData) {
+        for (WeightedLatLng l : mData) {
             mTree.add(l);
         }
         end = System.currentTimeMillis();
@@ -284,6 +313,34 @@ public class HeatmapTileProvider implements TileProvider {
         mMaxIntensity = getMaxIntensities(mRadius);
         end = System.currentTimeMillis();
         Log.d(TAG, "getMaxIntensities: " + (end - start) + "ms");
+    }
+
+    /**
+     * Changes the dataset the heatmap is portraying. Unweighted.
+     *
+     * @param data Data set of points to use in the heatmap, as LatLngs.
+     */
+
+    public void setData(Collection<LatLng> data) {
+        // Turn them into LatLngs and delegate.
+        setWeightedData(wrapData(data));
+    }
+
+    /**
+     * Helper function - wraps LatLngs into WeightedLatLngs.
+     *
+     * @param data Data to wrap (LatLng)
+     * @return Data, in WeightedLatLng form
+     */
+    private static Collection<WeightedLatLng> wrapData(Collection<LatLng> data) {
+        // Use an ArrayList as it is a nice collection
+        ArrayList<WeightedLatLng> weightedData = new ArrayList<WeightedLatLng>();
+
+        for (LatLng l : data) {
+            weightedData.add(new WeightedLatLng(l));
+        }
+
+        return weightedData;
     }
 
     /**
@@ -332,7 +389,7 @@ public class HeatmapTileProvider implements TileProvider {
         // hence, the else
         // Note: Tile must remain square, so cant optimise by editing bounds
         double xOffset = 0;
-        Collection<LatLngWrapper> wrappedPoints = new ArrayList<LatLngWrapper>();
+        Collection<WeightedLatLng> wrappedPoints = new ArrayList<WeightedLatLng>();
         if (minX < 0) {
             // Need to consider "negative" points
             // (minX to 0) ->  (512+minX to 512) ie +512
@@ -363,14 +420,14 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Search for all points within tile bounds
         long start = System.currentTimeMillis();
-        Collection<LatLngWrapper> points = mTree.search(tileBounds);
+        Collection<WeightedLatLng> points = mTree.search(tileBounds);
         long end = System.currentTimeMillis();
         Log.d(TAG, "getTile Search (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // Add wrapped (wraparound) points if necessary
         if (!wrappedPoints.isEmpty()) {
-            for (LatLngWrapper l : wrappedPoints) {
-                points.add(new LatLngWrapper(l, xOffset));
+            for (WeightedLatLng l : wrappedPoints) {
+                points.add(new WeightedLatLng(l, xOffset));
             }
         }
 
@@ -382,7 +439,7 @@ public class HeatmapTileProvider implements TileProvider {
         // Quantize points
         start = System.currentTimeMillis();
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
-        for (LatLngWrapper w : points) {
+        for (WeightedLatLng w : points) {
             Point p = w.getPoint();
             int bucketX = (int) ((p.x - minX) / bucketWidth);
             int bucketY = (int) ((p.y - minY) / bucketWidth);

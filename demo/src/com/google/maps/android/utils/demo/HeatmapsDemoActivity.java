@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.google.maps.android.heatmaps.LatLngWrapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,12 +72,12 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
 
     /**
-     * Maps name of data set to data (list of LatLngWrappers)
-     * Each LatLngWrapper contains a LatLng as well as corresponding intensity value (which
+     * Maps name of data set to data (list of WeightedLatLngs)
+     * Each WeightedLatLng contains a LatLng as well as corresponding intensity value (which
      * represents "importance" of this LatLng) - see the class for more details
      */
-    private HashMap<String, ArrayList<LatLngWrapper>> mLists =
-            new HashMap<String, ArrayList<LatLngWrapper>>();
+    private HashMap<String, ArrayList<LatLng>> mLists =
+            new HashMap<String, ArrayList<LatLng>>();
 
     @Override
     protected int getLayoutId() {
@@ -105,15 +104,15 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
 
         // Make the handler deal with the map
-        // Input: list of LatLngWrappers, minimum and maximum zoom levels to calculate custom
+        // Input: list of WeightedLatLngs, minimum and maximum zoom levels to calculate custom
         // intensity from, and the map to draw the heatmap on
         // radius, gradient and opacity not specified, so default are used
         try {
-            mProvider = new HeatmapTileProvider.Builder(
+            mProvider = new HeatmapTileProvider.Builder().data(
                     mLists.get(getString(R.string.police_stations))).build();
             mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
         } catch (IllegalArgumentException e) {
-            Log.e("IllegalArgumentException in Builder", e.getMessage());
+            Log.e(TAG, "IllegalArgumentException in Builder: " + e.getMessage());
         }
     }
 
@@ -164,8 +163,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     // Datasets:
     // Police Stations: all police stations across Australia from http://poidb.com
     // Red Lights: all red lights across Australia from http://poidb.com
-    private ArrayList<LatLngWrapper> readItems(int resource) throws JSONException {
-        ArrayList<LatLngWrapper> list = new ArrayList<LatLngWrapper>();
+    private ArrayList<LatLng> readItems(int resource) throws JSONException {
+        ArrayList<LatLng> list = new ArrayList<LatLng>();
         long start = System.currentTimeMillis();
         InputStream inputStream = getResources().openRawResource(resource);
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
@@ -174,7 +173,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             JSONObject object = array.getJSONObject(i);
             double lat = object.getDouble("lat");
             double lng = object.getDouble("lng");
-            list.add(new LatLngWrapper(new LatLng(lat, lng)));
+            list.add(new LatLng(lat, lng));
         }
 
         long end = System.currentTimeMillis();

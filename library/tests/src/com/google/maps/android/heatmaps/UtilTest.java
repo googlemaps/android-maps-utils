@@ -93,8 +93,8 @@ public class UtilTest extends TestCase {
         ------------> x
          */
 
-        ArrayList<LatLngWrapper> data = new ArrayList<LatLngWrapper>();
-        LatLngWrapper first = new LatLngWrapper(new LatLng(10, 20));
+        ArrayList<WeightedLatLng> data = new ArrayList<WeightedLatLng>();
+        WeightedLatLng first = new WeightedLatLng(new LatLng(10, 20));
         data.add(first);
         double x1 = first.getPoint().x;
         double y1 = first.getPoint().y;
@@ -104,7 +104,7 @@ public class UtilTest extends TestCase {
 
         assertTrue(bounds.contains(expected) && expected.contains(bounds));
 
-        LatLngWrapper second = new LatLngWrapper(new LatLng(20, 30));
+        WeightedLatLng second = new WeightedLatLng(new LatLng(20, 30));
         data.add(second);
         double x2 = second.getPoint().x;
         double y2 = second.getPoint().y;
@@ -114,7 +114,7 @@ public class UtilTest extends TestCase {
 
         assertTrue(bounds.contains(expected) && expected.contains(bounds));
 
-        LatLngWrapper third = new LatLngWrapper(new LatLng(5, 10));
+        WeightedLatLng third = new WeightedLatLng(new LatLng(5, 10));
         data.add(third);
         double x3 = third.getPoint().x;
         double y3 = third.getPoint().y;

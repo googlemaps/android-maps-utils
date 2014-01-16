@@ -10,7 +10,7 @@ import com.google.maps.android.quadtree.PointQuadTree;
  * Created from a LatLng and optional intensity: point coordinates of the LatLng and the intensity
  * value can be accessed from it later.
  */
-public class LatLngWrapper implements PointQuadTree.Item {
+public class WeightedLatLng implements PointQuadTree.Item {
 
     /**
      * Default intensity to use when intensity not specified
@@ -39,7 +39,7 @@ public class LatLngWrapper implements PointQuadTree.Item {
      *                  Intensity is additive: having two points of intensity 10 at the same
      *                  location is identical to having one of intensity 20.
      */
-    public LatLngWrapper(LatLng latLng, double intensity) {
+    public WeightedLatLng(LatLng latLng, double intensity) {
         mPoint = mProjection.toPoint(latLng);
         if (intensity >= 0) mIntensity = intensity;
         else mIntensity = DEFAULT_INTENSITY;
@@ -50,15 +50,15 @@ public class LatLngWrapper implements PointQuadTree.Item {
      *
      * @param latLng LatLng to add to wrapper
      */
-    public LatLngWrapper(LatLng latLng) {
+    public WeightedLatLng(LatLng latLng) {
         this(latLng, DEFAULT_INTENSITY);
     }
 
     /**
-     * Constructor for use in TileProvider that adds to the x coordinate of another LatLngWapper
+     * Constructor for use in TileProvider that adds to the x coordinate of another WeightedLatLng
      * Use in TileProvider only (for wraparound tiles)
      */
-    LatLngWrapper(LatLngWrapper w, double xOffset) {
+    WeightedLatLng(WeightedLatLng w, double xOffset) {
         mPoint = new Point(w.getPoint().x + xOffset, w.getPoint().y);
         mIntensity = w.getIntensity();
     }

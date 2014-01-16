@@ -27,15 +27,15 @@ public class HeatmapUtil {
     /**
      * Helper function for quadtree creation
      *
-     * @param points Collection of LatLngWrapper to calculate bounds for
-     * @return Bounds that enclose the listed LatLngWrapper points
+     * @param points Collection of WeightedLatLng to calculate bounds for
+     * @return Bounds that enclose the listed WeightedLatLng points
      */
-    public static Bounds getBounds(Collection<LatLngWrapper> points) {
+    public static Bounds getBounds(Collection<WeightedLatLng> points) {
 
         // Use an iterator, need to access any one point of the collection for starting bounds
-        Iterator<LatLngWrapper> iter = points.iterator();
+        Iterator<WeightedLatLng> iter = points.iterator();
 
-        LatLngWrapper first = iter.next();
+        WeightedLatLng first = iter.next();
 
         double minX = first.getPoint().x;
         double maxX = first.getPoint().x + sigma;
@@ -43,7 +43,7 @@ public class HeatmapUtil {
         double maxY = first.getPoint().y + sigma;
 
         while (iter.hasNext()) {
-            LatLngWrapper l = iter.next();
+            WeightedLatLng l = iter.next();
             double x = l.getPoint().x;
             double y = l.getPoint().y;
             // Extend bounds if necessary
@@ -205,7 +205,7 @@ public class HeatmapUtil {
      * @param screenDim larger dimension of screen in pixels (for scale)
      * @return Approximate max value
      */
-    public static double getMaxValue(Collection<LatLngWrapper> points, Bounds bounds, int radius,
+    public static double getMaxValue(Collection<WeightedLatLng> points, Bounds bounds, int radius,
                                      int screenDim) {
         // Approximate scale as if entire heatmap is on the screen
         // ie scale dimensions to larger of width or height (screenDim)
@@ -226,7 +226,7 @@ public class HeatmapUtil {
         // Assign into buckets + find max value as we go along
         double x, y;
         double max = 0;
-        for (LatLngWrapper l : points) {
+        for (WeightedLatLng l : points) {
             x = l.getPoint().x;
             y = l.getPoint().y;
 
