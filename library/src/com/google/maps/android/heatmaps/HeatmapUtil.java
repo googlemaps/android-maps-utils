@@ -309,13 +309,27 @@ public class HeatmapUtil {
      */
     private static int interpolateColor(int color1, int color2, float ratio) {
 
-        // Interpolate using calculated ratio
-        double red = (Color.red(color2) - Color.red(color1)) * ratio + Color.red(color1);
-        double green = (Color.green(color2) - Color.green(color1)) * ratio + Color.green(color1);
-        double blue = (Color.blue(color2) - Color.blue(color1)) * ratio + Color.blue(color1);
-        double alpha = (Color.alpha(color2) - Color.alpha(color1)) * ratio + Color.alpha(color1);
+        int alpha = (int) ((Color.alpha(color2) - Color.alpha(color1)) * ratio + Color.alpha(color1));
 
-        return Color.argb((int) alpha, (int) red, (int) green, (int) blue);
+        float[] hsv1 = new float[3];
+        Color.RGBToHSV(Color.red(color1), Color.green(color1), Color.blue(color1), hsv1);
+        float[] hsv2 = new float[3];
+        Color.RGBToHSV(Color.red(color2), Color.green(color2), Color.blue(color2), hsv2);
+
+        // adjust so that the shortest path on the color wheel will be taken
+        if (hsv1[0] - hsv2[0] > 180) {
+            hsv2[0] += 360;
+        } else if (hsv2[0] - hsv1[0] > 180) {
+            hsv1[0] += 360;
+        }
+
+        // Interpolate using calculated ratio
+        float[] result = new float[3];
+        for (int i = 0; i < 3; i++) {
+            result[i] = (hsv2[i] - hsv1[i]) * (ratio) + hsv1[i];
+        }
+
+        return Color.HSVToColor(alpha, result);
     }
 
 
