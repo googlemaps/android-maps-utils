@@ -24,7 +24,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraChangeListener}</li>
  * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
-public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener {
+public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = ClusterManager.class.getName();
 
     private final MarkerManager mMarkerManager;
@@ -41,6 +41,8 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private final ReadWriteLock mClusterTaskLock = new ReentrantReadWriteLock();
 
     private OnClusterItemClickListener<T> mOnClusterItemClickListener;
+    private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
+    private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
 
     public ClusterManager(Context context, GoogleMap map) {
@@ -78,7 +80,9 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mRenderer = view;
         mRenderer.onAdd();
         mRenderer.setOnClusterClickListener(mOnClusterClickListener);
+        mRenderer.setOnClusterInfoWindowClickListener(mOnClusterInfoWindowClickListener);
         mRenderer.setOnClusterItemClickListener(mOnClusterItemClickListener);
+        mRenderer.setOnClusterItemInfoWindowClickListener(mOnClusterItemInfoWindowClickListener);
         cluster();
     }
 
@@ -173,6 +177,11 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         return getMarkerManager().onMarkerClick(marker);
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        getMarkerManager().onInfoWindowClick(marker);
+    }
+
     /**
      * Runs the clustering algorithm in a background thread, then re-paints when results come back.
      */
@@ -203,12 +212,30 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
+     * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
+     * the ClusterManager must be added as a info window click listener to the map.
+     */
+    public void setOnClusterInfoWindowClickListener(OnClusterInfoWindowClickListener<T> listener) {
+        mOnClusterInfoWindowClickListener = listener;
+        mRenderer.setOnClusterInfoWindowClickListener(listener);
+    }
+
+    /**
      * Sets a callback that's invoked when an individual ClusterItem is tapped. Note: For this
      * listener to function, the ClusterManager must be added as a click listener to the map.
      */
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
         mOnClusterItemClickListener = listener;
         mRenderer.setOnClusterItemClickListener(listener);
+    }
+
+    /**
+     * Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped. Note: For this
+     * listener to function, the ClusterManager must be added as a info window click listener to the map.
+     */
+    public void setOnClusterItemInfoWindowClickListener(OnClusterItemInfoWindowClickListener<T> listener) {
+        mOnClusterItemInfoWindowClickListener = listener;
+        mRenderer.setOnClusterItemInfoWindowClickListener(listener);
     }
 
     /**
@@ -219,9 +246,23 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
+     * Called when a Cluster's Info Window is clicked.
+     */
+    public interface OnClusterInfoWindowClickListener<T extends ClusterItem> {
+        public void onClusterInfoWindowClick(Cluster<T> cluster);
+    }
+
+    /**
      * Called when an individual ClusterItem is clicked.
      */
     public interface OnClusterItemClickListener<T extends ClusterItem> {
         public boolean onClusterItemClick(T item);
+    }
+
+    /**
+     * Called when an individual ClusterItem's Info Window is clicked.
+     */
+    public interface OnClusterItemInfoWindowClickListener<T extends ClusterItem> {
+        public void onClusterItemInfoWindowClick(T item);
     }
 }

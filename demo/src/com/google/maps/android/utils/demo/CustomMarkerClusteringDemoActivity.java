@@ -24,7 +24,7 @@ import java.util.Random;
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
  */
-public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person> {
+public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
     private ClusterManager<Person> mClusterManager;
     private Random mRandom = new Random(1984);
 
@@ -102,9 +102,19 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
     }
 
     @Override
+    public void onClusterInfoWindowClick(Cluster<Person> cluster) {
+        // Does nothing, but you could go to a list of the users.
+    }
+
+    @Override
     public boolean onClusterItemClick(Person item) {
         // Does nothing, but you could go into the user's profile page, for example.
         return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(Person item) {
+        // Does nothing, but you could go into the user's profile page, for example.
     }
 
     @Override
@@ -115,8 +125,11 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         mClusterManager.setRenderer(new PersonRenderer());
         getMap().setOnCameraChangeListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);
+        getMap().setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
 
         addItems();
         mClusterManager.cluster();
