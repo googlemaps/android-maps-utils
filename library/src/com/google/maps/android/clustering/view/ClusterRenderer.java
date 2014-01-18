@@ -19,7 +19,11 @@ public interface ClusterRenderer<T extends ClusterItem> {
 
     void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener);
 
+    void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<T> listener);
+
     void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
+
+    void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener);
 
     /**
      * Called when the view is added.
