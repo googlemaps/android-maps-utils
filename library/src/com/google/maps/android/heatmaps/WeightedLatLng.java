@@ -54,15 +54,6 @@ public class WeightedLatLng implements PointQuadTree.Item {
         this(latLng, DEFAULT_INTENSITY);
     }
 
-    /**
-     * Constructor for use in TileProvider that adds to the x coordinate of another WeightedLatLng
-     * Use in TileProvider only (for wraparound tiles)
-     */
-    WeightedLatLng(WeightedLatLng w, double xOffset) {
-        mPoint = new Point(w.getPoint().x + xOffset, w.getPoint().y);
-        mIntensity = w.getIntensity();
-    }
-
     public Point getPoint() {
         return mPoint;
     }

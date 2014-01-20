@@ -441,13 +441,6 @@ public class HeatmapTileProvider implements TileProvider {
         long end = System.currentTimeMillis();
         Log.d(TAG, "getTile Search (" + x + "," + y + ") : " + (end - start) + "ms");
 
-        // Add wrapped (wraparound) points if necessary
-        if (!wrappedPoints.isEmpty()) {
-            for (WeightedLatLng l : wrappedPoints) {
-                points.add(new WeightedLatLng(l, xOffset));
-            }
-        }
-
         // If no points, return blank tile
         if (points.isEmpty()) {
             return mBlankTile;
@@ -462,6 +455,14 @@ public class HeatmapTileProvider implements TileProvider {
             int bucketY = (int) ((p.y - minY) / bucketWidth);
             intensity[bucketX][bucketY] += w.getIntensity();
         }
+        // Quantize wraparound points (taking xOffset into account)
+        for (WeightedLatLng w : wrappedPoints) {
+            Point p = w.getPoint();
+            int bucketX = (int) ((p.x + xOffset - minX) / bucketWidth);
+            int bucketY = (int) ((p.y - minY) / bucketWidth);
+            intensity[bucketX][bucketY] += w.getIntensity();
+        }
+
         end = System.currentTimeMillis();
         Log.d(TAG, "getTile Bucketing (" + x + "," + y + ") : " + (end - start) + "ms");
 
