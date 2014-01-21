@@ -630,7 +630,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Need to convolve every point (including those outside of non-padded area)
         // but only need to add to points within non-padded area
-        int x, y, x2, xUpperLimit;
+        int x, y, x2, xUpperLimit, initial;
         double val;
         for (x = 0; x < dimOld; x++) {
             for (y = 0; y < dimOld; y++) {
@@ -640,8 +640,10 @@ public class HeatmapTileProvider implements TileProvider {
                 if (val != 0) {
                     // need to "apply" convolution from that point to every point in
                     // (max(lowerLimit, x - radius), y) to (min(upperLimit, x + radius), y)
-                    xUpperLimit = Math.min(upperLimit, x + radius) + 1;
-                    for (x2 = Math.max(lowerLimit, x - radius); x2 < xUpperLimit; x2++) {
+                    xUpperLimit = ((upperLimit < x + radius) ? upperLimit : x + radius) + 1;
+                    // Replace Math.max
+                    initial = (lowerLimit > x - radius) ? lowerLimit : x - radius;
+                    for (x2 = initial; x2 < xUpperLimit; x2++) {
                         // multiplier for x2 = x - radius is kernel[0]
                         // x2 = x + radius is kernel[radius * 2]
                         // so multiplier for x2 in general is kernel[x2 - (x - radius)]
@@ -668,8 +670,10 @@ public class HeatmapTileProvider implements TileProvider {
                     // need to "apply" convolution from that point to every point in
                     // (x, max(lowerLimit, y - radius) to (x, min(upperLimit, y + radius))
                     // Dont care about
-                    yUpperLimit = Math.min(upperLimit, y + radius) + 1;
-                    for (y2 = Math.max(lowerLimit, y - radius); y2 < yUpperLimit; y2++) {
+                    yUpperLimit = ((upperLimit < y + radius) ? upperLimit : y + radius) + 1;
+                    // replace math.max
+                    initial = (lowerLimit > y - radius) ? lowerLimit : y - radius;
+                    for (y2 = initial; y2 < yUpperLimit; y2++) {
                         // Similar logic to above
                         // subtract, as adding to a smaller grid
                         outputGrid[x - radius][y2 - radius] += val * kernel[y2 - (y - radius)];
