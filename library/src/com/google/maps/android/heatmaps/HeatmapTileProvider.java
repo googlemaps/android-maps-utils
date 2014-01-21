@@ -478,9 +478,10 @@ public class HeatmapTileProvider implements TileProvider {
         long endTime = System.currentTimeMillis();
         Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (endTime - start) + "ms");
 
+        Tile tile = convertBitmap(bitmap);
         Log.d(TAG, "getTile Total (" + x + "," + y + ") : " + (endTime - startTime) + "ms, Points: " + points.size() + ", Zoom: " + zoom);
 
-        return convertBitmap(bitmap);
+        return tile;
     }
 
     /**
