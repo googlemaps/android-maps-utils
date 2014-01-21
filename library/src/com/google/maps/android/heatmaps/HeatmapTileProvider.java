@@ -33,19 +33,19 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Default radius for convolution
      */
-    public static final int DEFAULT_HEATMAP_RADIUS = 20;
+    public static final int DEFAULT_RADIUS = 20;
 
     /**
      * Default opacity of heatmap overlay
      */
-    public static final double DEFAULT_HEATMAP_OPACITY = 0.7;
+    public static final double DEFAULT_OPACITY = 0.7;
 
     /**
      * Default gradient for heatmap.
      * Copied from Javascript version.
      * Array of colors, in int form.
      */
-    public static final int[] DEFAULT_HEATMAP_GRADIENT = {
+    public static final int[] DEFAULT_GRADIENT = {
             //a, r, g, b / r, g, b
             Color.argb(0, 102, 255, 0),  // green (invisible)
             Color.argb(255 / 3 * 2, 102, 255, 0),  // 2/3rds invisible
@@ -160,9 +160,9 @@ public class HeatmapTileProvider implements TileProvider {
         private Collection<WeightedLatLng> data;
 
         // Optional, initialised to default values
-        private int radius = DEFAULT_HEATMAP_RADIUS;
-        private int[] gradient = DEFAULT_HEATMAP_GRADIENT;
-        private double opacity = DEFAULT_HEATMAP_OPACITY;
+        private int radius = DEFAULT_RADIUS;
+        private int[] gradient = DEFAULT_GRADIENT;
+        private double opacity = DEFAULT_OPACITY;
 
         /**
          * Constructor for builder.

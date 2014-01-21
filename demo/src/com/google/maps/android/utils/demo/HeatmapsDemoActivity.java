@@ -107,20 +107,16 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         // Input: list of WeightedLatLngs, minimum and maximum zoom levels to calculate custom
         // intensity from, and the map to draw the heatmap on
         // radius, gradient and opacity not specified, so default are used
-        try {
-            mProvider = new HeatmapTileProvider.Builder().data(
-                    mLists.get(getString(R.string.police_stations))).build();
-            mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "IllegalArgumentException in Builder: " + e.getMessage());
-        }
+        mProvider = new HeatmapTileProvider.Builder().data(
+                mLists.get(getString(R.string.police_stations))).build();
+        mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
 
     public void changeRadius(View view) {
         if (defaultRadius) {
             mProvider.setRadius(ALT_HEATMAP_RADIUS);
         } else {
-            mProvider.setRadius(HeatmapTileProvider.DEFAULT_HEATMAP_RADIUS);
+            mProvider.setRadius(HeatmapTileProvider.DEFAULT_RADIUS);
         }
         mOverlay.clearTileCache();
         defaultRadius = !defaultRadius;
@@ -130,7 +126,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         if (defaultGradient) {
             mProvider.setGradient(ALT_HEATMAP_GRADIENT);
         } else {
-            mProvider.setGradient(HeatmapTileProvider.DEFAULT_HEATMAP_GRADIENT);
+            mProvider.setGradient(HeatmapTileProvider.DEFAULT_GRADIENT);
         }
         mOverlay.clearTileCache();
         defaultGradient = !defaultGradient;
@@ -140,7 +136,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         if (defaultOpacity) {
             mProvider.setOpacity(ALT_HEATMAP_OPACITY);
         } else {
-            mProvider.setOpacity(HeatmapTileProvider.DEFAULT_HEATMAP_OPACITY);
+            mProvider.setOpacity(HeatmapTileProvider.DEFAULT_OPACITY);
         }
         mOverlay.clearTileCache();
         defaultOpacity = !defaultOpacity;
