@@ -157,10 +157,10 @@ public class UtilTest extends TestCase {
 
         // Testing actual values now
         assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.2f), -65433);
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.5f), -65281);
+        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.5f), Color.MAGENTA);
         assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.8f), -10092289);
-        assertEquals(HeatmapTileProvider.interpolateColor(red, green, 0.5f), -256);
-        assertEquals(HeatmapTileProvider.interpolateColor(blue, green, 0.5f), -16711681);
+        assertEquals(HeatmapTileProvider.interpolateColor(red, green, 0.5f), Color.YELLOW);
+        assertEquals(HeatmapTileProvider.interpolateColor(blue, green, 0.5f), Color.CYAN);
 
         // TODO: Transparency tests (after we decide how we're going to deal with transparency)
     }
