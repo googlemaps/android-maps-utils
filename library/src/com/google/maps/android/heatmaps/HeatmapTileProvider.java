@@ -475,10 +475,14 @@ public class HeatmapTileProvider implements TileProvider {
         // Color it into a bitmap
         start = System.currentTimeMillis();
         Bitmap bitmap = colorize(convolved, mColorMap, mMaxIntensity[zoom]);
-        long endTime = System.currentTimeMillis();
-        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (endTime - start) + "ms");
+        end = System.currentTimeMillis();
+        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (end - start) + "ms");
 
+        // Convert bitmap to tile
+        start = System.currentTimeMillis();
         Tile tile = convertBitmap(bitmap);
+        long endTime = System.currentTimeMillis();
+        Log.d(TAG, "getTile convertBitmap (" + x + "," + y + ") : " + (endTime - start) + "ms");
         Log.d(TAG, "getTile Total (" + x + "," + y + ") : " + (endTime - startTime) + "ms, Points: " + points.size() + ", Zoom: " + zoom);
 
         return tile;
