@@ -626,15 +626,14 @@ public class HeatmapTileProvider implements TileProvider {
         int upperLimit = radius + dim - 1;
 
         // Convolve horizontally
-        double[] intermediate = new double[dimOld];
+        double[][] intermediate = new double[dimOld][dimOld];
 
         // Need to convolve every point (including those outside of non-padded area)
         // but only need to add to points within non-padded area
-        // Optimisation use buffer:
         int x, y, x2, xUpperLimit;
         double val;
-        for (y = 0; y < dimOld; y++) {
-            for (x = 0; x < dimOld; x++) {
+        for (x = 0; x < dimOld; x++) {
+            for (y = 0; y < dimOld; y++) {
                 // for each point (x, y)
                 val = grid[x][y];
                 // only bother if something there
@@ -646,18 +645,11 @@ public class HeatmapTileProvider implements TileProvider {
                         // multiplier for x2 = x - radius is kernel[0]
                         // x2 = x + radius is kernel[radius * 2]
                         // so multiplier for x2 in general is kernel[x2 - (x - radius)]
-                        intermediate[x2] += val * kernel[x2 - (x - radius)];
+                        intermediate[x2][y] += val * kernel[x2 - (x - radius)];
                     }
                 }
             }
-            // Copy row into grid
-            for (x = 0; x < dimOld; x++) {
-                grid[x][y] = intermediate[x];
-                // clear buffer
-                intermediate[x] = 0;
-            }
         }
-
 
         // Convolve vertically
         double[][] outputGrid = new double[dim][dim];
@@ -670,7 +662,7 @@ public class HeatmapTileProvider implements TileProvider {
         for (x = lowerLimit; x < upperLimit + 1; x++) {
             for (y = 0; y < dimOld; y++) {
                 // for each point (x, y)
-                val = grid[x][y];
+                val = intermediate[x][y];
                 // only bother if something there
                 if (val != 0) {
                     // need to "apply" convolution from that point to every point in
