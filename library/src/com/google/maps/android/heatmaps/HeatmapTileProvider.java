@@ -3,6 +3,7 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -774,7 +775,9 @@ public class HeatmapTileProvider implements TileProvider {
         double scale = nBuckets / boundsDim;
 
         // Make buckets
-        double[][] buckets = new double[nBuckets][nBuckets];
+        // Use a sparse array
+        SparseArray<SparseArray<Double>> buckets = new SparseArray<SparseArray<Double>>();
+        //double[][] buckets = new double[nBuckets][nBuckets];
 
         // Assign into buckets + find max value as we go along
         double x, y;
@@ -786,8 +789,22 @@ public class HeatmapTileProvider implements TileProvider {
             int xBucket = (int) ((x - minX) * scale);
             int yBucket = (int) ((y - minY) * scale);
 
-            buckets[xBucket][yBucket] += l.getIntensity();
-            if (buckets[xBucket][yBucket] > max) max = buckets[xBucket][yBucket];
+            // Check if x bucket exists, if not make it
+            SparseArray<Double> column = buckets.get(xBucket);
+            if (column == null) {
+                column = new SparseArray<Double>();
+                buckets.put(xBucket, column);
+            }
+            // Check if there is already a y value there
+            Double value = column.get(yBucket);
+            if (value == null) {
+                value = 0.0;
+            }
+            value += l.getIntensity();
+            // TODO: do we need to update this? its a Double, not a primitive
+            column.put(yBucket, value);
+
+            if (value > max) max = (double) value;
         }
 
         return max;
