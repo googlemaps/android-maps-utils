@@ -292,6 +292,11 @@ public class HeatmapTileProvider implements TileProvider {
      * Changes the dataset the heatmap is portraying. Weighted.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
+     *             Note: Editing data without calling setWeightedData again will potentially cause
+     *             problems (it is used in calculate max intensity values, which are recalculated
+     *             upon changing radius). Either pass in a copy if you want to edit the data
+     *             set without changing the data displayed in the heatmap, or call setWeightedData
+     *             again afterwards.
      */
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
@@ -394,7 +399,6 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Make bounds: minX, maxX, minY, maxY
         // Sigma because search is non inclusive
-        double sigma = 0.00000001;
         double minX = x * tileWidth - padding;
         double maxX = (x + 1) * tileWidth + padding + sigma;
         double minY = y * tileWidth - padding;
@@ -526,6 +530,13 @@ public class HeatmapTileProvider implements TileProvider {
         setGradient(mGradient);
     }
 
+    /**
+     * Gets array of maximum intensity values to use with the heatmap for each zoom level
+     * This is the value that the highest color on the color map corresponds to
+     *
+     * @param radius radius of the heatmap
+     * @return array of maximum intensities
+     */
     private double[] getMaxIntensities(int radius) {
         // Can go from zoom level 3 to zoom level 22
         double[] maxIntensityArray = new double[MAX_ZOOM_LEVEL];
