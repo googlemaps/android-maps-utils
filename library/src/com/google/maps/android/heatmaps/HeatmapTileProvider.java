@@ -33,19 +33,19 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Default radius for convolution
      */
-    public static final int DEFAULT_HEATMAP_RADIUS = 20;
+    public static final int DEFAULT_RADIUS = 20;
 
     /**
      * Default opacity of heatmap overlay
      */
-    public static final double DEFAULT_HEATMAP_OPACITY = 0.7;
+    public static final double DEFAULT_OPACITY = 0.7;
 
     /**
      * Default gradient for heatmap.
      * Copied from Javascript version.
      * Array of colors, in int form.
      */
-    public static final int[] DEFAULT_HEATMAP_GRADIENT = {
+    public static final int[] DEFAULT_GRADIENT = {
             //a, r, g, b / r, g, b
             Color.argb(0, 102, 255, 0),  // green (invisible)
             Color.argb(255 / 3 * 2, 102, 255, 0),  // 2/3rds invisible
@@ -160,9 +160,9 @@ public class HeatmapTileProvider implements TileProvider {
         private Collection<WeightedLatLng> data;
 
         // Optional, initialised to default values
-        private int radius = DEFAULT_HEATMAP_RADIUS;
-        private int[] gradient = DEFAULT_HEATMAP_GRADIENT;
-        private double opacity = DEFAULT_HEATMAP_OPACITY;
+        private int radius = DEFAULT_RADIUS;
+        private int[] gradient = DEFAULT_GRADIENT;
+        private double opacity = DEFAULT_OPACITY;
 
         /**
          * Constructor for builder.
@@ -441,13 +441,6 @@ public class HeatmapTileProvider implements TileProvider {
         long end = System.currentTimeMillis();
         Log.d(TAG, "getTile Search (" + x + "," + y + ") : " + (end - start) + "ms");
 
-        // Add wrapped (wraparound) points if necessary
-        if (!wrappedPoints.isEmpty()) {
-            for (WeightedLatLng l : wrappedPoints) {
-                points.add(new WeightedLatLng(l, xOffset));
-            }
-        }
-
         // If no points, return blank tile
         if (points.isEmpty()) {
             return mBlankTile;
@@ -462,6 +455,14 @@ public class HeatmapTileProvider implements TileProvider {
             int bucketY = (int) ((p.y - minY) / bucketWidth);
             intensity[bucketX][bucketY] += w.getIntensity();
         }
+        // Quantize wraparound points (taking xOffset into account)
+        for (WeightedLatLng w : wrappedPoints) {
+            Point p = w.getPoint();
+            int bucketX = (int) ((p.x + xOffset - minX) / bucketWidth);
+            int bucketY = (int) ((p.y - minY) / bucketWidth);
+            intensity[bucketX][bucketY] += w.getIntensity();
+        }
+
         end = System.currentTimeMillis();
         Log.d(TAG, "getTile Bucketing (" + x + "," + y + ") : " + (end - start) + "ms");
 
@@ -474,12 +475,17 @@ public class HeatmapTileProvider implements TileProvider {
         // Color it into a bitmap
         start = System.currentTimeMillis();
         Bitmap bitmap = colorize(convolved, mColorMap, mMaxIntensity[zoom]);
-        long endTime = System.currentTimeMillis();
-        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (endTime - start) + "ms");
+        end = System.currentTimeMillis();
+        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (end - start) + "ms");
 
+        // Convert bitmap to tile
+        start = System.currentTimeMillis();
+        Tile tile = convertBitmap(bitmap);
+        long endTime = System.currentTimeMillis();
+        Log.d(TAG, "getTile convertBitmap (" + x + "," + y + ") : " + (endTime - start) + "ms");
         Log.d(TAG, "getTile Total (" + x + "," + y + ") : " + (endTime - startTime) + "ms, Points: " + points.size() + ", Zoom: " + zoom);
 
-        return convertBitmap(bitmap);
+        return tile;
     }
 
     /**
@@ -629,7 +635,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Need to convolve every point (including those outside of non-padded area)
         // but only need to add to points within non-padded area
-        int x, y, x2;
+        int x, y, x2, xUpperLimit, initial;
         double val;
         for (x = 0; x < dimOld; x++) {
             for (y = 0; y < dimOld; y++) {
@@ -639,8 +645,10 @@ public class HeatmapTileProvider implements TileProvider {
                 if (val != 0) {
                     // need to "apply" convolution from that point to every point in
                     // (max(lowerLimit, x - radius), y) to (min(upperLimit, x + radius), y)
-                    for (x2 = Math.max(lowerLimit, x - radius);
-                         x2 < Math.min(upperLimit, x + radius) + 1; x2++) {
+                    xUpperLimit = ((upperLimit < x + radius) ? upperLimit : x + radius) + 1;
+                    // Replace Math.max
+                    initial = (lowerLimit > x - radius) ? lowerLimit : x - radius;
+                    for (x2 = initial; x2 < xUpperLimit; x2++) {
                         // multiplier for x2 = x - radius is kernel[0]
                         // x2 = x + radius is kernel[radius * 2]
                         // so multiplier for x2 in general is kernel[x2 - (x - radius)]
@@ -655,7 +663,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Similarly, need to convolve every point, but only add to points within non-padded area
         // However, we are adding to a smaller grid here (previously, was to a grid of same size)
-        int y2;
+        int y2, yUpperLimit;
 
         // Don't care about convolving parts in horizontal padding - wont impact inner
         for (x = lowerLimit; x < upperLimit + 1; x++) {
@@ -667,8 +675,10 @@ public class HeatmapTileProvider implements TileProvider {
                     // need to "apply" convolution from that point to every point in
                     // (x, max(lowerLimit, y - radius) to (x, min(upperLimit, y + radius))
                     // Dont care about
-                    for (y2 = Math.max(lowerLimit, y - radius);
-                         y2 < Math.min(upperLimit, y + radius) + 1; y2++) {
+                    yUpperLimit = ((upperLimit < y + radius) ? upperLimit : y + radius) + 1;
+                    // replace math.max
+                    initial = (lowerLimit > y - radius) ? lowerLimit : y - radius;
+                    for (y2 = initial; y2 < yUpperLimit; y2++) {
                         // Similar logic to above
                         // subtract, as adding to a smaller grid
                         outputGrid[x - radius][y2 - radius] += val * kernel[y2 - (y - radius)];
