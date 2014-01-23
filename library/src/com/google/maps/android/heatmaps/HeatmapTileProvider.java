@@ -69,7 +69,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Default (and maximum possible) maximum zoom level at which to calculate maximum intensities
      */
-    private static final int DEFAULT_MAX_ZOOM = 9;
+    private static final int DEFAULT_MAX_ZOOM = 11;
 
     /**
      * Maximum zoom level possible on a map.
@@ -167,7 +167,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Constructor for builder.
-         * <p/>
+         *
          * No required parameters here, but user must call either data() or weightedData().
          */
         public Builder() {
@@ -302,8 +302,6 @@ public class HeatmapTileProvider implements TileProvider {
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
         mData = data;
-
-        Log.e(TAG, "Data size: " + mData.size());
 
         // Check point set is OK
         if (mData.isEmpty()) {
