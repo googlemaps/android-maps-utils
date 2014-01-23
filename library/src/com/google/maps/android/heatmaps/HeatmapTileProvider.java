@@ -3,6 +3,7 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.LongSparseArray;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -68,7 +69,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Default (and maximum possible) maximum zoom level at which to calculate maximum intensities
      */
-    private static final int DEFAULT_MAX_ZOOM = 9;
+    private static final int DEFAULT_MAX_ZOOM = 11;
 
     /**
      * Maximum zoom level possible on a map.
@@ -166,7 +167,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Constructor for builder.
-         * <p/>
+         *
          * No required parameters here, but user must call either data() or weightedData().
          */
         public Builder() {
@@ -292,6 +293,11 @@ public class HeatmapTileProvider implements TileProvider {
      * Changes the dataset the heatmap is portraying. Weighted.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
+     *             Note: Editing data without calling setWeightedData again will potentially cause
+     *             problems (it is used in calculate max intensity values, which are recalculated
+     *             upon changing radius). Either pass in a copy if you want to edit the data
+     *             set without changing the data displayed in the heatmap, or call setWeightedData
+     *             again afterwards.
      */
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
@@ -394,7 +400,6 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Make bounds: minX, maxX, minY, maxY
         // Sigma because search is non inclusive
-        double sigma = 0.00000001;
         double minX = x * tileWidth - padding;
         double maxX = (x + 1) * tileWidth + padding + sigma;
         double minY = y * tileWidth - padding;
@@ -526,6 +531,13 @@ public class HeatmapTileProvider implements TileProvider {
         setGradient(mGradient);
     }
 
+    /**
+     * Gets array of maximum intensity values to use with the heatmap for each zoom level
+     * This is the value that the highest color on the color map corresponds to
+     *
+     * @param radius radius of the heatmap
+     * @return array of maximum intensities
+     */
     private double[] getMaxIntensities(int radius) {
         // Can go from zoom level 3 to zoom level 22
         double[] maxIntensityArray = new double[MAX_ZOOM_LEVEL];
@@ -763,7 +775,9 @@ public class HeatmapTileProvider implements TileProvider {
         double scale = nBuckets / boundsDim;
 
         // Make buckets
-        double[][] buckets = new double[nBuckets][nBuckets];
+        // Use a sparse array - use LongSparseArray just in case
+        LongSparseArray<LongSparseArray<Double>> buckets = new LongSparseArray<LongSparseArray<Double>>();
+        //double[][] buckets = new double[nBuckets][nBuckets];
 
         // Assign into buckets + find max value as we go along
         double x, y;
@@ -775,8 +789,22 @@ public class HeatmapTileProvider implements TileProvider {
             int xBucket = (int) ((x - minX) * scale);
             int yBucket = (int) ((y - minY) * scale);
 
-            buckets[xBucket][yBucket] += l.getIntensity();
-            if (buckets[xBucket][yBucket] > max) max = buckets[xBucket][yBucket];
+            // Check if x bucket exists, if not make it
+            LongSparseArray<Double> column = buckets.get(xBucket);
+            if (column == null) {
+                column = new LongSparseArray<Double>();
+                buckets.put(xBucket, column);
+            }
+            // Check if there is already a y value there
+            Double value = column.get(yBucket);
+            if (value == null) {
+                value = 0.0;
+            }
+            value += l.getIntensity();
+            // Yes, do need to update it, despite it being a Double.
+            column.put(yBucket, value);
+
+            if (value > max) max = (double) value;
         }
 
         return max;
