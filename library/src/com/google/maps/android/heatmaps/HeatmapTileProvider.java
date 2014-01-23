@@ -3,7 +3,7 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
-import android.util.SparseArray;
+import android.util.LongSparseArray;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -302,6 +302,8 @@ public class HeatmapTileProvider implements TileProvider {
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
         mData = data;
+
+        Log.e(TAG, "Data size: " + mData.size());
 
         // Check point set is OK
         if (mData.isEmpty()) {
@@ -775,8 +777,8 @@ public class HeatmapTileProvider implements TileProvider {
         double scale = nBuckets / boundsDim;
 
         // Make buckets
-        // Use a sparse array
-        SparseArray<SparseArray<Double>> buckets = new SparseArray<SparseArray<Double>>();
+        // Use a sparse array - use LongSparseArray just in case
+        LongSparseArray<LongSparseArray<Double>> buckets = new LongSparseArray<LongSparseArray<Double>>();
         //double[][] buckets = new double[nBuckets][nBuckets];
 
         // Assign into buckets + find max value as we go along
@@ -790,9 +792,9 @@ public class HeatmapTileProvider implements TileProvider {
             int yBucket = (int) ((y - minY) * scale);
 
             // Check if x bucket exists, if not make it
-            SparseArray<Double> column = buckets.get(xBucket);
+            LongSparseArray<Double> column = buckets.get(xBucket);
             if (column == null) {
-                column = new SparseArray<Double>();
+                column = new LongSparseArray<Double>();
                 buckets.put(xBucket, column);
             }
             // Check if there is already a y value there
@@ -801,7 +803,7 @@ public class HeatmapTileProvider implements TileProvider {
                 value = 0.0;
             }
             value += l.getIntensity();
-            // TODO: do we need to update this? its a Double, not a primitive
+            // Yes, do need to update it, despite it being a Double.
             column.put(yBucket, value);
 
             if (value > max) max = (double) value;
