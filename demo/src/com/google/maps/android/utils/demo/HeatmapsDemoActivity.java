@@ -114,9 +114,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         // Input: list of WeightedLatLngs, minimum and maximum zoom levels to calculate custom
         // intensity from, and the map to draw the heatmap on
         // radius, gradient and opacity not specified, so default are used
-        mProvider = new HeatmapTileProvider.Builder().data(
-                mLists.get(getString(R.string.police_stations))).build();
-        mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
 
     public void changeRadius(View view) {
@@ -154,8 +151,16 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         public void onItemSelected(AdapterView<?> parent, View view,
                                    int pos, long id) {
             String dataset = parent.getItemAtPosition(pos).toString();
-            mProvider.setData(mLists.get(dataset));
-            mOverlay.clearTileCache();
+
+            // Check if need to instantiate (avoid setData etc twice)
+            if (mProvider == null) {
+                mProvider = new HeatmapTileProvider.Builder().data(
+                        mLists.get(getString(R.string.police_stations))).build();
+                mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            } else {
+                mProvider.setData(mLists.get(dataset));
+                mOverlay.clearTileCache();
+            }
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
