@@ -1,7 +1,6 @@
 package com.google.maps.android.utils.demo;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -60,8 +59,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Color.rgb(191, 0, 31),
             Color.rgb(255, 0, 0)
     };
-
-    private static final String TAG = HeatmapsDemoActivity.class.getName();
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -166,7 +163,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     // Red Lights: all red lights across Australia from http://poidb.com
     private ArrayList<LatLng> readItems(int resource) throws JSONException {
         ArrayList<LatLng> list = new ArrayList<LatLng>();
-        long start = System.currentTimeMillis();
         InputStream inputStream = getResources().openRawResource(resource);
         String json = new Scanner(inputStream).useDelimiter("\\A").next();
         JSONArray array = new JSONArray(json);
@@ -176,9 +172,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             double lng = object.getDouble("lng");
             list.add(new LatLng(lat, lng));
         }
-
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "readItems: " + (end - start) + "ms");
         return list;
     }
 }

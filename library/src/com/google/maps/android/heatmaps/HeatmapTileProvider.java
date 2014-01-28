@@ -3,7 +3,6 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -92,11 +91,6 @@ public class HeatmapTileProvider implements TileProvider {
     private static final Tile mBlankTile = TileProvider.NO_TILE;
 
     /**
-     * Tag, for logging
-     */
-    private static final String TAG = HeatmapTileProvider.class.getName();
-
-    /**
      * Default size of a color map for the heatmap
      */
     private static final int COLOR_MAP_SIZE = 1001;
@@ -167,7 +161,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Constructor for builder.
-         *
+         * <p/>
          * No required parameters here, but user must call either data() or weightedData().
          */
         public Builder() {
@@ -313,29 +307,19 @@ public class HeatmapTileProvider implements TileProvider {
         // As quadtree creation is actually quite lightweight/fast as compared to other functions
         // called in heatmap creation, re-creating the quadtree is an acceptable solution here.
 
-        long start = System.currentTimeMillis();
         // Make the quad tree
         mBounds = getBounds(mData);
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "getBounds: " + (end - start) + "ms");
 
-        start = System.currentTimeMillis();
         mTree = new PointQuadTree(mBounds);
 
         // Add points to quad tree
         for (WeightedLatLng l : mData) {
             mTree.add(l);
         }
-        end = System.currentTimeMillis();
-
-        Log.d(TAG, "make quadtree: " + (end - start) + "ms");
 
         // Calculate reasonable maximum intensity for color scale (user can also specify)
         // Get max intensities
-        start = System.currentTimeMillis();
         mMaxIntensity = getMaxIntensities(mRadius);
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getMaxIntensities: " + (end - start) + "ms");
     }
 
     /**
@@ -375,7 +359,6 @@ public class HeatmapTileProvider implements TileProvider {
      * @return image in Tile format
      */
     public Tile getTile(int x, int y, int zoom) {
-        long startTime = System.currentTimeMillis();
         // Convert tile coordinates and zoom into Point/Bounds format
         // Know that at zoom level 0, there is one tile: (0, 0) (arbitrary width 512)
         // Each zoom level multiplies number of tiles by 2
@@ -441,10 +424,7 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Search for all points within tile bounds
-        long start = System.currentTimeMillis();
         Collection<WeightedLatLng> points = mTree.search(tileBounds);
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Search (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // If no points, return blank tile
         if (points.isEmpty()) {
@@ -452,7 +432,6 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Quantize points
-        start = System.currentTimeMillis();
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
         for (WeightedLatLng w : points) {
             Point p = w.getPoint();
@@ -468,27 +447,14 @@ public class HeatmapTileProvider implements TileProvider {
             intensity[bucketX][bucketY] += w.getIntensity();
         }
 
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Bucketing (" + x + "," + y + ") : " + (end - start) + "ms");
-
-        start = System.currentTimeMillis();
         // Convolve it ("smoothen" it out)
         double[][] convolved = convolve(intensity, mKernel);
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Convolving (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // Color it into a bitmap
-        start = System.currentTimeMillis();
         Bitmap bitmap = colorize(convolved, mColorMap, mMaxIntensity[zoom]);
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // Convert bitmap to tile
-        start = System.currentTimeMillis();
         Tile tile = convertBitmap(bitmap);
-        long endTime = System.currentTimeMillis();
-        Log.d(TAG, "getTile convertBitmap (" + x + "," + y + ") : " + (endTime - start) + "ms");
-        Log.d(TAG, "getTile Total (" + x + "," + y + ") : " + (endTime - startTime) + "ms, Points: " + points.size() + ", Zoom: " + zoom);
 
         return tile;
     }
