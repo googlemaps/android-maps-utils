@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * A demo of the Heatmaps library. Demonstates how the HeatmapTileProvider can be used to create
+ * A demo of the Heatmaps library. Demonstrates how the HeatmapTileProvider can be used to create
  * a colored map overlay that visualises many points of weighted importance/intensity, with
  * different colors representing areas of high and low concentration/combined intensity of points.
  */
@@ -66,7 +66,6 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private boolean defaultGradient = true;
     private boolean defaultRadius = true;
     private boolean defaultOpacity = true;
-
 
     /**
      * Maps name of data set to data (list of WeightedLatLngs)

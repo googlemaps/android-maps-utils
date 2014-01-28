@@ -16,20 +16,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-
 /**
  * Tile provider that creates heatmap tiles.
  */
 public class HeatmapTileProvider implements TileProvider {
-    /**
-     * Tile dimension. Package access - WeightedLatLng
-     */
-    static final int TILE_DIM = 512;
-
-    /**
-     * Assumed screen size
-     */
-    private static final int SCREEN_SIZE = 1280;
     /**
      * Default radius for convolution
      */
@@ -59,6 +49,23 @@ public class HeatmapTileProvider implements TileProvider {
             Color.rgb(255, 57, 0),
             Color.rgb(255, 0, 0)     // red
     };
+
+    /**
+     * Tile dimension. Package access - WeightedLatLng
+     */
+    static final int TILE_DIM = 512;
+
+    /**
+     * For use in getBounds.
+     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
+     * upper bound, it should be returned)
+     */
+    static final double sigma = 0.0000001;
+
+    /**
+     * Assumed screen size
+     */
+    private static final int SCREEN_SIZE = 1280;
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -94,13 +101,6 @@ public class HeatmapTileProvider implements TileProvider {
      * Default size of a color map for the heatmap
      */
     private static final int COLOR_MAP_SIZE = 1001;
-
-    /**
-     * For use in getBounds.
-     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
-     * upper bound, it should be returned)
-     */
-    static double sigma = 0.0000001;
 
     /**
      * Quad tree of all the points to display in the heatmap
@@ -161,11 +161,9 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Constructor for builder.
-         * <p/>
          * No required parameters here, but user must call either data() or weightedData().
          */
         public Builder() {
-
         }
 
         /**
@@ -178,7 +176,6 @@ public class HeatmapTileProvider implements TileProvider {
         public Builder data(Collection<LatLng> val) {
             return weightedData(wrapData(val));
         }
-
 
         /**
          * Setter for data in builder. Must call this or data
@@ -196,7 +193,6 @@ public class HeatmapTileProvider implements TileProvider {
             }
             return this;
         }
-
 
         /**
          * Setter for radius in builder
@@ -329,7 +325,7 @@ public class HeatmapTileProvider implements TileProvider {
      */
 
     public void setData(Collection<LatLng> data) {
-        // Turn them into LatLngs and delegate.
+        // Turn them into WeightedLatLngs and delegate.
         setWeightedData(wrapData(data));
     }
 
@@ -453,16 +449,13 @@ public class HeatmapTileProvider implements TileProvider {
         // Color it into a bitmap
         Bitmap bitmap = colorize(convolved, mColorMap, mMaxIntensity[zoom]);
 
-        // Convert bitmap to tile
-        Tile tile = convertBitmap(bitmap);
-
-        return tile;
+        // Convert bitmap to tile and return
+        return convertBitmap(bitmap);
     }
 
     /**
      * Setter for gradient/color map.
-     * Important: tile overlay cache must be cleared after this for it to be effective
-     * outside of initialisation
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param gradient Gradient to set
      */
@@ -473,7 +466,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Setter for radius.
-     * User should clear overlay's tile cache after calling this.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param radius Radius to set
      */
@@ -487,7 +480,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Setter for opacity
-     * User should clear overlay's tile cache after calling this.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param opacity opacity to set
      */
@@ -591,9 +584,9 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Applies a 2D Gaussian convolution to the input grid, returning a 2D grid cropped of padding.
      *
-     * @param grid   Raw input grid to convolve: dimension dim+2*radius x dim + 2*radius
+     * @param grid   Raw input grid to convolve: dimension (dim + 2 * radius) x (dim + 2 * radius)
      *               ie dim * dim with padding of size radius
-     * @param kernel Pre-computed Gaussian kernel of size radius*2+1
+     * @param kernel Pre-computed Gaussian kernel of size radius * 2 + 1
      * @return the smoothened grid
      */
     static double[][] convolve(double[][] grid, double[] kernel) {
@@ -680,11 +673,9 @@ public class HeatmapTileProvider implements TileProvider {
         // Maximum color value
         int maxColor = colorMap[colorMap.length - 1];
         // Multiplier to "scale" intensity values with, to map to appropriate color
-        // TODO: is this change (-1 to length) ok? Reasoning: otherwise max will break it
         double colorMapScaling = (colorMap.length - 1) / max;
         // Dimension of the input grid (and dimension of output bitmap)
         int dim = grid.length;
-
 
         int i, j, index, col;
         double val;
@@ -770,7 +761,7 @@ public class HeatmapTileProvider implements TileProvider {
             // Yes, do need to update it, despite it being a Double.
             column.put(yBucket, value);
 
-            if (value > max) max = (double) value;
+            if (value > max) max = value;
         }
 
         return max;
@@ -806,15 +797,13 @@ public class HeatmapTileProvider implements TileProvider {
         for (int i = 0; i < COLOR_MAP_SIZE; i++) {
             // if i is larger than next color stop value, increment to next color stop
             // Check that it is safe to access lowColorStop + 1 first!
-            // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice
-            if (lowColorStop + 1 < values.length) {
-                if (i > values[lowColorStop + 1]) lowColorStop++;
+            if (lowColorStop < values.length - 1) {
+                if (i > values[lowColorStop + 1]) {
+                    lowColorStop++;
+                }
             }
             // In between two color stops: interpolate
             if (lowColorStop < values.length - 1) {
-                // Check that it is safe to access lowColorStop + 1
-                if (i > values[lowColorStop + 1]) lowColorStop++;
-
                 float ratio = (i - interval * lowColorStop) / ((float) interval);
                 colorMap[i] = interpolateColor(colors[lowColorStop], colors[lowColorStop + 1],
                         ratio);
@@ -826,7 +815,6 @@ public class HeatmapTileProvider implements TileProvider {
             // Deal with changing the opacity if required
             if (opacity != 1) {
                 int c = colorMap[i];
-                // TODO: make this better later?
                 colorMap[i] = Color.argb((int) (Color.alpha(c) * opacity),
                         Color.red(c), Color.green(c), Color.blue(c));
             }
@@ -846,7 +834,8 @@ public class HeatmapTileProvider implements TileProvider {
      */
     static int interpolateColor(int color1, int color2, float ratio) {
 
-        int alpha = (int) ((Color.alpha(color2) - Color.alpha(color1)) * ratio + Color.alpha(color1));
+        int alpha = (int) ((Color.alpha(color2) - Color.alpha(color1)) * ratio +
+                Color.alpha(color1));
 
         float[] hsv1 = new float[3];
         Color.RGBToHSV(Color.red(color1), Color.green(color1), Color.blue(color1), hsv1);
