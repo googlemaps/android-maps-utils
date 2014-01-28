@@ -57,6 +57,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mRenderer = new DefaultClusterRenderer<T>(context, map, this);
         mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
+        mRenderer.onAdd();
     }
 
     public MarkerManager.Collection getMarkerCollection() {
