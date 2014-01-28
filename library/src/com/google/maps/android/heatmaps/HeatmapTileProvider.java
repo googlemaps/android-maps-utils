@@ -222,7 +222,7 @@ public class HeatmapTileProvider implements TileProvider {
          *
          * @param val Gradient to color heatmap with.
          *            Ordered from least to highest corresponding intensity.
-         *            A larger colour map is interpolated from these "colour stops".
+         *            A larger color map is interpolated from these "color stops".
          *            First color usually fully transparent, and should be at least 3 colors for
          *            best results.
          * @return updated builder object
@@ -704,7 +704,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         int i, j, index, col;
         double val;
-        // Array of colours
+        // Array of colors
         int colors[] = new int[dim * dim];
         for (i = 0; i < dim; i++) {
             for (j = 0; j < dim; j++) {

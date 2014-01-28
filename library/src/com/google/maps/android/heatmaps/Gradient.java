@@ -61,7 +61,8 @@ public class Gradient {
     }
 
     /**
-     * Creates a Gradient with the given colors and starting points which creates a colorMap of given size.
+     * Creates a Gradient with the given colors and starting points which creates a colorMap of given size,
+     * and interpolates between them with the given interpolator
      * The colors and starting points are given as parallel arrays.
      * @param colors The colors to be used in the gradient
      * @param startPoints The starting point for each color, given as a percentage of the maximum intensity
@@ -79,18 +80,18 @@ public class Gradient {
         mInterpolator = interpolator;
         mColorMapSize = colorMapSize;
         if (colors.length != 0 && colors.length == startPoints.length) {
-            // Create first colour if not already created
+            // Create first color if not already created
             // The initial color is transparent by default
             if (startPoints[0] != 0) {
                 int initialColor = Color.argb(0, Color.red(colors[0]), Color.green(colors[0]), Color.blue(colors[0]));
                 mColorIntervals.put(0, new ColorInterval(initialColor, colors[0], mColorMapSize * startPoints[0]));
             }
-            // Generate colour intervals
+            // Generate color intervals
             for (int i = 1; i < colors.length; i++) {
                 mColorIntervals.put(((int) (mColorMapSize * startPoints[i - 1])),
                         new ColorInterval(colors[i - 1], colors[i], (mColorMapSize * (startPoints[i] - startPoints[i - 1]))));
             }
-            // Extend to a final colour
+            // Extend to a final color
             // If color for 100% intensity is not given, the color of highest intensity is used.
             if (startPoints[startPoints.length -1] != 1) {
                 mColorIntervals.put(((int) (mColorMapSize * startPoints[startPoints.length - 1])),
