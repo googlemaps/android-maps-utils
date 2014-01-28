@@ -1,7 +1,5 @@
 package com.google.maps.android.kdtree;
 
-import android.util.Log;
-
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
