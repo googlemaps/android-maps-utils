@@ -6,7 +6,7 @@ import com.google.maps.android.geometry.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -40,7 +40,7 @@ public class KdTree<T extends KdTree.Item> {
     /**
      * The elements inside this quad, if any.
      */
-    private T[] mItems;
+    private ArrayList<T> mItems;
 
     /**
      * Maximum depth.
@@ -54,24 +54,24 @@ public class KdTree<T extends KdTree.Item> {
 
     private static final Random r = new Random();
 
-    public KdTree(T[] items) {
+    public KdTree(ArrayList<T> items) {
         mItems = items;
         mDepth = 0;
         if (items == null) {
             mBounds = null;
         } else {
             mBounds = getBounds(items);
-            if (mItems.length > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
+            if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
                 split();
             }
         }
     }
 
-    private KdTree(T[] items, int depth, Bounds bounds) {
+    private KdTree(ArrayList<T> items, int depth, Bounds bounds) {
         mItems = items;
         mDepth = depth;
         mBounds = bounds;
-        if (mItems.length > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
+        if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
             split();
         }
     }
@@ -79,21 +79,20 @@ public class KdTree<T extends KdTree.Item> {
     private void split() {
         Bounds lowBounds, highBounds;
         if (mDepth % 2 == 0) {
-            selectX(mItems.length / 2, 0, mItems.length - 1);
-            double boundary = (mItems[mItems.length / 2].getPoint().x + mItems[(mItems.length / 2) + 1].getPoint().x) / 2;
+            selectX(mItems.size() / 2, 0, mItems.size() - 1);
+            double boundary = (mItems.get(mItems.size() / 2).getPoint().x + mItems.get((mItems.size() / 2) + 1).getPoint().x) / 2;
             lowBounds = new Bounds(mBounds.minX, boundary, mBounds.minY, mBounds.maxY);
             highBounds = new Bounds(mBounds.minX, boundary, mBounds.minY, mBounds.maxY);
         } else {
-            selectY(mItems.length / 2, 0, mItems.length - 1);
-            double boundary = (mItems[mItems.length / 2].getPoint().y + mItems[(mItems.length / 2) + 1].getPoint().y) / 2;
+            selectY(mItems.size() / 2, 0, mItems.size() - 1);
+            double boundary = (mItems.get(mItems.size() / 2).getPoint().y + mItems.get((mItems.size() / 2) + 1).getPoint().y) / 2;
             lowBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary);
             highBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary);
         }
         // TODO what if multiple at same x / y value? How to do bounds?
-        //TODO : copyOfRange uses API level 9 - change min in Android Manifest?
         mChildren = new KdTree[]{
-                new KdTree(Arrays.copyOfRange(mItems, 0, mItems.length / 2), mDepth + 1, lowBounds),
-                new KdTree(Arrays.copyOfRange(mItems, mItems.length / 2, mItems.length), mDepth + 1, highBounds)
+                new KdTree(Arrays.copyOfRange(mItems, 0, mItems.size() / 2), mDepth + 1, lowBounds),
+                new KdTree(Arrays.copyOfRange(mItems, mItems.size() / 2, mItems.size()), mDepth + 1, highBounds)
         };
         mItems = null;
     }
@@ -168,7 +167,7 @@ public class KdTree<T extends KdTree.Item> {
             }
         } else if (mItems != null) {
             if (searchBounds.contains(mBounds)) {
-                Collections.addAll(results, mItems);
+                results.addAll(mItems);
             } else {
                 for (T item : mItems) {
                     if (searchBounds.contains(item.getPoint())) {
@@ -185,16 +184,22 @@ public class KdTree<T extends KdTree.Item> {
      * @param points Collection of WeightedLatLng to calculate bounds for
      * @return Bounds that enclose the listed WeightedLatLng points
      */
-    private Bounds getBounds(T[] points) {
+    private Bounds getBounds(Collection<T> points) {
 
-        double minX = points[0].getPoint().x;
-        double maxX = points[0].getPoint().x + sigma;
-        double minY = points[0].getPoint().y;
-        double maxY = points[0].getPoint().y + sigma;
+        // Use an iterator, need to access any one point of the collection for starting bounds
+        Iterator<T> iter = points.iterator();
 
-        for (int i = 1; i < points.length; i++) {
-            double x = points[i].getPoint().x;
-            double y = points[i].getPoint().y;
+        T first = iter.next();
+
+        double minX = first.getPoint().x;
+        double maxX = first.getPoint().x + sigma;
+        double minY = first.getPoint().y;
+        double maxY = first.getPoint().y + sigma;
+
+        while (iter.hasNext()) {
+            T l = iter.next();
+            double x = l.getPoint().x;
+            double y = l.getPoint().y;
             // Extend bounds if necessary
             if (x < minX) minX = x;
             if (x + sigma > maxX) maxX = x + sigma;
