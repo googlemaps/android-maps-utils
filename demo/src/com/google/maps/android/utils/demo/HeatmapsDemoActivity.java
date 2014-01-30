@@ -3,6 +3,7 @@ package com.google.maps.android.utils.demo;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -49,24 +50,16 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Color.argb(0, 0, 255, 255),// transparent
             Color.argb(255 / 3 * 2, 0, 255, 255),
             Color.rgb(0, 191, 255),
-            Color.rgb(0, 127, 255),
-            Color.rgb(0, 63, 255),
-            Color.rgb(0, 0, 255),
-            Color.rgb(0, 0, 223),
-            Color.rgb(0, 0, 191),
-            Color.rgb(0, 0, 159),
             Color.rgb(0, 0, 127),
-            Color.rgb(63, 0, 91),
-            Color.rgb(127, 0, 63),
-            Color.rgb(191, 0, 31),
             Color.rgb(255, 0, 0)
     };
 
     public static final float[] ALT_HEATMAP_GRADIENT_START_POINTS = {
-            0.0f, 0.05f, 0.1f, 0.2f, 0.25f, 0.3f, 0.35f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f
+            0.0f, 0.10f, 0.20f, 0.60f, 1.0f
     };
 
-    public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS, ALT_HEATMAP_GRADIENT_START_POINTS);
+    public static final Gradient ALT_HEATMAP_GRADIENT =
+            new Gradient(ALT_HEATMAP_GRADIENT_COLORS, ALT_HEATMAP_GRADIENT_START_POINTS);
 
     private static final String TAG = HeatmapsDemoActivity.class.getName();
 
