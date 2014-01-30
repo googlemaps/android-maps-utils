@@ -3,7 +3,6 @@ package com.google.maps.android.utils.demo;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
