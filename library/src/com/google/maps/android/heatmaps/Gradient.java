@@ -100,6 +100,8 @@ public class Gradient {
         }
         mInterpolator = interpolator;
         mColorMapSize = colorMapSize;
+        mColors = new int[colors.length];
+        mStartPoints = new float[startPoints.length];
         System.arraycopy(colors, 0, mColors, 0, colors.length);
         System.arraycopy(startPoints, 0, mStartPoints, 0, startPoints.length);
     }
