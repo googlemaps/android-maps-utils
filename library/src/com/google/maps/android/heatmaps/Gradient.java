@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -99,8 +100,8 @@ public class Gradient {
         }
         mInterpolator = interpolator;
         mColorMapSize = colorMapSize;
-        this.mColors = colors;
-        this.mStartPoints = startPoints;
+        System.arraycopy(colors, 0, mColors, 0, colors.length);
+        System.arraycopy(startPoints, 0, mStartPoints, 0, startPoints.length);
     }
 
     private HashMap<Integer, ColorInterval> generateColorIntervals() {
