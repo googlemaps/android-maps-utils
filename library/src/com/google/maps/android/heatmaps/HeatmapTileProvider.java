@@ -219,12 +219,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for gradient in builder
-         *
          * @param val Gradient to color heatmap with.
-         *            Ordered from least to highest corresponding intensity.
-         *            A larger color map is interpolated from these "color stops".
-         *            First color usually fully transparent, and should be at least 3 colors for
-         *            best results.
          * @return updated builder object
          */
         public Builder gradient(Gradient val) {
