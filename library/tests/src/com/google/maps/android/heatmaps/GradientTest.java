@@ -62,7 +62,7 @@ public class GradientTest extends TestCase {
         }
     }
 
-    public void testGradientInterpolation() {
+    public void testOpacityInterpolation() {
         int[] colors = {
                 Color.argb(0, 0, 255, 0),
                 Color.GREEN,
@@ -88,5 +88,21 @@ public class GradientTest extends TestCase {
         assertEquals(colorMap[0], Color.argb(0, 0, 255, 0));
         assertEquals(colorMap[1], Color.argb(63, 0, 255, 0));
         assertEquals(colorMap[2], Color.argb(127, 0, 255, 0));
+    }
+
+    public void testMoreColorsThanColorMap() {
+        int[] colors = {
+                Color.argb(0, 0, 255, 0),
+                Color.GREEN,
+                Color.RED,
+                Color.BLUE
+        };
+        float[] startPoints = {
+                0f, 0.2f, 0.5f, 1f
+        };
+        Gradient g = new Gradient(colors, startPoints, 2);
+        int[] colorMap = g.generateColorMap(1.0);
+        assertEquals(colorMap[0], Color.GREEN);
+        assertEquals(colorMap[1], Color.RED);
     }
 }
