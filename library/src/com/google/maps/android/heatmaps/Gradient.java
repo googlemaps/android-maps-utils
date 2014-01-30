@@ -14,14 +14,14 @@ import java.util.HashMap;
 public class Gradient {
 
     private class ColorInterval {
-        public int color1;
-        public int color2;
+        private final int color1;
+        private final int color2;
 
         /**
          * The period over which the color changes from color1 to color2.
          * This is given as the number of elements it represents in the colorMap.
          */
-        public float duration;
+        private final float duration;
 
         public ColorInterval(int color1, int color2, float duration) {
             this.color1 = color1;
