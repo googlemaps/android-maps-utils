@@ -42,24 +42,27 @@ public class HeatmapTileProvider implements TileProvider {
     public static final double DEFAULT_OPACITY = 0.7;
 
     /**
-     * Default gradient for heatmap.
-     * Copied from Javascript version.
-     * Array of colors, in int form.
+     * Colors for default gradient.
+     * Array of colors, represented by ints.
      */
-    public static final int[] DEFAULT_GRADIENT = {
-            //a, r, g, b / r, g, b
-            Color.argb(0, 102, 255, 0),  // green (invisible)
-            Color.argb(255 / 3 * 2, 102, 255, 0),  // 2/3rds invisible
-            Color.rgb(147, 255, 0),
-            Color.rgb(193, 255, 0),
-            Color.rgb(238, 255, 0),  // yellow
-            Color.rgb(244, 227, 0),
-            Color.rgb(249, 198, 0),
-            Color.rgb(255, 170, 0),  // orange
-            Color.rgb(255, 113, 0),
-            Color.rgb(255, 57, 0),
-            Color.rgb(255, 0, 0)     // red
+    public static final int[] DEFAULT_GRADIENT_COLOURS = {
+            Color.rgb(102, 225, 0),
+            Color.rgb(255, 0, 0)
     };
+
+    /**
+     * Starting fractions for default gradient.
+     * This defines which percentages the above colors represent.
+     * These should be a sorted array of floats in the interval [0, 1].
+     */
+    public static final float[] DEFAULT_GRADIENT_START_POINTS = {
+            0.1f, 1f
+    };
+
+    /**
+     * Default gradient for heatmap.
+     */
+    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS, DEFAULT_GRADIENT_START_POINTS);
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -97,11 +100,6 @@ public class HeatmapTileProvider implements TileProvider {
     private static final String TAG = HeatmapTileProvider.class.getName();
 
     /**
-     * Default size of a color map for the heatmap
-     */
-    private static final int COLOR_MAP_SIZE = 1001;
-
-    /**
      * For use in getBounds.
      * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
      * upper bound, it should be returned)
@@ -131,7 +129,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Gradient of the color map
      */
-    private int[] mGradient;
+    private Gradient mGradient;
 
     /**
      * Color map to use to color tiles
@@ -162,7 +160,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Optional, initialised to default values
         private int radius = DEFAULT_RADIUS;
-        private int[] gradient = DEFAULT_GRADIENT;
+        private Gradient gradient = DEFAULT_GRADIENT;
         private double opacity = DEFAULT_OPACITY;
 
         /**
@@ -222,20 +220,11 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for gradient in builder
-         *
          * @param val Gradient to color heatmap with.
-         *            Ordered from least to highest corresponding intensity.
-         *            A larger colour map is interpolated from these "colour stops".
-         *            First color usually fully transparent, and should be at least 3 colors for
-         *            best results.
          * @return updated builder object
          */
-        public Builder gradient(int[] val) {
+        public Builder gradient(Gradient val) {
             gradient = val;
-            // Check that gradient is not empty
-            if (gradient.length == 0) {
-                throw new IllegalArgumentException("Gradient is empty.");
-            }
             return this;
         }
 
@@ -500,9 +489,9 @@ public class HeatmapTileProvider implements TileProvider {
      *
      * @param gradient Gradient to set
      */
-    public void setGradient(int[] gradient) {
+    public void setGradient(Gradient gradient) {
         mGradient = gradient;
-        mColorMap = generateColorMap(gradient, mOpacity);
+        mColorMap = gradient.generateColorMap(mOpacity);
     }
 
     /**
@@ -722,7 +711,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         int i, j, index, col;
         double val;
-        // Array of colours
+        // Array of colors
         int colors[] = new int[dim * dim];
         for (i = 0; i < dim; i++) {
             for (j = 0; j < dim; j++) {
@@ -810,97 +799,5 @@ public class HeatmapTileProvider implements TileProvider {
         return max;
     }
 
-    /**
-     * Generates the color map to use with a provided gradient.
-     *
-     * @param gradient Array of colors (int format)
-     * @param opacity  Overall opacity of entire image: every individual alpha value will be
-     *                 multiplied by this opacity.
-     * @return the generated color map based on the gradient
-     */
-    static int[] generateColorMap(int[] gradient, double opacity) {
-        // Convert gradient into parallel arrays
-        int[] values = new int[gradient.length];
-        int[] colors = new int[gradient.length];
-
-        // Evenly space out gradient colors with a constant interval (interval = "space" between
-        // colors given in the gradient)
-        // With defaults, this is 1000/10 = 100
-        int interval = (COLOR_MAP_SIZE - 1) / (gradient.length - 1);
-
-        // Go through gradient and insert into values/colors
-        for (int i = 0; i < gradient.length; i++) {
-            values[i] = i * interval;
-            colors[i] = gradient[i];
-        }
-
-        int[] colorMap = new int[COLOR_MAP_SIZE];
-        // lowColorStop = closest color stop (value from gradient) below current position
-        int lowColorStop = 0;
-        for (int i = 0; i < COLOR_MAP_SIZE; i++) {
-            // if i is larger than next color stop value, increment to next color stop
-            // Check that it is safe to access lowColorStop + 1 first!
-            // TODO: This fixes previous problem of breaking upon no even divide, but isnt nice
-            if (lowColorStop + 1 < values.length) {
-                if (i > values[lowColorStop + 1]) lowColorStop++;
-            }
-            // In between two color stops: interpolate
-            if (lowColorStop < values.length - 1) {
-                // Check that it is safe to access lowColorStop + 1
-                if (i > values[lowColorStop + 1]) lowColorStop++;
-
-                float ratio = (i - interval * lowColorStop) / ((float) interval);
-                colorMap[i] = interpolateColor(colors[lowColorStop], colors[lowColorStop + 1],
-                        ratio);
-            }
-            // above highest color stop: use that
-            else {
-                colorMap[i] = colors[colors.length - 1];
-            }
-            // Deal with changing the opacity if required
-            if (opacity != 1) {
-                int c = colorMap[i];
-                // TODO: make this better later?
-                colorMap[i] = Color.argb((int) (Color.alpha(c) * opacity),
-                        Color.red(c), Color.green(c), Color.blue(c));
-            }
-        }
-
-
-        return colorMap;
-    }
-
-    /**
-     * Helper function for creation of color map - interpolates between given colors
-     *
-     * @param color1 First color
-     * @param color2 Second color
-     * @param ratio  Between 0 to 1. Fraction of the distance between color1 and color2
-     * @return Color associated with x2
-     */
-    static int interpolateColor(int color1, int color2, float ratio) {
-
-        int alpha = (int) ((Color.alpha(color2) - Color.alpha(color1)) * ratio + Color.alpha(color1));
-
-        float[] hsv1 = new float[3];
-        Color.RGBToHSV(Color.red(color1), Color.green(color1), Color.blue(color1), hsv1);
-        float[] hsv2 = new float[3];
-        Color.RGBToHSV(Color.red(color2), Color.green(color2), Color.blue(color2), hsv2);
-
-        // adjust so that the shortest path on the color wheel will be taken
-        if (hsv1[0] - hsv2[0] > 180) {
-            hsv2[0] += 360;
-        } else if (hsv2[0] - hsv1[0] > 180) {
-            hsv1[0] += 360;
-        }
-
-        // Interpolate using calculated ratio
-        float[] result = new float[3];
-        for (int i = 0; i < 3; i++) {
-            result[i] = (hsv2[i] - hsv1[i]) * (ratio) + hsv1[i];
-        }
-
-        return Color.HSVToColor(alpha, result);
-    }
 
 }
