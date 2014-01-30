@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 /**
  * A class to generate a color map from a given array of colors and the fractions
- * of the maximum value that the colors represent by interpolating between them.
+ * that the colors represent by interpolating between their HSV values.
  * This color map is to be used in the HeatmapTileProvider.
  */
 public class Gradient {
