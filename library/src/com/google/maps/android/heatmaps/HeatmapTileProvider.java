@@ -56,7 +56,7 @@ public class HeatmapTileProvider implements TileProvider {
      * These should be a sorted array of floats in the interval [0, 1].
      */
     public static final float[] DEFAULT_GRADIENT_START_POINTS = {
-            0.1f, 1f
+            0.2f, 1f
     };
 
     /**
