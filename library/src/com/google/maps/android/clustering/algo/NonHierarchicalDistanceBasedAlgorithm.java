@@ -184,5 +184,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         public int getSize() {
             return 1;
         }
+        
+        @Override
+		public boolean isOneLocation() {
+        	return false;
+        }
     }
 }
