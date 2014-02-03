@@ -52,17 +52,12 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             Color.rgb(255, 0, 0)
     };
 
-<<<<<<< HEAD
-=======
     public static final float[] ALT_HEATMAP_GRADIENT_START_POINTS = {
             0.0f, 0.10f, 0.20f, 0.60f, 1.0f
     };
 
     public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS, ALT_HEATMAP_GRADIENT_START_POINTS);
 
-    private static final String TAG = HeatmapsDemoActivity.class.getName();
-
->>>>>>> remotes/upstream/master
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
 

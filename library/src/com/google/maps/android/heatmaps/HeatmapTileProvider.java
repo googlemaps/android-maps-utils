@@ -20,6 +20,7 @@ import java.util.Iterator;
  * Tile provider that creates heatmap tiles.
  */
 public class HeatmapTileProvider implements TileProvider {
+
     /**
      * Default radius for convolution
      */
@@ -49,27 +50,20 @@ public class HeatmapTileProvider implements TileProvider {
     };
 
     /**
-<<<<<<< HEAD
      * Tile dimension. Package access - WeightedLatLng
      */
     static final int TILE_DIM = 512;
 
     /**
-     * For use in getBounds.
-     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
-     * upper bound, it should be returned)
-     */
-    static final double sigma = 0.0000001;
-
-    /**
      * Assumed screen size
      */
     private static final int SCREEN_SIZE = 1280;
-=======
+
+    /**
      * Default gradient for heatmap.
      */
-    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS, DEFAULT_GRADIENT_START_POINTS);
->>>>>>> remotes/upstream/master
+    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS,
+            DEFAULT_GRADIENT_START_POINTS);
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -102,22 +96,11 @@ public class HeatmapTileProvider implements TileProvider {
     private static final Tile mBlankTile = TileProvider.NO_TILE;
 
     /**
-<<<<<<< HEAD
-     * Default size of a color map for the heatmap
-     */
-    private static final int COLOR_MAP_SIZE = 1001;
-=======
-     * Tag, for logging
-     */
-    private static final String TAG = HeatmapTileProvider.class.getName();
-
-    /**
      * For use in getBounds.
      * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
      * upper bound, it should be returned)
      */
     static double sigma = 0.0000001;
->>>>>>> remotes/upstream/master
 
     /**
      * Quad tree of all the points to display in the heatmap
@@ -774,99 +757,4 @@ public class HeatmapTileProvider implements TileProvider {
 
         return max;
     }
-
-<<<<<<< HEAD
-    /**
-     * Generates the color map to use with a provided gradient.
-     *
-     * @param gradient Array of colors (int format)
-     * @param opacity  Overall opacity of entire image: every individual alpha value will be
-     *                 multiplied by this opacity.
-     * @return the generated color map based on the gradient
-     */
-    static int[] generateColorMap(int[] gradient, double opacity) {
-        // Convert gradient into parallel arrays
-        int[] values = new int[gradient.length];
-        int[] colors = new int[gradient.length];
-
-        // Evenly space out gradient colors with a constant interval (interval = "space" between
-        // colors given in the gradient)
-        // With defaults, this is 1000/10 = 100
-        int interval = (COLOR_MAP_SIZE - 1) / (gradient.length - 1);
-
-        // Go through gradient and insert into values/colors
-        for (int i = 0; i < gradient.length; i++) {
-            values[i] = i * interval;
-            colors[i] = gradient[i];
-        }
-
-        int[] colorMap = new int[COLOR_MAP_SIZE];
-        // lowColorStop = closest color stop (value from gradient) below current position
-        int lowColorStop = 0;
-        for (int i = 0; i < COLOR_MAP_SIZE; i++) {
-            // if i is larger than next color stop value, increment to next color stop
-            // Check that it is safe to access lowColorStop + 1 first!
-            if (lowColorStop < values.length - 1) {
-                if (i > values[lowColorStop + 1]) {
-                    lowColorStop++;
-                }
-            }
-            // In between two color stops: interpolate
-            if (lowColorStop < values.length - 1) {
-                float ratio = (i - interval * lowColorStop) / ((float) interval);
-                colorMap[i] = interpolateColor(colors[lowColorStop], colors[lowColorStop + 1],
-                        ratio);
-            }
-            // above highest color stop: use that
-            else {
-                colorMap[i] = colors[colors.length - 1];
-            }
-            // Deal with changing the opacity if required
-            if (opacity != 1) {
-                int c = colorMap[i];
-                colorMap[i] = Color.argb((int) (Color.alpha(c) * opacity),
-                        Color.red(c), Color.green(c), Color.blue(c));
-            }
-        }
-
-
-        return colorMap;
-    }
-
-    /**
-     * Helper function for creation of color map - interpolates between given colors
-     *
-     * @param color1 First color
-     * @param color2 Second color
-     * @param ratio  Between 0 to 1. Fraction of the distance between color1 and color2
-     * @return Color associated with x2
-     */
-    static int interpolateColor(int color1, int color2, float ratio) {
-
-        int alpha = (int) ((Color.alpha(color2) - Color.alpha(color1)) * ratio +
-                Color.alpha(color1));
-
-        float[] hsv1 = new float[3];
-        Color.RGBToHSV(Color.red(color1), Color.green(color1), Color.blue(color1), hsv1);
-        float[] hsv2 = new float[3];
-        Color.RGBToHSV(Color.red(color2), Color.green(color2), Color.blue(color2), hsv2);
-
-        // adjust so that the shortest path on the color wheel will be taken
-        if (hsv1[0] - hsv2[0] > 180) {
-            hsv2[0] += 360;
-        } else if (hsv2[0] - hsv1[0] > 180) {
-            hsv1[0] += 360;
-        }
-
-        // Interpolate using calculated ratio
-        float[] result = new float[3];
-        for (int i = 0; i < 3; i++) {
-            result[i] = (hsv2[i] - hsv1[i]) * (ratio) + hsv1[i];
-        }
-
-        return Color.HSVToColor(alpha, result);
-    }
-=======
->>>>>>> remotes/upstream/master
-
 }
