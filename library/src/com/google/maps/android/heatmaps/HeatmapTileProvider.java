@@ -31,26 +31,25 @@ public class HeatmapTileProvider implements TileProvider {
     public static final double DEFAULT_OPACITY = 0.7;
 
     /**
-     * Default gradient for heatmap.
-     * Copied from Javascript version.
-     * Array of colors, in int form.
+     * Colors for default gradient.
+     * Array of colors, represented by ints.
      */
-    public static final int[] DEFAULT_GRADIENT = {
-            //a, r, g, b / r, g, b
-            Color.argb(0, 102, 255, 0),  // green (invisible)
-            Color.argb(255 / 3 * 2, 102, 255, 0),  // 2/3rds invisible
-            Color.rgb(147, 255, 0),
-            Color.rgb(193, 255, 0),
-            Color.rgb(238, 255, 0),  // yellow
-            Color.rgb(244, 227, 0),
-            Color.rgb(249, 198, 0),
-            Color.rgb(255, 170, 0),  // orange
-            Color.rgb(255, 113, 0),
-            Color.rgb(255, 57, 0),
-            Color.rgb(255, 0, 0)     // red
+    public static final int[] DEFAULT_GRADIENT_COLOURS = {
+            Color.rgb(102, 225, 0),
+            Color.rgb(255, 0, 0)
     };
 
     /**
+     * Starting fractions for default gradient.
+     * This defines which percentages the above colors represent.
+     * These should be a sorted array of floats in the interval [0, 1].
+     */
+    public static final float[] DEFAULT_GRADIENT_START_POINTS = {
+            0.2f, 1f
+    };
+
+    /**
+<<<<<<< HEAD
      * Tile dimension. Package access - WeightedLatLng
      */
     static final int TILE_DIM = 512;
@@ -66,6 +65,11 @@ public class HeatmapTileProvider implements TileProvider {
      * Assumed screen size
      */
     private static final int SCREEN_SIZE = 1280;
+=======
+     * Default gradient for heatmap.
+     */
+    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS, DEFAULT_GRADIENT_START_POINTS);
+>>>>>>> remotes/upstream/master
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -98,9 +102,22 @@ public class HeatmapTileProvider implements TileProvider {
     private static final Tile mBlankTile = TileProvider.NO_TILE;
 
     /**
+<<<<<<< HEAD
      * Default size of a color map for the heatmap
      */
     private static final int COLOR_MAP_SIZE = 1001;
+=======
+     * Tag, for logging
+     */
+    private static final String TAG = HeatmapTileProvider.class.getName();
+
+    /**
+     * For use in getBounds.
+     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
+     * upper bound, it should be returned)
+     */
+    static double sigma = 0.0000001;
+>>>>>>> remotes/upstream/master
 
     /**
      * Quad tree of all the points to display in the heatmap
@@ -125,7 +142,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Gradient of the color map
      */
-    private int[] mGradient;
+    private Gradient mGradient;
 
     /**
      * Color map to use to color tiles
@@ -156,7 +173,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Optional, initialised to default values
         private int radius = DEFAULT_RADIUS;
-        private int[] gradient = DEFAULT_GRADIENT;
+        private Gradient gradient = DEFAULT_GRADIENT;
         private double opacity = DEFAULT_OPACITY;
 
         /**
@@ -212,20 +229,11 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for gradient in builder
-         *
          * @param val Gradient to color heatmap with.
-         *            Ordered from least to highest corresponding intensity.
-         *            A larger colour map is interpolated from these "colour stops".
-         *            First color usually fully transparent, and should be at least 3 colors for
-         *            best results.
          * @return updated builder object
          */
-        public Builder gradient(int[] val) {
+        public Builder gradient(Gradient val) {
             gradient = val;
-            // Check that gradient is not empty
-            if (gradient.length == 0) {
-                throw new IllegalArgumentException("Gradient is empty.");
-            }
             return this;
         }
 
@@ -459,9 +467,9 @@ public class HeatmapTileProvider implements TileProvider {
      *
      * @param gradient Gradient to set
      */
-    public void setGradient(int[] gradient) {
+    public void setGradient(Gradient gradient) {
         mGradient = gradient;
-        mColorMap = generateColorMap(gradient, mOpacity);
+        mColorMap = gradient.generateColorMap(mOpacity);
     }
 
     /**
@@ -679,7 +687,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         int i, j, index, col;
         double val;
-        // Array of colours
+        // Array of colors
         int colors[] = new int[dim * dim];
         for (i = 0; i < dim; i++) {
             for (j = 0; j < dim; j++) {
@@ -767,6 +775,7 @@ public class HeatmapTileProvider implements TileProvider {
         return max;
     }
 
+<<<<<<< HEAD
     /**
      * Generates the color map to use with a provided gradient.
      *
@@ -857,5 +866,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         return Color.HSVToColor(alpha, result);
     }
+=======
+>>>>>>> remotes/upstream/master
 
 }
