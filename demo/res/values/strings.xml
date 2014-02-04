@@ -3,7 +3,7 @@
     <string name="app_name">Maps Utils Demo</string>
     <string name="input_text">Looking for...</string>
     <string name="button_send">Go!</string>
-    <string name="police_stations">Police Stations in Melbourne</string>
+    <string name="police_stations">Police Stations in Victoria</string>
     <string name="medicare">Medicare Offices</string>
     <string-array name="heatmaps_datasets_array">
         <item>@string/police_stations</item>
