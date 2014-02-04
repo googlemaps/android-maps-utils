@@ -184,7 +184,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         }
 
         for (int j = 0; j < 4; j++) {
-            StringBuilder jsonResults = getJsonPlaces(keyword, searchCenters.get(j));
+            String jsonResults = getJsonPlaces(keyword, searchCenters.get(j));
             try {
                 // Create a JSON object hierarchy from the results
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
@@ -214,18 +214,18 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * @param location The location the radar search should be based around.
      * @return The results from the radar search request as a json
      */
-    private StringBuilder getJsonPlaces(String keyword, LatLng location) {
+    private String getJsonPlaces(String keyword, LatLng location) {
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
         try {
-            StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_RADAR_SEARCH + OUT_JSON);
-            sb.append("?location=" + location.latitude + "," + location.longitude);
-            sb.append("&radius=5000");
-            sb.append("&sensor=false");
-            sb.append("&key=" + API_KEY);
-            sb.append("&keyword=" + keyword.replace(" ", "%20"));
-
-            URL url = new URL(sb.toString());
+            URL url = new URL(
+                    PLACES_API_BASE + TYPE_RADAR_SEARCH + OUT_JSON
+                    + "?location=" + location.latitude + "," + location.longitude
+                    + "&radius=" + (SEARCH_RADIUS / 2)
+                    + "&sensor=false"
+                    + "&key=" + API_KEY
+                    + "&keyword=" + keyword.replace(" ", "%20")
+            );
             conn = (HttpURLConnection) url.openConnection();
             InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
@@ -246,7 +246,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 conn.disconnect();
             }
         }
-        return jsonResults;
+        return jsonResults.toString();
     }
 
     /**
