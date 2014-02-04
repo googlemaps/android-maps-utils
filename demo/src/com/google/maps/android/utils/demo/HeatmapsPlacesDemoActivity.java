@@ -3,7 +3,6 @@ package com.google.maps.android.utils.demo;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -40,22 +39,34 @@ import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+/**
+ * A demo of the heatmaps library incorporating radar search from the Google Places API.
+ * This demonstrates the usefulness of heatmaps for displaying the distribution of points,
+ * as well as demonstrating the various color options and dealing with multiple heatmaps.
+ */
 public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
     private GoogleMap mMap = null;
 
     private final LatLng SYDNEY = new LatLng(-33.873651, 151.2058896);
 
-    private static final String LOG_TAG = "HeatmapsDemoApp";
-
+    /**
+     * The base URL for the radar search request.
+     */
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
+
+    /**
+     * The options required for the radar search.
+     */
     private static final String TYPE_RADAR_SEARCH = "/radarsearch";
     private static final String OUT_JSON = "/json";
-    // server API key
-    // TODO : remove
+    // Places API Server Key - place your own here!
+    // TODO : remove our key
     private static final String API_KEY = "AIzaSyDzEnwjg6wwrkrLLBUr0TEWfS8O5Dt1NEA";
 
-    //Red, Blue, Green, Purple, Orange
+    /**
+     * The colors to be used for the different heatmap layers.
+     */
     private static final int[] COLORS = {
             Color.rgb(238, 44, 44),    // red
             Color.rgb(60, 80, 255),    // blue
@@ -64,16 +75,32 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             Color.rgb(100, 100, 100)}; // grey
     private static final int MAX_CHECKBOXES = COLORS.length;
 
+    /**
+     * The search radius which roughly corresponds to the radius of the results
+     * from the radar search.
+     */
     public static final int SEARCH_RADIUS = 8000;
 
+    /**
+     * Stores the TileOverlay corresponding to each of the keywords that have been searched for.
+     */
     private Hashtable<String, TileOverlay> mOverlays = new Hashtable<String, TileOverlay>();
 
+    /**
+     * The keywords that have been searched for.
+     */
     private ArrayList<String> mKeywords;
 
+    /**
+     * A layout containing checkboxes for each of the heatmaps rendered.
+     */
     private LinearLayout mCheckboxLayout;
 
     private Context mContext;
 
+    /**
+     * The number of overlays rendered so far.
+     */
     private int mOverlayCount = 0;
 
     @Override
@@ -97,11 +124,8 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         });
 
         mContext = this;
-
         mCheckboxLayout = (LinearLayout) findViewById(R.id.checkboxes);
-
         mKeywords = new ArrayList<String>();
-
         setUpMap();
     }
 
@@ -121,6 +145,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     }
 
     /**
+     * Takes the input from the user and generates the required heatmap.
      * Called when a search query is submitted
      */
     public void submit() {
@@ -143,12 +168,19 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         }
     }
 
+    /**
+     * Makes four radar search requests for the given keyword, then parses the
+     * json output and returns the search results as a collection of LatLng objects.
+     *
+     * @param keyword A string to use as a search term for the radar search
+     * @return Returns the search results from radar search as a collection
+     *          of LatLng objects.
+     */
     private Collection<LatLng> getPoints(String keyword) {
-        Log.d(LOG_TAG, "getting points for " + keyword);
-        long start = System.currentTimeMillis();
         HashMap<String, LatLng> results = new HashMap<String, LatLng>();
 
-        // create four points to centre points around - so that four separate requests will be done
+        // Calculate four equidistant points around Sydney to use as search centers
+        //   so that four searches can be done.
         ArrayList<LatLng> searchCenters = new ArrayList<LatLng>(4);
         for (int heading = 45; heading < 360; heading += 90) {
             searchCenters.add(SphericalUtil.computeOffset(SYDNEY, SEARCH_RADIUS / 2, heading));
@@ -161,8 +193,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 JSONObject jsonObj = new JSONObject(jsonResults.toString());
                 JSONArray pointsJsonArray = jsonObj.getJSONArray("results");
 
-                Log.e("json results for " + keyword, "" + pointsJsonArray.length());
-
                 // Extract the Place descriptions from the results
                 for (int i = 0; i < pointsJsonArray.length(); i++) {
                     if (!results.containsKey(pointsJsonArray.getJSONObject(i).getString("id"))) {
@@ -174,13 +204,19 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                     }
                 }
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Cannot process JSON results", e);
+                Toast.makeText(mContext, "Cannot process JSON results", Toast.LENGTH_SHORT).show();
             }
         }
-        Log.d(LOG_TAG, "getPoints time = " + (System.currentTimeMillis() - start));
         return results.values();
     }
 
+    /**
+     * Makes a radar search request and returns the results in a json format.
+     *
+     * @param keyword The keyword to be searched for.
+     * @param location The location the radar search should be based around.
+     * @return The results from the radar search request as a json
+     */
     private StringBuilder getJsonPlaces(String keyword, LatLng location) {
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
@@ -203,10 +239,10 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Error processing Places API URL", e);
+            Toast.makeText(mContext, "Error processing Places API URL", Toast.LENGTH_SHORT).show();
             return null;
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error connecting to Places API", e);
+            Toast.makeText(mContext, "Error connecting to Places API", Toast.LENGTH_SHORT).show();
             return null;
         } finally {
             if (conn != null) {
@@ -222,15 +258,13 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * @param keyword the search terms associated with the check box
      */
     private void makeCheckBox(final String keyword) {
-        boolean show = true;
-
         mCheckboxLayout.setVisibility(View.VISIBLE);
 
         // Make new checkbox
         CheckBox checkBox = new CheckBox(mContext);
         checkBox.setText(keyword);
         checkBox.setTextColor(COLORS[mOverlayCount]);
-        checkBox.setChecked(show);
+        checkBox.setChecked(true);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -255,10 +289,8 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         }
 
         protected void onPostExecute(PointsKeywords pointsKeywords) {
-            long start = System.currentTimeMillis();
             Collection<LatLng> points = pointsKeywords.points;
             String keyword = pointsKeywords.keyword;
-            Log.e("keyword", keyword);
 
             // Check that it wasn't an empty query.
             if (!points.isEmpty()) {
@@ -268,7 +300,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                             .data(new ArrayList<LatLng>(points))
                             .gradient(makeGradient(COLORS[mOverlayCount]))
                             .build();
-                    Log.d(":)", "Using the " + mOverlayCount + "th colour");
                     TileOverlay overlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(provider));
                     mOverlays.put(keyword, overlay);
                 }
@@ -277,7 +308,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                     ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                     progressBar.setVisibility(View.GONE);
                 }
-                Log.d(LOG_TAG, "Make heatmap time = " + (System.currentTimeMillis() - start));
             } else {
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 progressBar.setVisibility(View.GONE);
@@ -287,7 +317,9 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         }
     }
 
-    // Because we want to keep both the points and the keywords.
+    /**
+     * Class to store both the points and the keywords, for use in the MakeOverlay class.
+     */
     private class PointsKeywords {
         public Collection<LatLng> points;
         public String keyword;
@@ -298,6 +330,12 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         }
     }
 
+    /**
+     * Creates a one colored gradient which varies in opacity.
+     * 
+     * @param color The opaque color the gradient should be.
+     * @return A gradient made purely of the given colour with different alpha values.
+     */
     private Gradient makeGradient(int color) {
         int[] colors = {color};
         float[] startPoints = {1.0f};
