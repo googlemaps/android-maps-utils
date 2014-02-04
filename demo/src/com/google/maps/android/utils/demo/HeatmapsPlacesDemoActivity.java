@@ -85,11 +85,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     private Hashtable<String, TileOverlay> mOverlays = new Hashtable<String, TileOverlay>();
 
     /**
-     * The keywords that have been searched for.
-     */
-    private ArrayList<String> mKeywords;
-
-    /**
      * A layout containing checkboxes for each of the heatmaps rendered.
      */
     private LinearLayout mCheckboxLayout;
@@ -99,7 +94,12 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * The number of overlays rendered so far.
      */
-    private int mOverlayCount = 0;
+    private int mOverlaysRendered = 0;
+
+    /**
+     * The number of overlays that have been inputted so far.
+     */
+    private int mOverlaysInput = 0;
 
     @Override
     protected int getLayoutId() {
@@ -123,7 +123,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
         mContext = this;
         mCheckboxLayout = (LinearLayout) findViewById(R.id.checkboxes);
-        mKeywords = new ArrayList<String>();
         setUpMap();
     }
 
@@ -149,12 +148,12 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     public void submit() {
         EditText editText = (EditText) findViewById(R.id.input_text);
         String keyword = editText.getText().toString();
-        if (mKeywords.contains(keyword)) {
+        if (mOverlays.contains(keyword)) {
             Toast.makeText(mContext, "This keyword has already been inputted :(", Toast.LENGTH_SHORT).show();
-        } else if (mOverlayCount == MAX_CHECKBOXES) {
+        } else if (mOverlaysRendered == MAX_CHECKBOXES) {
             Toast.makeText(mContext, "You can only input " + MAX_CHECKBOXES + " keywords. :(", Toast.LENGTH_SHORT).show();
         } else {
-            mKeywords.add(keyword);
+            mOverlaysInput++;
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.VISIBLE);
             new MakeOverlay().execute(keyword);
@@ -261,7 +260,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         // Make new checkbox
         CheckBox checkBox = new CheckBox(mContext);
         checkBox.setText(keyword);
-        checkBox.setTextColor(COLORS[mOverlayCount]);
+        checkBox.setTextColor(COLORS[mOverlaysRendered]);
         checkBox.setChecked(true);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,13 +295,13 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                     makeCheckBox(keyword);
                     HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                             .data(new ArrayList<LatLng>(points))
-                            .gradient(makeGradient(COLORS[mOverlayCount]))
+                            .gradient(makeGradient(COLORS[mOverlaysRendered]))
                             .build();
                     TileOverlay overlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(provider));
                     mOverlays.put(keyword, overlay);
                 }
-                mOverlayCount++;
-                if (mOverlayCount == mKeywords.size()) {
+                mOverlaysRendered++;
+                if (mOverlaysRendered == mOverlaysInput) {
                     ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -310,7 +309,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(mContext, "No results for this query :(", Toast.LENGTH_SHORT).show();
-                mKeywords.remove(keyword);
             }
         }
     }
