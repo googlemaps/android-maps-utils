@@ -44,7 +44,7 @@ public class HeatmapTileProvider implements TileProvider {
      * Colors for default gradient.
      * Array of colors, represented by ints.
      */
-    public static final int[] DEFAULT_GRADIENT_COLOURS = {
+    public static final int[] DEFAULT_GRADIENT_COLORS = {
             Color.rgb(102, 225, 0),
             Color.rgb(255, 0, 0)
     };
@@ -61,7 +61,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Default gradient for heatmap.
      */
-    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS, DEFAULT_GRADIENT_START_POINTS);
+    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLORS, DEFAULT_GRADIENT_START_POINTS);
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -219,6 +219,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Setter for gradient in builder
+         *
          * @param val Gradient to color heatmap with.
          * @return updated builder object
          */

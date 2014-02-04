@@ -4,6 +4,8 @@
 
     <string name="police_stations">Police Stations</string>
     <string name="red_lights">Red Light Cameras</string>
+    <string name="input_text">Looking for...</string>
+    <string name="button_send">Go!</string>
 
     <string-array name="heatmaps_datasets_array">
         <item>@string/police_stations</item>
