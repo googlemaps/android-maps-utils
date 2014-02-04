@@ -41,8 +41,8 @@ public class GradientTest extends TestCase {
     }
 
     public void testSimpleColorMap() {
-        int[] colors = { Color.RED, Color.BLUE };
-        float[] startPoints = { 0f, 1.0f };
+        int[] colors = {Color.RED, Color.BLUE};
+        float[] startPoints = {0f, 1.0f};
 
         Gradient g = new Gradient(colors, startPoints, 2);
         int[] colorMap = g.generateColorMap(1.0);
@@ -51,8 +51,8 @@ public class GradientTest extends TestCase {
     }
 
     public void testLargerColorMap() {
-        int[] colors = { Color.RED, Color.GREEN };
-        float[] startPoints = { 0f, 1.0f };
+        int[] colors = {Color.RED, Color.GREEN};
+        float[] startPoints = {0f, 1.0f};
 
         Gradient g = new Gradient(colors, startPoints, 10);
         int[] colorMap = g.generateColorMap(1.0);

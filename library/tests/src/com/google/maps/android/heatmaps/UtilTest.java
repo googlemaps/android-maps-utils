@@ -1,7 +1,5 @@
 package com.google.maps.android.heatmaps;
 
-import android.graphics.Color;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geometry.Bounds;
 
