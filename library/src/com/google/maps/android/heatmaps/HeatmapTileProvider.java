@@ -50,20 +50,28 @@ public class HeatmapTileProvider implements TileProvider {
     };
 
     /**
+     * Default gradient for heatmap.
+     */
+    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS,
+            DEFAULT_GRADIENT_START_POINTS);
+
+    /**
      * Tile dimension. Package access - WeightedLatLng
      */
     static final int TILE_DIM = 512;
 
     /**
+     * For use in getBounds.
+     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
+     * upper bound, it should be returned)
+     * Package access for tests
+     */
+    static double sigma = 0.0000001;
+
+    /**
      * Assumed screen size
      */
     private static final int SCREEN_SIZE = 1280;
-
-    /**
-     * Default gradient for heatmap.
-     */
-    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS,
-            DEFAULT_GRADIENT_START_POINTS);
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -94,13 +102,6 @@ public class HeatmapTileProvider implements TileProvider {
      * Blank tile
      */
     private static final Tile mBlankTile = TileProvider.NO_TILE;
-
-    /**
-     * For use in getBounds.
-     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
-     * upper bound, it should be returned)
-     */
-    static double sigma = 0.0000001;
 
     /**
      * Quad tree of all the points to display in the heatmap
