@@ -501,7 +501,7 @@ public class HeatmapTileProvider implements TileProvider {
                 for (int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
             }
         }
-        for (int i = DEFAULT_MIN_ZOOM; i < MAX_ZOOM_LEVEL; i++) {
+        for (int i = DEFAULT_MAX_ZOOM; i < MAX_ZOOM_LEVEL; i++) {
             maxIntensityArray[i] = maxIntensityArray[DEFAULT_MAX_ZOOM - 1];
         }
 
