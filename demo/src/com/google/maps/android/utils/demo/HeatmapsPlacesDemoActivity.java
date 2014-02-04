@@ -60,9 +60,8 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      */
     private static final String TYPE_RADAR_SEARCH = "/radarsearch";
     private static final String OUT_JSON = "/json";
-    // Places API Server Key - place your own here!
-    // TODO : remove our key
-    private static final String API_KEY = "AIzaSyDzEnwjg6wwrkrLLBUr0TEWfS8O5Dt1NEA";
+    // Places API Server Key
+    private static final String API_KEY = "YOUR_KEY_HERE"; // TODO place your own here!
 
     /**
      * The colors to be used for the different heatmap layers.
@@ -332,9 +331,9 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
     /**
      * Creates a one colored gradient which varies in opacity.
-     * 
+     *
      * @param color The opaque color the gradient should be.
-     * @return A gradient made purely of the given colour with different alpha values.
+     * @return A gradient made purely of the given color with different alpha values.
      */
     private Gradient makeGradient(int color) {
         int[] colors = {color};
