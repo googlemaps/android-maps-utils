@@ -91,8 +91,8 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         spinner.setOnItemSelectedListener(new SpinnerActivity());
 
         try {
-            mLists.put(getString(R.string.police_stations), readItems(R.raw.policeall));
-            mLists.put(getString(R.string.red_lights), readItems(R.raw.redlights));
+            mLists.put(getString(R.string.police_stations), readItems(R.raw.police));
+            mLists.put(getString(R.string.medicare), readItems(R.raw.medicare));
         } catch (JSONException e) {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
