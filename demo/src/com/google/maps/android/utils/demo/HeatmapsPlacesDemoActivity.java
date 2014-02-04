@@ -156,7 +156,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             mOverlaysInput++;
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.VISIBLE);
-            new MakeOverlay().execute(keyword);
+            new MakeOverlayTask().execute(keyword);
             editText.setText("");
 
             InputMethodManager imm = (InputMethodManager) getSystemService(
@@ -280,7 +280,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * Async task, because finding the points cannot be done on the main thread, while adding
      * the overlay must be done on the main thread.
      */
-    private class MakeOverlay extends AsyncTask<String, Integer, PointsKeywords> {
+    private class MakeOverlayTask extends AsyncTask<String, Integer, PointsKeywords> {
         protected PointsKeywords doInBackground(String... keyword) {
             return new PointsKeywords(getPoints(keyword[0]), keyword[0]);
         }
@@ -314,7 +314,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     }
 
     /**
-     * Class to store both the points and the keywords, for use in the MakeOverlay class.
+     * Class to store both the points and the keywords, for use in the MakeOverlayTask class.
      */
     private class PointsKeywords {
         public Collection<LatLng> points;
