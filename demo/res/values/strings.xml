@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Maps Utils Demo</string>
-
-    <string name="police_stations">Police Stations</string>
-    <string name="red_lights">Red Light Cameras</string>
     <string name="input_text">Looking for...</string>
     <string name="button_send">Go!</string>
-
+    <string name="police_stations">Police Stations in Melbourne</string>
+    <string name="medicare">Medicare Offices</string>
     <string-array name="heatmaps_datasets_array">
         <item>@string/police_stations</item>
-        <item>@string/red_lights</item>
+        <item>@string/medicare</item>
     </string-array>
 </resources>
