@@ -18,6 +18,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.SphericalUtil;
+import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
-
-import com.google.android.gms.maps.model.TileOverlay;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.maps.android.SphericalUtil;
-import com.google.maps.android.heatmaps.Gradient;
-import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 /**
  * A demo of the heatmaps library incorporating radar search from the Google Places API.
@@ -173,7 +172,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      *
      * @param keyword A string to use as a search term for the radar search
      * @return Returns the search results from radar search as a collection
-     *          of LatLng objects.
+     * of LatLng objects.
      */
     private Collection<LatLng> getPoints(String keyword) {
         HashMap<String, LatLng> results = new HashMap<String, LatLng>();
@@ -212,7 +211,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * Makes a radar search request and returns the results in a json format.
      *
-     * @param keyword The keyword to be searched for.
+     * @param keyword  The keyword to be searched for.
      * @param location The location the radar search should be based around.
      * @return The results from the radar search request as a json
      */
