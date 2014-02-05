@@ -713,6 +713,24 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      */
     protected void onClusterItemRendered(T clusterItem, Marker marker) {
     }
+    
+    /**
+    * Get the marker from a ClusterItem
+    * @param cluster which you will obtain its marker
+    * @return a marker from a cluster or null if it does not exists
+    */
+    protected Marker getMarker(T  cluster) {
+        return mMarkerCache.get(cluster);
+    }
+
+    /**
+    * Get the ClusterItem from a marker
+    * @param marker which you will obtain its ClusterItem
+    * @return a ClusterItem from a marker or null if it does not exists
+    */
+    protected T getCluster(Marker marker) {
+        return mMarkerCache.get(marker);
+    }
 
     /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
