@@ -60,7 +60,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     private static final String TYPE_RADAR_SEARCH = "/radarsearch";
     private static final String OUT_JSON = "/json";
     // Places API Server Key
-    private static final String API_KEY = "YOUR_KEY_HERE"; // TODO place your own here!
+    private static final String API_KEY = "AIzaSyDzEnwjg6wwrkrLLBUr0TEWfS8O5Dt1NEA"; // TODO place your own here!
 
     /**
      * The colors to be used for the different heatmap layers.
@@ -166,7 +166,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             Toast.makeText(mContext, "This keyword has already been inputted :(", Toast.LENGTH_SHORT).show();
         } else if (mOverlaysRendered == MAX_CHECKBOXES) {
             Toast.makeText(mContext, "You can only input " + MAX_CHECKBOXES + " keywords. :(", Toast.LENGTH_SHORT).show();
-        } else {
+        } else if (keyword.length() != 0) {
             mOverlaysInput++;
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.VISIBLE);
@@ -201,7 +201,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             String jsonResults = getJsonPlaces(keyword, searchCenters.get(j));
             try {
                 // Create a JSON object hierarchy from the results
-                JSONObject jsonObj = new JSONObject(jsonResults.toString());
+                JSONObject jsonObj = new JSONObject(jsonResults);
                 JSONArray pointsJsonArray = jsonObj.getJSONArray("results");
 
                 // Extract the Place descriptions from the results
