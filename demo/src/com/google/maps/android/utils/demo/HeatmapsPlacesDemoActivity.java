@@ -65,13 +65,27 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * The colors to be used for the different heatmap layers.
      */
-    private static final int[] COLORS = {
-            Color.rgb(238, 44, 44),    // red
-            Color.rgb(60, 80, 255),    // blue
-            Color.rgb(20, 170, 50),    // green
-            Color.rgb(255, 80, 255),   // pink
-            Color.rgb(100, 100, 100)}; // grey
-    private static final int MAX_CHECKBOXES = COLORS.length;
+    private static final HeatmapColors[] HEATMAP_COLORS = {
+            HeatmapColors.RED,
+            HeatmapColors.BLUE,
+            HeatmapColors.GREEN,
+            HeatmapColors.PINK,
+            HeatmapColors.GREY
+    };
+
+    public enum HeatmapColors {
+        RED (Color.rgb(238, 44, 44)),
+        BLUE (Color.rgb(60, 80, 255)),
+        GREEN (Color.rgb(20, 170, 50)),
+        PINK (Color.rgb(255, 80, 255)),
+        GREY (Color.rgb(100, 100, 100));
+
+        private final int color;
+        HeatmapColors(int color) {
+            this.color = color;
+        }
+    }
+    private static final int MAX_CHECKBOXES = 5;
 
     /**
      * The search radius which roughly corresponds to the radius of the results
@@ -260,7 +274,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         // Make new checkbox
         CheckBox checkBox = new CheckBox(mContext);
         checkBox.setText(keyword);
-        checkBox.setTextColor(COLORS[mOverlaysRendered]);
+        checkBox.setTextColor(HEATMAP_COLORS[mOverlaysRendered].color);
         checkBox.setChecked(true);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,7 +309,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                     makeCheckBox(keyword);
                     HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                             .data(new ArrayList<LatLng>(points))
-                            .gradient(makeGradient(COLORS[mOverlaysRendered]))
+                            .gradient(makeGradient(HEATMAP_COLORS[mOverlaysRendered].color))
                             .build();
                     TileOverlay overlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(provider));
                     mOverlays.put(keyword, overlay);
