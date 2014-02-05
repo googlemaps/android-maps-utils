@@ -65,12 +65,12 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * The colors to be used for the different heatmap layers.
      */
-    private static final HeatmapColors[] HEATMAP_COLORS = {
-            HeatmapColors.RED,
-            HeatmapColors.BLUE,
-            HeatmapColors.GREEN,
-            HeatmapColors.PINK,
-            HeatmapColors.GREY
+    private static final int[] HEATMAP_COLORS = {
+            HeatmapColors.RED.color,
+            HeatmapColors.BLUE.color,
+            HeatmapColors.GREEN.color,
+            HeatmapColors.PINK.color,
+            HeatmapColors.GREY.color
     };
 
     public enum HeatmapColors {
@@ -274,7 +274,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         // Make new checkbox
         CheckBox checkBox = new CheckBox(mContext);
         checkBox.setText(keyword);
-        checkBox.setTextColor(HEATMAP_COLORS[mOverlaysRendered].color);
+        checkBox.setTextColor(HEATMAP_COLORS[mOverlaysRendered]);
         checkBox.setChecked(true);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,7 +309,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                     makeCheckBox(keyword);
                     HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                             .data(new ArrayList<LatLng>(points))
-                            .gradient(makeGradient(HEATMAP_COLORS[mOverlaysRendered].color))
+                            .gradient(makeGradient(HEATMAP_COLORS[mOverlaysRendered]))
                             .build();
                     TileOverlay overlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(provider));
                     mOverlays.put(keyword, overlay);
