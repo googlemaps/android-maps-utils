@@ -60,7 +60,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     private static final String TYPE_RADAR_SEARCH = "/radarsearch";
     private static final String OUT_JSON = "/json";
     // Places API Server Key
-    private static final String API_KEY = "AIzaSyDzEnwjg6wwrkrLLBUr0TEWfS8O5Dt1NEA"; // TODO place your own here!
+    private static final String API_KEY = "YOUR_KEY_HERE"; // TODO place your own here!
 
     /**
      * The colors to be used for the different heatmap layers.
