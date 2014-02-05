@@ -273,6 +273,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Changes the dataset the heatmap is portraying. Weighted.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
      *             Note: Editing data without calling setWeightedData again will potentially cause
@@ -312,6 +313,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Changes the dataset the heatmap is portraying. Unweighted.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
      */
