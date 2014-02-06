@@ -2,8 +2,7 @@ package com.google.maps.android.heatmaps;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
-import android.util.LongSparseArray;
+import android.support.v4.util.LongSparseArray;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -17,20 +16,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-
 /**
  * Tile provider that creates heatmap tiles.
  */
 public class HeatmapTileProvider implements TileProvider {
-    /**
-     * Tile dimension. Package access - WeightedLatLng
-     */
-    static final int TILE_DIM = 512;
 
-    /**
-     * Assumed screen size
-     */
-    private static final int SCREEN_SIZE = 1280;
     /**
      * Default radius for convolution
      */
@@ -45,7 +35,7 @@ public class HeatmapTileProvider implements TileProvider {
      * Colors for default gradient.
      * Array of colors, represented by ints.
      */
-    public static final int[] DEFAULT_GRADIENT_COLOURS = {
+    public static final int[] DEFAULT_GRADIENT_COLORS = {
             Color.rgb(102, 225, 0),
             Color.rgb(255, 0, 0)
     };
@@ -56,13 +46,31 @@ public class HeatmapTileProvider implements TileProvider {
      * These should be a sorted array of floats in the interval [0, 1].
      */
     public static final float[] DEFAULT_GRADIENT_START_POINTS = {
-            0.1f, 1f
+            0.2f, 1f
     };
 
     /**
      * Default gradient for heatmap.
      */
-    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLOURS, DEFAULT_GRADIENT_START_POINTS);
+    public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLORS, DEFAULT_GRADIENT_START_POINTS);
+
+    /**
+     * Tile dimension. Package access - WeightedLatLng
+     */
+    static final int TILE_DIM = 512;
+
+    /**
+     * For use in getBounds.
+     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
+     * upper bound, it should be returned)
+     * Package access for tests
+     */
+    static double sigma = 0.0000001;
+
+    /**
+     * Assumed screen size
+     */
+    private static final int SCREEN_SIZE = 1280;
 
     /**
      * Default (and minimum possible) minimum zoom level at which to calculate maximum intensities
@@ -93,18 +101,6 @@ public class HeatmapTileProvider implements TileProvider {
      * Blank tile
      */
     private static final Tile mBlankTile = TileProvider.NO_TILE;
-
-    /**
-     * Tag, for logging
-     */
-    private static final String TAG = HeatmapTileProvider.class.getName();
-
-    /**
-     * For use in getBounds.
-     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
-     * upper bound, it should be returned)
-     */
-    static double sigma = 0.0000001;
 
     /**
      * Quad tree of all the points to display in the heatmap
@@ -165,11 +161,9 @@ public class HeatmapTileProvider implements TileProvider {
 
         /**
          * Constructor for builder.
-         *
          * No required parameters here, but user must call either data() or weightedData().
          */
         public Builder() {
-
         }
 
         /**
@@ -182,7 +176,6 @@ public class HeatmapTileProvider implements TileProvider {
         public Builder data(Collection<LatLng> val) {
             return weightedData(wrapData(val));
         }
-
 
         /**
          * Setter for data in builder. Must call this or data
@@ -200,7 +193,6 @@ public class HeatmapTileProvider implements TileProvider {
             }
             return this;
         }
-
 
         /**
          * Setter for radius in builder
@@ -222,10 +214,6 @@ public class HeatmapTileProvider implements TileProvider {
          * Setter for gradient in builder
          *
          * @param val Gradient to color heatmap with.
-         *            Ordered from least to highest corresponding intensity.
-         *            A larger colour map is interpolated from these "colour stops".
-         *            First color usually fully transparent, and should be at least 3 colors for
-         *            best results.
          * @return updated builder object
          */
         public Builder gradient(Gradient val) {
@@ -307,29 +295,19 @@ public class HeatmapTileProvider implements TileProvider {
         // As quadtree creation is actually quite lightweight/fast as compared to other functions
         // called in heatmap creation, re-creating the quadtree is an acceptable solution here.
 
-        long start = System.currentTimeMillis();
         // Make the quad tree
         mBounds = getBounds(mData);
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "getBounds: " + (end - start) + "ms");
 
-        start = System.currentTimeMillis();
         mTree = new PointQuadTree(mBounds);
 
         // Add points to quad tree
         for (WeightedLatLng l : mData) {
             mTree.add(l);
         }
-        end = System.currentTimeMillis();
-
-        Log.d(TAG, "make quadtree: " + (end - start) + "ms");
 
         // Calculate reasonable maximum intensity for color scale (user can also specify)
         // Get max intensities
-        start = System.currentTimeMillis();
         mMaxIntensity = getMaxIntensities(mRadius);
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getMaxIntensities: " + (end - start) + "ms");
     }
 
     /**
@@ -339,7 +317,7 @@ public class HeatmapTileProvider implements TileProvider {
      */
 
     public void setData(Collection<LatLng> data) {
-        // Turn them into LatLngs and delegate.
+        // Turn them into WeightedLatLngs and delegate.
         setWeightedData(wrapData(data));
     }
 
@@ -369,7 +347,6 @@ public class HeatmapTileProvider implements TileProvider {
      * @return image in Tile format
      */
     public Tile getTile(int x, int y, int zoom) {
-        long startTime = System.currentTimeMillis();
         // Convert tile coordinates and zoom into Point/Bounds format
         // Know that at zoom level 0, there is one tile: (0, 0) (arbitrary width 512)
         // Each zoom level multiplies number of tiles by 2
@@ -435,10 +412,7 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Search for all points within tile bounds
-        long start = System.currentTimeMillis();
         Collection<WeightedLatLng> points = mTree.search(tileBounds);
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Search (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // If no points, return blank tile
         if (points.isEmpty()) {
@@ -446,7 +420,6 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         // Quantize points
-        start = System.currentTimeMillis();
         double[][] intensity = new double[TILE_DIM + mRadius * 2][TILE_DIM + mRadius * 2];
         for (WeightedLatLng w : points) {
             Point p = w.getPoint();
@@ -462,35 +435,19 @@ public class HeatmapTileProvider implements TileProvider {
             intensity[bucketX][bucketY] += w.getIntensity();
         }
 
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Bucketing (" + x + "," + y + ") : " + (end - start) + "ms");
-
-        start = System.currentTimeMillis();
         // Convolve it ("smoothen" it out)
         double[][] convolved = convolve(intensity, mKernel);
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Convolving (" + x + "," + y + ") : " + (end - start) + "ms");
 
         // Color it into a bitmap
-        start = System.currentTimeMillis();
         Bitmap bitmap = colorize(convolved, mColorMap, mMaxIntensity[zoom]);
-        end = System.currentTimeMillis();
-        Log.d(TAG, "getTile Colorize (" + x + "," + y + ") : " + (end - start) + "ms");
 
-        // Convert bitmap to tile
-        start = System.currentTimeMillis();
-        Tile tile = convertBitmap(bitmap);
-        long endTime = System.currentTimeMillis();
-        Log.d(TAG, "getTile convertBitmap (" + x + "," + y + ") : " + (endTime - start) + "ms");
-        Log.d(TAG, "getTile Total (" + x + "," + y + ") : " + (endTime - startTime) + "ms, Points: " + points.size() + ", Zoom: " + zoom);
-
-        return tile;
+        // Convert bitmap to tile and return
+        return convertBitmap(bitmap);
     }
 
     /**
      * Setter for gradient/color map.
-     * Important: tile overlay cache must be cleared after this for it to be effective
-     * outside of initialisation
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param gradient Gradient to set
      */
@@ -501,7 +458,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Setter for radius.
-     * User should clear overlay's tile cache after calling this.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param radius Radius to set
      */
@@ -515,7 +472,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Setter for opacity
-     * User should clear overlay's tile cache after calling this.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param opacity opacity to set
      */
@@ -545,7 +502,7 @@ public class HeatmapTileProvider implements TileProvider {
                 for (int j = 0; j < i; j++) maxIntensityArray[j] = maxIntensityArray[i];
             }
         }
-        for (int i = DEFAULT_MIN_ZOOM; i < MAX_ZOOM_LEVEL; i++) {
+        for (int i = DEFAULT_MAX_ZOOM; i < MAX_ZOOM_LEVEL; i++) {
             maxIntensityArray[i] = maxIntensityArray[DEFAULT_MAX_ZOOM - 1];
         }
 
@@ -619,9 +576,9 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Applies a 2D Gaussian convolution to the input grid, returning a 2D grid cropped of padding.
      *
-     * @param grid   Raw input grid to convolve: dimension dim+2*radius x dim + 2*radius
+     * @param grid   Raw input grid to convolve: dimension (dim + 2 * radius) x (dim + 2 * radius)
      *               ie dim * dim with padding of size radius
-     * @param kernel Pre-computed Gaussian kernel of size radius*2+1
+     * @param kernel Pre-computed Gaussian kernel of size radius * 2 + 1
      * @return the smoothened grid
      */
     static double[][] convolve(double[][] grid, double[] kernel) {
@@ -708,15 +665,13 @@ public class HeatmapTileProvider implements TileProvider {
         // Maximum color value
         int maxColor = colorMap[colorMap.length - 1];
         // Multiplier to "scale" intensity values with, to map to appropriate color
-        // TODO: is this change (-1 to length) ok? Reasoning: otherwise max will break it
         double colorMapScaling = (colorMap.length - 1) / max;
         // Dimension of the input grid (and dimension of output bitmap)
         int dim = grid.length;
 
-
         int i, j, index, col;
         double val;
-        // Array of colours
+        // Array of colors
         int colors[] = new int[dim * dim];
         for (i = 0; i < dim; i++) {
             for (j = 0; j < dim; j++) {
@@ -798,11 +753,9 @@ public class HeatmapTileProvider implements TileProvider {
             // Yes, do need to update it, despite it being a Double.
             column.put(yBucket, value);
 
-            if (value > max) max = (double) value;
+            if (value > max) max = value;
         }
 
         return max;
     }
-
-
 }

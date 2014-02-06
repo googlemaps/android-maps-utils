@@ -1,7 +1,5 @@
 package com.google.maps.android.heatmaps;
 
-import android.graphics.Color;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geometry.Bounds;
 
@@ -127,41 +125,5 @@ public class UtilTest extends TestCase {
         expected = new Bounds(x3, x2 + HeatmapTileProvider.sigma, y2,
                 y3 + HeatmapTileProvider.sigma);
         assertTrue(bounds.contains(expected) && expected.contains(bounds));
-    }
-
-    public void testInterpolateColor() {
-        int red = Color.RED;
-        int blue = Color.BLUE;
-        int green = Color.GREEN;
-
-        // Expect itself
-        assertEquals(red, HeatmapTileProvider.interpolateColor(red, red, 0.5f));
-        assertEquals(blue, HeatmapTileProvider.interpolateColor(blue, blue, 0.5f));
-        assertEquals(green, HeatmapTileProvider.interpolateColor(green, green, 0.5f));
-
-        // Expect first to be returned
-        int result = HeatmapTileProvider.interpolateColor(red, blue, 0);
-        assertEquals(red, result);
-
-        // Expect second to be returned
-        result = HeatmapTileProvider.interpolateColor(red, blue, 1);
-        assertEquals(blue, result);
-
-        // Expect same value (should wraparound correctly, shortest path both times)
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.5f),
-                HeatmapTileProvider.interpolateColor(blue, red, 0.5f));
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.2f),
-                HeatmapTileProvider.interpolateColor(blue, red, 0.8f));
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.8f),
-                HeatmapTileProvider.interpolateColor(blue, red, 0.2f));
-
-        // Testing actual values now
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.2f), -65433);
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.5f), Color.MAGENTA);
-        assertEquals(HeatmapTileProvider.interpolateColor(red, blue, 0.8f), -10092289);
-        assertEquals(HeatmapTileProvider.interpolateColor(red, green, 0.5f), Color.YELLOW);
-        assertEquals(HeatmapTileProvider.interpolateColor(blue, green, 0.5f), Color.CYAN);
-
-        // TODO: Transparency tests (after we decide how we're going to deal with transparency)
     }
 }
