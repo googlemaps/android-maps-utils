@@ -25,6 +25,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Heatmaps", HeatmapsDemoActivity.class);
+        addDemo("Heatmaps with Places API", HeatmapsPlacesDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
