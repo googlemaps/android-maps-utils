@@ -41,6 +41,31 @@ public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
     public int getSize() {
         return mItems.size();
     }
+    
+    private static boolean isEqual(double d0, double d1) {
+        final double epsilon = 0.0000001;
+        return Math.abs(d0 - d1) < epsilon;
+    }
+    
+    private static boolean isEqualPosition(LatLng position0, LatLng position1) {
+    	return isEqual(position0.latitude, position1.latitude) && 
+    		   isEqual(position0.longitude, position1.longitude);
+    }
+    
+    @Override
+	public boolean isOneLocation() {
+    	LatLng position = null;
+    	for (T item : mItems) {
+    		if (position == null || isEqualPosition(item.getPosition(), position)) {
+    			position = item.getPosition();
+    		} else {
+    			position = null;
+    			break;
+    		}
+		}
+    	
+    	return position != null;
+    }
 
     @Override
     public String toString() {
