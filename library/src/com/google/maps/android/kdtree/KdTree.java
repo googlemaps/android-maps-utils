@@ -4,7 +4,6 @@ import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -37,10 +36,12 @@ public class KdTree<T extends KdTree.Item> {
      */
     private final static int MAX_ELEMENTS = 50;
 
-    /**
+    /** TODO fix these comments
      * The elements inside this quad, if any.
      */
-    private ArrayList<T> mItems;
+    private ArrayList<T> mXItems;
+
+    private ArrayList<T> mYItems;
 
     /**
      * Maximum depth.
@@ -55,23 +56,25 @@ public class KdTree<T extends KdTree.Item> {
     private static final Random r = new Random();
 
     public KdTree(ArrayList<T> items) {
-        mItems = items;
+        //sort things;
+        mXItems = items;
         mDepth = 0;
         if (items == null) {
             mBounds = null;
         } else {
             mBounds = getBounds(items);
-            if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
+            if (mXItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
                 split();
             }
         }
     }
 
-    private KdTree(ArrayList<T> items, int depth, Bounds bounds) {
-        mItems = items;
+    private KdTree(ArrayList<T> xitems, ArrayList<T> yitems, int depth, Bounds bounds) {
+        mXItems = xitems;
+        mYItems = yitems;
         mDepth = depth;
         mBounds = bounds;
-        if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
+        if (mXItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
             split();
         }
     }
@@ -79,70 +82,20 @@ public class KdTree<T extends KdTree.Item> {
     private void split() {
         Bounds lowBounds, highBounds;
         if (mDepth % 2 == 0) {
-            selectX(mItems.size() / 2, 0, mItems.size() - 1);
-            double boundary = (mItems.get(mItems.size() / 2).getPoint().x + mItems.get((mItems.size() / 2) + 1).getPoint().x) / 2;
+            double boundary = (mXItems.get(mXItems.size() / 2).getPoint().x + mXItems.get((mXItems.size() / 2) + 1).getPoint().x) / 2;
             lowBounds = new Bounds(mBounds.minX, boundary, mBounds.minY, mBounds.maxY);
             highBounds = new Bounds(mBounds.minX, boundary, mBounds.minY, mBounds.maxY);
         } else {
-            selectY(mItems.size() / 2, 0, mItems.size() - 1);
-            double boundary = (mItems.get(mItems.size() / 2).getPoint().y + mItems.get((mItems.size() / 2) + 1).getPoint().y) / 2;
+            double boundary = (mYItems.get(mYItems.size() / 2).getPoint().y + mYItems.get((mYItems.size() / 2) + 1).getPoint().y) / 2;
             lowBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary);
             highBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary);
         }
-        // TODO what if multiple at same x / y value? How to do bounds?
         mChildren = new KdTree[]{
-                new KdTree(Arrays.copyOfRange(mItems, 0, mItems.size() / 2), mDepth + 1, lowBounds),
-                new KdTree(Arrays.copyOfRange(mItems, mItems.size() / 2, mItems.size()), mDepth + 1, highBounds)
+                new KdTree(x1arraylist, y1arraylist, mDepth + 1, lowBounds),
+                new KdTree(x2arraylist, y2arraylist, mDepth + 1, highBounds)
         };
-        mItems = null;
-    }
-
-    private void selectX(int i, int min, int max) {
-        if (min < max) {
-            int j = r.nextInt(max - min) + min;
-            swapItems(max, j);
-            double pivotVal = mItems[j].getPoint().x;
-            int store = min;
-            for (int k = min; k < max; k++) {
-                if (mItems[k].getPoint().x <= pivotVal) {
-                    swapItems(k, store);
-                    store++;
-                }
-            }
-            swapItems(store, max);
-            if (store < i) {
-                selectX(i - store - 1, store + 1, max);
-            } else {
-                selectX(i, min, store - 1);
-            }
-        }
-    }
-
-    private void selectY(int i, int min, int max) {
-        if (min < max) {
-            int j = r.nextInt(max - min) + min;
-            swapItems(max, j);
-            double pivotVal = mItems[j].getPoint().y;
-            int store = min;
-            for (int k = min; k < max; k++) {
-                if (mItems[k].getPoint().y <= pivotVal) {
-                    swapItems(k, store);
-                    store++;
-                }
-            }
-            swapItems(store, max);
-            if (store < i) {
-                selectY(i - store - 1, store + 1, max);
-            } else {
-                selectY(i, min, store - 1);
-            }
-        }
-    }
-
-    private void swapItems(int a, int b) {
-        T temp = mItems[a];
-        mItems[a] = mItems[b];
-        mItems[b] = mItems[a];
+        mXItems = null;
+        mYItems = null;
     }
 
     /**
@@ -165,11 +118,11 @@ public class KdTree<T extends KdTree.Item> {
             for (KdTree<T> quad : mChildren) {
                 quad.search(searchBounds, results);
             }
-        } else if (mItems != null) {
+        } else if (mXItems != null) {
             if (searchBounds.contains(mBounds)) {
-                results.addAll(mItems);
+                results.addAll(mXItems);
             } else {
-                for (T item : mItems) {
+                for (T item : mXItems) {
                     if (searchBounds.contains(item.getPoint())) {
                         results.add(item);
                     }
