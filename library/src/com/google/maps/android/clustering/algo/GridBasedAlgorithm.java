@@ -16,7 +16,6 @@ import com.google.maps.android.projection.SphericalMercatorProjection;
  * Groups markers into a grid.
  */
 public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
-    private static final String TAG = GridBasedAlgorithm.class.getName();
     private static final int GRID_SIZE = 100;
 
     private final Set<T> mItems = Collections.synchronizedSet(new HashSet<T>());
