@@ -61,7 +61,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * Child quads.
      */
-    private PointQuadTree<T>[] mChildren = null;
+    private List<PointQuadTree<T>> mChildren = null;
 
     /**
      * Creates a new quad tree with specified bounds.
@@ -123,12 +123,11 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
      * Split this quad.
      */
     private void split() {
-        mChildren = new PointQuadTree[]{
-                new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1),
-                new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1),
-                new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1),
-                new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1)
-        };
+        mChildren = new ArrayList<PointQuadTree<T>>();
+        mChildren.add(new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1));
+   		mChildren.add(new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1));
+   		mChildren.add(new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1));
+   		mChildren.add(new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1));
 
         List<T> items = mItems;
         mItems = null;
