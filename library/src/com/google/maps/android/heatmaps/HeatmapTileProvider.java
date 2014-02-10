@@ -68,7 +68,7 @@ public class HeatmapTileProvider implements TileProvider {
     static double sigma = 0.0000001;
 
     /**
-     * Assumed screen size
+     * Assumed screen size (pixels)
      */
     private static final int SCREEN_SIZE = 1280;
 
@@ -96,11 +96,6 @@ public class HeatmapTileProvider implements TileProvider {
      * Maximum radius value.
      */
     private static final int MAX_RADIUS = 50;
-
-    /**
-     * Blank tile
-     */
-    private static final Tile mBlankTile = TileProvider.NO_TILE;
 
     /**
      * Quad tree of all the points to display in the heatmap
@@ -276,11 +271,10 @@ public class HeatmapTileProvider implements TileProvider {
      * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
-     *             Note: Editing data without calling setWeightedData again will potentially cause
-     *             problems (it is used in calculate max intensity values, which are recalculated
-     *             upon changing radius). Either pass in a copy if you want to edit the data
-     *             set without changing the data displayed in the heatmap, or call setWeightedData
-     *             again afterwards.
+     *             Note: Editing data without calling setWeightedData again will not update the data
+     *             displayed on the tree, but will impact calculation of max intensity values.
+     *             If you want to be able to edit data without changing the heatmap, you should pass
+     *             in a defensive copy of the data.
      */
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
@@ -407,10 +401,11 @@ public class HeatmapTileProvider implements TileProvider {
 
         // If outside of *padded* quadtree bounds, return blank tile
         // This is comparing our bounds to the padded bounds of all points in the quadtree
+        // ie tiles that don't touch the heatmap at all
         Bounds paddedBounds = new Bounds(mBounds.minX - padding, mBounds.maxX + padding,
                 mBounds.minY - padding, mBounds.maxY + padding);
         if (!tileBounds.intersects(paddedBounds)) {
-            return mBlankTile;
+            return TileProvider.NO_TILE;
         }
 
         // Search for all points within tile bounds
@@ -418,7 +413,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // If no points, return blank tile
         if (points.isEmpty()) {
-            return mBlankTile;
+            return TileProvider.NO_TILE;
         }
 
         // Quantize points
