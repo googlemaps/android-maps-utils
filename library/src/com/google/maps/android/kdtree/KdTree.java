@@ -5,6 +5,8 @@ import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -36,11 +38,14 @@ public class KdTree<T extends KdTree.Item> {
      */
     private final static int MAX_ELEMENTS = 50;
 
-    /** TODO fix these comments
-     * The elements inside this quad, if any.
+    /**
+     * The elements inside this node, sorted according to their x values.
      */
     private ArrayList<T> mXItems;
 
+    /**
+     * The elements inside this node, sorted according to their y values.
+     */
     private ArrayList<T> mYItems;
 
     /**
@@ -53,11 +58,12 @@ public class KdTree<T extends KdTree.Item> {
      */
     private KdTree<T>[] mChildren = null;
 
-    private static final Random r = new Random();
-
     public KdTree(ArrayList<T> items) {
         //sort things;
-        mXItems = items;
+        mXItems = new ArrayList<T>(items);
+        Collections.sort(mXItems, new ItemXComparator());
+        mYItems = new ArrayList<T>(items);
+        Collections.sort(mYItems, new ItemYComparator());
         mDepth = 0;
         if (items == null) {
             mBounds = null;
@@ -82,12 +88,12 @@ public class KdTree<T extends KdTree.Item> {
     private void split() {
         Bounds lowBounds, highBounds;
         if (mDepth % 2 == 0) {
-            double boundary = (mXItems.get(mXItems.size() / 2).getPoint().x + mXItems.get((mXItems.size() / 2) + 1).getPoint().x) / 2;
-            lowBounds = new Bounds(mBounds.minX, boundary, mBounds.minY, mBounds.maxY);
+            double boundary = mXItems.get(mXItems.size() / 2).getPoint().x;
+            lowBounds = new Bounds(mBounds.minX, boundary + sigma, mBounds.minY, mBounds.maxY);
             highBounds = new Bounds(mBounds.minX, boundary, mBounds.minY, mBounds.maxY);
         } else {
-            double boundary = (mYItems.get(mYItems.size() / 2).getPoint().y + mYItems.get((mYItems.size() / 2) + 1).getPoint().y) / 2;
-            lowBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary);
+            double boundary = mYItems.get(mYItems.size() / 2).getPoint().y;
+            lowBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary + sigma);
             highBounds = new Bounds(mBounds.minX, mBounds.maxX, mBounds.minY, boundary);
         }
         mChildren = new KdTree[]{
@@ -161,6 +167,56 @@ public class KdTree<T extends KdTree.Item> {
         }
 
         return new Bounds(minX, maxX, minY, maxY);
+    }
+
+    private class ItemXComparator implements Comparator<Item> {
+
+        @Override
+        public int compare(Item a, Item b) {
+            if (a.getPoint().x < b.getPoint().x) {
+                return -1;
+            } else if (a.getPoint().x == b.getPoint().x) {
+                 if (a.getPoint().y < b.getPoint().y) {
+                    return -1;
+                 } else if (a.getPoint().y == b.getPoint().y) {
+                     return 0;
+                 } else {
+                     return 1;
+                 }
+            } else {
+                return 1;
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return false;
+        }
+    }
+
+    private class ItemYComparator implements Comparator<Item> {
+
+        @Override
+        public int compare(Item a, Item b) {
+            if (a.getPoint().y < b.getPoint().y) {
+                return -1;
+            } else if (a.getPoint().y == b.getPoint().y) {
+                if (a.getPoint().x < b.getPoint().x) {
+                    return -1;
+                } else if (a.getPoint().x == b.getPoint().x) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else {
+                return 1;
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return false;
+        }
     }
 
 }
