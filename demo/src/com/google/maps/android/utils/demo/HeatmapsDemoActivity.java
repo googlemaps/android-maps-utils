@@ -155,9 +155,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
     }
 
-    // Datasets:
-    // Police Stations: all police stations across Australia from http://poidb.com
-    // Red Lights: all red lights across Australia from http://poidb.com
+    // Datasets from http://data.gov.au
     private ArrayList<LatLng> readItems(int resource) throws JSONException {
         ArrayList<LatLng> list = new ArrayList<LatLng>();
         InputStream inputStream = getResources().openRawResource(resource);
