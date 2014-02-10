@@ -100,8 +100,8 @@ public class UtilTest extends TestCase {
         double y1 = first.getPoint().y;
 
         Bounds bounds = HeatmapTileProvider.getBounds(data);
-        Bounds expected = new Bounds(x1, x1 + HeatmapTileProvider.sigma, y1,
-                y1 + HeatmapTileProvider.sigma);
+        Bounds expected = new Bounds(x1, x1 + HeatmapTileProvider.SIGMA, y1,
+                y1 + HeatmapTileProvider.SIGMA);
 
         assertTrue(bounds.contains(expected) && expected.contains(bounds));
 
@@ -111,8 +111,8 @@ public class UtilTest extends TestCase {
         double y2 = second.getPoint().y;
 
         bounds = HeatmapTileProvider.getBounds(data);
-        expected = new Bounds(x1, x2 + HeatmapTileProvider.sigma, y2,
-                y1 + HeatmapTileProvider.sigma);
+        expected = new Bounds(x1, x2 + HeatmapTileProvider.SIGMA, y2,
+                y1 + HeatmapTileProvider.SIGMA);
 
         assertTrue(bounds.contains(expected) && expected.contains(bounds));
 
@@ -122,8 +122,8 @@ public class UtilTest extends TestCase {
         double y3 = third.getPoint().y;
 
         bounds = HeatmapTileProvider.getBounds(data);
-        expected = new Bounds(x3, x2 + HeatmapTileProvider.sigma, y2,
-                y3 + HeatmapTileProvider.sigma);
+        expected = new Bounds(x3, x2 + HeatmapTileProvider.SIGMA, y2,
+                y3 + HeatmapTileProvider.SIGMA);
         assertTrue(bounds.contains(expected) && expected.contains(bounds));
     }
 }
