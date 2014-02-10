@@ -89,7 +89,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
     /**
      * The search radius which roughly corresponds to the radius of the results
-     * from the radar search.
+     * from the radar search in meters.
      */
     public static final int SEARCH_RADIUS = 8000;
 
@@ -102,8 +102,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * A layout containing checkboxes for each of the heatmaps rendered.
      */
     private LinearLayout mCheckboxLayout;
-
-    private Context mContext;
 
     /**
      * The number of overlays rendered so far.
@@ -135,7 +133,6 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             }
         });
 
-        mContext = this;
         mCheckboxLayout = (LinearLayout) findViewById(R.id.checkboxes);
         setUpMap();
     }
@@ -163,9 +160,9 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         EditText editText = (EditText) findViewById(R.id.input_text);
         String keyword = editText.getText().toString();
         if (mOverlays.contains(keyword)) {
-            Toast.makeText(mContext, "This keyword has already been inputted :(", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This keyword has already been inputted :(", Toast.LENGTH_SHORT).show();
         } else if (mOverlaysRendered == MAX_CHECKBOXES) {
-            Toast.makeText(mContext, "You can only input " + MAX_CHECKBOXES + " keywords. :(", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You can only input " + MAX_CHECKBOXES + " keywords. :(", Toast.LENGTH_SHORT).show();
         } else if (keyword.length() != 0) {
             mOverlaysInput++;
             ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -215,7 +212,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                     }
                 }
             } catch (JSONException e) {
-                Toast.makeText(mContext, "Cannot process JSON results", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Cannot process JSON results", Toast.LENGTH_SHORT).show();
             }
         }
         return results.values();
@@ -250,10 +247,10 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Toast.makeText(mContext, "Error processing Places API URL", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error processing Places API URL", Toast.LENGTH_SHORT).show();
             return null;
         } catch (IOException e) {
-            Toast.makeText(mContext, "Error connecting to Places API", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error connecting to Places API", Toast.LENGTH_SHORT).show();
             return null;
         } finally {
             if (conn != null) {
@@ -272,7 +269,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         mCheckboxLayout.setVisibility(View.VISIBLE);
 
         // Make new checkbox
-        CheckBox checkBox = new CheckBox(mContext);
+        CheckBox checkBox = new CheckBox(this);
         checkBox.setText(keyword);
         checkBox.setTextColor(HEATMAP_COLORS[mOverlaysRendered]);
         checkBox.setChecked(true);
@@ -322,7 +319,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             } else {
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(mContext, "No results for this query :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HeatmapsPlacesDemoActivity.this, "No results for this query :(", Toast.LENGTH_SHORT).show();
             }
         }
     }

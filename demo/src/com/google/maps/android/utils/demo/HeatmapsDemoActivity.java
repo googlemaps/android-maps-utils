@@ -61,9 +61,9 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
 
-    private boolean defaultGradient = true;
-    private boolean defaultRadius = true;
-    private boolean defaultOpacity = true;
+    private boolean mDefaultGradient = true;
+    private boolean mDefaultRadius = true;
+    private boolean mDefaultOpacity = true;
 
     /**
      * Maps name of data set to data (list of WeightedLatLngs)
@@ -104,33 +104,33 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     public void changeRadius(View view) {
-        if (defaultRadius) {
+        if (mDefaultRadius) {
             mProvider.setRadius(ALT_HEATMAP_RADIUS);
         } else {
             mProvider.setRadius(HeatmapTileProvider.DEFAULT_RADIUS);
         }
         mOverlay.clearTileCache();
-        defaultRadius = !defaultRadius;
+        mDefaultRadius = !mDefaultRadius;
     }
 
     public void changeGradient(View view) {
-        if (defaultGradient) {
+        if (mDefaultGradient) {
             mProvider.setGradient(ALT_HEATMAP_GRADIENT);
         } else {
             mProvider.setGradient(HeatmapTileProvider.DEFAULT_GRADIENT);
         }
         mOverlay.clearTileCache();
-        defaultGradient = !defaultGradient;
+        mDefaultGradient = !mDefaultGradient;
     }
 
     public void changeOpacity(View view) {
-        if (defaultOpacity) {
+        if (mDefaultOpacity) {
             mProvider.setOpacity(ALT_HEATMAP_OPACITY);
         } else {
             mProvider.setOpacity(HeatmapTileProvider.DEFAULT_OPACITY);
         }
         mOverlay.clearTileCache();
-        defaultOpacity = !defaultOpacity;
+        mDefaultOpacity = !mDefaultOpacity;
     }
 
     // Dealing with spinner choices
