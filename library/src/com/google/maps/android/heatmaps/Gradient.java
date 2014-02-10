@@ -159,9 +159,16 @@ public class Gradient {
         Color.RGBToHSV(Color.red(color2), Color.green(color2), Color.blue(color2), hsv2);
 
         // adjust so that the shortest path on the color wheel will be taken
+        /*
         if (hsv1[0] - hsv2[0] > 180) {
             hsv2[0] += 360;
         } else if (hsv2[0] - hsv1[0] > 180) {
+            hsv1[0] += 360;
+        }
+        */
+        if (color1 - color2 > 180) {
+            hsv2[0] += 360;
+        } else if (color2 - color1 > 180) {
             hsv1[0] += 360;
         }
 
@@ -169,6 +176,9 @@ public class Gradient {
         float[] result = new float[3];
         for (int i = 0; i < 3; i++) {
             result[i] = (hsv2[i] - hsv1[i]) * (ratio) + hsv1[i];
+            if (i == 0) {
+                result[i] = (result[i] * 5) % 360;
+            }
         }
 
         return Color.HSVToColor(alpha, result);

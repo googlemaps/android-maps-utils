@@ -15,7 +15,7 @@ public class WeightedLatLng implements PointQuadTree.Item {
     /**
      * Default intensity to use when intensity not specified
      */
-    public static final double DEFAULT_INTENSITY = 10;
+    public static final double DEFAULT_INTENSITY = 1;
 
     /**
      * Projection to use for points

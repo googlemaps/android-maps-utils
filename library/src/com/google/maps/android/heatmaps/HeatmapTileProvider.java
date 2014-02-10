@@ -684,13 +684,10 @@ public class HeatmapTileProvider implements TileProvider {
                 index = i * dim + j;
                 col = (int) (val * colorMapScaling);
 
-                if ((int) val != 0) {
+                if (val != 0) {
                     // Make it more resilient: cant go outside colorMap
                     if (col < colorMap.length) colors[index] = colorMap[col];
                     else colors[index] = maxColor;
-                    if (col < 5) {
-                        Log.d("asdf", "val = " + val + "\t col = " + col);
-                    }
                 } else {
                     colors[index] = Color.TRANSPARENT;
                 }
