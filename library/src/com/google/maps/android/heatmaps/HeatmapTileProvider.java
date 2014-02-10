@@ -138,7 +138,7 @@ public class HeatmapTileProvider implements TileProvider {
     private double[] mKernel;
 
     /**
-     * Opacity of the overall heatmap overlay (0...1)
+     * Opacity of the overall heatmap overlay (0...1]
      */
     private double mOpacity;
 
@@ -273,6 +273,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Changes the dataset the heatmap is portraying. Weighted.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
      *             Note: Editing data without calling setWeightedData again will potentially cause
@@ -312,6 +313,7 @@ public class HeatmapTileProvider implements TileProvider {
 
     /**
      * Changes the dataset the heatmap is portraying. Unweighted.
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
      */
@@ -523,7 +525,7 @@ public class HeatmapTileProvider implements TileProvider {
         return new Tile(TILE_DIM, TILE_DIM, bitmapdata);
     }
 
-    /** Utility functions below */
+    /* Utility functions below */
 
     /**
      * Helper function for quadtree creation
@@ -637,7 +639,7 @@ public class HeatmapTileProvider implements TileProvider {
                 if (val != 0) {
                     // need to "apply" convolution from that point to every point in
                     // (x, max(lowerLimit, y - radius) to (x, min(upperLimit, y + radius))
-                    // Dont care about
+                    // Don't care about
                     yUpperLimit = ((upperLimit < y + radius) ? upperLimit : y + radius) + 1;
                     // replace math.max
                     initial = (lowerLimit > y - radius) ? lowerLimit : y - radius;
@@ -676,7 +678,7 @@ public class HeatmapTileProvider implements TileProvider {
         for (i = 0; i < dim; i++) {
             for (j = 0; j < dim; j++) {
                 // [x][y]
-                // need to enter each row of x coordinates sequentally (x first)
+                // need to enter each row of x coordinates sequentially (x first)
                 // -> [j][i]
                 val = grid[j][i];
                 index = i * dim + j;
