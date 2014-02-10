@@ -217,6 +217,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * ViewModifier ensures only one re-rendering of the view occurs at a time, and schedules
      * re-rendering, which is performed by the RenderTask.
      */
+    @SuppressLint("HandlerLeak")
     private class ViewModifier extends Handler {
         private static final int RUN_TASK = 0;
         private static final int TASK_FINISHED = 1;
@@ -473,6 +474,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * animating a markerWithPosition) is performed while trying not to block the rest of the app's
      * UI.
      */
+    @SuppressLint("HandlerLeak")
     private class MarkerModifier extends Handler implements MessageQueue.IdleHandler {
         private static final int BLANK = 0;
 
