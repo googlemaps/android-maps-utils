@@ -567,13 +567,13 @@ public class HeatmapTileProvider implements TileProvider {
      * Normalised with central value of 1.
      *
      * @param radius radius of the kernel
-     * @param sigma  standard deviation of the Gaussian function
+     * @param sd  standard deviation of the Gaussian function
      * @return generated Gaussian kernel
      */
-    static double[] generateKernel(int radius, double sigma) {
+    static double[] generateKernel(int radius, double sd) {
         double[] kernel = new double[radius * 2 + 1];
         for (int i = -radius; i <= radius; i++) {
-            kernel[i + radius] = (Math.exp(-i * i / (2 * sigma * sigma)));
+            kernel[i + radius] = (Math.exp(-i * i / (2 * sd * sd)));
         }
         return kernel;
     }
