@@ -280,9 +280,10 @@ public class HeatmapTileProvider implements TileProvider {
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
      *             Note: Editing data without calling setWeightedData again will not update the data
-     *             displayed on the tree, but will impact calculation of max intensity values.
-     *             If you want to be able to edit data without changing the heatmap, you should pass
-     *             in a defensive copy of the data.
+     *             displayed on the map, but will impact calculation of max intensity values,
+     *             as the collection you pass in is stored.
+     *             Outside of changing the data, max intensity values are calculated only upon
+     *             changing the radius.
      */
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
