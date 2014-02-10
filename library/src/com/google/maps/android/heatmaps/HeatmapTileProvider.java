@@ -3,6 +3,7 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -67,7 +68,7 @@ public class HeatmapTileProvider implements TileProvider {
      * upper bound, it should be returned)
      * Package access for tests
      */
-    static double sigma = 0.0000001;
+    static final double SIGMA = 1e-6;
 
     /**
      * Tile dimension, in pixels.
@@ -140,7 +141,7 @@ public class HeatmapTileProvider implements TileProvider {
     private double[] mKernel;
 
     /**
-     * Opacity of the overall heatmap overlay (0...1]
+     * Opacity of the overall heatmap overlay [0...1]
      */
     private double mOpacity;
 
@@ -318,7 +319,6 @@ public class HeatmapTileProvider implements TileProvider {
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
      */
-
     public void setData(Collection<LatLng> data) {
         // Turn them into WeightedLatLngs and delegate.
         setWeightedData(wrapData(data));
@@ -376,9 +376,9 @@ public class HeatmapTileProvider implements TileProvider {
         // Make bounds: minX, maxX, minY, maxY
         // Sigma because search is non inclusive
         double minX = x * tileWidth - padding;
-        double maxX = (x + 1) * tileWidth + padding + sigma;
+        double maxX = (x + 1) * tileWidth + padding + SIGMA;
         double minY = y * tileWidth - padding;
-        double maxY = (y + 1) * tileWidth + padding + sigma;
+        double maxY = (y + 1) * tileWidth + padding + SIGMA;
 
         // Deal with overlap across lat = 180
         // Need to make it wrap around both ways
@@ -544,9 +544,9 @@ public class HeatmapTileProvider implements TileProvider {
         WeightedLatLng first = iter.next();
 
         double minX = first.getPoint().x;
-        double maxX = first.getPoint().x + sigma;
+        double maxX = first.getPoint().x + SIGMA;
         double minY = first.getPoint().y;
-        double maxY = first.getPoint().y + sigma;
+        double maxY = first.getPoint().y + SIGMA;
 
         while (iter.hasNext()) {
             WeightedLatLng l = iter.next();
@@ -554,9 +554,9 @@ public class HeatmapTileProvider implements TileProvider {
             double y = l.getPoint().y;
             // Extend bounds if necessary
             if (x < minX) minX = x;
-            if (x + sigma > maxX) maxX = x + sigma;
+            if (x + SIGMA > maxX) maxX = x + SIGMA;
             if (y < minY) minY = y;
-            if (y + sigma > maxY) maxY = y + sigma;
+            if (y + SIGMA > maxY) maxY = y + SIGMA;
         }
 
         return new Bounds(minX, maxX, minY, maxY);
@@ -687,7 +687,7 @@ public class HeatmapTileProvider implements TileProvider {
                 index = i * dim + j;
                 col = (int) (val * colorMapScaling);
 
-                if ((int) val != 0) {
+                if (val != 0) {
                     // Make it more resilient: cant go outside colorMap
                     if (col < colorMap.length) colors[index] = colorMap[col];
                     else colors[index] = maxColor;

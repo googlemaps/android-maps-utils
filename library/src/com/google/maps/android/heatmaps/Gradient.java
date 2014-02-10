@@ -21,7 +21,7 @@ public class Gradient {
          */
         private final float duration;
 
-        public ColorInterval(int color1, int color2, float duration) {
+        private ColorInterval(int color1, int color2, float duration) {
             this.color1 = color1;
             this.color2 = color2;
             this.duration = duration;
@@ -89,19 +89,22 @@ public class Gradient {
         // Create first color if not already created
         // The initial color is transparent by default
         if (mStartPoints[0] != 0) {
-            int initialColor = Color.argb(0, Color.red(mColors[0]), Color.green(mColors[0]), Color.blue(mColors[0]));
+            int initialColor = Color.argb(
+                    0, Color.red(mColors[0]), Color.green(mColors[0]), Color.blue(mColors[0]));
             colorIntervals.put(0, new ColorInterval(initialColor, mColors[0], mColorMapSize * mStartPoints[0]));
         }
         // Generate color intervals
         for (int i = 1; i < mColors.length; i++) {
             colorIntervals.put(((int) (mColorMapSize * mStartPoints[i - 1])),
-                    new ColorInterval(mColors[i - 1], mColors[i], (mColorMapSize * (mStartPoints[i] - mStartPoints[i - 1]))));
+                new ColorInterval(mColors[i - 1], mColors[i],
+                    (mColorMapSize * (mStartPoints[i] - mStartPoints[i - 1]))));
         }
         // Extend to a final color
         // If color for 100% intensity is not given, the color of highest intensity is used.
         if (mStartPoints[mStartPoints.length - 1] != 1) {
-            colorIntervals.put(((int) (mColorMapSize * mStartPoints[mStartPoints.length - 1])),
-                    new ColorInterval(mColors[mColors.length - 1], mColors[mColors.length - 1], mColorMapSize * (1 - mStartPoints[mStartPoints.length - 1])));
+            int i = mStartPoints.length - 1;
+            colorIntervals.put(((int) (mColorMapSize * mStartPoints[i])),
+                    new ColorInterval(mColors[i], mColors[i], mColorMapSize * (1 - mStartPoints[i])));
         }
         return colorIntervals;
     }
@@ -113,7 +116,7 @@ public class Gradient {
      *                multiplied by this opacity.
      * @return the generated color map based on the gradient
      */
-    public int[] generateColorMap(double opacity) {
+    int[] generateColorMap(double opacity) {
         HashMap<Integer, ColorInterval> colorIntervals = generateColorIntervals();
         int[] colorMap = new int[mColorMapSize];
         ColorInterval interval = colorIntervals.get(0);
