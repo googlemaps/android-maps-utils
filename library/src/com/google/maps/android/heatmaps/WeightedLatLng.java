@@ -22,7 +22,7 @@ public class WeightedLatLng implements PointQuadTree.Item {
      * Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection
      */
     public static final SphericalMercatorProjection mProjection =
-            new SphericalMercatorProjection(HeatmapTileProvider.TILE_DIM);
+            new SphericalMercatorProjection(HeatmapTileProvider.WORLD_WIDTH);
 
     private Point mPoint;
 
