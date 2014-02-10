@@ -55,9 +55,11 @@ public class HeatmapTileProvider implements TileProvider {
     public static final Gradient DEFAULT_GRADIENT = new Gradient(DEFAULT_GRADIENT_COLORS, DEFAULT_GRADIENT_START_POINTS);
 
     /**
-     * Tile dimension. Package access - WeightedLatLng
+     * Size of the world (arbitrary).
+     * Used to measure distances relative to the total world size.
+     * Package access for WeightedLatLng.
      */
-    static final int TILE_DIM = 512;
+    static final double WORLD_WIDTH = 1;
 
     /**
      * For use in getBounds.
@@ -68,7 +70,12 @@ public class HeatmapTileProvider implements TileProvider {
     static double sigma = 0.0000001;
 
     /**
-     * Assumed screen size
+     * Tile dimension, in pixels.
+     */
+    private static final int TILE_DIM = 512;
+
+    /**
+     * Assumed screen size (pixels)
      */
     private static final int SCREEN_SIZE = 1280;
 
@@ -96,11 +103,6 @@ public class HeatmapTileProvider implements TileProvider {
      * Maximum radius value.
      */
     private static final int MAX_RADIUS = 50;
-
-    /**
-     * Blank tile
-     */
-    private static final Tile mBlankTile = TileProvider.NO_TILE;
 
     /**
      * Quad tree of all the points to display in the heatmap
@@ -276,11 +278,10 @@ public class HeatmapTileProvider implements TileProvider {
      * User should clear overlay's tile cache (using clearTileCache()) after calling this.
      *
      * @param data Data set of points to use in the heatmap, as LatLngs.
-     *             Note: Editing data without calling setWeightedData again will potentially cause
-     *             problems (it is used in calculate max intensity values, which are recalculated
-     *             upon changing radius). Either pass in a copy if you want to edit the data
-     *             set without changing the data displayed in the heatmap, or call setWeightedData
-     *             again afterwards.
+     *             Note: Editing data without calling setWeightedData again will not update the data
+     *             displayed on the tree, but will impact calculation of max intensity values.
+     *             If you want to be able to edit data without changing the heatmap, you should pass
+     *             in a defensive copy of the data.
      */
     public void setWeightedData(Collection<WeightedLatLng> data) {
         // Change point set
@@ -352,23 +353,24 @@ public class HeatmapTileProvider implements TileProvider {
         // Convert tile coordinates and zoom into Point/Bounds format
         // Know that at zoom level 0, there is one tile: (0, 0) (arbitrary width 512)
         // Each zoom level multiplies number of tiles by 2
-        // Width of the world = 512 (Spherical Mercator Projection)
-        // x = [0, 512) [-180, 180)
-
-        //basically arbitrarily chosen scale (based off the demo)
-        double worldWidth = TILE_DIM;
+        // Width of the world = WORLD_WIDTH = 1
+        // x = [0, 1) corresponds to [-180, 180)
 
         // calculate width of one tile, given there are 2 ^ zoom tiles in that zoom level
-        double tileWidth = worldWidth / Math.pow(2, zoom);
+        // In terms of world width units
+        double tileWidth = WORLD_WIDTH / Math.pow(2, zoom);
 
         // how much padding to include in search
-        // Maths: padding = tileWidth * mRadius / TILE_DIM = TILE_DIM /(2^zoom) * mRadius / TILE_DIM
-        double padding = mRadius / Math.pow(2, zoom);
+        // is to tileWidth as mRadius (padding in terms of pixels) is to TILE_DIM
+        // In terms of world width units
+        double padding = tileWidth * mRadius / TILE_DIM;
 
         // padded tile width
+        // In terms of world width units
         double tileWidthPadded = tileWidth + 2 * padding;
 
-        // padded bucket width
+        // padded bucket width - divided by number of buckets
+        // In terms of world width units
         double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
 
         // Make bounds: minX, maxX, minY, maxY
@@ -389,16 +391,16 @@ public class HeatmapTileProvider implements TileProvider {
             // Need to consider "negative" points
             // (minX to 0) ->  (512+minX to 512) ie +512
             // add 512 to search bounds and subtract 512 from actual points
-            Bounds overlapBounds = new Bounds(minX + worldWidth, worldWidth, minY, maxY);
-            xOffset = -worldWidth;
+            Bounds overlapBounds = new Bounds(minX + WORLD_WIDTH, WORLD_WIDTH, minY, maxY);
+            xOffset = -WORLD_WIDTH;
             wrappedPoints = mTree.search(overlapBounds);
-        } else if (maxX > worldWidth) {
+        } else if (maxX > WORLD_WIDTH) {
             // Cant both be true as then tile covers whole world
             // Need to consider "overflow" points
             // (512 to maxX) -> (0 to maxX-512) ie -512
             // subtract 512 from search bounds and add 512 to actual points
-            Bounds overlapBounds = new Bounds(0, maxX - worldWidth, minY, maxY);
-            xOffset = worldWidth;
+            Bounds overlapBounds = new Bounds(0, maxX - WORLD_WIDTH, minY, maxY);
+            xOffset = WORLD_WIDTH;
             wrappedPoints = mTree.search(overlapBounds);
         }
 
@@ -407,10 +409,11 @@ public class HeatmapTileProvider implements TileProvider {
 
         // If outside of *padded* quadtree bounds, return blank tile
         // This is comparing our bounds to the padded bounds of all points in the quadtree
+        // ie tiles that don't touch the heatmap at all
         Bounds paddedBounds = new Bounds(mBounds.minX - padding, mBounds.maxX + padding,
                 mBounds.minY - padding, mBounds.maxY + padding);
         if (!tileBounds.intersects(paddedBounds)) {
-            return mBlankTile;
+            return TileProvider.NO_TILE;
         }
 
         // Search for all points within tile bounds
@@ -418,7 +421,7 @@ public class HeatmapTileProvider implements TileProvider {
 
         // If no points, return blank tile
         if (points.isEmpty()) {
-            return mBlankTile;
+            return TileProvider.NO_TILE;
         }
 
         // Quantize points
@@ -564,13 +567,13 @@ public class HeatmapTileProvider implements TileProvider {
      * Normalised with central value of 1.
      *
      * @param radius radius of the kernel
-     * @param sigma  standard deviation of the Gaussian function
+     * @param sd  standard deviation of the Gaussian function
      * @return generated Gaussian kernel
      */
-    static double[] generateKernel(int radius, double sigma) {
+    static double[] generateKernel(int radius, double sd) {
         double[] kernel = new double[radius * 2 + 1];
         for (int i = -radius; i <= radius; i++) {
-            kernel[i + radius] = (Math.exp(-i * i / (2 * sigma * sigma)));
+            kernel[i + radius] = (Math.exp(-i * i / (2 * sd * sd)));
         }
         return kernel;
     }
