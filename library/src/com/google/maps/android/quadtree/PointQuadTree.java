@@ -123,7 +123,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
      * Split this quad.
      */
     private void split() {
-        mChildren = new ArrayList<PointQuadTree<T>>();
+        mChildren = new ArrayList<PointQuadTree<T>>(4);
         mChildren.add(new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY, mDepth + 1));
         mChildren.add(new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY, mDepth + 1));
         mChildren.add(new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1));
