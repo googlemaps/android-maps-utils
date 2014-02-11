@@ -1,10 +1,13 @@
 package com.google.maps.android.utils.demo;
 
 import android.graphics.Color;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,7 +59,12 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             0.0f, 0.10f, 0.20f, 0.60f, 1.0f
     };
 
-    public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS, ALT_HEATMAP_GRADIENT_START_POINTS);
+    public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
+            ALT_HEATMAP_GRADIENT_START_POINTS);
+
+    private static final String ATTRIB_FORMAT = "Data from <a href = \"%s\">data.gov.au</a>, " +
+            "modified under <a href = \"http://creativecommons.org/licenses/by/3.0/au/\">" +
+            "CC BY 3.0 AU</a>";
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -66,12 +74,10 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     private boolean mDefaultOpacity = true;
 
     /**
-     * Maps name of data set to data (list of WeightedLatLngs)
-     * Each WeightedLatLng contains a LatLng as well as corresponding intensity value (which
-     * represents "importance" of this LatLng) - see the class for more details
+     * Maps name of data set to data (list of LatLngs)
+     * Also maps to the URL of the data set for attribution
      */
-    private HashMap<String, ArrayList<LatLng>> mLists =
-            new HashMap<String, ArrayList<LatLng>>();
+    private HashMap<String, DataSet> mLists = new HashMap<String, DataSet>();
 
     @Override
     protected int getLayoutId() {
@@ -91,8 +97,10 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         spinner.setOnItemSelectedListener(new SpinnerActivity());
 
         try {
-            mLists.put(getString(R.string.police_stations), readItems(R.raw.police));
-            mLists.put(getString(R.string.medicare), readItems(R.raw.medicare));
+            mLists.put(getString(R.string.police_stations), new DataSet(readItems(R.raw.police),
+                    getString(R.string.police_stations_url)));
+            mLists.put(getString(R.string.medicare), new DataSet(readItems(R.raw.medicare),
+                    getString(R.string.medicare_url)));
         } catch (JSONException e) {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
@@ -139,15 +147,23 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
                                    int pos, long id) {
             String dataset = parent.getItemAtPosition(pos).toString();
 
+            TextView attribution = ((TextView) findViewById(R.id.attribution));
+
             // Check if need to instantiate (avoid setData etc twice)
             if (mProvider == null) {
                 mProvider = new HeatmapTileProvider.Builder().data(
-                        mLists.get(getString(R.string.police_stations))).build();
+                        mLists.get(getString(R.string.police_stations)).getData()).build();
                 mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+                // make it show links
+                attribution.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
-                mProvider.setData(mLists.get(dataset));
+                mProvider.setData(mLists.get(dataset).getData());
                 mOverlay.clearTileCache();
             }
+            // Update attribution
+            attribution.setText(Html.fromHtml(String.format(ATTRIB_FORMAT,
+                    mLists.get(dataset).getUrl())));
+
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
@@ -169,4 +185,26 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         }
         return list;
     }
+
+    /**
+     * Helper class - stores data sets and sources.
+     */
+    private class DataSet {
+        private ArrayList<LatLng> dataSet;
+        private String url;
+
+        public DataSet(ArrayList<LatLng> dataSet, String url) {
+            this.dataSet = dataSet;
+            this.url = url;
+        }
+
+        public ArrayList<LatLng> getData() {
+            return dataSet;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+    }
+
 }
