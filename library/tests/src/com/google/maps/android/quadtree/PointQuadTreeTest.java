@@ -33,7 +33,7 @@ public class PointQuadTreeTest extends TestCase {
     }
 
     public void testAddOnePoint() {
-        Item item = new Item(0,0);
+        Item item = new Item(0, 0);
         mTree.add(item);
         Collection<Item> items = searchAll();
         assertEquals(1, items.size());
@@ -122,9 +122,9 @@ public class PointQuadTreeTest extends TestCase {
      * Timing results are averaged.
      */
     public void testManyPoints() {
-        for (double i=0; i < 200; i++) {
-            for (double j=0; j < 2000; j++) {
-                mTree.add(new Item(i/200.0, j/2000.0));
+        for (double i = 0; i < 200; i++) {
+            for (double j = 0; j < 2000; j++) {
+                mTree.add(new Item(i / 200.0, j / 2000.0));
             }
         }
 
@@ -157,7 +157,7 @@ public class PointQuadTreeTest extends TestCase {
      */
     public void testRandomPoints() {
         Random random = new Random();
-        for (int i = 0; i<100000; i++) {
+        for (int i = 0; i < 100000; i++) {
             mTree.add(new Item(random.nextDouble(), random.nextDouble()));
         }
         searchAll();
