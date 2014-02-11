@@ -104,7 +104,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final ViewModifier mViewModifier = new ViewModifier();
 
     private ClusterManager.OnClusterClickListener<T> mClickListener;
+    private ClusterManager.OnClusterInfoWindowClickListener<T> mInfoWindowClickListener;
     private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
+    private ClusterManager.OnClusterItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
 
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
@@ -125,10 +127,28 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             }
         });
 
+        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                if (mItemInfoWindowClickListener != null) {
+                    mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
+                }
+            }
+        });
+
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 return mClickListener != null && mClickListener.onClusterClick(mMarkerToCluster.get(marker));
+            }
+        });
+
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                if (mInfoWindowClickListener != null) {
+                    mInfoWindowClickListener.onClusterInfoWindowClick(mMarkerToCluster.get(marker));
+                }
             }
         });
     }
@@ -414,8 +434,18 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     }
 
     @Override
+    public void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<T> listener) {
+        mInfoWindowClickListener = listener;
+    }
+
+    @Override
     public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
         mItemClickListener = listener;
+    }
+
+    @Override
+    public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener) {
+        mItemInfoWindowClickListener = listener;
     }
 
     private static double distanceSquared(Point a, Point b) {

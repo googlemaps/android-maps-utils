@@ -3,3 +3,8 @@
 *.iml
 build
 local.properties
+.classpath
+.project
+library/bin
+library/gen
+project.properties
