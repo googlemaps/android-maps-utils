@@ -296,7 +296,7 @@ public class PolyUtil {
         int lat = 0;
         int lng = 0;
 
-        for (int pointIndex = 0; index < len; ++pointIndex) {
+        while (index < len) {
             int result = 1;
             int shift = 0;
             int b;

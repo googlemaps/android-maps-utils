@@ -25,8 +25,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
 public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
-    private static final String TAG = ClusterManager.class.getName();
-
     private final MarkerManager mMarkerManager;
     private final MarkerManager.Collection mMarkers;
     private final MarkerManager.Collection mClusterMarkers;

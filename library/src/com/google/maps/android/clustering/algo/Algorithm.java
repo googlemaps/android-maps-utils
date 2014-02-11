@@ -1,11 +1,10 @@
 package com.google.maps.android.clustering.algo;
 
-import com.google.android.gms.maps.Projection;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
-
 import java.util.Collection;
 import java.util.Set;
+
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 
 /**
  * Logic for computing clusters

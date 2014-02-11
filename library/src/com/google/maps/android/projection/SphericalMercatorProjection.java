@@ -25,6 +25,7 @@ public class SphericalMercatorProjection {
         mWorldWidth = worldWidth;
     }
 
+    @SuppressWarnings("deprecation")
     public Point toPoint(final LatLng latLng) {
         final double x = latLng.longitude / 360 + .5;
         final double siny = Math.sin(Math.toRadians(latLng.latitude));
