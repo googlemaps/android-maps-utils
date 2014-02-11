@@ -47,7 +47,6 @@
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
     <TextView
-        android:text="Data from..."
         android:id="@+id/attribution"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
