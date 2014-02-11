@@ -213,8 +213,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
      * the ClusterManager must be added as a info window click listener to the map.
      */
@@ -224,7 +222,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
->>>>>>> 47b98b1edb21b89c3d800706c64fd96859568cdf
      * Sets a callback that's invoked when an individual ClusterItem is tapped. Note: For this
      * listener to function, the ClusterManager must be added as a click listener to the map.
      */
