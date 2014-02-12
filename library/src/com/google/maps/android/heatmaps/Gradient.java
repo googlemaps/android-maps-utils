@@ -44,7 +44,7 @@ public class Gradient {
         }
     }
 
-    public static final int DEFAULT_COLOR_MAP_SIZE = 1000;
+    private static final int DEFAULT_COLOR_MAP_SIZE = 1000;
 
     /**
      * Size of a color map for the heatmap

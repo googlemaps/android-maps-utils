@@ -37,7 +37,7 @@ public class WeightedLatLng implements PointQuadTree.Item {
      * Projection to use for points
      * Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection
      */
-    public static final SphericalMercatorProjection mProjection =
+    private static final SphericalMercatorProjection sProjection =
             new SphericalMercatorProjection(HeatmapTileProvider.WORLD_WIDTH);
 
     private Point mPoint;
@@ -56,7 +56,7 @@ public class WeightedLatLng implements PointQuadTree.Item {
      *                  location is identical to having one of intensity 2.
      */
     public WeightedLatLng(LatLng latLng, double intensity) {
-        mPoint = mProjection.toPoint(latLng);
+        mPoint = sProjection.toPoint(latLng);
         if (intensity >= 0) mIntensity = intensity;
         else mIntensity = DEFAULT_INTENSITY;
     }

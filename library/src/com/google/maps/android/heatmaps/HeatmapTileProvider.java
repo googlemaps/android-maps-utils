@@ -51,9 +51,9 @@ public class HeatmapTileProvider implements TileProvider {
      * Colors for default gradient.
      * Array of colors, represented by ints.
      */
-    public static final int[] DEFAULT_GRADIENT_COLORS = {
-            Color.rgb(102, 225, 0),
-            Color.rgb(255, 0, 0)
+    private static final int[] DEFAULT_GRADIENT_COLORS = {
+        Color.rgb(102, 225, 0),
+        Color.rgb(255, 0, 0)
     };
 
     /**
@@ -61,8 +61,8 @@ public class HeatmapTileProvider implements TileProvider {
      * This defines which percentages the above colors represent.
      * These should be a sorted array of floats in the interval [0, 1].
      */
-    public static final float[] DEFAULT_GRADIENT_START_POINTS = {
-            0.2f, 1f
+    private static final float[] DEFAULT_GRADIENT_START_POINTS = {
+        0.2f, 1f
     };
 
     /**
