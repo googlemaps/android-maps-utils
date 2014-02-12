@@ -101,15 +101,15 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
         if (this.mChildren != null) {
             if (y < mBounds.midY) {
                 if (x < mBounds.midX) { // top left
-                    mChildren[0].insert(x, y, item);
+                    mChildren.get(0).insert(x, y, item);
                 } else { // top right
-                    mChildren[1].insert(x, y, item);
+                    mChildren.get(1).insert(x, y, item);
                 }
             } else {
                 if (x < mBounds.midX) { // bottom left
-                    mChildren[2].insert(x, y, item);
+                    mChildren.get(2).insert(x, y, item);
                 } else {
-                    mChildren[3].insert(x, y, item);
+                    mChildren.get(3).insert(x, y, item);
                 }
             }
             return;
@@ -160,15 +160,15 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
         if (this.mChildren != null) {
             if (y < mBounds.midY) {
                 if (x < mBounds.midX) { // top left
-                    return mChildren[0].remove(x, y, item);
+                    return mChildren.get(0).remove(x, y, item);
                 } else { // top right
-                    return mChildren[1].remove(x, y, item);
+                    return mChildren.get(1).remove(x, y, item);
                 }
             } else {
                 if (x < mBounds.midX) { // bottom left
-                    return mChildren[2].remove(x, y, item);
+                    return mChildren.get(2).remove(x, y, item);
                 } else {
-                    return mChildren[3].remove(x, y, item);
+                    return mChildren.get(3).remove(x, y, item);
                 }
             }
         }
