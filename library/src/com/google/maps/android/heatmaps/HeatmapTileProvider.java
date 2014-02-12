@@ -3,7 +3,6 @@ package com.google.maps.android.heatmaps;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -559,7 +558,7 @@ public class HeatmapTileProvider implements TileProvider {
      * Normalised with central value of 1.
      *
      * @param radius radius of the kernel
-     * @param sd  standard deviation of the Gaussian function
+     * @param sd     standard deviation of the Gaussian function
      * @return generated Gaussian kernel
      */
     static double[] generateKernel(int radius, double sd) {
