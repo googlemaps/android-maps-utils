@@ -177,6 +177,11 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * Called when a search query is submitted
      */
     public void submit() {
+        if ("YOUR_KEY_HERE".equals(API_KEY)) {
+            Toast.makeText(this, "Please sign up for a Places API key and add it to HeatmapsPlacesDemoActivity.API_KEY",
+                Toast.LENGTH_LONG).show();
+            return;
+        }
         EditText editText = (EditText) findViewById(R.id.input_text);
         String keyword = editText.getText().toString();
         if (mOverlays.contains(keyword)) {
