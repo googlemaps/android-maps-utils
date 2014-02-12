@@ -3,6 +3,7 @@ com.google.maps.android.clustering
 com.google.maps.android.clustering.algo
 com.google.maps.android.clustering.view
 com.google.maps.android.geometry
+com.google.maps.android.heatmaps
 com.google.maps.android.projection
 com.google.maps.android.quadtree
 com.google.maps.android.ui

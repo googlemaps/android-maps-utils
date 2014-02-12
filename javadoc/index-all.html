@@ -16,7 +16,7 @@
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
 <a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
-<div class="contentContainer"><a href="#_A_">A</a>&nbsp;<a href="#_B_">B</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_D_">D</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_M_">M</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_O_">O</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_R_">R</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a href="#_X_">X</a>&nbsp;<a href="#_Y_">Y</a>&nbsp;<a name="_A_">
+<div class="contentContainer"><a href="#_A_">A</a>&nbsp;<a href="#_B_">B</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_D_">D</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_H_">H</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_M_">M</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_O_">O</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_R_">R</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a href="#_W_">W</a>&nbsp;<a href="#_X_">X</a>&nbsp;<a href="#_Y_">Y</a>&nbsp;<a name="_A_">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
@@ -65,6 +65,10 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Bounds.html#Bounds(double, double, double, double)">Bounds(double, double, double, double)</a></span> - Constructor for class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#build()">build()</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Call when all desired options have been set.</div>
+</dd>
 </dl>
 <a name="_C_">
 <!--   -->
@@ -74,7 +78,9 @@
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.Collection.html#clear()">clear()</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/quadtree/PointQuadTree.html#clear()">clear()</a></span> - Method in class com.google.maps.android.quadtree.<a href="./com/google/maps/android/quadtree/PointQuadTree.html" title="class in com.google.maps.android.quadtree">PointQuadTree</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Removes all points from the quadTree</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/Algorithm.html#clearItems()">clearItems()</a></span> - Method in interface com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html#clearItems()">clearItems()</a></span> - Method in class com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo">GridBasedAlgorithm</a></dt>
@@ -109,9 +115,17 @@
 <dd>
 <div class="block">Called when a Cluster is clicked.</div>
 </dd>
+<dt><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering"><span class="strong">ClusterManager.OnClusterInfoWindowClickListener</span></a>&lt;<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterInfoWindowClickListener.html" title="type parameter in ClusterManager.OnClusterInfoWindowClickListener">T</a> extends <a href="./com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt; - Interface in <a href="./com/google/maps/android/clustering/package-summary.html">com.google.maps.android.clustering</a></dt>
+<dd>
+<div class="block">Called when a Cluster's Info Window is clicked.</div>
+</dd>
 <dt><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering"><span class="strong">ClusterManager.OnClusterItemClickListener</span></a>&lt;<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="type parameter in ClusterManager.OnClusterItemClickListener">T</a> extends <a href="./com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt; - Interface in <a href="./com/google/maps/android/clustering/package-summary.html">com.google.maps.android.clustering</a></dt>
 <dd>
 <div class="block">Called when an individual ClusterItem is clicked.</div>
+</dd>
+<dt><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering"><span class="strong">ClusterManager.OnClusterItemInfoWindowClickListener</span></a>&lt;<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemInfoWindowClickListener.html" title="type parameter in ClusterManager.OnClusterItemInfoWindowClickListener">T</a> extends <a href="./com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt; - Interface in <a href="./com/google/maps/android/clustering/package-summary.html">com.google.maps.android.clustering</a></dt>
+<dd>
+<div class="block">Called when an individual ClusterItem's Info Window is clicked.</div>
 </dd>
 <dt><a href="./com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view"><span class="strong">ClusterRenderer</span></a>&lt;<a href="./com/google/maps/android/clustering/view/ClusterRenderer.html" title="type parameter in ClusterRenderer">T</a> extends <a href="./com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt; - Interface in <a href="./com/google/maps/android/clustering/view/package-summary.html">com.google.maps.android.clustering.view</a></dt>
 <dd>
@@ -126,6 +140,8 @@
 <dt><a href="./com/google/maps/android/clustering/view/package-summary.html">com.google.maps.android.clustering.view</a> - package com.google.maps.android.clustering.view</dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/maps/android/geometry/package-summary.html">com.google.maps.android.geometry</a> - package com.google.maps.android.geometry</dt>
+<dd>&nbsp;</dd>
+<dt><a href="./com/google/maps/android/heatmaps/package-summary.html">com.google.maps.android.heatmaps</a> - package com.google.maps.android.heatmaps</dt>
 <dd>&nbsp;</dd>
 <dt><a href="./com/google/maps/android/projection/package-summary.html">com.google.maps.android.projection</a> - package com.google.maps.android.projection</dt>
 <dd>&nbsp;</dd>
@@ -179,9 +195,39 @@
 </a>
 <h2 class="title">D</h2>
 <dl>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#data(java.util.Collection)">data(Collection&lt;LatLng&gt;)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Setter for data in builder.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/PolyUtil.html#decode(java.lang.String)">decode(String)</a></span> - Static method in class com.google.maps.android.<a href="./com/google/maps/android/PolyUtil.html" title="class in com.google.maps.android">PolyUtil</a></dt>
 <dd>
 <div class="block">Decodes an encoded path string into a sequence of LatLngs.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/Gradient.html#DEFAULT_COLOR_MAP_SIZE">DEFAULT_COLOR_MAP_SIZE</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#DEFAULT_GRADIENT">DEFAULT_GRADIENT</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Default gradient for heatmap.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#DEFAULT_GRADIENT_COLORS">DEFAULT_GRADIENT_COLORS</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Colors for default gradient.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#DEFAULT_GRADIENT_START_POINTS">DEFAULT_GRADIENT_START_POINTS</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Starting fractions for default gradient.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html#DEFAULT_INTENSITY">DEFAULT_INTENSITY</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></dt>
+<dd>
+<div class="block">Default intensity to use when intensity not specified</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#DEFAULT_OPACITY">DEFAULT_OPACITY</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Default opacity of heatmap overlay</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#DEFAULT_RADIUS">DEFAULT_RADIUS</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Default radius for convolution</div>
 </dd>
 <dt><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view"><span class="strong">DefaultClusterRenderer</span></a>&lt;<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a> extends <a href="./com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt; - Class in <a href="./com/google/maps/android/clustering/view/package-summary.html">com.google.maps.android.clustering.view</a></dt>
 <dd>
@@ -235,6 +281,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.html#getInfoWindow(Marker)">getInfoWindow(Marker)</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.html" title="class in com.google.maps.android">MarkerManager</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html#getIntensity()">getIntensity()</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/Algorithm.html#getItems()">getItems()</a></span> - Method in interface com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html#getItems()">getItems()</a></span> - Method in class com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo">GridBasedAlgorithm</a></dt>
@@ -253,6 +301,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.Collection.html#getMarkers()">getMarkers()</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html#getPoint()">getPoint()</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/quadtree/PointQuadTree.Item.html#getPoint()">getPoint()</a></span> - Method in interface com.google.maps.android.quadtree.<a href="./com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/StaticCluster.html#getPosition()">getPosition()</a></span> - Method in class com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/StaticCluster.html" title="class in com.google.maps.android.clustering.algo">StaticCluster</a></dt>
@@ -267,12 +317,51 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/Cluster.html#getSize()">getSize()</a></span> - Method in interface com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#getTile(int, int, int)">getTile(int, int, int)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Creates tile.</div>
+</dd>
+<dt><a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps"><span class="strong">Gradient</span></a> - Class in <a href="./com/google/maps/android/heatmaps/package-summary.html">com.google.maps.android.heatmaps</a></dt>
+<dd>
+<div class="block">A class to generate a color map from a given array of colors and the fractions
+ that the colors represent by interpolating between their HSV values.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/Gradient.html#Gradient(int[], float[])">Gradient(int[], float[])</a></span> - Constructor for class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></dt>
+<dd>
+<div class="block">Creates a Gradient with the given colors and starting points.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/Gradient.html#Gradient(int[], float[], int)">Gradient(int[], float[], int)</a></span> - Constructor for class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></dt>
+<dd>
+<div class="block">Creates a Gradient with the given colors and starting points which creates a colorMap of given size.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#gradient(com.google.maps.android.heatmaps.Gradient)">gradient(Gradient)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Setter for gradient in builder</div>
+</dd>
 <dt><a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo"><span class="strong">GridBasedAlgorithm</span></a>&lt;<a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="type parameter in GridBasedAlgorithm">T</a> extends <a href="./com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt; - Class in <a href="./com/google/maps/android/clustering/algo/package-summary.html">com.google.maps.android.clustering.algo</a></dt>
 <dd>
 <div class="block">Groups markers into a grid.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html#GridBasedAlgorithm()">GridBasedAlgorithm()</a></span> - Constructor for class com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo">GridBasedAlgorithm</a></dt>
 <dd>&nbsp;</dd>
+</dl>
+<a name="_H_">
+<!--   -->
+</a>
+<h2 class="title">H</h2>
+<dl>
+<dt><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps"><span class="strong">HeatmapTileProvider</span></a> - Class in <a href="./com/google/maps/android/heatmaps/package-summary.html">com.google.maps.android.heatmaps</a></dt>
+<dd>
+<div class="block">Tile provider that creates heatmap tiles.</div>
+</dd>
+<dt><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps"><span class="strong">HeatmapTileProvider.Builder</span></a> - Class in <a href="./com/google/maps/android/heatmaps/package-summary.html">com.google.maps.android.heatmaps</a></dt>
+<dd>
+<div class="block">Builder class for the HeatmapTileProvider.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#HeatmapTileProvider.Builder()">HeatmapTileProvider.Builder()</a></span> - Constructor for class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Constructor for builder.</div>
+</dd>
 </dl>
 <a name="_I_">
 <!--   -->
@@ -348,6 +437,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Bounds.html#maxY">maxY</a></span> - Variable in class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/Gradient.html#mColorMapSize">mColorMapSize</a></span> - Variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></dt>
+<dd>
+<div class="block">Size of a color map for the heatmap</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/Gradient.html#mColors">mColors</a></span> - Variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></dt>
+<dd>
+<div class="block">The colors to be used in the gradient</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Bounds.html#midX">midX</a></span> - Variable in class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Bounds.html#midY">midY</a></span> - Variable in class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></dt>
@@ -356,6 +453,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Bounds.html#minY">minY</a></span> - Variable in class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html#mProjection">mProjection</a></span> - Static variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></dt>
+<dd>
+<div class="block">Projection to use for points
+ Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/Gradient.html#mStartPoints">mStartPoints</a></span> - Variable in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></dt>
+<dd>
+<div class="block">The starting point for each color, given as a percentage of the maximum intensity</div>
+</dd>
 </dl>
 <a name="_N_">
 <!--   -->
@@ -400,7 +506,11 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterClickListener.html#onClusterClick(com.google.maps.android.clustering.Cluster)">onClusterClick(Cluster&lt;T&gt;)</a></span> - Method in interface com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterClickListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterInfoWindowClickListener.html#onClusterInfoWindowClick(com.google.maps.android.clustering.Cluster)">onClusterInfoWindowClick(Cluster&lt;T&gt;)</a></span> - Method in interface com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterInfoWindowClickListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html#onClusterItemClick(T)">onClusterItemClick(T)</a></span> - Method in interface com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterItemClickListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemInfoWindowClickListener.html#onClusterItemInfoWindowClick(T)">onClusterItemInfoWindowClick(T)</a></span> - Method in interface com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.OnClusterItemInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterItemInfoWindowClickListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#onClusterItemRendered(T, Marker)">onClusterItemRendered(T, Marker)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>
@@ -415,6 +525,8 @@
 <div class="block">Called when the view needs to be updated because new clusters need to be displayed.</div>
 </dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#onClustersChanged(java.util.Set)">onClustersChanged(Set&lt;? extends Cluster&lt;T&gt;&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.html#onInfoWindowClick(Marker)">onInfoWindowClick(Marker)</a></span> - Method in class com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering">ClusterManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.html#onInfoWindowClick(Marker)">onInfoWindowClick(Marker)</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.html" title="class in com.google.maps.android">MarkerManager</a></dt>
 <dd>&nbsp;</dd>
@@ -436,6 +548,10 @@
 </dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#onRemove()">onRemove()</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#opacity(double)">opacity(double)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Setter for opacity in builder</div>
+</dd>
 </dl>
 <a name="_P_">
 <!--   -->
@@ -472,6 +588,10 @@
 </a>
 <h2 class="title">R</h2>
 <dl>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#radius(int)">radius(int)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Setter for radius in builder</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/algo/StaticCluster.html#remove(T)">remove(T)</a></span> - Method in class com.google.maps.android.clustering.algo.<a href="./com/google/maps/android/clustering/algo/StaticCluster.html" title="class in com.google.maps.android.clustering.algo">StaticCluster</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.Collection.html#remove(Marker)">remove(Marker)</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></dt>
@@ -522,6 +642,14 @@
 <dd>
 <div class="block">Sets the child view for the icon.</div>
 </dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#setData(java.util.Collection)">setData(Collection&lt;LatLng&gt;)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Changes the dataset the heatmap is portraying.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#setGradient(com.google.maps.android.heatmaps.Gradient)">setGradient(Gradient)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Setter for gradient/color map.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.html#setOnClusterClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterClickListener)">setOnClusterClickListener(ClusterManager.OnClusterClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering">ClusterManager</a></dt>
 <dd>
 <div class="block">Sets a callback that's invoked when a Cluster is tapped.</div>
@@ -529,6 +657,14 @@
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/view/ClusterRenderer.html#setOnClusterClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterClickListener)">setOnClusterClickListener(ClusterManager.OnClusterClickListener&lt;T&gt;)</a></span> - Method in interface com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#setOnClusterClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterClickListener)">setOnClusterClickListener(ClusterManager.OnClusterClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.html#setOnClusterInfoWindowClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterInfoWindowClickListener)">setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering">ClusterManager</a></dt>
+<dd>
+<div class="block">Sets a callback that's invoked when a Cluster is tapped.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/view/ClusterRenderer.html#setOnClusterInfoWindowClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterInfoWindowClickListener)">setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener&lt;T&gt;)</a></span> - Method in interface com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#setOnClusterInfoWindowClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterInfoWindowClickListener)">setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.html#setOnClusterItemClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener)">setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering">ClusterManager</a></dt>
 <dd>
@@ -538,6 +674,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#setOnClusterItemClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener)">setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.html#setOnClusterItemInfoWindowClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener)">setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering">ClusterManager</a></dt>
+<dd>
+<div class="block">Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/view/ClusterRenderer.html#setOnClusterItemInfoWindowClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener)">setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener&lt;T&gt;)</a></span> - Method in interface com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#setOnClusterItemInfoWindowClickListener(com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener)">setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.Collection.html#setOnInfoWindowAdapter(GoogleMap.InfoWindowAdapter)">setOnInfoWindowAdapter(GoogleMap.InfoWindowAdapter)</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.Collection.html#setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener)">setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener)</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></dt>
@@ -546,6 +690,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/MarkerManager.Collection.html#setOnMarkerDragListener(GoogleMap.OnMarkerDragListener)">setOnMarkerDragListener(GoogleMap.OnMarkerDragListener)</a></span> - Method in class com.google.maps.android.<a href="./com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#setOpacity(double)">setOpacity(double)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Setter for opacity
+ User should clear overlay's tile cache (using clearTileCache()) after calling this.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#setRadius(int)">setRadius(int)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Setter for radius.</div>
+</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/clustering/ClusterManager.html#setRenderer(com.google.maps.android.clustering.view.ClusterRenderer)">setRenderer(ClusterRenderer&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.<a href="./com/google/maps/android/clustering/ClusterManager.html" title="class in com.google.maps.android.clustering">ClusterManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="strong"><a href="./com/google/maps/android/ui/IconGenerator.html#setRotation(int)">setRotation(int)</a></span> - Method in class com.google.maps.android.ui.<a href="./com/google/maps/android/ui/IconGenerator.html" title="class in com.google.maps.android.ui">IconGenerator</a></dt>
@@ -566,7 +719,11 @@
 <div class="block">Sets the text color, size, style, hint color, and highlight color from the specified
  <code>TextAppearance</code> resource.</div>
 </dd>
-<dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#shouldRenderAsCluster(com.google.maps.android.clustering.Cluster)">shouldRenderAsCluster(Cluster)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html#setWeightedData(java.util.Collection)">setWeightedData(Collection&lt;WeightedLatLng&gt;)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></dt>
+<dd>
+<div class="block">Changes the dataset the heatmap is portraying.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html#shouldRenderAsCluster(com.google.maps.android.clustering.Cluster)">shouldRenderAsCluster(Cluster&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="./com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>
 <div class="block">Determine whether the cluster should be rendered as individual markers or a cluster.</div>
 </dd>
@@ -619,6 +776,30 @@
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Point.html#toString()">toString()</a></span> - Method in class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Point.html" title="class in com.google.maps.android.geometry">Point</a></dt>
 <dd>&nbsp;</dd>
 </dl>
+<a name="_W_">
+<!--   -->
+</a>
+<h2 class="title">W</h2>
+<dl>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html#weightedData(java.util.Collection)">weightedData(Collection&lt;WeightedLatLng&gt;)</a></span> - Method in class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></dt>
+<dd>
+<div class="block">Setter for data in builder.</div>
+</dd>
+<dt><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps"><span class="strong">WeightedLatLng</span></a> - Class in <a href="./com/google/maps/android/heatmaps/package-summary.html">com.google.maps.android.heatmaps</a></dt>
+<dd>
+<div class="block">A wrapper class that can be used in a PointQuadTree
+ Created from a LatLng and optional intensity: point coordinates of the LatLng and the intensity
+ value can be accessed from it later.</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html#WeightedLatLng(LatLng, double)">WeightedLatLng(LatLng, double)</a></span> - Constructor for class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></dt>
+<dd>
+<div class="block">Constructor</div>
+</dd>
+<dt><span class="strong"><a href="./com/google/maps/android/heatmaps/WeightedLatLng.html#WeightedLatLng(LatLng)">WeightedLatLng(LatLng)</a></span> - Constructor for class com.google.maps.android.heatmaps.<a href="./com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></dt>
+<dd>
+<div class="block">Constructor that uses default value for intensity</div>
+</dd>
+</dl>
 <a name="_X_">
 <!--   -->
 </a>
@@ -635,7 +816,7 @@
 <dt><span class="strong"><a href="./com/google/maps/android/geometry/Point.html#y">y</a></span> - Variable in class com.google.maps.android.geometry.<a href="./com/google/maps/android/geometry/Point.html" title="class in com.google.maps.android.geometry">Point</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#_A_">A</a>&nbsp;<a href="#_B_">B</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_D_">D</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_M_">M</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_O_">O</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_R_">R</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a href="#_X_">X</a>&nbsp;<a href="#_Y_">Y</a>&nbsp;</div>
+<a href="#_A_">A</a>&nbsp;<a href="#_B_">B</a>&nbsp;<a href="#_C_">C</a>&nbsp;<a href="#_D_">D</a>&nbsp;<a href="#_E_">E</a>&nbsp;<a href="#_G_">G</a>&nbsp;<a href="#_H_">H</a>&nbsp;<a href="#_I_">I</a>&nbsp;<a href="#_M_">M</a>&nbsp;<a href="#_N_">N</a>&nbsp;<a href="#_O_">O</a>&nbsp;<a href="#_P_">P</a>&nbsp;<a href="#_R_">R</a>&nbsp;<a href="#_S_">S</a>&nbsp;<a href="#_T_">T</a>&nbsp;<a href="#_W_">W</a>&nbsp;<a href="#_X_">X</a>&nbsp;<a href="#_Y_">Y</a>&nbsp;</div>
 <p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
 </body>
 </html>

@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>WeightedLatLng</title>
+<link rel="stylesheet" type="text/css" href="../../../../../javadoc-base.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="WeightedLatLng";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.maps.android.heatmaps</div>
+<h2 title="Class WeightedLatLng" class="title">Class WeightedLatLng</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>com.google.maps.android.heatmaps.WeightedLatLng</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public class <span class="strong">WeightedLatLng</span>
+extends java.lang.Object
+implements <a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a></pre>
+<div class="block">A wrapper class that can be used in a PointQuadTree
+ Created from a LatLng and optional intensity: point coordinates of the LatLng and the intensity
+ value can be accessed from it later.</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static double</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/WeightedLatLng.html#DEFAULT_INTENSITY">DEFAULT_INTENSITY</a></strong></code>
+<div class="block">Default intensity to use when intensity not specified</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../com/google/maps/android/projection/SphericalMercatorProjection.html" title="class in com.google.maps.android.projection">SphericalMercatorProjection</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/WeightedLatLng.html#mProjection">mProjection</a></strong></code>
+<div class="block">Projection to use for points
+ Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/WeightedLatLng.html#WeightedLatLng(LatLng)">WeightedLatLng</a></strong>(LatLng&nbsp;latLng)</code>
+<div class="block">Constructor that uses default value for intensity</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/WeightedLatLng.html#WeightedLatLng(LatLng, double)">WeightedLatLng</a></strong>(LatLng&nbsp;latLng,
+              double&nbsp;intensity)</code>
+<div class="block">Constructor</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/WeightedLatLng.html#getIntensity()">getIntensity</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../com/google/maps/android/geometry/Point.html" title="class in com.google.maps.android.geometry">Point</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/WeightedLatLng.html#getPoint()">getPoint</a></strong>()</code>&nbsp;</td>
+</tr>
+</table>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="DEFAULT_INTENSITY">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_INTENSITY</h4>
+<pre>public static final&nbsp;double DEFAULT_INTENSITY</pre>
+<div class="block">Default intensity to use when intensity not specified</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../constant-values.html#com.google.maps.android.heatmaps.WeightedLatLng.DEFAULT_INTENSITY">Constant Field Values</a></dd></dl>
+</li>
+</ul>
+<a name="mProjection">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>mProjection</h4>
+<pre>public static final&nbsp;<a href="../../../../../com/google/maps/android/projection/SphericalMercatorProjection.html" title="class in com.google.maps.android.projection">SphericalMercatorProjection</a> mProjection</pre>
+<div class="block">Projection to use for points
+ Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection</div>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="WeightedLatLng(LatLng)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>WeightedLatLng</h4>
+<pre>public&nbsp;WeightedLatLng(LatLng&nbsp;latLng)</pre>
+<div class="block">Constructor that uses default value for intensity</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>latLng</code> - LatLng to add to wrapper</dd></dl>
+</li>
+</ul>
+<a name="WeightedLatLng(LatLng, double)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>WeightedLatLng</h4>
+<pre>public&nbsp;WeightedLatLng(LatLng&nbsp;latLng,
+              double&nbsp;intensity)</pre>
+<div class="block">Constructor</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>latLng</code> - LatLng to add to wrapper</dd><dd><code>intensity</code> - Intensity to use: should be greater than 0
+                  Default value is 1.
+                  This represents the "importance" or "value" of this particular point
+                  Higher intensity values map to higher colours.
+                  Intensity is additive: having two points of intensity 1 at the same
+                  location is identical to having one of intensity 2.</dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="getIntensity()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getIntensity</h4>
+<pre>public&nbsp;double&nbsp;getIntensity()</pre>
+</li>
+</ul>
+<a name="getPoint()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getPoint</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/maps/android/geometry/Point.html" title="class in com.google.maps.android.geometry">Point</a>&nbsp;getPoint()</pre>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html#getPoint()">getPoint</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree">PointQuadTree.Item</a></code></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>Gradient</title>
+<link rel="stylesheet" type="text/css" href="../../../../../javadoc-base.css" title="Style">
+</head>
+<body>
+<script type="text/javascript"><!--
+    if (location.href.indexOf('is-external=true') == -1) {
+        parent.document.title="Gradient";
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<a class="back" href="javascript:history.back()">Back</a> <a class="back" href="/android-maps-utils/" target="_top">Back to site</a>
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">com.google.maps.android.heatmaps</div>
+<h2 title="Class Gradient" class="title">Class Gradient</h2>
+</div>
+<div class="contentContainer">
+<ul class="inheritance">
+<li>java.lang.Object</li>
+<li>
+<ul class="inheritance">
+<li>com.google.maps.android.heatmaps.Gradient</li>
+</ul>
+</li>
+</ul>
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>public class <span class="strong">Gradient</span>
+extends java.lang.Object</pre>
+<div class="block">A class to generate a color map from a given array of colors and the fractions
+ that the colors represent by interpolating between their HSV values.
+ This color map is to be used in the HeatmapTileProvider.</div>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/Gradient.html#DEFAULT_COLOR_MAP_SIZE">DEFAULT_COLOR_MAP_SIZE</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/Gradient.html#mColorMapSize">mColorMapSize</a></strong></code>
+<div class="block">Size of a color map for the heatmap</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/Gradient.html#mColors">mColors</a></strong></code>
+<div class="block">The colors to be used in the gradient</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>float[]</code></td>
+<td class="colLast"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/Gradient.html#mStartPoints">mStartPoints</a></strong></code>
+<div class="block">The starting point for each color, given as a percentage of the maximum intensity</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colOne" scope="col">Constructor and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colOne"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/Gradient.html#Gradient(int[], float[])">Gradient</a></strong>(int[]&nbsp;colors,
+        float[]&nbsp;startPoints)</code>
+<div class="block">Creates a Gradient with the given colors and starting points.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><strong><a href="../../../../../com/google/maps/android/heatmaps/Gradient.html#Gradient(int[], float[], int)">Gradient</a></strong>(int[]&nbsp;colors,
+        float[]&nbsp;startPoints,
+        int&nbsp;colorMapSize)</code>
+<div class="block">Creates a Gradient with the given colors and starting points which creates a colorMap of given size.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method_summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a name="methods_inherited_from_class_java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field_detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="DEFAULT_COLOR_MAP_SIZE">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_COLOR_MAP_SIZE</h4>
+<pre>public static final&nbsp;int DEFAULT_COLOR_MAP_SIZE</pre>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../constant-values.html#com.google.maps.android.heatmaps.Gradient.DEFAULT_COLOR_MAP_SIZE">Constant Field Values</a></dd></dl>
+</li>
+</ul>
+<a name="mColorMapSize">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mColorMapSize</h4>
+<pre>public final&nbsp;int mColorMapSize</pre>
+<div class="block">Size of a color map for the heatmap</div>
+</li>
+</ul>
+<a name="mColors">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mColors</h4>
+<pre>public&nbsp;int[] mColors</pre>
+<div class="block">The colors to be used in the gradient</div>
+</li>
+</ul>
+<a name="mStartPoints">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>mStartPoints</h4>
+<pre>public&nbsp;float[] mStartPoints</pre>
+<div class="block">The starting point for each color, given as a percentage of the maximum intensity</div>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<ul class="blockList">
+<li class="blockList"><a name="constructor_detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a name="Gradient(int[], float[])">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>Gradient</h4>
+<pre>public&nbsp;Gradient(int[]&nbsp;colors,
+        float[]&nbsp;startPoints)</pre>
+<div class="block">Creates a Gradient with the given colors and starting points.
+ These are given as parallel arrays.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>colors</code> - The colors to be used in the gradient</dd><dd><code>startPoints</code> - The starting point for each color, given as a percentage of the maximum intensity
+                    This is given as an array of floats with values in the interval [0,1]</dd></dl>
+</li>
+</ul>
+<a name="Gradient(int[], float[], int)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Gradient</h4>
+<pre>public&nbsp;Gradient(int[]&nbsp;colors,
+        float[]&nbsp;startPoints,
+        int&nbsp;colorMapSize)</pre>
+<div class="block">Creates a Gradient with the given colors and starting points which creates a colorMap of given size.
+ The colors and starting points are given as parallel arrays.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>colors</code> - The colors to be used in the gradient</dd><dd><code>startPoints</code> - The starting point for each color, given as a percentage of the maximum intensity
+                     This is given as an array of floats with values in the interval [0,1]</dd><dd><code>colorMapSize</code> - The size of the colorMap to be generated by the Gradient</dd></dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<p class="legalCopy"><small><script src="//www.google.com/js/gweb/analytics/autotrack.js"></script><script>new gweb.analytics.AutoTrack({profile: "UA-12846745-19",heatMapper: true});</script></small></p>
+</body>
+</html>
