@@ -78,14 +78,6 @@ public class HeatmapTileProvider implements TileProvider {
     static final double WORLD_WIDTH = 1;
 
     /**
-     * For use in getBounds.
-     * Sigma is used to ensure search is inclusive of upper bounds (eg if a point is on exactly the
-     * upper bound, it should be returned)
-     * Package access for tests
-     */
-    static final double SIGMA = 1e-6;
-
-    /**
      * Tile dimension, in pixels.
      */
     private static final int TILE_DIM = 512;
@@ -279,7 +271,7 @@ public class HeatmapTileProvider implements TileProvider {
         mGradient = builder.gradient;
         mOpacity = builder.opacity;
 
-        // Compute kernel density function (sigma = 1/3rd of radius)
+        // Compute kernel density function (sd = 1/3rd of radius)
         mKernel = generateKernel(mRadius, mRadius / 3.0);
 
         // Generate color map
@@ -390,11 +382,10 @@ public class HeatmapTileProvider implements TileProvider {
         double bucketWidth = tileWidthPadded / (TILE_DIM + mRadius * 2);
 
         // Make bounds: minX, maxX, minY, maxY
-        // Sigma because search is non inclusive
         double minX = x * tileWidth - padding;
-        double maxX = (x + 1) * tileWidth + padding + SIGMA;
+        double maxX = (x + 1) * tileWidth + padding;
         double minY = y * tileWidth - padding;
-        double maxY = (y + 1) * tileWidth + padding + SIGMA;
+        double maxY = (y + 1) * tileWidth + padding;
 
         // Deal with overlap across lat = 180
         // Need to make it wrap around both ways
@@ -560,9 +551,9 @@ public class HeatmapTileProvider implements TileProvider {
         WeightedLatLng first = iter.next();
 
         double minX = first.getPoint().x;
-        double maxX = first.getPoint().x + SIGMA;
+        double maxX = first.getPoint().x;
         double minY = first.getPoint().y;
-        double maxY = first.getPoint().y + SIGMA;
+        double maxY = first.getPoint().y;
 
         while (iter.hasNext()) {
             WeightedLatLng l = iter.next();
@@ -570,9 +561,9 @@ public class HeatmapTileProvider implements TileProvider {
             double y = l.getPoint().y;
             // Extend bounds if necessary
             if (x < minX) minX = x;
-            if (x + SIGMA > maxX) maxX = x + SIGMA;
+            if (x > maxX) maxX = x;
             if (y < minY) minY = y;
-            if (y + SIGMA > maxY) maxY = y + SIGMA;
+            if (y > maxY) maxY = y;
         }
 
         return new Bounds(minX, maxX, minY, maxY);
@@ -583,7 +574,7 @@ public class HeatmapTileProvider implements TileProvider {
      * Normalised with central value of 1.
      *
      * @param radius radius of the kernel
-     * @param sd  standard deviation of the Gaussian function
+     * @param sd     standard deviation of the Gaussian function
      * @return generated Gaussian kernel
      */
     static double[] generateKernel(int radius, double sd) {
