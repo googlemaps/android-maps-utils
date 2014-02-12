@@ -75,18 +75,21 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      */
     private static final String TYPE_RADAR_SEARCH = "/radarsearch";
     private static final String OUT_JSON = "/json";
-    // Places API Server Key
+
+    /**
+     * Places API server key.
+     */
     private static final String API_KEY = "YOUR_KEY_HERE"; // TODO place your own here!
 
     /**
      * The colors to be used for the different heatmap layers.
      */
     private static final int[] HEATMAP_COLORS = {
-            HeatmapColors.RED.color,
-            HeatmapColors.BLUE.color,
-            HeatmapColors.GREEN.color,
-            HeatmapColors.PINK.color,
-            HeatmapColors.GREY.color
+        HeatmapColors.RED.color,
+        HeatmapColors.BLUE.color,
+        HeatmapColors.GREEN.color,
+        HeatmapColors.PINK.color,
+        HeatmapColors.GREY.color
     };
 
     public enum HeatmapColors {
@@ -101,6 +104,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             this.color = color;
         }
     }
+
     private static final int MAX_CHECKBOXES = 5;
 
     /**
@@ -160,10 +164,10 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 11));
                 // Add a circle around Sydney to roughly encompass the results
                 mMap.addCircle(new CircleOptions()
-                        .center(SYDNEY)
-                        .radius(SEARCH_RADIUS * 1.2)
-                        .strokeColor(Color.RED)
-                        .strokeWidth(4));
+                    .center(SYDNEY)
+                    .radius(SEARCH_RADIUS * 1.2)
+                    .strokeColor(Color.RED)
+                    .strokeWidth(4));
             }
         }
     }
