@@ -115,7 +115,7 @@ public class HeatmapTileProvider implements TileProvider {
     /**
      * Quad tree of all the points to display in the heatmap
      */
-    private PointQuadTree mTree;
+    private PointQuadTree<WeightedLatLng> mTree;
 
     /**
      * Collection of all the data.
@@ -309,7 +309,7 @@ public class HeatmapTileProvider implements TileProvider {
         // Make the quad tree
         mBounds = getBounds(mData);
 
-        mTree = new PointQuadTree(mBounds);
+        mTree = new PointQuadTree<WeightedLatLng>(mBounds);
 
         // Add points to quad tree
         for (WeightedLatLng l : mData) {
