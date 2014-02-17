@@ -8,3 +8,4 @@ local.properties
 library/bin
 library/gen
 project.properties
+.DS_Store
