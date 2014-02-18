@@ -714,23 +714,47 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected void onClusterItemRendered(T clusterItem, Marker marker) {
     }
     
-    /**
-     * Get the marker from a ClusterItem
-     * @param cluster which you will obtain its marker
-     * @return a marker from a cluster or null if it does not exists
-     */
-    protected Marker getMarker(T cluster) {
-        return mMarkerCache.get(cluster);
-    }
+	/**
+	 * Get the marker from a ClusterItem
+	 * @param cluster ClusterItem which you will obtain its marker
+	 * @return a marker from a ClusterItem or null if it does not exists
+	 */
+	protected Marker getMarker(T  clusterItem) {
+		return mMarkerCache.get(clusterItem);
+	}
 
-    /**
-     * Get the ClusterItem from a marker
-     * @param marker which you will obtain its ClusterItem
-     * @return a ClusterItem from a marker or null if it does not exists
-     */
-    protected T getCluster(Marker marker) {
-        return mMarkerCache.get(marker);
-    }
+	/**
+	 * Get the ClusterItem from a marker
+	 * @param marker which you will obtain its ClusterItem
+	 * @return a ClusterItem from a marker or null if it does not exists
+	 */
+	protected T getClusterItem(Marker marker) {
+		return mMarkerCache.get(marker);
+	}
+	
+	/**
+	 * Get the marker from a Cluster
+	 * @param cluster which you will obtain its marker
+	 * @return a marker from a cluster or null if it does not exists
+	 */
+	protected Marker getMarker(Cluster<T>  cluster) {
+		for (Map.Entry<Marker, Cluster<T>> entry : mMarkerToCluster.entrySet()) {
+	        if (cluster.equals(entry.getValue())) {
+	            return entry.getKey();
+	        }
+	    }
+	    return null;
+	}
+
+	/**
+	 * Get the Cluster from a marker
+	 * @param marker which you will obtain its Cluster
+	 * @return a Cluster from a marker or null if it does not exists
+	 */
+	protected Cluster<T> getCluster(Marker marker) {
+		
+		return mMarkerToCluster.get(marker);
+	}
 
     /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
