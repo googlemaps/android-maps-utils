@@ -95,6 +95,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Lookup between markers and the associated cluster.
      */
     private Map<Marker, Cluster<T>> mMarkerToCluster = new HashMap<Marker, Cluster<T>>();
+    private Map<Cluster<T>, Marker> mClusterToMarker = new WeakHashMap<Cluster<T>, Marker>();
 
     /**
      * The target zoom level for the current set of clusters.
@@ -720,7 +721,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 	 * @return a marker from a ClusterItem or null if it does not exists
 	 */
 	protected Marker getMarker(T  clusterItem) {
-		return mMarkerCache.get(clusterItem);
+	    return mMarkerCache.get(clusterItem);
 	}
 
 	/**
@@ -729,7 +730,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 	 * @return a ClusterItem from a marker or null if it does not exists
 	 */
 	protected T getClusterItem(Marker marker) {
-		return mMarkerCache.get(marker);
+	    return mMarkerCache.get(marker);
 	}
 	
 	/**
@@ -738,12 +739,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 	 * @return a marker from a cluster or null if it does not exists
 	 */
 	protected Marker getMarker(Cluster<T>  cluster) {
-		for (Map.Entry<Marker, Cluster<T>> entry : mMarkerToCluster.entrySet()) {
-	        if (cluster.equals(entry.getValue())) {
-	            return entry.getKey();
-	        }
-	    }
-	    return null;
+	    return mClusterToMarker.get(cluster);
 	}
 
 	/**
@@ -752,8 +748,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 	 * @return a Cluster from a marker or null if it does not exists
 	 */
 	protected Cluster<T> getCluster(Marker marker) {
-		
-		return mMarkerToCluster.get(marker);
+	    return mMarkerToCluster.get(marker);
 	}
 
     /**
@@ -812,6 +807,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
             Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
             mMarkerToCluster.put(marker, cluster);
+            mClusterToMarker.put(cluster, marker);
             MarkerWithPosition markerWithPosition = new MarkerWithPosition(marker);
             if (animateFrom != null) {
                 markerModifier.animate(markerWithPosition, animateFrom, cluster.getPosition());
