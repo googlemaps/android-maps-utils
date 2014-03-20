@@ -41,6 +41,7 @@ import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.WeakHashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
