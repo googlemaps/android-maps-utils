@@ -17,7 +17,7 @@ The library is under heavy development, but ready for use. Check the [issue trac
 
 <img src="bubblemarker.png" style="float: right">
 
-  * **BubbleIconFactory** &mdash; display text on your Markers (see screenshot to the right)
+  * **IconGenerator** &mdash; display text on your Markers (see screenshot to the right)
 
   * **Poly decoding and encoding** &mdash; compact encoding for paths, [interoperability](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) with Maps API web services
 
