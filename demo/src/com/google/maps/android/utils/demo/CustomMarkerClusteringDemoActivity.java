@@ -99,6 +99,26 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         String firstName = cluster.getItems().iterator().next().name;
         Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
         return true;
+        /**
+         * Zoom in the cluster. Need to create LatLngBounds and including all the cluster items inside of bounds 
+         * Then animate to center of the bounds.
+         * The code:
+         * 
+         * // Create the builder to collect all essential cluster items for the bounds
+         * LatLngBounds.Builder builder = LatLngBounds.builder();
+         * for (ClusterItem item : cluster.getItems()) {
+         *     builder.include(item.getPosition());
+         * }
+         * // Get the LatLngBounds
+         * final LatLngBounds bounds = builder.build();
+         * // Animate camera to the bounds
+         * try {
+         *     getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+         * } catch (Exception e) {
+         *     e.printStackTrace();
+         * }
+         * return true;
+         */
     }
 
     @Override
