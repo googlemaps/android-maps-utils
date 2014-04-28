@@ -41,6 +41,7 @@ import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.WeakHashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,6 +96,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Lookup between markers and the associated cluster.
      */
     private Map<Marker, Cluster<T>> mMarkerToCluster = new HashMap<Marker, Cluster<T>>();
+    private Map<Cluster<T>, Marker> mClusterToMarker = new WeakHashMap<Cluster<T>, Marker>();
 
     /**
      * The target zoom level for the current set of clusters.
@@ -715,6 +717,42 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      */
     protected void onClusterItemRendered(T clusterItem, Marker marker) {
     }
+    
+	/**
+	 * Get the marker from a ClusterItem
+	 * @param cluster ClusterItem which you will obtain its marker
+	 * @return a marker from a ClusterItem or null if it does not exists
+	 */
+	protected Marker getMarker(T  clusterItem) {
+	    return mMarkerCache.get(clusterItem);
+	}
+
+	/**
+	 * Get the ClusterItem from a marker
+	 * @param marker which you will obtain its ClusterItem
+	 * @return a ClusterItem from a marker or null if it does not exists
+	 */
+	protected T getClusterItem(Marker marker) {
+	    return mMarkerCache.get(marker);
+	}
+	
+	/**
+	 * Get the marker from a Cluster
+	 * @param cluster which you will obtain its marker
+	 * @return a marker from a cluster or null if it does not exists
+	 */
+	protected Marker getMarker(Cluster<T>  cluster) {
+	    return mClusterToMarker.get(cluster);
+	}
+
+	/**
+	 * Get the Cluster from a marker
+	 * @param marker which you will obtain its Cluster
+	 * @return a Cluster from a marker or null if it does not exists
+	 */
+	protected Cluster<T> getCluster(Marker marker) {
+	    return mMarkerToCluster.get(marker);
+	}
 
     /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
@@ -772,6 +810,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
             Marker marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
             mMarkerToCluster.put(marker, cluster);
+            mClusterToMarker.put(cluster, marker);
             MarkerWithPosition markerWithPosition = new MarkerWithPosition(marker);
             if (animateFrom != null) {
                 markerModifier.animate(markerWithPosition, animateFrom, cluster.getPosition());
