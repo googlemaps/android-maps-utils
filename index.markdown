@@ -17,6 +17,10 @@ The library is under heavy development, but ready for use. Check the [issue trac
 
 <img src="bubblemarker.png" style="float: right">
 
+  * **Marker clustering** &mdash; handles the display of a large number of points
+
+  * **Heat maps** &mdash; display a large number of points as a heat map
+
   * **IconGenerator** &mdash; display text on your Markers (see screenshot to the right)
 
   * **Poly decoding and encoding** &mdash; compact encoding for paths, [interoperability](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) with Maps API web services
@@ -31,14 +35,14 @@ An introductory video:
 <p id="start"></p>
 ## Getting Started
 
-The current version of the library is `0.3`.
+The current version of the library is `0.3.1`.
 
 ### Android Studio/Gradle
 
 Add the following dependency to your Gradle build file:
 
     dependencies {
-        compile 'com.google.maps.android:android-maps-utils:0.2+'
+        compile 'com.google.maps.android:android-maps-utils:0.3+'
     }
 
 ### Maven
@@ -48,7 +52,7 @@ Add the following to your `pom.xml`:
     <dependency>
         <groupId>com.google.maps.android</groupId>
         <artifactId>android-maps-utils-apklib</artifactId>
-        <version>0.2+</version>
+        <version>0.3+</version>
         <type>apklib</type>
     </dependency>
 
