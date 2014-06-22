@@ -724,7 +724,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param clusterItem ClusterItem which you will obtain its marker
      * @return a marker from a ClusterItem or null if it does not exists
      */
-    protected Marker getMarker(T  clusterItem) {
+    public Marker getMarker(T  clusterItem) {
         return mMarkerCache.get(clusterItem);
     }
 
@@ -733,7 +733,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param marker which you will obtain its ClusterItem
      * @return a ClusterItem from a marker or null if it does not exists
      */
-    protected T getClusterItem(Marker marker) {
+    public T getClusterItem(Marker marker) {
         return mMarkerCache.get(marker);
     }
 
@@ -742,7 +742,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param cluster which you will obtain its marker
      * @return a marker from a cluster or null if it does not exists
      */
-    protected Marker getMarker(Cluster<T>  cluster) {
+    public Marker getMarker(Cluster<T>  cluster) {
         return mClusterToMarker.get(cluster);
     }
 
@@ -751,7 +751,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param marker which you will obtain its Cluster
      * @return a Cluster from a marker or null if it does not exists
      */
-    protected Cluster<T> getCluster(Marker marker) {
+    public Cluster<T> getCluster(Marker marker) {
         return mMarkerToCluster.get(marker);
     }
 
