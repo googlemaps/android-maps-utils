@@ -1,7 +1,6 @@
 package com.google.maps.android.utils.demo.model;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 
 public class MyItem implements ClusterItem {
