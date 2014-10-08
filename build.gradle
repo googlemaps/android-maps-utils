@@ -4,9 +4,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.12.2'
         classpath 'com.github.townsfolk:gradle-release:1.2'
     }
 }
-
 apply plugin: 'release'
