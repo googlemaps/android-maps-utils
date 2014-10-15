@@ -2,6 +2,7 @@ package com.google.maps.android.clustering;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -144,7 +145,11 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             // Attempt to cancel the in-flight request.
             mClusterTask.cancel(true);
             mClusterTask = new ClusterTask();
-            mClusterTask.execute(mMap.getCameraPosition().zoom);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                mClusterTask.execute(mMap.getCameraPosition().zoom);
+            } else {
+                mClusterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMap.getCameraPosition().zoom);
+            }
         } finally {
             mClusterTaskLock.writeLock().unlock();
         }
