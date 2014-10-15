@@ -11,3 +11,5 @@ on master, one needs to be on gh-pages.
     $ jekyll serve --baseurl
 
 Navigate to http://$HOST:4000/android-maps-utils/
+
+![Analytics](https://ga-beacon.appspot.com/UA-12846745-20/android-maps-utils/gh-pages?pixel)
