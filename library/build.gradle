@@ -19,9 +19,10 @@ dependencies {
     compile 'com.google.android.gms:play-services:4.3+'
 }
 
+
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1.0"
 
     sourceSets {
         main {
@@ -30,7 +31,7 @@ android {
             res.srcDirs = ['res']
         }
 
-        instrumentTest {
+        androidTest {
             java.srcDirs = ['tests/src']
         }
     }
