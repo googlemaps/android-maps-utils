@@ -35,7 +35,7 @@ An introductory video:
 <p id="start"></p>
 ## Getting Started
 
-The current version of the library is `0.3.1`.
+The current version of the library is `0.3.2`.
 
 ### Android Studio/Gradle
 
