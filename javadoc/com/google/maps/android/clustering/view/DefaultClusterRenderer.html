@@ -87,8 +87,32 @@ implements <a href="../../../../../../com/google/maps/android/clustering/view/Cl
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&gt;</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html#getCluster(Marker)">getCluster</a></strong>(Marker&nbsp;marker)</code>
+<div class="block">Get the Cluster from a marker</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html#getClusterItem(Marker)">getClusterItem</a></strong>(Marker&nbsp;marker)</code>
+<div class="block">Get the ClusterItem from a marker</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>protected java.lang.String</code></td>
 <td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html#getClusterText(int)">getClusterText</a></strong>(int&nbsp;bucket)</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>Marker</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html#getMarker(com.google.maps.android.clustering.Cluster)">getMarker</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&gt;&nbsp;cluster)</code>
+<div class="block">Get the marker from a Cluster</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>Marker</code></td>
+<td class="colLast"><code><strong><a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html#getMarker(T)">getMarker</a></strong>(<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&nbsp;clusterItem)</code>
+<div class="block">Get the marker from a ClusterItem</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -210,6 +234,30 @@ implements <a href="../../../../../../com/google/maps/android/clustering/view/Cl
  cluster, bucketed to some set points.</div>
 </li>
 </ul>
+<a name="getCluster(Marker)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCluster</h4>
+<pre>public&nbsp;<a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&gt;&nbsp;getCluster(Marker&nbsp;marker)</pre>
+<div class="block">Get the Cluster from a marker</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>marker</code> - which you will obtain its Cluster</dd>
+<dt><span class="strong">Returns:</span></dt><dd>a Cluster from a marker or null if it does not exists</dd></dl>
+</li>
+</ul>
+<a name="getClusterItem(Marker)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getClusterItem</h4>
+<pre>public&nbsp;<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&nbsp;getClusterItem(Marker&nbsp;marker)</pre>
+<div class="block">Get the ClusterItem from a marker</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>marker</code> - which you will obtain its ClusterItem</dd>
+<dt><span class="strong">Returns:</span></dt><dd>a ClusterItem from a marker or null if it does not exists</dd></dl>
+</li>
+</ul>
 <a name="getClusterText(int)">
 <!--   -->
 </a>
@@ -217,6 +265,32 @@ implements <a href="../../../../../../com/google/maps/android/clustering/view/Cl
 <li class="blockList">
 <h4>getClusterText</h4>
 <pre>protected&nbsp;java.lang.String&nbsp;getClusterText(int&nbsp;bucket)</pre>
+</li>
+</ul>
+<a name="getMarker(com.google.maps.android.clustering.Cluster)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMarker</h4>
+<pre>public&nbsp;Marker&nbsp;getMarker(<a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&gt;&nbsp;cluster)</pre>
+<div class="block">Get the marker from a Cluster</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>cluster</code> - which you will obtain its marker</dd>
+<dt><span class="strong">Returns:</span></dt><dd>a marker from a cluster or null if it does not exists</dd></dl>
+</li>
+</ul>
+<a name="getMarker(com.google.maps.android.clustering.ClusterItem)">
+<!--   -->
+</a><a name="getMarker(T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMarker</h4>
+<pre>public&nbsp;Marker&nbsp;getMarker(<a href="../../../../../../com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="type parameter in DefaultClusterRenderer">T</a>&nbsp;clusterItem)</pre>
+<div class="block">Get the marker from a ClusterItem</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>clusterItem</code> - ClusterItem which you will obtain its marker</dd>
+<dt><span class="strong">Returns:</span></dt><dd>a marker from a ClusterItem or null if it does not exists</dd></dl>
 </li>
 </ul>
 <a name="onAdd()">
