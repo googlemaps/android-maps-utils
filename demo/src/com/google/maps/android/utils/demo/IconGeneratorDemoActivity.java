@@ -1,5 +1,6 @@
 package com.google.maps.android.utils.demo;
 
+import android.graphics.Color;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,8 +16,8 @@ public class IconGeneratorDemoActivity extends BaseDemoActivity {
         IconGenerator iconFactory = new IconGenerator(this);
         addIcon(iconFactory, "Default", new LatLng(-33.8696, 151.2094));
 
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Blue style", new LatLng(-33.9360, 151.2070));
+        iconFactory.setColor(Color.CYAN);
+        addIcon(iconFactory, "Custom color", new LatLng(-33.9360, 151.2070));
 
         iconFactory.setRotation(90);
         iconFactory.setStyle(IconGenerator.STYLE_RED);

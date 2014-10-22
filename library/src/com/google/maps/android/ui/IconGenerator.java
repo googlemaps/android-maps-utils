@@ -50,12 +50,14 @@ public class IconGenerator {
 
     private float mAnchorU = 0.5f;
     private float mAnchorV = 1f;
+    private BubbleDrawable mBackground;
 
     /**
      * Creates a new IconGenerator with the default style.
      */
     public IconGenerator(Context context) {
         mContext = context;
+        mBackground = new BubbleDrawable(mContext.getResources());
     }
 
     /**
@@ -208,8 +210,18 @@ public class IconGenerator {
      * Sets the style of the icon. The style consists of a background and text appearance.
      */
     public void setStyle(int style) {
-        setBackground(mContext.getResources().getDrawable(getBackground(style)));
+        setColor(getStyleColor(style));
         setTextAppearance(mContext, getTextStyle(style));
+    }
+
+    /**
+     * Sets the background to the default, with a given color tint.
+     *
+     * @param color the color for the background tint.
+     */
+    public void setColor(int color) {
+        mBackground.setColor(color);
+        setBackground(mBackground);
     }
 
     /**
@@ -249,6 +261,7 @@ public class IconGenerator {
             mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
             mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
             mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
+            setStyle(STYLE_DEFAULT);
         }
     }
 
@@ -274,22 +287,22 @@ public class IconGenerator {
     public static final int STYLE_PURPLE = 6;
     public static final int STYLE_ORANGE = 7;
 
-    private static int getBackground(int style) {
+    private static int getStyleColor(int style) {
         switch (style) {
             default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
-                return R.drawable.bubble_white;
+                return 0xffffffff;
             case STYLE_RED:
-                return R.drawable.bubble_red;
+                return 0xffcc0000;
             case STYLE_BLUE:
-                return R.drawable.bubble_blue;
+                return 0xff0099cc;
             case STYLE_GREEN:
-                return R.drawable.bubble_green;
+                return 0xff669900;
             case STYLE_PURPLE:
-                return R.drawable.bubble_purple;
+                return 0xff9933cc;
             case STYLE_ORANGE:
-                return R.drawable.bubble_orange;
+                return 0xffff8800;
         }
     }
 
