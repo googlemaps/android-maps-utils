@@ -625,10 +625,15 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          * @return true if there is still work to be processed.
          */
         public boolean isBusy() {
-            return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
-                    mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
-                    mAnimationTasks.isEmpty()
-            );
+            try {
+                lock.lock();
+                return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
+                        mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
+                        mAnimationTasks.isEmpty()
+                );
+            } finally {
+                lock.unlock();
+            }
         }
 
         /**
