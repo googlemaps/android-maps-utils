@@ -1,11 +1,15 @@
 package com.google.maps.android.utils.demo;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public abstract class BaseDemoActivity extends FragmentActivity {
+/**
+ * Created by lavenderc on 12/1/14.
+ */
+public class KMLDemoActivity extends FragmentActivity {
+
     private GoogleMap mMap;
 
     protected int getLayoutId() {
@@ -26,20 +30,9 @@ public abstract class BaseDemoActivity extends FragmentActivity {
     }
 
     private void setUpMapIfNeeded() {
-        if (mMap != null) {
-            return;
+        if (mMap == null) {
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         }
-        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-
     }
 
-    /**
-     * Run the demo-specific code.
-     */
-    protected abstract void startDemo();
-
-    protected GoogleMap getMap() {
-        setUpMapIfNeeded();
-        return mMap;
-    }
 }
