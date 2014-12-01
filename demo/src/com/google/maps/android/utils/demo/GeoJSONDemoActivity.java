@@ -8,7 +8,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 /**
  * Created by juliawong on 12/1/14.
  */
-public class JSONDemoActivity extends FragmentActivity {
+public class GeoJSONDemoActivity extends FragmentActivity {
 
     private GoogleMap mMap;
 
