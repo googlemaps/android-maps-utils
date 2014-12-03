@@ -37,7 +37,7 @@
 
         <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyDCa5WRSMk3CrNSf3y5xbyQTvp1_zwuTtE"/>
+                android:value="AIzaSyDe3Ivf9_tRPzoxzSKIWxJxH6uCLB6H9ww"/>
 
         <activity
                 android:name=".MainActivity"
@@ -57,6 +57,8 @@
         <activity android:name=".TileProviderAndProjectionDemo"/>
         <activity android:name=".HeatmapsDemoActivity"/>
         <activity android:name=".HeatmapsPlacesDemoActivity"/>
+        <activity android:name=".KMLDemoActivity"/>
+        <activity android:name=".GeoJSONDemoActivity"/>
 
     </application>
 

@@ -79,7 +79,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * Places API server key.
      */
-    private static final String API_KEY = "YOUR_KEY_HERE"; // TODO place your own here!
+    private static final String API_KEY = "AIzaSyDe3Ivf9_tRPzoxzSKIWxJxH6uCLB6H9ww"; // TODO place your own here!
 
     /**
      * The colors to be used for the different heatmap layers.

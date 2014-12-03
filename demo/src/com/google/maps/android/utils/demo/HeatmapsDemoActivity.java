@@ -42,8 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-//HELLO WORLD
-
 /**
  * A demo of the Heatmaps library. Demonstrates how the HeatmapTileProvider can be used to create
  * a colored map overlay that visualises many points of weighted importance/intensity, with
