@@ -69,7 +69,6 @@ public class ImportGeoJson{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -122,9 +121,9 @@ public class ImportGeoJson{
             // parseGeoJsonFeature(...)
             // add new object to newGeoJsonObjects
         }
+        // TODO check if feature
         else {
-            // parse a feature
-            // parseGeoJsonFeature(geojson_file);
+            parseGeoJsonFeature(geojson_file);
         }
     }
 
@@ -133,9 +132,11 @@ public class ImportGeoJson{
      * @return true if file contains a feature collection, otherwise false
      */
     private boolean checkIfFeatureCollection() {
-        // check if type is FeatureCollection
-        // throw error if type isn't FeatureCollection or Feature
-        // cater for capitalisation
+        try {
+            return geojson_file.getString("type").toLowerCase().equals("featurecollection");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -146,7 +147,14 @@ public class ImportGeoJson{
      * @return {@link com.google.android.gms.maps.model.LatLng} object representing the coordinate
      */
     private LatLng coordinateToLatLngArray(JSONArray geoJsonCoordinates) {
-        // Parse coordinates into a LatLng object
+        try {
+            // GeoJSON stores coordinates as lng, lat so need to reverse
+            return new LatLng(geoJsonCoordinates.getDouble(1),
+                    geoJsonCoordinates.getDouble(0));
+
+        } catch (JSONException e) {
+            Log.e("JSONException", e.toString());
+        }
         return null;
     }
 
@@ -155,11 +163,26 @@ public class ImportGeoJson{
      * {@link com.google.android.gms.maps.model.LatLng} objects
      * @param geoJsonCoordinates JSONArray of coordinates from the GeoJSON file
      * @return array of {@link com.google.android.gms.maps.model.LatLng}
-*                                objects representing the coordinates
+     *                                objects representing the coordinates
      */
     private ArrayList<LatLng> coordinatesToLatLngArray(JSONArray geoJsonCoordinates) {
-        // Parse all coordinates into an array of LatLng
+        JSONArray json_coords;
+        JSONArray json_coord;
         ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
+        // Iterate over the array of arrays of coordinates
+        for(int i = 0; i < geoJsonCoordinates.length(); i++) {
+            try {
+                json_coords = geoJsonCoordinates.getJSONArray(i);
+                // Iterate over the array of coordinates
+                for (int j = 0; j < json_coords.length(); j++) {
+                    json_coord = json_coords.getJSONArray(j);
+                    // GeoJSON stores coordinates as lng, lat so need to reverse
+                    coordinatesArray.add(new LatLng(json_coord.getDouble(1), json_coord.getDouble(0)));
+                }
+            } catch (JSONException e) {
+                Log.e("JSONException", e.toString());
+            }
+        }
         return coordinatesArray;
     }
 
