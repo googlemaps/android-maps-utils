@@ -1,7 +1,9 @@
 package com.google.maps.android.importGeoJson;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
@@ -15,44 +17,86 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by juliawong on 12/2/14.
  * Imports the given GeoJSON file and adds all GeoJSON objects to the map
  */
+public class ImportGeoJson{
 // TODO return newly added map objects
-
-public class ImportGeoJson {
-    private JSONObject JSON_FILE;
+    private JSONObject geojson_file;
     private ArrayList<Object> newGeoJsonObjects = new ArrayList<Object>();
 
     /**
-     * Creates a new ImportGeoJson object
-     * @param geojson_file_url URL of GeoJSON file
-     * @throws java.io.IOException
-     * @throws org.json.JSONException
+     * Creates a JSONObject from a given String
      */
-    public ImportGeoJson(String geojson_file_url) throws IOException, JSONException {
-        InputStream stream = new URL(geojson_file_url).openConnection().getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-        StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
+    private class parseUrlToJson extends AsyncTask<String, Void, JSONObject> {
+        /**
+         * Downloads the file and turns it into a string
+         * @param params First parameter is the URL of the file to download
+         * @return String containing the contents of the JSON file
+         */
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            StringBuilder result = new StringBuilder();
+            InputStream stream;
+            BufferedReader reader;
+            String line;
+            try {
+                // Creates the character input stream
+                stream = new URL(params[0]).openConnection().getInputStream();
+                // Reads from stream
+                reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+                // Read each line of the GeoJSON file into a string
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+            } catch (MalformedURLException e) {
+                Log.e("MalformedURLException", e.toString());
+            } catch (UnsupportedEncodingException e) {
+                Log.e("UnsupportedEncodingException", e.toString());
+            } catch (IOException e) {
+                Log.e("IOException", e.toString());
+            }
+            // Converts the result string into a JSONObject
+            try {
+                return new JSONObject(result.toString());
+            } catch (JSONException e) {
+                Log.e("JSONException", e.toString());
+            }
+            return null;
         }
+    }
 
-        Log.i("GeoJSON file", result.toString());
+    /**
+     * Creates a new ImportGeoJson object
+     * @param map
+     * @param geojson_file_url URL of GeoJSON file
+     */
+    public ImportGeoJson(GoogleMap map, String geojson_file_url)  {
+        try {
+            // Fetch the file
+            geojson_file = new parseUrlToJson().execute(geojson_file_url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        // Check if it works
+        Log.i("JSON", geojson_file.toString());
 
-        JSON_FILE = new JSONObject(result.toString());
     }
 
     /**
      * Creates a new ImportGeoJson object
      * @param resource_id Raw resource GeoJSON file
      */
-    public ImportGeoJson(int resource_id) {
+    public ImportGeoJson(GoogleMap map, int resource_id) {
         // convert resource into json
         // parseGeoJsonFile()
     }
@@ -68,7 +112,7 @@ public class ImportGeoJson {
         }
         else {
             // parse a feature
-            // parseGeoJsonFeature(JSON_FILE);
+            // parseGeoJsonFeature(geojson_file);
         }
     }
 
@@ -252,5 +296,26 @@ public class ImportGeoJson {
         return null;
     }
 
+//    @Override
+//    protected JSONObject doInBackground(String... params) {
+//        try {
+//            InputStream stream = new URL(params[0]).openConnection().getInputStream();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+//            StringBuilder result = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                result.append(line);
+//            }
+//            Log.i("JSON FILE", result.toString());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Log.i("JSON FILE", "END");
+//        return null;
+//    }
 }
 
