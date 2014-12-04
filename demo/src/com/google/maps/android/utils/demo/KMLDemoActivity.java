@@ -1,5 +1,9 @@
 package com.google.maps.android.utils.demo;
 
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
+import android.widget.TextView;
+
 import com.google.maps.android.kml.Document;
 import com.google.maps.android.kml.Placemark;
 import com.google.maps.android.kml.Style;
@@ -23,10 +27,16 @@ public class KMLDemoActivity extends BaseDemoActivity {
         return parser;
     }
 
-
+    protected int getLayoutId() {
+        return R.layout.kml_demo;
+    }
 
 
     public void startDemo () {
+
+        TextView t = (TextView)findViewById(R.id.attribution);
+       t.setMovementMethod(new ScrollingMovementMethod());
+
         try {
             XmlPullParser parser;
             Document document = new Document();
@@ -37,12 +47,17 @@ public class KMLDemoActivity extends BaseDemoActivity {
             HashMap<String, Style> styles = document.getStyles();
             HashMap<String, Placemark> placemarks = document.getPlacemarks();
 
+
+            t.append(Html.fromHtml("<b>Styles</b><br>"));
+
             for (Style s: styles.values()) {
-                System.out.println(s.getStyleID());
+                String text = ("ID: " + s.getStyleID() + ", COLOR: " + s.getLineColor() + "\n");
+                t.append(text);
             }
 
             for (Placemark p: placemarks.values()) {
-                System.out.println(p.getName());
+                String text = ("Placemark Name: " + p.getName() + "\n");
+                t.append(text);
             }
         } catch (Exception e) {
             System.out.println("Unable to find file in res/raw, please try again!");

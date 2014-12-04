@@ -18,6 +18,9 @@ public class Coordinate {
     private int INNER_BOUNDARY = 0;
     private int OUTER_BOUNDARY = 1;
 
+    private int LATITUDE = 0;
+    private int LONGITUDE = 1;
+
     private int type;
     private int boundary;
 
@@ -30,16 +33,19 @@ public class Coordinate {
         boundary = UNINITIALIZED;
     }
     /**********************************
-         Recieves an integer value, 0 or 1, which determines whether the line is an inner boundary
-         or an outer boundary for polygon coordinates.
+        @param bBoundary Integer value which corresponds to either polygon, line or point type.
+        INNER_BOUNDARY = 0;
+        OUTER_BOUNDARY = 1;
      **********************************/
     public void setBoundary (int bBoundary) {
         boundary = bBoundary;
     }
 
     /**********************************
-         Recieves an integer value, 0, 1 or 2, which determines whether the coordinates are a polygon,
-         line or point
+        @param tType Integer value which corresponds to either polygon, line or point type.
+        POLYGON_TYPE = 0;
+        LINESTRING_TYPE = 1;
+        POINT_TYPE = 2;
      **********************************/
     public void setType(int tType) {
         type = tType;
@@ -55,17 +61,25 @@ public class Coordinate {
                     <lat>,<lon>
      **********************************/
     public void setCoordinateList (String text) {
-
+        String[] lines = text.split("\n");
+        for (String point: lines) {
+            String[] coordinate = point.split(",");
+            if (coordinate.length > 2) {
+                coordinateList.add(convertToLatLng(coordinate));
+            }
+        }
     }
 
     /**********************************
          Receives a pair of coordinate values which are separated by a comma and assigns a latlng
          value to it. The method then returns this latlng value.
-         @param     pair    String input in the format <lat>,<lon>
          @return    lat     LatLng value
      **********************************/
-    public LatLng convertToLatLng (String pair) {
-        return null;
+    public LatLng convertToLatLng (String[] coordinate) {
+        Double latDouble = Double.parseDouble(coordinate[LATITUDE]);
+        Double lonDouble = Double.parseDouble(coordinate[LONGITUDE]);
+        LatLng latLng = new LatLng(latDouble,lonDouble);
+        return latLng;
     }
 
     public int getBoundary() {
@@ -77,7 +91,7 @@ public class Coordinate {
     }
 
     public ArrayList<LatLng> getCoordinateList () {
-        return null;
+        return coordinateList;
     }
 
 
