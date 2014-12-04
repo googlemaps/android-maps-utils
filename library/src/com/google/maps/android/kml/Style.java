@@ -14,8 +14,8 @@ public class Style {
     String polyColor;
     String colorMode;
 
-    public Style(String name) {
-        style = name;
+    public Style() {
+        style = null;
         lineColor = null;
         width = 0;
         outline = false;

@@ -29,41 +29,54 @@ public class Coordinate {
         type = UNINITIALIZED;
         boundary = UNINITIALIZED;
     }
-
-
-    public void setBoundary (int boundary) {
+    /**********************************
+         Recieves an integer value, 0 or 1, which determines whether the line is an inner boundary
+         or an outer boundary for polygon coordinates.
+     **********************************/
+    public void setBoundary (int bBoundary) {
+        boundary = bBoundary;
     }
 
-    public void setType(int type) {
-    }
-
-    public int getBoundary() {
-        return UNINITIALIZED;
-    }
-
-    public int getType () {
-        return UNINITIALIZED;
-    }
-
-    public ArrayList<LatLng> getCoordinateList () {
-        return null;
+    /**********************************
+         Recieves an integer value, 0, 1 or 2, which determines whether the coordinates are a polygon,
+         line or point
+     **********************************/
+    public void setType(int tType) {
+        type = tType;
     }
 
     /**********************************
         Receives a list of coordinates from a string value, and assigns a latlng
         value to each pair of latitude and longitude points in a line, separated by the comma
         delimiter. The method ignores any coordinates which follow the second item in the array.
+        @param text String input in the format:
+                    <lat>,<lon>
+                    <lat>,<lon>
+                    <lat>,<lon>
      **********************************/
-
     public void setCoordinateList (String text) {
+
     }
 
     /**********************************
-     Receives a pair of coordinate values which are separated by a comma and assigns a latlng
-     value to it. The method then returns this latlng value.
+         Receives a pair of coordinate values which are separated by a comma and assigns a latlng
+         value to it. The method then returns this latlng value.
+         @param     pair    String input in the format <lat>,<lon>
+         @return    lat     LatLng value
      **********************************/
-
     public LatLng convertToLatLng (String pair) {
+        return null;
+    }
+
+    public int getBoundary() {
+        return boundary;
+    }
+
+    public int getType () {
+        return type;
+    }
+
+    public ArrayList<LatLng> getCoordinateList () {
         return null;
     }
 
