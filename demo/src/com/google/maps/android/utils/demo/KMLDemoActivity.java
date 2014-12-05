@@ -34,31 +34,14 @@ public class KMLDemoActivity extends BaseDemoActivity {
 
     public void startDemo () {
 
-        TextView t = (TextView)findViewById(R.id.attribution);
+       TextView t = (TextView)findViewById(R.id.attribution);
        t.setMovementMethod(new ScrollingMovementMethod());
 
         try {
-            XmlPullParser parser;
-            Document document = new Document();
-            parser = readItems();
-            document.setParser(parser);
+            XmlPullParser parser = readItems();
+            Document document = new Document(parser);
             document.readKMLData();
 
-            HashMap<String, Style> styles = document.getStyles();
-            HashMap<String, Placemark> placemarks = document.getPlacemarks();
-
-
-            t.append(Html.fromHtml("<b>Styles</b><br>"));
-
-            for (Style s: styles.values()) {
-                String text = ("ID: " + s.getStyleID() + ", COLOR: " + s.getLineColor() + "\n");
-                t.append(text);
-            }
-
-            for (Placemark p: placemarks.values()) {
-                String text = ("Placemark Name: " + p.getName() + "\n");
-                t.append(text);
-            }
         } catch (Exception e) {
             System.out.println("Unable to find file in res/raw, please try again!");
         }
