@@ -21,6 +21,9 @@ public class Document {
     private HashMap<String, Style> styles;
     private HashMap<String, Placemark> placemarks;
 
+    private int LATITUDE = 0;
+    private int LONGITUDE = 1;
+
     public Document () {
         this.parser = null;
         this.styles = new HashMap<String, Style>();
@@ -38,7 +41,6 @@ public class Document {
 
     public void readKMLData() {
         XmlPullParser p = this.parser;
-        String currentStyle = "";
         String name;
         try {
             int eventType = p.getEventType();
@@ -63,7 +65,13 @@ public class Document {
         }
     }
 
-
+    /**********************************
+     * Reads input from a parser, then assigns values to a placemark classed based on the name
+     * of the tag for which the text is defined in
+     *
+     * @param  placemark    newly created placemark class
+     * @param p             An XML parser which contains the input to be read
+     **********************************/
     public void assignPlacemark(XmlPullParser p, Placemark placemark) {
         try {
             int eventType = p.getEventType();
@@ -82,8 +90,8 @@ public class Document {
                 } else if (name.equals("visibility")) {
                     placemark.setVisibility(p.nextText());
                 } else if (name.equals("LineString") || name.equals("Point") || name.equals("Polygon")) {
-                    Coordinate c = new Coordinate();
-                    assignCoordinates(p, c);
+                   Coordinate c = new Coordinate();
+                   assignCoordinates(p, c, name);
                 }
             }
             if (!(eventType == XmlPullParser.END_TAG && name.equals("Placemark"))) {
@@ -96,20 +104,30 @@ public class Document {
 
     }
 
-    public void assignCoordinates (XmlPullParser p, Coordinate c) {
+    public void assignCoordinates (XmlPullParser p, Coordinate c, String closingTag) {
         try {
-            //do the things
+            int eventType = p.getEventType();
+            String name = p.getName();
+            if(eventType == XmlPullParser.START_TAG) {
+               if (name.equals("coordinates")) {
+                   c.setCoordinateList(p.nextText());
+               }
+            }
+            if (!(eventType == XmlPullParser.END_TAG && name.equals(closingTag))) {
+                p.next();
+                assignCoordinates(p, c, closingTag);
+            }
         } catch (Exception e){
 
         }
     }
 
     /**********************************
-     Assigns values to a style
-
-     Supports: width, color, fill, outline, colorMode
-
-     @param     p               XML Pull Parser from a file stream
+     * Reads input from a parser, then assigns values to a style class based on the start
+     * tag for which the tag content is defined in.
+     *
+     * @param  style   Style class, newly created
+     * @param p    An XML parser which contains the input to be read
      **********************************/
     public void assignStyle(XmlPullParser p, Style style) {
         try {
@@ -136,6 +154,12 @@ public class Document {
 
         }
     }
+
+
+    /**********************************
+     * Returns a hashmap of placemarks, for which the keys are the name of the placemark
+     * and the values are a placemark class.
+     **********************************/
 
     public HashMap<String, Placemark> getPlacemarks() {
         return this.placemarks;

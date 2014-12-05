@@ -5,17 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    </LinearLayout>
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -25,8 +14,9 @@
 
     <TextView
         android:id="@+id/attribution"
+        android:maxLines="10"
+        android:scrollbars = "vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center" />
-
 </LinearLayout>
