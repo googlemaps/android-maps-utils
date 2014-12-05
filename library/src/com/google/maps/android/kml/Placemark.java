@@ -13,7 +13,6 @@ public class Placemark {
     private String styleURL;
     private String address;
     private String phoneNumber;
-    private String region;
 
     private int POLYGON_TYPE = 0;
     private int LINESTRING_TYPE = 1;
@@ -49,30 +48,22 @@ public class Placemark {
     public void setAddress(String string) {
         address = string;
     }
-    public void setRegion(String string) {
-        region = string;
-    }
 
     public String getName() {
         return name;
     }
-
     public String getVisibility() {
         return visibility;
     }
-
     public String getDescription() {
         return description;
     }
-
     public String getStyleURL() {
         return styleURL;
     }
-
     public String getAddress() {
         return address;
     }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -91,7 +82,7 @@ public class Placemark {
     }
     public void setPoint(String coordinates) {
         Coordinate coordinate = new Coordinate();
-        coordinate.setType(LINESTRING_TYPE);
+        coordinate.setType(POINT_TYPE);
         coordinate.setCoordinateList(coordinates);
     }
 

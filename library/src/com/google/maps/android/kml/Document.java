@@ -24,15 +24,10 @@ public class Document {
     private int LATITUDE = 0;
     private int LONGITUDE = 1;
 
-    public Document () {
-        this.parser = null;
+    public Document (XmlPullParser parser) {
+        this.parser = parser;
         this.styles = new HashMap<String, Style>();
         this.placemarks = new HashMap<String, Placemark>();
-    }
-
-
-    public void setParser (XmlPullParser parser) {
-        this.parser = parser;
     }
     /**********************************
      Generates style values when a parser to a text is given.
@@ -104,6 +99,14 @@ public class Document {
 
     }
 
+    /**********************************
+     * Reads input from a parser
+     *
+     * @param c     Newly created coordinate class\
+     * @param p     XML Pull Parser
+     * @param closingTag    String value which represents the point at which to stop reading input
+     **********************************/
+
     public void assignCoordinates (XmlPullParser p, Coordinate c, String closingTag) {
         try {
             int eventType = p.getEventType();
@@ -164,6 +167,11 @@ public class Document {
     public HashMap<String, Placemark> getPlacemarks() {
         return this.placemarks;
     }
+
+    /**********************************
+     * Returns a hashmap of styles, for which the keys are the name of the style
+     * and the values are a style class.
+     **********************************/
 
     public HashMap<String, Style> getStyles() {
         return  this.styles;
