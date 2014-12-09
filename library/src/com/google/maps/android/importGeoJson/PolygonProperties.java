@@ -1,11 +1,12 @@
 package com.google.maps.android.importGeoJson;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/9/14.
@@ -29,13 +30,18 @@ public class PolygonProperties {
 
     private boolean mIsGeodesic = false;
 
+    private ArrayList<ArrayList<LatLng>> mCoordinates;
+
     /**
      * Takes in a JSONObject containing properties for a polygon and saves relevant properties
      *
      * @param geoJsonPolygonProperties contains properties of a polygon
+     * @param coordinates              contains a list of a list of coordinates representing the
+     *                                 polygon and its holes
      */
-    public PolygonProperties(JSONObject geoJsonPolygonProperties) throws JSONException {
-        Log.i("TEST", geoJsonPolygonProperties.toString());
+    public PolygonProperties(JSONObject geoJsonPolygonProperties,
+            ArrayList<ArrayList<LatLng>> coordinates) throws JSONException {
+        this.mCoordinates = coordinates;
         if (geoJsonPolygonProperties.has("id")) {
             mId = geoJsonPolygonProperties.getString("id");
         }
@@ -57,6 +63,24 @@ public class PolygonProperties {
         if (geoJsonPolygonProperties.has("geodesic")) {
             mIsGeodesic = geoJsonPolygonProperties.getBoolean("geodesic");
         }
+    }
+
+    /**
+     * Gets the coordinates of the polygon
+     *
+     * @return list of a list of coordinates of the polygon
+     */
+    public ArrayList<LatLng> getCoordinates() {
+        return mCoordinates.get(0);
+    }
+
+    /**
+     * Gets the coordinates of the holes of the polygon
+     *
+     * @return list of a list of coordinates of the holes polygon
+     */
+    public ArrayList<LatLng> getHoles() {
+        return mCoordinates.remove(0);
     }
 
     /**
@@ -130,7 +154,8 @@ public class PolygonProperties {
      */
     public PolygonOptions getPolygonOptions() {
         PolygonOptions options = new PolygonOptions();
-        options.strokeWidth(getStrokeWidth()).strokeColor(getStrokeColor())
+        options.addAll(getCoordinates()).addHole(getHoles()).strokeWidth(getStrokeWidth())
+                .strokeColor(getStrokeColor())
                 .fillColor(getFillColor()).zIndex(getZIndex()).visible(isVisible())
                 .geodesic(mIsGeodesic);
         return options;

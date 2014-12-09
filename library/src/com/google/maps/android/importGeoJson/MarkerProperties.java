@@ -1,5 +1,6 @@
 package com.google.maps.android.importGeoJson;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
@@ -33,12 +34,16 @@ public class MarkerProperties {
 
     private boolean mIsVisible = true;
 
+    private LatLng mCoodinates;
+
     /**
      * Takes in a JSONObject containing properties for a marker and saves relevant properties
      *
      * @param geoJsonPointProperties contains properties of a marker
+     * @param coordinates LatLng object representing coordinates of the marker
      */
-    public MarkerProperties(JSONObject geoJsonPointProperties) throws JSONException {
+    public MarkerProperties(JSONObject geoJsonPointProperties, LatLng coordinates) throws JSONException {
+        this.mCoodinates = coordinates;
         if (geoJsonPointProperties.has("id")) {
             mId = geoJsonPointProperties.getString("id");
         }
@@ -67,6 +72,14 @@ public class MarkerProperties {
             mIsVisible = geoJsonPointProperties.getBoolean("visible");
         }
 
+    }
+
+    /**
+     * Gets the coordinates of the marker
+     * @return coordinates of the marker
+     */
+    public LatLng getCoodinates() {
+        return mCoodinates;
     }
 
     /**
@@ -158,10 +171,9 @@ public class MarkerProperties {
      */
     public MarkerOptions getMarkerOptions() {
         MarkerOptions options = new MarkerOptions();
-        options.title(getTitle()).snippet(getSnippet()).alpha(getAlpha())
+        options.position(getCoodinates()).title(getTitle()).snippet(getSnippet()).alpha(getAlpha())
                 .anchor(getAnchorU(), getAnchorV()).draggable(isDraggable()).rotation(getRotation())
                 .visible(isVisible());
         return options;
     }
-
 }

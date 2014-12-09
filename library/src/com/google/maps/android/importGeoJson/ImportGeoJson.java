@@ -285,7 +285,7 @@ public class ImportGeoJson {
         MarkerProperties properties = null;
         // Get the marker properties
         try {
-            properties = new MarkerProperties(geoJsonPointProperties);
+            properties = new MarkerProperties(geoJsonPointProperties, coordinates);
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }
@@ -329,7 +329,7 @@ public class ImportGeoJson {
         PolylineProperties properties = null;
         // Get polyline properties
         try {
-            properties = new PolylineProperties(geoJsonLineStringProperties);
+            properties = new PolylineProperties(geoJsonLineStringProperties, coordinates);
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }
@@ -387,7 +387,7 @@ public class ImportGeoJson {
         PolygonProperties properties = null;
         // Get the polygon properties
         try {
-            properties = new PolygonProperties(geoJsonPolygonProperties);
+            properties = new PolygonProperties(geoJsonPolygonProperties, coordinates);
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }

@@ -1,9 +1,12 @@
 package com.google.maps.android.importGeoJson;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/9/14.
@@ -26,12 +29,17 @@ public class PolylineProperties {
 
     private boolean mIsGeodesic = false;
 
+    private ArrayList<LatLng> mCoordinates;
+
     /**
      * Takes in a JSONObject containing properties for a polyline and saves relevant properties
      *
      * @param geoJsonPointProperties contains properties of a polyline
+     * @param coordinates            Array of LatLngs representing the coordinates
      */
-    public PolylineProperties(JSONObject geoJsonPointProperties) throws JSONException {
+    public PolylineProperties(JSONObject geoJsonPointProperties, ArrayList<LatLng> coordinates)
+            throws JSONException {
+        this.mCoordinates = coordinates;
         if (geoJsonPointProperties.has("id")) {
             mId = geoJsonPointProperties.getString("id");
         }
@@ -51,6 +59,15 @@ public class PolylineProperties {
             mIsGeodesic = geoJsonPointProperties.getBoolean("geodesic");
 
         }
+    }
+
+    /**
+     * Gets coordinates of the polyline
+     *
+     * @return list with coordinates of the polyline
+     */
+    public ArrayList<LatLng> getCoordinates() {
+        return mCoordinates;
     }
 
     /**
@@ -116,7 +133,8 @@ public class PolylineProperties {
      */
     public PolylineOptions getPolylineOptions() {
         PolylineOptions options = new PolylineOptions();
-
+        options.addAll(getCoordinates()).width(getWidth()).color(getColor()).zIndex(getZIndex())
+                .visible(isVisible()).geodesic(isGeodesic());
         return options;
     }
 }
