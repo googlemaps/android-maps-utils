@@ -9,9 +9,7 @@ import android.util.Log;
 
 /**
  * Created by juliawong on 12/9/14.
- */
-
-/**
+ *
  * Parses a given JSONObject containing properties for the Polygon
  * Allows the user to retrieve the PolygonOptions
  */

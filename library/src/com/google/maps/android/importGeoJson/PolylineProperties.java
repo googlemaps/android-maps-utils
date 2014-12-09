@@ -7,9 +7,7 @@ import org.json.JSONObject;
 
 /**
  * Created by juliawong on 12/9/14.
- */
-
-/**
+ *
  * Parses a given JSONObject containing properties for the Polyline
  * Allows the user to retrieve the MarkerOptions
  */
