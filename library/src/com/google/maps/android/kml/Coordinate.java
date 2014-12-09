@@ -5,7 +5,9 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -32,6 +34,33 @@ public class Coordinate {
         coordinateList = null;
         type = UNINITIALIZED;
         boundary = UNINITIALIZED;
+    }
+
+    /**********************************
+     * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
+     *
+     * @param p XMLPullParser which reads input from designated source
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+
+    public void coordinateProperties(XmlPullParser p) throws XmlPullParserException, IOException {
+        int eventType = p.getEventType();
+        String name = p.getName();
+
+        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("coordinates"))) {
+            name = p.getName();
+            if (eventType == XmlPullParser.START_TAG) {
+                if (name.equals("coordinates")) {
+                    //TODO: Assign coordinates, do the things.
+
+                    /*
+                     setCoordinateList(p);
+                     */
+                }
+            }
+            eventType = p.next();
+        }
     }
 
     /**********************************
@@ -117,14 +146,29 @@ public class Coordinate {
         return null;
     }
 
+    /**
+     * Retrieves the type of boundary (inner or outer) this coordinate posseses
+     *
+     * @return boundary type, represented by an integer or -1 if not set
+     */
     public int getBoundary() {
         return boundary;
     }
 
+    /**
+     * Retrieves the coordinate type (poly, line or point) this coordinate posses
+     *
+     * @return coordinate type, represented by an integer or -1 if not set
+     */
     public int getType () {
         return type;
     }
 
+    /**
+     * Retrieves an Arraylist of LatLng points
+     *
+     * @return an Arraylist of LatLng points, null if not set.
+     */
     public ArrayList<LatLng> getCoordinateList () {
         return coordinateList;
     }
