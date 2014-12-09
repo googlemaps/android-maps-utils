@@ -32,6 +32,8 @@ public class ImportGeoJson {
     // TODO: return newly added map objects
     private JSONObject mGeoJsonFile;
 
+    private final GoogleMap mMap;
+
     private ArrayList<Object> mGeoJsonMapObjects = new ArrayList<Object>();
 
     /**
@@ -69,14 +71,16 @@ public class ImportGeoJson {
      * @param geoJsonFileUrl URL of GeoJSON file
      */
     public ImportGeoJson(GoogleMap map, String geoJsonFileUrl) {
+        mMap = map;
+
+        // Currently a bad implementation
         try {
-            // TODO: Decide whether to allow for JSONObject
             // Waits for the file to be loaded
             new parseUrlToJson().execute(geoJsonFileUrl).get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("InterruptedException", e.toString());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e("ExecutionException", e.toString());
         }
     }
 
@@ -88,6 +92,7 @@ public class ImportGeoJson {
      * @param applicationContext Application context object
      */
     public ImportGeoJson(GoogleMap map, int resourceId, Context applicationContext) {
+        mMap = map;
         // Creates the character input stream
         InputStream stream = applicationContext.getResources().openRawResource(resourceId);
         // Convert stream to JSONObject
@@ -112,7 +117,7 @@ public class ImportGeoJson {
                 result.append(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("IOException", e.toString());
         }
 
         // Converts the result string into a JSONObject
@@ -163,7 +168,7 @@ public class ImportGeoJson {
             // Ignore case and strip whitespace from the value which has key field "type"
             return geoJsonObj.getString("type").toLowerCase().trim().equals("featurecollection");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.toString());
         }
         return false;
     }
@@ -179,7 +184,7 @@ public class ImportGeoJson {
             // Ignore case and strip whitespace from the value which has key field "type"
             return geoJsonObj.getString("type").toLowerCase().trim().equals("feature");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.toString());
         }
         return false;
     }
@@ -212,20 +217,15 @@ public class ImportGeoJson {
      * coordinates
      */
     private ArrayList<LatLng> coordinatesToLatLngArray(JSONArray geoJsonCoordinates) {
-        JSONArray jsonCoordinates;
         JSONArray jsonCoordinate;
         ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
-        // Iterate over the array of arrays of coordinates
+        // Iterate over the array of coordinates
         for (int i = 0; i < geoJsonCoordinates.length(); i++) {
             try {
-                jsonCoordinates = geoJsonCoordinates.getJSONArray(i);
-                // Iterate over the array of coordinates
-                for (int j = 0; j < jsonCoordinates.length(); j++) {
-                    jsonCoordinate = jsonCoordinates.getJSONArray(j);
-                    // GeoJSON stores coordinates as lng, lat so need to reverse
-                    coordinatesArray.add(
-                            new LatLng(jsonCoordinate.getDouble(1), jsonCoordinate.getDouble(0)));
-                }
+                jsonCoordinate = geoJsonCoordinates.getJSONArray(i);
+                // GeoJSON stores coordinates as lng, lat so need to reverse
+                coordinatesArray.add(new LatLng(jsonCoordinate.getDouble(1),
+                        jsonCoordinate.getDouble(0)));
             } catch (JSONException e) {
                 Log.e("JSONException", e.toString());
             }
@@ -282,18 +282,14 @@ public class ImportGeoJson {
     private Marker toMarker(JSONArray geoJsonPointCoordinatesArray,
             JSONObject geoJsonPointProperties) {
         LatLng coordinates = coordinateToLatLngArray(geoJsonPointCoordinatesArray);
-        // parse GeoJson point obj into Maps Marker
-        // Call coordinateToLatLngArray(...)
-        // Properties:
-        /*
-        id
-        alpha
-        icon
-        anchor
-        draggable
-        rotation
-        visible */
-
+        MarkerProperties properties = null;
+        // Get the marker properties
+        try {
+            properties = new MarkerProperties(geoJsonPointProperties);
+        } catch (JSONException e) {
+            Log.e("JSONException", e.toString());
+        }
+        // TODO: return marker + add to map
         return null;
     }
 
@@ -307,21 +303,22 @@ public class ImportGeoJson {
     private ArrayList<Marker> toMarkers(JSONArray geoJsonMultiPointCoordinatesArray,
             JSONObject geoJsonMultiPointProperties) {
         ArrayList<Marker> markers = new ArrayList<Marker>();
+        // Iterate over the list of points
         for (int i = 0; i < geoJsonMultiPointCoordinatesArray.length(); i++) {
             try {
+                // Add each marker to the list
                 markers.add(toMarker(geoJsonMultiPointCoordinatesArray.getJSONArray(i),
                         geoJsonMultiPointProperties));
             } catch (JSONException e) {
                 Log.e("JSONException", e.toString());
             }
         }
-        return null;
+        return markers;
     }
 
     /**
      * Creates a new {@link com.google.android.gms.maps.model.Polyline} object based on the
-     * existing
-     * coordinates and properties
+     * existing coordinates and properties
      *
      * @param geoJsonLineStringProperties JSONObject containing the LineString GeoJSON object
      * @return new {@link com.google.android.gms.maps.model.Polyline} model object
@@ -329,19 +326,15 @@ public class ImportGeoJson {
     private Polyline toPolyline(JSONArray geoJsonLineStringCoordinatesArray,
             JSONObject geoJsonLineStringProperties) {
         ArrayList<LatLng> coordinates = coordinatesToLatLngArray(geoJsonLineStringCoordinatesArray);
-        // parse GeoJson linestring obj into Maps Polyline
-        // Call coordinatesToLatLngArray(...)
-        // All elements except for first are holes
+        PolylineProperties properties = null;
+        // Get polyline properties
+        try {
+            properties = new PolylineProperties(geoJsonLineStringProperties);
+        } catch (JSONException e) {
+            Log.e("JSONException", e.toString());
+        }
 
-        // Properties:
-        /*
-        id
-        width
-        color
-        z-index
-        visible
-        geodesic */
-
+        // TODO: return polyline + add to map
         return null;
     }
 
@@ -356,15 +349,17 @@ public class ImportGeoJson {
     private ArrayList<Polyline> toPolylines(JSONArray geoJsonMultiLineStringCoordinatesArray,
             JSONObject geoJsonMultiLineStringProperties) {
         ArrayList<Polyline> polylines = new ArrayList<Polyline>();
+        // Iterate over the list of multilines
         for (int i = 0; i < geoJsonMultiLineStringCoordinatesArray.length(); i++) {
             try {
+                // Add each polyline to the list
                 polylines.add(toPolyline(geoJsonMultiLineStringCoordinatesArray.getJSONArray(i),
                         geoJsonMultiLineStringProperties));
             } catch (JSONException e) {
                 Log.e("JSONException", e.toString());
             }
         }
-        return null;
+        return polylines;
     }
 
     /**
@@ -376,20 +371,27 @@ public class ImportGeoJson {
      */
     private Polygon toPolygon(JSONArray geoJsonPolygonCoordinatesArray,
             JSONObject geoJsonPolygonProperties) {
-        ArrayList<LatLng> coordinates = coordinatesToLatLngArray(geoJsonPolygonCoordinatesArray);
-        // parse GeoJson polygon obj into Maps Polygon
-        // Call coordinatesToLatLngArray(...)
+        // All elements except the first are holes
+        ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
+        // Iterate over the list of coordinates for the polygon
+        for (int i = 0; i < geoJsonPolygonCoordinatesArray.length(); i++) {
+            try {
+                // Add each group of coordinates to the list
+                coordinates.add(
+                        coordinatesToLatLngArray(geoJsonPolygonCoordinatesArray.getJSONArray(i)));
+            } catch (JSONException e) {
+                Log.e("JSONException", e.toString());
+            }
+        }
 
-        // Properties:
-        /*
-        id
-        stroke width
-        stroke color
-        fill color
-        z-index
-        visible
-        geodesic */
-
+        PolygonProperties properties = null;
+        // Get the polygon properties
+        try {
+            properties = new PolygonProperties(geoJsonPolygonProperties);
+        } catch (JSONException e) {
+            Log.e("JSONException", e.toString());
+        }
+        // TODO: return polygon + add to map
         return null;
     }
 
@@ -403,16 +405,17 @@ public class ImportGeoJson {
     private ArrayList<Polygon> toPolygons(JSONArray geoJsonMultiPolygonCoordinatesArray,
             JSONObject geoJsonMultiPolygonProperties) {
         ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        // Iterate over the list of polygons
         for (int i = 0; i < geoJsonMultiPolygonCoordinatesArray.length(); i++) {
             try {
+                // Add each polygon to the list
                 polygons.add(toPolygon(geoJsonMultiPolygonCoordinatesArray.getJSONArray(i),
                         geoJsonMultiPolygonProperties));
             } catch (JSONException e) {
                 Log.e("JSONException", e.toString());
             }
         }
-        return null;
+        return polygons;
     }
 
 }
-

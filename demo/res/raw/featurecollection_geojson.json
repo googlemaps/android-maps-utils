@@ -2,7 +2,7 @@
     "features": [
       { "type": "Feature",
         "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
-        "properties": {"prop0": "value0"}
+        "properties": {"id": "ID", "draggable": true, "title": "abcdedf", rotation: 50.5}
         },
       { "type": "Feature",
         "geometry": {
@@ -20,13 +20,15 @@
          "geometry": {
            "type": "Polygon",
            "coordinates": [
-             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
-               [100.0, 1.0], [100.0, 0.0] ]
-             ]
+                [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
+                [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
+            ]
          },
          "properties": {
            "prop0": "value0",
-           "prop1": {"this": "that"}
+           "prop1": {},
+           "geodesic": true,
+           "fill color": 0xff00ff
            }
          }
        ]
