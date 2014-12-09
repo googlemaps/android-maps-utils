@@ -5,7 +5,15 @@ import com.google.android.gms.maps.model.LatLng;
 import junit.framework.TestCase;
 
 /**
- * Created by lavenderc on 12/5/14.
+ *
+             *
+            /.\
+           /..\
+          /'.'\
+         /.''.'\
+         /.'.'.\
+        /'.''.'.\
+        ^^^[_]^^^
  */
 public class CoordinateTest extends TestCase {
 
@@ -45,6 +53,15 @@ public class CoordinateTest extends TestCase {
         assertNull(c.convertToLatLng(latLng2));
         String[] latLng3 = null;
         assertNull(c.convertToLatLng(latLng3));
+    }
+
+    public void testConvertCoordinateList() {
+        String list = "45, 65 \n 65, 45\n 23, 45\n";
+        c.setCoordinateList(list);
+        assertEquals(c.getCoordinateList().size(), 3);
+
+
+
     }
 
 

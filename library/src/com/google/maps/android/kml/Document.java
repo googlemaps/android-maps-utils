@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -18,16 +19,20 @@ import java.util.HashMap;
 public class Document {
 
     private XmlPullParser parser;
-    private HashMap<String, Style> styles;
-    private HashMap<String, Placemark> placemarks;
+    private ArrayList<Style> styles;
+    private ArrayList<Placemark> placemarks;
 
-    private int LATITUDE = 0;
-    private int LONGITUDE = 1;
+    private int POLYGON_TYPE = 0;
+    private int LINESTRING_TYPE = 1;
+    private int POINT_TYPE = 2;
+
+    private int INNER_BOUNDARY = 0;
+    private int OUTER_BOUNDARY = 1;
 
     public Document (XmlPullParser parser) {
         this.parser = parser;
-        this.styles = new HashMap<String, Style>();
-        this.placemarks = new HashMap<String, Placemark>();
+        this.styles = new ArrayList<Style>();
+        this.placemarks = new ArrayList<Placemark>();
     }
     /**********************************
      Generates style values when a parser to a text is given.
@@ -44,13 +49,14 @@ public class Document {
                 if(eventType == XmlPullParser.START_TAG) {
                     if (name.equals("Style")) {
                         Style style =  new Style();
-                        style.setStyleID(p.getAttributeValue(null, "id"));
+                        style.setValues("styleID", p.getAttributeValue(null, "id"));
                         assignStyle(p, style);
-                        this.styles.put(style.getStyleID(), style);
+                        this.styles.add(style);
                     } else if (name.equals ("Placemark")) {
                         Placemark placemark = new Placemark();
-                        assignPlacemark(p, placemark);
-                        this.placemarks.put(placemark.getName(), placemark);
+                        ArrayList<Coordinate> c = new ArrayList<Coordinate>();
+                        assignPlacemark(p, placemark, c);
+                        this.placemarks.add(placemark);
                     }
                 }
                 eventType = p.next();
@@ -66,32 +72,35 @@ public class Document {
      *
      * @param  placemark    newly created placemark class
      * @param p             An XML parser which contains the input to be read
+     * @param co            An arraylist of coordinates
      **********************************/
-    public void assignPlacemark(XmlPullParser p, Placemark placemark) {
+    public void assignPlacemark(XmlPullParser p, Placemark placemark, ArrayList<Coordinate> co) {
         try {
             int eventType = p.getEventType();
             String name = p.getName();
             if(eventType == XmlPullParser.START_TAG) {
-                if (name.equals("name")) {
-                    placemark.setName(p.nextText());
-                } else if (name.equals("styleUrl")) {
-                    placemark.setStyleURL(p.nextText());
-                } else if (name.equals("description")) {
-                    placemark.setDescription(p.nextText());
-                } else if (name.equals("phoneNumber")) {
-                    placemark.setPhoneNumber(p.nextText());
-                } else if (name.equals("address")) {
-                    placemark.setAddress(p.nextText());
-                } else if (name.equals("visibility")) {
-                    placemark.setVisibility(p.nextText());
-                } else if (name.equals("LineString") || name.equals("Point") || name.equals("Polygon")) {
-                   Coordinate c = new Coordinate();
-                   assignCoordinates(p, c, name);
+                if (name.equalsIgnoreCase("NAME") || name.equalsIgnoreCase("STYLEURL") ||
+                        name.equalsIgnoreCase("DESCRIPTION") || name.equalsIgnoreCase("PHONENUMBER") ||
+                        name.equalsIgnoreCase("ADDRESS") || name.equalsIgnoreCase("VISIBILITY")) {
+                    placemark.setValues(name, p.nextText());
+
+                } if (name.equals("LineString")) {
+                    Coordinate c = new Coordinate();
+                    c.setType(LINESTRING_TYPE);
+                    assignCoordinates(p, c, placemark, co);
+                } else if (name.equals("Point")) {
+                    Coordinate c = new Coordinate();
+                    c.setType(POINT_TYPE);
+                    assignCoordinates(p, c, placemark,co);
+                } else if (name.equals("Polygon")) {
+                    Coordinate c = new Coordinate();
+                    c.setType(POLYGON_TYPE);
+                    assignPolygon(p, c, placemark, co, name);
                 }
             }
             if (!(eventType == XmlPullParser.END_TAG && name.equals("Placemark"))) {
                 p.next();
-                assignPlacemark(p, placemark);
+                assignPlacemark(p, placemark, co);
             }
         } catch (Exception e){
 
@@ -99,27 +108,63 @@ public class Document {
 
     }
 
+    public void assignPolygon (XmlPullParser p, Coordinate c,
+    Placemark placemark, ArrayList<Coordinate> coordinates, String closingTag) {
+
+        try {
+            int eventType = p.getEventType();
+            String name = p.getName();
+            if(eventType == XmlPullParser.START_TAG) {
+                if (name.equals("outerBoundaryIs")) {
+                    c = new Coordinate();
+                    c.setType(POLYGON_TYPE);
+                    c.setBoundary(OUTER_BOUNDARY);
+                } else if (name.equals("innerBoundaryIs")) {
+                    c = new Coordinate();
+                    c.setType(POLYGON_TYPE);
+                    c.setBoundary(INNER_BOUNDARY);
+                } else if (name.equals("coordinates")) {
+                    assignCoordinates(p, c, placemark, coordinates);
+                }
+            }
+            if (!(eventType == XmlPullParser.END_TAG && name.equals(closingTag))) {
+                p.next();
+                assignPolygon(p, c, placemark, coordinates, closingTag);
+            }
+        } catch (Exception e){
+
+        }
+    }
+
+
+
+
     /**********************************
      * Reads input from a parser
      *
      * @param c     Newly created coordinate class\
      * @param p     XML Pull Parser
-     * @param closingTag    String value which represents the point at which to stop reading input
+     *
      **********************************/
 
-    public void assignCoordinates (XmlPullParser p, Coordinate c, String closingTag) {
+    public void assignCoordinates (XmlPullParser p, Coordinate c,
+        Placemark placemark, ArrayList<Coordinate> coordinates) {
+
         try {
             int eventType = p.getEventType();
             String name = p.getName();
             if(eventType == XmlPullParser.START_TAG) {
                if (name.equals("coordinates")) {
+
                    c.setCoordinateList(p.nextText());
                }
-            }
-            if (!(eventType == XmlPullParser.END_TAG && name.equals(closingTag))) {
+            } else if (!(eventType == XmlPullParser.END_TAG)) {
                 p.next();
-                assignCoordinates(p, c, closingTag);
+                assignCoordinates(p, c, placemark, coordinates);
             }
+                coordinates.add(c);
+                placemark.setLine(coordinates);
+
         } catch (Exception e){
 
         }
@@ -135,21 +180,9 @@ public class Document {
     public void assignStyle(XmlPullParser p, Style style) {
         try {
             int eventType = p.getEventType();
-            String name = p.getName();
             if(eventType == XmlPullParser.START_TAG) {
-                if (name.equals("color")) {
-                    style.setLineColor(p.nextText());
-                } else if (name.equals("width")) {
-                    style.setLineWidth(Integer.parseInt(p.nextText()));
-                } else if (name.equals("fill")) {
-                    style.setPolyFillColor(p.nextText());
-                } else if (name.equals("outline")) {
-                    style.setOutline(Boolean.getBoolean(p.nextText()));
-                } else if (name.equals("colorMode")) {
-                    style.setColorMode(p.nextText());
-                }
-            }
-            if (!(eventType == XmlPullParser.END_TAG && name.equals("Style"))) {
+                style.setValues(p.getName(), p.nextText());
+            } else if (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
                 p.next();
                 assignStyle(p, style);
             }
@@ -158,22 +191,10 @@ public class Document {
         }
     }
 
-
-    /**********************************
-     * Returns a hashmap of placemarks, for which the keys are the name of the placemark
-     * and the values are a placemark class.
-     **********************************/
-
-    public HashMap<String, Placemark> getPlacemarks() {
+    public ArrayList<Placemark> getPlacemarks() {
         return this.placemarks;
     }
-
-    /**********************************
-     * Returns a hashmap of styles, for which the keys are the name of the style
-     * and the values are a style class.
-     **********************************/
-
-    public HashMap<String, Style> getStyles() {
-        return  this.styles;
+    public ArrayList<Style> getStyles() {
+        return this.styles;
     }
 }

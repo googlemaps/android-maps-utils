@@ -2,72 +2,25 @@ package com.google.maps.android.kml;
 
 import android.graphics.Color;
 
+import java.util.HashMap;
+
 /**
  * Created by lavenderc on 12/2/14.
  */
 public class Style {
 
-    String style;
-    String lineColor;
-    int width;
-    boolean outline;
-    String polyColor;
-    String colorMode;
+    private HashMap<String, String> values;
 
     public Style() {
-        style = null;
-        lineColor = null;
-        width = 0;
-        outline = false;
-        colorMode = null;
+        values = new HashMap<String, String>();
     }
 
-
-    public void setOutline(boolean value) {
-        outline = value;
+    public void setValues (String key, String value) {
+        values.put(key, value);
     }
 
-    public void setStyleID(String styleID) {
-        style = styleID;
+    public String getValues (String key) {
+        return values.get(key);
     }
 
-    public void setLineColor(String color) {
-        lineColor = color;
-    }
-
-     public void setLineWidth(Integer integer) {
-        width = integer;
-    }
-
-    public void setPolyFillColor (String color) {
-        polyColor = color;
-    }
-
-    public void setColorMode(String mode) { colorMode = mode; }
-
-    public String getPolyFillColor (){
-        return polyColor;
-    }
-
-    public boolean getOutline() {
-        return outline;
-    }
-
-    public int getLineWidth() {
-        return width;
-    }
-
-    public String getLineColor() {
-        return lineColor;
-    }
-
-    public String getStyleID() {
-        return style;
-    }
-
-    public String getColorMode() { return colorMode; }
-
-    public void setStyle(String style) {
-        this.style = style;
-    }
 }
