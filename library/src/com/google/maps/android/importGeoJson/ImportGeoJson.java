@@ -3,8 +3,11 @@ package com.google.maps.android.importGeoJson;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -282,10 +285,11 @@ public class ImportGeoJson {
     private Marker toMarker(JSONArray geoJsonPointCoordinatesArray,
             JSONObject geoJsonPointProperties) {
         LatLng coordinates = coordinateToLatLngArray(geoJsonPointCoordinatesArray);
-        MarkerProperties properties = null;
+        MarkerOptions properties = null;
         // Get the marker properties
         try {
-            properties = new MarkerProperties(geoJsonPointProperties, coordinates);
+            properties = new MarkerProperties(geoJsonPointProperties, coordinates)
+                    .getMarkerOptions();
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }
@@ -326,10 +330,11 @@ public class ImportGeoJson {
     private Polyline toPolyline(JSONArray geoJsonLineStringCoordinatesArray,
             JSONObject geoJsonLineStringProperties) {
         ArrayList<LatLng> coordinates = coordinatesToLatLngArray(geoJsonLineStringCoordinatesArray);
-        PolylineProperties properties = null;
+        PolylineOptions properties = null;
         // Get polyline properties
         try {
-            properties = new PolylineProperties(geoJsonLineStringProperties, coordinates);
+            properties = new PolylineProperties(geoJsonLineStringProperties, coordinates)
+                    .getPolylineOptions();
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }
@@ -384,10 +389,11 @@ public class ImportGeoJson {
             }
         }
 
-        PolygonProperties properties = null;
+        PolygonOptions properties = null;
         // Get the polygon properties
         try {
-            properties = new PolygonProperties(geoJsonPolygonProperties, coordinates);
+            properties = new PolygonProperties(geoJsonPolygonProperties, coordinates)
+                    .getPolygonOptions();
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }

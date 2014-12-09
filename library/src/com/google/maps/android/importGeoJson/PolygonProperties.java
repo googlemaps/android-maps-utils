@@ -70,7 +70,7 @@ public class PolygonProperties {
      *
      * @return list of a list of coordinates of the polygon
      */
-    public ArrayList<LatLng> getCoordinates() {
+    private ArrayList<LatLng> getCoordinates() {
         return mCoordinates.get(0);
     }
 
@@ -79,8 +79,10 @@ public class PolygonProperties {
      *
      * @return list of a list of coordinates of the holes polygon
      */
-    public ArrayList<LatLng> getHoles() {
-        return mCoordinates.remove(0);
+    private ArrayList<ArrayList<LatLng>> getHoles() {
+        // TODO: implement this
+        // Everything in mCoordinates but the first element
+        return null;
     }
 
     /**
@@ -154,7 +156,8 @@ public class PolygonProperties {
      */
     public PolygonOptions getPolygonOptions() {
         PolygonOptions options = new PolygonOptions();
-        options.addAll(getCoordinates()).addHole(getHoles()).strokeWidth(getStrokeWidth())
+        // TODO: add hole ONLY when there are coordinates available otherwise it returns null
+        options.addAll(getCoordinates()).strokeWidth(getStrokeWidth())
                 .strokeColor(getStrokeColor())
                 .fillColor(getFillColor()).zIndex(getZIndex()).visible(isVisible())
                 .geodesic(mIsGeodesic);
