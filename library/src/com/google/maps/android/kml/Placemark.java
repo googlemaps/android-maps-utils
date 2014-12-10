@@ -15,16 +15,16 @@ import java.util.HashMap;
  */
 public class Placemark {
 
-    private final int POLYGON_TYPE = 0;
+    private static final int POLYGON_TYPE = 0;
 
-    private final int LINESTRING_TYPE = 1;
+    private static final int LINESTRING_TYPE = 1;
 
-    private final int POINT_TYPE = 2;
+    private static final int POINT_TYPE = 2;
 
 
-    private ArrayList<Coordinate> line = new ArrayList<Coordinate>();
+    private ArrayList<Coordinate> mLine = new ArrayList<Coordinate>();
 
-    private HashMap<String, String> values = new HashMap<String, String>();
+    private HashMap<String, String> mValues = new HashMap<String, String>();
 
     /**
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
@@ -52,7 +52,7 @@ public class Placemark {
                         c.setType(POLYGON_TYPE);
                     }
                     c.coordinateProperties(p);
-                    line.add(c);
+                    mLine.add(c);
                 }
             }
             eventType = p.next();
@@ -70,17 +70,17 @@ public class Placemark {
      * @param value The string value which we want to access
      */
     public void setValues(String key, String value) {
-        values.put(key, value);
+        mValues.put(key, value);
     }
 
     /**
-     * Retrieves values from a hash map using a key
+     * Retrieves mValues from a hash map using a key
      *
      * @param key The name of the value which we want to retrieve
      * @return The value which was inserted using the key, otherwise null
      */
     public String getValues(String key) {
-        return values.get(key);
+        return mValues.get(key);
     }
 
 
@@ -92,6 +92,6 @@ public class Placemark {
      */
 
     public ArrayList<Coordinate> getLine() {
-        return line;
+        return mLine;
     }
 }

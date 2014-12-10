@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class Style {
 
-    private HashMap<String, String> values = new HashMap<String, String>();
+    private HashMap<String, String> mValues = new HashMap<String, String>();
 
     /**
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
@@ -28,10 +28,10 @@ public class Style {
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
             String name = p.getName();
             if (eventType == XmlPullParser.START_TAG) {
-                // List of all the allowed values in our hashmap
-                // TODO: Add more allowed values e.g. strokeWidth,
+                // List of all the allowed mValues in our hashmap
+                // TODO: Add more allowed mValues e.g. strokeWidth,
                 if (name.equals("color") || name.equals("width") || name.equals("colorMode")) {
-                    values.put(name, p.nextText());
+                    mValues.put(name, p.nextText());
                 }
             }
             eventType = p.next();
@@ -49,17 +49,17 @@ public class Style {
      * @param value The string value which we want to access
      */
     public void setValues(String key, String value) {
-        values.put(key, value);
+        mValues.put(key, value);
     }
 
     /**
-     * Retrieves values from a hash map using a key
+     * Retrieves mValues from a hash map using a key
      *
      * @param key The name of the value which we want to retrieve
      * @return The value which was inserted using the key, otherwise null
      */
     public String getValues(String key) {
-        return values.get(key);
+        return mValues.get(key);
     }
 
 }

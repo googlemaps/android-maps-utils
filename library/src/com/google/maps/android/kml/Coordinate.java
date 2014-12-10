@@ -13,35 +13,35 @@ import java.util.ArrayList;
  */
 public class Coordinate {
 
-    private final int UNINITIALIZED = -1;
+    private static final int sUNINITIALIZED = -1;
 
-    private final int POLYGON_TYPE = 0;
+    private static final int POLYGON_TYPE = 0;
 
-    private final int LINESTRING_TYPE = 1;
+    private static final int LINESTRING_TYPE = 1;
 
-    private final int POINT_TYPE = 2;
+    private static final int POINT_TYPE = 2;
 
-    private final int INNER_BOUNDARY = 0;
+    private static final int INNER_BOUNDARY = 0;
 
-    private final int OUTER_BOUNDARY = 1;
+    private static final int OUTER_BOUNDARY = 1;
 
-    private final int LATITUDE = 0;
+    private static final int LATITUDE = 0;
 
-    private final int LONGITUDE = 1;
+    private static final int LONGITUDE = 1;
 
-    private int type;
+    private int mType;
 
-    private int boundary;
+    private int mBoundary;
 
-    private ArrayList<LatLng> coordinateList;
+    private ArrayList<LatLng> mCoordinateList;
 
     /**
      * Creates a new coordinate
      */
     public Coordinate() {
-        coordinateList = null;
-        type = UNINITIALIZED;
-        boundary = UNINITIALIZED;
+        mCoordinateList = null;
+        mType = sUNINITIALIZED;
+        mBoundary = sUNINITIALIZED;
     }
 
     /**
@@ -73,42 +73,42 @@ public class Coordinate {
     }
 
     /**
-     * Takes an integer value from 0 to 1 and sets it to the corresponding boundary (either outer
-     * or inner). The boundary is uninitialized if the type is not set to polygon.
+     * Takes an integer value from 0 to 1 and sets it to the corresponding mBoundary (either outer
+     * or inner). The mBoundary is uninitialized if the mType is not set to polygon.
      *
-     * @param bBoundary Integer value which corresponds to an inner boundary or outer boundary
+     * @param bBoundary Integer value which corresponds to an inner mBoundary or outer mBoundary
      *                  INNER_BOUNDARY = 0;
      *                  OUTER_BOUNDARY = 1;
      */
     public void setBoundary(int bBoundary) {
-        if ((bBoundary == INNER_BOUNDARY || bBoundary == OUTER_BOUNDARY) && (type
+        if ((bBoundary == INNER_BOUNDARY || bBoundary == OUTER_BOUNDARY) && (mType
                 == POLYGON_TYPE)) {
-            boundary = bBoundary;
-        } else if (type != POLYGON_TYPE) {
+            mBoundary = bBoundary;
+        } else if (mType != POLYGON_TYPE) {
             System.out
-                    .println("Polygon type expected! An inner or outer boundary cannot be set if " +
-                            "your coordinate type is line string or point. Please check your KML input");
-            boundary = UNINITIALIZED;
+                    .println("Polygon mType expected! An inner or outer mBoundary cannot be set if " +
+                            "your coordinate mType is line string or point. Please check your KML input");
+            mBoundary = sUNINITIALIZED;
         } else {
-            System.out.println("Inner boundary or outer boundary expected!");
-            boundary = UNINITIALIZED;
+            System.out.println("Inner mBoundary or outer mBoundary expected!");
+            mBoundary = sUNINITIALIZED;
         }
     }
 
     /**
-     * Assigns the type of placemark this coordinate object belongs to
+     * Assigns the mType of placemark this coordinate object belongs to
      *
-     * @param tType Integer value which corresponds to either polygon, line or point type.
+     * @param tType Integer value which corresponds to either polygon, line or point mType.
      *              POLYGON_TYPE = 0;
      *              LINESTRING_TYPE = 1;
      *              POINT_TYPE = 2;
      */
     public void setType(int tType) {
         if (tType == POLYGON_TYPE || tType == LINESTRING_TYPE || tType == POINT_TYPE) {
-            type = tType;
+            mType = tType;
         } else {
-            System.out.println("Line, String or Point type expected!");
-            type = UNINITIALIZED;
+            System.out.println("Line, String or Point mType expected!");
+            mType = sUNINITIALIZED;
         }
     }
 
@@ -124,12 +124,12 @@ public class Coordinate {
      *             <lat>,<lon>
      */
     public void setCoordinateList(String text) {
-        coordinateList = new ArrayList<LatLng>();
+        mCoordinateList = new ArrayList<LatLng>();
         String[] lines = text.split("\n");
         for (String point : lines) {
             String[] coordinate = point.split(",");
             if (coordinate.length > 2) {
-                coordinateList.add(convertToLatLng(coordinate));
+                mCoordinateList.add(convertToLatLng(coordinate));
             }
         }
     }
@@ -161,21 +161,21 @@ public class Coordinate {
     }
 
     /**
-     * Retrieves the type of boundary (inner or outer) this coordinate possesses
+     * Retrieves the mType of mBoundary (inner or outer) this coordinate possesses
      *
-     * @return boundary type, represented by an integer or -1 if not set
+     * @return mBoundary mType, represented by an integer or -1 if not set
      */
     public int getBoundary() {
-        return boundary;
+        return mBoundary;
     }
 
     /**
-     * Retrieves the coordinate type (poly, line or point) this coordinate posses
+     * Retrieves the coordinate mType (poly, line or point) this coordinate posses
      *
-     * @return coordinate type, represented by an integer or -1 if not set
+     * @return coordinate mType, represented by an integer or -1 if not set
      */
     public int getType() {
-        return type;
+        return mType;
     }
 
     /**
@@ -184,7 +184,7 @@ public class Coordinate {
      * @return an Arraylist of LatLng points, null if not set.
      */
     public ArrayList<LatLng> getCoordinateList() {
-        return coordinateList;
+        return mCoordinateList;
     }
 
 

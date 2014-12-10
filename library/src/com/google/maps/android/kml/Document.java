@@ -9,11 +9,11 @@ import java.util.ArrayList;
  */
 public class Document {
 
-    private XmlPullParser parser;
+    private XmlPullParser mParser;
 
-    private ArrayList<Style> styles;
+    private ArrayList<Style> mStyles;
 
-    private ArrayList<Placemark> placemarks;
+    private ArrayList<Placemark> mPlacemarks;
 
     /**
      * Constructs a new Document object
@@ -21,17 +21,17 @@ public class Document {
      * @param parser XmlPullParser loaded with the KML file
      */
     public Document(XmlPullParser parser) {
-        this.parser = parser;
-        this.styles = new ArrayList<Style>();
-        this.placemarks = new ArrayList<Placemark>();
+        this.mParser = parser;
+        this.mStyles = new ArrayList<Style>();
+        this.mPlacemarks = new ArrayList<Placemark>();
     }
 
     /**
-     * Generates style values when a parser to a text is given.
-     * New styles with different features are created when a new ID is given
+     * Generates style values when a mParser to a text is given.
+     * New mStyles with different features are created when a new ID is given
      */
     public void readKMLData() {
-        XmlPullParser p = this.parser;
+        XmlPullParser p = this.mParser;
         String name;
         try {
             int eventType = p.getEventType();
@@ -42,11 +42,11 @@ public class Document {
                         Style style = new Style();
                         style.setValues("styleID", p.getAttributeValue(null, "id"));
                         style.styleProperties(p);
-                        this.styles.add(style);
+                        this.mStyles.add(style);
                     } else if (name.equals("Placemark")) {
                         Placemark placemark = new Placemark();
                         placemark.placemarkProperties(p);
-                        this.placemarks.add(placemark);
+                        this.mPlacemarks.add(placemark);
                     }
                 }
                 eventType = p.next();
@@ -64,11 +64,11 @@ public class Document {
      */
 
     public void printKMLData() {
-        for (Style s : styles) {
+        for (Style s : mStyles) {
             System.out.println(s.getValues("styleID") + " " + s.getValues("color"));
         }
 
-        for (Placemark p : placemarks) {
+        for (Placemark p : mPlacemarks) {
             System.out.println(p.getValues("name"));
             for (Coordinate c : p.getLine()) {
                 // This will only work once coordinate class can parse in coords
