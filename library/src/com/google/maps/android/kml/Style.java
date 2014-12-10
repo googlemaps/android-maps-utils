@@ -19,6 +19,8 @@ public class Style {
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
      *
      * @param p XMLPullParser reads input from designated source
+     * @throws XmlPullParserException
+     * @throws IOException
      */
     public void styleProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();

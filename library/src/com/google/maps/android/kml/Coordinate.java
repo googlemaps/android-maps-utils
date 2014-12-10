@@ -48,6 +48,8 @@ public class Coordinate {
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
      *
      * @param p XMLPullParser which reads input from designated source
+     * @throws XmlPullParserException
+     * @throws IOException
      */
     public void coordinateProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();

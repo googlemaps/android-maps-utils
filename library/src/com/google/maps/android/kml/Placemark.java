@@ -30,6 +30,8 @@ public class Placemark {
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
      *
      * @param p reads input from designated source
+     * @throws XmlPullParserException
+     * @throws IOException
      */
     public void placemarkProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
