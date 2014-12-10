@@ -1,33 +1,25 @@
 package com.google.maps.android.kml;
 
-import android.content.Context;
-
-import android.R;
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
-
-import com.google.android.gms.maps.model.LatLng;
-
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-
+/**
+ * Document class allows for users to input their KML data and output it onto the map
+ */
 public class Document {
 
     private XmlPullParser parser;
+
     private ArrayList<Style> styles;
+
     private ArrayList<Placemark> placemarks;
 
+    /**
+     * Constructs a new Document object
+     *
+     * @param parser XmlPullParser loaded with the KML file
+     */
     public Document(XmlPullParser parser) {
         this.parser = parser;
         this.styles = new ArrayList<Style>();
@@ -35,12 +27,9 @@ public class Document {
     }
 
     /**
-     * *******************************
      * Generates style values when a parser to a text is given.
      * New styles with different features are created when a new ID is given
-     * ********************************
      */
-
     public void readKMLData() {
         XmlPullParser p = this.parser;
         String name;
@@ -68,18 +57,21 @@ public class Document {
     }
 
 
-    /***
-     * Eventually we want this function to create all the markers / polygons and add them to the map.
+    /**
+     * Eventually we want this function to create all the markers / polygons and add them to the
+     * map.
      * For now we are just printing out certain values.
      */
 
     public void printKMLData() {
-        for (Style s: styles) {
-            System.out.println( s.getValues("styleID") + " " + s.getValues("color"));
+        for (Style s : styles) {
+            System.out.println(s.getValues("styleID") + " " + s.getValues("color"));
         }
-        for (Placemark p: placemarks) {
+
+        for (Placemark p : placemarks) {
             System.out.println(p.getValues("name"));
-            for (Coordinate c: p.getLine()) {
+            for (Coordinate c : p.getLine()) {
+                // This will only work once coordinate class can parse in coords
                 System.out.println(c.getCoordinateList().size());
             }
         }

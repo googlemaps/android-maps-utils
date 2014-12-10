@@ -4,33 +4,36 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by lavenderc on 12/3/14.
+ *
+ * Represents a placemark which is either a point, linestring or polygon
+ * Stores the properties about the placemark including coordinates
  */
 public class Placemark {
 
-    private int POLYGON_TYPE = 0;
-    private int LINESTRING_TYPE = 1;
-    private int POINT_TYPE = 2;
+    private final int POLYGON_TYPE = 0;
+
+    private final int LINESTRING_TYPE = 1;
+
+    private final int POINT_TYPE = 2;
 
 
     private ArrayList<Coordinate> line = new ArrayList<Coordinate>();
+
     private HashMap<String, String> values = new HashMap<String, String>();
 
-    /**********************************
+    /**
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
      *
-     * @param p XMLPullParser which reads input from designated source
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @param p reads input from designated source
      */
-
-    public void placemarkProperties (XmlPullParser p) throws XmlPullParserException, IOException {
+    public void placemarkProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
+        // Iterate through document until the closing placemark is reached
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Placemark"))) {
             String name = p.getName();
             //For some reason name.matches only works if you nest it inside the statement below.
@@ -64,16 +67,17 @@ public class Placemark {
      * @param key   The string value which we use to access value
      * @param value The string value which we want to access
      */
-    public void setValues (String key, String value) {
+    public void setValues(String key, String value) {
         values.put(key, value);
     }
 
     /**
      * Retrieves values from a hash map using a key
+     *
      * @param key The name of the value which we want to retrieve
-     * @return  The value which was inserted using the key, otherwise null
+     * @return The value which was inserted using the key, otherwise null
      */
-    public String getValues (String key) {
+    public String getValues(String key) {
         return values.get(key);
     }
 
@@ -85,7 +89,7 @@ public class Placemark {
      * @return An ArrayList of Coordinate classes
      */
 
-    public ArrayList<Coordinate> getLine () {
+    public ArrayList<Coordinate> getLine() {
         return line;
     }
 }
