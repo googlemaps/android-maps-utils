@@ -27,9 +27,10 @@ public class Style {
         // Iterate through document until closing style tag is reached
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
             String name = p.getName();
+            // TODO support linestyle, labelstyle and polystyle
             if (eventType == XmlPullParser.START_TAG) {
                 // List of all the allowed mValues in our hashmap
-                // TODO: Add more allowed mValues e.g. strokeWidth,
+                // TODO: Add more allowed mValues e.g. strokeWidth, etc.
                 if (name.equals("color") || name.equals("width") || name.equals("colorMode")) {
                     mValues.put(name, p.nextText());
                 }

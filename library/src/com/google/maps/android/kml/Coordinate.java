@@ -148,8 +148,7 @@ public class Coordinate {
         try {
             Double latDouble = Double.parseDouble(coordinate[LONGITUDE]);
             Double lonDouble = Double.parseDouble(coordinate[LATITUDE]);
-            LatLng latLng = new LatLng(latDouble, lonDouble);
-            return latLng;
+            return new LatLng(latDouble, lonDouble);
 
         } catch (NumberFormatException e) {
             System.out.println("Non-integer value found in coordinate tag!");

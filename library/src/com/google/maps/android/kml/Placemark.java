@@ -40,9 +40,14 @@ public class Placemark {
             String name = p.getName();
             // For some reason name.matches only works if you nest it inside the statement below.
             if (eventType == XmlPullParser.START_TAG) {
-                if (name.matches("name|styleURL|description|phoneNumber|address|visibility")) {
+                if (name.matches("name|description|visibility")) {
                     setValues(name, p.nextText());
-                } else if (name.matches("LineString|Point|Polygon")) {
+                }
+                // Strip the leading # character from the style
+                else if (name.equals("styleUrl")) {
+                    setValues(name, p.nextText().substring(1));
+                }
+                else if (name.matches("LineString|Point|Polygon")) {
                     Coordinate c = new Coordinate();
                     if (name.equals("LineString")) {
                         c.setType(LINESTRING_TYPE);

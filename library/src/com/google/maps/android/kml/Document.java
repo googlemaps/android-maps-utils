@@ -5,15 +5,16 @@ import org.xmlpull.v1.XmlPullParser;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
 public class Document {
 
-    private XmlPullParser mParser;
+    private final XmlPullParser mParser;
 
-    private ArrayList<Style> mStyles;
+    private HashMap<String, Style> mStyles;
 
     private ArrayList<Placemark> mPlacemarks;
 
@@ -24,7 +25,7 @@ public class Document {
      */
     public Document(XmlPullParser parser) {
         this.mParser = parser;
-        this.mStyles = new ArrayList<Style>();
+        this.mStyles = new HashMap<String, Style>();
         this.mPlacemarks = new ArrayList<Placemark>();
     }
 
@@ -42,9 +43,9 @@ public class Document {
                 if (eventType == XmlPullParser.START_TAG) {
                     if (name.equals("Style")) {
                         Style style = new Style();
-                        style.setValues("styleID", p.getAttributeValue(null, "id"));
+                        String styleUrl = p.getAttributeValue(null, "id");
                         style.styleProperties(p);
-                        this.mStyles.add(style);
+                        mStyles.put(styleUrl, style);
                     } else if (name.equals("Placemark")) {
                         Placemark placemark = new Placemark();
                         placemark.placemarkProperties(p);
@@ -66,14 +67,17 @@ public class Document {
      */
 
     public void printKMLData() {
-        for (Style s : mStyles) {
-            System.out.println(s.getValues("styleID") + " " + s.getValues("color"));
+        // Print out all the styles
+        for (String s : mStyles.keySet()) {
+            System.out.println(s);
         }
 
         for (Placemark p : mPlacemarks) {
-            System.out.println(p.getValues("name"));
+            // Print style name and the related style object
+            System.out.println(p.getValues("styleUrl"));
+            System.out.println(mStyles.get(p.getValues("styleUrl")));
             for (Coordinate c : p.getLine()) {
-                System.out.println(c.getCoordinateList().size());
+                //System.out.println(c.getCoordinateList().toString());
             }
         }
     }
