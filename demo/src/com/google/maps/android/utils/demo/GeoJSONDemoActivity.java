@@ -1,5 +1,7 @@
 package com.google.maps.android.utils.demo;
 
+import com.google.maps.android.importGeoJson.ImportGeoJson;
+
 /**
  * Created by juliawong on 12/1/14.
  */
@@ -13,11 +15,23 @@ public class GeoJSONDemoActivity extends BaseDemoActivity {
 //                R.raw.google_letters_geojson, getApplicationContext());
 //        ImportGeoJson resource_feature_test = new ImportGeoJson(getMap(),
 //                R.raw.single_feature_geojson, getApplicationContext());
-//        ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
-//                R.raw.featurecollection_geojson, getApplicationContext());
+
 //        This has 87 points
-//        ImportGeoJson spain_collection_test = new ImportGeoJson(getMap(),
-//                R.raw.markers_in_spain_geojson, getApplicationContext());
+
+        try {
+
+
+
+
+           ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
+                    R.raw.google_letters_geojson, getApplicationContext());
+
+
+           feature_collection_test.printObjects();
+
+        } catch (Exception e) {
+
+        }
 
     }
 }

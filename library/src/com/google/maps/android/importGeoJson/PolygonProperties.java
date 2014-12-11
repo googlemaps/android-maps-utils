@@ -16,21 +16,11 @@ import java.util.ArrayList;
  */
 public class PolygonProperties {
 
-    private String mId = null;
-
-    private float mStrokeWidth = 10;
-
-    private int mStrokeColor = 0xff000000;
-
-    private int mFillColor = 0x00000000;
-
-    private float mZIndex = 0;
-
-    private boolean mIsVisible = true;
-
-    private boolean mIsGeodesic = false;
-
     private ArrayList<ArrayList<LatLng>> mCoordinates;
+
+    private ArrayList<ArrayList<LatLng>> hCoordinates;
+
+    PolygonOptions options;
 
     /**
      * Takes in a JSONObject containing properties for a polygon and saves relevant properties
@@ -41,112 +31,49 @@ public class PolygonProperties {
      */
     public PolygonProperties(JSONObject geoJsonPolygonProperties,
             ArrayList<ArrayList<LatLng>> coordinates) throws JSONException {
+
+        this.options = new PolygonOptions();
         this.mCoordinates = coordinates;
-        if (geoJsonPolygonProperties.has("id")) {
-            mId = geoJsonPolygonProperties.getString("id");
+        setHoles();
+        options.addAll(this.mCoordinates.get(0));
+
+
+        if (geoJsonPolygonProperties != null) {
+            if (geoJsonPolygonProperties.has("id")) {
+                //TODO: What do I do with the id??
+            }
+            if (geoJsonPolygonProperties.has("stroke width")) {
+                this.options.strokeWidth((float) geoJsonPolygonProperties.getDouble("stroke width"));
+            }
+            if (geoJsonPolygonProperties.has("stroke color")) {
+                this.options.strokeColor(geoJsonPolygonProperties.getInt("stroke color"));
+            }
+            if (geoJsonPolygonProperties.has("fill color")) {
+                this.options.fillColor(geoJsonPolygonProperties.getInt("fill color"));
+            }
+            if (geoJsonPolygonProperties.has("z index")) {
+               this.options.zIndex((float) geoJsonPolygonProperties.getDouble("z index"));
+            }
+            if (geoJsonPolygonProperties.has("visible")) {
+               this.options.visible(geoJsonPolygonProperties.getBoolean("stroke visible"));
+            }
+            if (geoJsonPolygonProperties.has("geodesic")) {
+                this.options.geodesic(geoJsonPolygonProperties.getBoolean("geodesic"));
+            }
         }
-        if (geoJsonPolygonProperties.has("stroke width")) {
-            mStrokeWidth = (float) geoJsonPolygonProperties.getDouble("stroke width");
+    }
+
+    private ArrayList<ArrayList<LatLng>> setHoles() {
+        hCoordinates = new ArrayList<ArrayList<LatLng>>();
+        if(mCoordinates.size() > 1) {
+            for (int i = 1; i < mCoordinates.size(); i++) {
+                hCoordinates.add(mCoordinates.get(i));
+                options.addHole(mCoordinates.get(i));
+            }
         }
-        if (geoJsonPolygonProperties.has("stroke color")) {
-            mStrokeColor = geoJsonPolygonProperties.getInt("stroke color");
-        }
-        if (geoJsonPolygonProperties.has("fill color")) {
-            mFillColor = geoJsonPolygonProperties.getInt("fill color");
-        }
-        if (geoJsonPolygonProperties.has("z index")) {
-            mZIndex = (float) geoJsonPolygonProperties.getDouble("z index");
-        }
-        if (geoJsonPolygonProperties.has("visible")) {
-            mIsVisible = geoJsonPolygonProperties.getBoolean("stroke visible");
-        }
-        if (geoJsonPolygonProperties.has("geodesic")) {
-            mIsGeodesic = geoJsonPolygonProperties.getBoolean("geodesic");
-        }
+        return hCoordinates;
     }
 
-    /**
-     * Gets the coordinates of the polygon
-     *
-     * @return list of a list of coordinates of the polygon
-     */
-    private ArrayList<LatLng> getCoordinates() {
-        return mCoordinates.get(0);
-    }
-
-    /**
-     * Gets the coordinates of the holes of the polygon
-     *
-     * @return list of a list of coordinates of the holes polygon
-     */
-    private ArrayList<ArrayList<LatLng>> getHoles() {
-        // TODO: implement this
-        // Everything in mCoordinates but the first element
-        return null;
-    }
-
-    /**
-     * Gets the ID of the polygon
-     *
-     * @return ID of polygon
-     */
-    private String getId() {
-        return mId;
-    }
-
-    /**
-     * Gets the stroke width of the polygon
-     *
-     * @return stroke width of polygon
-     */
-    private float getStrokeWidth() {
-        return mStrokeWidth;
-    }
-
-    /**
-     * Gets the stroke color of the polygon
-     *
-     * @return stroke color of polygon
-     */
-    private int getStrokeColor() {
-        return mStrokeColor;
-    }
-
-    /**
-     * Gets the fill color of the polygon
-     *
-     * @return fill color of polygon
-     */
-    private int getFillColor() {
-        return mFillColor;
-    }
-
-    /**
-     * Gets the z index of the polygon
-     *
-     * @return z index of polygon
-     */
-    private float getZIndex() {
-        return mZIndex;
-    }
-
-    /**
-     * Gets the visibility of the polygon
-     *
-     * @return true if visible; false otherwise
-     */
-    private boolean isVisible() {
-        return mIsVisible;
-    }
-
-    /**
-     * Gets whether each segment of the line is drawn as a geodesic or not
-     *
-     * @return true if each segment is drawn as a geodesic; false otherwise
-     */
-    private boolean isGeodesic() {
-        return mIsGeodesic;
-    }
 
     /**
      * Creates a PolygonOptions object with all of the properties from the properties object passed
@@ -155,12 +82,6 @@ public class PolygonProperties {
      * @return PolygonOptions object with defined options
      */
     public PolygonOptions getPolygonOptions() {
-        PolygonOptions options = new PolygonOptions();
-        // TODO: add hole ONLY when there are coordinates available otherwise it returns null
-        options.addAll(getCoordinates()).strokeWidth(getStrokeWidth())
-                .strokeColor(getStrokeColor())
-                .fillColor(getFillColor()).zIndex(getZIndex()).visible(isVisible())
-                .geodesic(mIsGeodesic);
-        return options;
+        return this.options;
     }
 }
