@@ -53,7 +53,7 @@ public class Coordinate {
      */
     public void coordinateProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
-        String name = p.getName();
+        String name;
 
         // Iterate through the document until the closing coordinates tag is reached
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("coordinates"))) {
@@ -61,11 +61,9 @@ public class Coordinate {
             // Check if the current tag is the beginning of a coordinate tag
             if (eventType == XmlPullParser.START_TAG) {
                 if (name.equals("coordinates")) {
-                    //TODO: Assign coordinates, do the things.
-
-                    /*
-                     setCoordinateList(p);
-                     */
+                    // Go to next to get coordinates
+                    p.next();
+                    setCoordinateList(p.getText());
                 }
             }
             eventType = p.next();
@@ -125,7 +123,7 @@ public class Coordinate {
      */
     public void setCoordinateList(String text) {
         mCoordinateList = new ArrayList<LatLng>();
-        String[] lines = text.split("\n");
+        String[] lines = text.trim().split("(\\s+)");
         for (String point : lines) {
             String[] coordinate = point.split(",");
             if (coordinate.length > 2) {
@@ -148,10 +146,11 @@ public class Coordinate {
      */
     public LatLng convertToLatLng(String[] coordinate) {
         try {
-            Double latDouble = Double.parseDouble(coordinate[LATITUDE]);
-            Double lonDouble = Double.parseDouble(coordinate[LONGITUDE]);
+            Double latDouble = Double.parseDouble(coordinate[LONGITUDE]);
+            Double lonDouble = Double.parseDouble(coordinate[LATITUDE]);
             LatLng latLng = new LatLng(latDouble, lonDouble);
             return latLng;
+
         } catch (NumberFormatException e) {
             System.out.println("Non-integer value found in coordinate tag!");
         } catch (NullPointerException e) {

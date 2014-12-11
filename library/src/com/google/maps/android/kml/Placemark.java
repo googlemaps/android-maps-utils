@@ -38,7 +38,7 @@ public class Placemark {
         // Iterate through document until the closing placemark is reached
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Placemark"))) {
             String name = p.getName();
-            //For some reason name.matches only works if you nest it inside the statement below.
+            // For some reason name.matches only works if you nest it inside the statement below.
             if (eventType == XmlPullParser.START_TAG) {
                 if (name.matches("name|styleURL|description|phoneNumber|address|visibility")) {
                     setValues(name, p.nextText());

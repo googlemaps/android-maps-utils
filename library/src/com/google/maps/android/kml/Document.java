@@ -2,6 +2,8 @@ package com.google.maps.android.kml;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -52,7 +54,7 @@ public class Document {
                 eventType = p.next();
             }
         } catch (Exception e) {
-
+            Log.e("ERROR", e.toString());
         }
     }
 
@@ -71,7 +73,6 @@ public class Document {
         for (Placemark p : mPlacemarks) {
             System.out.println(p.getValues("name"));
             for (Coordinate c : p.getLine()) {
-                // This will only work once coordinate class can parse in coords
                 System.out.println(c.getCoordinateList().size());
             }
         }
