@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Coordinate {
 
-    private static final int sUNINITIALIZED = -1;
+    private static final int UNINITIALIZED = -1;
 
     private static final int POLYGON_TYPE = 0;
 
@@ -40,16 +40,14 @@ public class Coordinate {
      */
     public Coordinate() {
         mCoordinateList = null;
-        mType = sUNINITIALIZED;
-        mBoundary = sUNINITIALIZED;
+        mType = UNINITIALIZED;
+        mBoundary = UNINITIALIZED;
     }
 
     /**
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
      *
      * @param p XMLPullParser which reads input from designated source
-     * @throws XmlPullParserException
-     * @throws IOException
      */
     public void coordinateProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
@@ -84,12 +82,14 @@ public class Coordinate {
             mBoundary = bBoundary;
         } else if (mType != POLYGON_TYPE) {
             System.out
-                    .println("Polygon mType expected! An inner or outer mBoundary cannot be set if " +
-                            "your coordinate mType is line string or point. Please check your KML input");
-            mBoundary = sUNINITIALIZED;
+                    .println(
+                            "Polygon mType expected! An inner or outer mBoundary cannot be set if" +
+                                    " your coordinate mType is line string or point. Please check" +
+                                    " your KML input");
+            mBoundary = UNINITIALIZED;
         } else {
             System.out.println("Inner mBoundary or outer mBoundary expected!");
-            mBoundary = sUNINITIALIZED;
+            mBoundary = UNINITIALIZED;
         }
     }
 
@@ -106,7 +106,7 @@ public class Coordinate {
             mType = tType;
         } else {
             System.out.println("Line, String or Point mType expected!");
-            mType = sUNINITIALIZED;
+            mType = UNINITIALIZED;
         }
     }
 
@@ -137,12 +137,9 @@ public class Coordinate {
      * value to it. The method then returns this latLng value. The method ignores any integers
      * which are found after the second element of the array. If lon or lat values are greater
      * than their respective geographic boundaries, then it is set to the maximum possible value.
-     * Returns null if:
-     * × Param is not an integer value
-     * × Param is a null string
      *
      * @param coordinate An array of integer values, individually representing coordinates
-     * @return lat     LatLng value
+     * @return lat     LatLng value or null if param is a null string or isn't an integer
      */
     public LatLng convertToLatLng(String[] coordinate) {
         try {
@@ -168,7 +165,7 @@ public class Coordinate {
     }
 
     /**
-     * Retrieves the coordinate mType (poly, line or point) this coordinate posses
+     * Retrieves the coordinate type (poly, line or point) this coordinate posses
      *
      * @return coordinate mType, represented by an integer or -1 if not set
      */
