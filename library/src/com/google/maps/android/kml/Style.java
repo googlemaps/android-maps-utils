@@ -45,7 +45,7 @@ public class Style {
             p.next();
             int eventType = p.getEventType();
             // Iterate through document until closing style tag is reached
-            while (!(eventType == XmlPullParser.END_TAG)) {
+            while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
                 String name = p.getName();
                 if (eventType == XmlPullParser.START_TAG) {
                     // In future we may want to save all the properties to allow the user to access
