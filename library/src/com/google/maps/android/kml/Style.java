@@ -1,5 +1,8 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -13,19 +16,20 @@ import java.util.HashMap;
  */
 public class Style {
 
-    private static final int UNINITIALIZED = -1;
+    private final HashMap<String, String> mPolyStyle;
 
-    private static final int POLYSTYLE = 0;
+    private final HashMap<String, String> mLineStyle;
 
-    private static final int LINESTYLE = 1;
+    private PolylineOptions mPolylineOptions;
 
-    private final HashMap<String, String> mValues;
+    private PolygonOptions mPolygonOptions;
 
-    private int mStyle;
 
     public Style() {
-        mValues = new HashMap<String, String>();
-        mStyle = UNINITIALIZED;
+        mPolyStyle = new HashMap<String, String>();
+        mLineStyle = new HashMap<String, String>();
+        mPolylineOptions = new PolylineOptions();
+        mPolygonOptions = new PolygonOptions();
 
     }
 
@@ -35,70 +39,65 @@ public class Style {
      * @param p XMLPullParser reads input from designated source
      */
     public void styleProperties(XmlPullParser p) throws XmlPullParserException, IOException {
-        // Style tag is always followed by the LineStyle or PolyStyle tag
-        // Need 2 next calls to iterate over style tag and its id attribute
-        p.next();
-        p.next();
-        // Only parse the style if it is a LineStyle or PolyStyle
-        if (p.getName().matches("LineStyle|PolyStyle")) {
-            mStyle = p.getName().equals("LineStyle") ? LINESTYLE : POLYSTYLE;
-            p.next();
-            int eventType = p.getEventType();
-            // Iterate through document until closing style tag is reached
-            while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
-                String name = p.getName();
-                if (eventType == XmlPullParser.START_TAG) {
-                    // In future we may want to save all the properties to allow the user to access
-                    // additional data
-                    if (name.matches("color|width|colorMode|fill|outline")) {
-                        setValue(name, p.nextText());
-                    }
-                }
+        int eventType = p.getEventType();
+        // Iterate through document until closing style tag is reached
+        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
+            // Parse LineStyle properties and place into mLineStyle
+            if (eventType == XmlPullParser.START_TAG && p.getName().equals("LineStyle")) {
+                // Iterate over the property tags
                 eventType = p.next();
+                while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("LineStyle"))) {
+                    // Check if it is a valid property tag of LineStyle
+                    if (eventType == XmlPullParser.START_TAG &&
+                            p.getName().matches("color|colorMode|width")) {
+                        mLineStyle.put(p.getName(), p.nextText());
+                    }
+                    eventType = p.next();
+                }
             }
+            // Parse PolyStyle properties and place into mPolyStyle
+            else if (eventType == XmlPullParser.START_TAG && p.getName().equals("PolyStyle")) {
+                // Iterate over the property tags
+                eventType = p.next();
+                while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
+                    // Check if it is a valid property tag of PolyStyle
+                    if (eventType == XmlPullParser.START_TAG &&
+                            p.getName().matches("color|colorMode|fill|outline")) {
+                        mPolyStyle.put(p.getName(), p.nextText());
+                    }
+                    eventType = p.next();
+                }
+            }
+            eventType = p.next();
         }
     }
 
     /**
-     * Takes in two strings, key and value, whereby the key is the name of the tag and the value
-     * is the text, and puts them into a hashmap.
+     * Retrieves a value from the hash map storing the LineStyle using a given key
      *
-     * EXAMPLE USE: <name>Hello World</name>
-     * key = name, value = Hello World.
-     *
-     * @param key   The string value which we use to access value
-     * @param value The string value which we want to access
+     * @param key associated value to retrieve
+     * @return value to which the key is mapped to, otherwise null
      */
-    public void setValue(String key, String value) {
-        mValues.put(key, value);
+    public String getLineStyleValue(String key) {
+        return mLineStyle.get(key);
     }
 
     /**
-     * Retrieves a value from a hash map using a given key
+     * Retrieves a value from the hash map storing the PolyStyle using a given key
      *
-     * @param key The name of the value which we want to retrieve
-     * @return The value which was inserted using the key, otherwise null
+     * @param key associated value to retrieve
+     * @return value to which the key is mapped to, otherwise null
      */
-    public String getValue(String key) {
-        return mValues.get(key);
+    public String getPolyStyleValue(String key) {
+        return mPolyStyle.get(key);
     }
 
     /**
-     * Used to check if there are any values in the mValues hashmap
+     * Used to check if there are no elements in both style hash maps
      *
-     * @return true if the mValues is empty, false otherwise
+     * @return true if both style hash maps are empty, false otherwise
      */
     public boolean isEmpty() {
-        return mValues.isEmpty();
+        return mPolyStyle.isEmpty() && mLineStyle.isEmpty();
     }
-
-    /**
-     * Gets the type of style this class defines
-     *
-     * @return type of style, -1 if not a LineStyle or PolyStyle
-     */
-    public int getStyleType() {
-        return mStyle;
-    }
-
 }

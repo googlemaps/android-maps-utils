@@ -52,7 +52,7 @@ public class Document {
                         style.styleProperties(p);
                         // Only add the style to the list if it contains values and is a
                         // LineStyle or PolyStyle
-                        if (style.getStyleType() != -1 && !style.isEmpty()) {
+                        if (!style.isEmpty()) {
                             mStyles.put(styleUrl, style);
                         }
                     } else if (name.equals("Placemark")) {
@@ -80,30 +80,37 @@ public class Document {
             System.out.println(s);
         }
 
-        for (Placemark p : mPlacemarks) {
-            // Print style name and the related style object
-            // Take into consideration that styleName may be null or the styleUrl you try to fetch
-            // may not exist :o
-            String styleName = p.getValue("styleUrl");
-            if (styleName != null && styleName.startsWith("#")) {
-                styleName = styleName.substring(1);
-                if (mStyles.containsKey(styleName))
-                // Print style hashmap
-                {
-                    Log.i(p.getValue("name"), mStyles.get(styleName).toString());
-                } else
-                // Print style name
-                {
-                    Log.i(p.getValue("name"), styleName);
-                }
-            } else {
-                Log.i(p.getValue("name"), "default style");
-            }
+//        for (Placemark p : mPlacemarks) {
+//            // Print style name and the related style object
+//            // Take into consideration that styleName may be null or the styleUrl you try to fetch
+//            // may not exist :o
+//            String styleName = p.getValue("styleUrl");
+//            if (styleName != null && styleName.startsWith("#")) {
+//                styleName = styleName.substring(1);
+//                if (mStyles.containsKey(styleName))
+//                // Print style hashmap
+//                {
+//                    Log.i(p.getValue("name"), mStyles.get(styleName).toString());
+//                } else
+//                // Print style name
+//                {
+//                    Log.i(p.getValue("name"), styleName);
+//                }
+//            } else {
+//                Log.i(p.getValue("name"), "default style");
+//            }
+//
+//            Log.i("Placemark line array", Integer.toString(p.getLine().size()));
+//            for (Coordinate c : p.getLine()) {
+//                System.out.println(c.getCoordinateList().toString());
+//            }
+//        }
+    }
 
-            Log.i("Placemark line array", Integer.toString(p.getLine().size()));
-            for (Coordinate c : p.getLine()) {
-                System.out.println(c.getCoordinateList().toString());
-            }
+    // TODO: Implement this function later
+    public void removeKMLData() {
+        for (Placemark p : mPlacemarks) {
+            // Call remove on each object
         }
     }
 }
