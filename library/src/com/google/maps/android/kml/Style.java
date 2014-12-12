@@ -73,23 +73,37 @@ public class Style {
     }
 
     /**
-     * Retrieves a value from the hash map storing the LineStyle using a given key
-     *
-     * @param key associated value to retrieve
-     * @return value to which the key is mapped to, otherwise null
+     * Gets a PolylineOptions object containing the property styles parsed from the KML file
+     * Used for LineString
+     * @return PolylineOptions object with defined options
      */
-    public String getLineStyleValue(String key) {
-        return mLineStyle.get(key);
+    public PolylineOptions getPolylineOptions() {
+        if (mLineStyle.containsKey("color"))
+            mPolylineOptions.color(Integer.parseInt(mLineStyle.get("color")));
+        // TODO: implement colorMode
+        //if (mLineStyle.containsKey("colorMode"))
+        if (mLineStyle.containsKey("width"))
+            mPolylineOptions.width(Float.parseFloat(mLineStyle.get("width")));
+        return mPolylineOptions;
     }
 
     /**
-     * Retrieves a value from the hash map storing the PolyStyle using a given key
-     *
-     * @param key associated value to retrieve
-     * @return value to which the key is mapped to, otherwise null
+     * Gets a PolygonOptions object containing the property styles parsed from the KML file
+     * Used for LinearRing
+     * @return PolygonOptions object with defined options
      */
-    public String getPolyStyleValue(String key) {
-        return mPolyStyle.get(key);
+    public PolygonOptions getPolygonOptions() {
+        if (mPolyStyle.containsKey("color"))
+            mPolygonOptions.fillColor(Integer.parseInt(mPolyStyle.get("color")));
+        // TODO: implement colorMode
+        //if (mPolyStyle.containsKey("colorMode"))
+        if (mPolyStyle.containsKey("outline")) {
+            if (mLineStyle.containsKey("color"))
+                mPolygonOptions.strokeColor(Integer.parseInt(mLineStyle.get("color")));
+            if (mLineStyle.containsKey("width"))
+                mPolygonOptions.strokeWidth(Integer.parseInt(mLineStyle.get("width")));
+        }
+        return mPolygonOptions;
     }
 
     /**
