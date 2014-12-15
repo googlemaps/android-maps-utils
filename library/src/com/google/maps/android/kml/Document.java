@@ -3,9 +3,13 @@ package com.google.maps.android.kml;
 import com.google.android.gms.maps.GoogleMap;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,9 +25,10 @@ public class Document {
     private final ArrayList<Placemark> mPlacemarks;
 
     private final GoogleMap mMap;
+
     /**
      * Constructs a new Document object
-     *
+     * @param map Map object
      * @param parser XmlPullParser loaded with the KML file
      */
     public Document(GoogleMap map, XmlPullParser parser) {
@@ -31,6 +36,42 @@ public class Document {
         this.mMap = map;
         this.mStyles = new HashMap<String, Style>();
         this.mPlacemarks = new ArrayList<Placemark>();
+    }
+
+    /**
+     *
+     * @param map Map object
+     * @param resourceId Raw resource KML file
+     * @param applicationContext Application context object
+     * @throws XmlPullParserException
+     */
+    public Document(GoogleMap map, int resourceId, Context applicationContext)
+            throws XmlPullParserException {
+        this.mMap = map;
+        this.mStyles = new HashMap<String, Style>();
+        this.mPlacemarks = new ArrayList<Placemark>();
+        InputStream stream = applicationContext.getResources().openRawResource(resourceId);
+
+        this.mParser = createXmlParser(stream);
+    }
+
+    /**
+     * Creates a new XmlPullParser object
+     * @param stream Character input stream representing the KML file
+     * @return XmlPullParser object to allow for the KML document to be parsed
+     */
+    private XmlPullParser createXmlParser (InputStream stream) {
+        XmlPullParserFactory factory = null;
+        try {
+            factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser parser = factory.newPullParser();
+            parser.setInput(stream, null);
+            return parser;
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -54,11 +95,7 @@ public class Document {
                         Style style = new Style();
                         String styleUrl = p.getAttributeValue(null, "id");
                         style.styleProperties(p);
-                        // Only add the style to the list if it contains values and is a
-                        // LineStyle or PolyStyle
-                        if (!style.isEmpty()) {
-                            mStyles.put(styleUrl, style);
-                        }
+                        mStyles.put(styleUrl, style);
                     } else if (name.equals("Placemark")) {
                         Placemark placemark = new Placemark();
                         placemark.placemarkProperties(p);
