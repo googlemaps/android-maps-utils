@@ -21,7 +21,6 @@ public class Document {
     private final ArrayList<Placemark> mPlacemarks;
 
     private final GoogleMap mMap;
-
     /**
      * Constructs a new Document object
      *
@@ -42,6 +41,11 @@ public class Document {
         XmlPullParser p = this.mParser;
         String name;
         try {
+            // Check if this is the start of the document
+            p.require(XmlPullParser.START_DOCUMENT, null, null);
+            p.next();
+            // Check for a kml tag
+            p.require(XmlPullParser.START_TAG, null, "kml");
             int eventType = p.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 name = p.getName();
@@ -63,6 +67,8 @@ public class Document {
                 }
                 eventType = p.next();
             }
+            // Check for an ending kml tag and the end of the document
+            p.require(XmlPullParser.END_DOCUMENT, null, null);
         } catch (Exception e) {
             Log.e("ERROR", e.toString());
         }
@@ -107,7 +113,7 @@ public class Document {
 //        }
     }
 
-    // TODO: Implement this function later
+    // TODO: Implement this function
     public void removeKMLData() {
         for (Placemark p : mPlacemarks) {
             // Call remove on each object
