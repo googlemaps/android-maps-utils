@@ -47,8 +47,7 @@ public class Style {
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
             if (eventType == XmlPullParser.START_TAG && p.getName().equals("LineStyle")) {
                 parseLineStyle(p);
-            }
-            else if (eventType == XmlPullParser.START_TAG && p.getName().equals("PolyStyle")) {
+            } else if (eventType == XmlPullParser.START_TAG && p.getName().equals("PolyStyle")) {
                 parsePolyStyle(p);
             }
             eventType = p.next();
@@ -60,9 +59,8 @@ public class Style {
 
     /**
      * Adds style properties to the PolylineOptions object mPolylineOptions
+     *
      * @param p XMLPullParser reads all input for the LineStyle
-     * @throws XmlPullParserException
-     * @throws IOException
      */
     private void parseLineStyle(XmlPullParser p) throws XmlPullParserException, IOException {
         String color;
@@ -74,12 +72,11 @@ public class Style {
                 if (p.getName().equals("color")) {
                     color = p.nextText();
                     mPolylineOptions.color((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
-                    mPolygonOptions.strokeColor((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
-                }
-                else if (p.getName().equals("colorMode")) {
+                    mPolygonOptions
+                            .strokeColor((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
+                } else if (p.getName().equals("colorMode")) {
                     // TODO: Implement a function to handle colorMode
-                }
-                else if (p.getName().equals("width")) {
+                } else if (p.getName().equals("width")) {
                     width = p.nextText();
                     mPolylineOptions.width(Float.parseFloat(width));
                     mPolygonOptions.strokeWidth(Float.parseFloat(width));
@@ -91,9 +88,8 @@ public class Style {
 
     /**
      * Adds style properties to the PolygonOptions object mPolygonOptions
+     *
      * @param p XMLPullParser reads all input for the PolyStyle
-     * @throws XmlPullParserException
-     * @throws IOException
      */
     private void parsePolyStyle(XmlPullParser p) throws XmlPullParserException, IOException {
 
@@ -104,14 +100,11 @@ public class Style {
                 if (p.getName().equals("color")) {
                     mPolygonOptions.fillColor(
                             (int) Long.parseLong(p.nextText(), HEXADECIMAL_COLOR_RADIX));
-                }
-                else if (p.getName().equals("colorMode")) {
+                } else if (p.getName().equals("colorMode")) {
                     // TODO: Implement a function to handle colorMode
-                }
-                else if (p.getName().equals("fill")) {
+                } else if (p.getName().equals("fill")) {
                     fill = false;
-                }
-                else if (p.getName().equals("outline")) {
+                } else if (p.getName().equals("outline")) {
                     outline = false;
                 }
             }
@@ -140,6 +133,7 @@ public class Style {
     /**
      * Gets a PolylineOptions object containing the property styles parsed from the KML file
      * Used for LineString
+     *
      * @return PolylineOptions object with defined options
      */
     public PolylineOptions getPolylineOptions() {
@@ -149,6 +143,7 @@ public class Style {
     /**
      * Gets a PolygonOptions object containing the property styles parsed from the KML file
      * Used for LinearRing
+     *
      * @return PolygonOptions object with defined options
      */
     public PolygonOptions getPolygonOptions() {

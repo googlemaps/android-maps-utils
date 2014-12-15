@@ -28,7 +28,8 @@ public class Document {
 
     /**
      * Constructs a new Document object
-     * @param map Map object
+     *
+     * @param map    Map object
      * @param parser XmlPullParser loaded with the KML file
      */
     public Document(GoogleMap map, XmlPullParser parser) {
@@ -39,11 +40,9 @@ public class Document {
     }
 
     /**
-     *
-     * @param map Map object
-     * @param resourceId Raw resource KML file
+     * @param map                Map object
+     * @param resourceId         Raw resource KML file
      * @param applicationContext Application context object
-     * @throws XmlPullParserException
      */
     public Document(GoogleMap map, int resourceId, Context applicationContext)
             throws XmlPullParserException {
@@ -57,10 +56,11 @@ public class Document {
 
     /**
      * Creates a new XmlPullParser object
+     *
      * @param stream Character input stream representing the KML file
      * @return XmlPullParser object to allow for the KML document to be parsed
      */
-    private XmlPullParser createXmlParser (InputStream stream) {
+    private XmlPullParser createXmlParser(InputStream stream) {
         XmlPullParserFactory factory = null;
         try {
             factory = XmlPullParserFactory.newInstance();
