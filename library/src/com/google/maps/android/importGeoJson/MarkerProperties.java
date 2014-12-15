@@ -29,30 +29,34 @@ public class MarkerProperties {
 
         this.options.position(coordinates);
 
-        if (geoJsonPointProperties.has("id")) {
-            //TODO: What do I do with the ID?
-        }
-        if (geoJsonPointProperties.has("title")) {
-           this.options.title(geoJsonPointProperties.getString("title"));
-        }
-        if (geoJsonPointProperties.has("snippet")) {
-            this.options.snippet(geoJsonPointProperties.getString("snippet"));
-        }
-        if (geoJsonPointProperties.has("alpha")) {
-            this.options.alpha((float) geoJsonPointProperties.getDouble("alpha"));
-        }
-        if (geoJsonPointProperties.has("anchorU") && geoJsonPointProperties.has("anchorV")) {
-            this.options.anchor((float) geoJsonPointProperties.getDouble("anchorU"),
-            (float) geoJsonPointProperties.getDouble("anchorV"));
-        }
-        if (geoJsonPointProperties.has("draggable")) {
-            this.options.draggable(geoJsonPointProperties.getBoolean("draggable"));
-        }
-        if (geoJsonPointProperties.has("rotation")) {
-            this.options.rotation((float) geoJsonPointProperties.getDouble("rotation"));
-        }
-        if (geoJsonPointProperties.has("visible")) {
-            this.options.visible(geoJsonPointProperties.getBoolean("visible"));
+
+        if (geoJsonPointProperties != null) {
+
+            if (geoJsonPointProperties.has("id")) {
+                //TODO: What do I do with the ID?
+            }
+            if (geoJsonPointProperties.has("title")) {
+                this.options.title(geoJsonPointProperties.getString("title"));
+            }
+            if (geoJsonPointProperties.has("snippet")) {
+                this.options.snippet(geoJsonPointProperties.getString("snippet"));
+            }
+            if (geoJsonPointProperties.has("alpha")) {
+                this.options.alpha((float) geoJsonPointProperties.getDouble("alpha"));
+            }
+            if (geoJsonPointProperties.has("anchorU") && geoJsonPointProperties.has("anchorV")) {
+                this.options.anchor((float) geoJsonPointProperties.getDouble("anchorU"),
+                        (float) geoJsonPointProperties.getDouble("anchorV"));
+            }
+            if (geoJsonPointProperties.has("draggable")) {
+                this.options.draggable(geoJsonPointProperties.getBoolean("draggable"));
+            }
+            if (geoJsonPointProperties.has("rotation")) {
+                this.options.rotation((float) geoJsonPointProperties.getDouble("rotation"));
+            }
+            if (geoJsonPointProperties.has("visible")) {
+                this.options.visible(geoJsonPointProperties.getBoolean("visible"));
+            }
         }
     }
 

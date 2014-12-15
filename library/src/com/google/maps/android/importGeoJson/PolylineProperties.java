@@ -37,25 +37,27 @@ public class PolylineProperties {
 
         this.options.addAll(mCoordinates);
 
+        if (geoJsonPointProperties != null) {
 
-        if (geoJsonPointProperties.has("id")) {
-            //TODO: What do I do with the id?
-        }
-        if (geoJsonPointProperties.has("width")) {
-            this.options.width((float) geoJsonPointProperties.getDouble("width"));
-        }
-        if (geoJsonPointProperties.has("color")) {
-            this.options.color(geoJsonPointProperties.getInt("color"));
-        }
-        if (geoJsonPointProperties.has("z index")) {
-            this.options.zIndex((float) geoJsonPointProperties.getDouble("z index"));
-        }
-        if (geoJsonPointProperties.has("visible")) {
-            this.options.visible(geoJsonPointProperties.getBoolean("visible"));
-        }
-        if (geoJsonPointProperties.has("geodesic")) {
-            this.options.geodesic(geoJsonPointProperties.getBoolean("geodesic"));
+            if (geoJsonPointProperties.has("id")) {
+                //TODO: What do I do with the id?
+            }
+            if (geoJsonPointProperties.has("width")) {
+                this.options.width((float) geoJsonPointProperties.getDouble("width"));
+            }
+            if (geoJsonPointProperties.has("color")) {
+                this.options.color(geoJsonPointProperties.getInt("color"));
+            }
+            if (geoJsonPointProperties.has("z index")) {
+                this.options.zIndex((float) geoJsonPointProperties.getDouble("z index"));
+            }
+            if (geoJsonPointProperties.has("visible")) {
+                this.options.visible(geoJsonPointProperties.getBoolean("visible"));
+            }
+            if (geoJsonPointProperties.has("geodesic")) {
+                this.options.geodesic(geoJsonPointProperties.getBoolean("geodesic"));
 
+            }
         }
     }
 
