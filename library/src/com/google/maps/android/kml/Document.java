@@ -78,7 +78,7 @@ public class Document {
      * Generates style values when a mParser to a text is given.
      * New mStyles with different features are created when a new ID is given
      */
-    public void readKMLData() {
+    public void importKML() {
         XmlPullParser p = this.mParser;
         String name;
         try {
@@ -117,7 +117,7 @@ public class Document {
      * For now we are just printing out certain values.
      */
 
-    public void printKMLData() {
+    public void addKMLData() {
         // Print out all the styles
         for (String s : mStyles.keySet()) {
             System.out.println(s);
@@ -155,5 +155,10 @@ public class Document {
         for (Placemark p : mPlacemarks) {
             // Call remove on each object
         }
+    }
+
+    // TODO: Implement this fumction
+    public void toggleKMLData() {
+        
     }
 }
