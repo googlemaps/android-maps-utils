@@ -24,10 +24,13 @@ public class GeoJSONDemoActivity extends BaseDemoActivity {
 
 
            ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
-                    R.raw.google_letters_geojson, getApplicationContext());
+                    R.raw.single_feature, getApplicationContext());
 
 
-           feature_collection_test.printObjects();
+           feature_collection_test.addGeoJsonData();
+            feature_collection_test.toggleGeoJsonData();
+
+
 
         } catch (Exception e) {
 

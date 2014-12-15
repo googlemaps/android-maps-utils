@@ -94,8 +94,6 @@ public class ImportGeoJson {
      */
     public ImportGeoJson(GoogleMap map, String geoJsonFileUrl) {
 
-
-
         // Currently a bad implementation
         try {
             // Waits for the file to be loaded
@@ -160,7 +158,7 @@ public class ImportGeoJson {
         // Case sensitive, so we do not need toLowerCase() here:
         // mGeoJsonFile.getString("type").toLowerCase().trim().equals("feature");
         boolean isFeature = mGeoJsonFile.getString("type").trim().equals("Feature");
-        boolean isGeometry = mGeoJsonFile.getString("type").trim().matches("Point|LineString|Polygon");
+        boolean isGeometry = mGeoJsonFile.getString("type").trim().matches("Point|LineString|Polygon|MultiPoint|LineString|MultiLineString|MultiPolygon");
         boolean isFeatureCollection = mGeoJsonFile.getString("type").trim().equals("FeatureCollection");
         boolean isGeometryCollection = mGeoJsonFile.getString("type").trim().equals("GeometryCollection");
 
@@ -169,9 +167,7 @@ public class ImportGeoJson {
                 // Store the list of GeoJSON feature object
                 jsonFeaturesArray = mGeoJsonFile.getJSONArray("features");
                 for (int i = 0; i < jsonFeaturesArray.length(); i++) {
-
                     isFeature = jsonFeaturesArray.getJSONObject(i).getString("type").trim().equals("Feature");
-
                     if (isFeature) {
                         mGeoJsonMapObjects.add(parseGeoJsonFeature(jsonFeaturesArray.getJSONObject(i)));
                     }
@@ -183,28 +179,66 @@ public class ImportGeoJson {
         } else if (isFeature) {
             mGeoJsonMapObjects.add(parseGeoJsonFeature(mGeoJsonFile));
         } else if (isGeometryCollection) {
-            //TODO: Implement Geometry Collection
+            JSONArray geometriesObjectArray;
+            geometriesObjectArray = mGeoJsonFile.getJSONArray("geometries");
+            for (int i = 0; i < geometriesObjectArray.length(); i++) {
+                mGeoJsonMapObjects.add(parseGeoJsonGeometry(geometriesObjectArray.getJSONObject(i)));
+            }
         } else if (isGeometry) {
+            //TODO: If MultiPoint, then this returns an ArrayList of markers. We need to find a way to add markers individually.
             mGeoJsonMapObjects.add(parseGeoJsonGeometry(mGeoJsonFile));
         }
     }
 
-    public void printObjects() {
+    /**
+     * Adds map options to the map.
+     */
 
-
-
-
+    public void addGeoJsonData() {
 
         for (Object mapObject: mGeoJsonMapObjects) {
             if (mapObject instanceof  PolygonOptions) {
-
-                mMap.addPolygon((PolygonOptions) ((PolygonOptions) mapObject));
-
+                mMap.addPolygon((PolygonOptions) mapObject);
             } else if (mapObject instanceof MarkerOptions) {
-                //System.out.println(((MarkerOptions) mapObject).getPosition());
+                mMap.addMarker((MarkerOptions) mapObject);
+            }else if (mapObject instanceof PolylineOptions) {
+                mMap.addPolyline((PolylineOptions) mapObject);
+            } else if (mapObject instanceof ArrayList) {
+                //TODO: See multipoint TODO above.
+                for (Object element : (ArrayList) mapObject) {
+                    if (element instanceof MarkerOptions) {
+                        mMap.addMarker((MarkerOptions)element);
+                    } else if (element instanceof PolylineOptions) {
+                        mMap.addPolyline((PolylineOptions) element);
+                    } else if (element instanceof PolygonOptions) {
+                        mMap.addPolygon((PolygonOptions) element);
+                    }
+                }
             }
         }
+    }
 
+    private boolean isVisible = true;
+
+    public void toggleGeoJsonData() {
+
+    }
+
+
+
+
+
+
+
+    /**
+     * Removes all map options from the map
+     * TODO:
+     * Implementation removes everything from the map. We should probably create a function where the user
+     * can toggle the GeoJSON layer on and off.
+     */
+
+    public void removeGeoJsonData() {
+        mMap.clear();
     }
 
     /**
@@ -259,7 +293,12 @@ public class ImportGeoJson {
         try {
             geometryType = geoJsonFeature.getString("type").toLowerCase();
             featureCoordinatesArray = geoJsonFeature.getJSONArray("coordinates");
-            //featureProperties = geoJsonFeature.getJSONObject("properties");
+
+            if (geoJsonFeature.has("properties")) {
+                featureProperties = geoJsonFeature.getJSONObject("properties");
+            }
+
+
             return parseGeoJsonGeometryObject(geoJsonFeature, geometryType, featureCoordinatesArray, featureProperties);
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
@@ -303,8 +342,8 @@ public class ImportGeoJson {
             JSONObject geoJsonPointProperties) {
         MarkerOptions properties = null;
         try {
-            LatLng coordinates = new LatLng(geoJsonPointCoordinatesArray.getDouble(0),
-                geoJsonPointCoordinatesArray.getDouble(1));
+            LatLng coordinates = new LatLng(geoJsonPointCoordinatesArray.getDouble(1),
+                geoJsonPointCoordinatesArray.getDouble(0));
             properties = new MarkerProperties(geoJsonPointProperties, coordinates)
                     .getMarkerOptions();
         } catch (JSONException e) {
@@ -323,7 +362,6 @@ public class ImportGeoJson {
     private ArrayList<MarkerOptions> toMarkers(JSONArray geoJsonMultiPointCoordinatesArray,
             JSONObject geoJsonMultiPointProperties) {
         ArrayList<MarkerOptions> markers = new ArrayList<MarkerOptions>();
-        // Iterate over the list of points
         for (int i = 0; i < geoJsonMultiPointCoordinatesArray.length(); i++) {
             try {
                 // Add each marker to the list
