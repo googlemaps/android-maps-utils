@@ -7,7 +7,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Created by lavenderc on 12/2/14.
@@ -16,18 +15,23 @@ import java.util.HashMap;
  */
 public class Style {
 
-    private final HashMap<String, String> mPolyStyle;
+    private final PolylineOptions mPolylineOptions;
 
-    private final HashMap<String, String> mLineStyle;
+    private final PolygonOptions mPolygonOptions;
 
-    private PolylineOptions mPolylineOptions;
+    private final static int POLYGON_TRANSPARENT_COLOR = 0x00000000;
 
-    private PolygonOptions mPolygonOptions;
+    private final static int POLYGON_NO_OUTLINE_WIDTH = 0;
+
+    private final static int HEXADECIMAL_COLOR_RADIX = 16;
+
+    private boolean fill = true;
+
+    private boolean outline = true;
 
 
     public Style() {
-        mPolyStyle = new HashMap<String, String>();
-        mLineStyle = new HashMap<String, String>();
+
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
 
@@ -40,35 +44,96 @@ public class Style {
      */
     public void styleProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
-        // Iterate through document until closing style tag is reached
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
-            // Parse LineStyle properties and place into mLineStyle
             if (eventType == XmlPullParser.START_TAG && p.getName().equals("LineStyle")) {
-                // Iterate over the property tags
-                eventType = p.next();
-                while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("LineStyle"))) {
-                    // Check if it is a valid property tag of LineStyle
-                    if (eventType == XmlPullParser.START_TAG &&
-                            p.getName().matches("color|colorMode|width")) {
-                        mLineStyle.put(p.getName(), p.nextText());
-                    }
-                    eventType = p.next();
-                }
+                parseLineStyle(p);
             }
-            // Parse PolyStyle properties and place into mPolyStyle
             else if (eventType == XmlPullParser.START_TAG && p.getName().equals("PolyStyle")) {
-                // Iterate over the property tags
-                eventType = p.next();
-                while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
-                    // Check if it is a valid property tag of PolyStyle
-                    if (eventType == XmlPullParser.START_TAG &&
-                            p.getName().matches("color|colorMode|fill|outline")) {
-                        mPolyStyle.put(p.getName(), p.nextText());
-                    }
-                    eventType = p.next();
+                parsePolyStyle(p);
+            }
+            eventType = p.next();
+        }
+
+        checkFill();
+        checkOutline();
+    }
+
+    /**
+     * Adds style properties to the PolylineOptions object mPolylineOptions
+     * @param p XMLPullParser reads all input for the LineStyle
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    private void parseLineStyle(XmlPullParser p) throws XmlPullParserException, IOException {
+        String color;
+        String width;
+        int eventType = p.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("LineStyle"))) {
+            // Assign relevant properties to mPolylineOptions
+            if (eventType == XmlPullParser.START_TAG) {
+                if (p.getName().equals("color")) {
+                    color = p.nextText();
+                    mPolylineOptions.color((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
+                    mPolygonOptions.strokeColor((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
+                }
+                else if (p.getName().equals("colorMode")) {
+                    // TODO: Implement a function to handle colorMode
+                }
+                else if (p.getName().equals("width")) {
+                    width = p.nextText();
+                    mPolylineOptions.width(Float.parseFloat(width));
+                    mPolygonOptions.strokeWidth(Float.parseFloat(width));
                 }
             }
             eventType = p.next();
+        }
+    }
+
+    /**
+     * Adds style properties to the PolygonOptions object mPolygonOptions
+     * @param p XMLPullParser reads all input for the PolyStyle
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    private void parsePolyStyle(XmlPullParser p) throws XmlPullParserException, IOException {
+
+        int eventType = p.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
+            // Assign relevant properties to mPolygonOptions
+            if (eventType == XmlPullParser.START_TAG) {
+                if (p.getName().equals("color")) {
+                    mPolygonOptions.fillColor(
+                            (int) Long.parseLong(p.nextText(), HEXADECIMAL_COLOR_RADIX));
+                }
+                else if (p.getName().equals("colorMode")) {
+                    // TODO: Implement a function to handle colorMode
+                }
+                else if (p.getName().equals("fill")) {
+                    fill = false;
+                }
+                else if (p.getName().equals("outline")) {
+                    outline = false;
+                }
+            }
+            eventType = p.next();
+        }
+    }
+
+    /**
+     * Checks if there is no fill for the Polygon and makes transparent
+     */
+    private void checkFill() {
+        if (!fill) {
+            mPolygonOptions.fillColor(POLYGON_TRANSPARENT_COLOR);
+        }
+    }
+
+    /**
+     * Checks if there is no outline for the Polygon and removes outline
+     */
+    private void checkOutline() {
+        if (!outline) {
+            mPolygonOptions.strokeWidth(POLYGON_NO_OUTLINE_WIDTH);
         }
     }
 
@@ -78,12 +143,6 @@ public class Style {
      * @return PolylineOptions object with defined options
      */
     public PolylineOptions getPolylineOptions() {
-        if (mLineStyle.containsKey("color"))
-            mPolylineOptions.color(Integer.parseInt(mLineStyle.get("color")));
-        // TODO: implement colorMode
-        //if (mLineStyle.containsKey("colorMode"))
-        if (mLineStyle.containsKey("width"))
-            mPolylineOptions.width(Float.parseFloat(mLineStyle.get("width")));
         return mPolylineOptions;
     }
 
@@ -93,25 +152,6 @@ public class Style {
      * @return PolygonOptions object with defined options
      */
     public PolygonOptions getPolygonOptions() {
-        if (mPolyStyle.containsKey("color"))
-            mPolygonOptions.fillColor(Integer.parseInt(mPolyStyle.get("color")));
-        // TODO: implement colorMode
-        //if (mPolyStyle.containsKey("colorMode"))
-        if (mPolyStyle.containsKey("outline")) {
-            if (mLineStyle.containsKey("color"))
-                mPolygonOptions.strokeColor(Integer.parseInt(mLineStyle.get("color")));
-            if (mLineStyle.containsKey("width"))
-                mPolygonOptions.strokeWidth(Integer.parseInt(mLineStyle.get("width")));
-        }
         return mPolygonOptions;
-    }
-
-    /**
-     * Used to check if there are no elements in both style hash maps
-     *
-     * @return true if both style hash maps are empty, false otherwise
-     */
-    public boolean isEmpty() {
-        return mPolyStyle.isEmpty() && mLineStyle.isEmpty();
     }
 }
