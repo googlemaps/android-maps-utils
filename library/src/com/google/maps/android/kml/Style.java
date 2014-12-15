@@ -1,5 +1,6 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -19,6 +20,8 @@ public class Style {
 
     private final PolygonOptions mPolygonOptions;
 
+    private final MarkerOptions mPointOptions;
+
     private final static int POLYGON_TRANSPARENT_COLOR = 0x00000000;
 
     private final static int POLYGON_NO_OUTLINE_WIDTH = 0;
@@ -31,10 +34,9 @@ public class Style {
 
 
     public Style() {
-
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
-
+        mPointOptions = new MarkerOptions();
     }
 
     /**
@@ -45,6 +47,7 @@ public class Style {
     public void styleProperties(XmlPullParser p) throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
+
             if (eventType == XmlPullParser.START_TAG && p.getName().equals("LineStyle")) {
                 parseLineStyle(p);
             } else if (eventType == XmlPullParser.START_TAG && p.getName().equals("PolyStyle")) {
@@ -72,8 +75,7 @@ public class Style {
                 if (p.getName().equals("color")) {
                     color = p.nextText();
                     mPolylineOptions.color((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
-                    mPolygonOptions
-                            .strokeColor((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
+                    mPolygonOptions.strokeColor((int) Long.parseLong(color, HEXADECIMAL_COLOR_RADIX));
                 } else if (p.getName().equals("colorMode")) {
                     // TODO: Implement a function to handle colorMode
                 } else if (p.getName().equals("width")) {
@@ -94,7 +96,15 @@ public class Style {
     private void parsePolyStyle(XmlPullParser p) throws XmlPullParserException, IOException {
 
         int eventType = p.getEventType();
+
+        boolean isInPolyStyle = true;
+
+
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
+
+            isInPolyStyle = (eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"));
+
+
             // Assign relevant properties to mPolygonOptions
             if (eventType == XmlPullParser.START_TAG) {
                 if (p.getName().equals("color")) {
@@ -149,4 +159,7 @@ public class Style {
     public PolygonOptions getPolygonOptions() {
         return mPolygonOptions;
     }
+
+
+    public MarkerOptions getPointOptions() { return mPointOptions; }
 }

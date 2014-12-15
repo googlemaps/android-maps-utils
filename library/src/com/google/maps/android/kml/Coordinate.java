@@ -81,14 +81,8 @@ public class Coordinate {
                 == POLYGON_TYPE)) {
             mBoundary = bBoundary;
         } else if (mType != POLYGON_TYPE) {
-            System.out
-                    .println(
-                            "Polygon mType expected! An inner or outer mBoundary cannot be set if" +
-                                    " your coordinate mType is line string or point. Please check" +
-                                    " your KML input");
             mBoundary = UNINITIALIZED;
         } else {
-            System.out.println("Inner mBoundary or outer mBoundary expected!");
             mBoundary = UNINITIALIZED;
         }
     }

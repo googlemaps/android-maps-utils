@@ -12,11 +12,5 @@
         android:layout_weight="1"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <TextView
-        android:id="@+id/attribution"
-        android:maxLines="10"
-        android:scrollbars = "vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
+
 </LinearLayout>

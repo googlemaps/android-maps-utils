@@ -1,12 +1,9 @@
 package com.google.maps.android.utils.demo;
 
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
+import android.view.View;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.kml.Coordinate;
-import com.google.maps.android.kml.Document;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.kml.ImportKML;
 import com.google.maps.android.kml.Placemark;
 import com.google.maps.android.kml.Style;
 
@@ -19,9 +16,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class KMLDemoActivity extends BaseDemoActivity {
-
-    private ArrayList<Style> styles;
-    private ArrayList<Placemark> placemarks;
 
     /**
      * TODO:
@@ -44,13 +38,14 @@ public class KMLDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             XmlPullParser parser = readItems();
-            Document document = new Document(parser);
-            document.readKMLData();
-            document.printKMLData();
+            ImportKML importKML = new ImportKML(getMap(), parser);
+            importKML.importKML();
+            importKML.addKMLData();
+            importKML.toggleKMLData();
+            importKML.toggleKMLData();
         } catch (Exception e) {
             System.out.println("Unable to find file in res/raw, please try again!");
         }
     }
-
 
 }

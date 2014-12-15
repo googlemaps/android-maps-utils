@@ -1,11 +1,14 @@
 package com.google.maps.android.kml;
 
+import android.util.Xml;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by lavenderc on 12/3/14.
@@ -44,27 +47,30 @@ public class Placemark {
             if (eventType == XmlPullParser.START_TAG) {
                 if (name.matches("name|description|visibility|styleUrl")) {
                     setValue(name, p.nextText());
-                }
-                // outerBoundaryIs and innerBoundaryIs refer to the polygon boundaries
-                else if (name.matches("LineString|Point|outerBoundaryIs|innerBoundaryIs")) {
-                    Coordinate c = new Coordinate();
-                    if (name.equals("LineString")) {
-                        c.setType(LINESTRING_TYPE);
-                    } else if (name.equals("Point")) {
-                        c.setType(POINT_TYPE);
-                    } else if (name.equals("outerBoundaryIs")) {
-                        c.setType(POLYGON_TYPE);
-                        c.setBoundary(OUTER_BOUNDARY);
-                    } else if (name.equals("innerBoundaryIs")) {
-                        c.setType(POLYGON_TYPE);
-                        c.setBoundary(INNER_BOUNDARY);
-                    }
-                    c.coordinateProperties(p);
-                    mLine.add(c);
+                } else if (name.matches("LineString|Point|outerBoundaryIs|innerBoundaryIs")) {
+                    setType(name, p);
                 }
             }
             eventType = p.next();
         }
+    }
+
+
+    private void setType(String name, XmlPullParser parser) throws XmlPullParserException, IOException {
+        Coordinate c = new Coordinate();
+        if (name.equals("LineString")) {
+            c.setType(LINESTRING_TYPE);
+        } else if (name.equals("Point")) {
+            c.setType(POINT_TYPE);
+        } else if (name.equals("outerBoundaryIs")) {
+            c.setType(POLYGON_TYPE);
+            c.setBoundary(OUTER_BOUNDARY);
+        } else if (name.equals("innerBoundaryIs")) {
+            c.setType(POLYGON_TYPE);
+            c.setBoundary(INNER_BOUNDARY);
+        }
+        c.coordinateProperties(parser);
+        mLine.add(c);
     }
 
     /**
