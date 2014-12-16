@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -129,7 +130,6 @@ public class ImportGeoJson {
      * Parses all GeoJSON objects in the GeoJSON file
      */
     private void parseGeoJsonFile() throws JSONException {
-
         JSONArray jsonFeaturesArray;
         boolean isFeature = mGeoJsonFile.getString("type").trim().equals("Feature");
         boolean isGeometry = mGeoJsonFile.getString("type").trim().matches(
@@ -147,28 +147,40 @@ public class ImportGeoJson {
                     isFeature = jsonFeaturesArray.getJSONObject(i).getString("type").trim().equals(
                             "Feature");
                     if (isFeature) {
-                        mGeoJsonMapObjects.add(
-                                parseGeoJsonFeature(jsonFeaturesArray.getJSONObject(i)));
+                        storeMapObject(parseGeoJsonFeature(jsonFeaturesArray.getJSONObject(i)));
                     }
                 }
             } catch (JSONException e) {
                 Log.e("JSONException", e.toString());
             }
-
         }
         // Single feature in the JSONObject
         else if (isFeature) {
-            mGeoJsonMapObjects.add(parseGeoJsonFeature(mGeoJsonFile));
+            storeMapObject(parseGeoJsonFeature(mGeoJsonFile));
         } else if (isGeometryCollection) {
             JSONArray geometriesObjectArray;
             geometriesObjectArray = mGeoJsonFile.getJSONArray("geometries");
             for (int i = 0; i < geometriesObjectArray.length(); i++) {
-                mGeoJsonMapObjects
-                        .add(parseGeoJsonGeometry(geometriesObjectArray.getJSONObject(i)));
+                storeMapObject(parseGeoJsonGeometry(geometriesObjectArray.getJSONObject(i)));
             }
         } else if (isGeometry) {
-            //TODO: If MultiPoint, then this returns an ArrayList of markers. We need to find a way to add markers individually.
-            mGeoJsonMapObjects.add(parseGeoJsonGeometry(mGeoJsonFile));
+            storeMapObject(parseGeoJsonGeometry(mGeoJsonFile));
+
+        }
+    }
+
+    /**
+     * Takes an object and adds it to mGeoJsonMapObjects. In the case of an ArrayList, it adds all
+     * the elements to mGeoJsonMapObjects
+     *
+     * @param geometryObject object to add to mGeoJsonMapObjects, either MarkerProperties,
+     *                       PolylineProperties, PolygonProperties or an ArrayList
+     */
+    private void storeMapObject(Object geometryObject) {
+        if (geometryObject instanceof List) {
+            mGeoJsonMapObjects.addAll((ArrayList) geometryObject);
+        } else {
+            mGeoJsonMapObjects.add(geometryObject);
         }
     }
 
@@ -183,17 +195,6 @@ public class ImportGeoJson {
                 mMap.addMarker((MarkerOptions) mapObject);
             } else if (mapObject instanceof PolylineOptions) {
                 mMap.addPolyline((PolylineOptions) mapObject);
-            } else if (mapObject instanceof ArrayList) {
-                //TODO: See multipoint TODO above.
-                for (Object element : (ArrayList) mapObject) {
-                    if (element instanceof MarkerOptions) {
-                        mMap.addMarker((MarkerOptions) element);
-                    } else if (element instanceof PolylineOptions) {
-                        mMap.addPolyline((PolylineOptions) element);
-                    } else if (element instanceof PolygonOptions) {
-                        mMap.addPolygon((PolygonOptions) element);
-                    }
-                }
             }
         }
         mIsVisible = true;
@@ -204,8 +205,14 @@ public class ImportGeoJson {
      */
     public void toggleGeoJsonData() {
         // TODO: implement this method
-        // Iterate through all and set visibility to false
-        // toggle mIsVisible
+        mIsVisible = !mIsVisible;
+        if (mIsVisible) {
+            // make each object non visible
+        } else {
+            // make each object visible
+            // What if visibility of object was originally false?
+        }
+
     }
 
     /**
@@ -213,7 +220,6 @@ public class ImportGeoJson {
      */
     public void removeGeoJsonData() {
         // TODO: implement this method
-        // Visibility of object was originally false
         mIsVisible = false;
     }
 
