@@ -35,7 +35,7 @@ public class MarkerProperties {
         if (geoJsonPointProperties != null) {
 
             if (geoJsonPointProperties.has("id")) {
-                //TODO: What do I do with the ID?
+                //TODO: To consider if returning the elements added to the map
             }
             if (geoJsonPointProperties.has("title")) {
                 this.mOptions.title(geoJsonPointProperties.getString("title"));

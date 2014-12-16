@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 /**
@@ -38,17 +40,17 @@ public class PolygonProperties {
 
         if (geoJsonPolygonProperties != null) {
             if (geoJsonPolygonProperties.has("id")) {
-                //TODO: What do I do with the id??
+                //TODO: To consider if returning the elements added to the map
             }
             if (geoJsonPolygonProperties.has("stroke width")) {
                 this.mOptions
                         .strokeWidth((float) geoJsonPolygonProperties.getDouble("stroke width"));
             }
             if (geoJsonPolygonProperties.has("stroke color")) {
-                this.mOptions.strokeColor(geoJsonPolygonProperties.getInt("stroke color"));
+                this.mOptions.strokeColor(Color.parseColor(geoJsonPolygonProperties.getString("stroke color")));
             }
             if (geoJsonPolygonProperties.has("fill color")) {
-                this.mOptions.fillColor(geoJsonPolygonProperties.getInt("fill color"));
+                this.mOptions.fillColor(Color.parseColor(geoJsonPolygonProperties.getString("fill color")));
             }
             if (geoJsonPolygonProperties.has("z index")) {
                 this.mOptions.zIndex((float) geoJsonPolygonProperties.getDouble("z index"));

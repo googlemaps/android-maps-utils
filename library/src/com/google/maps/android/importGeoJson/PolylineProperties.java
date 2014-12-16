@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 /**
@@ -38,13 +40,13 @@ public class PolylineProperties {
         if (geoJsonPointProperties != null) {
 
             if (geoJsonPointProperties.has("id")) {
-                //TODO: What do I do with the id?
+                //TODO: To consider if returning the elements added to the map
             }
             if (geoJsonPointProperties.has("width")) {
                 this.mOptions.width((float) geoJsonPointProperties.getDouble("width"));
             }
             if (geoJsonPointProperties.has("color")) {
-                this.mOptions.color(geoJsonPointProperties.getInt("color"));
+                this.mOptions.color(Color.parseColor(geoJsonPointProperties.getString("color")));
             }
             if (geoJsonPointProperties.has("z index")) {
                 this.mOptions.zIndex((float) geoJsonPointProperties.getDouble("z index"));
