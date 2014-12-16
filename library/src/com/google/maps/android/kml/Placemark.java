@@ -98,6 +98,9 @@ public class Placemark {
     }
 
 
+    public HashMap<String, String> getProperties() { return mValues; }
+
+
     /**
      * Retrieves the ArrayList of Coordinate classes (list of multiple latlng lists) that this
      * placemark has
@@ -105,7 +108,7 @@ public class Placemark {
      * @return An ArrayList of Coordinate classes
      */
 
-    public ArrayList<Coordinate> getLine() {
+    public ArrayList<Coordinate> getPoints() {
         return mLine;
     }
 }

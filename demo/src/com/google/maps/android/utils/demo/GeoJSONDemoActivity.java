@@ -23,12 +23,12 @@ public class GeoJSONDemoActivity extends BaseDemoActivity {
 
 
 
-           ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
-                    R.raw.single_feature, getApplicationContext());
+           //ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
+           //         R.raw.single_feature, getApplicationContext());
 
 
-           feature_collection_test.addGeoJsonData();
-            feature_collection_test.toggleGeoJsonData();
+           //feature_collection_test.addGeoJsonData();
+            //feature_collection_test.toggleGeoJsonData();
 
 
 

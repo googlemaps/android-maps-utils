@@ -62,6 +62,7 @@ public class Coordinate {
                     // Go to next to get coordinates
                     p.next();
                     setCoordinateList(p.getText());
+
                 }
             }
             eventType = p.next();
@@ -120,7 +121,7 @@ public class Coordinate {
         String[] lines = text.trim().split("(\\s+)");
         for (String point : lines) {
             String[] coordinate = point.split(",");
-            if (coordinate.length > 2) {
+            if (coordinate.length > 1) {
                 mCoordinateList.add(convertToLatLng(coordinate));
             }
         }

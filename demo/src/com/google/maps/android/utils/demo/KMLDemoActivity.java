@@ -22,7 +22,7 @@ public class KMLDemoActivity extends BaseDemoActivity {
      * - Read data using that async thing
      */
     private XmlPullParser readItems() throws JSONException, XmlPullParserException {
-        InputStream stream = getResources().openRawResource(R.raw.cta);
+        InputStream stream = getResources().openRawResource(R.raw.sample_kml);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
