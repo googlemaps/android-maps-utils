@@ -2,8 +2,11 @@ package com.google.maps.android.importGeoJson;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
@@ -52,6 +55,8 @@ import java.util.concurrent.ExecutionException;
 public class ImportGeoJson {
 
 
+    private final ArrayList<Object> mGeoJsonMapOptionObjects = new ArrayList<Object>();
+
     private final ArrayList<Object> mGeoJsonMapObjects = new ArrayList<Object>();
 
     private final GoogleMap mMap;
@@ -68,7 +73,7 @@ public class ImportGeoJson {
      * @param map            map object
      * @param geoJsonFileUrl URL of GeoJSON file
      */
-    public ImportGeoJson(GoogleMap map, String geoJsonFileUrl) {
+    public ImportGeoJson(GoogleMap map, String geoJsonFileUrl) throws JSONException {
         mMap = map;
 
         // Currently a bad implementation
@@ -80,6 +85,7 @@ public class ImportGeoJson {
         } catch (ExecutionException e) {
             Log.e("ExecutionException", e.toString());
         }
+        parseGeoJsonFile(mGeoJsonFile);
     }
 
     /**
@@ -94,7 +100,7 @@ public class ImportGeoJson {
         mMap = map;
         InputStream stream = applicationContext.getResources().openRawResource(resourceId);
         mGeoJsonFile = createJsonFileObject(stream);
-        parseGeoJsonFile();
+        parseGeoJsonFile(mGeoJsonFile);
     }
 
     /**
@@ -129,25 +135,26 @@ public class ImportGeoJson {
     /**
      * Parses all GeoJSON objects in the GeoJSON file
      */
-    private void parseGeoJsonFile() throws JSONException {
+    private void parseGeoJsonFile(JSONObject geoJsonFile) throws JSONException {
         JSONArray jsonFeaturesArray;
-        boolean isFeature = mGeoJsonFile.getString("type").trim().equals("Feature");
-        boolean isGeometry = mGeoJsonFile.getString("type").trim().matches(
+        boolean isFeature = geoJsonFile.getString("type").trim().equals("Feature");
+        boolean isGeometry = geoJsonFile.getString("type").trim().matches(
                 "Point|LineString|Polygon|MultiPoint|LineString|MultiLineString|MultiPolygon");
-        boolean isFeatureCollection = mGeoJsonFile.getString("type").trim().equals(
+        boolean isFeatureCollection = geoJsonFile.getString("type").trim().equals(
                 "FeatureCollection");
-        boolean isGeometryCollection = mGeoJsonFile.getString("type").trim().equals(
+        boolean isGeometryCollection = geoJsonFile.getString("type").trim().equals(
                 "GeometryCollection");
 
         if (isFeatureCollection) {
             try {
                 // Store the list of GeoJSON feature objects
-                jsonFeaturesArray = mGeoJsonFile.getJSONArray("features");
+                jsonFeaturesArray = geoJsonFile.getJSONArray("features");
                 for (int i = 0; i < jsonFeaturesArray.length(); i++) {
                     isFeature = jsonFeaturesArray.getJSONObject(i).getString("type").trim().equals(
                             "Feature");
                     if (isFeature) {
-                        storeMapObject(parseGeoJsonFeature(jsonFeaturesArray.getJSONObject(i)));
+                        storeMapObjects(mGeoJsonMapOptionObjects,
+                                parseGeoJsonFeature(jsonFeaturesArray.getJSONObject(i)));
                     }
                 }
             } catch (JSONException e) {
@@ -156,45 +163,78 @@ public class ImportGeoJson {
         }
         // Single feature in the JSONObject
         else if (isFeature) {
-            storeMapObject(parseGeoJsonFeature(mGeoJsonFile));
+            storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonFeature(geoJsonFile));
         } else if (isGeometryCollection) {
-            JSONArray geometriesObjectArray;
-            geometriesObjectArray = mGeoJsonFile.getJSONArray("geometries");
-            for (int i = 0; i < geometriesObjectArray.length(); i++) {
-                storeMapObject(parseGeoJsonGeometry(geometriesObjectArray.getJSONObject(i)));
-            }
+            storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonGeometryCollection(geoJsonFile));
         } else if (isGeometry) {
-            storeMapObject(parseGeoJsonGeometry(mGeoJsonFile));
-
+            storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonGeometry(geoJsonFile));
         }
     }
 
     /**
-     * Takes an object and adds it to mGeoJsonMapObjects. In the case of an ArrayList, it adds all
-     * the elements to mGeoJsonMapObjects
+     * Creates a list of properties objects from a given JSONObject containing a geometry
+     * collection
+     * Handles cases where there may be a geometry collection nested in a geometry collection
      *
-     * @param geometryObject object to add to mGeoJsonMapObjects, either MarkerProperties,
-     *                       PolylineProperties, PolygonProperties or an ArrayList
+     * @param geometryCollection Geometry collection to parse into geometry property objects
+     * @return ArrayList of MarkerProperties, PolylineProperties and PolygonProperties
      */
-    private void storeMapObject(Object geometryObject) {
-        if (geometryObject instanceof List) {
-            mGeoJsonMapObjects.addAll((ArrayList) geometryObject);
+    private ArrayList<Object> parseGeoJsonGeometryCollection(JSONObject geometryCollection)
+            throws JSONException {
+        ArrayList<Object> geometryCollectionObjects = new ArrayList<Object>();
+        JSONArray geometriesObjectArray = geometryCollection.getJSONArray("geometries");
+        boolean isGeometry;
+        boolean isGeometryCollection;
+
+        // Iterate over all elements in the geometry collection
+        for (int i = 0; i < geometriesObjectArray.length(); i++) {
+            isGeometry = geometriesObjectArray.getJSONObject(i).getString("type").matches(
+                    "Point|LineString|Polygon|MultiPoint|LineString|MultiLineString|MultiPolygon");
+            isGeometryCollection = geometriesObjectArray.getJSONObject(i).getString("type")
+                    .equals("GeometryCollection");
+
+            // Add to geometryCollectionObjects
+            if (isGeometry) {
+                storeMapObjects(geometryCollectionObjects,
+                        parseGeoJsonGeometry(geometriesObjectArray.getJSONObject(i)));
+            }
+
+            // Call itself with the GeometryCollection element and add to geometryCollectionObjects
+            else if (isGeometryCollection) {
+                storeMapObjects(geometryCollectionObjects, parseGeoJsonGeometryCollection(
+                        geometriesObjectArray.getJSONObject(i)));
+            }
+        }
+        return geometryCollectionObjects;
+    }
+
+    /**
+     * Takes an object and adds it to mapObjectList. In the case of an ArrayList, it adds all the
+     * elements to mapObjectList
+     *
+     * @param mapObjectList list to append all map objects to
+     * @param mapObject     object to add to mGeoJsonMapOptionObjects, either
+     *                      MarkerProperties,PolylineProperties, PolygonProperties or an ArrayList
+     */
+    private void storeMapObjects(List<Object> mapObjectList, Object mapObject) {
+        if (mapObject instanceof List) {
+            mapObjectList.addAll((ArrayList) mapObject);
         } else {
-            mGeoJsonMapObjects.add(geometryObject);
+            mapObjectList.add(mapObject);
         }
     }
 
     /**
-     * Adds all objects in mGeoJsonMapObjects to the mMap
+     * Adds all objects in mGeoJsonMapOptionObjects to the mMap
      */
     public void addGeoJsonData() {
-        for (Object mapObject : mGeoJsonMapObjects) {
+        for (Object mapObject : mGeoJsonMapOptionObjects) {
             if (mapObject instanceof PolygonOptions) {
-                mMap.addPolygon((PolygonOptions) mapObject);
+                mGeoJsonMapObjects.add(mMap.addPolygon((PolygonOptions) mapObject));
             } else if (mapObject instanceof MarkerOptions) {
-                mMap.addMarker((MarkerOptions) mapObject);
+                mGeoJsonMapObjects.add(mMap.addMarker((MarkerOptions) mapObject));
             } else if (mapObject instanceof PolylineOptions) {
-                mMap.addPolyline((PolylineOptions) mapObject);
+                mGeoJsonMapObjects.add(mMap.addPolyline((PolylineOptions) mapObject));
             }
         }
         mIsVisible = true;
@@ -216,11 +256,19 @@ public class ImportGeoJson {
     }
 
     /**
-     * Removes all objects in mGeoJsonMapObjects from the mMap
+     * Removes all objects in mGeoJsonMapOptionObjects from the mMap
      */
     public void removeGeoJsonData() {
-        // TODO: implement this method
         mIsVisible = false;
+        for (Object mapObject : mGeoJsonMapObjects) {
+            if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).remove();
+            } else if (mapObject instanceof Marker) {
+                ((Marker) mapObject).remove();
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).remove();
+            }
+        }
     }
 
     /**
