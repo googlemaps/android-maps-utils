@@ -1,17 +1,20 @@
 package com.google.maps.android.kml;
 
+import android.content.Context;
+import android.graphics.Color;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import android.content.Context;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,9 +54,13 @@ public class ImportKML {
 
     private static final int HASH_POSITION = 1;
 
+    private final static int HEXADECIMAL_COLOR_RADIX = 16;
+
     private int mType;
 
     private int mBoundary;
+
+    private ArrayList<Object> mOptions;
 
     private boolean isVisible;
 
@@ -77,6 +84,7 @@ public class ImportKML {
         this.mPlacemarks = new ArrayList<Placemark>();
         this.mObjects = new ArrayList<Object>();
         this.isVisible = true;
+        this.mOptions = new ArrayList<Object>();
     }
 
     /**
@@ -92,6 +100,7 @@ public class ImportKML {
         this.stream = applicationContext.getResources().openRawResource(resourceId);
         this.mParser = createXmlParser(this.stream);
         this.mObjects = new ArrayList<Object>();
+        this.mOptions = new ArrayList<Object>();
         this.isVisible = true;
     }
 
@@ -139,12 +148,28 @@ public class ImportKML {
         this.mParser.require(XmlPullParser.END_DOCUMENT, null, null);
     }
 
+    /**
+     * Creates a new Style and puts it into a HashMap. Key value is the style id specified in the tag,
+     * Value is a newly created Style class
+     * @param mParser XmlPullParser object for KML document parsing
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
+
     private void createStyle(XmlPullParser mParser) throws IOException, XmlPullParserException {
         Style style = new Style();
-        String styleUrl = mParser.getAttributeValue(null, "id");
+        String styleUrl = "#" + mParser.getAttributeValue(null, "id");
         style.styleProperties(mParser);
         mStyles.put(styleUrl, style);
     }
+
+    /**
+     * Creates a new Placemark and puts it into a HashMap. Key value is the style id specified in the tag,
+     * Value is a newly created Placemark class
+     * @param mParser XmlPullParser object for KML document parsing
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
 
     private void createPlacemark(XmlPullParser mParser) throws IOException, XmlPullParserException {
         Placemark placemark = new Placemark();
@@ -152,43 +177,128 @@ public class ImportKML {
         this.mPlacemarks.add(placemark);
     }
 
-
+    /**
+     * Retreives values from Placemarks and Styles, if they exist, and creates a geometry option o
+     * object with appropriate properties
+     */
     private void assignStyles() {
-        for (Placemark mPlacemark : mPlacemarks) {
-            String mStyleName = mPlacemark.getValue("styleUrl");
-            if (mStyleName != null && mStyleName.startsWith("#")) {
-                mStyleName = mStyleName.substring(HASH_POSITION);
-                if (mStyles.containsKey(mStyleName)) {
-                    for (Coordinate mCoordinate : mPlacemark.getLine()) {
-                      addPointsToStyles(mStyleName, mCoordinate);
+        for (Placemark placemark: mPlacemarks) {
+            for (Coordinate coordinates: placemark.getPoints()) {
+                if (coordinates.getType() == LINESTRING_TYPE) {
+                    mOptions.add(assignLineOptions(placemark, coordinates));
+                } else if (coordinates.getType() == POLYGON_TYPE) {
+                    if (coordinates.getBoundary() == INNER_BOUNDARY) {
+                        mOptions.add(assignPolygonOptions(placemark, coordinates, INNER_BOUNDARY));
+                    } else {
+                        mOptions.add(assignPolygonOptions(placemark, coordinates, OUTER_BOUNDARY));
+                    }
+
+                } else if (coordinates.getType() == POINT_TYPE) {
+                    ArrayList<MarkerOptions> markerOptions = assignMarkerOptions(placemark, coordinates);
+                    for(MarkerOptions markers: markerOptions){
+                        mOptions.add(markers);
                     }
                 }
-            } else {
-                Log.i(mPlacemark.getValue("name"), "default style");
             }
-       }
-
-    }
-
-    private void addPointsToStyles (String styleName, Coordinate coordinate) {
-        if (coordinate.getType() == POLYGON_TYPE) {
-            mStyles.get(styleName).getPolygonOptions().addAll(coordinate.getCoordinateList());
-        } else if (coordinate.getType() == LINESTRING_TYPE) {
-            mStyles.get(styleName).getPolylineOptions().addAll(coordinate.getCoordinateList());
-        } else if (coordinate.getType() == POINT_TYPE) {
-          //TODO: Implement Marker
         }
     }
 
-    //TODO: Latitude and longitude can be reversed sometimes, you what mate
+
+    /**
+     * Adds geometry options options onto the map. The geometry object itself is stored in another
+     * data structure for retrieval later
+     */
     public void addKMLData() {
-        for (Style s: mStyles.values()) {
-            mObjects.add(this.mMap.addPolyline(s.getPolylineOptions()));
+        for (Object objects: mOptions) {
+            if (objects instanceof PolylineOptions) {
+                mObjects.add(mMap.addPolyline((PolylineOptions) objects));
+            } else if (objects instanceof PolygonOptions) {
+                mObjects.add(mMap.addPolygon((PolygonOptions) objects));
+            } else if (objects instanceof MarkerOptions) {
+                mObjects.add(mMap.addMarker((MarkerOptions) objects));
+            }
         }
     }
+
+    /**
+     *
+     * @param placemark
+     * @param coordinates
+     * @return
+     */
+    public PolylineOptions assignLineOptions(Placemark placemark, Coordinate coordinates) {
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.addAll(coordinates.getCoordinateList());
+        boolean hasStyleURL =  placemark.getProperties().containsKey("styleUrl");
+        if (hasStyleURL) {
+            boolean isStyleSpecified = mStyles.containsKey(placemark.getValue("styleUrl"));
+            if (isStyleSpecified) {
+                HashMap<String, String> polyLineProperties = mStyles.get(placemark.getValue("styleUrl")).getPolylineOptions();
+                if (polyLineProperties.containsKey("color")) {
+
+                    polylineOptions.color(Color.parseColor(polyLineProperties.get("color")));
+                    System.out.println(polylineOptions.getColor());
+                }
+                if (polyLineProperties.containsKey("width")) {
+                    Float width = Float.parseFloat(polyLineProperties.get("width"));
+                    polylineOptions.width(width);
+                }
+            }
+        }
+        return polylineOptions;
+    }
+
+    public PolygonOptions assignPolygonOptions(Placemark placemark, Coordinate coordinates, int linearPosition) {
+        PolygonOptions polygonOptions = new PolygonOptions();
+        if (linearPosition == OUTER_BOUNDARY) {
+            polygonOptions.addAll(coordinates.getCoordinateList());
+        } else {
+            polygonOptions.addHole(coordinates.getCoordinateList());
+        }
+
+        boolean hasStyleURL =  placemark.getProperties().containsKey("styleUrl");
+        if (hasStyleURL) {
+            boolean isStyleSpecified = mStyles.containsKey(placemark.getValue("styleUrl"));
+            if (isStyleSpecified) {
+                HashMap<String, String> polygonProperties = mStyles.get(placemark.getValue("styleUrl")).getPolygonOptions();
+                if (polygonProperties.containsKey("strokeColor")) {
+                    polygonOptions.strokeColor(Color.parseColor(polygonProperties.get("strokeColor")));
+                } if (polygonProperties.containsKey("strokeWidth")) {
+                    Float width = Float.parseFloat(polygonProperties.get("strokeWidth"));
+                    polygonOptions.strokeWidth(width);
+                } if (polygonProperties.containsKey("fillColor")) {
+                    Float width = Float.parseFloat(polygonProperties.get("fillColor"));
+                    polygonOptions.strokeWidth(width);
+                }
+            }
+        }
+
+        return polygonOptions;
+    }
+
+    public ArrayList<MarkerOptions> assignMarkerOptions (Placemark placemark, Coordinate coordinates) {
+        ArrayList<MarkerOptions> m = new ArrayList<MarkerOptions>();
+        for (LatLng point: coordinates.getCoordinateList()) {
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(point);
+            m.add(marker);
+        }
+        return m;
+    }
+
+
 
     public void removeKMLData() {
-        this.mMap.clear();
+        this.isVisible = !this.isVisible;
+        for (Object mObject: mObjects) {
+            if (mObject instanceof Polygon) {
+                ((Polygon) mObject).remove();
+            } else if (mObject instanceof Polyline){
+                ((Polyline) mObject).remove();
+            } else if (mObject instanceof Marker) {
+                ((Marker) mObject).remove();
+            }
+        }
     }
 
     public void toggleKMLData() {
