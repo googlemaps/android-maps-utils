@@ -90,6 +90,7 @@ public class PolygonProperties {
 
     /**
      * Creates a string containing properties for the polygon
+     *
      * @return string containing properties for polygon
      */
     @Override

@@ -74,6 +74,7 @@ public class PolylineProperties {
 
     /**
      * Creates a string containing properties for the polyline
+     *
      * @return string containing properties for polyline
      */
     @Override
