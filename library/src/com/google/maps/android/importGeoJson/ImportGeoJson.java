@@ -201,28 +201,29 @@ public class ImportGeoJson {
      */
     public void addGeoJsonData() {
         for (Object mapObject : mGeoJsonMapOptionObjects) {
-            if (mapObject instanceof PolygonOptions) {
-                mGeoJsonMapObjects.add(mMap.addPolygon((PolygonOptions) mapObject));
-            } else if (mapObject instanceof MarkerOptions) {
+            if (mapObject instanceof MarkerOptions) {
                 mGeoJsonMapObjects.add(mMap.addMarker((MarkerOptions) mapObject));
             } else if (mapObject instanceof PolylineOptions) {
                 mGeoJsonMapObjects.add(mMap.addPolyline((PolylineOptions) mapObject));
+            } else if (mapObject instanceof PolygonOptions) {
+                mGeoJsonMapObjects.add(mMap.addPolygon((PolygonOptions) mapObject));
             }
         }
         mIsVisible = true;
     }
 
     /**
-     * Shows and hides all data on mMap based on mIsVisible
+     * Inverts the visibility of all features on the map
      */
     public void toggleGeoJsonData() {
-        // TODO: implement this method
-        mIsVisible = !mIsVisible;
-        if (mIsVisible) {
-            // make each object non visible
-        } else {
-            // make each object visible
-            // What if visibility of object was originally false?
+        for (Object mapObject : mGeoJsonMapObjects) {
+            if (mapObject instanceof Marker) {
+                ((Marker) mapObject).setVisible(!((Marker) mapObject).isVisible());
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).setVisible(!((Polyline) mapObject).isVisible());
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).setVisible(!((Polygon) mapObject).isVisible());
+            }
         }
     }
 
@@ -232,12 +233,12 @@ public class ImportGeoJson {
     public void removeGeoJsonData() {
         mIsVisible = false;
         for (Object mapObject : mGeoJsonMapObjects) {
-            if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).remove();
-            } else if (mapObject instanceof Marker) {
+            if (mapObject instanceof Marker) {
                 ((Marker) mapObject).remove();
             } else if (mapObject instanceof Polyline) {
                 ((Polyline) mapObject).remove();
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).remove();
             }
         }
     }
@@ -293,6 +294,7 @@ public class ImportGeoJson {
         } else if (geometryType.equals("MultiPolygon")) {
             return toPolygons(featureArray, featureProperties);
         } else if (geometryType.equals("GeometryCollection")) {
+            //TODO: why aren't styles being applied?
             return toGeometryCollection(featureArray, featureProperties);
         }
         return null;
@@ -531,20 +533,25 @@ public class ImportGeoJson {
         boolean isGeometry;
         boolean isGeometryCollection;
         JSONObject geometryCollectionElement;
+        String geometryCollectionType;
         JSONArray geometriesArray;
+        JSONArray coordinatesArray;
 
         // Iterate over all the elements in the geometry collection
         for (int i = 0; i < geoJsonGeometryCollectionArray.length(); i++) {
             geometryCollectionElement = geoJsonGeometryCollectionArray.getJSONObject(i);
-            isGeometry = geometryCollectionElement.getString("type")
-                    .matches(GEOJSON_GEOMETRY_OBJECTS);
-            isGeometryCollection = geometryCollectionElement.getString("type")
-                    .equals("GeometryCollection");
+            geometryCollectionType = geometryCollectionElement.getString("type");
 
-            // Add to geometryCollectionObjects array
+            isGeometry = geometryCollectionType.matches(GEOJSON_GEOMETRY_OBJECTS);
+            isGeometryCollection = geometryCollectionType.equals("GeometryCollection");
+
+            // Add new geometry object to geometryCollectionObjects
             if (isGeometry) {
-                storeMapObjects(geometryCollectionObjects, parseGeoJsonGeometry(
-                        geometryCollectionElement));
+                coordinatesArray = geometryCollectionElement.getJSONArray("coordinates");
+                // Pass in type, coordinates and properties of the current geometry
+                storeMapObjects(geometryCollectionObjects,
+                        parseGeoJsonGeometryObject(geometryCollectionType, coordinatesArray,
+                                geoJsonCollectionProperties));
             }
             // Recursively parse all elements and add to geometryCollectionObjects array
             else if (isGeometryCollection) {
