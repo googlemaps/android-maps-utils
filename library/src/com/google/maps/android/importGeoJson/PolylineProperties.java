@@ -71,4 +71,22 @@ public class PolylineProperties {
     public PolylineOptions getPolylineOptions() {
         return this.mOptions;
     }
+
+    /**
+     * Creates a string containing properties for the polyline
+     * @return string containing properties for polyline
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("PolylineProperties{");
+        sb.append("\n points=").append(mOptions.getPoints());
+        sb.append(",\n width=").append(mOptions.getWidth());
+        sb.append(",\n color=").append(mOptions.getColor());
+        sb.append(",\n z index=").append(mOptions.getZIndex());
+        sb.append(",\n visible=").append(mOptions.isVisible());
+        sb.append(",\n geodesic=").append(mOptions.isGeodesic());
+        sb.append("\n}");
+        return sb.toString();
+    }
+
 }

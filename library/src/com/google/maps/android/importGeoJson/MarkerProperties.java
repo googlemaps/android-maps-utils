@@ -71,4 +71,25 @@ public class MarkerProperties {
     public MarkerOptions getMarkerOptions() {
         return this.mOptions;
     }
+
+    /**
+     * Creates a string containing properties for the marker
+     *
+     * @return string containing properties for marker
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("MarkerProperties{");
+        sb.append("\n position=").append(mOptions.getPosition());
+        sb.append(",\n title=").append(mOptions.getTitle());
+        sb.append(",\n snippet=").append(mOptions.getSnippet());
+        sb.append(",\n alpha=").append(mOptions.getAlpha());
+        sb.append(",\n anchor(U,V)= (").append(mOptions.getAnchorU()).append(", ")
+                .append(mOptions.getAnchorV()).append(")");
+        sb.append(",\n draggable=").append(mOptions.isDraggable());
+        sb.append(",\n rotation=").append(mOptions.getRotation());
+        sb.append(",\n visible=").append(mOptions.isVisible());
+        sb.append("\n}");
+        return sb.toString();
+    }
 }

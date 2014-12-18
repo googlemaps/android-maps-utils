@@ -47,10 +47,12 @@ public class PolygonProperties {
                         .strokeWidth((float) geoJsonPolygonProperties.getDouble("stroke width"));
             }
             if (geoJsonPolygonProperties.has("stroke color")) {
-                this.mOptions.strokeColor(Color.parseColor(geoJsonPolygonProperties.getString("stroke color")));
+                this.mOptions.strokeColor(
+                        Color.parseColor(geoJsonPolygonProperties.getString("stroke color")));
             }
             if (geoJsonPolygonProperties.has("fill color")) {
-                this.mOptions.fillColor(Color.parseColor(geoJsonPolygonProperties.getString("fill color")));
+                this.mOptions.fillColor(
+                        Color.parseColor(geoJsonPolygonProperties.getString("fill color")));
             }
             if (geoJsonPolygonProperties.has("z index")) {
                 this.mOptions.zIndex((float) geoJsonPolygonProperties.getDouble("z index"));
@@ -84,5 +86,24 @@ public class PolygonProperties {
      */
     public PolygonOptions getPolygonOptions() {
         return this.mOptions;
+    }
+
+    /**
+     * Creates a string containing properties for the polygon
+     * @return string containing properties for polygon
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("PolygonProperties{");
+        sb.append("\n points=").append(mOptions.getPoints());
+        sb.append(",\n holes=").append(mOptions.getHoles());
+        sb.append(",\n stroke width=").append(mOptions.getStrokeWidth());
+        sb.append(",\n stroke color=").append(mOptions.getStrokeColor());
+        sb.append(",\n fill color=").append(mOptions.getFillColor());
+        sb.append(",\n z index=").append(mOptions.getZIndex());
+        sb.append(",\n visible=").append(mOptions.isVisible());
+        sb.append(",\n geodesic=").append(mOptions.isGeodesic());
+        sb.append("\n}");
+        return sb.toString();
     }
 }
