@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
  * Imports the given GeoJSON file and adds all GeoJSON objects to the map
  */
 
-/*          _
+/*         _
           {_}
           / \
          /   \
@@ -54,6 +54,9 @@ import java.util.concurrent.ExecutionException;
 
 public class ImportGeoJson {
 
+
+    private static final String GEOJSON_GEOMETRY_OBJECTS
+            = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
 
     private final ArrayList<Object> mGeoJsonMapOptionObjects = new ArrayList<Object>();
 
@@ -96,7 +99,7 @@ public class ImportGeoJson {
      * @param applicationContext Application context object
      */
     public ImportGeoJson(GoogleMap map, int resourceId, Context applicationContext)
-            throws JSONException {
+            throws JSONException, IOException {
         mMap = map;
         InputStream stream = applicationContext.getResources().openRawResource(resourceId);
         mGeoJsonFile = createJsonFileObject(stream);
@@ -109,103 +112,72 @@ public class ImportGeoJson {
      * @param stream Character input stream representing  the GeoJSON file
      * @return JSONObject representing the GeoJSON file
      */
-    private JSONObject createJsonFileObject(InputStream stream) {
+    private JSONObject createJsonFileObject(InputStream stream) throws IOException, JSONException {
         String line;
         StringBuilder result = new StringBuilder();
         // Reads from stream
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
         // Read each line of the GeoJSON file into a string
-        try {
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-        } catch (IOException e) {
-            Log.e("IOException", e.toString());
+        while ((line = reader.readLine()) != null) {
+            result.append(line);
         }
 
         // Converts the result string into a JSONObject
-        try {
-            return new JSONObject(result.toString());
-        } catch (JSONException e) {
-            Log.e("JSONException", e.toString());
-        }
-        return null;
+        return new JSONObject(result.toString());
     }
 
     /**
      * Parses all GeoJSON objects in the GeoJSON file
      */
+    /**
+     * Parses all GeoJSON objects in the GeoJSON file and adds them to mGeoJsonMapOptionObjects
+     *
+     * @param geoJsonFile GeoJSON file to parse
+     */
     private void parseGeoJsonFile(JSONObject geoJsonFile) throws JSONException {
-        JSONArray jsonFeaturesArray;
+        JSONArray geometriesArray;
         boolean isFeature = geoJsonFile.getString("type").trim().equals("Feature");
-        boolean isGeometry = geoJsonFile.getString("type").trim().matches(
-                "Point|LineString|Polygon|MultiPoint|LineString|MultiLineString|MultiPolygon");
+        boolean isGeometry = geoJsonFile.getString("type").trim().matches(GEOJSON_GEOMETRY_OBJECTS);
         boolean isFeatureCollection = geoJsonFile.getString("type").trim().equals(
                 "FeatureCollection");
         boolean isGeometryCollection = geoJsonFile.getString("type").trim().equals(
                 "GeometryCollection");
-
         if (isFeatureCollection) {
-            try {
-                // Store the list of GeoJSON feature objects
-                jsonFeaturesArray = geoJsonFile.getJSONArray("features");
-                for (int i = 0; i < jsonFeaturesArray.length(); i++) {
-                    isFeature = jsonFeaturesArray.getJSONObject(i).getString("type").trim().equals(
-                            "Feature");
-                    if (isFeature) {
-                        storeMapObjects(mGeoJsonMapOptionObjects,
-                                parseGeoJsonFeature(jsonFeaturesArray.getJSONObject(i)));
-                    }
-                }
-            } catch (JSONException e) {
-                Log.e("JSONException", e.toString());
-            }
+            storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonFeatureCollection(geoJsonFile));
+        } else if (isGeometryCollection) {
+            geometriesArray = geoJsonFile.getJSONArray("geometries");
+            storeMapObjects(mGeoJsonMapOptionObjects, toGeometryCollection(geometriesArray, null));
         }
         // Single feature in the JSONObject
         else if (isFeature) {
             storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonFeature(geoJsonFile));
-        } else if (isGeometryCollection) {
-            storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonGeometryCollection(geoJsonFile));
         } else if (isGeometry) {
             storeMapObjects(mGeoJsonMapOptionObjects, parseGeoJsonGeometry(geoJsonFile));
         }
     }
 
     /**
-     * Creates a list of properties objects from a given JSONObject containing a geometry
-     * collection
-     * Handles cases where there may be a geometry collection nested in a geometry collection
+     * Creates a list of properties objects from a given JSONObject containing a feature collection
      *
-     * @param geometryCollection Geometry collection to parse into geometry property objects
+     * @param featureCollection Feature collection to parse into geometry property objects
      * @return ArrayList of MarkerProperties, PolylineProperties and PolygonProperties
      */
-    private ArrayList<Object> parseGeoJsonGeometryCollection(JSONObject geometryCollection)
+    private ArrayList<Object> parseGeoJsonFeatureCollection(JSONObject featureCollection)
             throws JSONException {
-        ArrayList<Object> geometryCollectionObjects = new ArrayList<Object>();
-        JSONArray geometriesObjectArray = geometryCollection.getJSONArray("geometries");
-        boolean isGeometry;
-        boolean isGeometryCollection;
-
-        // Iterate over all elements in the geometry collection
-        for (int i = 0; i < geometriesObjectArray.length(); i++) {
-            isGeometry = geometriesObjectArray.getJSONObject(i).getString("type").matches(
-                    "Point|LineString|Polygon|MultiPoint|LineString|MultiLineString|MultiPolygon");
-            isGeometryCollection = geometriesObjectArray.getJSONObject(i).getString("type")
-                    .equals("GeometryCollection");
-
-            // Add to geometryCollectionObjects
-            if (isGeometry) {
-                storeMapObjects(geometryCollectionObjects,
-                        parseGeoJsonGeometry(geometriesObjectArray.getJSONObject(i)));
-            }
-
-            // Call itself with the GeometryCollection element and add to geometryCollectionObjects
-            else if (isGeometryCollection) {
-                storeMapObjects(geometryCollectionObjects, parseGeoJsonGeometryCollection(
-                        geometriesObjectArray.getJSONObject(i)));
+        ArrayList<Object> featureCollectionObjects = new ArrayList<Object>();
+        JSONArray featureCollectionArray = featureCollection.getJSONArray("features");
+        boolean isFeature;
+        for (int i = 0; i < featureCollectionArray.length(); i++) {
+            isFeature = featureCollectionArray.getJSONObject(i).getString("type").trim()
+                    .equals("Feature");
+            // Add the single feature to featureCollectionObjects
+            if (isFeature) {
+                storeMapObjects(featureCollectionObjects,
+                        parseGeoJsonFeature(featureCollectionArray.getJSONObject(i)));
             }
         }
-        return geometryCollectionObjects;
+        return featureCollectionObjects;
     }
 
     /**
@@ -252,7 +224,6 @@ public class ImportGeoJson {
             // make each object visible
             // What if visibility of object was originally false?
         }
-
     }
 
     /**
@@ -299,35 +270,37 @@ public class ImportGeoJson {
     /**
      * Converts a single geometry object into its relevant Google Map object
      *
-     * @param geometryType            type of geometry object
-     * @param featureCoordinatesArray array of coordinates for the geometry object
-     * @param featureProperties       properties of the geometry object
+     * @param geometryType      type of geometry object
+     * @param featureArray      array of coordinates or geometries
+     * @param featureProperties properties of the geometry object
      * @return {@link com.google.android.gms.maps.model.MarkerOptions}, {@link
      * com.google.android.gms.maps.model.PolylineOptions} or {@link
      * com.google.android.gms.maps.model.PolygonOptions} object or an array of either Options
      * objects
      */
     private Object parseGeoJsonGeometryObject(String geometryType,
-            JSONArray featureCoordinatesArray, JSONObject featureProperties) {
-        if (geometryType.equals("point")) {
-            return toMarker(featureCoordinatesArray, featureProperties);
-        } else if (geometryType.equals("multipoint")) {
-            return toMarkers(featureCoordinatesArray, featureProperties);
-        } else if (geometryType.equals("linestring")) {
-            return toPolyline(featureCoordinatesArray, featureProperties);
-        } else if (geometryType.equals("multilinestring")) {
-            return toPolylines(featureCoordinatesArray, featureProperties);
-        } else if (geometryType.equals("polygon")) {
-            return toPolygon(featureCoordinatesArray, featureProperties);
-        } else if (geometryType.equals("multipolygon")) {
-            return toPolygons(featureCoordinatesArray, featureProperties);
+            JSONArray featureArray, JSONObject featureProperties) throws JSONException {
+        if (geometryType.equals("Point")) {
+            return toMarker(featureArray, featureProperties);
+        } else if (geometryType.equals("MultiPoint")) {
+            return toMarkers(featureArray, featureProperties);
+        } else if (geometryType.equals("LineString")) {
+            return toPolyline(featureArray, featureProperties);
+        } else if (geometryType.equals("MultiLineString")) {
+            return toPolylines(featureArray, featureProperties);
+        } else if (geometryType.equals("Polygon")) {
+            return toPolygon(featureArray, featureProperties);
+        } else if (geometryType.equals("MultiPolygon")) {
+            return toPolygons(featureArray, featureProperties);
+        } else if (geometryType.equals("GeometryCollection")) {
+            return toGeometryCollection(featureArray, featureProperties);
         }
         return null;
-
     }
 
     /**
      * Parses the JSONObject of a single geometry for type, properties and coordinates
+     * Geometry objects have member coordinates but not properties like feature objects do
      *
      * @param geoJsonFeature geometry feature to parse
      * @return {@link com.google.android.gms.maps.model.MarkerOptions}, {@link
@@ -335,24 +308,12 @@ public class ImportGeoJson {
      * com.google.android.gms.maps.model.PolygonOptions} object or an array of either Options
      * objects
      */
-    private Object parseGeoJsonGeometry(JSONObject geoJsonFeature) {
+    private Object parseGeoJsonGeometry(JSONObject geoJsonFeature) throws JSONException {
         String geometryType;
         JSONArray featureCoordinatesArray;
-        JSONObject featureProperties = null;
-        try {
-            geometryType = geoJsonFeature.getString("type").toLowerCase();
-            featureCoordinatesArray = geoJsonFeature.getJSONArray("coordinates");
-
-            if (geoJsonFeature.has("properties")) {
-                featureProperties = geoJsonFeature.getJSONObject("properties");
-            }
-
-            return parseGeoJsonGeometryObject(geometryType, featureCoordinatesArray,
-                    featureProperties);
-        } catch (JSONException e) {
-            Log.e("JSONException", e.toString());
-        }
-        return null;
+        geometryType = geoJsonFeature.getString("type");
+        featureCoordinatesArray = geoJsonFeature.getJSONArray("coordinates");
+        return parseGeoJsonGeometryObject(geometryType, featureCoordinatesArray, null);
     }
 
     /**
@@ -366,15 +327,21 @@ public class ImportGeoJson {
      */
     private Object parseGeoJsonFeature(JSONObject geoJsonFeature) {
         String geometryType;
-        JSONArray featureCoordinatesArray;
+        // Contains an array of geometries if the feature is a GeometryCollection and coordinates
+        // otherwise
+        JSONArray featureArray;
         JSONObject featureProperties;
         try {
             // Store the type, coordinates and properties of the GeoJSON feature
-            geometryType = geoJsonFeature.getJSONObject("geometry").getString("type").toLowerCase();
-            featureCoordinatesArray = geoJsonFeature.getJSONObject("geometry")
-                    .getJSONArray("coordinates");
+            geometryType = geoJsonFeature.getJSONObject("geometry").getString("type");
+
+            if (geometryType.equals("GeometryCollection")) {
+                featureArray = geoJsonFeature.getJSONObject("geometry").getJSONArray("geometries");
+            } else {
+                featureArray = geoJsonFeature.getJSONObject("geometry").getJSONArray("coordinates");
+            }
             featureProperties = geoJsonFeature.getJSONObject("properties");
-            return parseGeoJsonGeometryObject(geometryType, featureCoordinatesArray,
+            return parseGeoJsonGeometryObject(geometryType, featureArray,
                     featureProperties);
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
@@ -390,6 +357,7 @@ public class ImportGeoJson {
      * @param geoJsonPointCoordinatesArray JSONArray containing coordinates of the GeoJSON Point
      *                                     object
      * @param geoJsonPointProperties       JSONObject containing the GeoJSON Point object
+     *                                     properties
      * @return new map {@link com.google.android.gms.maps.model.MarkerOptions} object
      */
     private MarkerOptions toMarker(JSONArray geoJsonPointCoordinatesArray,
@@ -413,8 +381,8 @@ public class ImportGeoJson {
      * @param geoJsonMultiPointCoordinatesArray JSONArray containing coordinates of the GeoJSON
      *                                          MultiPoint object
      * @param geoJsonMultiPointProperties       JSONObject containing the MultiPoint GeoJSON object
-     * @return an array of new map {@link com.google.android.gms.maps.model.MarkerOptions}
-     * objects
+     *                                          properties
+     * @return array of new map {@link com.google.android.gms.maps.model.MarkerOptions} objects
      */
     private ArrayList<MarkerOptions> toMarkers(JSONArray geoJsonMultiPointCoordinatesArray,
             JSONObject geoJsonMultiPointProperties) {
@@ -438,6 +406,7 @@ public class ImportGeoJson {
      * @param geoJsonLineStringCoordinatesArray JSONArray containing coordinates of the GeoJSON
      *                                          LineString object
      * @param geoJsonLineStringProperties       JSONObject containing the LineString GeoJSON object
+     *                                          properties
      * @return new {@link com.google.android.gms.maps.model.PolylineOptions} object
      */
     private PolylineOptions toPolyline(JSONArray geoJsonLineStringCoordinatesArray,
@@ -463,10 +432,8 @@ public class ImportGeoJson {
      *                                               GeoJSON
      *                                               MultiLineString object
      * @param geoJsonMultiLineStringProperties       JSONObject containing the MultiLineString
-     *                                               GeoJSON
-     *                                               object
-     * @return an array of new {@link com.google.android.gms.maps.model.PolylineOptions}
-     * objects
+     *                                               GeoJSON object properties
+     * @return array of new {@link com.google.android.gms.maps.model.PolylineOptions} objects
      */
     private ArrayList<PolylineOptions> toPolylines(JSONArray geoJsonMultiLineStringCoordinatesArray,
             JSONObject geoJsonMultiLineStringProperties) {
@@ -491,6 +458,7 @@ public class ImportGeoJson {
      * @param geoJsonPolygonCoordinatesArray JSONArray containing coordinates of the GeoJSON
      *                                       Polygon object
      * @param geoJsonPolygonProperties       JSONObject containing the Polygon GeoJSON object
+     *                                       properties
      * @return new {@link com.google.android.gms.maps.model.PolygonOptions} object
      */
     private PolygonOptions toPolygon(JSONArray geoJsonPolygonCoordinatesArray,
@@ -521,15 +489,15 @@ public class ImportGeoJson {
     }
 
     /**
-     * Creates new {@link com.google.android.gms.maps.model.Polygon} objects based on the existing
+     * Creates new {@link com.google.android.gms.maps.model.PolygonOptions} objects based on the
+     * existing
      * coordinates and properties
      *
      * @param geoJsonMultiPolygonCoordinatesArray JSONArray containing coordinates of the GeoJSON
      *                                            MultiPolygon object
      * @param geoJsonMultiPolygonProperties       JSONObject containing the MultiPolygon GeoJSON
-     *                                            object
-     * @return an array of new {@link com.google.android.gms.maps.model.PolygonOptions} model
-     * objects
+     *                                            object properties
+     * @return array of new {@link com.google.android.gms.maps.model.PolygonOptions} objects
      */
     private ArrayList<PolygonOptions> toPolygons(JSONArray geoJsonMultiPolygonCoordinatesArray,
             JSONObject geoJsonMultiPolygonProperties) {
@@ -545,6 +513,47 @@ public class ImportGeoJson {
             }
         }
         return polygons;
+    }
+
+    /**
+     * Creates a new array of various MarkerOptions, PolylineOptions, PolygonOptions based on
+     * existing coordinates and properties
+     *
+     * @param geoJsonGeometryCollectionArray JSONArray containing the geometries of the
+     *                                       GeometryCollection
+     * @param geoJsonCollectionProperties    JSONObject containing the GeometryCollection
+     *                                       properties
+     * @return array of various MarkerOptions, PolylineOptions, PolygonOptions
+     */
+    private ArrayList<Object> toGeometryCollection(JSONArray geoJsonGeometryCollectionArray,
+            JSONObject geoJsonCollectionProperties) throws JSONException {
+        ArrayList<Object> geometryCollectionObjects = new ArrayList<Object>();
+        boolean isGeometry;
+        boolean isGeometryCollection;
+        JSONObject geometryCollectionElement;
+        JSONArray geometriesArray;
+
+        // Iterate over all the elements in the geometry collection
+        for (int i = 0; i < geoJsonGeometryCollectionArray.length(); i++) {
+            geometryCollectionElement = geoJsonGeometryCollectionArray.getJSONObject(i);
+            isGeometry = geometryCollectionElement.getString("type")
+                    .matches(GEOJSON_GEOMETRY_OBJECTS);
+            isGeometryCollection = geometryCollectionElement.getString("type")
+                    .equals("GeometryCollection");
+
+            // Add to geometryCollectionObjects array
+            if (isGeometry) {
+                storeMapObjects(geometryCollectionObjects, parseGeoJsonGeometry(
+                        geometryCollectionElement));
+            }
+            // Recursively parse all elements and add to geometryCollectionObjects array
+            else if (isGeometryCollection) {
+                geometriesArray = geometryCollectionElement.getJSONArray("geometries");
+                storeMapObjects(geometryCollectionObjects,
+                        toGeometryCollection(geometriesArray, geoJsonCollectionProperties));
+            }
+        }
+        return geometryCollectionObjects;
     }
 
     /**
@@ -567,10 +576,10 @@ public class ImportGeoJson {
 
             } catch (IOException e) {
                 Log.e("IOException", e.toString());
+            } catch (JSONException e) {
+                Log.e("JSONException", e.toString());
             }
-
             return null;
         }
     }
-
 }
