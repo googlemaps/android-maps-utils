@@ -294,7 +294,6 @@ public class ImportGeoJson {
         } else if (geometryType.equals("MultiPolygon")) {
             return toPolygons(featureArray, featureProperties);
         } else if (geometryType.equals("GeometryCollection")) {
-            //TODO: why aren't styles being applied?
             return toGeometryCollection(featureArray, featureProperties);
         }
         return null;
