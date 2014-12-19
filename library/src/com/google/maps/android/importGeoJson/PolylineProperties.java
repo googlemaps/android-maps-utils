@@ -20,6 +20,8 @@ public class PolylineProperties {
 
     private final PolylineOptions mOptions;
 
+    private boolean mVisibility = true;
+
     /**
      * Takes in a JSONObject containing properties for a Polyline and parses the relevant
      * properties
@@ -53,6 +55,7 @@ public class PolylineProperties {
             }
             if (geoJsonPointProperties.has("visible")) {
                 this.mOptions.visible(geoJsonPointProperties.getBoolean("visible"));
+                mVisibility = geoJsonPointProperties.getBoolean("visible");
             }
             if (geoJsonPointProperties.has("geodesic")) {
                 this.mOptions.geodesic(geoJsonPointProperties.getBoolean("geodesic"));
@@ -70,6 +73,14 @@ public class PolylineProperties {
      */
     public PolylineOptions getPolylineOptions() {
         return this.mOptions;
+    }
+
+    /**
+     * Gets the visibility of the Polyline from when it was imported
+     * @return true if visible, false if invisible
+     */
+    public boolean getVisibility() {
+        return this.mVisibility;
     }
 
     /**
