@@ -58,7 +58,7 @@ public class PolygonProperties {
                 this.mOptions.zIndex((float) geoJsonPolygonProperties.getDouble("z index"));
             }
             if (geoJsonPolygonProperties.has("visible")) {
-                this.mOptions.visible(geoJsonPolygonProperties.getBoolean("stroke visible"));
+                this.mOptions.visible(geoJsonPolygonProperties.getBoolean("visible"));
             }
             if (geoJsonPolygonProperties.has("geodesic")) {
                 this.mOptions.geodesic(geoJsonPolygonProperties.getBoolean("geodesic"));
