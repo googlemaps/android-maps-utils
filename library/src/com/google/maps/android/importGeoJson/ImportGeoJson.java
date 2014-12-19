@@ -213,9 +213,44 @@ public class ImportGeoJson {
     }
 
     /**
-     * Inverts the visibility of all features on the map
+     * Sets all geometry objects to visible
+     * Affects geometry objects with original imported visibility as false
      */
-    public void toggleGeoJsonData() {
+    public void showGeoJsonData() {
+        mIsVisible = true;
+        for (Object mapObject : mGeoJsonMapObjects) {
+            if (mapObject instanceof Marker) {
+                ((Marker) mapObject).setVisible(true);
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).setVisible(true);
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).setVisible(true);
+            }
+        }
+    }
+
+    /**
+     * Sets all geometry objects to invisible
+     * Affects geometry objects with original imported visibility as true
+     */
+    public void hideGeoJsonData() {
+        mIsVisible = false;
+        for (Object mapObject : mGeoJsonMapObjects) {
+            if (mapObject instanceof Marker) {
+                ((Marker) mapObject).setVisible(false);
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).setVisible(false);
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).setVisible(false);
+            }
+        }
+
+    }
+
+    /**
+     * Inverts the visibility of all geometry objects on the map
+     */
+    public void invertGeoJsonData() {
         for (Object mapObject : mGeoJsonMapObjects) {
             if (mapObject instanceof Marker) {
                 ((Marker) mapObject).setVisible(!((Marker) mapObject).isVisible());
@@ -225,6 +260,15 @@ public class ImportGeoJson {
                 ((Polygon) mapObject).setVisible(!((Polygon) mapObject).isVisible());
             }
         }
+    }
+
+    /**
+     * Toggles the overlay on and off
+     * If a geometry object was imported with its visibility set to false, it will not be affected
+     * by this call
+     */
+    public void toggleGeoJsonData() {
+        // TODO: implement this function
     }
 
     /**
