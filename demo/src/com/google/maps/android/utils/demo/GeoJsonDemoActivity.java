@@ -9,7 +9,7 @@ import android.widget.Button;
 /**
  * Created by juliawong on 12/1/14.
  */
-public class GeoJSONDemoActivity extends BaseDemoActivity {
+public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     protected int getLayoutId() {
         return R.layout.geojson_demo;
@@ -17,33 +17,13 @@ public class GeoJSONDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-
-
-
-//        ImportGeoJson url_collection_test = new ImportGeoJson(getMap(),
-//                "http://thebeatsbrief.com/M_Features_21_Aug.geojson_demo");
-//        ImportGeoJson resource_collection_test = new ImportGeoJson(getMap(),
-//                R.raw.google_letters_geojson, getApplicationContext());
-//        ImportGeoJson resource_feature_test = new ImportGeoJson(getMap(),
-//                R.raw.single_feature_geojson, getApplicationContext());
-
-//        This has 87 points
-//        ImportGeoJson spain_collection_test = new ImportGeoJson(getMap(),
-//                R.raw.markers_in_spain_geojson, getApplicationContext());
         try {
-//           ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
-//                    R.raw.big_very_big, getApplicationContext());
+
             final ImportGeoJson feature_collection_test = new ImportGeoJson(getMap(),
                     R.raw.feature_collection_geojson_demo, getApplicationContext());
-//
+
             feature_collection_test.addGeoJsonData();
-//            feature_collection_test.toggleGeoJsonData();
-//            feature_collection_test.invertVisibility();
-//
-//            ImportGeoJson feature_collection_test_1 = new ImportGeoJson(getMap(),
-//                    R.raw.google_letters_geojson, getApplicationContext());
-//
-//            feature_collection_test_1.addGeoJsonData();
+
             final Button toggle_button = (Button) findViewById(R.id.toggle);
             toggle_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
