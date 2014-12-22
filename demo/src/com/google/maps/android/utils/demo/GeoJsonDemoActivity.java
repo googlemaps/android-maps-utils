@@ -27,7 +27,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             final Button toggle_button = (Button) findViewById(R.id.toggle);
             toggle_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    feature_collection_test.toggleGeoJsonData();
+                    feature_collection_test.toggleVisibility();
 
                 }
             });
@@ -43,14 +43,14 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             final Button show_all_button = (Button) findViewById(R.id.show_all);
             show_all_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    feature_collection_test.showGeoJsonData();
+                    feature_collection_test.showAllGeoJsonData();
                 }
             });
 
             final Button hide_all_button = (Button) findViewById(R.id.hide_all);
             hide_all_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    feature_collection_test.hideGeoJsonData();
+                    feature_collection_test.hideAllGeoJsonData();
                 }
             });
 

@@ -143,7 +143,8 @@ public class ImportGeoJson {
             storeMapObjects(mGeoJsonMapPropertyObjects, parseGeoJsonFeatureCollection(geoJsonFile));
         } else if (isGeometryCollection) {
             geometriesArray = geoJsonFile.getJSONArray("geometries");
-            storeMapObjects(mGeoJsonMapPropertyObjects, toGeometryCollection(geometriesArray, null));
+            storeMapObjects(mGeoJsonMapPropertyObjects,
+                    toGeometryCollection(geometriesArray, null));
         }
         // Single feature in the JSONObject
         else if (isFeature) {
@@ -198,11 +199,14 @@ public class ImportGeoJson {
     public void addGeoJsonData() {
         for (Object mapObject : mGeoJsonMapPropertyObjects) {
             if (mapObject instanceof MarkerProperties) {
-                mGeoJsonMapObjects.add(mMap.addMarker(((MarkerProperties) mapObject).getMarkerOptions()));
+                mGeoJsonMapObjects
+                        .add(mMap.addMarker(((MarkerProperties) mapObject).getMarkerOptions()));
             } else if (mapObject instanceof PolylineProperties) {
-                mGeoJsonMapObjects.add(mMap.addPolyline(((PolylineProperties) mapObject).getPolylineOptions()));
+                mGeoJsonMapObjects.add(mMap
+                        .addPolyline(((PolylineProperties) mapObject).getPolylineOptions()));
             } else if (mapObject instanceof PolygonProperties) {
-                mGeoJsonMapObjects.add(mMap.addPolygon(((PolygonProperties) mapObject).getPolygonOptions()));
+                mGeoJsonMapObjects
+                        .add(mMap.addPolygon(((PolygonProperties) mapObject).getPolygonOptions()));
             }
         }
         mIsVisible = true;
@@ -212,7 +216,7 @@ public class ImportGeoJson {
      * Sets all geometry objects to visible
      * Affects geometry objects with original imported visibility as false
      */
-    public void showGeoJsonData() {
+    public void showAllGeoJsonData() {
         mIsVisible = true;
         for (Object mapObject : mGeoJsonMapObjects) {
             if (mapObject instanceof Marker) {
@@ -229,7 +233,7 @@ public class ImportGeoJson {
      * Sets all geometry objects to invisible
      * Affects geometry objects with original imported visibility as true
      */
-    public void hideGeoJsonData() {
+    public void hideAllGeoJsonData() {
         mIsVisible = false;
         for (Object mapObject : mGeoJsonMapObjects) {
             if (mapObject instanceof Marker) {
@@ -263,7 +267,7 @@ public class ImportGeoJson {
      * If a geometry object was imported with its visibility set to false, it will not be affected
      * by this call
      */
-    public void toggleGeoJsonData() {
+    public void toggleVisibility() {
         mIsVisible = !mIsVisible;
         Object mapObject;
         // Needed to check for the visibility
@@ -272,11 +276,13 @@ public class ImportGeoJson {
         for (int i = 0; i < mGeoJsonMapObjects.size(); i++) {
             mapObject = mGeoJsonMapObjects.get(i);
             mapProperty = mGeoJsonMapPropertyObjects.get(i);
-            if (mapObject instanceof  Marker && ((MarkerProperties) mapProperty).getVisibility()) {
+            if (mapObject instanceof Marker && ((MarkerProperties) mapProperty).getVisibility()) {
                 ((Marker) mapObject).setVisible(mIsVisible);
-            } else if (mapObject instanceof Polyline && ((PolylineProperties) mapProperty).getVisibility()) {
+            } else if (mapObject instanceof Polyline && ((PolylineProperties) mapProperty)
+                    .getVisibility()) {
                 ((Polyline) mapObject).setVisible(mIsVisible);
-            } else if (mapObject instanceof Polygon && ((PolygonProperties) mapProperty).getVisibility()) {
+            } else if (mapObject instanceof Polygon && ((PolygonProperties) mapProperty)
+                    .getVisibility()) {
                 ((Polygon) mapObject).setVisible(mIsVisible);
             }
         }
@@ -476,7 +482,6 @@ public class ImportGeoJson {
         } catch (JSONException e) {
             Log.e("JSONException", e.toString());
         }
-
         return properties;
     }
 
@@ -491,7 +496,8 @@ public class ImportGeoJson {
      *                                               GeoJSON object properties
      * @return array of new {@link com.google.android.gms.maps.model.PolylineOptions} objects
      */
-    private ArrayList<PolylineProperties> toPolylines(JSONArray geoJsonMultiLineStringCoordinatesArray,
+    private ArrayList<PolylineProperties> toPolylines(
+            JSONArray geoJsonMultiLineStringCoordinatesArray,
             JSONObject geoJsonMultiLineStringProperties) {
         ArrayList<PolylineProperties> polylines = new ArrayList<PolylineProperties>();
         // Iterate over the list of polylines
