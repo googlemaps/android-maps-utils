@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -28,45 +29,21 @@ public class ImportKML {
 
     private final XmlPullParser mParser;
 
-    private final HashMap<String, Style> mStyles;
+    private final HashMap<String, StyleProperties> mStyles;
 
     private final ArrayList<Object> mObjects;
 
-    private final ArrayList<Placemark> mPlacemarks;
+    private final ArrayList<PlacemarkProperties> mPlacemarkProperties;
 
     private final GoogleMap mMap;
-
-    private static final int UNINITIALIZED = -1;
-
-    private static final int POLYGON_TYPE = 0;
-
-    private static final int LINESTRING_TYPE = 1;
-
-    private static final int POINT_TYPE = 2;
 
     private static final int INNER_BOUNDARY = 0;
 
     private static final int OUTER_BOUNDARY = 1;
 
-    private static final int LATITUDE = 0;
-
-    private static final int LONGITUDE = 1;
-
-    private static final int HASH_POSITION = 1;
-
-    private final static int HEXADECIMAL_COLOR_RADIX = 16;
-
-    private int mType;
-
-    private int mBoundary;
-
     private ArrayList<Object> mOptions;
 
     private boolean isVisible;
-
-    private String name;
-
-    private ArrayList<LatLng> mCoordinateList;
 
     private InputStream stream;
 
@@ -80,8 +57,8 @@ public class ImportKML {
     public ImportKML(GoogleMap map, XmlPullParser parser) {
         this.mParser = parser;
         this.mMap = map;
-        this.mStyles = new HashMap<String, Style>();
-        this.mPlacemarks = new ArrayList<Placemark>();
+        this.mStyles = new HashMap<String, StyleProperties>();
+        this.mPlacemarkProperties = new ArrayList<PlacemarkProperties>();
         this.mObjects = new ArrayList<Object>();
         this.isVisible = true;
         this.mOptions = new ArrayList<Object>();
@@ -95,8 +72,8 @@ public class ImportKML {
     public ImportKML(GoogleMap map, int resourceId, Context applicationContext)
             throws XmlPullParserException {
         this.mMap = map;
-        this.mStyles = new HashMap<String, Style>();
-        this.mPlacemarks = new ArrayList<Placemark>();
+        this.mStyles = new HashMap<String, StyleProperties>();
+        this.mPlacemarkProperties = new ArrayList<PlacemarkProperties>();
         this.stream = applicationContext.getResources().openRawResource(resourceId);
         this.mParser = createXmlParser(this.stream);
         this.mObjects = new ArrayList<Object>();
@@ -133,9 +110,7 @@ public class ImportKML {
         this.mParser.next();
         this.mParser.require(XmlPullParser.START_TAG, null, "kml");
         int eventType = this.mParser.getEventType();
-
         while (eventType != XmlPullParser.END_DOCUMENT) {
-
             if (eventType == XmlPullParser.START_TAG) {
                 boolean isStyle = this.mParser.getName().equals("Style");
                 boolean isPlacemark = this.mParser.getName().equals("Placemark");
@@ -157,10 +132,10 @@ public class ImportKML {
      */
 
     private void createStyle(XmlPullParser mParser) throws IOException, XmlPullParserException {
-        Style style = new Style();
+        StyleProperties styleProperties = new StyleProperties();
         String styleUrl = "#" + mParser.getAttributeValue(null, "id");
-        style.styleProperties(mParser);
-        mStyles.put(styleUrl, style);
+        styleProperties.styleProperties(mParser);
+        mStyles.put(styleUrl, styleProperties);
     }
 
     /**
@@ -170,11 +145,10 @@ public class ImportKML {
      * @throws IOException
      * @throws XmlPullParserException
      */
-
     private void createPlacemark(XmlPullParser mParser) throws IOException, XmlPullParserException {
-        Placemark placemark = new Placemark();
-        placemark.placemarkProperties(mParser);
-        this.mPlacemarks.add(placemark);
+        PlacemarkProperties placemarkProperties = new PlacemarkProperties();
+        placemarkProperties.placemarkProperties(mParser);
+        this.mPlacemarkProperties.add(placemarkProperties);
     }
 
     /**
@@ -182,23 +156,94 @@ public class ImportKML {
      * object with appropriate properties
      */
     private void assignStyles() {
-        for (Placemark placemark: mPlacemarks) {
-            for (Coordinate coordinates: placemark.getPoints()) {
-                if (coordinates.getType() == LINESTRING_TYPE) {
-                    mOptions.add(assignLineOptions(placemark, coordinates));
-                } else if (coordinates.getType() == POLYGON_TYPE) {
-                    if (coordinates.getBoundary() == INNER_BOUNDARY) {
-                        mOptions.add(assignPolygonOptions(placemark, coordinates, INNER_BOUNDARY));
-                    } else {
-                        mOptions.add(assignPolygonOptions(placemark, coordinates, OUTER_BOUNDARY));
-                    }
+        for (PlacemarkProperties placemarkProperties : mPlacemarkProperties) {
+            if (placemarkProperties.getPolygon() != null) {
+                mOptions.add(assignPolygonOptions(placemarkProperties));
+            } else if (placemarkProperties.getPolyline() != null) {
+                mOptions.add(assignLineOptions(placemarkProperties));
+            }
+        }
+    }
 
-                } else if (coordinates.getType() == POINT_TYPE) {
-                    ArrayList<MarkerOptions> markerOptions = assignMarkerOptions(placemark, coordinates);
-                    for(MarkerOptions markers: markerOptions){
-                        mOptions.add(markers);
-                    }
+    /**
+     *
+     * @param placemarkProperties
+     * @return
+     */
+    private PolylineOptions assignLineOptions(PlacemarkProperties placemarkProperties) {
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.addAll(placemarkProperties.getPolyline().getLineStringPoints());
+
+        boolean hasStyleURL =  placemarkProperties.getProperties().containsKey("styleUrl");
+        if (hasStyleURL) {
+            boolean isStyleSpecified = mStyles.containsKey(placemarkProperties.getProperty("styleUrl"));
+            if (isStyleSpecified) {
+                HashMap<String, String> polyLineProperties = mStyles.get(placemarkProperties.getProperty("styleUrl")).getPolylineOptions();
+                if (polyLineProperties.containsKey("color")) {
+                    polylineOptions.color(Color.parseColor(polyLineProperties.get("color")));
                 }
+                if (polyLineProperties.containsKey("width")) {
+                    Float width = Float.parseFloat(polyLineProperties.get("width"));
+                    polylineOptions.width(width);
+                }
+            }
+        }
+        return polylineOptions;
+    }
+
+    /**
+     * Gets a placemark class which has a polygon option and creates a Google Maps PolygonOptions.
+     * It then adds in corresponding values. Currently only supports adding:
+     * Stroke color, stroke width, fill color, is visible, outer points, inner points (holes
+     * @param placemarkProperties
+     * @return
+     */
+
+    private PolygonOptions assignPolygonOptions(PlacemarkProperties placemarkProperties) {
+        PolygonOptions polygonOptions = new PolygonOptions();
+        for (Map.Entry<ArrayList<LatLng>, Integer> p: placemarkProperties.getPolygon().getPolygonPoints().entrySet()) {
+            if (p.getValue() == OUTER_BOUNDARY) {
+                polygonOptions.addAll(p.getKey());
+            } else if (p.getValue() == INNER_BOUNDARY) {
+                polygonOptions.addHole(p.getKey());
+            }
+        }
+
+        boolean hasStyleURL =  placemarkProperties.getProperties().containsKey("styleUrl");
+        if (hasStyleURL) {
+            boolean isStyleSpecified = mStyles.containsKey(placemarkProperties.getProperty("styleUrl"));
+            if (isStyleSpecified) {
+                HashMap<String, String> polygonProperties = mStyles.get(placemarkProperties.getProperty("styleUrl")).getPolygonOptions();
+                if (polygonProperties.containsKey("strokeColor")) {
+                    polygonOptions.strokeColor(Color.parseColor(polygonProperties.get("strokeColor")));
+                } if (polygonProperties.containsKey("strokeWidth")) {
+                    Float width = Float.parseFloat(polygonProperties.get("strokeWidth"));
+                    polygonOptions.strokeWidth(width);
+                } if (polygonProperties.containsKey("fillColor")) {
+                    Float width = Float.parseFloat(polygonProperties.get("fillColor"));
+                    polygonOptions.strokeWidth(width);
+                } if (polygonProperties.containsKey("visible")) {
+                    //TODO: See if we actually support boolean values, havent checked.
+                    Boolean isVisible = Boolean.parseBoolean(polygonProperties.get("visible"));
+                    polygonOptions.visible(isVisible);
+                }
+            }
+        }
+        return polygonOptions;
+    }
+
+    /**
+     * Removes all objects permanently from that the user has added with KML
+     */
+    public void removeKMLData() {
+        this.isVisible = !this.isVisible;
+        for (Object mObject: mObjects) {
+            if (mObject instanceof Polygon) {
+                ((Polygon) mObject).remove();
+            } else if (mObject instanceof Polyline){
+                ((Polyline) mObject).remove();
+            } else if (mObject instanceof Marker) {
+                ((Marker) mObject).remove();
             }
         }
     }
@@ -221,96 +266,40 @@ public class ImportKML {
     }
 
     /**
-     *
-     * @param placemark
-     * @param coordinates
-     * @return
+     * Toggles visibility of all of the objects trhat the user has added with KML
      */
-    public PolylineOptions assignLineOptions(Placemark placemark, Coordinate coordinates) {
-        PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.addAll(coordinates.getCoordinateList());
-        boolean hasStyleURL =  placemark.getProperties().containsKey("styleUrl");
-        if (hasStyleURL) {
-            boolean isStyleSpecified = mStyles.containsKey(placemark.getValue("styleUrl"));
-            if (isStyleSpecified) {
-                HashMap<String, String> polyLineProperties = mStyles.get(placemark.getValue("styleUrl")).getPolylineOptions();
-                if (polyLineProperties.containsKey("color")) {
-
-                    polylineOptions.color(Color.parseColor(polyLineProperties.get("color")));
-                    System.out.println(polylineOptions.getColor());
-                }
-                if (polyLineProperties.containsKey("width")) {
-                    Float width = Float.parseFloat(polyLineProperties.get("width"));
-                    polylineOptions.width(width);
-                }
-            }
-        }
-        return polylineOptions;
+    public void showAllKMLData() {
+        changeVisibility(true);
     }
 
-    public PolygonOptions assignPolygonOptions(Placemark placemark, Coordinate coordinates, int linearPosition) {
-        PolygonOptions polygonOptions = new PolygonOptions();
-        if (linearPosition == OUTER_BOUNDARY) {
-            polygonOptions.addAll(coordinates.getCoordinateList());
-        } else {
-            polygonOptions.addHole(coordinates.getCoordinateList());
-        }
-
-        boolean hasStyleURL =  placemark.getProperties().containsKey("styleUrl");
-        if (hasStyleURL) {
-            boolean isStyleSpecified = mStyles.containsKey(placemark.getValue("styleUrl"));
-            if (isStyleSpecified) {
-                HashMap<String, String> polygonProperties = mStyles.get(placemark.getValue("styleUrl")).getPolygonOptions();
-                if (polygonProperties.containsKey("strokeColor")) {
-                    polygonOptions.strokeColor(Color.parseColor(polygonProperties.get("strokeColor")));
-                } if (polygonProperties.containsKey("strokeWidth")) {
-                    Float width = Float.parseFloat(polygonProperties.get("strokeWidth"));
-                    polygonOptions.strokeWidth(width);
-                } if (polygonProperties.containsKey("fillColor")) {
-                    Float width = Float.parseFloat(polygonProperties.get("fillColor"));
-                    polygonOptions.strokeWidth(width);
-                }
-            }
-        }
-
-        return polygonOptions;
+    public void hideAllKMLData() {
+        changeVisibility(false);
     }
 
-    public ArrayList<MarkerOptions> assignMarkerOptions (Placemark placemark, Coordinate coordinates) {
-        ArrayList<MarkerOptions> m = new ArrayList<MarkerOptions>();
-        for (LatLng point: coordinates.getCoordinateList()) {
-            MarkerOptions marker = new MarkerOptions();
-            marker.position(point);
-            m.add(marker);
-        }
-        return m;
-    }
-
-
-
-    public void removeKMLData() {
-        this.isVisible = !this.isVisible;
+    public void toggleVisibilty () {
         for (Object mObject: mObjects) {
             if (mObject instanceof Polygon) {
-                ((Polygon) mObject).remove();
+                ((Polygon) mObject).setVisible(!((Polygon) mObject).isVisible());
             } else if (mObject instanceof Polyline){
-                ((Polyline) mObject).remove();
+                ((Polyline) mObject).setVisible(!((Polyline) mObject).isVisible());
             } else if (mObject instanceof Marker) {
-                ((Marker) mObject).remove();
+                ((Marker) mObject).setVisible(!((Marker) mObject).isVisible());
             }
         }
     }
 
-    public void toggleKMLData() {
-        this.isVisible = !this.isVisible;
+    private void changeVisibility (Boolean visibility) {
         for (Object mObject: mObjects) {
             if (mObject instanceof Polygon) {
-                ((Polygon) mObject).setVisible(this.isVisible);
+                ((Polygon) mObject).setVisible(visibility);
             } else if (mObject instanceof Polyline){
-                ((Polyline) mObject).setVisible(this.isVisible);
+                ((Polyline) mObject).setVisible(visibility);
             } else if (mObject instanceof Marker) {
-                ((Marker) mObject).setVisible(this.isVisible);
+                ((Marker) mObject).setVisible(visibility);
             }
         }
     }
+
+
+
 }
