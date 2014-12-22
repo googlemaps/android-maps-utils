@@ -64,6 +64,8 @@ public class ImportGeoJson {
 
     private boolean mIsVisible = true;
 
+    private boolean mLayerActive = false;
+
     // TODO: implement fetching files by URL later
 
     /**
@@ -197,19 +199,24 @@ public class ImportGeoJson {
      * Adds all objects in mGeoJsonMapPropertyObjects to the mMap
      */
     public void addGeoJsonData() {
-        for (Object mapObject : mGeoJsonMapPropertyObjects) {
-            if (mapObject instanceof MarkerProperties) {
-                mGeoJsonMapObjects
-                        .add(mMap.addMarker(((MarkerProperties) mapObject).getMarkerOptions()));
-            } else if (mapObject instanceof PolylineProperties) {
-                mGeoJsonMapObjects.add(mMap
-                        .addPolyline(((PolylineProperties) mapObject).getPolylineOptions()));
-            } else if (mapObject instanceof PolygonProperties) {
-                mGeoJsonMapObjects
-                        .add(mMap.addPolygon(((PolygonProperties) mapObject).getPolygonOptions()));
+        // Prevents duplicate layers of the file from being added
+        if (!mLayerActive) {
+            for (Object mapObject : mGeoJsonMapPropertyObjects) {
+                if (mapObject instanceof MarkerProperties) {
+                    mGeoJsonMapObjects
+                            .add(mMap.addMarker(((MarkerProperties) mapObject).getMarkerOptions()));
+                } else if (mapObject instanceof PolylineProperties) {
+                    mGeoJsonMapObjects.add(mMap
+                            .addPolyline(((PolylineProperties) mapObject).getPolylineOptions()));
+                } else if (mapObject instanceof PolygonProperties) {
+                    mGeoJsonMapObjects
+                            .add(mMap.addPolygon(
+                                    ((PolygonProperties) mapObject).getPolygonOptions()));
+                }
             }
         }
         mIsVisible = true;
+        mLayerActive = true;
     }
 
     /**
@@ -292,7 +299,6 @@ public class ImportGeoJson {
      * Removes all objects in mGeoJsonMapObjects from the mMap
      */
     public void removeGeoJsonData() {
-        mIsVisible = false;
         for (Object mapObject : mGeoJsonMapObjects) {
             if (mapObject instanceof Marker) {
                 ((Marker) mapObject).remove();
@@ -302,8 +308,10 @@ public class ImportGeoJson {
                 ((Polygon) mapObject).remove();
             }
         }
-        // Remove all options
-        mGeoJsonMapPropertyObjects.clear();
+        mIsVisible = false;
+        mLayerActive = false;
+        // Remove all stored map objects
+        mGeoJsonMapObjects.clear();
     }
 
     /**
