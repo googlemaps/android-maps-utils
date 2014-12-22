@@ -22,6 +22,8 @@ public class PolygonProperties {
 
     private final ArrayList<ArrayList<LatLng>> mCoordinates;
 
+    private boolean mVisibility = true;
+
     /**
      * Takes in a JSONObject containing properties for a polygon and saves relevant properties
      *
@@ -47,16 +49,19 @@ public class PolygonProperties {
                         .strokeWidth((float) geoJsonPolygonProperties.getDouble("stroke width"));
             }
             if (geoJsonPolygonProperties.has("stroke color")) {
-                this.mOptions.strokeColor(Color.parseColor(geoJsonPolygonProperties.getString("stroke color")));
+                this.mOptions.strokeColor(
+                        Color.parseColor(geoJsonPolygonProperties.getString("stroke color")));
             }
             if (geoJsonPolygonProperties.has("fill color")) {
-                this.mOptions.fillColor(Color.parseColor(geoJsonPolygonProperties.getString("fill color")));
+                this.mOptions.fillColor(
+                        Color.parseColor(geoJsonPolygonProperties.getString("fill color")));
             }
             if (geoJsonPolygonProperties.has("z index")) {
                 this.mOptions.zIndex((float) geoJsonPolygonProperties.getDouble("z index"));
             }
             if (geoJsonPolygonProperties.has("visible")) {
-                this.mOptions.visible(geoJsonPolygonProperties.getBoolean("stroke visible"));
+                this.mOptions.visible(geoJsonPolygonProperties.getBoolean("visible"));
+                this.mVisibility = geoJsonPolygonProperties.getBoolean("visible");
             }
             if (geoJsonPolygonProperties.has("geodesic")) {
                 this.mOptions.geodesic(geoJsonPolygonProperties.getBoolean("geodesic"));
@@ -84,5 +89,33 @@ public class PolygonProperties {
      */
     public PolygonOptions getPolygonOptions() {
         return this.mOptions;
+    }
+
+    /**
+     * Gets the mVisibility of the Polygon from when it was imported
+     * @return true if visible, false if invisible
+     */
+    public boolean getVisibility() {
+        return this.mVisibility;
+    }
+
+    /**
+     * Creates a string containing properties for the polygon
+     *
+     * @return string containing properties for polygon
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("PolygonProperties{");
+        sb.append("\n points=").append(mOptions.getPoints());
+        sb.append(",\n holes=").append(mOptions.getHoles());
+        sb.append(",\n stroke width=").append(mOptions.getStrokeWidth());
+        sb.append(",\n stroke color=").append(mOptions.getStrokeColor());
+        sb.append(",\n fill color=").append(mOptions.getFillColor());
+        sb.append(",\n z index=").append(mOptions.getZIndex());
+        sb.append(",\n visible=").append(mOptions.isVisible());
+        sb.append(",\n geodesic=").append(mOptions.isGeodesic());
+        sb.append("\n}");
+        return sb.toString();
     }
 }
