@@ -13,6 +13,7 @@
     <string name="invert">Invert</string>
     <string name="show_all">Show All</string>
     <string name="hide_all">Hide All</string>
+    <string name="add">Add</string>
     <string-array name="heatmaps_datasets_array">
         <item>@string/police_stations</item>
         <item>@string/medicare</item>

@@ -9,6 +9,12 @@
                   android:layout_height="wrap_content"
                   android:orientation="horizontal">
 
+        <Button android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add" />
+
         <Button android:id="@+id/toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
