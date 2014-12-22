@@ -15,7 +15,7 @@ import java.util.HashMap;
  *
  * Represents the defined styles in the KML document
  */
-public class Style {
+public class StyleProperties {
 
     private final  HashMap<String, String> mPolylineOptions;
 
@@ -34,7 +34,7 @@ public class Style {
     private boolean outline = true;
 
 
-    public Style() {
+    public StyleProperties() {
         mPolylineOptions = new HashMap<String, String>();
         mPolygonOptions = new HashMap<String, String>();
         mPointOptions = new HashMap<String, String>();
@@ -72,7 +72,7 @@ public class Style {
             if (eventType == XmlPullParser.START_TAG) {
                 if (p.getName().equals("color")) {
                     color = p.nextText();
-                    color = "#" + color.substring(0, 6);
+                    color = "#" + color;
                     mPolylineOptions.put("color", color);
                     mPolygonOptions.put("strokeColor", color);
 
@@ -91,19 +91,16 @@ public class Style {
     }
 
     private void parsePolyStyle (XmlPullParser p)  throws XmlPullParserException, IOException {
-
         int eventType = p.getEventType();
         boolean isInPolyStyle = true;
 
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
-
             isInPolyStyle = (eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"));
-
             // Assign relevant properties to mPolygonOptions
             if (eventType == XmlPullParser.START_TAG) {
                 if (p.getName().equals("color")) {
                     String color = p.nextText();
-                    color = "#" + color.substring(0, 6);
+                    color = "#" + color;
                     mPolygonOptions.put("fillColor", color);
                 } else if (p.getName().equals("colorMode")) {
                     // TODO: Implement a function to handle colorMode
