@@ -93,6 +93,7 @@ public class PolygonProperties {
 
     /**
      * Gets the mVisibility of the Polygon from when it was imported
+     *
      * @return true if visible, false if invisible
      */
     public boolean getVisibility() {
