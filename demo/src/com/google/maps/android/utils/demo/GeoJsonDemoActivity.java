@@ -24,6 +24,14 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
             feature_collection_test.addGeoJsonData();
 
+            final Button add_button = (Button) findViewById(R.id.add);
+            add_button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    feature_collection_test.addGeoJsonData();
+
+                }
+            });
+
             final Button toggle_button = (Button) findViewById(R.id.toggle);
             toggle_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
