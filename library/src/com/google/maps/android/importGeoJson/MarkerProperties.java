@@ -62,6 +62,15 @@ public class MarkerProperties {
                 this.mOptions.visible(geoJsonPointProperties.getBoolean("visible"));
                 mVisibility = geoJsonPointProperties.getBoolean("visible");
             }
+            if (geoJsonPointProperties.has("flat")) {
+                this.mOptions.flat(geoJsonPointProperties.getBoolean("flat"));
+            }
+            if (geoJsonPointProperties.has("infoWindowAnchorU") && geoJsonPointProperties
+                    .has("infoWindowAnchorV")) {
+                this.mOptions.infoWindowAnchor(
+                        (float) geoJsonPointProperties.getDouble("infoWindowAnchorU"),
+                        (float) geoJsonPointProperties.getDouble("infoWindowAnchorV"));
+            }
         }
     }
 
@@ -77,6 +86,7 @@ public class MarkerProperties {
 
     /**
      * Gets the visibility of the Marker from when it was imported
+     *
      * @return true if visible, false if invisible
      */
     public boolean getVisibility() {
@@ -95,11 +105,15 @@ public class MarkerProperties {
         sb.append(",\n title=").append(mOptions.getTitle());
         sb.append(",\n snippet=").append(mOptions.getSnippet());
         sb.append(",\n alpha=").append(mOptions.getAlpha());
-        sb.append(",\n anchor(U,V)= (").append(mOptions.getAnchorU()).append(", ")
+        sb.append(",\n anchor (U, V)= (").append(mOptions.getAnchorU()).append(", ")
                 .append(mOptions.getAnchorV()).append(")");
         sb.append(",\n draggable=").append(mOptions.isDraggable());
         sb.append(",\n rotation=").append(mOptions.getRotation());
         sb.append(",\n visible=").append(mOptions.isVisible());
+        sb.append(",\n flat=").append(mOptions.isFlat());
+        sb.append(",\n window anchor (U, V) = (").append(mOptions.getInfoWindowAnchorU())
+                .append(", ")
+                .append(mOptions.getInfoWindowAnchorV()).append(")");
         sb.append("\n}");
         return sb.toString();
     }
