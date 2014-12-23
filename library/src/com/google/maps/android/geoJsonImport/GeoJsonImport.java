@@ -50,15 +50,36 @@ import java.util.List;
 
 public class GeoJsonImport {
 
-    private static final String GEOJSON_GEOMETRY_OBJECTS_REGEX
-            = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
-
     private final ArrayList<Object> mGeoJsonMapPropertyObjects = new ArrayList<Object>();
 
     private final ArrayList<Object> mGeoJsonMapObjects = new ArrayList<Object>();
 
     private final GoogleMap mMap;
 
+    // defined geometry objects except for GeometryCollection
+    private static final String GEOJSON_GEOMETRY_OBJECTS_REGEX
+            = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
+
+    // all geometries (except for GeometryCollection) and features must have an array of coordinates
+    private final static String COORDINATE_ARRAY = "coordinates";
+
+    private final static String FEATURE = "Feature";
+
+    private final static String FEATURE_COLLECTION = "FeatureCollection";
+
+    // all feature objects must have a member named geometry
+    private final static String FEATURE_GEOMETRY = "geometry";
+
+    // all feature objects must have a member named properties
+    private final static String FEATURE_PROPERTIES = "properties";
+
+    // name of the member in feature collection that is an array
+    private final static String FEATURE_COLLECTION_ARRAY = "features";
+
+    private final static String GEOMETRY_COLLECTION = "GeometryCollection";
+
+    // name of the member in geometry collection that is an array
+    private final static String GEOMETRY_COLLECTION_ARRAY = "geometries";
 
     private JSONObject mGeoJsonObject;
 
@@ -136,24 +157,19 @@ public class GeoJsonImport {
      * @param geoJsonFile GeoJSON file to parse
      * @throws JSONException if the GeoJSON file cannot be successfully parsed
      */
+
     private void parseGeoJsonFile(JSONObject geoJsonFile) throws JSONException {
         JSONArray geometriesArray;
-        boolean isFeature = geoJsonFile.getString("type").trim().equals("Feature");
-        boolean isGeometry = geoJsonFile.getString("type").trim().matches(
-                GEOJSON_GEOMETRY_OBJECTS_REGEX);
-        boolean isFeatureCollection = geoJsonFile.getString("type").trim().equals(
-                "FeatureCollection");
-        boolean isGeometryCollection = geoJsonFile.getString("type").trim().equals(
-                "GeometryCollection");
-        if (isFeatureCollection) {
+        String type = geoJsonFile.getString("type").trim();
+        if (FEATURE_COLLECTION.equals(type)) {
             storeMapObjects(mGeoJsonMapPropertyObjects, parseGeoJsonFeatureCollection(geoJsonFile));
-        } else if (isGeometryCollection) {
-            geometriesArray = geoJsonFile.getJSONArray("geometries");
+        } else if (GEOMETRY_COLLECTION.equals(type)) {
+            geometriesArray = geoJsonFile.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
             storeMapObjects(mGeoJsonMapPropertyObjects,
                     toGeometryCollection(geometriesArray, null));
-        } else if (isFeature) {
+        } else if (FEATURE.equals(type)) {
             storeMapObjects(mGeoJsonMapPropertyObjects, parseGeoJsonFeature(geoJsonFile));
-        } else if (isGeometry) {
+        } else if (type != null && type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
             storeMapObjects(mGeoJsonMapPropertyObjects, parseGeoJsonGeometry(geoJsonFile));
         }
     }
@@ -169,11 +185,10 @@ public class GeoJsonImport {
             throws JSONException {
         ArrayList<Object> featureCollectionObjects = new ArrayList<Object>();
         // Gets the array containing the feature collection objects
-        JSONArray featureCollectionArray = featureCollection.getJSONArray("features");
-        boolean isFeature;
+        JSONArray featureCollectionArray = featureCollection.getJSONArray(FEATURE_COLLECTION_ARRAY);
         for (int i = 0; i < featureCollectionArray.length(); i++) {
-            isFeature = featureCollectionArray.getJSONObject(i).getString("type").trim()
-                    .equals("Feature");
+            boolean isFeature = featureCollectionArray.getJSONObject(i).getString("type").trim()
+                    .equals(FEATURE);
             // Add the single feature to featureCollectionObjects
             if (isFeature) {
                 storeMapObjects(featureCollectionObjects,
@@ -191,7 +206,7 @@ public class GeoJsonImport {
      * @param mapObject     object to add to mGeoJsonMapPropertyObjects, either
      *                      MarkerProperties,PolylineProperties, PolygonProperties or an ArrayList
      */
-    private void storeMapObjects(List<Object> mapObjectList, Object mapObject) {
+    private static void storeMapObjects(List<Object> mapObjectList, Object mapObject) {
         if (mapObject instanceof List) {
             mapObjectList.addAll((ArrayList) mapObject);
         } else {
@@ -327,7 +342,7 @@ public class GeoJsonImport {
      * coordinates
      * @throws JSONException if array doesn't contain an array of coordinates
      */
-    private ArrayList<LatLng> coordinatesToLatLngArray(JSONArray geoJsonCoordinates)
+    private static ArrayList<LatLng> coordinatesToLatLngArray(JSONArray geoJsonCoordinates)
             throws JSONException {
         JSONArray jsonCoordinate;
         ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
@@ -352,11 +367,11 @@ public class GeoJsonImport {
      * objects
      * @throws JSONException if there is no type string or coordinates array for the geometry
      */
-    private Object parseGeoJsonGeometry(JSONObject geoJsonFeature) throws JSONException {
+    private static Object parseGeoJsonGeometry(JSONObject geoJsonFeature) throws JSONException {
         String geometryType;
         JSONArray featureCoordinatesArray;
         geometryType = geoJsonFeature.getString("type");
-        featureCoordinatesArray = geoJsonFeature.getJSONArray("coordinates");
+        featureCoordinatesArray = geoJsonFeature.getJSONArray(COORDINATE_ARRAY);
         return parseGeoJsonGeometryObject(geometryType, featureCoordinatesArray, null);
     }
 
@@ -375,21 +390,21 @@ public class GeoJsonImport {
      * @throws JSONException if there is no type string or geometries array or coordinates array for
      *                       the feature
      */
-    private Object parseGeoJsonFeature(JSONObject geoJsonFeature) throws JSONException {
+    private static Object parseGeoJsonFeature(JSONObject geoJsonFeature) throws JSONException {
         String geometryType;
         // Contains an array of geometries if the feature is a GeometryCollection and coordinates
         // otherwise
         JSONArray featureArray;
         JSONObject featureProperties;
         // Store the type, coordinates and properties of the GeoJSON feature
-        geometryType = geoJsonFeature.getJSONObject("geometry").getString("type");
+        geometryType = geoJsonFeature.getJSONObject(FEATURE_GEOMETRY).getString("type");
 
-        if (geometryType.equals("GeometryCollection")) {
-            featureArray = geoJsonFeature.getJSONObject("geometry").getJSONArray("geometries");
+        if (geometryType.equals(GEOMETRY_COLLECTION)) {
+            featureArray = geoJsonFeature.getJSONObject(FEATURE_GEOMETRY).getJSONArray(GEOMETRY_COLLECTION_ARRAY);
         } else {
-            featureArray = geoJsonFeature.getJSONObject("geometry").getJSONArray("coordinates");
+            featureArray = geoJsonFeature.getJSONObject(FEATURE_GEOMETRY).getJSONArray(COORDINATE_ARRAY);
         }
-        featureProperties = geoJsonFeature.getJSONObject("properties");
+        featureProperties = geoJsonFeature.getJSONObject(FEATURE_PROPERTIES);
         return parseGeoJsonGeometryObject(geometryType, featureArray,
                 featureProperties);
     }
@@ -408,7 +423,7 @@ public class GeoJsonImport {
      * objects
      * @throws JSONException
      */
-    private Object parseGeoJsonGeometryObject(String geometryType,
+    private static Object parseGeoJsonGeometryObject(String geometryType,
             JSONArray featureArray, JSONObject featureProperties) throws JSONException {
         if (geometryType.equals("Point")) {
             return toMarker(featureArray, featureProperties);
@@ -422,7 +437,7 @@ public class GeoJsonImport {
             return toPolygon(featureArray, featureProperties);
         } else if (geometryType.equals("MultiPolygon")) {
             return toPolygons(featureArray, featureProperties);
-        } else if (geometryType.equals("GeometryCollection")) {
+        } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             return toGeometryCollection(featureArray, featureProperties);
         }
         return null;
@@ -438,7 +453,7 @@ public class GeoJsonImport {
      * @return new MarkerProperties object
      * @throws JSONException if coordinates or marker properties cannot be successfully parsed
      */
-    private MarkerProperties toMarker(JSONArray geoJsonPointCoordinatesArray,
+    private static MarkerProperties toMarker(JSONArray geoJsonPointCoordinatesArray,
             JSONObject geoJsonPointProperties) throws JSONException {
         MarkerProperties properties;
         LatLng coordinates = new LatLng(geoJsonPointCoordinatesArray.getDouble(1),
@@ -459,7 +474,8 @@ public class GeoJsonImport {
      * @return array of new MarkerProperties objects
      * @throws JSONException if all coordinates or all marker properties cannot be successfully parsed
      */
-    private ArrayList<MarkerProperties> toMarkers(JSONArray geoJsonMultiPointCoordinatesArray,
+    private static ArrayList<MarkerProperties> toMarkers(
+            JSONArray geoJsonMultiPointCoordinatesArray,
             JSONObject geoJsonMultiPointProperties) throws JSONException {
         ArrayList<MarkerProperties> markers = new ArrayList<MarkerProperties>();
         for (int i = 0; i < geoJsonMultiPointCoordinatesArray.length(); i++) {
@@ -480,7 +496,7 @@ public class GeoJsonImport {
      * @return new PolylineProperties object
      * @throws JSONException if coordinates or polyline properties could not be successfully parsed
      */
-    private PolylineProperties toPolyline(JSONArray geoJsonLineStringCoordinatesArray,
+    private static PolylineProperties toPolyline(JSONArray geoJsonLineStringCoordinatesArray,
             JSONObject geoJsonLineStringProperties) throws JSONException {
         ArrayList<LatLng> coordinates = coordinatesToLatLngArray(geoJsonLineStringCoordinatesArray);
         PolylineProperties properties;
@@ -499,7 +515,7 @@ public class GeoJsonImport {
      * @return array of new PolylineProperties objects
      * @throws JSONException if all coordinates or all polyline properties cannot be successfully parsed
      */
-    private ArrayList<PolylineProperties> toPolylines(
+    private static ArrayList<PolylineProperties> toPolylines(
             JSONArray geoJsonMultiLineStringCoordinatesArray,
             JSONObject geoJsonMultiLineStringProperties) throws JSONException {
         ArrayList<PolylineProperties> polylines = new ArrayList<PolylineProperties>();
@@ -523,7 +539,7 @@ public class GeoJsonImport {
      * @return new PolygonProperties object
      * @throws JSONException if coordinates or polygon properties could not be successfully parsed
      */
-    private PolygonProperties toPolygon(JSONArray geoJsonPolygonCoordinatesArray,
+    private static PolygonProperties toPolygon(JSONArray geoJsonPolygonCoordinatesArray,
             JSONObject geoJsonPolygonProperties) throws JSONException {
         PolygonProperties properties;
         ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
@@ -551,7 +567,8 @@ public class GeoJsonImport {
      * @return array of new PolygonProperties objects
      * @throws JSONException if all coordinates or all polygon properties could not be successfully parsed
      */
-    private ArrayList<PolygonProperties> toPolygons(JSONArray geoJsonMultiPolygonCoordinatesArray,
+    private static ArrayList<PolygonProperties> toPolygons(
+            JSONArray geoJsonMultiPolygonCoordinatesArray,
             JSONObject geoJsonMultiPolygonProperties) throws JSONException {
         ArrayList<PolygonProperties> polygons = new ArrayList<PolygonProperties>();
         // Iterate over the list of polygons
@@ -575,7 +592,7 @@ public class GeoJsonImport {
      * @return array of various MarkerProperties, PolylineProperties, PolygonProperties
      * @throws JSONException if elements in the geometry collection could not be successfully parsed
      */
-    private ArrayList<Object> toGeometryCollection(JSONArray geoJsonGeometryCollectionArray,
+    private static ArrayList<Object> toGeometryCollection(JSONArray geoJsonGeometryCollectionArray,
             JSONObject geoJsonCollectionProperties) throws JSONException {
         ArrayList<Object> geometryCollectionObjects = new ArrayList<Object>();
 
@@ -596,19 +613,18 @@ public class GeoJsonImport {
             // Update status of current element
             geometryCollectionType = geometryCollectionElement.getString("type");
             isGeometry = geometryCollectionType.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX);
-            isGeometryCollection = geometryCollectionType.equals("GeometryCollection");
+            isGeometryCollection = geometryCollectionType.equals(GEOMETRY_COLLECTION);
 
-            // Add new geometry object to geometryCollectionObjects
             if (isGeometry) {
-                coordinatesArray = geometryCollectionElement.getJSONArray("coordinates");
+                // Add new geometry object to geometryCollectionObjects
+                coordinatesArray = geometryCollectionElement.getJSONArray(COORDINATE_ARRAY);
                 // Pass in type, coordinates and properties of the current geometry
                 storeMapObjects(geometryCollectionObjects,
                         parseGeoJsonGeometryObject(geometryCollectionType, coordinatesArray,
                                 geoJsonCollectionProperties));
-            }
-            // Recursively parse all elements and add to geometryCollectionObjects array
-            else if (isGeometryCollection) {
-                geometriesArray = geometryCollectionElement.getJSONArray("geometries");
+            } else if (isGeometryCollection) {
+                // Recursively parse all elements and add to geometryCollectionObjects array
+                geometriesArray = geometryCollectionElement.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
                 storeMapObjects(geometryCollectionObjects,
                         toGeometryCollection(geometriesArray, geoJsonCollectionProperties));
             }
