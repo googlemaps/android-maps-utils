@@ -487,7 +487,7 @@ public class GeoJsonImport {
                     toGeometryCollection(geometriesArray, null));
         } else if (FEATURE.equals(type)) {
             storeMapObjects(mGeoJsonMapPropertyObjects, parseGeoJsonFeature(geoJsonFile));
-        } else if (type != null && type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
+        } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
             storeMapObjects(mGeoJsonMapPropertyObjects, parseGeoJsonGeometry(geoJsonFile));
         }
     }
