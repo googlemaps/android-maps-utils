@@ -1,4 +1,4 @@
-package com.google.maps.android.importGeoJson;
+package com.google.maps.android.geoJsonImport;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;

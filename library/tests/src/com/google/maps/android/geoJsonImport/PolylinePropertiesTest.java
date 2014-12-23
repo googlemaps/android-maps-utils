@@ -1,4 +1,4 @@
-package com.google.maps.android.importGeoJson;
+package com.google.maps.android.geoJsonImport;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -33,13 +33,14 @@ public class PolylinePropertiesTest extends TestCase {
         }
 
         assertNotNull(po);
+        assertTrue(pp.getVisibility());
+        assertEquals(Arrays.asList(new LatLng(0, 0), new LatLng(10, 10), new LatLng(50, 50)),
+                po.getPoints());
         assertEquals((float) 10, po.getWidth());
         assertEquals(0xff000000, po.getColor());
         assertEquals((float) 0, po.getZIndex());
         assertEquals(true, po.isVisible());
         assertEquals(false, po.isGeodesic());
-        assertEquals(Arrays.asList(new LatLng(0, 0), new LatLng(10, 10), new LatLng(50, 50)),
-                po.getPoints());
 
 
     }
