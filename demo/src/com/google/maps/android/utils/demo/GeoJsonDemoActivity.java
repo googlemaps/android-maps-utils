@@ -1,6 +1,6 @@
 package com.google.maps.android.utils.demo;
 
-import com.google.maps.android.importGeoJson.ImportGeoJson;
+import com.google.maps.android.geoJsonImport.GeoJsonImport;
 
 import android.util.Log;
 import android.view.View;
@@ -19,7 +19,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     protected void startDemo() {
         try {
 
-            final ImportGeoJson featureCollectionTest = new ImportGeoJson(getMap(),
+            final GeoJsonImport featureCollectionTest = new GeoJsonImport(getMap(),
                     R.raw.feature_collection_geojson_demo, getApplicationContext());
 
             featureCollectionTest.addGeoJsonData();
