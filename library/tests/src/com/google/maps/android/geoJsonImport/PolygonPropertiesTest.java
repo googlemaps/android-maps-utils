@@ -35,7 +35,6 @@ public class PolygonPropertiesTest extends TestCase {
         }
 
         assertNotNull(po);
-        assertTrue(pp.getVisibility());
         assertEquals(Arrays.asList(new LatLng(0, 0), new LatLng(20, 20), new LatLng(30, 50),
                 new LatLng(0, 0)), po.getPoints());
         assertEquals(Arrays.asList(), po.getHoles());

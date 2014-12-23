@@ -26,7 +26,6 @@ public class MarkerPropertiesTest extends TestCase {
 
 
         assertNotNull(mp);
-        assertTrue(mp.getVisibility());
         assertEquals(new LatLng(0.0, 0.0), mo.getPosition());
         assertEquals(null, mo.getTitle());
         assertEquals(null, mo.getSnippet());
@@ -65,7 +64,6 @@ public class MarkerPropertiesTest extends TestCase {
         mo = mp.getMarkerOptions();
 
         assertNotNull(mp);
-        assertFalse(mp.getVisibility());
         assertEquals(new LatLng(20.0, -30.5), mo.getPosition());
         assertEquals("test title", mo.getTitle());
         assertEquals("this is a description", mo.getSnippet());

@@ -33,7 +33,6 @@ public class PolylinePropertiesTest extends TestCase {
         }
 
         assertNotNull(po);
-        assertTrue(pp.getVisibility());
         assertEquals(Arrays.asList(new LatLng(0, 0), new LatLng(10, 10), new LatLng(50, 50)),
                 po.getPoints());
         assertEquals((float) 10, po.getWidth());
