@@ -40,14 +40,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 }
             });
 
-            final Button invert_button = (Button) findViewById(R.id.invert);
-            invert_button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    featureCollectionTest.invertVisibility();
-
-                }
-            });
-
             final Button show_all_button = (Button) findViewById(R.id.show_all);
             show_all_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

@@ -21,12 +21,6 @@
                 android:layout_weight="1"
                 android:text="@string/toggle" />
 
-        <Button android:id="@+id/invert"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/invert" />
-
         <Button android:id="@+id/show_all"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
