@@ -22,8 +22,6 @@ public class PolygonProperties {
 
     private final ArrayList<ArrayList<LatLng>> mCoordinates;
 
-    private boolean mVisibility = true;
-
     /**
      * Takes in a JSONObject containing properties for a polygon and saves relevant properties
      *
@@ -61,7 +59,6 @@ public class PolygonProperties {
             }
             if (geoJsonPolygonProperties.has("visible")) {
                 this.mOptions.visible(geoJsonPolygonProperties.getBoolean("visible"));
-                this.mVisibility = geoJsonPolygonProperties.getBoolean("visible");
             }
             if (geoJsonPolygonProperties.has("geodesic")) {
                 this.mOptions.geodesic(geoJsonPolygonProperties.getBoolean("geodesic"));
@@ -89,15 +86,6 @@ public class PolygonProperties {
      */
     public PolygonOptions getPolygonOptions() {
         return this.mOptions;
-    }
-
-    /**
-     * Gets the mVisibility of the Polygon from when it was imported
-     *
-     * @return true if visible, false if invisible
-     */
-    public boolean getVisibility() {
-        return this.mVisibility;
     }
 
     /**

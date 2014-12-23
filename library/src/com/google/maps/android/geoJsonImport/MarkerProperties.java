@@ -16,8 +16,6 @@ public class MarkerProperties {
 
     private final MarkerOptions mOptions;
 
-    private boolean mVisibility = true;
-
     /**
      * Takes in a JSONObject containing properties for a Marker and parses the relevant properties
      * for mOptions
@@ -60,7 +58,6 @@ public class MarkerProperties {
             }
             if (geoJsonPointProperties.has("visible")) {
                 this.mOptions.visible(geoJsonPointProperties.getBoolean("visible"));
-                mVisibility = geoJsonPointProperties.getBoolean("visible");
             }
             if (geoJsonPointProperties.has("flat")) {
                 this.mOptions.flat(geoJsonPointProperties.getBoolean("flat"));
@@ -82,15 +79,6 @@ public class MarkerProperties {
      */
     public MarkerOptions getMarkerOptions() {
         return this.mOptions;
-    }
-
-    /**
-     * Gets the visibility of the Marker from when it was imported
-     *
-     * @return true if visible, false if invisible
-     */
-    public boolean getVisibility() {
-        return this.mVisibility;
     }
 
     /**

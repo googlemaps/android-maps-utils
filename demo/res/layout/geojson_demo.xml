@@ -15,23 +15,11 @@
                 android:layout_weight="1"
                 android:text="@string/add" />
 
-        <Button android:id="@+id/toggle"
+        <Button android:id="@+id/visibility"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/toggle" />
-
-        <Button android:id="@+id/show_all"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/show_all" />
-
-        <Button android:id="@+id/hide_all"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/hide_all" />
+                android:text="@string/visibility" />
 
         <Button android:id="@+id/remove"
                 android:layout_width="wrap_content"

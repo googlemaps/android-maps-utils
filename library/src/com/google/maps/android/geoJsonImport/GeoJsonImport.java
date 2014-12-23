@@ -84,14 +84,11 @@ public class GeoJsonImport {
     private JSONObject mGeoJsonObject;
 
     /**
-     * Visibility status of the GeoJSON data
-     */
-    private boolean mIsVisible = true;
-
-    /**
      * Active layer means that the GeoJSON data has been added to the map
      */
     private boolean mActiveLayer = false;
+
+    private boolean mVisibility = false;
 
     // TODO: implement fetching files by URL
 
@@ -539,67 +536,27 @@ public class GeoJsonImport {
                 }
             }
         }
-        mIsVisible = true;
         mActiveLayer = true;
+        mVisibility = true;
     }
 
     /**
-     * Sets all geometry objects to visible
-     * Affects geometry objects with original imported visibility as false
+     * Sets all objects on the map to have the given visibility
+     *
+     * @param visibility true if all objects on the map are to be shown, false if no objects on the
+     *                   map are to be shown
      */
-    public void showAllGeoJsonData() {
+    public void geoJsonDataVisibility(boolean visibility) {
         for (Object mapObject : mGeoJsonMapObjects) {
             if (mapObject instanceof Marker) {
-                ((Marker) mapObject).setVisible(true);
+                ((Marker) mapObject).setVisible(visibility);
             } else if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).setVisible(true);
+                ((Polyline) mapObject).setVisible(visibility);
             } else if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).setVisible(true);
+                ((Polygon) mapObject).setVisible(visibility);
             }
         }
-        mIsVisible = true;
-    }
-
-    /**
-     * Sets all geometry objects to invisible
-     * Affects geometry objects with original imported visibility as true
-     */
-    public void hideAllGeoJsonData() {
-        for (Object mapObject : mGeoJsonMapObjects) {
-            if (mapObject instanceof Marker) {
-                ((Marker) mapObject).setVisible(false);
-            } else if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).setVisible(false);
-            } else if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).setVisible(false);
-            }
-        }
-        mIsVisible = false;
-    }
-
-    /**
-     * Toggles the overlay on and off
-     * Only affects geometry objects that were imported with visibility set to true
-     */
-    public void toggleVisibility() {
-        mIsVisible = !mIsVisible;
-        Object mapObject;
-        // Needed to check for the visibility
-        Object mapProperty;
-        // Check if each object on the map was imported with visibility set to true and toggle
-        for (int i = 0; i < mGeoJsonMapObjects.size(); i++) {
-            mapObject = mGeoJsonMapObjects.get(i);
-            mapProperty = mGeoJsonMapPropertyObjects.get(i);
-            if (mapObject instanceof Marker && ((MarkerProperties) mapProperty).getVisibility()) {
-                ((Marker) mapObject).setVisible(mIsVisible);
-            } else if (mapObject instanceof Polyline && ((PolylineProperties) mapProperty)
-                    .getVisibility()) {
-                ((Polyline) mapObject).setVisible(mIsVisible);
-            } else if (mapObject instanceof Polygon && ((PolygonProperties) mapProperty)
-                    .getVisibility()) {
-                ((Polygon) mapObject).setVisible(mIsVisible);
-            }
-        }
+        mVisibility = visibility;
     }
 
     /**
@@ -615,11 +572,15 @@ public class GeoJsonImport {
                 ((Polygon) mapObject).remove();
             }
         }
-        mIsVisible = false;
         mActiveLayer = false;
+        mVisibility = false;
 
         // Remove all stored map objects
         mGeoJsonMapObjects.clear();
+    }
+
+    public boolean getVisibility() {
+        return mVisibility;
     }
 
     /**
