@@ -11,6 +11,10 @@ public class MultiPolygon extends Geometry {
 
     private ArrayList<Polygon> mPolygons;
 
+    public MultiPolygon(ArrayList<Polygon> polygons) {
+        mPolygons = polygons;
+    }
+
     @Override
     public String getType() {
         return mType;
@@ -20,5 +24,11 @@ public class MultiPolygon extends Geometry {
         return mPolygons;
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(mType).append("{");
+        sb.append("\n Polygons=").append(mPolygons);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

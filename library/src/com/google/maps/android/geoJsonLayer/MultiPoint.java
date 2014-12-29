@@ -10,6 +10,10 @@ public class MultiPoint extends Geometry {
 
     private ArrayList<Point> mPoints;
 
+    public MultiPoint(ArrayList<Point> points) {
+        mPoints = points;
+    }
+
     @Override
     public String getType() {
         return mType;
@@ -17,5 +21,13 @@ public class MultiPoint extends Geometry {
 
     public ArrayList<Point> getPoints() {
         return mPoints;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(mType).append("{");
+        sb.append("\n points=").append(mPoints);
+        sb.append("\n}\n");
+        return sb.toString();
     }
 }
