@@ -1,4 +1,4 @@
-package geoJsonLayer;
+package com.google.maps.android.geoJsonLayer;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,6 @@
-package geoJsonLayer;
+package com.google.maps.android.geoJsonLayer;
+
+import android.util.Log;
 
 import java.util.Map;
 
@@ -35,6 +37,11 @@ public class Feature {
 
     public String removeProperty(String property) {
         return mProperties.remove(property);
+    }
+
+    public Feature() {
+        mGeometry = new LineString();
+        Log.i("E", Boolean.toString(mGeometry instanceof Geometry));
     }
 
 }

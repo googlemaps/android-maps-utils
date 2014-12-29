@@ -1,4 +1,4 @@
-package geoJsonLayer;
+package com.google.maps.android.geoJsonLayer;
 
 import com.google.android.gms.maps.GoogleMap;
 
