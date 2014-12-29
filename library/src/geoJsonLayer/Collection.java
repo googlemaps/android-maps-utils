@@ -10,7 +10,9 @@ import java.util.ArrayList;
  * Created by juliawong on 12/29/14.
  */
 public class Collection {
+
     private ArrayList<Feature> mFeatures = new ArrayList<Feature>();
+
     private GoogleMap mMap;
 
     public Collection(GoogleMap map, int resourceId, Context context) {
@@ -28,9 +30,17 @@ public class Collection {
         return mMap;
     }
 
+    public void setMap(GoogleMap map) {
+        mMap = map;
+    }
+
     // TODO: Split styles or keep as one
     public Style getStyle() {
         return null;
+    }
+
+    public void setStyle(Style style) {
+
     }
 
     public void removeFeature(Feature feature) {
@@ -41,15 +51,7 @@ public class Collection {
 
     }
 
-    public void setMap(GoogleMap map) {
-        mMap = map;
-    }
-
     public void setPreserveViewPort(boolean preserveViewPort) {
-
-    }
-
-    public void setStyle(Style style) {
 
     }
 
