@@ -5,4 +5,11 @@ package geoJsonLayer;
  */
 public class Geometry {
 
+    private String mType = null;
+
+    public String getType() {
+        return mType;
+    }
+
+
 }
