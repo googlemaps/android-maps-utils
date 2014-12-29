@@ -6,7 +6,8 @@ import java.util.ArrayList;
  * Created by juliawong on 12/29/14.
  */
 public class MultiLineString extends Geometry {
-    private final static String mType = "MultiLineString";
+
+    private final static String GEOMETRY_TYPE = "MultiLineString";
 
     private ArrayList<LineString> mLineStrings;
 
@@ -17,7 +18,7 @@ public class MultiLineString extends Geometry {
 
     @Override
     public String getType() {
-        return mType;
+        return GEOMETRY_TYPE;
     }
 
     public ArrayList<LineString> getLineStrings() {
@@ -26,7 +27,7 @@ public class MultiLineString extends Geometry {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(mType).append("{");
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
         sb.append("\n LineStrings=").append(mLineStrings);
         sb.append("\n}\n");
         return sb.toString();

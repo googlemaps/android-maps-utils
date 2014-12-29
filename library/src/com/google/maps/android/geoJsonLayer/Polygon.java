@@ -9,7 +9,8 @@ import java.util.ArrayList;
  */
 
 public class Polygon extends Geometry {
-    private final static String mType = "Polygon";
+
+    private final static String GEOMETRY_TYPE = "Polygon";
 
     private ArrayList<ArrayList<LatLng>> mCoordinates;
 
@@ -20,7 +21,7 @@ public class Polygon extends Geometry {
 
     @Override
     public String getType() {
-        return mType;
+        return GEOMETRY_TYPE;
     }
 
     public ArrayList<ArrayList<LatLng>> getCoordinates() {
@@ -29,7 +30,7 @@ public class Polygon extends Geometry {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(mType).append("{");
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
         sb.append("\n coordinates=").append(mCoordinates);
         sb.append("\n}\n");
         return sb.toString();

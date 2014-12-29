@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class GeometryCollection extends Geometry {
 
-    private final static String mType = "GeometryCollection";
+    private final static String GEOMETRY_TYPE = "GeometryCollection";
 
     private ArrayList<Geometry> mGeometries;
 
@@ -18,7 +18,7 @@ public class GeometryCollection extends Geometry {
 
     @Override
     public String getType() {
-        return mType;
+        return GEOMETRY_TYPE;
     }
 
     public ArrayList<Geometry> getGeometries() {
@@ -27,7 +27,7 @@ public class GeometryCollection extends Geometry {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(mType).append("{");
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
         sb.append("\n Geometries=").append(mGeometries);
         sb.append("\n}\n");
         return sb.toString();

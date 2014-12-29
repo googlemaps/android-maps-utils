@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Point extends Geometry {
 
-    private final static String mType = "Point";
+    private final static String GEOMETRY_TYPE = "Point";
 
     private LatLng mCoordinates;
 
@@ -17,7 +17,7 @@ public class Point extends Geometry {
 
     @Override
     public String getType() {
-        return mType;
+        return GEOMETRY_TYPE;
     }
 
     public LatLng getCoordinates() {
@@ -26,7 +26,7 @@ public class Point extends Geometry {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(mType).append("{");
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
         sb.append("\n coordinates=").append(mCoordinates);
         sb.append("\n}\n");
         return sb.toString();

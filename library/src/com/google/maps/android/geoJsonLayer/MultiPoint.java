@@ -6,7 +6,8 @@ import java.util.ArrayList;
  * Created by juliawong on 12/29/14.
  */
 public class MultiPoint extends Geometry {
-    private final static String mType = "MultiPoint";
+
+    private final static String GEOMETRY_TYPE = "MultiPoint";
 
     private ArrayList<Point> mPoints;
 
@@ -16,7 +17,7 @@ public class MultiPoint extends Geometry {
 
     @Override
     public String getType() {
-        return mType;
+        return GEOMETRY_TYPE;
     }
 
     public ArrayList<Point> getPoints() {
@@ -25,7 +26,7 @@ public class MultiPoint extends Geometry {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(mType).append("{");
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
         sb.append("\n points=").append(mPoints);
         sb.append("\n}\n");
         return sb.toString();
