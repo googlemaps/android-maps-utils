@@ -21,17 +21,22 @@ public class Feature {
 
     private Map<String, String> mProperties;
 
-    public Feature(Geometry geometry, Style style, String id, Map<String, String> properties) {
+    public Feature(Geometry geometry, String id, Map<String, String> properties) {
         this.mGeometry = geometry;
-        this.mStyle = style;
         this.mId = id;
         this.mProperties = properties;
-
 
         createDemoGeometry();
     }
 
     // TODO: implement an iterator thing or just return mProperties
+
+    // TODO: Redraw with new style
+    public Style setStyle(Style style) {
+        Style oldStyle = mStyle;
+        mStyle = style;
+        return oldStyle;
+    }
 
     public Geometry getGeometry() {
         return mGeometry;
@@ -58,11 +63,13 @@ public class Feature {
         Point p2 = new Point(new LatLng(0.0, 0.0));
         LineString l1 = new LineString(new ArrayList<LatLng>(
                 Arrays.asList(new LatLng(101.0, 0.0), new LatLng(102.0, 1.0))));
-        LineString l2 = new LineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(101.0, 0.0), new LatLng(102.0, 1.0))));
-        GeometryCollection gc1 = new GeometryCollection(new ArrayList<Geometry>(Arrays.asList(l2, p2)));
-        GeometryCollection gc2 = new GeometryCollection(new ArrayList<Geometry>(Arrays.asList(gc1)));
+        LineString l2 = new LineString(new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(101.0, 0.0), new LatLng(102.0, 1.0))));
+        GeometryCollection gc1 = new GeometryCollection(
+                new ArrayList<Geometry>(Arrays.asList(l2, p2)));
+        GeometryCollection gc2 = new GeometryCollection(
+                new ArrayList<Geometry>(Arrays.asList(gc1)));
         mGeometry = new GeometryCollection(new ArrayList<Geometry>(Arrays.asList(p1, l1, gc2)));
         Log.i("Geometry", mGeometry.toString());
     }
-
 }
