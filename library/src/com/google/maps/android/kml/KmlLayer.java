@@ -1,17 +1,15 @@
 package com.google.maps.android.kml;
 
-import android.content.Context;
 import android.graphics.Color;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -25,17 +23,17 @@ import java.util.Map;
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
-public class ImportKML {
+public class KmlLayer {
 
-    private final XmlPullParser mParser;
+    private XmlPullParser mParser;
 
-    private final HashMap<String, StyleProperties> mStyles;
+    private HashMap<String, StyleProperties> mStyles;
 
-    private final ArrayList<Object> mObjects;
+    private ArrayList<Object> mObjects;
 
-    private final ArrayList<PlacemarkProperties> mPlacemarkProperties;
+    private ArrayList<PlacemarkProperties> mPlacemarkProperties;
 
-    private final GoogleMap mMap;
+    private GoogleMap mMap;
 
     private static final int INNER_BOUNDARY = 0;
 
@@ -43,62 +41,40 @@ public class ImportKML {
 
     private ArrayList<Object> mOptions;
 
-    private boolean isVisible;
-
-    private InputStream stream;
+    //TODO: MAJOR TODOS:
+    //Implement Icon and IconStyle
+    //Figure out if Point has a style
+    //Implement Multigeometry
 
 
     /**
      * Constructs a new Document object
      *
      * @param map    Map object
-     * @param parser XmlPullParser loaded with the KML file
      */
-    public ImportKML(GoogleMap map, XmlPullParser parser) {
-        this.mParser = parser;
+    public KmlLayer(GoogleMap map, InputStream stream) throws XmlPullParserException, JSONException, IOException {
+        this.mParser = convertUrlToParser(stream);
         this.mMap = map;
+        setKmlData();
+    }
+
+
+    private void setKmlData() throws XmlPullParserException, JSONException, IOException {
         this.mStyles = new HashMap<String, StyleProperties>();
         this.mPlacemarkProperties = new ArrayList<PlacemarkProperties>();
         this.mObjects = new ArrayList<Object>();
-        this.isVisible = true;
         this.mOptions = new ArrayList<Object>();
+        importKML();
+        assignStyles();
+        addKmlLayerToMap();
     }
 
-    /**
-     * @param map                Map object
-     * @param resourceId         Raw resource KML file
-     * @param applicationContext Application context object
-     */
-    public ImportKML(GoogleMap map, int resourceId, Context applicationContext)
-            throws XmlPullParserException {
-        this.mMap = map;
-        this.mStyles = new HashMap<String, StyleProperties>();
-        this.mPlacemarkProperties = new ArrayList<PlacemarkProperties>();
-        this.stream = applicationContext.getResources().openRawResource(resourceId);
-        this.mParser = createXmlParser(this.stream);
-        this.mObjects = new ArrayList<Object>();
-        this.mOptions = new ArrayList<Object>();
-        this.isVisible = true;
-    }
-
-    /**
-     * Creates a new XmlPullParser object
-     *
-     * @param stream Character input stream representing the KML file
-     * @return XmlPullParser object to allow for the KML document to be parsed
-     */
-    private XmlPullParser createXmlParser(InputStream stream) {
-        XmlPullParserFactory factory = null;
-        try {
-            factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser parser = factory.newPullParser();
-            parser.setInput(stream, null);
-            return parser;
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private XmlPullParser convertUrlToParser (InputStream stream) throws JSONException, XmlPullParserException {
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlPullParser parser = factory.newPullParser();
+        parser.setInput(stream, null);
+        return parser;
     }
 
     /**
@@ -119,7 +95,7 @@ public class ImportKML {
             }
             eventType = this.mParser.next();
         }
-        assignStyles();
+
         this.mParser.require(XmlPullParser.END_DOCUMENT, null, null);
     }
 
@@ -161,8 +137,11 @@ public class ImportKML {
                 mOptions.add(assignPolygonOptions(placemarkProperties));
             } else if (placemarkProperties.getPolyline() != null) {
                 mOptions.add(assignLineOptions(placemarkProperties));
+            } else if (placemarkProperties.getPoint() != null) {
+                mOptions.add(assignMarkerOptions(placemarkProperties));
             }
         }
+        System.out.println(mOptions.size());
     }
 
     /**
@@ -172,7 +151,9 @@ public class ImportKML {
      */
     private PolylineOptions assignLineOptions(PlacemarkProperties placemarkProperties) {
         PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.addAll(placemarkProperties.getPolyline().getLineStringPoints());
+
+        ArrayList<LatLng> lineStringPoint = ((ArrayList<LatLng>)placemarkProperties.getPolyline().getGeometry());
+        polylineOptions.addAll(lineStringPoint);
 
         boolean hasStyleURL =  placemarkProperties.getProperties().containsKey("styleUrl");
         if (hasStyleURL) {
@@ -191,6 +172,13 @@ public class ImportKML {
         return polylineOptions;
     }
 
+    private MarkerOptions assignMarkerOptions(PlacemarkProperties placemarkProperties) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position((LatLng) placemarkProperties.getPoint().getGeometry());
+        return markerOptions;
+    }
+
+
     /**
      * Gets a placemark class which has a polygon option and creates a Google Maps PolygonOptions.
      * It then adds in corresponding values. Currently only supports adding:
@@ -201,7 +189,12 @@ public class ImportKML {
 
     private PolygonOptions assignPolygonOptions(PlacemarkProperties placemarkProperties) {
         PolygonOptions polygonOptions = new PolygonOptions();
-        for (Map.Entry<ArrayList<LatLng>, Integer> p: placemarkProperties.getPolygon().getPolygonPoints().entrySet()) {
+
+
+        HashMap< ArrayList<LatLng>, Integer> one = ((HashMap< ArrayList<LatLng>, Integer>) placemarkProperties.getPolygon().getGeometry());
+
+
+        for (Map.Entry<ArrayList<LatLng>, Integer> p: one.entrySet()) {
             if (p.getValue() == OUTER_BOUNDARY) {
                 polygonOptions.addAll(p.getKey());
             } else if (p.getValue() == INNER_BOUNDARY) {
@@ -232,28 +225,13 @@ public class ImportKML {
         return polygonOptions;
     }
 
-    /**
-     * Removes all objects permanently from that the user has added with KML
-     */
-    public void removeKMLData() {
-        this.isVisible = !this.isVisible;
-        for (Object mObject: mObjects) {
-            if (mObject instanceof Polygon) {
-                ((Polygon) mObject).remove();
-            } else if (mObject instanceof Polyline){
-                ((Polyline) mObject).remove();
-            } else if (mObject instanceof Marker) {
-                ((Marker) mObject).remove();
-            }
-        }
-    }
-
 
     /**
      * Adds geometry options options onto the map. The geometry object itself is stored in another
      * data structure for retrieval later
      */
-    public void addKMLData() {
+    private void addKmlLayerToMap() {
+        System.out.println(mOptions.size());
         for (Object objects: mOptions) {
             if (objects instanceof PolylineOptions) {
                 mObjects.add(mMap.addPolyline((PolylineOptions) objects));
@@ -265,40 +243,8 @@ public class ImportKML {
         }
     }
 
-    /**
-     * Toggles visibility of all of the objects trhat the user has added with KML
-     */
-    public void showAllKMLData() {
-        changeVisibility(true);
-    }
 
-    public void hideAllKMLData() {
-        changeVisibility(false);
-    }
 
-    public void toggleVisibilty () {
-        for (Object mObject: mObjects) {
-            if (mObject instanceof Polygon) {
-                ((Polygon) mObject).setVisible(!((Polygon) mObject).isVisible());
-            } else if (mObject instanceof Polyline){
-                ((Polyline) mObject).setVisible(!((Polyline) mObject).isVisible());
-            } else if (mObject instanceof Marker) {
-                ((Marker) mObject).setVisible(!((Marker) mObject).isVisible());
-            }
-        }
-    }
-
-    private void changeVisibility (Boolean visibility) {
-        for (Object mObject: mObjects) {
-            if (mObject instanceof Polygon) {
-                ((Polygon) mObject).setVisible(visibility);
-            } else if (mObject instanceof Polyline){
-                ((Polyline) mObject).setVisible(visibility);
-            } else if (mObject instanceof Marker) {
-                ((Marker) mObject).setVisible(visibility);
-            }
-        }
-    }
 
 
 

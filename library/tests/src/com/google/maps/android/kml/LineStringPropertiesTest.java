@@ -41,10 +41,12 @@ public class LineStringPropertiesTest extends TestCase {
 
         String[] point = {"0", "0"};
         LatLng latLng = new LatLng(0, 0);
-
-
         assertNotNull(lineStringProperties.convertToLatLng(point));
         assertEquals(lineStringProperties.convertToLatLng(point).latitude, latLng.latitude);
+        assertEquals(lineStringProperties.convertToLatLng(point).longitude, latLng.longitude);
+
+
+        String[] point1 = {"0", "0"};
 
 
 

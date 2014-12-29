@@ -21,14 +21,6 @@ public class StyleProperties {
 
     private final HashMap<String, String> mPolygonOptions;
 
-    private final HashMap<String, String> mPointOptions;
-
-    private final static int POLYGON_TRANSPARENT_COLOR = 0x00000000;
-
-    private final static int POLYGON_NO_OUTLINE_WIDTH = 0;
-
-    private final static int HEXADECIMAL_COLOR_RADIX = 16;
-
     private boolean fill = true;
 
     private boolean outline = true;
@@ -37,7 +29,6 @@ public class StyleProperties {
     public StyleProperties() {
         mPolylineOptions = new HashMap<String, String>();
         mPolygonOptions = new HashMap<String, String>();
-        mPointOptions = new HashMap<String, String>();
     }
 
     /**
@@ -163,7 +154,4 @@ public class StyleProperties {
     public HashMap<String, String> getPolygonOptions() {
         return mPolygonOptions;
     }
-
-
-    public HashMap<String, String> getPointOptions() { return mPointOptions; }
 }
