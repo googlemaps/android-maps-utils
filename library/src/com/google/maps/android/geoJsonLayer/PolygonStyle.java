@@ -1,9 +1,13 @@
 package com.google.maps.android.geoJsonLayer;
 
+import com.google.android.gms.maps.model.PolygonOptions;
+
 /**
  * Created by juliawong on 12/29/14.
  */
 public class PolygonStyle implements Style {
+
+    private PolygonOptions mPolygonOptions;
 
     private int mFillColor;
 
@@ -15,7 +19,7 @@ public class PolygonStyle implements Style {
 
     private boolean mVisible;
 
-    private boolean mZIndex;
+    private float mZIndex;
 
     public int getFillColor() {
         return mFillColor;
@@ -23,6 +27,7 @@ public class PolygonStyle implements Style {
 
     public void setFillColor(int fillColor) {
         mFillColor = fillColor;
+        mPolygonOptions.fillColor(mFillColor);
     }
 
     public boolean isGeodesic() {
@@ -31,6 +36,7 @@ public class PolygonStyle implements Style {
 
     public void setGeodesic(boolean geodesic) {
         mGeodesic = geodesic;
+        mPolygonOptions.geodesic(mGeodesic);
     }
 
     public int getStrokeColor() {
@@ -39,6 +45,7 @@ public class PolygonStyle implements Style {
 
     public void setStrokeColor(int strokeColor) {
         mStrokeColor = strokeColor;
+        mPolygonOptions.strokeColor(mStrokeColor);
     }
 
     public float getStrokeWidth() {
@@ -47,14 +54,16 @@ public class PolygonStyle implements Style {
 
     public void setStrokeWidth(float strokeWidth) {
         mStrokeWidth = strokeWidth;
+        mPolygonOptions.strokeWidth(mStrokeWidth);
     }
 
-    public boolean isZIndex() {
+    public float isZIndex() {
         return mZIndex;
     }
 
-    public void setZIndex(boolean ZIndex) {
+    public void setZIndex(float ZIndex) {
         mZIndex = ZIndex;
+        mPolygonOptions.zIndex(mZIndex);
     }
 
     @Override
@@ -65,5 +74,10 @@ public class PolygonStyle implements Style {
     @Override
     public void setVisible(boolean visible) {
         mVisible = visible;
+        mPolygonOptions.visible(mVisible);
+    }
+
+    public PolygonOptions getPolygonOptions() {
+        return mPolygonOptions;
     }
 }

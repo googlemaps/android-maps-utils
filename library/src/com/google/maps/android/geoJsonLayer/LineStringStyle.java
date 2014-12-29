@@ -1,9 +1,13 @@
 package com.google.maps.android.geoJsonLayer;
 
+import com.google.android.gms.maps.model.PolylineOptions;
+
 /**
  * Created by juliawong on 12/29/14.
  */
 public class LineStringStyle implements Style {
+
+    private PolylineOptions mPolylineOptions;
 
     private int mColor;
 
@@ -21,6 +25,7 @@ public class LineStringStyle implements Style {
 
     public void setColor(int color) {
         mColor = color;
+        mPolylineOptions.color(mColor);
     }
 
     public boolean isGeodesic() {
@@ -29,6 +34,7 @@ public class LineStringStyle implements Style {
 
     public void setGeodesic(boolean geodesic) {
         mGeodesic = geodesic;
+        mPolylineOptions.geodesic(mGeodesic);
     }
 
     public float getWidth() {
@@ -37,6 +43,7 @@ public class LineStringStyle implements Style {
 
     public void setWidth(float width) {
         mWidth = width;
+        mPolylineOptions.width(mWidth);
     }
 
     public float getZIndex() {
@@ -45,6 +52,7 @@ public class LineStringStyle implements Style {
 
     public void setZIndex(float ZIndex) {
         mZIndex = ZIndex;
+        mPolylineOptions.zIndex(mZIndex);
     }
 
     @Override
@@ -55,5 +63,10 @@ public class LineStringStyle implements Style {
     @Override
     public void setVisible(boolean visible) {
         mVisible = visible;
+        mPolylineOptions.visible(mVisible);
+    }
+
+    public PolylineOptions getPolylineOptions() {
+        return mPolylineOptions;
     }
 }

@@ -1,9 +1,13 @@
 package com.google.maps.android.geoJsonLayer;
 
+import com.google.android.gms.maps.model.MarkerOptions;
+
 /**
  * Created by juliawong on 12/29/14.
  */
 public class PointStyle implements Style {
+
+    private MarkerOptions mMarkerOptions;
 
     private float mAlpha;
 
@@ -33,22 +37,21 @@ public class PointStyle implements Style {
 
     public void setAlpha(float alpha) {
         mAlpha = alpha;
+        mMarkerOptions.alpha(mAlpha);
     }
 
     public float getAnchorU() {
         return mAnchorU;
     }
 
-    public void setAnchorU(float anchorU) {
-        mAnchorU = anchorU;
-    }
-
     public float getAnchorV() {
         return mAnchorV;
     }
 
-    public void setAnchorV(float anchorV) {
+    public void setAnchor(float anchorU, float anchorV) {
+        mAnchorU = anchorU;
         mAnchorV = anchorV;
+        mMarkerOptions.anchor(mAnchorU, mAnchorV);
     }
 
     public boolean isDraggable() {
@@ -57,6 +60,7 @@ public class PointStyle implements Style {
 
     public void setDraggable(boolean draggable) {
         mDraggable = draggable;
+        mMarkerOptions.draggable(mDraggable);
     }
 
     public boolean isFlat() {
@@ -65,22 +69,21 @@ public class PointStyle implements Style {
 
     public void setFlat(boolean flat) {
         mFlat = flat;
+        mMarkerOptions.flat(mFlat);
     }
 
     public float getInfoWindowAnchorU() {
         return mInfoWindowAnchorU;
     }
 
-    public void setInfoWindowAnchorU(float infoWindowAnchorU) {
-        mInfoWindowAnchorU = infoWindowAnchorU;
-    }
-
     public float getInfoWindowAnchorV() {
         return mInfoWindowAnchorV;
     }
 
-    public void setInfoWindowAnchorV(float infoWindowAnchorV) {
+    public void setInfoWindowAnchor(float infoWindowAnchorU, float infoWindowAnchorV) {
+        mInfoWindowAnchorU = infoWindowAnchorU;
         mInfoWindowAnchorV = infoWindowAnchorV;
+        mMarkerOptions.infoWindowAnchor(mInfoWindowAnchorU, mInfoWindowAnchorV);
     }
 
     public float getRotation() {
@@ -89,6 +92,7 @@ public class PointStyle implements Style {
 
     public void setRotation(float rotation) {
         mRotation = rotation;
+        mMarkerOptions.rotation(mRotation);
     }
 
     public String getSnippet() {
@@ -97,6 +101,7 @@ public class PointStyle implements Style {
 
     public void setSnippet(String snippet) {
         mSnippet = snippet;
+        mMarkerOptions.snippet(mSnippet);
     }
 
     public String getTitle() {
@@ -105,6 +110,7 @@ public class PointStyle implements Style {
 
     public void setTitle(String title) {
         mTitle = title;
+        mMarkerOptions.title(mTitle);
     }
 
     @Override
@@ -115,5 +121,10 @@ public class PointStyle implements Style {
     @Override
     public void setVisible(boolean visible) {
         this.mVisible = visible;
+        mMarkerOptions.visible(mVisible);
+    }
+
+    public MarkerOptions getMarkerOptions() {
+        return mMarkerOptions;
     }
 }
