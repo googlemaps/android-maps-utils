@@ -4,6 +4,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -25,8 +26,12 @@ public class PlacemarkProperties {
 
     private LineStringProperties mLineStringProperty;
 
-    private static Logger LOGGER = Logger.getLogger("InfoLogging");
+    private PointProperties mPointProperty;
 
+    private ArrayList<Object> mMultiGeometryProperty;
+
+    private static Logger LOGGER = Logger.getLogger("InfoLogging");
+    
 
     /**
      * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
@@ -40,35 +45,76 @@ public class PlacemarkProperties {
             String name = parser.getName();
             // For some reason name.matches only works if you nest it inside the statement below.
             if (eventType == XmlPullParser.START_TAG) {
-
-                //TODO: Check if name, description or visibility has any edge cases we need to test for
-                if (name.equals("name") || name.equals("description") || name.equals("visibility")) {
-                    setProperties(name, parser.nextText());
-                } else if (name.equals("styleUrl")) {
-                    //TODO: Style url can either be in the tags or they can be an id
-                    if (parser.getAttributeValue(null, "id") != null) {
-                        if (isValidStyleUrl(parser.getAttributeValue(null, "id"))) {
-                            setProperties(name, parser.getAttributeValue(null, "id"));
-                        }
-                    } else {
-                        String styleUrl = parser.nextText();
-                        if (isValidStyleUrl(parser.nextText())) {
-                            setProperties(name, styleUrl);
-                        }
-                    }
-                }
-
-                if (name.equals("LineString")) {
-                    setLineString(parser);
-                } else if (name.equals("Polygon")) {
-                    setPolygon(parser);
-                } else if (name.equals("Point")) {
-                    setMarker(parser);
+                if (isStyle(name)) {
+                    setStyle(parser, name);
+                } else if (isGeometry(name)) {
+                    setGeometry(parser, name);
                 }
             }
-                eventType = parser.next();
+            eventType = parser.next();
         }
     }
+
+    /**
+     * Determines whether the tag name is a style property keyword
+     * @param name  The text within the start tag
+     * @return  true if text equals name, description, visibility or styleUrl
+     */
+    private boolean isStyle(String name) {
+        if (name.equals("name") || name.equals("description") || name.equals("visibility")
+                || name.equals("styleUrl")) return true;
+        return false;
+    }
+
+    /**
+     * Sets all the relevant style properties
+     * @param parser    XmlPullParser reading in a KML stream
+     * @param name      The text within the start tag
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    private void setStyle(XmlPullParser parser, String name) throws XmlPullParserException, IOException {
+        //TODO: Check if name, description or visibility has any edge cases we need to test for
+        String styleUrl;
+        if (name.equals("name") || name.equals("description") || name.equals("visibility")) {
+            setProperties(name, parser.nextText());
+        } else if (name.equals("styleUrl")) {
+            styleUrl = parser.getAttributeValue(null, "id");
+            if (parser.getAttributeCount() != 0) {
+                setProperties(name, parser.getAttributeValue(null, "id"));
+            } else {
+                styleUrl = parser.nextText();
+                setProperties(name, styleUrl);
+            }
+        }
+    }
+
+    /**
+     * Determines whether the tag name is a geometry property keyword
+     * @param name  The text within the start tag
+     * @return  true if the text equals linestring, polygon, point or multigeometry
+     */
+    private boolean isGeometry(String name) {
+        if (name.equals("LineString") || name.equals("Polygon") || name.equals("Point")
+                || name.equals("MultiGeometry")) return true;
+        return false;
+    }
+
+
+
+    private void setGeometry(XmlPullParser parser, String name) throws XmlPullParserException, IOException {
+        if (name.equals("LineString")) {
+            setLineString(parser);
+        } else if (name.equals("Polygon")) {
+            setPolygon(parser);
+        } else if (name.equals("Point")) {
+            setMarker(parser);
+        } else if (name.equals("MultiGeometry")) {
+            //setMultiGeometry(parser);
+        }
+    }
+
+
 
     /**
      * Creates a polygon property class when the starting "Polygon" tag is detected in the parser
@@ -83,9 +129,9 @@ public class PlacemarkProperties {
             String name = parser.getName();
             if (eventType == XmlPullParser.START_TAG) {
                 if (name.equals("outerBoundaryIs")) {
-                    mPolygonProperty.pointProperties(parser, OUTER_BOUNDARY);
+                    mPolygonProperty.parseGeometry(parser);
                 } else if (name.equals("innerBoundaryIs")) {
-                    mPolygonProperty.pointProperties(parser, INNER_BOUNDARY);
+                    mPolygonProperty.parseGeometry(parser);
                 }
             }
             eventType = parser.next();
@@ -103,7 +149,7 @@ public class PlacemarkProperties {
         int eventType = parser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && parser.getName().equals("LineString"))) {
             if (eventType == XmlPullParser.START_TAG) {
-                mLineStringProperty.pointProperties(parser);
+                mLineStringProperty.parseGeometry(parser);
             }
             eventType = parser.next();
         }
@@ -115,7 +161,14 @@ public class PlacemarkProperties {
      * @throws IOException
      */
     private void setMarker(XmlPullParser parser) throws XmlPullParserException, IOException {
-        //TODO: Do marker options
+        mPointProperty = new PointProperties();
+        int eventType = parser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && parser.getName().equals("Point"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                mPointProperty.parseGeometry(parser);
+            }
+            eventType = parser.next();
+        }
     }
 
     /**
@@ -151,28 +204,6 @@ public class PlacemarkProperties {
     }
 
     /**
-     * Checks that the styleUrl starts with #, as we do not currently support importing kml
-     * files from other sources
-     * @param styleUrl  string which represents name of the styleurl
-     * @return  true if styleUrl has a "#" at the beginning, false otherwise
-     */
-    private boolean isValidStyleUrl(String styleUrl) {
-        return styleUrl.startsWith("#");
-    }
-
-    /**
-     * Checks that there is only one geometry object in this placemark class
-     * @return true if one or no geometry object, otherwise false
-     */
-    public boolean isValidGeometryObject() {
-        if (mLineStringProperty != null && mPolygonProperty != null) return false;
-        if (mLineStringProperty == null && mPolygonProperty != null) return true;
-        if (mLineStringProperty != null && mPolygonProperty == null) return true;
-        if (mLineStringProperty != null && mPolygonProperty != null) return false;
-        return true;
-    }
-
-    /**
      * Returns a hashmap of properties
      * @return Hashmap of properties, or null if it does not exist
      */
@@ -192,6 +223,10 @@ public class PlacemarkProperties {
      */
     public LineStringProperties getPolyline() {
         return mLineStringProperty;
+    }
+
+    public PointProperties getPoint() {
+        return mPointProperty;
     }
 
 }
