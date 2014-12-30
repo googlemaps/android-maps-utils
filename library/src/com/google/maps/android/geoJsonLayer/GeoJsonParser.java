@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -18,6 +19,7 @@ import java.util.Iterator;
  */
 public class GeoJsonParser {
 
+    // TODO: add default styles
     private final static String FEATURE_COLLECTION = "FeatureCollection";
 
     private final static String FEATURE = "Feature";
@@ -35,12 +37,12 @@ public class GeoJsonParser {
 
     }
 
-    private ArrayList<Feature> parseFeatureCollection(JSONObject geoJsonFile) throws JSONException {
+    private ArrayList<Feature> parseFeatureCollection(JSONArray geoJsonFeatures)
+            throws JSONException {
         // FC is an array of features
         ArrayList<Feature> features = new ArrayList<Feature>();
-        JSONArray featureCollectionArray = geoJsonFile.getJSONArray("features");
-        for (int i = 0; i < featureCollectionArray.length(); i++) {
-            JSONObject feature = featureCollectionArray.getJSONObject(i);
+        for (int i = 0; i < geoJsonFeatures.length(); i++) {
+            JSONObject feature = geoJsonFeatures.getJSONObject(i);
 
             if (feature.getString("type").equals(FEATURE)) {
                 features.add(parseFeature(feature));
@@ -49,35 +51,38 @@ public class GeoJsonParser {
         return features;
     }
 
-    private Feature parseFeature(JSONObject geoJsonFile) throws JSONException {
-        // TODO if the geometry is null don't add it to the map
+    private Feature parseFeature(JSONObject geoJsonFeature) throws JSONException {
+        // TODO: if the geometry is null don't add it to the map
         String id = null;
+        Geometry geometry;
         Feature feature;
-        feature = parseGeometry(geoJsonFile.getJSONObject("geometry"));
+        geometry = parseGeometry(geoJsonFeature.getJSONObject("geometry"));
         // Id is optional for a feature
-        if (geoJsonFile.has("id")) {
-            feature.setId(geoJsonFile.getString("id"));
+        if (geoJsonFeature.has("id")) {
+            id = geoJsonFeature.getString("id");
         }
-        JSONObject properties = geoJsonFile.getJSONObject("properties");
-        parseProperties(feature, properties);
+        JSONObject properties = geoJsonFeature.getJSONObject("properties");
+        feature = new Feature(geometry, id, parseProperties(properties));
         return feature;
     }
 
-    private Feature parseGeometry(JSONObject geoJsonFile) throws JSONException {
-        String geometryType = geoJsonFile.getString("type");
-        JSONArray coordinates = geoJsonFile.getJSONArray("coordinates");
-        Geometry geometry = createGeometry(geometryType, coordinates);
-        return new Feature(geometry);
+    private Geometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
+        String geometryType = geoJsonGeometry.getString("type");
+        JSONArray coordinates = geoJsonGeometry.getJSONArray("coordinates");
+        return createGeometry(geometryType, coordinates);
     }
 
-    private void parseProperties(Feature feature, JSONObject properties) throws JSONException {
+    private HashMap<String, String> parseProperties(JSONObject properties) throws JSONException {
+        HashMap<String, String> propertiesMap = new HashMap<String, String>();
         Iterator propertyKeys = properties.keys();
         while (propertyKeys.hasNext()) {
             String key = (String) propertyKeys.next();
-            feature.setProperty(key, properties.getString(key));
+            propertiesMap.put(key, properties.getString(key));
         }
+        return propertiesMap;
     }
 
+    // TODO: figure out GeometryCollection
     private Geometry createGeometry(String geometryType, JSONArray coordinates)
             throws JSONException {
         if (geometryType.equals("Point")) {
