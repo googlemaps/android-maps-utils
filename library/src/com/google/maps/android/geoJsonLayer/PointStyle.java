@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class PointStyle implements Style {
 
+    private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint";
+
     private MarkerOptions mMarkerOptions;
 
     private float mAlpha;
@@ -126,5 +128,9 @@ public class PointStyle implements Style {
 
     public MarkerOptions getMarkerOptions() {
         return mMarkerOptions;
+    }
+
+    public static String getGeometryType() {
+        return GEOMETRY_TYPE_REGEX;
     }
 }

@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
  */
 public class LineStringStyle implements Style {
 
+    private final static String GEOMETRY_TYPE_REGEX = "Line|MultiLine";
+
     private PolylineOptions mPolylineOptions;
 
     private int mColor;
@@ -68,5 +70,9 @@ public class LineStringStyle implements Style {
 
     public PolylineOptions getPolylineOptions() {
         return mPolylineOptions;
+    }
+
+    public static String getGeometryType() {
+        return GEOMETRY_TYPE_REGEX;
     }
 }

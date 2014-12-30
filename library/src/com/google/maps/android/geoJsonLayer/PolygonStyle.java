@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.PolygonOptions;
  */
 public class PolygonStyle implements Style {
 
+    private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon";
+
     private PolygonOptions mPolygonOptions;
 
     private int mFillColor;
@@ -57,7 +59,7 @@ public class PolygonStyle implements Style {
         mPolygonOptions.strokeWidth(mStrokeWidth);
     }
 
-    public float isZIndex() {
+    public float getZIndex() {
         return mZIndex;
     }
 
@@ -79,5 +81,9 @@ public class PolygonStyle implements Style {
 
     public PolygonOptions getPolygonOptions() {
         return mPolygonOptions;
+    }
+
+    public static String getGeometryType() {
+        return GEOMETRY_TYPE_REGEX;
     }
 }
