@@ -11,14 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**
  * Parse a JSONObject and return an array of Feature objects
  */
 public class GeoJsonParser {
-    private ArrayList<Feature> mFeatures;
 
     private final static String FEATURE_COLLECTION = "FeatureCollection";
 
@@ -26,69 +24,77 @@ public class GeoJsonParser {
 
     private final JSONObject mGeoJsonFile;
 
+    private ArrayList<Feature> mFeatures;
+
     public GeoJsonParser(JSONObject geoJsonFile) throws JSONException {
         mGeoJsonFile = geoJsonFile;
         String type = mGeoJsonFile.getString("type");
 
         // Decide how to parse the object
+        // If parsing geom, you need to create the feature
 
     }
 
-    private void parseFeatureCollection(JSONObject geoJsonFile) throws JSONException {
+    private ArrayList<Feature> parseFeatureCollection(JSONObject geoJsonFile) throws JSONException {
         // FC is an array of features
+        ArrayList<Feature> features = new ArrayList<Feature>();
         JSONArray featureCollectionArray = geoJsonFile.getJSONArray("features");
         for (int i = 0; i < featureCollectionArray.length(); i++) {
             JSONObject feature = featureCollectionArray.getJSONObject(i);
 
             if (feature.getString("type").equals(FEATURE)) {
-                parseFeature(feature);
+                features.add(parseFeature(feature));
             }
         }
+        return features;
     }
 
-    private void parseFeature(JSONObject geoJsonFile) throws JSONException {
+    private Feature parseFeature(JSONObject geoJsonFile) throws JSONException {
         // TODO if the geometry is null don't add it to the map
-        // Id is optional for a feature
         String id = null;
+        Feature feature;
+        feature = parseGeometry(geoJsonFile.getJSONObject("geometry"));
+        // Id is optional for a feature
         if (geoJsonFile.has("id")) {
-            id = geoJsonFile.getString("id");
+            feature.setId(geoJsonFile.getString("id"));
         }
-        String geometryType = geoJsonFile.getJSONObject("geometry").getString("type");
         JSONObject properties = geoJsonFile.getJSONObject("properties");
+        parseProperties(feature, properties);
+        return feature;
+    }
 
-        if (!geometryType.equals(FEATURE_COLLECTION)) {
-            JSONArray coordinates = geoJsonFile.getJSONArray("coordinates");
-            createFeature(id, geometryType, properties, coordinates);
+    private Feature parseGeometry(JSONObject geoJsonFile) throws JSONException {
+        String geometryType = geoJsonFile.getString("type");
+        JSONArray coordinates = geoJsonFile.getJSONArray("coordinates");
+        Geometry geometry = createGeometry(geometryType, coordinates);
+        return new Feature(geometry);
+    }
+
+    private void parseProperties(Feature feature, JSONObject properties) throws JSONException {
+        Iterator propertyKeys = properties.keys();
+        while (propertyKeys.hasNext()) {
+            String key = (String) propertyKeys.next();
+            feature.setProperty(key, properties.getString(key));
         }
     }
 
-    private void createFeature(String id, String geometryType, JSONObject properties,
-            JSONArray coordinates)
+    private Geometry createGeometry(String geometryType, JSONArray coordinates)
             throws JSONException {
-        HashMap<String, String> propertiesMap = parseProperties(properties);
-        Geometry geometry = null;
         if (geometryType.equals("Point")) {
-            geometry = createPoint(coordinates);
-        }
-        else if (geometryType.equals("MultiPoint")) {
-            geometry = createMultiPoint(coordinates);
-        }
-        else if (geometryType.equals("LineString")) {
-            geometry = createLineString(coordinates);
-        }
-        else if (geometryType.equals("MultiLineString")) {
-            geometry = createMultiLineString(coordinates);
-        }
-        else if (geometryType.equals("Polygon")) {
-            geometry = createPolygon(coordinates);
-        }
-        else if (geometryType.equals("MultiPolygon")) {
-            geometry = createMultiPolygon(coordinates);
+            return createPoint(coordinates);
+        } else if (geometryType.equals("MultiPoint")) {
+            return createMultiPoint(coordinates);
+        } else if (geometryType.equals("LineString")) {
+            return createLineString(coordinates);
+        } else if (geometryType.equals("MultiLineString")) {
+            return createMultiLineString(coordinates);
+        } else if (geometryType.equals("Polygon")) {
+            return createPolygon(coordinates);
+        } else if (geometryType.equals("MultiPolygon")) {
+            return createMultiPolygon(coordinates);
         }
 
-        if (geometry != null) {
-            mFeatures.add(new Feature(id, geometry, propertiesMap));
-        }
+        return null;
     }
 
     private Point createPoint(JSONArray coordinates) throws JSONException {
@@ -141,23 +147,14 @@ public class GeoJsonParser {
         return coordinatesArray;
     }
 
-    private ArrayList<ArrayList<LatLng>> parseCoordinatesArrays(JSONArray coordinates) throws JSONException {
+    private ArrayList<ArrayList<LatLng>> parseCoordinatesArrays(JSONArray coordinates)
+            throws JSONException {
         ArrayList<ArrayList<LatLng>> coordinatesArray = new ArrayList<ArrayList<LatLng>>();
 
         for (int i = 0; i < coordinates.length(); i++) {
             coordinatesArray.add(parseCoordinatesArray(coordinates.getJSONArray(i)));
         }
         return coordinatesArray;
-    }
-
-    private HashMap<String, String> parseProperties(JSONObject properties) throws JSONException {
-        HashMap<String, String> propertiesMap = new HashMap<String, String>();
-        Iterator propertyKeys = properties.keys();
-        while (propertyKeys.hasNext()) {
-            String key = (String) propertyKeys.next();
-            propertiesMap.put(key, properties.getString(key));
-        }
-        return propertiesMap;
     }
 
     public ArrayList<Feature> getFeatures() {
