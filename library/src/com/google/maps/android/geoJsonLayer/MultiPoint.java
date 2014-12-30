@@ -11,15 +11,30 @@ public class MultiPoint extends Geometry {
 
     private ArrayList<Point> mPoints;
 
+    /**
+     * Creates a MultiPoint object
+     *
+     * @param points array of Points to add to the MultiPoint
+     */
     public MultiPoint(ArrayList<Point> points) {
         mPoints = points;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the array of Points
+     *
+     * @return array of Points
+     */
     public ArrayList<Point> getPoints() {
         return mPoints;
     }

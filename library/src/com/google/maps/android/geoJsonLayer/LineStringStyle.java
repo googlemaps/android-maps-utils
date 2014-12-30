@@ -21,6 +21,10 @@ public class LineStringStyle implements Style {
 
     private float mZIndex;
 
+    public static String getGeometryType() {
+        return GEOMETRY_TYPE_REGEX;
+    }
+
     public int getColor() {
         return mColor;
     }
@@ -70,9 +74,5 @@ public class LineStringStyle implements Style {
 
     public PolylineOptions getPolylineOptions() {
         return mPolylineOptions;
-    }
-
-    public static String getGeometryType() {
-        return GEOMETRY_TYPE_REGEX;
     }
 }

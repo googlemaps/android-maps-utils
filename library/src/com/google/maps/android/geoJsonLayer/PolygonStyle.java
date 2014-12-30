@@ -23,6 +23,10 @@ public class PolygonStyle implements Style {
 
     private float mZIndex;
 
+    public static String getGeometryType() {
+        return GEOMETRY_TYPE_REGEX;
+    }
+
     public int getFillColor() {
         return mFillColor;
     }
@@ -81,9 +85,5 @@ public class PolygonStyle implements Style {
 
     public PolygonOptions getPolygonOptions() {
         return mPolygonOptions;
-    }
-
-    public static String getGeometryType() {
-        return GEOMETRY_TYPE_REGEX;
     }
 }

@@ -11,15 +11,30 @@ public class Point extends Geometry {
 
     private LatLng mCoordinates;
 
+    /**
+     * Creates a new Point
+     *
+     * @param coordinates coordinates of Point to store
+     */
     public Point(LatLng coordinates) {
         mCoordinates = coordinates;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the coordinates of the Point
+     *
+     * @return coordinates of the Point
+     */
     public LatLng getCoordinates() {
         return mCoordinates;
     }

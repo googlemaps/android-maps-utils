@@ -11,16 +11,31 @@ public class MultiLineString extends Geometry {
 
     private ArrayList<LineString> mLineStrings;
 
+    /**
+     * Creates a new MultiLineString object
+     *
+     * @param lineStrings array of LineStrings to add to the MultiLineString
+     */
     public MultiLineString(
             ArrayList<LineString> lineStrings) {
         mLineStrings = lineStrings;
     }
 
+    /**
+     * Get the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the array of LineStrings
+     *
+     * @return array of LineStrings
+     */
     public ArrayList<LineString> getLineStrings() {
         return mLineStrings;
     }

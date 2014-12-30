@@ -33,6 +33,10 @@ public class PointStyle implements Style {
 
     private boolean mVisible;
 
+    public static String getGeometryType() {
+        return GEOMETRY_TYPE_REGEX;
+    }
+
     public float getAlpha() {
         return mAlpha;
     }
@@ -128,9 +132,5 @@ public class PointStyle implements Style {
 
     public MarkerOptions getMarkerOptions() {
         return mMarkerOptions;
-    }
-
-    public static String getGeometryType() {
-        return GEOMETRY_TYPE_REGEX;
     }
 }

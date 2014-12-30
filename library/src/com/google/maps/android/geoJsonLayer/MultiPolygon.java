@@ -11,15 +11,30 @@ public class MultiPolygon extends Geometry {
 
     private ArrayList<Polygon> mPolygons;
 
+    /**
+     * Creates a new MultiPolygon
+     *
+     * @param polygons array of Polygons to add to the MultiPolygon
+     */
     public MultiPolygon(ArrayList<Polygon> polygons) {
         mPolygons = polygons;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the array of Polygons
+     *
+     * @return array of Polygons
+     */
     public ArrayList<Polygon> getPolygons() {
         return mPolygons;
     }

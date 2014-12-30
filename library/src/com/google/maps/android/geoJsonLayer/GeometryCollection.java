@@ -11,16 +11,31 @@ public class GeometryCollection extends Geometry {
 
     private ArrayList<Geometry> mGeometries;
 
+    /**
+     * Creates a new GeometryCollection object
+     *
+     * @param geometries array of Geometry objects to add to the GeometryCollection
+     */
     public GeometryCollection(
             ArrayList<Geometry> geometries) {
         mGeometries = geometries;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the stored geometries
+     *
+     * @return stored geometries
+     */
     public ArrayList<Geometry> getGeometries() {
         return mGeometries;
     }

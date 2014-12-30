@@ -13,15 +13,30 @@ public class LineString extends Geometry {
 
     private ArrayList<LatLng> mCoordinates;
 
+    /**
+     * Creates a new LineString object
+     *
+     * @param coordinates array of coordinates of LineString to store
+     */
     public LineString(ArrayList<LatLng> coordinates) {
         mCoordinates = coordinates;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the coordinates of the LineString
+     *
+     * @return coordinates of the LineString
+     */
     public ArrayList<LatLng> getCoordinates() {
         return mCoordinates;
     }

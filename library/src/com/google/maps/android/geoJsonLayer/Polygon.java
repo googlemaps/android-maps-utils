@@ -14,16 +14,31 @@ public class Polygon extends Geometry {
 
     private ArrayList<ArrayList<LatLng>> mCoordinates;
 
+    /**
+     * Creates a new Polygon object
+     *
+     * @param coordinates array of arrays of coordinates of Polygon to store
+     */
     public Polygon(
             ArrayList<ArrayList<LatLng>> coordinates) {
         mCoordinates = coordinates;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the coordinates of the Polygon
+     *
+     * @return coordinates of the Polygon
+     */
     public ArrayList<ArrayList<LatLng>> getCoordinates() {
         return mCoordinates;
     }
@@ -35,5 +50,4 @@ public class Polygon extends Geometry {
         sb.append("\n}\n");
         return sb.toString();
     }
-
 }
