@@ -103,4 +103,15 @@ public class Feature {
     public String removeProperty(String property) {
         return mProperties.remove(property);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Feature{");
+        sb.append("\n geometry=").append(mGeometry);
+        sb.append(",\n style=").append(mStyle);
+        sb.append(",\n id=").append(mId);
+        sb.append(",\n properties=").append(mProperties);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }
