@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,13 +21,37 @@ import java.util.Iterator;
  */
 public class GeoJsonParser {
 
-    private final static String FEATURE = "Feature";
+    // Feature object type
+    private static final String FEATURE = "Feature";
 
-    private final static String FEATURE_COLLECTION = "FeatureCollection";
+    // Feature object geometry member
+    private static final String FEATURE_GEOMETRY = "geometry";
+
+    // Feature object id member
+    private static final String FEATURE_ID = "id";
+
+    // FeatureCollection type
+    private static final String FEATURE_COLLECTION = "FeatureCollection";
+
+    // FeatureCollection features array member
+    private static final String FEATURE_COLLECTION_ARRAY = "features";
+
+    // Geometry coordinates member
+    private static final String GEOMETRY_COORDINATES_ARRAY = "coordinates";
+
+    // GeometryCollection type
+    private static final String GEOMETRY_COLLECTION = "GeometryCollection";
+
+    // GeometryCollection geometries array member
+    private static final String GEOMETRY_COLLECTION_ARRAY = "geometries";
+
+    // Geometry object except for GeometryCollection
+    private static final String GEOJSON_GEOMETRY_OBJECTS_REGEX
+            = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
 
     private final JSONObject mGeoJsonFile;
 
-    private ArrayList<Feature> mFeatures;
+    private final ArrayList<Feature> mFeatures;
 
     /**
      * Creates a new GeoJsonParser
@@ -48,9 +74,12 @@ public class GeoJsonParser {
         if (type.equals(FEATURE)) {
             mFeatures.add(parseFeature(mGeoJsonFile));
         } else if (type.equals(FEATURE_COLLECTION)) {
-            mFeatures.addAll(parseFeatureCollection(mGeoJsonFile.getJSONArray("features")));
+            mFeatures.addAll(parseFeatureCollection(
+                    mGeoJsonFile.getJSONArray(FEATURE_COLLECTION_ARRAY)));
+        } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
+                .equals(GEOMETRY_COLLECTION)) {
+            mFeatures.add(geometrytoFeature(parseGeometry(mGeoJsonFile)));
         }
-        // TODO: figure out GeometryCollection and its styles
     }
 
     /**
@@ -75,7 +104,8 @@ public class GeoJsonParser {
     }
 
     /**
-     * Parses a single GeoJSON feature which contains a geometry and properties member both of which
+     * Parses a single GeoJSON feature which contains a geometry and properties member both of
+     * which
      * can be null and optionally an id. If the geometry member has a null value, we do not add the
      * geometry to the array.
      *
@@ -89,10 +119,11 @@ public class GeoJsonParser {
         String id = null;
         Geometry geometry;
         Feature feature;
-        geometry = parseGeometry(geoJsonFeature.getJSONObject("geometry"));
+        geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
+
         // Id is optional for a feature
-        if (geoJsonFeature.has("id")) {
-            id = geoJsonFeature.getString("id");
+        if (geoJsonFeature.has(FEATURE_ID)) {
+            id = geoJsonFeature.getString(FEATURE_ID);
         }
         JSONObject properties = geoJsonFeature.getJSONObject("properties");
         feature = new Feature(geometry, id, parseProperties(properties));
@@ -110,8 +141,15 @@ public class GeoJsonParser {
      */
     private Geometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
         String geometryType = geoJsonGeometry.getString("type");
-        JSONArray coordinates = geoJsonGeometry.getJSONArray("coordinates");
-        return createGeometry(geometryType, coordinates);
+        JSONArray geometryArray;
+        if (geometryType.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
+            geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COORDINATES_ARRAY);
+        } else {
+            // GeometryCollection
+            geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
+        }
+
+        return createGeometry(geometryType, geometryArray);
     }
 
     /**
@@ -143,27 +181,32 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a Geometry object from the given type of geometry and its coordinates
+     * Creates a Geometry object from the given type of geometry and its coordinates or geometries
+     * array
      *
-     * @param geometryType type of geometry
-     * @param coordinates  coordinates of the geometry to parse and add to the Geometry object
-     * @return Geometry object of type geometryType and containing the given coordinates
+     * @param geometryType  type of geometry
+     * @param geometryArray coordinates or geometries of the geometry to parse and add to the
+     *                      Geometry object
+     * @return Geometry object of type geometryType and containing the given coordinates or
+     * geometries
      * @throws JSONException if the coordinates could be parsed
      */
-    private Geometry createGeometry(String geometryType, JSONArray coordinates)
+    private Geometry createGeometry(String geometryType, JSONArray geometryArray)
             throws JSONException {
         if (geometryType.equals("Point")) {
-            return createPoint(coordinates);
+            return createPoint(geometryArray);
         } else if (geometryType.equals("MultiPoint")) {
-            return createMultiPoint(coordinates);
+            return createMultiPoint(geometryArray);
         } else if (geometryType.equals("LineString")) {
-            return createLineString(coordinates);
+            return createLineString(geometryArray);
         } else if (geometryType.equals("MultiLineString")) {
-            return createMultiLineString(coordinates);
+            return createMultiLineString(geometryArray);
         } else if (geometryType.equals("Polygon")) {
-            return createPolygon(coordinates);
+            return createPolygon(geometryArray);
         } else if (geometryType.equals("MultiPolygon")) {
-            return createMultiPolygon(coordinates);
+            return createMultiPolygon(geometryArray);
+        } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
+            return createGeometryCollection(geometryArray);
         }
 
         return null;
@@ -177,6 +220,7 @@ public class GeoJsonParser {
      * @throws JSONException if coordinates cannot be parsed
      */
     private Point createPoint(JSONArray coordinates) throws JSONException {
+        Log.i("Point", coordinates.toString());
         return new Point(parseCoordinate(coordinates));
     }
 
@@ -245,6 +289,23 @@ public class GeoJsonParser {
             polygons.add(createPolygon(coordinates.getJSONArray(i)));
         }
         return new MultiPolygon(polygons);
+    }
+
+    /**
+     * Creates a new GeometryCollection object containing an array of Geometry objects
+     *
+     * @param geometries array containing the elements of the GeoJSON GeometryCollection
+     * @return GeometryCollection object
+     * @throws JSONException if geometries cannot be parsed
+     */
+    private GeometryCollection createGeometryCollection(JSONArray geometries) throws JSONException {
+        ArrayList<Geometry> geometryCollectionElements = new ArrayList<Geometry>();
+
+        for (int i = 0; i < geometries.length(); i++) {
+            JSONObject geometryElement = geometries.getJSONObject(i);
+            geometryCollectionElements.add(parseGeometry(geometryElement));
+        }
+        return new GeometryCollection(geometryCollectionElements);
     }
 
     /**
