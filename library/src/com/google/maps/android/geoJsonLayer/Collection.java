@@ -28,6 +28,8 @@ public class Collection {
 
     private PolygonStyle mDefaultPolygonStyle;
 
+    private JSONObject mGeoJsonFile;
+
     // TODO close streams
 
     /**
@@ -38,8 +40,7 @@ public class Collection {
      * @throws IOException   if the file cannot be opened for read
      * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
      */
-    public Collection(GoogleMap map, JSONObject geoJsonObject)
-            throws IOException, JSONException {
+    public Collection(GoogleMap map, JSONObject geoJsonObject) {
         mMap = map;
         mFeatures = new ArrayList<Feature>();
     }
@@ -58,7 +59,7 @@ public class Collection {
         mMap = map;
         mFeatures = new ArrayList<Feature>();
         InputStream stream = context.getResources().openRawResource(resourceId);
-        JSONObject geoJsonObject = createJsonFileObject(stream);
+        mGeoJsonFile = createJsonFileObject(stream);
     }
 
     /**
@@ -82,6 +83,12 @@ public class Collection {
 
         // Converts the result string into a JSONObject
         return new JSONObject(result.toString());
+    }
+
+    public void parseGeoJson() throws JSONException {
+        GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
+        parser.parseGeoJson();
+        mFeatures = parser.getFeatures();
     }
 
     // TODO: implement an iterator thing or just return mFeatures
@@ -178,7 +185,8 @@ public class Collection {
     /**
      * Sets the default style for the Polygon objects
      *
-     * @param polygonStyle to set as default style, this is applied to Polygons as they are imported
+     * @param polygonStyle to set as default style, this is applied to Polygons as they are
+     *                     imported
      *                     from the GeoJSON file
      */
     public void setDefaultPolygonStyle(PolygonStyle polygonStyle) {
@@ -188,7 +196,8 @@ public class Collection {
     /**
      * Set the input map to be centred and zoomed to the bounding box of the set of data
      *
-     * @param preserveViewPort if true, map's centre and zoom are changed, if false viewport is left
+     * @param preserveViewPort if true, map's centre and zoom are changed, if false viewport is
+     *                         left
      *                         unchanged
      */
     public void setPreserveViewPort(boolean preserveViewPort) {
@@ -207,4 +216,15 @@ public class Collection {
         // TODO: redraw objects
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Collection{");
+        sb.append("\n features=").append(mFeatures);
+        sb.append(",\n Point style=").append(mDefaultPointStyle);
+        sb.append(",\n LineString style=").append(mDefaultLineStringStyle);
+        sb.append(",\n Polygon style=").append(mDefaultPolygonStyle);
+        sb.append(",\n GeoJson file=").append(mGeoJsonFile);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }
