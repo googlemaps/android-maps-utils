@@ -20,9 +20,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         try {
-            Collection collection = new Collection(getMap(), R.raw.markers_in_spain_geojson, getApplicationContext());
+            Collection collection = new Collection(getMap(), R.raw.feature_collection_geojson_demo, getApplicationContext());
             collection.parseGeoJson();
-            Log.i("Features", collection.toString());
+            Log.i("MultiLineString", collection.toString());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

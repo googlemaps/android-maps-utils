@@ -11,11 +11,11 @@
                 ]
             },
             "properties":{
-                "Name":"Matadero Madrid",
+                "title":"Matadero Madrid",
                 "Match":"Matadero Madrid",
                 "Type":"Art",
                 "Recommend":"Y",
-                "Notes":"Converted industrial building into cultural space",
+                "snippet":"Converted industrial building into cultural space",
                 "Contact":"http://www.mataderomadrid.org",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -54,11 +54,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Fabuloso",
+                "title":"El Fabuloso",
                 "Match":"El Fabuloso",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"Part bar, part club, see and be seen with the beautiful people.",
+                "snippet":"Part bar, part club, see and be seen with the beautiful people.",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -97,11 +97,11 @@
                 ]
             },
             "properties":{
-                "Name":"Jose Alfredo",
+                "title":"Jose Alfredo",
                 "Match":"JosÃ© Alfredo",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"Low light and sofas",
+                "snippet":"Low light and sofas",
                 "Contact":"http://josealfredobar.com",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -140,11 +140,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Venencia",
+                "title":"La Venencia",
                 "Match":"La Venencia",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"Old school (Hemmingway drank here) sherry bar",
+                "snippet":"Old school (Hemmingway drank here) sherry bar",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -183,11 +183,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Via Lâ€¡ctea",
+                "title":"La Via Lâ€¡ctea",
                 "Match":"La VÃ­a LÃ¡ctea",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"Dark bar with pool tables and rock music.",
+                "snippet":"Dark bar with pool tables and rock music.",
                 "Contact":"https://www.facebook.com/lavialacteabar",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -226,11 +226,11 @@
                 ]
             },
             "properties":{
-                "Name":"The Passenger",
+                "title":"The Passenger",
                 "Match":"The Passenger",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"Train themed (get it, passenger) bar, good for a late drink.",
+                "snippet":"Train themed (get it, passenger) bar, good for a late drink.",
                 "Contact":"http://www.parolio.com/portfolio/the-passenger/",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -269,11 +269,11 @@
                 ]
             },
             "properties":{
-                "Name":"The Roof Bar",
+                "title":"The Roof Bar",
                 "Match":"The Roof Bar",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"360 degree views",
+                "snippet":"360 degree views",
                 "Contact":"http://www.melia.com/es/hoteles/espana/madrid/me-madrid-reina-victoria/the-roof.html",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -312,11 +312,11 @@
                 ]
             },
             "properties":{
-                "Name":"Tupperware",
+                "title":"Tupperware",
                 "Match":"Tupperware",
                 "Type":"Bar",
                 "Recommend":"M",
-                "Notes":"1950s and â€™60s memorabilia bar",
+                "snippet":"1950s and â€™60s memorabilia bar",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -355,11 +355,11 @@
                 ]
             },
             "properties":{
-                "Name":"Vaova",
+                "title":"Vaova",
                 "Match":"Vaova",
                 "Type":"Bar",
                 "Recommend":"Y",
-                "Notes":"Rustic Safari, dark and clandestine basement bar, great for tete-a-tete.",
+                "snippet":"Rustic Safari, dark and clandestine basement bar, great for tete-a-tete.",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"TRUE",
@@ -398,11 +398,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Real Jardin Botâ€¡nico",
+                "title":"El Real Jardin Botâ€¡nico",
                 "Match":"El Real JardÃ­n BotÃ¡nico",
                 "Type":"Botanical Gardens",
                 "Recommend":"Y",
-                "Notes":"Many, many, many plants",
+                "snippet":"Many, many, many plants",
                 "Contact":"http://en.wikipedia.org/wiki/Real_Jard%C3%ADn_BotÃ¡nico_de_Madrid",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -441,11 +441,11 @@
                 ]
             },
             "properties":{
-                "Name":"Plaza de Toros de las Ventas",
+                "title":"Plaza de Toros de las Ventas",
                 "Match":"Plaza de Toros de las Ventas",
                 "Type":"Bullring",
                 "Recommend":"Y",
-                "Notes":"Spain's home of bull fighting",
+                "snippet":"Spain's home of bull fighting",
                 "Contact":"http://www.las-ventas.com",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -484,11 +484,11 @@
                 ]
             },
             "properties":{
-                "Name":"Cafe de Oriente",
+                "title":"Cafe de Oriente",
                 "Match":"CafÃ© de Oriente Museo del Traje",
                 "Type":"CafÃ©",
                 "Recommend":"M",
-                "Notes":"CafÃ© located close to tourist hot spots, so expect as much.",
+                "snippet":"CafÃ© located close to tourist hot spots, so expect as much.",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -527,11 +527,11 @@
                 ]
             },
             "properties":{
-                "Name":"Chocolateria San Gines",
+                "title":"Chocolateria San Gines",
                 "Match":"ChocolaterÃ­a San GinÃ©s",
                 "Type":"CafÃ©",
                 "Recommend":"Y",
-                "Notes":"Very popular 24 hour sugary churros and hot chocolate",
+                "snippet":"Very popular 24 hour sugary churros and hot chocolate",
                 "Contact":"http://www.chocolateriasangines.com/Chocolateria_San_Gines/Welcome_to_San_Gines.html",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -570,11 +570,11 @@
                 ]
             },
             "properties":{
-                "Name":"Harina",
+                "title":"Harina",
                 "Match":"harina",
                 "Type":"CafÃ©",
                 "Recommend":"M",
-                "Notes":"Breakfast (average coffee), two locations",
+                "snippet":"Breakfast (average coffee), two locations",
                 "Contact":"http://www.harinamadrid.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -613,11 +613,11 @@
                 ]
             },
             "properties":{
-                "Name":"TOMA CAFe",
+                "title":"TOMA CAFe",
                 "Match":"TOMA CAFÃ‰",
                 "Type":"CafÃ©",
                 "Recommend":"Y",
-                "Notes":"Mid Morning Coffee",
+                "snippet":"Mid Morning Coffee",
                 "Contact":"http://tomacafe.es",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -656,11 +656,11 @@
                 ]
             },
             "properties":{
-                "Name":"San Francisco el Grande Basilica",
+                "title":"San Francisco el Grande Basilica",
                 "Match":"San Francisco el Grande Basilica",
                 "Type":"Church",
                 "Recommend":"Y",
-                "Notes":"Fourth largest dome in the world",
+                "snippet":"Fourth largest dome in the world",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/san-francisco-el-grande/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -699,11 +699,11 @@
                 ]
             },
             "properties":{
-                "Name":"Berlin Cabaret",
+                "title":"Berlin Cabaret",
                 "Match":"BerlÃ­n Cabaret",
                 "Type":"Club",
                 "Recommend":"M",
-                "Notes":"Caberet style club with ocasional shows",
+                "snippet":"Caberet style club with ocasional shows",
                 "Contact":"http://www.berlincabaret.com",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -742,11 +742,11 @@
                 ]
             },
             "properties":{
-                "Name":"Charada",
+                "title":"Charada",
                 "Match":"Charada",
                 "Type":"Club",
                 "Recommend":"Y",
-                "Notes":"Open late to dance the night away",
+                "snippet":"Open late to dance the night away",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -785,11 +785,11 @@
                 ]
             },
             "properties":{
-                "Name":"Kapital",
+                "title":"Kapital",
                 "Match":"Kapital",
                 "Type":"Club",
                 "Recommend":"Y",
-                "Notes":"Dance all night long under bright lights",
+                "snippet":"Dance all night long under bright lights",
                 "Contact":"http://www.grupo-kapital.com/kapital/",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -828,11 +828,11 @@
                 ]
             },
             "properties":{
-                "Name":"Del Diego",
+                "title":"Del Diego",
                 "Match":"Del Diego",
                 "Type":"Cocktail Bar",
                 "Recommend":"Y",
-                "Notes":"Popular late night cocktail",
+                "snippet":"Popular late night cocktail",
                 "Contact":"http://deldiego.com/Bienvenida.html",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -871,11 +871,11 @@
                 ]
             },
             "properties":{
-                "Name":"Dry Cosmopolitan Bar",
+                "title":"Dry Cosmopolitan Bar",
                 "Match":"Dry Cosmopolitan Bar",
                 "Type":"Cocktail Bar",
                 "Recommend":"Y",
-                "Notes":"Like the name suggests",
+                "snippet":"Like the name suggests",
                 "Contact":"http://www.cntraveller.com/recommended/food/best-restaurants-and-bars-in-madrid/page/the-dry-cosmopolitan-bar,-madrid",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -914,11 +914,11 @@
                 ]
             },
             "properties":{
-                "Name":"Gin Club",
+                "title":"Gin Club",
                 "Match":"Gin Club",
                 "Type":"Cocktail Bar",
                 "Recommend":"Y",
-                "Notes":"Gin served with snacks",
+                "snippet":"Gin served with snacks",
                 "Contact":"http://en.mercadodelareina.com/restaurante-madrid/la-barra/",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -957,11 +957,11 @@
                 ]
             },
             "properties":{
-                "Name":"Le Cabrera",
+                "title":"Le Cabrera",
                 "Match":"Le Cabrera",
                 "Type":"Cocktail Bar",
                 "Recommend":"Y",
-                "Notes":"Very trendy coctail bar for monied honies",
+                "snippet":"Very trendy coctail bar for monied honies",
                 "Contact":"http://lecabrera.com",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -1000,11 +1000,11 @@
                 ]
             },
             "properties":{
-                "Name":"Museo Chicote",
+                "title":"Museo Chicote",
                 "Match":"Museo Chicote",
                 "Type":"Cocktail Bar",
                 "Recommend":"M",
-                "Notes":"Old school coctail bar since Frank Sinatra and Ava Gardener days. Quite touristy.",
+                "snippet":"Old school coctail bar since Frank Sinatra and Ava Gardener days. Quite touristy.",
                 "Contact":"http://www.museo-chicote.com",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -1043,11 +1043,11 @@
                 ]
             },
             "properties":{
-                "Name":"Cafe de Chinitas",
+                "title":"Cafe de Chinitas",
                 "Match":"CafÃ© de Chinitas",
                 "Type":"Flamenco",
                 "Recommend":"M",
-                "Notes":"Go for a drink and catch a show and listen to jazz music",
+                "snippet":"Go for a drink and catch a show and listen to jazz music",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1086,11 +1086,11 @@
                 ]
             },
             "properties":{
-                "Name":"Cardamomo",
+                "title":"Cardamomo",
                 "Match":"Cardamomo",
                 "Type":"Flamenco",
                 "Recommend":"M",
-                "Notes":"Bit touristy, but if you want to see Flamenco",
+                "snippet":"Bit touristy, but if you want to see Flamenco",
                 "Contact":"http://cardamomo.es",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1129,11 +1129,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Patas",
+                "title":"Casa Patas",
                 "Match":"Casa Patas",
                 "Type":"Flamenco",
                 "Recommend":"Y",
-                "Notes":"Book in advance for Flamenco show",
+                "snippet":"Book in advance for Flamenco show",
                 "Contact":"http://www.casapatas.com",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1172,11 +1172,11 @@
                 ]
             },
             "properties":{
-                "Name":"CORRAL DE LA MORERIA, Tablao Flamenco en Madrid",
+                "title":"CORRAL DE LA MORERIA, Tablao Flamenco en Madrid",
                 "Match":"CORRAL DE LA MORERÃA, Tablao Flamenco en Madrid",
                 "Type":"Flamenco",
                 "Recommend":"Y",
-                "Notes":"Madird hot spot, freuqented by celebs.",
+                "snippet":"Madird hot spot, freuqented by celebs.",
                 "Contact":"http://www.corraldelamoreria.com/en/index.html",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -1215,11 +1215,11 @@
                 ]
             },
             "properties":{
-                "Name":"Tablao Restaurante Las Carboneras",
+                "title":"Tablao Restaurante Las Carboneras",
                 "Match":"Tablao Restaurante Las Carboneras",
                 "Type":"Flamenco",
                 "Recommend":"Y",
-                "Notes":"Reserve a ticket to Flamenco",
+                "snippet":"Reserve a ticket to Flamenco",
                 "Contact":"http://www.tablaolascarboneras.com",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1258,11 +1258,11 @@
                 ]
             },
             "properties":{
-                "Name":"Mercado de la Cebada",
+                "title":"Mercado de la Cebada",
                 "Match":"Mercado de la Cebada",
                 "Type":"Food Market",
                 "Recommend":"Y",
-                "Notes":"Neighborhood marke",
+                "snippet":"Neighborhood marke",
                 "Contact":"http://mercadodelacebada.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1301,11 +1301,11 @@
                 ]
             },
             "properties":{
-                "Name":"Mercado de San Miguel",
+                "title":"Mercado de San Miguel",
                 "Match":"Mercado de San Miguel",
                 "Type":"Food Market",
                 "Recommend":"Y",
-                "Notes":"Massive tapas hall and food market, Popular with tourists",
+                "snippet":"Massive tapas hall and food market, Popular with tourists",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1344,11 +1344,11 @@
                 ]
             },
             "properties":{
-                "Name":"Mercado San Anton",
+                "title":"Mercado San Anton",
                 "Match":"Mercado San AntÃ³n",
                 "Type":"Food Market",
                 "Recommend":"Y",
-                "Notes":"Highly recommended mixture of supermarket and food stalls, grab a drink on the terrace.",
+                "snippet":"Highly recommended mixture of supermarket and food stalls, grab a drink on the terrace.",
                 "Contact":"www.mercadosananton.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1387,11 +1387,11 @@
                 ]
             },
             "properties":{
-                "Name":"Museo Nacional Centro de Arte Reina Sofia",
+                "title":"Museo Nacional Centro de Arte Reina Sofia",
                 "Match":"Museo Nacional Centro de Arte Reina SofÃ­a",
                 "Type":"Gallery",
                 "Recommend":"Y",
-                "Notes":"Suited to lovers of modern art like Dali and Picasso",
+                "snippet":"Suited to lovers of modern art like Dali and Picasso",
                 "Contact":"http://www.museoreinasofia.es",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1430,11 +1430,11 @@
                 ]
             },
             "properties":{
-                "Name":"Museo Nacional del Prado",
+                "title":"Museo Nacional del Prado",
                 "Match":"Museo Nacional del Prado",
                 "Type":"Gallery",
                 "Recommend":"Y",
-                "Notes":"Most well known Madrid gallery staring VelÃ¡zquez and Goya paintings.",
+                "snippet":"Most well known Madrid gallery staring VelÃ¡zquez and Goya paintings.",
                 "Contact":"http://www.museoreinasofia.es",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1473,11 +1473,11 @@
                 ]
             },
             "properties":{
-                "Name":"Thyssen-Bornemisza Museum",
+                "title":"Thyssen-Bornemisza Museum",
                 "Match":"Thyssen-Bornemisza Museum",
                 "Type":"Gallery",
                 "Recommend":"Y",
-                "Notes":"Renaissance, Abstract and Surrealism pieces from Fra Angelico and Marc Chagal.",
+                "snippet":"Renaissance, Abstract and Surrealism pieces from Fra Angelico and Marc Chagal.",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/museo-thyssen-bornemisza/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1516,11 +1516,11 @@
                 ]
             },
             "properties":{
-                "Name":"CÃ­rculo de Bellas Artes",
+                "title":"CÃ­rculo de Bellas Artes",
                 "Match":"CÃ­rculo de Bellas Artes",
                 "Type":"Gallery and Bar",
                 "Recommend":"Y",
-                "Notes":"Grab a drink on 7th floor with city views.",
+                "snippet":"Grab a drink on 7th floor with city views.",
                 "Contact":"http://www.circulobellasartes.com/english/index.php",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -1559,11 +1559,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Gabinoteca",
+                "title":"La Gabinoteca",
                 "Match":"La Gabinoteca",
                 "Type":"Gastrobar",
                 "Recommend":"Y",
-                "Notes":"Modern Spanish Fare",
+                "snippet":"Modern Spanish Fare",
                 "Contact":"http://www.lagabinoteca.es/menu.html",
                 "Eat":"TRUE",
                 "Drink":"TRUE",
@@ -1602,11 +1602,11 @@
                 ]
             },
             "properties":{
-                "Name":"Teleferico",
+                "title":"Teleferico",
                 "Match":"TelefÃ©rico",
                 "Type":"Gondola",
                 "Recommend":"Y",
-                "Notes":"Gondola with a view",
+                "snippet":"Gondola with a view",
                 "Contact":"http://www.teleferico.com",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1645,11 +1645,11 @@
                 ]
             },
             "properties":{
-                "Name":"Hotel ME Madrid Reina Victoria",
+                "title":"Hotel ME Madrid Reina Victoria",
                 "Match":"Hotel ME Madrid Reina Victoria",
                 "Type":"Hotel Bar",
                 "Recommend":"Y",
-                "Notes":"Trendy, upmarket roof top bar.",
+                "snippet":"Trendy, upmarket roof top bar.",
                 "Contact":"http://www.melia.com/en/hotels/spain/madrid/me-madrid-reina-victoria/index.html",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -1688,11 +1688,11 @@
                 ]
             },
             "properties":{
-                "Name":"Hotel Urban",
+                "title":"Hotel Urban",
                 "Match":"Hotel Urban",
                 "Type":"Hotel Bar",
                 "Recommend":"Y",
-                "Notes":"Trendy hotel bar, either Glass Bar or La Terraza",
+                "snippet":"Trendy hotel bar, either Glass Bar or La Terraza",
                 "Contact":"http://www.hotelurban.com/#!en/restaurants/la-terraza-del-urban-1/",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -1731,11 +1731,11 @@
                 ]
             },
             "properties":{
-                "Name":"Royal Palace of Madrid",
+                "title":"Royal Palace of Madrid",
                 "Match":"Royal Palace of Madrid",
                 "Type":"Landmark",
                 "Recommend":"Y",
-                "Notes":"Ex home of royal family",
+                "snippet":"Ex home of royal family",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/palacio-real/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1774,11 +1774,11 @@
                 ]
             },
             "properties":{
-                "Name":"Botin",
+                "title":"Botin",
                 "Match":"BotÃ­n",
                 "Type":"Lunch",
                 "Recommend":"Y",
-                "Notes":"Oldest restaurant in the world, having a relaxing lunch of traditional wood-fired slow-roasted suckling pig and lamb.",
+                "snippet":"Oldest restaurant in the world, having a relaxing lunch of traditional wood-fired slow-roasted suckling pig and lamb.",
                 "Contact":"http://www.botin.es/?q=en",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1817,11 +1817,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Mingo",
+                "title":"Casa Mingo",
                 "Match":"Casa Mingo",
                 "Type":"Lunch",
                 "Recommend":"Y",
-                "Notes":"Queue for Asturian roast chicken and cider",
+                "snippet":"Queue for Asturian roast chicken and cider",
                 "Contact":"http://www.casamingo.es/home.html",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1860,11 +1860,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Rastro",
+                "title":"El Rastro",
                 "Match":"El Rastro",
                 "Type":"Market",
                 "Recommend":"Y",
-                "Notes":"Sunday fea market",
+                "snippet":"Sunday fea market",
                 "Contact":"http://en.wikipedia.org/wiki/El_Rastro",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1903,11 +1903,11 @@
                 ]
             },
             "properties":{
-                "Name":"Santceloni",
+                "title":"Santceloni",
                 "Match":"Santceloni",
                 "Type":"Mediterranean restaurant",
                 "Recommend":"Y",
-                "Notes":"High end dininig",
+                "snippet":"High end dininig",
                 "Contact":"http://www.restaurantesantceloni.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -1946,11 +1946,11 @@
                 ]
             },
             "properties":{
-                "Name":"Temple of Debod",
+                "title":"Temple of Debod",
                 "Match":"Temple of Debod",
                 "Type":"Monument",
                 "Recommend":"Y",
-                "Notes":"Photo op with Egyptian templegifted to Mandrid",
+                "snippet":"Photo op with Egyptian templegifted to Mandrid",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/templo-de-debod/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -1989,11 +1989,11 @@
                 ]
             },
             "properties":{
-                "Name":"Parque del Retiro",
+                "title":"Parque del Retiro",
                 "Match":"Parque del Retiro",
                 "Type":"Park",
                 "Recommend":"Y",
-                "Notes":"The 'green lungs' of Madrid. Massive public park. Consider a lunch hamper from Restaurante Magasand.",
+                "snippet":"The 'green lungs' of Madrid. Massive public park. Consider a lunch hamper from Restaurante Magasand.",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/parque-del-retiro/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -2032,11 +2032,11 @@
                 ]
             },
             "properties":{
-                "Name":"CaixaForum Madrid",
+                "title":"CaixaForum Madrid",
                 "Match":"CaixaForum Madrid",
                 "Type":"Photo Op",
                 "Recommend":"Y",
-                "Notes":"Take in the vertical garden outside, comtemporary art inside.",
+                "snippet":"Take in the vertical garden outside, comtemporary art inside.",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -2075,11 +2075,11 @@
                 ]
             },
             "properties":{
-                "Name":"Bar Cock",
+                "title":"Bar Cock",
                 "Match":"Bar Cock",
                 "Type":"Pub",
                 "Recommend":"Y",
-                "Notes":"Grab a drink in relaxed Spanich pub",
+                "snippet":"Grab a drink in relaxed Spanich pub",
                 "Contact":"http://cargocollective.com/barcock",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -2118,11 +2118,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Lucio",
+                "title":"Casa Lucio",
                 "Match":"Casa Lucio",
                 "Type":"Restaurant",
                 "Recommend":"Y",
-                "Notes":"(Closed August) Lunch or late snack, well known for eggs and chips",
+                "snippet":"(Closed August) Lunch or late snack, well known for eggs and chips",
                 "Contact":"http://www.casalucio.es",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2161,11 +2161,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Club Allard",
+                "title":"El Club Allard",
                 "Match":"El Club Allard",
                 "Type":"Restaurant",
                 "Recommend":"Y",
-                "Notes":"High end 2 Michellen star",
+                "snippet":"High end 2 Michellen star",
                 "Contact":"http://www.elcluballard.com/home/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2204,11 +2204,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Paraguas",
+                "title":"El Paraguas",
                 "Match":"El Paraguas",
                 "Type":"Restaurant",
                 "Recommend":"Y",
-                "Notes":"Sunday Lunch. Upmarket sister to Ten con Ten.",
+                "snippet":"Sunday Lunch. Upmarket sister to Ten con Ten.",
                 "Contact":"http://www.elparaguas.com/index.html",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2247,11 +2247,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Cocina de San Anton",
+                "title":"La Cocina de San Anton",
                 "Match":"La Cocina de San AntÃ³n",
                 "Type":"Restaurant/Bar",
                 "Recommend":"Y",
-                "Notes":"Terrace bar in Mercado San Anton",
+                "snippet":"Terrace bar in Mercado San Anton",
                 "Contact":"http://www.lacocinadesananton.com",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -2290,11 +2290,11 @@
                 ]
             },
             "properties":{
-                "Name":"Lamucca",
+                "title":"Lamucca",
                 "Match":"Lamucca",
                 "Type":"Restaurant/Bar",
                 "Recommend":"Y",
-                "Notes":"Relaxed hip restaurant with outdoor terrace",
+                "snippet":"Relaxed hip restaurant with outdoor terrace",
                 "Contact":"http://www.lamucca.es/en",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2333,11 +2333,11 @@
                 ]
             },
             "properties":{
-                "Name":"Ramses Life & Food",
+                "title":"Ramses Life & Food",
                 "Match":"Ramses Life & Food",
                 "Type":"Restaurant/Bar",
                 "Recommend":"Y",
-                "Notes":"G+T on the Phillipe Starck veranda.",
+                "snippet":"G+T on the Phillipe Starck veranda.",
                 "Contact":"http://www.ramseslife.com",
                 "Eat":"FALSE",
                 "Drink":"TRUE",
@@ -2376,11 +2376,11 @@
                 ]
             },
             "properties":{
-                "Name":"Ten con Ten",
+                "title":"Ten con Ten",
                 "Match":"Ten con Ten",
                 "Type":"Restaurant/Bar",
                 "Recommend":"Y",
-                "Notes":"Reservations suggested in the trendy spot, or grab a drink at the bar.",
+                "snippet":"Reservations suggested in the trendy spot, or grab a drink at the bar.",
                 "Contact":"http://www.restaurantetenconten.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2419,11 +2419,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Pescador",
+                "title":"El Pescador",
                 "Match":"El Pescador",
                 "Type":"Seafood Restaurant",
                 "Recommend":"Y",
-                "Notes":"(Closed for August)",
+                "snippet":"(Closed for August)",
                 "Contact":"http://www.marisqueriaelpescador.net/history/?lang=en",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2462,11 +2462,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Dorada",
+                "title":"La Dorada",
                 "Match":"La Dorada",
                 "Type":"Seafood Restaurant",
                 "Recommend":"Y",
-                "Notes":"Seafood Restaurant",
+                "snippet":"Seafood Restaurant",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2505,11 +2505,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Fidel",
+                "title":"Casa Fidel",
                 "Match":"Casa Fidel",
                 "Type":"Set Menu Lunch/Dinner",
                 "Recommend":"M",
-                "Notes":"Young urbanites and arty types for affordable set menu",
+                "snippet":"Young urbanites and arty types for affordable set menu",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2548,11 +2548,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Hernanz",
+                "title":"Casa Hernanz",
                 "Match":"Casa Hernanz",
                 "Type":"Shoes",
                 "Recommend":"Y",
-                "Notes":"Stand in queue to buy Spanish sandals and slippers",
+                "snippet":"Stand in queue to buy Spanish sandals and slippers",
                 "Contact":"http://www.alpargateriahernanz.com",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -2591,11 +2591,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Corte Ingles",
+                "title":"El Corte Ingles",
                 "Match":"El Corte InglÃ©s",
                 "Type":"Shopping",
                 "Recommend":"M",
-                "Notes":"Major middle of the road department store",
+                "snippet":"Major middle of the road department store",
                 "Contact":"http://www.elcorteingles.es/index.asp",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -2634,11 +2634,11 @@
                 ]
             },
             "properties":{
-                "Name":"Isolee",
+                "title":"Isolee",
                 "Match":"IsolÃ©e",
                 "Type":"Shopping",
                 "Recommend":"Y",
-                "Notes":"Latest trends in cuisine, fashion, music and decoration",
+                "snippet":"Latest trends in cuisine, fashion, music and decoration",
                 "Contact":"http://www.isolee.com",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -2677,11 +2677,11 @@
                 ]
             },
             "properties":{
-                "Name":"ARZABAL",
+                "title":"ARZABAL",
                 "Match":"ARZÃBAL",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"Traditional spanish dinner",
+                "snippet":"Traditional spanish dinner",
                 "Contact":"http://www.esmadrid.com/en/restaurants/taberna-arzabal/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2720,11 +2720,11 @@
                 ]
             },
             "properties":{
-                "Name":"Asturianos",
+                "title":"Asturianos",
                 "Match":"Asturianos",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"Hightly recommended traditional spanish dinner",
+                "snippet":"Hightly recommended traditional spanish dinner",
                 "Contact":"http://www.esmadrid.com/en/restaurants/asturianos/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2763,11 +2763,11 @@
                 ]
             },
             "properties":{
-                "Name":"Estado Puro",
+                "title":"Estado Puro",
                 "Match":"Estado Puro",
                 "Type":"Spanish Restaurant",
                 "Recommend":"M",
-                "Notes":"Upmarket hotel restaurant",
+                "snippet":"Upmarket hotel restaurant",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2806,11 +2806,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Bola Taberna",
+                "title":"La Bola Taberna",
                 "Match":"La Bola Taberna",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"Best place to try MadrileÃ±o (boiled meats, chicken, morcilla, chorizo, chickpeas and vegetables)",
+                "snippet":"Best place to try MadrileÃ±o (boiled meats, chicken, morcilla, chorizo, chickpeas and vegetables)",
                 "Contact":"http://en.labola.es",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2849,11 +2849,11 @@
                 ]
             },
             "properties":{
-                "Name":"Restaurante Magasand",
+                "title":"Restaurante Magasand",
                 "Match":"Restaurante Magasand",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"Grab a take away lunch hamper",
+                "snippet":"Grab a take away lunch hamper",
                 "Contact":"http://magasand.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2892,11 +2892,11 @@
                 ]
             },
             "properties":{
-                "Name":"Restaurante Sacha",
+                "title":"Restaurante Sacha",
                 "Match":"Restaurante Sacha",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"High recommended Spanish restaurant with leafy terrace.",
+                "snippet":"High recommended Spanish restaurant with leafy terrace.",
                 "Contact":"http://www.nytimes.com/2012/10/14/travel/where-madrid-chefs-go-for-real-spanish-food.html?_r=0",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2935,11 +2935,11 @@
                 ]
             },
             "properties":{
-                "Name":"Taberna Carmencita",
+                "title":"Taberna Carmencita",
                 "Match":"Taberna Carmencita",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"All day menu including formal(ish) breakfast",
+                "snippet":"All day menu including formal(ish) breakfast",
                 "Contact":"http://tabernalacarmencita.es",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -2978,11 +2978,11 @@
                 ]
             },
             "properties":{
-                "Name":"Taberna Laredo",
+                "title":"Taberna Laredo",
                 "Match":"Taberna Laredo",
                 "Type":"Spanish Restaurant",
                 "Recommend":"Y",
-                "Notes":"High recommended (where chefs eat)",
+                "snippet":"High recommended (where chefs eat)",
                 "Contact":"http://www.tabernalaredo.com/WEB_INGLES/index.html",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3021,11 +3021,11 @@
                 ]
             },
             "properties":{
-                "Name":"Plaza de la Villa",
+                "title":"Plaza de la Villa",
                 "Match":"Plaza de la Villa",
                 "Type":"Square",
                 "Recommend":"Y",
-                "Notes":"Main medieval centers of Madrid",
+                "snippet":"Main medieval centers of Madrid",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/plaza-de-la-villa/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -3064,11 +3064,11 @@
                 ]
             },
             "properties":{
-                "Name":"Plaza Mayor, Madrid",
+                "title":"Plaza Mayor, Madrid",
                 "Match":"Plaza Mayor, Madrid",
                 "Type":"Square",
                 "Recommend":"Y",
-                "Notes":"Arches, balconies and painted facades",
+                "snippet":"Arches, balconies and painted facades",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/plaza-mayor-madrid/",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -3107,11 +3107,11 @@
                 ]
             },
             "properties":{
-                "Name":"Plaza Santa Ana",
+                "title":"Plaza Santa Ana",
                 "Match":"Plaza Santa Ana",
                 "Type":"Square",
                 "Recommend":"Y",
-                "Notes":"Tapas places ring the square, great place to kick off a night out.",
+                "snippet":"Tapas places ring the square, great place to kick off a night out.",
                 "Contact":"",
                 "Eat":"FALSE",
                 "Drink":"FALSE",
@@ -3150,11 +3150,11 @@
                 ]
             },
             "properties":{
-                "Name":"Puerta del Sol",
+                "title":"Puerta del Sol",
                 "Match":"Puerta del Sol",
                 "Type":"Square",
                 "Recommend":"Y",
-                "Notes":"A hub of activity, including tourists seeing the many landmarks.",
+                "snippet":"A hub of activity, including tourists seeing the many landmarks.",
                 "Contact":"http://www.esmadrid.com/en/tourist-information/puerta-del-sol/",
                 "Eat":"TRUE",
                 "Drink":"TRUE",
@@ -3193,11 +3193,11 @@
                 ]
             },
             "properties":{
-                "Name":"Baco Y Beto",
+                "title":"Baco Y Beto",
                 "Match":"Baco Y Beto",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Spanish Tapas with a Cuban twist",
+                "snippet":"Spanish Tapas with a Cuban twist",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3236,11 +3236,11 @@
                 ]
             },
             "properties":{
-                "Name":"Bocaito",
+                "title":"Bocaito",
                 "Match":"BocaÃ­to",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Stay in the bar downstairs for tapas",
+                "snippet":"Stay in the bar downstairs for tapas",
                 "Contact":"http://www.bocaito.com/en/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3279,11 +3279,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Alberto",
+                "title":"Casa Alberto",
                 "Match":"Casa Alberto",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Since 1827, glass of vermouth with oxtail stew",
+                "snippet":"Since 1827, glass of vermouth with oxtail stew",
                 "Contact":"http://www.casaalberto.es/en/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3322,11 +3322,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Labra",
+                "title":"Casa Labra",
                 "Match":"Casa Labra",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Very popular tapas spot, order cod and croquetas de bacalao",
+                "snippet":"Very popular tapas spot, order cod and croquetas de bacalao",
                 "Contact":"http://www.casalabra.es/en/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3365,11 +3365,11 @@
                 ]
             },
             "properties":{
-                "Name":"Casa Rafa",
+                "title":"Casa Rafa",
                 "Match":"Casa Rafa",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Very good shellfish",
+                "snippet":"Very good shellfish",
                 "Contact":"http://www.restauranterafa.es/index_en.html",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3408,11 +3408,11 @@
                 ]
             },
             "properties":{
-                "Name":"El Mollete",
+                "title":"El Mollete",
                 "Match":"El Mollete",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Located in a cellar. Lunch and dinner, reservations suggested or grab tapas at the bar.",
+                "snippet":"Located in a cellar. Lunch and dinner, reservations suggested or grab tapas at the bar.",
                 "Contact":"http://www.tabernaelmollete.com/index.html",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3451,11 +3451,11 @@
                 ]
             },
             "properties":{
-                "Name":"Freiduria de Gallinejas",
+                "title":"Freiduria de Gallinejas",
                 "Match":"FreidurÃ­a de Gallinejas",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Classic tapas, come for gallinejas and entresijos (lamb offal) tapas",
+                "snippet":"Classic tapas, come for gallinejas and entresijos (lamb offal) tapas",
                 "Contact":"http://www.gallinejasembajadores.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3494,11 +3494,11 @@
                 ]
             },
             "properties":{
-                "Name":"Juana La Loca",
+                "title":"Juana La Loca",
                 "Match":"Juana La Loca",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Trendy Tapas, come later",
+                "snippet":"Trendy Tapas, come later",
                 "Contact":"http://juanalalocamadrid.com/en/",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3537,11 +3537,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Ardosa",
+                "title":"La Ardosa",
                 "Match":"La Ardosa",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Old school beer and tapas",
+                "snippet":"Old school beer and tapas",
                 "Contact":"http://www.laardosa.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3580,11 +3580,11 @@
                 ]
             },
             "properties":{
-                "Name":"La Esquina de Eusebio",
+                "title":"La Esquina de Eusebio",
                 "Match":"La Esquina de Eusebio",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Local Tapas spot",
+                "snippet":"Local Tapas spot",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3623,11 +3623,11 @@
                 ]
             },
             "properties":{
-                "Name":"Lhardy",
+                "title":"Lhardy",
                 "Match":"Lhardy",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Avoid the restaurant and drink consomme at the bar",
+                "snippet":"Avoid the restaurant and drink consomme at the bar",
                 "Contact":"http://lhardy.com",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3666,11 +3666,11 @@
                 ]
             },
             "properties":{
-                "Name":"Sidreria El Tigre",
+                "title":"Sidreria El Tigre",
                 "Match":"Sidreria El Tigre",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Very popular tapas and drinks",
+                "snippet":"Very popular tapas and drinks",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3709,11 +3709,11 @@
                 ]
             },
             "properties":{
-                "Name":"Taberna La Dolores",
+                "title":"Taberna La Dolores",
                 "Match":"Taberna La Dolores",
                 "Type":"Tapas",
                 "Recommend":"Y",
-                "Notes":"Typical drinks and tapas",
+                "snippet":"Typical drinks and tapas",
                 "Contact":"",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
@@ -3752,11 +3752,11 @@
                 ]
             },
             "properties":{
-                "Name":"Matritum",
+                "title":"Matritum",
                 "Match":"Matritum",
                 "Type":"Wine Bar",
                 "Recommend":"M",
-                "Notes":"More restaurant than wine bar",
+                "snippet":"More restaurant than wine bar",
                 "Contact":"http://www.matritum.es",
                 "Eat":"TRUE",
                 "Drink":"FALSE",
