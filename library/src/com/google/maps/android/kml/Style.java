@@ -15,7 +15,7 @@ import java.util.HashMap;
  *
  * Represents the defined styles in the KML document
  */
-public class StyleProperties {
+public class Style {
 
     private final  HashMap<String, String> mPolylineOptions;
 
@@ -26,7 +26,7 @@ public class StyleProperties {
     private boolean outline = true;
 
 
-    public StyleProperties() {
+    public Style() {
         mPolylineOptions = new HashMap<String, String>();
         mPolygonOptions = new HashMap<String, String>();
     }
@@ -83,11 +83,7 @@ public class StyleProperties {
 
     private void parsePolyStyle (XmlPullParser p)  throws XmlPullParserException, IOException {
         int eventType = p.getEventType();
-        boolean isInPolyStyle = true;
-
         while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
-            isInPolyStyle = (eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"));
-            // Assign relevant properties to mPolygonOptions
             if (eventType == XmlPullParser.START_TAG) {
                 if (p.getName().equals("color")) {
                     String color = p.nextText();

@@ -15,6 +15,7 @@ public class KMLDemoActivity extends BaseDemoActivity {
         try {
             InputStream stream = getResources().openRawResource(R.raw.sample_kml);
             KmlLayer kmlLayer = new KmlLayer(getMap(), stream);
+            kmlLayer.setKmlData();
 
         } catch (Exception e) {
             System.out.println("Unable to find file in res/raw, please try again!");

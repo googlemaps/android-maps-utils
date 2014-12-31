@@ -14,22 +14,13 @@ import java.io.IOException;
  */
 public interface Geometry {
 
-    public static final int LATITUDE = 0;
-
-    public static final int LONGITUDE = 1;
-
     public static final int INNER_BOUNDARY = 0;
 
     public static final int OUTER_BOUNDARY = 1;
 
-    public LatLng latLng = null;
+    public void createCoordinates(String text);
 
-    public void parseGeometry (XmlPullParser parser) throws XmlPullParserException, IOException;
-
-    public void setGeometry (String text);
+    public void setGeometry(Object geometry);
 
     public Object getGeometry();
-
-    public LatLng convertToLatLng(String[] text);
-
 }

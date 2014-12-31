@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * Created by juliawong on 12/9/14.
  */
-public class PolygonPropertiesTest extends TestCase {
+public class PolygonTest extends TestCase {
 
     public void testDefaultProperties() {
         PolygonProperties pp = null;

@@ -18,7 +18,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         try {
-
+/*
             final GeoJsonImport featureCollectionTest = new GeoJsonImport(getMap(),
                     R.raw.feature_collection_geojson_demo, getApplicationContext());
 
@@ -61,7 +61,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 }
             });
 
-
+*/
 
         } catch (Exception e) {
             Log.v("Exception", e.toString());
