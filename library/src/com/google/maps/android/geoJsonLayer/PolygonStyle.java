@@ -86,4 +86,17 @@ public class PolygonStyle implements Style {
     public PolygonOptions getPolygonOptions() {
         return mPolygonOptions;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("PolygonStyle{");
+        sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
+        sb.append(",\n fill color=").append(mFillColor);
+        sb.append(",\n geodesic=").append(mGeodesic);
+        sb.append(",\n stroke color=").append(mStrokeColor);
+        sb.append(",\n visible=").append(mVisible);
+        sb.append(",\n z index=").append(mZIndex);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

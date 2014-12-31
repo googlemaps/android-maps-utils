@@ -75,4 +75,17 @@ public class LineStringStyle implements Style {
     public PolylineOptions getPolylineOptions() {
         return mPolylineOptions;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("LineStringStyle{");
+        sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
+        sb.append(",\n color=").append(mColor);
+        sb.append(",\n geodesic=").append(mGeodesic);
+        sb.append(",\n visible=").append(mVisible);
+        sb.append(",\n width=").append(mWidth);
+        sb.append(",\n z index=").append(mZIndex);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

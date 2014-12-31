@@ -133,4 +133,23 @@ public class PointStyle implements Style {
     public MarkerOptions getMarkerOptions() {
         return mMarkerOptions;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("PointStyle{");
+        sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
+        sb.append(",\n alpha=").append(mAlpha);
+        sb.append(",\n anchor U=").append(mAnchorU);
+        sb.append(",\n anchor V=").append(mAnchorV);
+        sb.append(",\n draggable=").append(mDraggable);
+        sb.append(",\n flat=").append(mFlat);
+        sb.append(",\n info window anchor U=").append(mInfoWindowAnchorU);
+        sb.append(",\n info window anchor V=").append(mInfoWindowAnchorV);
+        sb.append(",\n rotation=").append(mRotation);
+        sb.append(",\n snippet=").append(mSnippet);
+        sb.append(",\n title=").append(mTitle);
+        sb.append(",\n visible=").append(mVisible);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }
