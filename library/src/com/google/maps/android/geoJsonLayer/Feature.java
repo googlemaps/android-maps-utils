@@ -1,5 +1,6 @@
 package com.google.maps.android.geoJsonLayer;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -30,10 +31,16 @@ public class Feature {
         this.mProperties = properties;
     }
 
-    // TODO: implement an iterator thing or just return mProperties
+    /**
+     * Gets the iterator of the property keys. Order of keys is undefined.
+     * @return iterator of property keys
+     */
+    public Iterator getProperties() {
+        return mProperties.keySet().iterator();
+    }
 
     /**
-     * Get the style of the feature
+     * Gets the style of the feature
      *
      * @return style object
      */

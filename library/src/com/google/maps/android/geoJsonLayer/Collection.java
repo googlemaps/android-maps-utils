@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by juliawong on 12/29/14.
@@ -91,7 +92,13 @@ public class Collection {
         mFeatures = parser.getFeatures();
     }
 
-    // TODO: implement an iterator thing or just return mFeatures
+    /**
+     * Gets an iterator of all feature elements.
+     * @return iterator of feature elements
+     */
+    public Iterator getFeatures() {
+        return mFeatures.iterator();
+    }
 
     /**
      * Returns the features with the given ID if it exists
@@ -223,7 +230,6 @@ public class Collection {
         sb.append(",\n Point style=").append(mDefaultPointStyle);
         sb.append(",\n LineString style=").append(mDefaultLineStringStyle);
         sb.append(",\n Polygon style=").append(mDefaultPolygonStyle);
-        sb.append(",\n GeoJson file=").append(mGeoJsonFile);
         sb.append("\n}\n");
         return sb.toString();
     }
