@@ -16,6 +16,13 @@ public class PolygonStyle implements Style {
     private PolygonOptions mPolygonOptions;
 
     /**
+     * Creates a new PolygonStyle object
+     */
+    public PolygonStyle() {
+        mPolygonOptions = new PolygonOptions();
+    }
+
+    /**
      * Gets the type of geometries this style can be applied to
      *
      * @return type of geometries this style can be applied to

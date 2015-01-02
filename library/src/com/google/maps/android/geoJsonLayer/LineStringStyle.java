@@ -15,6 +15,13 @@ public class LineStringStyle implements Style {
     private PolylineOptions mPolylineOptions;
 
     /**
+     * Creates a new LineStringStyle object
+     */
+    public LineStringStyle() {
+        mPolylineOptions = new PolylineOptions();
+    }
+
+    /**
      * Gets the type of geometries this style can be applied to
      *
      * @return type of geometries this style can be applied to

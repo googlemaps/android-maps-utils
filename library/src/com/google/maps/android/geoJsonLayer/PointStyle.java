@@ -15,6 +15,13 @@ public class PointStyle implements Style {
     private MarkerOptions mMarkerOptions;
 
     /**
+     * Creates a new PointStyle object
+     */
+    public PointStyle() {
+        mMarkerOptions = new MarkerOptions();
+    }
+
+    /**
      * Gets the type of geometries this style can be applied to
      *
      * @return type of geometries this style can be applied to
