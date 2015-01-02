@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A MultiPolygon geometry contains a number of {@link com.google.maps.android.geoJsonLayer.Polygon}s.
  */
 public class MultiPolygon extends Geometry {
 

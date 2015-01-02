@@ -16,6 +16,8 @@ import java.util.Iterator;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * Adds a new layer of GeoJSON data with methods to allow the developer to interact with it.
  */
 public class Collection {
 
@@ -59,6 +61,9 @@ public class Collection {
             throws IOException, JSONException {
         mMap = map;
         mFeatures = new ArrayList<Feature>();
+        mDefaultPointStyle = new PointStyle();
+        mDefaultLineStringStyle = new LineStringStyle();
+        mDefaultPolygonStyle = new PolygonStyle();
         InputStream stream = context.getResources().openRawResource(resourceId);
         mGeoJsonFile = createJsonFileObject(stream);
     }
@@ -173,7 +178,8 @@ public class Collection {
     }
 
     /**
-     * Sets the default style for the LineString objects. Overrides all current styles on LineString
+     * Sets the default style for the LineString objects. Overrides all current styles on
+     * LineString
      * objects.
      *
      * @param lineStringStyle to set as default style, this is applied to LineStrings as they are
@@ -207,8 +213,7 @@ public class Collection {
      * Set the input map to be centred and zoomed to the bounding box of the set of data
      *
      * @param preserveViewPort if true, map's centre and zoom are changed, if false viewport is
-     *                         left
-     *                         unchanged
+     *                         left unchanged
      */
     public void setPreserveViewPort(boolean preserveViewPort) {
 

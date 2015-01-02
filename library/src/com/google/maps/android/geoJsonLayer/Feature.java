@@ -5,20 +5,22 @@ import java.util.Map;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A feature has a geometry, id and set of properties. Styles are also stored in this class.
  */
 public class Feature {
 
     private final Geometry mGeometry;
+
+    private final String mId;
+
+    private final Map<String, String> mProperties;
 
     private PointStyle mPointStyle;
 
     private LineStringStyle mLineStringStyle;
 
     private PolygonStyle mPolygonStyle;
-
-    private final String mId;
-
-    private final Map<String, String> mProperties;
 
     // check if ID exists
 

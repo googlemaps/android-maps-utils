@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A Polygon geometry contains a number of arrays of {@link com.google.android.gms.maps.model.LatLng}s.
+ * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 
 public class Polygon extends Geometry {

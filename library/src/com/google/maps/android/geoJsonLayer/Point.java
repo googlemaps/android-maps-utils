@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A Point geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
  */
 public class Point extends Geometry {
 

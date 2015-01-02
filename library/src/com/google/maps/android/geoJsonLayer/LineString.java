@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A LineString geometry contains a number of {@link com.google.android.gms.maps.model.LatLng}s.
  */
 public class LineString extends Geometry {
 

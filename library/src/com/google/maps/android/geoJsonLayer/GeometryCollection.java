@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A GeometryCollection geometry contains a number of geometry objects.
  */
 public class GeometryCollection extends Geometry {
 

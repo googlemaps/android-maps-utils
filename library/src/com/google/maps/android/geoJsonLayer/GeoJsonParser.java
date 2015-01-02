@@ -1,8 +1,5 @@
 package com.google.maps.android.geoJsonLayer;
 
-/**
- * Created by juliawong on 12/30/14.
- */
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,7 +14,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Parse a JSONObject and return an array of Feature objects
+ * Created by juliawong on 12/30/14.
+ *
+ * Parses a JSONObject and places data into their appropriate Feature objects. Returns an array of
+ * Feature objects parsed from the GeoJSON file.
  */
 public class GeoJsonParser {
 

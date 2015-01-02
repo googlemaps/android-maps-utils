@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A MultiPoint geometry contains a number of {@link com.google.maps.android.geoJsonLayer.Point}s.
  */
 public class MultiPoint extends Geometry {
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A MultiLineString geometry contains a number of {@link com.google.maps.android.geoJsonLayer.LineString}s.
  */
 public class MultiLineString extends Geometry {
 
