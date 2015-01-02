@@ -20,6 +20,9 @@ public class GeometryCollection extends Geometry {
      */
     public GeometryCollection(
             ArrayList<Geometry> geometries) {
+        if (geometries == null) {
+            throw new IllegalArgumentException("Geometries cannot be null");
+        }
         mGeometries = geometries;
     }
 

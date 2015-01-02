@@ -19,6 +19,9 @@ public class Point extends Geometry {
      * @param coordinates coordinates of Point to store
      */
     public Point(LatLng coordinates) {
+        if (coordinates == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null");
+        }
         mCoordinates = coordinates;
     }
 

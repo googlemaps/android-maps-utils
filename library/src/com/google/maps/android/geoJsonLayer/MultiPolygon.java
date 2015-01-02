@@ -19,6 +19,9 @@ public class MultiPolygon extends Geometry {
      * @param polygons array of Polygons to add to the MultiPolygon
      */
     public MultiPolygon(ArrayList<Polygon> polygons) {
+        if (polygons == null) {
+            throw new IllegalArgumentException("Polygons cannot be null");
+        }
         mPolygons = polygons;
     }
 

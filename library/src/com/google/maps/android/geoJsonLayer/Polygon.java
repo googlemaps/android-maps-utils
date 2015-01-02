@@ -24,6 +24,9 @@ public class Polygon extends Geometry {
      */
     public Polygon(
             ArrayList<ArrayList<LatLng>> coordinates) {
+        if (coordinates == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null");
+        }
         mCoordinates = coordinates;
     }
 

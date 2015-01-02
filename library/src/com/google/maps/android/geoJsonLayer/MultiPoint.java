@@ -19,6 +19,9 @@ public class MultiPoint extends Geometry {
      * @param points array of Points to add to the MultiPoint
      */
     public MultiPoint(ArrayList<Point> points) {
+        if (points == null) {
+            throw new IllegalArgumentException("Points cannot be null");
+        }
         mPoints = points;
     }
 

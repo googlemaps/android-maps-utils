@@ -20,6 +20,9 @@ public class MultiLineString extends Geometry {
      */
     public MultiLineString(
             ArrayList<LineString> lineStrings) {
+        if (lineStrings == null) {
+            throw new IllegalArgumentException("LineStrings cannot be null");
+        }
         mLineStrings = lineStrings;
     }
 

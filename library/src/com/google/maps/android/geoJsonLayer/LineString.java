@@ -21,6 +21,9 @@ public class LineString extends Geometry {
      * @param coordinates array of coordinates of LineString to store
      */
     public LineString(ArrayList<LatLng> coordinates) {
+        if (coordinates == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null");
+        }
         mCoordinates = coordinates;
     }
 
