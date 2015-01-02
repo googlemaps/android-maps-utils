@@ -53,14 +53,34 @@ public class GeoJsonParser {
 
     private final ArrayList<Feature> mFeatures;
 
+    private final PointStyle mPointStyle;
+
+    private final LineStringStyle mLineStringStyle;
+
+    private final PolygonStyle mPolygonStyle;
+
     /**
      * Creates a new GeoJsonParser
      *
-     * @param geoJsonFile GeoJSON file to parse
+     * @param geoJsonFile     GeoJSON file to parse
+     * @param pointStyle      PointStyle to apply to all features
+     * @param lineStringStyle LineStringStyle to apply to all features
+     * @param polygonStyle    PolygonStyle to apply to all features
      */
-    public GeoJsonParser(JSONObject geoJsonFile) {
+    public GeoJsonParser(JSONObject geoJsonFile, PointStyle pointStyle,
+            LineStringStyle lineStringStyle,
+            PolygonStyle polygonStyle) {
         mGeoJsonFile = geoJsonFile;
+        mPointStyle = pointStyle;
+        mLineStringStyle = lineStringStyle;
+        mPolygonStyle = polygonStyle;
         mFeatures = new ArrayList<Feature>();
+    }
+
+    private void setDefaultStyles(Feature feature) {
+        feature.setPointStyle(mPointStyle);
+        feature.setLineStringStyle(mLineStringStyle);
+        feature.setPolygonStyle(mPolygonStyle);
     }
 
     /**
@@ -69,7 +89,6 @@ public class GeoJsonParser {
      * @throws JSONException if the GeoJSON file could not be parsed
      */
     public void parseGeoJson() throws JSONException {
-        // TODO: add default styles
         String type = mGeoJsonFile.getString("type");
         if (type.equals(FEATURE)) {
             mFeatures.add(parseFeature(mGeoJsonFile));
@@ -127,6 +146,7 @@ public class GeoJsonParser {
         }
         JSONObject properties = geoJsonFeature.getJSONObject("properties");
         feature = new Feature(geometry, id, parseProperties(properties));
+        setDefaultStyles(feature);
         return feature;
     }
 
@@ -160,7 +180,9 @@ public class GeoJsonParser {
      * @return new Feature object
      */
     private Feature geometrytoFeature(Geometry geometry) {
-        return new Feature(geometry, null, null);
+        Feature feature = new Feature(geometry, null, null);
+        setDefaultStyles(feature);
+        return feature;
     }
 
     /**

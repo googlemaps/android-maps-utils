@@ -8,13 +8,17 @@ import java.util.Map;
  */
 public class Feature {
 
-    private Geometry mGeometry;
+    private final Geometry mGeometry;
 
-    private Style mStyle;
+    private PointStyle mPointStyle;
 
-    private String mId;
+    private LineStringStyle mLineStringStyle;
 
-    private Map<String, String> mProperties;
+    private PolygonStyle mPolygonStyle;
+
+    private final String mId;
+
+    private final Map<String, String> mProperties;
 
     // check if ID exists
 
@@ -33,33 +37,67 @@ public class Feature {
 
     /**
      * Gets the iterator of the property keys. Order of keys is undefined.
+     *
      * @return iterator of property keys
      */
     public Iterator getProperties() {
         return mProperties.keySet().iterator();
     }
 
+    // TODO: Redraw with new style when setters are used
+
     /**
-     * Gets the style of the feature
+     * Gets the PointStyle of the feature
      *
-     * @return style object
+     * @return PointStyle object
      */
-    public Style getStyle() {
-        return mStyle;
+    public PointStyle getPointStyle() {
+        return mPointStyle;
     }
 
-    // TODO: Redraw with new style and validate style against geometry
+    /**
+     * Sets the PointStyle of the feature
+     *
+     * @param pointStyle PointStyle object
+     */
+    public void setPointStyle(PointStyle pointStyle) {
+        mPointStyle = pointStyle;
+    }
 
     /**
-     * Sets the style of the feature, this will override default styles set in Collection
+     * Gets the LineStringStyle of the feature
      *
-     * @param style new style to set for this feature
-     * @return the previous style that the new style has overwritten
+     * @return LineStringStyle object
      */
-    public Style setStyle(Style style) {
-        Style oldStyle = mStyle;
-        mStyle = style;
-        return oldStyle;
+    public LineStringStyle getLineStringStyle() {
+        return mLineStringStyle;
+    }
+
+    /**
+     * Sets the LineStringStyle of the feature
+     *
+     * @param lineStringStyle LineStringStyle object
+     */
+    public void setLineStringStyle(LineStringStyle lineStringStyle) {
+        mLineStringStyle = lineStringStyle;
+    }
+
+    /**
+     * Gets the PolygonStyle of the feature
+     *
+     * @return PolygonStyle object
+     */
+    public PolygonStyle getPolygonStyle() {
+        return mPolygonStyle;
+    }
+
+    /**
+     * Sets the PolygonStyle of the feature
+     *
+     * @param polygonStyle PolygonStyle object
+     */
+    public void setPolygonStyle(PolygonStyle polygonStyle) {
+        mPolygonStyle = polygonStyle;
     }
 
     /**
@@ -115,7 +153,9 @@ public class Feature {
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");
         sb.append("\n geometry=").append(mGeometry);
-        sb.append(",\n style=").append(mStyle);
+        sb.append(",\n point style=").append(mPointStyle);
+        sb.append(",\n line string style=").append(mLineStringStyle);
+        sb.append(",\n polygon style=").append(mPolygonStyle);
         sb.append(",\n id=").append(mId);
         sb.append(",\n properties=").append(mProperties);
         sb.append("\n}\n");

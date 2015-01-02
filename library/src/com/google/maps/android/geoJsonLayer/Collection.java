@@ -31,6 +31,8 @@ public class Collection {
 
     private JSONObject mGeoJsonFile;
 
+    private float mZIndex;
+
     // TODO close streams
 
     /**
@@ -38,8 +40,6 @@ public class Collection {
      *
      * @param map           GoogleMap object
      * @param geoJsonObject JSONObject to parse GeoJSON data from
-     * @throws IOException   if the file cannot be opened for read
-     * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
      */
     public Collection(GoogleMap map, JSONObject geoJsonObject) {
         mMap = map;
@@ -87,13 +87,15 @@ public class Collection {
     }
 
     public void parseGeoJson() throws JSONException {
-        GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
+        GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile, mDefaultPointStyle,
+                mDefaultLineStringStyle, mDefaultPolygonStyle);
         parser.parseGeoJson();
         mFeatures = parser.getFeatures();
     }
 
     /**
      * Gets an iterator of all feature elements.
+     *
      * @return iterator of feature elements
      */
     public Iterator getFeatures() {
@@ -152,7 +154,7 @@ public class Collection {
     }
 
     /**
-     * Sets the default style for the Point objects
+     * Sets the default style for the Point objects. Overrides all current styles on Point objects.
      *
      * @param pointStyle to set as default style, this is applied to Points as they are imported
      *                   from the GeoJSON file
@@ -171,7 +173,8 @@ public class Collection {
     }
 
     /**
-     * Sets the default style for the LineString objects
+     * Sets the default style for the LineString objects. Overrides all current styles on LineString
+     * objects.
      *
      * @param lineStringStyle to set as default style, this is applied to LineStrings as they are
      *                        imported from the GeoJSON file
@@ -190,11 +193,11 @@ public class Collection {
     }
 
     /**
-     * Sets the default style for the Polygon objects
+     * Sets the default style for the Polygon objects. Overrides all current styles on Polygon
+     * objects.
      *
      * @param polygonStyle to set as default style, this is applied to Polygons as they are
-     *                     imported
-     *                     from the GeoJSON file
+     *                     imported from the GeoJSON file
      */
     public void setDefaultPolygonStyle(PolygonStyle polygonStyle) {
         mDefaultPolygonStyle = polygonStyle;
@@ -212,12 +215,22 @@ public class Collection {
     }
 
     /**
+     * Gets the z index of the imported layer
+     *
+     * @return z index of the data on this layer
+     */
+    public float getZIndex() {
+        return mZIndex;
+    }
+
+    /**
      * Sets the z index of the imported layer, only applies to LineStrings and Polygons, Points are
      * on top of all objects
      *
      * @param zIndex stack order for data on this layer, excludes Points
      */
     public void setZIndex(float zIndex) {
+        mZIndex = zIndex;
         mDefaultLineStringStyle.setZIndex(zIndex);
         mDefaultPolygonStyle.setZIndex(zIndex);
         // TODO: redraw objects
@@ -230,6 +243,7 @@ public class Collection {
         sb.append(",\n Point style=").append(mDefaultPointStyle);
         sb.append(",\n LineString style=").append(mDefaultLineStringStyle);
         sb.append(",\n Polygon style=").append(mDefaultPolygonStyle);
+        sb.append(",\n z index=").append(mZIndex);
         sb.append("\n}\n");
         return sb.toString();
     }
