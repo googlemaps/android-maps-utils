@@ -5,8 +5,6 @@ package com.google.maps.android.geoJsonLayer;
  */
 public interface Style {
 
-    public boolean isVisible();
-
-    public void setVisible(boolean visible);
+    public String getGeometryType();
 
 }

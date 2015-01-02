@@ -4,6 +4,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
  * Created by juliawong on 12/29/14.
+ *
+ * A class that allows for LineString objects to be styled and for these styles to be translated
+ * into a PolylineOptions object
  */
 public class LineStringStyle implements Style {
 
@@ -11,67 +14,111 @@ public class LineStringStyle implements Style {
 
     private PolylineOptions mPolylineOptions;
 
-    private int mColor;
-
-    private boolean mGeodesic;
-
-    private boolean mVisible;
-
-    private float mWidth;
-
-    private float mZIndex;
-
-    public static String getGeometryType() {
+    /**
+     * Gets the type of geometries this style can be applied to
+     *
+     * @return type of geometries this style can be applied to
+     */
+    @Override
+    public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
 
+    /**
+     * Gets the color
+     *
+     * @return color
+     */
     public int getColor() {
-        return mColor;
+        return mPolylineOptions.getColor();
     }
 
+    /**
+     * Sets the color
+     *
+     * @param color color value
+     */
     public void setColor(int color) {
-        mColor = color;
-        mPolylineOptions.color(mColor);
+        mPolylineOptions.color(color);
     }
 
+    /**
+     * Gets whether the LineString is geodesic
+     *
+     * @return true if geodesic, false otherwise
+     */
     public boolean isGeodesic() {
-        return mGeodesic;
+        return mPolylineOptions.isGeodesic();
     }
 
+    /**
+     * Sets whether the LineString is geodesic
+     *
+     * @param geodesic true if geodesic, false otherwise
+     */
     public void setGeodesic(boolean geodesic) {
-        mGeodesic = geodesic;
-        mPolylineOptions.geodesic(mGeodesic);
+        mPolylineOptions.geodesic(geodesic);
     }
 
+    /**
+     * Gets the width
+     *
+     * @return width
+     */
     public float getWidth() {
-        return mWidth;
+        return mPolylineOptions.getWidth();
     }
 
+    /**
+     * Sets the width
+     *
+     * @param width width value
+     */
     public void setWidth(float width) {
-        mWidth = width;
-        mPolylineOptions.width(mWidth);
+        mPolylineOptions.width(width);
     }
 
+    /**
+     * Gets the z index
+     *
+     * @return z index
+     */
     public float getZIndex() {
-        return mZIndex;
+        return mPolylineOptions.getZIndex();
     }
 
-    public void setZIndex(float ZIndex) {
-        mZIndex = ZIndex;
-        mPolylineOptions.zIndex(mZIndex);
+    /**
+     * Sets the z index
+     *
+     * @param zIndex z index value
+     */
+    public void setZIndex(float zIndex) {
+        mPolylineOptions.zIndex(zIndex);
     }
 
-    @Override
+    /**
+     * Gets whether the LineString is visible
+     *
+     * @return true if visible, false if not visible
+     */
     public boolean isVisible() {
-        return mVisible;
+        return mPolylineOptions.isVisible();
     }
 
-    @Override
+    /**
+     * Sets whether the LineString is visible
+     *
+     * @param visible true if visible, false if not visible
+     */
     public void setVisible(boolean visible) {
-        mVisible = visible;
-        mPolylineOptions.visible(mVisible);
+        mPolylineOptions.visible(visible);
     }
 
+    /**
+     * Gets the PolylineOptions object
+     *
+     * @return PolylineOptons object
+     */
     public PolylineOptions getPolylineOptions() {
         return mPolylineOptions;
     }
@@ -80,11 +127,11 @@ public class LineStringStyle implements Style {
     public String toString() {
         StringBuilder sb = new StringBuilder("LineStringStyle{");
         sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
-        sb.append(",\n color=").append(mColor);
-        sb.append(",\n geodesic=").append(mGeodesic);
-        sb.append(",\n visible=").append(mVisible);
-        sb.append(",\n width=").append(mWidth);
-        sb.append(",\n z index=").append(mZIndex);
+        sb.append(",\n color=").append(getColor());
+        sb.append(",\n geodesic=").append(isGeodesic());
+        sb.append(",\n visible=").append(isVisible());
+        sb.append(",\n width=").append(getWidth());
+        sb.append(",\n z index=").append(getZIndex());
         sb.append("\n}\n");
         return sb.toString();
     }
