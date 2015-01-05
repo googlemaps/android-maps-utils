@@ -138,7 +138,6 @@ public class PointStyle implements Style {
      * @param infoWindowAnchorV info window anchor V coordinate
      */
     public void setInfoWindowAnchor(float infoWindowAnchorU, float infoWindowAnchorV) {
-
         mMarkerOptions.infoWindowAnchor(infoWindowAnchorU, infoWindowAnchorV);
     }
 
@@ -215,12 +214,22 @@ public class PointStyle implements Style {
     }
 
     /**
-     * Gets the MarkerOptions object
+     * Gets a new MarkerOptions object
      *
-     * @return MarkerOptions object
+     * @return new MarkerOptions object
      */
     public MarkerOptions getMarkerOptions() {
-        return mMarkerOptions;
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.alpha(mMarkerOptions.getAlpha());
+        markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
+        markerOptions.draggable(mMarkerOptions.isDraggable());
+        markerOptions.flat(mMarkerOptions.isFlat());
+        markerOptions.infoWindowAnchor(mMarkerOptions.getInfoWindowAnchorU(), mMarkerOptions.getInfoWindowAnchorV());
+        markerOptions.rotation(mMarkerOptions.getRotation());
+        markerOptions.snippet(mMarkerOptions.getSnippet());
+        markerOptions.title(mMarkerOptions.getTitle());
+        markerOptions.visible(mMarkerOptions.isVisible());
+        return markerOptions;
     }
 
     @Override

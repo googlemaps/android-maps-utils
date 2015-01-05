@@ -7,8 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,34 +51,14 @@ public class GeoJsonParser {
 
     private final ArrayList<Feature> mFeatures;
 
-    private final PointStyle mPointStyle;
-
-    private final LineStringStyle mLineStringStyle;
-
-    private final PolygonStyle mPolygonStyle;
-
     /**
      * Creates a new GeoJsonParser
      *
      * @param geoJsonFile     GeoJSON file to parse
-     * @param pointStyle      PointStyle to apply to all features
-     * @param lineStringStyle LineStringStyle to apply to all features
-     * @param polygonStyle    PolygonStyle to apply to all features
      */
-    public GeoJsonParser(JSONObject geoJsonFile, PointStyle pointStyle,
-            LineStringStyle lineStringStyle,
-            PolygonStyle polygonStyle) {
+    public GeoJsonParser(JSONObject geoJsonFile) {
         mGeoJsonFile = geoJsonFile;
-        mPointStyle = pointStyle;
-        mLineStringStyle = lineStringStyle;
-        mPolygonStyle = polygonStyle;
         mFeatures = new ArrayList<Feature>();
-    }
-
-    private void setDefaultStyles(Feature feature) {
-        feature.setPointStyle(mPointStyle);
-        feature.setLineStringStyle(mLineStringStyle);
-        feature.setPolygonStyle(mPolygonStyle);
     }
 
     /**
@@ -134,7 +112,6 @@ public class GeoJsonParser {
      *                       not be parsed for some other reason
      */
     private Feature parseFeature(JSONObject geoJsonFeature) throws JSONException {
-        // TODO: if the geometry is null don't add it to the map
         String id = null;
         Geometry geometry;
         Feature feature;
@@ -146,7 +123,6 @@ public class GeoJsonParser {
         }
         JSONObject properties = geoJsonFeature.getJSONObject("properties");
         feature = new Feature(geometry, id, parseProperties(properties));
-        setDefaultStyles(feature);
         return feature;
     }
 
@@ -180,9 +156,7 @@ public class GeoJsonParser {
      * @return new Feature object
      */
     private Feature geometrytoFeature(Geometry geometry) {
-        Feature feature = new Feature(geometry, null, null);
-        setDefaultStyles(feature);
-        return feature;
+        return new Feature(geometry, null, null);
     }
 
     /**
@@ -242,7 +216,6 @@ public class GeoJsonParser {
      * @throws JSONException if coordinates cannot be parsed
      */
     private Point createPoint(JSONArray coordinates) throws JSONException {
-        Log.i("Point", coordinates.toString());
         return new Point(parseCoordinate(coordinates));
     }
 

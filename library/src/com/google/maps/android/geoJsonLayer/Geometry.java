@@ -10,6 +10,4 @@ public class Geometry {
     public String getType() {
         return mType;
     }
-
-
 }

@@ -32,9 +32,12 @@ public class Feature {
      * @param properties map of data containing properties related to the feature
      */
     public Feature(Geometry geometry, String id, Map<String, String> properties) {
-        this.mGeometry = geometry;
-        this.mId = id;
-        this.mProperties = properties;
+        mGeometry = geometry;
+        mId = id;
+        mProperties = properties;
+        mPointStyle = new PointStyle();
+        mLineStringStyle = new LineStringStyle();
+        mPolygonStyle = new PolygonStyle();
     }
 
     /**

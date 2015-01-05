@@ -122,12 +122,18 @@ public class LineStringStyle implements Style {
     }
 
     /**
-     * Gets the PolylineOptions object
+     * Gets a new PolylineOptions object
      *
-     * @return PolylineOptons object
+     * @return new PolylineOptons object
      */
     public PolylineOptions getPolylineOptions() {
-        return mPolylineOptions;
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.color(mPolylineOptions.getColor());
+        polylineOptions.geodesic(mPolylineOptions.isGeodesic());
+        polylineOptions.visible(mPolylineOptions.isVisible());
+        polylineOptions.width(mPolylineOptions.getWidth());
+        polylineOptions.zIndex(mPolylineOptions.getZIndex());
+        return polylineOptions;
     }
 
     @Override

@@ -141,12 +141,19 @@ public class PolygonStyle implements Style {
     }
 
     /**
-     * Gets the PolygonOptions object
+     * Gets a new PolygonOptions object
      *
-     * @return PolygonOptions object
+     * @return new PolygonOptions object
      */
     public PolygonOptions getPolygonOptions() {
-        return mPolygonOptions;
+        PolygonOptions polygonOptions = new PolygonOptions();
+        polygonOptions.fillColor(mPolygonOptions.getFillColor());
+        polygonOptions.geodesic(mPolygonOptions.isGeodesic());
+        polygonOptions.strokeColor(mPolygonOptions.getStrokeColor());
+        polygonOptions.strokeWidth(mPolygonOptions.getStrokeWidth());
+        polygonOptions.visible(mPolygonOptions.isVisible());
+        polygonOptions.zIndex(mPolygonOptions.getZIndex());
+        return polygonOptions;
     }
 
     @Override
