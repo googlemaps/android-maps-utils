@@ -66,7 +66,7 @@ public class KmlLayer {
 
     /*TODO:
         Figure out a better place to put convertToLatLng in the Placemark class
-        createMultiGeometry and createGeometry maybe can be the same class?
+        Implement IconStyle (IconStyle is the style class for Point classes)
         Multigeometry currently doesnt implement style, only the coordinates
         Implement StyleMap.
         Implement BalloonStyle (Equivalent in GoogleMaps is IconWindow)
