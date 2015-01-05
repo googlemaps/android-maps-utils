@@ -26,11 +26,14 @@ import java.util.HashMap;
  */
 public class Polygon implements Geometry {
 
+    public static final int INNER_BOUNDARY = 0;
 
-    private HashMap< ArrayList<LatLng>, Integer> polygonBoundaries;
+    public static final int OUTER_BOUNDARY = 1;
+
+    private HashMap<ArrayList<LatLng>, Integer> polygonBoundaries;
 
     /**
-     * Recieves text, with each line representing a tuple coordinates seperated by a comma
+     * Recieves text, with each line representing a tuple coordinates separated by a comma
      * (longitude, latitude, altitude) This method converts these tuples into LatLng points,
      * and ignores the altitude component
      * @param text

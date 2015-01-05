@@ -10,10 +10,10 @@ public class Point implements Geometry {
     private LatLng pointCoordinate;
 
     /**
-     * Recieves text representing a tuple coordinates seperated by a comma
+     * Receives text representing a tuple coordinates separated by a comma
      * (longitude, latitude, altitude) This method converts this tuples into LatLng points,
      * and ignores the altitude component
-     * @param text A string representation of a tuple coordinate, with values seperated by commas
+     * @param text A string representation of a tuple coordinate, with values separated by commas
      */
     @Override
     public void createCoordinates(String text) {

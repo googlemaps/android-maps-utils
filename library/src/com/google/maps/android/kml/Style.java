@@ -1,16 +1,9 @@
 package com.google.maps.android.kml;
 
-import android.util.Xml;
-
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.util.HashMap;
+import android.graphics.Color;
 
 /**
  * Created by lavenderc on 12/2/14.
@@ -19,57 +12,97 @@ import java.util.HashMap;
  */
 public class Style {
 
-    private final  HashMap<String, String> mPolylineOptions;
+    private final PolylineOptions mPolylineOptions;
 
-    private final HashMap<String, String> mPolygonOptions;
+    private final PolygonOptions mPolygonOptions;
 
-    private boolean fill;
+    private boolean mFill = true;
 
-    private boolean outline;
+    private boolean mOutline = true;
 
+    /**
+     * Creates a new Style object
+     */
     public Style() {
-        mPolylineOptions = new HashMap<String, String>();
-        mPolygonOptions = new HashMap<String, String>();
-        outline = true;
-        fill = true;
-    }
-
-    public void setOutlineColor (String color) {
-        mPolylineOptions.put("color", "#" + color);
-        mPolygonOptions.put("strokeColor", color);
-    }
-
-    public void setWidth (String width) {
-        mPolylineOptions.put("width", width);
-        mPolygonOptions.put("strokeWidth", width);
-    }
-
-
-    public void setOutline (boolean value) {
-        if (!outline) mPolygonOptions.put("strokeWidth", "none");
-    }
-
-    public void setFill (boolean value) {
-        if (!fill) mPolygonOptions.put("fillColor", "none");
+        mPolylineOptions = new PolylineOptions();
+        mPolygonOptions = new PolygonOptions();
     }
 
     /**
-     * Gets a PolylineOptions object containing the property styles parsed from the KML file
-     * Used for LineString
+     * Sets whether the Polygon will have a fill
      *
-     * @return PolylineOptions object with defined options
+     * @param fill true if fill is set, false if no fill
      */
-    public HashMap<String, String> getPolylineOptions() {
-        return mPolylineOptions;
+    public void setFill(boolean fill) {
+        mFill = fill;
     }
 
     /**
-     * Gets a PolygonOptions object containing the property styles parsed from the KML file
-     * Used for LinearRing
+     * Sets the fill color for Polygons
      *
-     * @return PolygonOptions object with defined options
+     * @param color fill color to set
      */
-    public HashMap<String, String> getPolygonOptions() {
-        return mPolygonOptions;
+    public void setFillColor(String color) {
+        // Add # to allow for mOutline color to be parsed correctly
+        mPolygonOptions.fillColor(Color.parseColor("#" + color));
+    }
+
+    /**
+     * Sets whether the Polygon will have an outline
+     *
+     * @param outline true if there is an outline, false if no outline
+     */
+    public void setOutline(boolean outline) {
+        mOutline = outline;
+    }
+
+    /**
+     * Sets outline color for Polylines and Polygons
+     *
+     * @param color outline color to set
+     */
+    public void setOutlineColor(String color) {
+        // Add # to allow for mOutline color to be parsed correctly
+        mPolylineOptions.color(Color.parseColor("#" + color));
+        mPolygonOptions.strokeColor(Color.parseColor("#" + color));
+    }
+
+    /**
+     * Sets the width of the outline for Polylines and Polygons
+     *
+     * @param width width of outline to set
+     */
+    public void setWidth(Float width) {
+        mPolylineOptions.width(width);
+        mPolygonOptions.strokeWidth(width);
+    }
+
+    /**
+     * Creates a new PolylineOptions object
+     *
+     * @return new PolylineOptions
+     */
+    public PolylineOptions getPolylineOptions() {
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.color(mPolylineOptions.getColor());
+        polylineOptions.width(mPolylineOptions.getWidth());
+        return polylineOptions;
+    }
+
+    /**
+     * Creates a new PolygonOptions object
+     *
+     * @return new PolygonOptions
+     */
+    public PolygonOptions getPolygonOptions() {
+        PolygonOptions polygonOptions = new PolygonOptions();
+        if (mFill) {
+            polygonOptions.fillColor(mPolygonOptions.getFillColor());
+        }
+        if (mOutline) {
+            polygonOptions.strokeColor(mPolygonOptions.getStrokeColor());
+            polygonOptions.strokeWidth(mPolygonOptions.getStrokeWidth());
+        }
+        return polygonOptions;
     }
 }
