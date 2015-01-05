@@ -29,17 +29,31 @@ public class Polygon implements Geometry {
 
     private HashMap< ArrayList<LatLng>, Integer> polygonBoundaries;
 
-    @Override
+    /**
+     * Recieves text, with each line representing a tuple coordinates seperated by a comma
+     * (longitude, latitude, altitude) This method converts these tuples into LatLng points,
+     * and ignores the altitude component
+     * @param text
+     */
     public void createCoordinates(String text) {
         ArrayList<LatLng> mPointList = new ArrayList<LatLng>();
         String[] lines = text.trim().split("(\\s+)");
         for (String point : lines) {
             String[] coordinate = point.split(",");
             mPointList.add(Placemark.convertToLatLng(coordinate));
-            setGeometry(mPointList);
         }
+        setGeometry(mPointList);
     }
 
+
+    /**
+     * Creates a new ArrayList of LatLng points and a HashMap of these ArrayLists, if it has
+     * not been created already. The HashMap keys are the ArrayList of points, and the values
+     * are a number, 0 or 1 which represent whether the point is an inner boundary or an outer
+     * boundary.
+     *
+     * @param geometry  An object which represents a LatLng point to add to an ArrayList
+     */
     public void setGeometry(Object geometry) {
         ArrayList<LatLng> mPointList = ((ArrayList<LatLng>) geometry);
         if (polygonBoundaries == null) {
@@ -50,7 +64,9 @@ public class Polygon implements Geometry {
         }
      }
 
-    @Override
+    /**
+     * @return A HashMap of an ArrayList of LatLng points
+     */
     public Object getGeometry() {
         return polygonBoundaries;
     }

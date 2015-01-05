@@ -39,7 +39,12 @@ public class LineString implements Geometry{
 
     ArrayList<LatLng> mLineStringPoints;
 
-    @Override
+    /**
+     * Recieves text, with each line representing a tuple coordinates seperated by a comma
+     * (longitude, latitude, altitude) This method converts these tuples into LatLng points,
+     * and ignores the altitude component
+     * @param text
+     */
     public void createCoordinates(String text) {
         String[] lines = text.trim().split("(\\s+)");
         for (String points : lines) {
@@ -49,13 +54,21 @@ public class LineString implements Geometry{
         }
     }
 
+    /**
+     * Creates a new ArrayList of LatLng points if it has not been created already and adds LatLng
+     * points to this ArrayList
+     * @param geometry  An object which represents a LatLng point to add to an ArrayList
+     */
     public void setGeometry(Object geometry) {
         LatLng latLng = (LatLng) geometry;
         if (mLineStringPoints == null) mLineStringPoints = new ArrayList<LatLng>();
         mLineStringPoints.add(latLng);
     }
 
-    @Override
+    /**
+     * Returns an ArrayList of LatLng points which represent coordinates in a Polyline object
+     * @return
+     */
     public Object getGeometry() {
         return mLineStringPoints;
     }

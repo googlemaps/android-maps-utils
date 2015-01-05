@@ -1,5 +1,7 @@
 package com.google.maps.android.kml;
 
+import android.util.Xml;
+
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -21,115 +23,35 @@ public class Style {
 
     private final HashMap<String, String> mPolygonOptions;
 
-    private boolean fill = true;
+    private boolean fill;
 
-    private boolean outline = true;
-
+    private boolean outline;
 
     public Style() {
         mPolylineOptions = new HashMap<String, String>();
         mPolygonOptions = new HashMap<String, String>();
+        outline = true;
+        fill = true;
     }
 
-    /**
-     * Takes in a XMLPullParser containing properties for a parser and saves relevant properties
-     *
-     * @param p XMLPullParser reads input from designated source
-     */
-    public void styleProperties(XmlPullParser p) throws XmlPullParserException, IOException {
-        int eventType = p.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("Style"))) {
-            if (eventType == XmlPullParser.START_TAG) {
-                if (eventType == XmlPullParser.START_TAG && p.getName().equals("LineStyle")) {
-                    parseLineStyle(p);
-                } else if (eventType == XmlPullParser.START_TAG && p.getName().equals("PolyStyle")) {
-                    parsePolyStyle(p);
-                }
-
-                assignStyleProperties(p);
-            }
-            eventType = p.next();
-        }
-       checkStyleSettings();
+    public void setOutlineColor (String color) {
+        mPolylineOptions.put("color", "#" + color);
+        mPolygonOptions.put("strokeColor", color);
     }
 
-    private void parseLineStyle (XmlPullParser p) throws XmlPullParserException, IOException {
-
-        String color;
-        String width;
-        int eventType = p.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("LineStyle"))) {
-            // Assign relevant properties to mPolylineOptions
-            if (eventType == XmlPullParser.START_TAG) {
-                if (p.getName().equals("color")) {
-                    color = p.nextText();
-                    color = "#" + color;
-                    mPolylineOptions.put("color", color);
-                    mPolygonOptions.put("strokeColor", color);
-
-                } else if (p.getName().equals("colorMode")) {
-                    // TODO: Implement a function to handle colorMode
-                } else if (p.getName().equals("width")) {
-                    width = p.nextText();
-                    mPolylineOptions.put("width", width);
-                    mPolygonOptions.put("strokeWidth", width);
-                }
-            }
-            eventType = p.next();
-        }
-
-
-    }
-
-    private void parsePolyStyle (XmlPullParser p)  throws XmlPullParserException, IOException {
-        int eventType = p.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && p.getName().equals("PolyStyle"))) {
-            if (eventType == XmlPullParser.START_TAG) {
-                if (p.getName().equals("color")) {
-                    String color = p.nextText();
-                    color = "#" + color;
-                    mPolygonOptions.put("fillColor", color);
-                } else if (p.getName().equals("colorMode")) {
-                    // TODO: Implement a function to handle colorMode
-                } else if (p.getName().equals("fill")) {
-                    fill = false;
-                } else if (p.getName().equals("outline")) {
-                    outline = false;
-                }
-            }
-            eventType = p.next();
-        }
+    public void setWidth (String width) {
+        mPolylineOptions.put("width", width);
+        mPolygonOptions.put("strokeWidth", width);
     }
 
 
-
-    private void assignStyleProperties(XmlPullParser p) throws XmlPullParserException, IOException {
-        if (p.getName().equals("color")) {
-            String color = p.nextText();
-            String subcolor = "#" + color.substring(0, 6);
-            mPolylineOptions.put("color", subcolor);
-            mPolygonOptions.put("color", subcolor);
-        } else if (p.getName().equals("width")) {
-            String width = p.nextText();
-            mPolylineOptions.put("width", width);
-            mPolygonOptions.put("width", width);
-        } else if (p.getName().equals("fill")) {
-            fill = false;
-        } else if (p.getName().equals("outline")) {
-            outline = false;
-        }
-    }
-
-
-    /**
-     * Checks if there is no outline for the Polygon and removes outline
-     * Checks if there is no fill for the Polygon and makes transparent
-     */
-    private void checkStyleSettings() {
+    public void setOutline (boolean value) {
         if (!outline) mPolygonOptions.put("strokeWidth", "none");
+    }
+
+    public void setFill (boolean value) {
         if (!fill) mPolygonOptions.put("fillColor", "none");
     }
-
 
     /**
      * Gets a PolylineOptions object containing the property styles parsed from the KML file

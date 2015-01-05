@@ -21,6 +21,8 @@ public class Placemark {
 
     private ArrayList<Geometry> mMultigeometry;
 
+    //TODO: One Geometry Object
+
     private Polygon mPolygon;
 
     private LineString mLineString;
@@ -45,19 +47,17 @@ public class Placemark {
         mPlacemarkProperties.put(propertyName, propertyValue);
     }
 
-    public void setLineString(String text) {
-        mLineString = new LineString();
-        mLineString.createCoordinates(text);
-    }
-
-    public void setPolygon(String text) {
-        mPolygon = new Polygon();
-        mPolygon.createCoordinates(text);
-    }
-
-    public void setPoint(String text) {
-        mPoint = new Point();
-        mPoint.createCoordinates(text);
+    public void setGeometry(String type, String text) {
+        if (type.equals("Point")) {
+            mPoint = new Point();
+            mPoint.createCoordinates(text);
+        } else if (type.equals("LineString")) {
+            mLineString = new LineString();
+            mLineString.createCoordinates(text);
+        } else if (type.equals("Polygon")) {
+            if (mPolygon == null) mPolygon = new Polygon();
+            mPolygon.createCoordinates(text);
+        }
     }
 
     public void setMultigeometry(String type, String text) {
