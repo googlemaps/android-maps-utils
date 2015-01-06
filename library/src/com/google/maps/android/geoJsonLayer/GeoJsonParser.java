@@ -43,9 +43,17 @@ public class GeoJsonParser {
     // GeometryCollection geometries array member
     private static final String GEOMETRY_COLLECTION_ARRAY = "geometries";
 
+    //Coordinates for bbox
+    private static final String BOUNDING_BOX = "bbox";
+
+    //Properties
+    private static final String PROPERTIES = "properties";
+
     // Geometry object except for GeometryCollection
     private static final String GEOJSON_GEOMETRY_OBJECTS_REGEX
             = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
+
+    private static final String GEOJSON_MEMBER_LITERAL_REGEX = "true|false|null";
 
     private final JSONObject mGeoJsonFile;
 
@@ -71,8 +79,7 @@ public class GeoJsonParser {
         if (type.equals(FEATURE)) {
             mFeatures.add(parseFeature(mGeoJsonFile));
         } else if (type.equals(FEATURE_COLLECTION)) {
-            mFeatures.addAll(parseFeatureCollection(
-                    mGeoJsonFile.getJSONArray(FEATURE_COLLECTION_ARRAY)));
+            mFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
         } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
                 .equals(GEOMETRY_COLLECTION)) {
             mFeatures.add(geometrytoFeature(parseGeometry(mGeoJsonFile)));
@@ -82,17 +89,17 @@ public class GeoJsonParser {
     /**
      * Parses a GeoJSON feature collection which contains an array of features
      *
-     * @param geoJsonFeatures array of features from the GeoJSON feature collection
      * @return array of Feature objects parsed from the given array
      * @throws JSONException if the feature collection could not be parsed
      */
-    private ArrayList<Feature> parseFeatureCollection(JSONArray geoJsonFeatures)
+    private ArrayList<Feature> parseFeatureCollection(JSONObject geoJsonFeatureCollection)
             throws JSONException {
-        // FC is an array of features
+
+        JSONArray geoJsonFeatures = geoJsonFeatureCollection.getJSONArray(FEATURE_COLLECTION_ARRAY);
+
         ArrayList<Feature> features = new ArrayList<Feature>();
         for (int i = 0; i < geoJsonFeatures.length(); i++) {
             JSONObject feature = geoJsonFeatures.getJSONObject(i);
-
             if (feature.getString("type").equals(FEATURE)) {
                 features.add(parseFeature(feature));
             }
@@ -113,18 +120,31 @@ public class GeoJsonParser {
      */
     private Feature parseFeature(JSONObject geoJsonFeature) throws JSONException {
         String id = null;
-        Geometry geometry;
-        Feature feature;
-        geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
+        Geometry geometry = null;
+        JSONObject properties = null;
 
-        // Id is optional for a feature
         if (geoJsonFeature.has(FEATURE_ID)) {
             id = geoJsonFeature.getString(FEATURE_ID);
+        } if (geoJsonFeature.has(PROPERTIES)) {
+           properties = geoJsonFeature.getJSONObject("properties");
+        } if (geoJsonFeature.has(FEATURE_GEOMETRY)) {
+            //Geometry can be null instead of an array of coordinates
+            if (!geoJsonFeature.getString(FEATURE_GEOMETRY).matches(GEOJSON_MEMBER_LITERAL_REGEX)) {
+                geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
+            }
         }
-        JSONObject properties = geoJsonFeature.getJSONObject("properties");
-        feature = new Feature(geometry, id, parseProperties(properties));
-        return feature;
+
+        return new Feature(geometry, id, parseProperties(properties), null);
     }
+
+    /*
+    private MultiPoint parseBoundingBox(JSONArray coordinates) throws JSONException {
+        ArrayList<Point> points = new ArrayList<Point>();
+        points.add(new Point(new LatLng(coordinates.getDouble(1), coordinates.getDouble(0))));
+        points.add(new Point(new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
+        return new MultiPoint(points);
+    }
+    */
 
     /**
      * Parses a single GeoJSON geometry object containing a coordinates or geometries array if it
@@ -156,7 +176,7 @@ public class GeoJsonParser {
      * @return new Feature object
      */
     private Feature geometrytoFeature(Geometry geometry) {
-        return new Feature(geometry, null, null);
+        return new Feature(geometry, null, null, null);
     }
 
     /**

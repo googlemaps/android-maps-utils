@@ -1,5 +1,8 @@
 package com.google.maps.android.geoJsonLayer;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -13,6 +16,8 @@ public class Feature {
     private final Geometry mGeometry;
 
     private final String mId;
+
+    private MultiPoint mBoundingBox;
 
     private final Map<String, String> mProperties;
 
@@ -31,9 +36,11 @@ public class Feature {
      * @param id         id to refer to the feature by
      * @param properties map of data containing properties related to the feature
      */
-    public Feature(Geometry geometry, String id, Map<String, String> properties) {
+    public Feature(Geometry geometry, String id, Map<String, String> properties,
+                   MultiPoint boundingBox) {
         mGeometry = geometry;
         mId = id;
+        mBoundingBox = boundingBox;
         mProperties = properties;
         mPointStyle = new PointStyle();
         mLineStringStyle = new LineStringStyle();
@@ -123,40 +130,14 @@ public class Feature {
         return mId;
     }
 
-    /**
-     * Sets a property with an assigned value in the properties map
-     *
-     * @param property key value to add to property map
-     * @param value    value related to key to add
-     * @return previous value of property if overwritten, otherwise null
-     */
-    public String setProperty(String property, String value) {
-        return mProperties.put(property, value);
-    }
-
-    /**
-     * Gets a property value from a given property key
-     *
-     * @param property key of property to get from properties map
-     * @return value of property if found, otherwise null
-     */
-    public String getProperty(String property) {
-        return mProperties.get(property);
-    }
-
-    /**
-     * Removes a property key and value from the properties map
-     *
-     * @param property key of property to remove from the properties map
-     * @return value of property removed if it was found, otherwise null
-     */
-    public String removeProperty(String property) {
-        return mProperties.remove(property);
+    public boolean hasGeometry() {
+        return (mGeometry != null);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");
+        sb.append("\n bounding box=").append(mBoundingBox);
         sb.append("\n geometry=").append(mGeometry);
         sb.append(",\n point style=").append(mPointStyle);
         sb.append(",\n line string style=").append(mLineStringStyle);

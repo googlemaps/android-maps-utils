@@ -33,7 +33,7 @@ public class GeoJsonParserTest extends TestCase {
         LineString ls1 = new LineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 100), new LatLng(1, 101))));
         LineString ls2 = new LineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(2, 102), new LatLng(3, 103))));
         MultiLineString multiLineString = new MultiLineString(new ArrayList<LineString>(Arrays.asList(ls1, ls2)));
-        Feature feature = new Feature(multiLineString, null, null);
+        Feature feature = new Feature(multiLineString, null, null, null);
         ArrayList<Feature> features = new ArrayList<Feature>(Arrays.asList(feature));
         assertEquals(features.get(0).getId(), parser.getFeatures().get(0).getId());
     }

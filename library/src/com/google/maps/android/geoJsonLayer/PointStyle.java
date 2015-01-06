@@ -1,6 +1,14 @@
 package com.google.maps.android.geoJsonLayer;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by juliawong on 12/29/14.
@@ -158,6 +166,7 @@ public class PointStyle implements Style {
     public void setRotation(float rotation) {
         mMarkerOptions.rotation(rotation);
     }
+
 
     /**
      * Gets the snippet

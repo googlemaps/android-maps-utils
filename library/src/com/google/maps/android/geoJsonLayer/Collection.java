@@ -1,11 +1,14 @@
 package com.google.maps.android.geoJsonLayer;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import com.google.maps.android.geoJsonLayer.Geometry;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,38 +105,14 @@ public class Collection {
         return new JSONObject(result.toString());
     }
 
-    public void parseGeoJson() throws JSONException {
-        GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
-        parser.parseGeoJson();
-
-        for (Feature feature : parser.getFeatures()) {
-            mFeatures.put(feature, null);
-        }
-        addToMap(mFeatures.keySet());
-    }
 
     /**
      * Gets an iterator of all feature elements.
      *
      * @return iterator of feature elements
      */
-    public Iterator getFeatures() {
-        return mFeatures.keySet().iterator();
-    }
-
-    /**
-     * Returns the features with the given ID if it exists
-     *
-     * @param id of Feature object to find
-     * @return Feature object with matching ID or otherwise null
-     */
-    public Feature getFeatureById(String id) {
-        for (Feature feature : mFeatures.keySet()) {
-            if (feature.getId().equals(id)) {
-                return feature;
-            }
-        }
-        return null;
+    public  Set<Feature> getFeatures() {
+        return mFeatures.keySet();
     }
 
     /**
@@ -152,15 +131,6 @@ public class Collection {
      */
     public void setMap(GoogleMap map) {
         mMap = map;
-    }
-
-    /**
-     * Removes a feature from the collection
-     *
-     * @param feature to remove
-     */
-    public void removeFeature(Feature feature) {
-        mFeatures.remove(feature);
     }
 
     /**
@@ -232,62 +202,27 @@ public class Collection {
     }
 
     /**
-     * Set the input map to be centred and zoomed to the bounding box of the set of data
-     *
-     * @param preserveViewPort if true, map's centre and zoom are changed, if false viewport is
-     *                         left unchanged
+     * Converts a GeoJson file to a parser and puts found features in set
+     * @throws JSONException
      */
-    public void setPreserveViewPort(boolean preserveViewPort) {
-        // TODO: implement this
+    public void parseGeoJson() throws JSONException {
+        GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
+        parser.parseGeoJson();
+
+        for (Feature feature : parser.getFeatures()) {
+            mFeatures.put(feature, null);
+        }
     }
 
     /**
-     * Gets the z index of the imported layer
-     *
-     * @return z index of the data on this layer
+     * Adds all features which are available in this collection to the map
      */
-    public float getZIndex() {
-        return mZIndex;
-    }
-
-    /**
-     * Sets the z index of the imported layer, only applies to LineStrings and Polygons, Points are
-     * on top of all objects
-     *
-     * @param zIndex stack order for data on this layer, excludes Points
-     */
-    public void setZIndex(float zIndex) {
-        mZIndex = zIndex;
-        mDefaultLineStringStyle.setZIndex(zIndex);
-        mDefaultPolygonStyle.setZIndex(zIndex);
-        // TODO: redraw objects
-    }
-
-    /**
-     * Adds all objects currently stored in the mFeature array, onto the map
-     *
-     * @param features array of features to add to the map
-     */
-    private void addToMap(Set<Feature> features) {
-        for (Feature feature : features) {
-            String geometryType = feature.getGeometry().getType();
-            if (geometryType.equals("Point")) {
-                mFeatures.put(feature,
-                        addPointToMap(feature.getPointStyle(), (Point) feature.getGeometry()));
-            } else if (geometryType.equals("LineString")) {
-                mFeatures.put(feature, addLineStringToMap(feature.getLineStringStyle(),
-                        (LineString) feature.getGeometry()));
-            } else if (geometryType.equals("Polygon")) {
-                mFeatures.put(feature, addPolygonToMap(feature.getPolygonStyle(),
-                        (Polygon) feature.getGeometry()));
-            } else if (geometryType.equals("MultiPoint")) {
-                mFeatures.put(feature, addMultiPointToMap(feature));
-            } else if (geometryType.equals("MultiLineString")) {
-                mFeatures.put(feature, addMultiLineStringToMap(feature));
-            } else if (geometryType.equals("MultiPolygon")) {
-                mFeatures.put(feature, addMultiPolygonToMap(feature));
+    public void addCollectionToMap() {
+        for (Feature feature : mFeatures.keySet()) {
+            //geometry: "null", is valid - need to check beforehand before we add
+            if (feature.hasGeometry()) {
+                addToMap(feature, feature.getGeometry());
             }
-            // TODO: recursive thing for GeometryCollection
         }
     }
 
@@ -300,9 +235,53 @@ public class Collection {
      */
     private Marker addPointToMap(PointStyle pointStyle, Point point) {
         MarkerOptions markerOptions = pointStyle.getMarkerOptions();
-        // Add coordinates
         markerOptions.position(point.getCoordinates());
         return mMap.addMarker(markerOptions);
+    }
+
+    /**
+     * Adds all objects currently stored in the mFeature array, onto the map
+     *
+     * @param feature feature to get geometry style
+     * @param geometry Geometry to add to the map
+     */
+    private void addToMap(Feature feature, Geometry geometry) {
+        String geometryType = geometry.getType();
+        if (geometryType.equals("Point")) {
+            mFeatures.put(feature,
+                    addPointToMap(feature.getPointStyle(), (Point) geometry));
+        } else if (geometryType.equals("LineString")) {
+            mFeatures.put(feature, addLineStringToMap(feature.getLineStringStyle(),
+                    (LineString) geometry));
+        } else if (geometryType.equals("Polygon")) {
+            mFeatures.put(feature, addPolygonToMap(feature.getPolygonStyle(),
+                    (Polygon) geometry));
+        } else if (geometryType.equals("MultiPoint")) {
+            mFeatures.put(feature, addMultiPointToMap(feature));
+        } else if (geometryType.equals("MultiLineString")) {
+            mFeatures.put(feature, addMultiLineStringToMap(feature));
+        } else if (geometryType.equals("MultiPolygon")) {
+            mFeatures.put(feature, addMultiPolygonToMap(feature));
+        } else if(geometryType.equals("GeometryCollection")) {
+            GeometryCollection geometryCollection = ((GeometryCollection) feature.getGeometry());
+            for (Geometry geometryObject: geometryCollection.getGeometries()) {
+                addToMap(feature, geometryObject);
+            }
+        }
+    }
+
+    /**
+     * Adds all Points in MultiPoint to the map as multiple Markers
+     *
+     * @param feature contains MultiPoint and relevant style properties
+     * @return array of Markers that have been added to the map
+     */
+    private ArrayList<Marker> addMultiPointToMap(Feature feature) {
+        ArrayList<Marker> markers = new ArrayList<Marker>();
+        for (Point point : ((MultiPoint) feature.getGeometry()).getPoints()) {
+            markers.add(addPointToMap(feature.getPointStyle(), point));
+        }
+        return markers;
     }
 
     /**
@@ -339,19 +318,7 @@ public class Collection {
         return mMap.addPolygon(polygonOptions);
     }
 
-    /**
-     * Adds all Points in MultiPoint to the map as multiple Markers
-     *
-     * @param feature contains MultiPoint and relevant style properties
-     * @return array of Markers that have been added to the map
-     */
-    private ArrayList<Marker> addMultiPointToMap(Feature feature) {
-        ArrayList<Marker> markers = new ArrayList<Marker>();
-        for (Point point : ((MultiPoint) feature.getGeometry()).getPoints()) {
-            markers.add(addPointToMap(feature.getPointStyle(), point));
-        }
-        return markers;
-    }
+
 
     /**
      * Adds all LineStrings in the MultiLineString to the map as multiple Polylines

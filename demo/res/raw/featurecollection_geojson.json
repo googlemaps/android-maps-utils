@@ -1,4 +1,5 @@
 { "type": "FeatureCollection",
+"bbox": [-180.0, -90.0, 180.0, 90.0],
     "features": [
       { "type": "Feature",
         "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},

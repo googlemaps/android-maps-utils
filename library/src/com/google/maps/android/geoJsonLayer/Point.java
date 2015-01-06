@@ -25,21 +25,10 @@ public class Point extends Geometry {
         mCoordinates = coordinates;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
-    @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
-    /**
-     * Gets the coordinates of the Point
-     *
-     * @return coordinates of the Point
-     */
     public LatLng getCoordinates() {
         return mCoordinates;
     }
