@@ -5,9 +5,11 @@ package com.google.maps.android.kml;
  */
 public interface Geometry {
 
+    public String getType();
+
     public void createCoordinates(String text);
 
-    public void setGeometry(Object geometry);
-
     public Object getGeometry();
+
+    public void setGeometry(Object geometry);
 }

@@ -11,6 +11,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,6 +85,8 @@ public class KmlLayer {
             throws XmlPullParserException {
         this.mMap = map;
         this.mStyles = new HashMap<String, Style>();
+        // TODO remove or something
+        mStyles.put(null, new Style());
         this.mPlacemark = new ArrayList<Placemark>();
         this.mMapObjects = new ArrayList<Object>();
         this.mOptions = new ArrayList<Object>();
@@ -207,16 +210,40 @@ public class KmlLayer {
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Style"))) {
             if (eventType == XmlPullParser.START_TAG) {
-                // TODO: IconStyle
-                if (mParser.getName().equals("LineStyle")) {
-                    createLineStyle(styleProperties);
+                if (mParser.getName().equals("IconStyle")) {
+                    createIconStyle(styleProperties);
                 } else if (mParser.getName().equals("PolyStyle")) {
                     createPolyStyle(styleProperties);
+                } else if (mParser.getName().equals("LineStyle")) {
+                    createLineStyle(styleProperties);
                 }
             }
             eventType = mParser.next();
         }
         mStyles.put(styleId, styleProperties);
+    }
+
+    /**
+     * Recieves input from a parser and adds a property if its corresponding start tag is detected
+     *
+     * @param style Style object to add properties to
+     */
+    private void createIconStyle(Style style) throws XmlPullParserException, IOException {
+        int eventType = mParser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("IconStyle"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().equals("scale")) {
+                    // TODO
+                } else if (mParser.getName().equals("heading")) {
+                    style.setHeading(Float.parseFloat(mParser.nextText()));
+                } else if (mParser.getName().equals("Icon")) {
+                    // TODO: get href child
+                } else if (mParser.getName().equals("hotSpot")) {
+                    // TODO: implement this for pixels. fraction and insetPixels
+                }
+            }
+            eventType = mParser.next();
+        }
     }
 
     /**
@@ -239,7 +266,7 @@ public class KmlLayer {
     }
 
     /**
-     * Recieves input from a parser and adds a property if its corresponding start tag is detected
+     * Receives input from a parser and adds a property if its corresponding start tag is detected
      *
      * @param style Style object to add properties to
      */
@@ -248,7 +275,6 @@ public class KmlLayer {
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("PolyStyle"))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals("color")) {
-                    // Append # to color value to allow for colors to be parsed correctly
                     style.setFillColor(mParser.nextText());
                 } else if (mParser.getName().equals("outline")) {
                     style.setOutline(Boolean.parseBoolean(mParser.nextText()));
@@ -261,20 +287,22 @@ public class KmlLayer {
     }
 
     /**
-     * Recieves input from a parser. If a style start tag is detected with an id, it sets the style
-     * for the placemark. If a Geometry, or Multigeometry start tag is detected, it creates the
+     * Receives input from a parser. If a style start tag is detected with an id, it sets the style
+     * for the placemark. If a Geometry, or MultiGeometry start tag is detected, it creates the
      * corresponding classes. If a property start tag is detected, then it adds those properties to
      */
     private void createPlacemark() throws IOException, XmlPullParserException {
+        Boolean hasGeometry = false;
         Placemark placemark = new Placemark();
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Placemark"))) {
             String tagName = mParser.getName();
             if (eventType == XmlPullParser.START_TAG) {
                 if (isStyle(tagName)) {
-                    placemark.setStyle(mParser, tagName);
+                    placemark.setStyle(mParser.nextText());
                 } else if (isGeometry(tagName)) {
                     createGeometry(GEOMETRY_TYPE, tagName, placemark);
+                    hasGeometry = true;
                 } else if (isProperty(tagName)) {
                     placemark.setProperties(tagName, mParser.nextText());
                 } else if (isMultiGeometry(tagName)) {
@@ -283,15 +311,17 @@ public class KmlLayer {
             }
             eventType = mParser.next();
         }
-        mPlacemark.add(placemark);
+        // If there is no geometry associated with the Placemark then we do not add it
+        if (hasGeometry) {
+            mPlacemark.add(placemark);
+        }
     }
 
     /**
      * Recieves input from a parser and sets a Geometry object to a Placemark class.
      *
      * @param type      Integer representation; either parsed as a single geometry object or part
-     *                  of
-     *                  a multigeometry object
+     *                  of a multigeometry object
      * @param tagName   Geometry object tagName; Polygon, LineStyle, Point
      * @param placemark Placemark class to add geometry objects to
      */
@@ -328,28 +358,36 @@ public class KmlLayer {
     }
 
     /**
-     * Recieves an ArrayList of Placemark objects and retrieves its geometry object; then creates a
-     * corresponding GoogleMapsOptions objects; and assigns styles and coordinates to this option
+     * Receives an ArrayList of Placemark objects and retrieves its geometry object; then creates a
+     * corresponding GoogleMaps Options objects; and assigns styles and coordinates to this option
      * to store in an ArrayList of GoogleMapsOptions.
      */
     private void assignGeometryOptions() {
         for (Placemark placemark : mPlacemark) {
-            if (placemark.getPolygon() != null) {
-                PolygonOptions polygonOptions = mStyles
-                        .get(placemark.getProperties().get("styleUrl")).getPolygonOptions();
-                addPolygonCoordinates(placemark.getPolygon(), polygonOptions);
-                mOptions.add(polygonOptions);
-            } else if (placemark.getPolyline() != null) {
-                PolylineOptions polylineOptions = mStyles
-                        .get(placemark.getProperties().get("styleUrl")).getPolylineOptions();
-                addPolylineCoordinates(placemark.getPolyline(), polylineOptions);
-                mOptions.add(polylineOptions);
-            } else if (placemark.getPoint() != null) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position((LatLng) placemark.getPoint().getGeometry());
-                mOptions.add(markerOptions);
-            } else if (placemark.getMultigeometry() != null) {
-                assignMultipleGeometryOptions(placemark);
+            // Check if the style is stored
+            if (mStyles.get(placemark.getStyle()) != null) {
+                String geometryType = placemark.getGeometry().getType();
+                if (geometryType.equals("Point")) {
+                    MarkerOptions markerOptions = mStyles.get(placemark.getStyle())
+                            .getMarkerOptions();
+                    addPointCoordinates((Point) placemark.getGeometry(), markerOptions);
+                    mOptions.add(markerOptions);
+                } else if (geometryType.equals("LineString")) {
+                    PolylineOptions polylineOptions = mStyles
+                            .get(placemark.getStyle()).getPolylineOptions();
+                    addPolylineCoordinates((LineString) placemark.getGeometry(), polylineOptions);
+                    mOptions.add(polylineOptions);
+                } else if (geometryType.equals("Polygon")) {
+                    PolygonOptions polygonOptions = mStyles
+                            .get(placemark.getStyle()).getPolygonOptions();
+                    addPolygonCoordinates((Polygon) placemark.getGeometry(), polygonOptions);
+                    mOptions.add(polygonOptions);
+                } else if (placemark.getMultigeometry() != null) {
+                    // TODO create a MG class
+                    assignMultipleGeometryOptions(placemark);
+                }
+            } else {
+                Log.i("Style not found", placemark.getStyle());
             }
         }
     }
@@ -361,23 +399,32 @@ public class KmlLayer {
      * GoogleMapsOptions
      */
     private void assignMultipleGeometryOptions(Placemark placemark) {
-        for (Object object : placemark.getMultigeometry()) {
-            if (object instanceof Polygon) {
+        for (Geometry geometry : placemark.getMultigeometry()) {
+            if (geometry instanceof Polygon) {
                 PolygonOptions polygonOptions = new PolygonOptions();
-                addPolygonCoordinates((Polygon) object, polygonOptions);
+                addPolygonCoordinates((Polygon) geometry, polygonOptions);
                 mOptions.add(polygonOptions);
-            } else if (object instanceof Point) {
+            } else if (geometry instanceof Point) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position((LatLng) ((Point) object).getGeometry());
+                markerOptions.position((LatLng) geometry.getGeometry());
                 mOptions.add(markerOptions);
-            } else if (object instanceof LineString) {
+            } else if (geometry instanceof LineString) {
                 PolylineOptions polylineOptions = new PolylineOptions();
-                addPolylineCoordinates((LineString) object, polylineOptions);
+                addPolylineCoordinates((LineString) geometry, polylineOptions);
                 mOptions.add(polylineOptions);
             }
         }
     }
 
+    /**
+     * Adds coordinates from Point class to MarkerOptions
+     *
+     * @param point Point object to retrieve LatLng point from
+     * @param markerOptions MarkerOptions object to add coordinates to
+     */
+    private void addPointCoordinates(Point point, MarkerOptions markerOptions) {
+        markerOptions.position((LatLng) point.getGeometry());
+    }
 
     /**
      * Adds an ArrayList of LatLng points from a LineString class to a PolylineOptions object
@@ -418,21 +465,20 @@ public class KmlLayer {
      * from adding the GoogleMapOptions to the GoogleMap and is stored in an ArrayList of Objects.
      */
     private void addKmlLayerToMap(GoogleMap googleMap) {
-        for (Object objects : mOptions) {
-            if (objects instanceof PolylineOptions) {
-                mMapObjects.add(googleMap.addPolyline((PolylineOptions) objects));
-            } else if (objects instanceof PolygonOptions) {
-                mMapObjects.add(googleMap.addPolygon((PolygonOptions) objects));
-            } else if (objects instanceof MarkerOptions) {
-                mMapObjects.add(googleMap.addMarker((MarkerOptions) objects));
+        for (Object option : mOptions) {
+            if (option instanceof PolylineOptions) {
+                mMapObjects.add(googleMap.addPolyline((PolylineOptions) option));
+            } else if (option instanceof PolygonOptions) {
+                mMapObjects.add(googleMap.addPolygon((PolygonOptions) option));
+            } else if (option instanceof MarkerOptions) {
+                mMapObjects.add(googleMap.addMarker((MarkerOptions) option));
             }
         }
     }
 
     /**
      * @return Retrieves an ArrayList of Objects; which are instances of either a Polyline, Polygon
-     * or
-     * Marker object which have been added to a defined GoogleMap.
+     * or Marker object which have been added to a defined GoogleMap.
      */
     private ArrayList<Object> getMapObjects() {
         return mMapObjects;

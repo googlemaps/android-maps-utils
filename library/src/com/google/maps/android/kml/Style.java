@@ -1,5 +1,6 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -11,6 +12,8 @@ import android.graphics.Color;
  * Represents the defined styles in the KML document
  */
 public class Style {
+
+    private final MarkerOptions mMarkerOptions;
 
     private final PolylineOptions mPolylineOptions;
 
@@ -24,8 +27,13 @@ public class Style {
      * Creates a new Style object
      */
     public Style() {
+        mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
+    }
+
+    public boolean isFill() {
+        return mFill;
     }
 
     /**
@@ -37,6 +45,7 @@ public class Style {
         mFill = fill;
     }
 
+
     /**
      * Sets the fill color for Polygons
      *
@@ -45,6 +54,14 @@ public class Style {
     public void setFillColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
         mPolygonOptions.fillColor(Color.parseColor("#" + color));
+    }
+
+    public void setHeading(float heading) {
+        mMarkerOptions.rotation(heading);
+    }
+
+    public boolean isOutline() {
+        return mOutline;
     }
 
     /**
@@ -75,6 +92,19 @@ public class Style {
     public void setWidth(Float width) {
         mPolylineOptions.width(width);
         mPolygonOptions.strokeWidth(width);
+    }
+
+    // TODO: think about whether we really need a deep copy of the Options
+
+    /**
+     * Creates a new MarkerOptions object
+     *
+     * @return new MarkerOptions
+     */
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.rotation(mMarkerOptions.getRotation());
+        return markerOptions;
     }
 
     /**

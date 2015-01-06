@@ -7,12 +7,20 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Point implements Geometry {
 
+    public static final String GEOMETRY_TYPE = "Point";
+
     private LatLng pointCoordinate;
+
+    @Override
+    public String getType() {
+        return GEOMETRY_TYPE;
+    }
 
     /**
      * Receives text representing a tuple coordinates separated by a comma
      * (longitude, latitude, altitude) This method converts this tuples into LatLng points,
      * and ignores the altitude component
+     *
      * @param text A string representation of a tuple coordinate, with values separated by commas
      */
     @Override
@@ -23,18 +31,18 @@ public class Point implements Geometry {
     }
 
     /**
-     * Creates a LatLng point
-     *
-     * @param geometry  An object which represents a LatLng point
-     */
-    public void setGeometry(Object geometry) {
-        pointCoordinate = ((LatLng) geometry);
-    }
-
-    /**
      * Returns a LatLng point representing point of a marker
      */
     public Object getGeometry() {
-       return pointCoordinate;
+        return pointCoordinate;
+    }
+
+    /**
+     * Creates a LatLng point
+     *
+     * @param geometry An object which represents a LatLng point
+     */
+    public void setGeometry(Object geometry) {
+        pointCoordinate = ((LatLng) geometry);
     }
 }

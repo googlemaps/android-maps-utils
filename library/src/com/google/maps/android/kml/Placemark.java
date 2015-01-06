@@ -2,67 +2,69 @@ package com.google.maps.android.kml;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by lavenderc on 12/3/14.
  *
- * Represents a placemark which is either a point, linestring or polygon
+ * Represents a placemark which is either a point, linestring, polygon or multigeometry
  * Stores the properties about the placemark including coordinates
  */
 public class Placemark {
-
-    private HashMap<String, String> mPlacemarkProperties;
-
-    private ArrayList<Geometry> mMultigeometry;
-
-    //TODO: One Geometry Object
-
-    private Polygon mPolygon;
-
-    private LineString mLineString;
-
-    private Point mPoint;
 
     public static final int LATITUDE = 1;
 
     public static final int LONGITUDE = 0;
 
+    private HashMap<String, String> mPlacemarkProperties;
 
-    public void setStyle(XmlPullParser parser, String name) throws XmlPullParserException, IOException {
-        if (parser.getAttributeCount() != 0) {
-            setProperties(name, parser.getAttributeValue(null, "id"));
-        } else {
-            setProperties(name, parser.nextText());
-        }
+    private ArrayList<Geometry> mMultigeometry;
+
+    private Geometry mGeometry;
+
+    private String mStyle;
+
+    public static LatLng convertToLatLng(String[] coordinate) {
+        Double latDouble = Double.parseDouble(coordinate[LATITUDE]);
+        Double lonDouble = Double.parseDouble(coordinate[LONGITUDE]);
+        return new LatLng(latDouble, lonDouble);
     }
 
-    public void setProperties (String propertyName, String propertyValue) {
-        if (mPlacemarkProperties == null) mPlacemarkProperties = new HashMap<String, String>();
+    public String getStyle() {
+        return mStyle;
+    }
+
+    public void setStyle(String style) {
+        mStyle = style;
+    }
+
+    public void setProperties(String propertyName, String propertyValue) {
+        if (mPlacemarkProperties == null) {
+            mPlacemarkProperties = new HashMap<String, String>();
+        }
         mPlacemarkProperties.put(propertyName, propertyValue);
     }
 
     public void setGeometry(String type, String text) {
         if (type.equals("Point")) {
-            mPoint = new Point();
-            mPoint.createCoordinates(text);
+            mGeometry = new Point();
+            mGeometry.createCoordinates(text);
         } else if (type.equals("LineString")) {
-            mLineString = new LineString();
-            mLineString.createCoordinates(text);
+            mGeometry = new LineString();
+            mGeometry.createCoordinates(text);
         } else if (type.equals("Polygon")) {
-            if (mPolygon == null) mPolygon = new Polygon();
-            mPolygon.createCoordinates(text);
+            if (mGeometry == null) {
+                mGeometry = new Polygon();
+            }
+            mGeometry.createCoordinates(text);
         }
     }
 
     public void setMultigeometry(String type, String text) {
-
-        if (mMultigeometry == null) mMultigeometry = new ArrayList<Geometry>();
+        if (mMultigeometry == null) {
+            mMultigeometry = new ArrayList<Geometry>();
+        }
 
         if (type.equals("Point")) {
             Point point = new Point();
@@ -74,7 +76,7 @@ public class Placemark {
             mMultigeometry.add(lineString);
         } else if (type.equals("Polygon")) {
             Polygon polygon = new Polygon();
-            polygon .createCoordinates(text);
+            polygon.createCoordinates(text);
             mMultigeometry.add(polygon);
         }
     }
@@ -83,26 +85,12 @@ public class Placemark {
         return mPlacemarkProperties;
     }
 
-    public Polygon getPolygon() {
-        return mPolygon;
-    }
-
-    public LineString getPolyline() {
-        return mLineString;
-    }
-
-    public Point getPoint() {
-        return mPoint;
+    public Geometry getGeometry() {
+        return mGeometry;
     }
 
     public ArrayList<Geometry> getMultigeometry() {
         return mMultigeometry;
-    }
-
-    public static LatLng convertToLatLng(String[] coordinate) {
-        Double latDouble = Double.parseDouble(coordinate[LATITUDE]);
-        Double lonDouble = Double.parseDouble(coordinate[LONGITUDE]);
-        return new LatLng(latDouble, lonDouble);
     }
 
 }

@@ -26,17 +26,23 @@ import java.util.HashMap;
  */
 public class Polygon implements Geometry {
 
+    public static final String GEOMETRY_TYPE = "Polygon";
+
     public static final int INNER_BOUNDARY = 0;
 
     public static final int OUTER_BOUNDARY = 1;
 
     private HashMap<ArrayList<LatLng>, Integer> polygonBoundaries;
 
+    @Override
+    public String getType() {
+        return GEOMETRY_TYPE;
+    }
+
     /**
      * Recieves text, with each line representing a tuple coordinates separated by a comma
      * (longitude, latitude, altitude) This method converts these tuples into LatLng points,
      * and ignores the altitude component
-     * @param text
      */
     public void createCoordinates(String text) {
         ArrayList<LatLng> mPointList = new ArrayList<LatLng>();
@@ -48,6 +54,12 @@ public class Polygon implements Geometry {
         setGeometry(mPointList);
     }
 
+    /**
+     * @return A HashMap of an ArrayList of LatLng points
+     */
+    public Object getGeometry() {
+        return polygonBoundaries;
+    }
 
     /**
      * Creates a new ArrayList of LatLng points and a HashMap of these ArrayLists, if it has
@@ -55,7 +67,7 @@ public class Polygon implements Geometry {
      * are a number, 0 or 1 which represent whether the point is an inner boundary or an outer
      * boundary.
      *
-     * @param geometry  An object which represents a LatLng point to add to an ArrayList
+     * @param geometry An object which represents a LatLng point to add to an ArrayList
      */
     public void setGeometry(Object geometry) {
         ArrayList<LatLng> mPointList = ((ArrayList<LatLng>) geometry);
@@ -65,12 +77,5 @@ public class Polygon implements Geometry {
         } else {
             polygonBoundaries.put(mPointList, INNER_BOUNDARY);
         }
-     }
-
-    /**
-     * @return A HashMap of an ArrayList of LatLng points
-     */
-    public Object getGeometry() {
-        return polygonBoundaries;
     }
 }
