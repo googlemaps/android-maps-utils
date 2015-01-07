@@ -1,5 +1,6 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -22,6 +23,8 @@ public class Style {
     private boolean mFill = true;
 
     private boolean mOutline = true;
+
+    private String mIconUrl;
 
     /**
      * Creates a new Style object
@@ -60,6 +63,33 @@ public class Style {
         mMarkerOptions.rotation(heading);
     }
 
+    // TODO support pixel and inset for custom marker images
+    public void setHotSpot(float x, float y, String xUnits, String yUnits) {
+        float xAnchor = 0.5f;
+        float yAnchor = 1.0f;
+        // Set x coordinate
+        if (xUnits.equals("fraction")) {
+            xAnchor = x;
+        }
+        if (yUnits.equals("fraction")) {
+            yAnchor = y;
+        }
+
+        mMarkerOptions.anchor(xAnchor, yAnchor);
+    }
+
+    public String getIconUrl() {
+        return mIconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        mIconUrl = iconUrl;
+        if (!mIconUrl.startsWith("http://")) {
+            // Icon stored locally
+            mMarkerOptions.icon(BitmapDescriptorFactory.fromPath(iconUrl));
+        }
+    }
+
     public boolean isOutline() {
         return mOutline;
     }
@@ -94,8 +124,6 @@ public class Style {
         mPolygonOptions.strokeWidth(width);
     }
 
-    // TODO: think about whether we really need a deep copy of the Options
-
     /**
      * Creates a new MarkerOptions object
      *
@@ -104,6 +132,7 @@ public class Style {
     public MarkerOptions getMarkerOptions() {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.rotation(mMarkerOptions.getRotation());
+        markerOptions.icon(mMarkerOptions.getIcon());
         return markerOptions;
     }
 
