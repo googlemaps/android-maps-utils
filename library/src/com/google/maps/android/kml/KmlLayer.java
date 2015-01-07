@@ -72,10 +72,11 @@ public class KmlLayer {
         Figure out a better place to put convertToLatLng in the Placemark class - create a parser class
         Implement IconStyle (IconStyle is the style class for Point classes) - in progress
         Multigeometry currently doesn't implement style, only the coordinates
+        Add Geometry constructors to take in coords
         Implement StyleMap.
         Implement BalloonStyle (Equivalent in GoogleMaps is IconWindow)
         Implement LabelStyle (Equivalent is IconGenerator Utility Library)
-        Test Multigeometry.
+        Test Multigeometry - can be recursive
     */
 
     /**
@@ -322,6 +323,7 @@ public class KmlLayer {
                     placemark.setProperties(tagName, mParser.nextText());
                 } else if (isMultiGeometry(tagName)) {
                     createMultiGeometry(placemark);
+                    hasGeometry = true;
                 }
             }
             eventType = mParser.next();
@@ -384,15 +386,13 @@ public class KmlLayer {
             if (style != null) {
                 String geometryType = placemark.getGeometry().getType();
                 Geometry geometry = placemark.getGeometry();
-
                 if (geometryType.equals("Point")) {
                     mMapObjects.add(addPointToMap((Point) geometry, style));
                 } else if (geometryType.equals("LineString")) {
                     mMapObjects.add(addLineStringToMap((LineString) geometry, style));
                 } else if (geometryType.equals("Polygon")) {
                     mMapObjects.add(addPolygonToMap((Polygon) geometry, style));
-                } else if (placemark.getMultigeometry() != null) {
-                    // TODO create a MG class
+                } else if (geometryType.equals("MultiGeometry")) {
                     addMultiGeometryToMap(placemark);
                 }
             } else {
@@ -462,21 +462,22 @@ public class KmlLayer {
      * GoogleMapsOptions
      */
     private void addMultiGeometryToMap(Placemark placemark) {
-//        for (Geometry geometry : placemark.getMultigeometry()) {
-//            if (geometry instanceof Polygon) {
-//                PolygonOptions polygonOptions = new PolygonOptions();
-//                addPolygonCoordinates((Polygon) geometry, polygonOptions);
-//                //mOptions.add(polygonOptions);
-//            } else if (geometry instanceof Point) {
-//                MarkerOptions markerOptions = new MarkerOptions();
-//                markerOptions.position((LatLng) geometry.getGeometry());
-//                //mOptions.add(markerOptions);
-//            } else if (geometry instanceof LineString) {
-//                PolylineOptions polylineOptions = new PolylineOptions();
-//                addPolylineCoordinates((LineString) geometry, polylineOptions);
-//                //mOptions.add(polylineOptions);
-//            }
-//        }
+        Style style = mStyles.get(placemark.getStyle());
+        ArrayList<Geometry> geometries = (ArrayList<Geometry>) placemark.getGeometry()
+                .getGeometry();
+        for (Geometry geometry : geometries) {
+            if (style != null) {
+                String geometryType = geometry.getType();
+                if (geometryType.equals("Point")) {
+                    mMapObjects.add(addPointToMap((Point) geometry, style));
+                } else if (geometryType.equals("LineString")) {
+                    mMapObjects.add(addLineStringToMap((LineString) geometry, style));
+                } else if (geometryType.equals("Polygon")) {
+                    mMapObjects.add(addPolygonToMap((Polygon) geometry, style));
+                }
+            } else {
+            }
+        }
     }
 
 

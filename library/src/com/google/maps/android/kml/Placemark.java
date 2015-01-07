@@ -25,6 +25,11 @@ public class Placemark {
 
     private String mStyle;
 
+    public Placemark() {
+        mPlacemarkProperties = new HashMap<String, String>();
+        mMultigeometry = new ArrayList<Geometry>();
+    }
+
     public static LatLng convertToLatLng(String[] coordinate) {
         Double latDouble = Double.parseDouble(coordinate[LATITUDE]);
         Double lonDouble = Double.parseDouble(coordinate[LONGITUDE]);
@@ -40,9 +45,6 @@ public class Placemark {
     }
 
     public void setProperties(String propertyName, String propertyValue) {
-        if (mPlacemarkProperties == null) {
-            mPlacemarkProperties = new HashMap<String, String>();
-        }
         mPlacemarkProperties.put(propertyName, propertyValue);
     }
 
@@ -62,9 +64,8 @@ public class Placemark {
     }
 
     public void setMultigeometry(String type, String text) {
-        if (mMultigeometry == null) {
-            mMultigeometry = new ArrayList<Geometry>();
-        }
+        mGeometry = new MultiGeometry();
+        mGeometry.setGeometry(mMultigeometry);
 
         if (type.equals("Point")) {
             Point point = new Point();
