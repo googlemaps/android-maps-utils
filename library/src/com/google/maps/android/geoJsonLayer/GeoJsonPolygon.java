@@ -7,20 +7,23 @@ import java.util.ArrayList;
 /**
  * Created by juliawong on 12/29/14.
  *
- * A LineString geometry contains a number of {@link com.google.android.gms.maps.model.LatLng}s.
+ * A Polygon geometry contains a number of arrays of {@link com.google.android.gms.maps.model.LatLng}s.
+ * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
-public class LineString extends Geometry {
 
-    private final static String GEOMETRY_TYPE = "LineString";
+public class GeoJsonPolygon extends GeoJsonGeometry {
 
-    private ArrayList<LatLng> mCoordinates;
+    private final static String GEOMETRY_TYPE = "Polygon";
+
+    private ArrayList<ArrayList<LatLng>> mCoordinates;
 
     /**
-     * Creates a new LineString object
+     * Creates a new Polygon object
      *
-     * @param coordinates array of coordinates of LineString to store
+     * @param coordinates array of arrays of coordinates of Polygon to store
      */
-    public LineString(ArrayList<LatLng> coordinates) {
+    public GeoJsonPolygon(
+            ArrayList<ArrayList<LatLng>> coordinates) {
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null");
         }
@@ -38,11 +41,11 @@ public class LineString extends Geometry {
     }
 
     /**
-     * Gets the coordinates of the LineString
+     * Gets the coordinates of the Polygon
      *
-     * @return coordinates of the LineString
+     * @return coordinates of the Polygon
      */
-    public ArrayList<LatLng> getCoordinates() {
+    public ArrayList<ArrayList<LatLng>> getCoordinates() {
         return mCoordinates;
     }
 

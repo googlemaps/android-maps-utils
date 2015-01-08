@@ -1,5 +1,6 @@
 {
    "type": "Feature",
+   "id": "Popsicles",
    "geometry": {
       "type": "GeometryCollection",
       "geometries": [

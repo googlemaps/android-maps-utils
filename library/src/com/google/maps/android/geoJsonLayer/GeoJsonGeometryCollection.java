@@ -7,19 +7,19 @@ import java.util.ArrayList;
  *
  * A GeometryCollection geometry contains a number of geometry objects.
  */
-public class GeometryCollection extends Geometry {
+public class GeoJsonGeometryCollection extends GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "GeometryCollection";
 
-    private ArrayList<Geometry> mGeometries;
+    private ArrayList<GeoJsonGeometry> mGeometries;
 
     /**
      * Creates a new GeometryCollection object
      *
      * @param geometries array of Geometry objects to add to the GeometryCollection
      */
-    public GeometryCollection(
-            ArrayList<Geometry> geometries) {
+    public GeoJsonGeometryCollection(
+            ArrayList<GeoJsonGeometry> geometries) {
         if (geometries == null) {
             throw new IllegalArgumentException("Geometries cannot be null");
         }
@@ -41,7 +41,7 @@ public class GeometryCollection extends Geometry {
      *
      * @return stored geometries
      */
-    public ArrayList<Geometry> getGeometries() {
+    public ArrayList<GeoJsonGeometry> getGeometries() {
         return mGeometries;
     }
 

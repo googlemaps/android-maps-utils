@@ -1,6 +1,8 @@
  { "type": "Feature",
     "bbox": [-180.0, -90.0, 180.0, 90.0],
-
+    "properties": {
+        "prop0": "value0"
+      },
     "geometry": {
       "type": "Polygon",
       "coordinates": [[

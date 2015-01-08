@@ -1,14 +1,7 @@
 package com.google.maps.android.geoJsonLayer;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by juliawong on 12/29/14.
@@ -16,16 +9,17 @@ import java.net.URL;
  * A class that allows for Point objects to be styled and for these styles to be translated into a
  * MarkerOptions object
  */
-public class PointStyle implements Style {
+public class GeoJsonPointStyle implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint";
 
     private MarkerOptions mMarkerOptions;
 
+
     /**
      * Creates a new PointStyle object
      */
-    public PointStyle() {
+    public GeoJsonPointStyle() {
         mMarkerOptions = new MarkerOptions();
     }
 
@@ -220,6 +214,15 @@ public class PointStyle implements Style {
      */
     public void setVisible(boolean visible) {
         mMarkerOptions.visible(visible);
+    }
+
+    /**
+     * Sets a bitmap image for the marker
+     *
+     * @param bitmap Bitmap descriptor for the marker
+     */
+    public void setIcon (BitmapDescriptor bitmap) {
+        mMarkerOptions.icon(bitmap);
     }
 
     /**

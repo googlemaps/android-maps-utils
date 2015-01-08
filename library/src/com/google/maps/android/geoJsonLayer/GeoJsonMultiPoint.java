@@ -5,24 +5,24 @@ import java.util.ArrayList;
 /**
  * Created by juliawong on 12/29/14.
  *
- * A MultiPoint geometry contains a number of {@link com.google.maps.android.geoJsonLayer.Point}s.
+ * A MultiPoint geometry contains a number of {@link GeoJsonPoint}s.
  */
-public class MultiPoint extends Geometry {
+public class GeoJsonMultiPoint extends GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPoint";
 
-    private ArrayList<Point> mPoints;
+    private ArrayList<GeoJsonPoint> mGeoJsonPoints;
 
     /**
      * Creates a MultiPoint object
      *
-     * @param points array of Points to add to the MultiPoint
+     * @param geoJsonPoints array of Points to add to the MultiPoint
      */
-    public MultiPoint(ArrayList<Point> points) {
-        if (points == null) {
+    public GeoJsonMultiPoint(ArrayList<GeoJsonPoint> geoJsonPoints) {
+        if (geoJsonPoints == null) {
             throw new IllegalArgumentException("Points cannot be null");
         }
-        mPoints = points;
+        mGeoJsonPoints = geoJsonPoints;
     }
 
     /**
@@ -40,14 +40,14 @@ public class MultiPoint extends Geometry {
      *
      * @return array of Points
      */
-    public ArrayList<Point> getPoints() {
-        return mPoints;
+    public ArrayList<GeoJsonPoint> getPoints() {
+        return mGeoJsonPoints;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n points=").append(mPoints);
+        sb.append("\n points=").append(mGeoJsonPoints);
         sb.append("\n}\n");
         return sb.toString();
     }
