@@ -7,7 +7,9 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.kml.Geometry;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -28,7 +30,7 @@ public class GeoJsonRenderer implements Observer {
 
     private final static Object NOT_ON_MAP = null;
 
-    public GeoJsonRenderer (HashMap<GeoJsonFeature, Object> features, GoogleMap map) {
+    public GeoJsonRenderer(HashMap<GeoJsonFeature, Object> features, GoogleMap map) {
         mFeatures = features;
         mMap = map;
     }
@@ -60,17 +62,22 @@ public class GeoJsonRenderer implements Observer {
         }
     }
 
-    private void removeFromMap(GeoJsonFeature feature) {
-        if (mFeatures.get(feature) != null) {
-            Object googleMapShape = mFeatures.get(feature);
-            if (googleMapShape instanceof Polygon) {
-                ((Polygon) googleMapShape).remove();
-            } else if (googleMapShape instanceof Polyline) {
-                ((Polyline) googleMapShape).remove();
-            } else if (googleMapShape instanceof Marker) {
-                ((Marker) googleMapShape).remove();
+    /**
+     * Given a feature and an object from the map, removes all instances of the object from the map
+     * and its value from the hashmap
+     *
+     */
+    private void removeFromMap(Object googleMapShape) {
+        if (googleMapShape instanceof Polygon) {
+            ((Polygon) googleMapShape).remove();
+        } else if (googleMapShape instanceof Polyline) {
+            ((Polyline) googleMapShape).remove();
+        } else if (googleMapShape instanceof Marker) {
+            ((Marker) googleMapShape).remove();
+        } else if (googleMapShape instanceof ArrayList) {
+            for (Object googleMapObject : (ArrayList<Object>) googleMapShape) {
+                removeFromMap(googleMapObject);
             }
-            mFeatures.put(feature, null);
         }
     }
 
@@ -100,7 +107,7 @@ public class GeoJsonRenderer implements Observer {
     /**
      * Adds all objects currently stored in the mFeature array, onto the map
      *
-     * @param geoJsonFeature feature to get geometry style
+     * @param geoJsonFeature  feature to get geometry style
      * @param GeoJsonGeometry Geometry to add to the map
      */
     private void addToMap(GeoJsonFeature geoJsonFeature, GeoJsonGeometry GeoJsonGeometry) {
@@ -120,13 +127,42 @@ public class GeoJsonRenderer implements Observer {
             mFeatures.put(geoJsonFeature, addMultiLineStringToMap(geoJsonFeature));
         } else if (geometryType.equals("MultiPolygon")) {
             mFeatures.put(geoJsonFeature, addMultiPolygonToMap(geoJsonFeature));
-        } else if(geometryType.equals("GeometryCollection")) {
+        } else if (geometryType.equals("GeometryCollection")) {
             GeoJsonGeometryCollection geometryCollection = ((GeoJsonGeometryCollection) geoJsonFeature.getGeometry());
-            for (GeoJsonGeometry geoJsonGeometryObject : geometryCollection.getGeometries()) {
-                addToMap(geoJsonFeature, geoJsonGeometryObject);
-            }
+            ArrayList<Object> geometries = new ArrayList<Object>();
+            mFeatures.put(geoJsonFeature, addGeometryCollectionToMap(geometryCollection, geometries, geoJsonFeature));
         }
     }
+
+    /**
+     * Goes through a geometry collection and retrieves geometries to put to the map. If another
+     * geometry collection is detected, then it recursively goes through the list of geometries
+     * until no more geometry collections are found
+     *
+     * @param geoJsonGeometry geometry collection we wish to retrieve geometry objects from
+     * @param geometries an arraylist of geometries that have been added to the map
+     * @param feature class to retrieves styles from
+     * @return  an arraylist of geometries which have been added to the map
+     */
+    private ArrayList<Object> addGeometryCollectionToMap(GeoJsonGeometryCollection geoJsonGeometry,
+        ArrayList<Object> geometries, GeoJsonFeature feature) {
+        for (GeoJsonGeometry geometry : geoJsonGeometry.getGeometries()) {
+            if (geometry.getType().equals("GeometryCollection")) {
+                addGeometryCollectionToMap((GeoJsonGeometryCollection) geometry, geometries, feature);
+            } else {
+                String geometryType = geometry.getType();
+                if (geometryType.equals("Point")) {
+                    geometries.add(addPointToMap(feature.getPointStyle(), (GeoJsonPoint) geometry));
+                } else if (geometryType.equals("LineString")) {
+                    geometries.add(addLineStringToMap(feature.getLineStringStyle(), (GeoJsonLineString) geometry));
+                } else if (geometryType.equals("Polygon")) {
+                    geometries.add(addPolygonToMap(feature.getPolygonStyle(), (GeoJsonPolygon) geometry));
+                }
+            }
+        }
+        return geometries;
+    }
+
 
     /**
      * Adds all Points in MultiPoint to the map as multiple Markers
@@ -210,15 +246,24 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
+     * Given a feature, removes all instances of that feature from the current map and redraws it again.
+     *
+     * @param feature Feature to redraw to the map
+     */
+    private void redrawCollectionToMap(GeoJsonFeature feature, Object googleMapObject) {
+        removeFromMap(googleMapObject);
+        mFeatures.put(feature, NOT_ON_MAP);
+        addToMap(feature, feature.getGeometry());
+    }
+
+    /**
      * Update is called if the developer sets a style in a Feature object
      * @param observable    Feature object
      * @param data          null, no extra argument is passed through the notifyObservers method
      */
     public void update(Observable observable, Object data) {
         if (observable instanceof GeoJsonFeature) {
-            GeoJsonFeature feature = ((GeoJsonFeature) observable);
-            removeFromMap(feature);
-            addToMap(feature, feature.getGeometry());
+            redrawCollectionToMap((GeoJsonFeature) observable, (mFeatures.get((GeoJsonFeature) observable)));
         }
     }
 }
