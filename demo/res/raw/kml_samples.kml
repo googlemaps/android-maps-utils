@@ -9,6 +9,7 @@
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/pal4/icon28.png</href>
         </Icon>
+        <hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction" />
       </IconStyle>
     </Style>
     <Style id="globeIcon">
@@ -137,7 +138,7 @@
         <styleUrl>#downArrowIcon</styleUrl>
         <Point>
           <altitudeMode>relativeToGround</altitudeMode>
-          <coordinates>-122.084075,37.4220033612141,50</coordinates>
+          <coordinates>0.084075,37.4220033612141,50</coordinates>
         </Point>
       </Placemark>
       <Placemark>
@@ -458,7 +459,7 @@ Simple Tables:<br>
         </LookAt>
         <LineString>
           <tessellate>1</tessellate>
-          <coordinates> -112.0814237830345,36.10677870477137,0
+          <coordinates> 0.0,0.0,0
             -112.0870267752693,36.0905099328766,0 </coordinates>
         </LineString>
       </Placemark>
@@ -476,7 +477,7 @@ Simple Tables:<br>
         </LookAt>
         <LineString>
           <tessellate>0</tessellate>
-          <coordinates> -112.080622229595,36.10673460007995,0
+          <coordinates> 50.080622229595,36.10673460007995,0
             -112.085242575315,36.09049598612422,0 </coordinates>
         </LineString>
       </Placemark>
