@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import java.util.Collection;
 import java.util.Random;
 
-public class GeoJsonPointQuadTreeTest extends TestCase {
+public class PointQuadTreeTest extends TestCase {
 
     private PointQuadTree<Item> mTree;
 

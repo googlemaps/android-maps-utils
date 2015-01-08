@@ -39,13 +39,13 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             GeoJsonLineStringStyle line = new GeoJsonLineStringStyle();
             line.setColor(Color.CYAN);
 
-            //GeoJsonPointStyle point = new GeoJsonPointStyle();
-            //point.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-           // point.setRotation(60);
+            GeoJsonPointStyle point = new GeoJsonPointStyle();
+            point.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+            point.setRotation(60);
 
             for (GeoJsonFeature feature: geoJsonCollection.getFeatures()) {
                 feature.setLineStringStyle(line);
-                //feature.setPointStyle(point);
+                feature.setPointStyle(point);
             }
 
 
