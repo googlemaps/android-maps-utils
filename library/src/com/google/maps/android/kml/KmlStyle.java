@@ -12,7 +12,7 @@ import android.graphics.Color;
  *
  * Represents the defined styles in the KML document
  */
-public class Style {
+public class KmlStyle {
 
     private final MarkerOptions mMarkerOptions;
 
@@ -29,12 +29,17 @@ public class Style {
     /**
      * Creates a new Style object
      */
-    public Style() {
+    public KmlStyle() {
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
     }
 
+    /**
+     * Get whether the Polygon has a fill
+     *
+     * @return true if there is a fill, false if no fill
+     */
     public boolean isFill() {
         return mFill;
     }
@@ -48,7 +53,6 @@ public class Style {
         mFill = fill;
     }
 
-
     /**
      * Sets the fill color for Polygons
      *
@@ -59,11 +63,25 @@ public class Style {
         mPolygonOptions.fillColor(Color.parseColor("#" + color));
     }
 
+    /**
+     * Sets the heading for Points. This is also known as rotation
+     *
+     * @param heading heading to set
+     */
     public void setHeading(float heading) {
         mMarkerOptions.rotation(heading);
     }
 
     // TODO support pixel and inset for custom marker images
+
+    /**
+     * Sets the hotspot for Points. This is also known as anchor point
+     *
+     * @param x      x value of a point on the icon
+     * @param y      y value of a point on the icon
+     * @param xUnits units in which the x value is specified
+     * @param yUnits units in which the y value is specified
+     */
     public void setHotSpot(float x, float y, String xUnits, String yUnits) {
         float xAnchor = 0.5f;
         float yAnchor = 1.0f;
@@ -78,10 +96,20 @@ public class Style {
         mMarkerOptions.anchor(xAnchor, yAnchor);
     }
 
+    /**
+     * Gets the icon url
+     *
+     * @return icon url
+     */
     public String getIconUrl() {
         return mIconUrl;
     }
 
+    /**
+     * Sets the icon url
+     *
+     * @param iconUrl icon url to set
+     */
     public void setIconUrl(String iconUrl) {
         mIconUrl = iconUrl;
         if (!mIconUrl.startsWith("http://")) {
@@ -90,6 +118,11 @@ public class Style {
         }
     }
 
+    /**
+     * Gets whether the Polygon has an outline
+     *
+     * @return true if Polygon has an outline, false if no outline
+     */
     public boolean isOutline() {
         return mOutline;
     }
