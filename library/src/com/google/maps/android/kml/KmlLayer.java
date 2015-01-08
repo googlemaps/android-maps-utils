@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -25,7 +26,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -51,7 +51,7 @@ public class KmlLayer {
      * Hashmap of Style classes. The key is a string value which represents the id of the Style in
      * the KML document.
      */
-    private final HashMap<String, KmlStyle> mStyles;
+    private HashMap<String, KmlStyle> mStyles;
 
     /**
      * XML Pull Parser, which reads in a KML Document
@@ -78,9 +78,7 @@ public class KmlLayer {
             throws XmlPullParserException {
         this.mMap = map;
         this.mStyles = new HashMap<String, KmlStyle>();
-        // Add a default style
-        mStyles.put(null, new KmlStyle());
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        this.mPlacemarks = new HashMap<KmlPlacemark, Object>();
         InputStream stream = context.getResources().openRawResource(resourceId);
         this.mParser = createXmlParser(stream);
     }
@@ -96,28 +94,8 @@ public class KmlLayer {
             throws XmlPullParserException {
         this.mMap = map;
         this.mStyles = new HashMap<String, KmlStyle>();
-        // Add a default style
-        mStyles.put(null, new KmlStyle());
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        this.mPlacemarks = new HashMap<KmlPlacemark, Object>();
         this.mParser = createXmlParser(stream);
-    }
-
-    /**
-     * Adds the KML data to the map
-     *
-     * @throws XmlPullParserException if KML file cannot be parsed
-     * @throws IOException            if KML file cannot be opened
-     */
-    public void setKmlData() {
-        // TODO: replace with KmlParser
-        // importKML();
-//        KmlParser parser = new KmlParser(mParser);
-//        parser.parseKml();
-//        mStyles = parser.getStyles();
-//        for (Placemark placemark : parser.getPlacemarks()) {
-//            mPlacemarks.put(placemark, null);
-//        }
-        addToMap();
     }
 
     /**
@@ -127,12 +105,28 @@ public class KmlLayer {
      * @return XmlPullParser containing the KML file
      * @throws XmlPullParserException if KML file cannot be parsed
      */
-    public XmlPullParser createXmlParser(InputStream stream) throws XmlPullParserException {
+    private XmlPullParser createXmlParser(InputStream stream) throws XmlPullParserException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
         parser.setInput(stream, null);
         return parser;
+    }
+
+    /**
+     * Adds the KML data to the map
+     *
+     * @throws XmlPullParserException if KML file cannot be parsed
+     * @throws IOException            if KML file cannot be opened
+     */
+    public void setKmlData() throws IOException, XmlPullParserException {
+        KmlParser parser = new KmlParser(mParser);
+        parser.parseKml();
+        mStyles = parser.getStyles();
+        for (KmlPlacemark placemark : parser.getPlacemarks()) {
+            mPlacemarks.put(placemark, null);
+        }
+        addToMap();
     }
 
     /**
@@ -143,7 +137,6 @@ public class KmlLayer {
     private void addToMap() {
         Log.i("Add", "START");
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
-
             KmlStyle style = mStyles.get(placemark.getStyle());
             // Check if the style is stored
             if (style != null) {
@@ -202,17 +195,12 @@ public class KmlLayer {
      * @param style   contains relevant styling properties for the Polygon
      * @return Polygon object
      */
-    private com.google.android.gms.maps.model.Polygon addPolygonToMap(KmlPolygon polygon,
+    private Polygon addPolygonToMap(KmlPolygon polygon,
             KmlStyle style) {
         PolygonOptions polygonOptions = style.getPolygonOptions();
-        HashMap<ArrayList<LatLng>, Integer> poly = (HashMap<ArrayList<LatLng>, Integer>) polygon
-                .getGeometry();
-        for (Map.Entry<ArrayList<LatLng>, Integer> p : poly.entrySet()) {
-            if (p.getValue() == OUTER_BOUNDARY) {
-                polygonOptions.addAll(p.getKey());
-            } else if (p.getValue() == INNER_BOUNDARY) {
-                polygonOptions.addHole(p.getKey());
-            }
+        polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
+        for (ArrayList<LatLng> innerBoundary : polygon.getInnerBoundaryCoordinates()) {
+            polygonOptions.addHole(innerBoundary);
         }
         return mMap.addPolygon(polygonOptions);
     }

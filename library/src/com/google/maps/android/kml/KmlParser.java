@@ -37,6 +37,8 @@ public class KmlParser {
      */
     public KmlParser(XmlPullParser parser) {
         mStyles = new HashMap<String, KmlStyle>();
+        // Add a default style
+        mStyles.put(null, new KmlStyle());
         mPlacemarks = new ArrayList<KmlPlacemark>();
         mParser = parser;
     }
