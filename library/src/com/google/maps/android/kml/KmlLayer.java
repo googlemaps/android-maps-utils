@@ -1,9 +1,12 @@
 package com.google.maps.android.kml;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -11,10 +14,15 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +46,8 @@ public class KmlLayer {
      */
     private final HashMap<String, Style> mStyles;
 
+    // TODO: change to hashmap where key is Geometry and value is the map object
+
     /**
      * A collection of GoogleMap objects (Polygon, Polyline, Marker) which have been put on the map
      */
@@ -47,11 +57,6 @@ public class KmlLayer {
      * A collection of Placemark objects
      */
     private final ArrayList<Placemark> mPlacemark;
-
-    /**
-     * A collection of GoogleMap options (PolygonOptions, PolylineOptions, MarkerOptions)
-     */
-    private final ArrayList<Object> mOptions;
 
     /**
      * A Google Map
@@ -64,13 +69,14 @@ public class KmlLayer {
     private XmlPullParser mParser;
 
     /*TODO:
-        Figure out a better place to put convertToLatLng in the Placemark class
-        Implement IconStyle (IconStyle is the style class for Point classes)
-        Multigeometry currently doesnt implement style, only the coordinates
+        Figure out a better place to put convertToLatLng in the Placemark class - create a parser class
+        Implement IconStyle (IconStyle is the style class for Point classes) - in progress
+        Multigeometry currently doesn't implement style, only the coordinates
+        Add Geometry constructors to take in coords
         Implement StyleMap.
         Implement BalloonStyle (Equivalent in GoogleMaps is IconWindow)
         Implement LabelStyle (Equivalent is IconGenerator Utility Library)
-        Test Multigeometry.
+        Test Multigeometry - can be recursive
     */
 
     /**
@@ -85,11 +91,10 @@ public class KmlLayer {
             throws XmlPullParserException {
         this.mMap = map;
         this.mStyles = new HashMap<String, Style>();
-        // TODO remove or something
+        // Add a default style
         mStyles.put(null, new Style());
         this.mPlacemark = new ArrayList<Placemark>();
         this.mMapObjects = new ArrayList<Object>();
-        this.mOptions = new ArrayList<Object>();
         InputStream stream = context.getResources().openRawResource(resourceId);
         this.mParser = createXmlParser(stream);
     }
@@ -105,9 +110,10 @@ public class KmlLayer {
             throws XmlPullParserException {
         this.mMap = map;
         this.mStyles = new HashMap<String, Style>();
+        // Add a default style
+        mStyles.put(null, new Style());
         this.mPlacemark = new ArrayList<Placemark>();
         this.mMapObjects = new ArrayList<Object>();
-        this.mOptions = new ArrayList<Object>();
         this.mParser = createXmlParser(stream);
     }
 
@@ -159,8 +165,7 @@ public class KmlLayer {
      */
     public void setKmlData() throws XmlPullParserException, IOException {
         importKML();
-        assignGeometryOptions();
-        addKmlLayerToMap(mMap);
+        addToMap();
     }
 
     /**
@@ -233,13 +238,24 @@ public class KmlLayer {
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("IconStyle"))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals("scale")) {
-                    // TODO
                 } else if (mParser.getName().equals("heading")) {
                     style.setHeading(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals("Icon")) {
-                    // TODO: get href child
+                    // Iterate until end icon tag found
+                    while (!(eventType == XmlPullParser.END_TAG && mParser.getName()
+                            .equals("Icon"))) {
+                        // find inner child href tag
+                        if (eventType == XmlPullParser.START_TAG && mParser.getName()
+                                .equals("href")) {
+                            style.setIconUrl(mParser.nextText());
+                        }
+                        eventType = mParser.next();
+                    }
                 } else if (mParser.getName().equals("hotSpot")) {
-                    // TODO: implement this for pixels. fraction and insetPixels
+                    style.setHotSpot(Float.parseFloat(mParser.getAttributeValue(null, "x")),
+                            Float.parseFloat(mParser.getAttributeValue(null, "y")),
+                            mParser.getAttributeValue(null, "xunits"),
+                            mParser.getAttributeValue(null, "yunits"));
                 }
             }
             eventType = mParser.next();
@@ -307,6 +323,7 @@ public class KmlLayer {
                     placemark.setProperties(tagName, mParser.nextText());
                 } else if (isMultiGeometry(tagName)) {
                     createMultiGeometry(placemark);
+                    hasGeometry = true;
                 }
             }
             eventType = mParser.next();
@@ -362,29 +379,21 @@ public class KmlLayer {
      * corresponding GoogleMaps Options objects; and assigns styles and coordinates to this option
      * to store in an ArrayList of GoogleMapsOptions.
      */
-    private void assignGeometryOptions() {
+    private void addToMap() {
         for (Placemark placemark : mPlacemark) {
+            Style style = mStyles.get(placemark.getStyle());
             // Check if the style is stored
-            if (mStyles.get(placemark.getStyle()) != null) {
+            if (style != null) {
                 String geometryType = placemark.getGeometry().getType();
+                Geometry geometry = placemark.getGeometry();
                 if (geometryType.equals("Point")) {
-                    MarkerOptions markerOptions = mStyles.get(placemark.getStyle())
-                            .getMarkerOptions();
-                    addPointCoordinates((Point) placemark.getGeometry(), markerOptions);
-                    mOptions.add(markerOptions);
+                    mMapObjects.add(addPointToMap((Point) geometry, style));
                 } else if (geometryType.equals("LineString")) {
-                    PolylineOptions polylineOptions = mStyles
-                            .get(placemark.getStyle()).getPolylineOptions();
-                    addPolylineCoordinates((LineString) placemark.getGeometry(), polylineOptions);
-                    mOptions.add(polylineOptions);
+                    mMapObjects.add(addLineStringToMap((LineString) geometry, style));
                 } else if (geometryType.equals("Polygon")) {
-                    PolygonOptions polygonOptions = mStyles
-                            .get(placemark.getStyle()).getPolygonOptions();
-                    addPolygonCoordinates((Polygon) placemark.getGeometry(), polygonOptions);
-                    mOptions.add(polygonOptions);
-                } else if (placemark.getMultigeometry() != null) {
-                    // TODO create a MG class
-                    assignMultipleGeometryOptions(placemark);
+                    mMapObjects.add(addPolygonToMap((Polygon) geometry, style));
+                } else if (geometryType.equals("MultiGeometry")) {
+                    addMultiGeometryToMap(placemark);
                 }
             } else {
                 Log.i("Style not found", placemark.getStyle());
@@ -393,60 +402,45 @@ public class KmlLayer {
     }
 
     /**
-     * Recieves an ArrayList of objects in a MultiGeometry. It then creates a corresponding
-     * GoogleMapsOptions
-     * object, assigns styles and coordinates to this option and stores it in an ArrayList of
-     * GoogleMapsOptions
-     */
-    private void assignMultipleGeometryOptions(Placemark placemark) {
-        for (Geometry geometry : placemark.getMultigeometry()) {
-            if (geometry instanceof Polygon) {
-                PolygonOptions polygonOptions = new PolygonOptions();
-                addPolygonCoordinates((Polygon) geometry, polygonOptions);
-                mOptions.add(polygonOptions);
-            } else if (geometry instanceof Point) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position((LatLng) geometry.getGeometry());
-                mOptions.add(markerOptions);
-            } else if (geometry instanceof LineString) {
-                PolylineOptions polylineOptions = new PolylineOptions();
-                addPolylineCoordinates((LineString) geometry, polylineOptions);
-                mOptions.add(polylineOptions);
-            }
-        }
-    }
-
-    /**
-     * Adds coordinates from Point class to MarkerOptions
+     * Addsa a KML Point to the map as a Marker by combining the styling and coordinates
      *
-     * @param point Point object to retrieve LatLng point from
-     * @param markerOptions MarkerOptions object to add coordinates to
+     * @param point contains coordinates for the Marker
+     * @param style contains relevant styling properties for the Marker
+     * @return Marker object
      */
-    private void addPointCoordinates(Point point, MarkerOptions markerOptions) {
+    private Marker addPointToMap(Point point, Style style) {
+        MarkerOptions markerOptions = style.getMarkerOptions();
         markerOptions.position((LatLng) point.getGeometry());
+        Marker marker = mMap.addMarker(markerOptions);
+        if (style.getIconUrl() != null) {
+            new IconImageDownload(marker).execute(style.getIconUrl());
+        }
+        return marker;
     }
 
     /**
-     * Adds an ArrayList of LatLng points from a LineString class to a PolylineOptions object
+     * Adds a KML LineString to the map as a Polyline by combining the styling and coordinates
      *
-     * @param lineString      A LineString class to retrieve LatLng points from
-     * @param polylineOptions A PolylineOptions Object to add LatLng points to
+     * @param lineString contains coordinates for the Polyline
+     * @param style      contains relevant styling properties for the Polyline
+     * @return Polyline object
      */
-    private void addPolylineCoordinates(LineString lineString, PolylineOptions polylineOptions) {
-        ArrayList<LatLng> lineStringPoint = ((ArrayList<LatLng>) lineString.getGeometry());
-        polylineOptions.addAll(lineStringPoint);
+    private Polyline addLineStringToMap(LineString lineString, Style style) {
+        PolylineOptions polylineOptions = style.getPolylineOptions();
+        polylineOptions.addAll((Iterable<LatLng>) lineString.getGeometry());
+        return mMap.addPolyline(polylineOptions);
     }
 
     /**
-     * Adds an ArrayList of LatLng points to a PolygonOption, retrieved from a HashMap. If the
-     * value of the ArrayList is set as an outer boundary, then the LatLng points are added as
-     * a polygon coordinate. If the value of the ArrayList is set as an inner boundary, then the
-     * LatLng points are added as a polygon hole.
+     * Adds a KML Polygon to the map as a Polygon by combining the styling and coordinates
      *
-     * @param polygon        A KML Object to retrieve LatLng points from
-     * @param polygonOptions A GoogleMap Polygon to add LatLng points to
+     * @param polygon contains coordinates for the Polygon
+     * @param style   contains relevant styling properties for the Polygon
+     * @return Polygon object
      */
-    private void addPolygonCoordinates(Polygon polygon, PolygonOptions polygonOptions) {
+    private com.google.android.gms.maps.model.Polygon addPolygonToMap(Polygon polygon,
+            Style style) {
+        PolygonOptions polygonOptions = style.getPolygonOptions();
         HashMap<ArrayList<LatLng>, Integer> poly = (HashMap<ArrayList<LatLng>, Integer>) polygon
                 .getGeometry();
         for (Map.Entry<ArrayList<LatLng>, Integer> p : poly.entrySet()) {
@@ -456,25 +450,36 @@ public class KmlLayer {
                 polygonOptions.addHole(p.getKey());
             }
         }
+        return mMap.addPolygon(polygonOptions);
     }
 
+    // TODO: implement this method once MultiGeometry class is created
+
     /**
-     * Retrieves a list of GoogleMapOptions from an ArrayList and adds them to a GoogleMap which
-     * is defined. It also stores instances of a Polyline, Polygon, or Marker object which is
-     * created
-     * from adding the GoogleMapOptions to the GoogleMap and is stored in an ArrayList of Objects.
+     * Recieves an ArrayList of objects in a MultiGeometry. It then creates a corresponding
+     * GoogleMapsOptions
+     * object, assigns styles and coordinates to this option and stores it in an ArrayList of
+     * GoogleMapsOptions
      */
-    private void addKmlLayerToMap(GoogleMap googleMap) {
-        for (Object option : mOptions) {
-            if (option instanceof PolylineOptions) {
-                mMapObjects.add(googleMap.addPolyline((PolylineOptions) option));
-            } else if (option instanceof PolygonOptions) {
-                mMapObjects.add(googleMap.addPolygon((PolygonOptions) option));
-            } else if (option instanceof MarkerOptions) {
-                mMapObjects.add(googleMap.addMarker((MarkerOptions) option));
+    private void addMultiGeometryToMap(Placemark placemark) {
+        Style style = mStyles.get(placemark.getStyle());
+        ArrayList<Geometry> geometries = (ArrayList<Geometry>) placemark.getGeometry()
+                .getGeometry();
+        for (Geometry geometry : geometries) {
+            if (style != null) {
+                String geometryType = geometry.getType();
+                if (geometryType.equals("Point")) {
+                    mMapObjects.add(addPointToMap((Point) geometry, style));
+                } else if (geometryType.equals("LineString")) {
+                    mMapObjects.add(addLineStringToMap((LineString) geometry, style));
+                } else if (geometryType.equals("Polygon")) {
+                    mMapObjects.add(addPolygonToMap((Polygon) geometry, style));
+                }
+            } else {
             }
         }
     }
+
 
     /**
      * @return Retrieves an ArrayList of Objects; which are instances of either a Polyline, Polygon
@@ -482,5 +487,35 @@ public class KmlLayer {
      */
     private ArrayList<Object> getMapObjects() {
         return mMapObjects;
+    }
+
+    /**
+     * Downloads images for use as marker icons
+     */
+    private class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
+
+        final Marker mMarker;
+
+        public IconImageDownload(Marker marker) {
+            mMarker = marker;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String imageUrl = params[0];
+            try {
+                return BitmapFactory.decodeStream((InputStream) new URL(imageUrl).getContent());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        }
     }
 }
