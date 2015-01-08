@@ -18,7 +18,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,14 +30,6 @@ import java.util.HashMap;
  * Document class allows for users to input their KML data and output it onto the map
  */
 public class KmlLayer {
-
-    private static final int INNER_BOUNDARY = 0;
-
-    private static final int OUTER_BOUNDARY = 1;
-
-    private static final int GEOMETRY_TYPE = 0;
-
-    private static final int MULTIGEOMETRY_TYPE = 1;
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
@@ -126,40 +117,38 @@ public class KmlLayer {
         for (KmlPlacemark placemark : parser.getPlacemarks()) {
             mPlacemarks.put(placemark, null);
         }
-        addToMap();
+        addKmlLayer();
     }
 
-    /**
-     * Receives an ArrayList of Placemark objects and retrieves its geometry object; then creates a
-     * corresponding GoogleMaps Options objects; and assigns styles and coordinates to this option
-     * to store in an ArrayList of GoogleMapsOptions.
-     */
-    private void addToMap() {
-        Log.i("Add", "START");
+    private void addKmlLayer() {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
-            KmlStyle style = mStyles.get(placemark.getStyle());
-            // Check if the style is stored
-            if (style != null) {
-                String geometryType = placemark.getGeometry().getType();
-                KmlGeometry geometry = placemark.getGeometry();
-                if (geometryType.equals("Point")) {
-                    mPlacemarks.put(placemark, addPointToMap((KmlPoint) geometry, style));
-                } else if (geometryType.equals("KmlLineString")) {
-                    mPlacemarks.put(placemark, addLineStringToMap((KmlLineString) geometry, style));
-                } else if (geometryType.equals("Polygon")) {
-                    mPlacemarks.put(placemark, addPolygonToMap((KmlPolygon) geometry, style));
-                } else if (geometryType.equals("MultiGeometry")) {
-                    addMultiGeometryToMap(placemark);
-                }
+            KmlStyle style;
+            if (mStyles.get(placemark.getStyle()) == null) {
+                // Assign default style if style cannot be found
+                style = mStyles.get(null);
             } else {
-                Log.i("Style not found", placemark.getStyle());
+                style = mStyles.get(placemark.getStyle());
             }
+            mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
         }
-        Log.i("Add", "END");
+    }
+
+    private Object addToMap(KmlGeometry geometry, KmlStyle style) {
+        String geometryType = geometry.getType();
+        if (geometryType.equals("Point")) {
+            return addPointToMap((KmlPoint) geometry, style);
+        } else if (geometryType.equals("LineString")) {
+            return addLineStringToMap((KmlLineString) geometry, style);
+        } else if (geometryType.equals("Polygon")) {
+            return addPolygonToMap((KmlPolygon) geometry, style);
+        } else if (geometryType.equals("MultiGeometry")) {
+             return addMultiGeometryToMap((KmlMultiGeometry) geometry, style);
+        }
+        return null;
     }
 
     /**
-     * Addsa a KML Point to the map as a Marker by combining the styling and coordinates
+     * Adds a KML Point to the map as a Marker by combining the styling and coordinates
      *
      * @param point contains coordinates for the Marker
      * @param style contains relevant styling properties for the Marker
@@ -205,6 +194,14 @@ public class KmlLayer {
         return mMap.addPolygon(polygonOptions);
     }
 
+    private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry geometry, KmlStyle style) {
+        ArrayList<Object> geometries = new ArrayList<Object>();
+        for (KmlGeometry kmlGeometry : (ArrayList<KmlGeometry>) geometry.getGeometry()) {
+            geometries.add(addToMap(kmlGeometry, style));
+        }
+        return geometries;
+    }
+
     // TODO: combine into 1 function, if MG, store arraylist
 
     /**
@@ -227,7 +224,6 @@ public class KmlLayer {
                 } else if (geometryType.equals("Polygon")) {
                     mPlacemarks.put(placemark, addPolygonToMap((KmlPolygon) geometry, style));
                 }
-            } else {
             }
         }
     }
