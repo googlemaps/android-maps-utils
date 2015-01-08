@@ -30,12 +30,12 @@ public class GeoJsonParserTest extends TestCase {
 
         GeoJsonParser parser = new GeoJsonParser(geoJsonObject);
         parser.parseGeoJson();
-        LineString ls1 = new LineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 100), new LatLng(1, 101))));
-        LineString ls2 = new LineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(2, 102), new LatLng(3, 103))));
-        MultiLineString multiLineString = new MultiLineString(new ArrayList<LineString>(Arrays.asList(ls1, ls2)));
-        Feature feature = new Feature(multiLineString, null, null, null);
-        ArrayList<Feature> features = new ArrayList<Feature>(Arrays.asList(feature));
-        assertEquals(features.get(0).getId(), parser.getFeatures().get(0).getId());
+        GeoJsonLineString ls1 = new GeoJsonLineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 100), new LatLng(1, 101))));
+        GeoJsonLineString ls2 = new GeoJsonLineString(new ArrayList<LatLng>(Arrays.asList(new LatLng(2, 102), new LatLng(3, 103))));
+        GeoJsonMultiLineString geoJsonMultiLineString = new GeoJsonMultiLineString(new ArrayList<GeoJsonLineString>(Arrays.asList(ls1, ls2)));
+        GeoJsonFeature geoJsonFeature = new GeoJsonFeature(geoJsonMultiLineString, null, null, null);
+        ArrayList<GeoJsonFeature> geoJsonFeatures = new ArrayList<GeoJsonFeature>(Arrays.asList(geoJsonFeature));
+        assertEquals(geoJsonFeatures.get(0).getId(), parser.getFeatures().get(0).getId());
     }
 
     public void testGetFeatures() throws Exception {

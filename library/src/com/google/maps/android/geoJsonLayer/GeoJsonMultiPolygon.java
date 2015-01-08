@@ -5,24 +5,24 @@ import java.util.ArrayList;
 /**
  * Created by juliawong on 12/29/14.
  *
- * A MultiPolygon geometry contains a number of {@link com.google.maps.android.geoJsonLayer.Polygon}s.
+ * A MultiPolygon geometry contains a number of {@link GeoJsonPolygon}s.
  */
-public class MultiPolygon extends Geometry {
+public class GeoJsonMultiPolygon extends GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPolygon";
 
-    private ArrayList<Polygon> mPolygons;
+    private ArrayList<GeoJsonPolygon> mGeoJsonPolygons;
 
     /**
      * Creates a new MultiPolygon
      *
-     * @param polygons array of Polygons to add to the MultiPolygon
+     * @param geoJsonPolygons array of Polygons to add to the MultiPolygon
      */
-    public MultiPolygon(ArrayList<Polygon> polygons) {
-        if (polygons == null) {
+    public GeoJsonMultiPolygon(ArrayList<GeoJsonPolygon> geoJsonPolygons) {
+        if (geoJsonPolygons == null) {
             throw new IllegalArgumentException("Polygons cannot be null");
         }
-        mPolygons = polygons;
+        mGeoJsonPolygons = geoJsonPolygons;
     }
 
     /**
@@ -40,14 +40,14 @@ public class MultiPolygon extends Geometry {
      *
      * @return array of Polygons
      */
-    public ArrayList<Polygon> getPolygons() {
-        return mPolygons;
+    public ArrayList<GeoJsonPolygon> getPolygons() {
+        return mGeoJsonPolygons;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n Polygons=").append(mPolygons);
+        sb.append("\n Polygons=").append(mGeoJsonPolygons);
         sb.append("\n}\n");
         return sb.toString();
     }

@@ -2,7 +2,7 @@ package com.google.maps.android.geoJsonLayer;
 
 import junit.framework.TestCase;
 
-public class LineStringStyleTest extends TestCase {
+public class GeoJsonGeoJsonLineStringStyleTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();

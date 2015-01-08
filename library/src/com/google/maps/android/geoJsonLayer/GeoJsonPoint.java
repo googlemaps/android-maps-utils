@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
  *
  * A Point geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
  */
-public class Point extends Geometry {
+public class GeoJsonPoint extends GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "Point";
 
@@ -18,7 +18,7 @@ public class Point extends Geometry {
      *
      * @param coordinates coordinates of Point to store
      */
-    public Point(LatLng coordinates) {
+    public GeoJsonPoint(LatLng coordinates) {
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null");
         }

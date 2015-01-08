@@ -2,27 +2,17 @@ package com.google.maps.android.utils.demo;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.geoJsonLayer.Collection;
-import com.google.maps.android.geoJsonLayer.Feature;
-import com.google.maps.android.geoJsonLayer.LineStringStyle;
-import com.google.maps.android.geoJsonLayer.PointStyle;
-import com.google.maps.android.geoJsonLayer.PolygonStyle;
+import com.google.maps.android.geoJsonLayer.GeoJsonCollection;
+import com.google.maps.android.geoJsonLayer.GeoJsonFeature;
+import com.google.maps.android.geoJsonLayer.GeoJsonLineStringStyle;
+import com.google.maps.android.geoJsonLayer.GeoJsonPointStyle;
 
 import org.json.JSONException;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Set;
 
 /**
  * Created by juliawong on 12/1/14.
@@ -41,15 +31,21 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
 
 
-            Collection collection = new Collection(getMap(), R.raw.overlapping, getApplicationContext());
-            collection.parseGeoJson();
-            collection.addCollectionToMap();
+            GeoJsonCollection geoJsonCollection = new GeoJsonCollection(getMap(), R.raw.geometrycollection_in_feature, getApplicationContext());
+            geoJsonCollection.parseGeoJson();
+            geoJsonCollection.addCollectionToMap();
 
-            Set<Feature> features = collection.getFeatures();
-            for (Feature feature: features) {
-                if (feature.getId().equals("google")) {
-                    //Do something
-                }
+
+            GeoJsonLineStringStyle line = new GeoJsonLineStringStyle();
+            line.setColor(Color.CYAN);
+
+            //GeoJsonPointStyle point = new GeoJsonPointStyle();
+            //point.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+           // point.setRotation(60);
+
+            for (GeoJsonFeature feature: geoJsonCollection.getFeatures()) {
+                feature.setLineStringStyle(line);
+                //feature.setPointStyle(point);
             }
 
 
@@ -57,7 +53,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
 
 
-            Log.i("MultiLineString", collection.toString());
+
+
+            Log.i("MultiLineString", geoJsonCollection.toString());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

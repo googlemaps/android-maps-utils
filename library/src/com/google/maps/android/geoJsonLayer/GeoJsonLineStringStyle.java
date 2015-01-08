@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
  * A class that allows for LineString objects to be styled and for these styles to be translated
  * into a PolylineOptions object
  */
-public class LineStringStyle implements Style {
+public class GeoJsonLineStringStyle implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Line|MultiLine";
 
@@ -17,7 +17,7 @@ public class LineStringStyle implements Style {
     /**
      * Creates a new LineStringStyle object
      */
-    public LineStringStyle() {
+    public GeoJsonLineStringStyle() {
         mPolylineOptions = new PolylineOptions();
     }
 

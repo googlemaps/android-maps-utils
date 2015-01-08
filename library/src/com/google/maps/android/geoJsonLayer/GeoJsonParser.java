@@ -57,7 +57,8 @@ public class GeoJsonParser {
 
     private final JSONObject mGeoJsonFile;
 
-    private final ArrayList<Feature> mFeatures;
+    private final ArrayList<GeoJsonFeature> mGeoJsonFeatures;
+
 
     /**
      * Creates a new GeoJsonParser
@@ -66,7 +67,7 @@ public class GeoJsonParser {
      */
     public GeoJsonParser(JSONObject geoJsonFile) {
         mGeoJsonFile = geoJsonFile;
-        mFeatures = new ArrayList<Feature>();
+        mGeoJsonFeatures = new ArrayList<GeoJsonFeature>();
     }
 
     /**
@@ -77,12 +78,12 @@ public class GeoJsonParser {
     public void parseGeoJson() throws JSONException {
         String type = mGeoJsonFile.getString("type");
         if (type.equals(FEATURE)) {
-            mFeatures.add(parseFeature(mGeoJsonFile));
+            mGeoJsonFeatures.add(parseFeature(mGeoJsonFile));
         } else if (type.equals(FEATURE_COLLECTION)) {
-            mFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
+            mGeoJsonFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
         } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
                 .equals(GEOMETRY_COLLECTION)) {
-            mFeatures.add(geometrytoFeature(parseGeometry(mGeoJsonFile)));
+            mGeoJsonFeatures.add(geometrytoFeature(parseGeometry(mGeoJsonFile)));
         }
     }
 
@@ -92,12 +93,12 @@ public class GeoJsonParser {
      * @return array of Feature objects parsed from the given array
      * @throws JSONException if the feature collection could not be parsed
      */
-    private ArrayList<Feature> parseFeatureCollection(JSONObject geoJsonFeatureCollection)
+    private ArrayList<GeoJsonFeature> parseFeatureCollection(JSONObject geoJsonFeatureCollection)
             throws JSONException {
 
         JSONArray geoJsonFeatures = geoJsonFeatureCollection.getJSONArray(FEATURE_COLLECTION_ARRAY);
 
-        ArrayList<Feature> features = new ArrayList<Feature>();
+        ArrayList<GeoJsonFeature> features = new ArrayList<GeoJsonFeature>();
         for (int i = 0; i < geoJsonFeatures.length(); i++) {
             JSONObject feature = geoJsonFeatures.getJSONObject(i);
             if (feature.getString("type").equals(FEATURE)) {
@@ -118,9 +119,10 @@ public class GeoJsonParser {
      * @throws JSONException if the feature does not have members geometry and properties or could
      *                       not be parsed for some other reason
      */
-    private Feature parseFeature(JSONObject geoJsonFeature) throws JSONException {
+    private GeoJsonFeature parseFeature(JSONObject geoJsonFeature) throws JSONException {
         String id = null;
-        Geometry geometry = null;
+        ArrayList<LatLng> boundingBox = null;
+        GeoJsonGeometry GeoJsonGeometry = null;
         JSONObject properties = null;
 
         if (geoJsonFeature.has(FEATURE_ID)) {
@@ -130,21 +132,24 @@ public class GeoJsonParser {
         } if (geoJsonFeature.has(FEATURE_GEOMETRY)) {
             //Geometry can be null instead of an array of coordinates
             if (!geoJsonFeature.getString(FEATURE_GEOMETRY).matches(GEOJSON_MEMBER_LITERAL_REGEX)) {
-                geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
+                GeoJsonGeometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
             }
+        } if (geoJsonFeature.has(BOUNDING_BOX)) {
+            boundingBox = parseBoundingBox(geoJsonFeature.getJSONArray(BOUNDING_BOX));
         }
 
-        return new Feature(geometry, id, parseProperties(properties), null);
+        GeoJsonFeature feature = new GeoJsonFeature(GeoJsonGeometry, id, parseProperties(properties), boundingBox);
+        return feature;
     }
 
-    /*
-    private MultiPoint parseBoundingBox(JSONArray coordinates) throws JSONException {
-        ArrayList<Point> points = new ArrayList<Point>();
-        points.add(new Point(new LatLng(coordinates.getDouble(1), coordinates.getDouble(0))));
-        points.add(new Point(new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
-        return new MultiPoint(points);
+
+    private ArrayList<LatLng> parseBoundingBox(JSONArray coordinates) throws JSONException {
+        ArrayList<LatLng> points = new ArrayList<LatLng>();
+        points.add((new LatLng(coordinates.getDouble(1), coordinates.getDouble(0))));
+        points.add((new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
+        return points;
     }
-    */
+
 
     /**
      * Parses a single GeoJSON geometry object containing a coordinates or geometries array if it
@@ -155,7 +160,7 @@ public class GeoJsonParser {
      * @throws JSONException if the geometry does not have a coordinates or geometries array or
      *                       could not be parsed for some other reason
      */
-    private Geometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
+    private GeoJsonGeometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
         String geometryType = geoJsonGeometry.getString("type");
         JSONArray geometryArray;
         if (geometryType.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
@@ -172,11 +177,12 @@ public class GeoJsonParser {
      * Converts a geometry object to a feature object. A geometry object has no ID or properties so
      * it is set to null.
      *
-     * @param geometry Geometry object to convert into a Feature object
+     * @param GeoJsonGeometry Geometry object to convert into a Feature object
      * @return new Feature object
      */
-    private Feature geometrytoFeature(Geometry geometry) {
-        return new Feature(geometry, null, null, null);
+    private GeoJsonFeature geometrytoFeature(GeoJsonGeometry GeoJsonGeometry) {
+        GeoJsonFeature geoJsonFeature = new GeoJsonFeature(GeoJsonGeometry, null, null, null);
+        return geoJsonFeature;
     }
 
     /**
@@ -207,7 +213,7 @@ public class GeoJsonParser {
      * geometries
      * @throws JSONException if the coordinates could be parsed
      */
-    private Geometry createGeometry(String geometryType, JSONArray geometryArray)
+    private GeoJsonGeometry createGeometry(String geometryType, JSONArray geometryArray)
             throws JSONException {
         if (geometryType.equals("Point")) {
             return createPoint(geometryArray);
@@ -235,8 +241,8 @@ public class GeoJsonParser {
      * @return Point object
      * @throws JSONException if coordinates cannot be parsed
      */
-    private Point createPoint(JSONArray coordinates) throws JSONException {
-        return new Point(parseCoordinate(coordinates));
+    private GeoJsonPoint createPoint(JSONArray coordinates) throws JSONException {
+        return new GeoJsonPoint(parseCoordinate(coordinates));
     }
 
     /**
@@ -246,12 +252,12 @@ public class GeoJsonParser {
      * @return MultiPoint object
      * @throws JSONException if coordinates cannot be parsed
      */
-    private MultiPoint createMultiPoint(JSONArray coordinates) throws JSONException {
-        ArrayList<Point> points = new ArrayList<Point>();
+    private GeoJsonMultiPoint createMultiPoint(JSONArray coordinates) throws JSONException {
+        ArrayList<GeoJsonPoint> geoJsonPoints = new ArrayList<GeoJsonPoint>();
         for (int i = 0; i < coordinates.length(); i++) {
-            points.add(createPoint(coordinates.getJSONArray(i)));
+            geoJsonPoints.add(createPoint(coordinates.getJSONArray(i)));
         }
-        return new MultiPoint(points);
+        return new GeoJsonMultiPoint(geoJsonPoints);
     }
 
     /**
@@ -261,8 +267,8 @@ public class GeoJsonParser {
      * @return LineString object
      * @throws JSONException if coordinates cannot be parsed
      */
-    private LineString createLineString(JSONArray coordinates) throws JSONException {
-        return new LineString(parseCoordinatesArray(coordinates));
+    private GeoJsonLineString createLineString(JSONArray coordinates) throws JSONException {
+        return new GeoJsonLineString(parseCoordinatesArray(coordinates));
     }
 
     /**
@@ -272,12 +278,12 @@ public class GeoJsonParser {
      * @return MultiLineString object
      * @throws JSONException if coordinates cannot be parsed
      */
-    private MultiLineString createMultiLineString(JSONArray coordinates) throws JSONException {
-        ArrayList<LineString> lineStrings = new ArrayList<LineString>();
+    private GeoJsonMultiLineString createMultiLineString(JSONArray coordinates) throws JSONException {
+        ArrayList<GeoJsonLineString> geoJsonLineStrings = new ArrayList<GeoJsonLineString>();
         for (int i = 0; i < coordinates.length(); i++) {
-            lineStrings.add(createLineString(coordinates.getJSONArray(i)));
+            geoJsonLineStrings.add(createLineString(coordinates.getJSONArray(i)));
         }
-        return new MultiLineString(lineStrings);
+        return new GeoJsonMultiLineString(geoJsonLineStrings);
     }
 
     /**
@@ -287,8 +293,8 @@ public class GeoJsonParser {
      * @return Polygon object
      * @throws JSONException if coordinates cannot be parsed
      */
-    private Polygon createPolygon(JSONArray coordinates) throws JSONException {
-        return new Polygon(parseCoordinatesArrays(coordinates));
+    private GeoJsonPolygon createPolygon(JSONArray coordinates) throws JSONException {
+        return new GeoJsonPolygon(parseCoordinatesArrays(coordinates));
     }
 
     /**
@@ -298,12 +304,12 @@ public class GeoJsonParser {
      * @return MultiPolygon object
      * @throws JSONException if coordinates cannot be parsed
      */
-    private MultiPolygon createMultiPolygon(JSONArray coordinates) throws JSONException {
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+    private GeoJsonMultiPolygon createMultiPolygon(JSONArray coordinates) throws JSONException {
+        ArrayList<GeoJsonPolygon> geoJsonPolygons = new ArrayList<GeoJsonPolygon>();
         for (int i = 0; i < coordinates.length(); i++) {
-            polygons.add(createPolygon(coordinates.getJSONArray(i)));
+            geoJsonPolygons.add(createPolygon(coordinates.getJSONArray(i)));
         }
-        return new MultiPolygon(polygons);
+        return new GeoJsonMultiPolygon(geoJsonPolygons);
     }
 
     /**
@@ -313,14 +319,14 @@ public class GeoJsonParser {
      * @return GeometryCollection object
      * @throws JSONException if geometries cannot be parsed
      */
-    private GeometryCollection createGeometryCollection(JSONArray geometries) throws JSONException {
-        ArrayList<Geometry> geometryCollectionElements = new ArrayList<Geometry>();
+    private GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries) throws JSONException {
+        ArrayList<GeoJsonGeometry> geoJsonGeometryCollectionElements = new ArrayList<GeoJsonGeometry>();
 
         for (int i = 0; i < geometries.length(); i++) {
             JSONObject geometryElement = geometries.getJSONObject(i);
-            geometryCollectionElements.add(parseGeometry(geometryElement));
+            geoJsonGeometryCollectionElements.add(parseGeometry(geometryElement));
         }
-        return new GeometryCollection(geometryCollectionElements);
+        return new GeoJsonGeometryCollection(geoJsonGeometryCollectionElements);
     }
 
     /**
@@ -374,7 +380,8 @@ public class GeoJsonParser {
      *
      * @return array of Features
      */
-    public ArrayList<Feature> getFeatures() {
-        return mFeatures;
+    public ArrayList<GeoJsonFeature> getFeatures() {
+        return mGeoJsonFeatures;
     }
+
 }

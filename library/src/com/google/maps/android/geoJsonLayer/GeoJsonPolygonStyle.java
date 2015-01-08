@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
  * a
  * PolyognOptions object
  */
-public class PolygonStyle implements Style {
+public class GeoJsonPolygonStyle implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon";
 
@@ -18,7 +18,7 @@ public class PolygonStyle implements Style {
     /**
      * Creates a new PolygonStyle object
      */
-    public PolygonStyle() {
+    public GeoJsonPolygonStyle() {
         mPolygonOptions = new PolygonOptions();
     }
 
