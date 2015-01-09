@@ -7,9 +7,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.kml.Geometry;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -39,6 +37,10 @@ public class GeoJsonRenderer implements Observer {
         mFeatures = features;
     }
 
+    /**
+     * Removes all feature objects from the current map, then readds feature objects to the new map
+     * @param map
+     */
     public void setMap(GoogleMap map) {
         removeCollectionFromMap();
         mMap = map;
@@ -157,6 +159,12 @@ public class GeoJsonRenderer implements Observer {
                     geometries.add(addLineStringToMap(feature.getLineStringStyle(), (GeoJsonLineString) geometry));
                 } else if (geometryType.equals("Polygon")) {
                     geometries.add(addPolygonToMap(feature.getPolygonStyle(), (GeoJsonPolygon) geometry));
+                }  else if (geometryType.equals("MultiPoint")) {
+                    geometries.add(addMultiPointToMap(feature));
+                } else if (geometryType.equals("MultiLineString")) {
+                    geometries.add(addMultiLineStringToMap(feature));
+                } else if (geometryType.equals("MultiPolygon")) {
+                    geometries.add(addMultiPolygonToMap(feature));
                 }
             }
         }
@@ -235,10 +243,8 @@ public class GeoJsonRenderer implements Observer {
      * @param geoJsonFeature contains MultiPolygon and relevant style properties
      * @return array of Polygons that have been added to the map
      */
-    private ArrayList<Polygon> addMultiPolygonToMap(
-            GeoJsonFeature geoJsonFeature) {
-        ArrayList<com.google.android.gms.maps.model.Polygon> polygons
-                = new ArrayList<com.google.android.gms.maps.model.Polygon>();
+    private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonFeature geoJsonFeature) {
+        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
         for (GeoJsonPolygon geoJsonPolygon : ((GeoJsonMultiPolygon) geoJsonFeature.getGeometry()).getPolygons()) {
             polygons.add(addPolygonToMap(geoJsonFeature.getPolygonStyle(), geoJsonPolygon));
         }
@@ -263,7 +269,11 @@ public class GeoJsonRenderer implements Observer {
      */
     public void update(Observable observable, Object data) {
         if (observable instanceof GeoJsonFeature) {
-            redrawCollectionToMap((GeoJsonFeature) observable, (mFeatures.get((GeoJsonFeature) observable)));
+            GeoJsonFeature geoJsonFeature = ((GeoJsonFeature) observable);
+            if (mFeatures.get(geoJsonFeature) != NOT_ON_MAP) {
+                redrawCollectionToMap(geoJsonFeature, mFeatures.get(geoJsonFeature));
+            }
+
         }
     }
 }
