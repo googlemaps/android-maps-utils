@@ -20,11 +20,13 @@ public class KmlParser {
 
     private static final String GEOMETRY_TAG_REGEX = "Point|LineString|Polygon|MultiGeometry";
 
-    private static final int LONGITUDE = 0;
+    private static final int LONGITUDE_INDEX = 0;
 
-    private static final int LATITUDE = 1;
+    private static final int LATITUDE_INDEX = 1;
 
     private final HashMap<String, KmlStyle> mStyles;
+
+    private final HashMap<String, String> mStyleMaps;
 
     private final ArrayList<KmlPlacemark> mPlacemarks;
 
@@ -39,6 +41,7 @@ public class KmlParser {
         mStyles = new HashMap<String, KmlStyle>();
         // Add a default style
         mStyles.put(null, new KmlStyle());
+        mStyleMaps = new HashMap<String, String>();
         mPlacemarks = new ArrayList<KmlPlacemark>();
         mParser = parser;
     }
@@ -53,11 +56,26 @@ public class KmlParser {
                 if (mParser.getName().equals("Style")) {
                     createStyle();
                 }
+                if (mParser.getName().equals("StyleMap")) {
+                    createStyleMap();
+                }
                 if (mParser.getName().equals("Placemark")) {
                     createPlacemark();
                 }
             }
             eventType = mParser.next();
+        }
+        assignStyleMapStyles();
+    }
+
+    /**
+     * Iterates through the the stylemap hashmap and assigns the relevant style objects to them if they exist
+     */
+    private void assignStyleMapStyles() {
+        for (String styleId : mStyleMaps.keySet()) {
+            if (mStyles.containsKey(mStyleMaps.get(styleId))) {
+                mStyles.put(styleId, mStyles.get(mStyleMaps.get(styleId)));
+            }
         }
     }
 
@@ -68,7 +86,7 @@ public class KmlParser {
         // Indicates if any valid style tags have been found
         Boolean isValidStyle = false;
         KmlStyle styleProperties = new KmlStyle();
-        // Append # to style id
+        // Append # to a local styleUrl
         String styleId = "#" + mParser.getAttributeValue(null, "id");
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Style"))) {
@@ -90,6 +108,27 @@ public class KmlParser {
         // Check if supported styles are added, unsupported styles are not saved
         if (isValidStyle) {
             mStyles.put(styleId, styleProperties);
+        }
+    }
+
+    /**
+     * Parses the StyleMap property and stores the id and the normal style tag
+     */
+    private void createStyleMap() throws XmlPullParserException, IOException {
+        // Indicates if a normal style is to be stored
+        Boolean isNormalKey = false;
+        // Append # to style id
+        String styleId = "#" + mParser.getAttributeValue(null, "id");
+        int eventType = mParser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("StyleMap"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().equals("key") && mParser.nextText().equals("normal")) {
+                    isNormalKey = true;
+                } else if (mParser.getName().equals(STYLE_TAG) && isNormalKey) {
+                    mStyleMaps.put(styleId, mParser.nextText());
+                }
+            }
+            eventType = mParser.next();
         }
     }
 
@@ -235,8 +274,8 @@ public class KmlParser {
     private LatLng convertToLatLng(String coordinateString) {
         // Lat and Lng are separated by a ,
         String[] coordinate = coordinateString.split(",");
-        Double lat = Double.parseDouble(coordinate[LATITUDE]);
-        Double lon = Double.parseDouble(coordinate[LONGITUDE]);
+        Double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
+        Double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
         return new LatLng(lat, lon);
     }
 
