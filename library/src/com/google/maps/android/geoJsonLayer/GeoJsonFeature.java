@@ -4,9 +4,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Set;
 
 /**
  * Created by juliawong on 12/29/14.
@@ -21,15 +23,13 @@ public class GeoJsonFeature extends Observable {
 
     private ArrayList<LatLng> mBoundingBox;
 
-    private final Map<String, String> mProperties;
+    private final HashMap<String, String> mProperties;
 
     private GeoJsonPointStyle mGeoJsonPointStyle;
 
     private GeoJsonLineStringStyle mGeoJsonLineStringStyle;
 
     private GeoJsonPolygonStyle mGeoJsonPolygonStyle;
-
-    private GoogleMap mMap;
 
     /**
      * Creates a new Feature object
@@ -39,7 +39,7 @@ public class GeoJsonFeature extends Observable {
      * @param properties map of data containing properties related to the feature
      */
     public GeoJsonFeature( GeoJsonGeometry GeoJsonGeometry, String id,
-                          Map<String, String> properties, ArrayList<LatLng> boundingBox) {
+                          HashMap<String, String> properties, ArrayList<LatLng> boundingBox) {
         mGeoJsonGeometry = GeoJsonGeometry;
         mId = id;
         mBoundingBox = boundingBox;
@@ -55,11 +55,9 @@ public class GeoJsonFeature extends Observable {
      *
      * @return iterator of property keys
      */
-    public Iterator getProperties() {
-        return mProperties.keySet().iterator();
+    public HashMap<String, String> getProperties() {
+        return mProperties;
     }
-
-    // TODO: Redraw with new style when setters are used
 
     /**
      * Gets the PointStyle of the feature

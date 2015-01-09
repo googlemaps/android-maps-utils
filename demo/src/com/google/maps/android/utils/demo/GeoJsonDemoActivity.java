@@ -6,6 +6,8 @@ import com.google.maps.android.geoJsonLayer.GeoJsonCollection;
 import com.google.maps.android.geoJsonLayer.GeoJsonFeature;
 import com.google.maps.android.geoJsonLayer.GeoJsonLineStringStyle;
 import com.google.maps.android.geoJsonLayer.GeoJsonPointStyle;
+import com.google.maps.android.geoJsonLayer.GeoJsonPolygon;
+import com.google.maps.android.geoJsonLayer.GeoJsonPolygonStyle;
 
 import org.json.JSONException;
 
@@ -31,25 +33,25 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
 
 
+
             GeoJsonCollection geoJsonCollection = new GeoJsonCollection(getMap(), R.raw.geometrycollection_in_feature, getApplicationContext());
             geoJsonCollection.parseGeoJson();
             geoJsonCollection.addCollectionToMap();
 
-
             GeoJsonLineStringStyle line = new GeoJsonLineStringStyle();
             line.setColor(Color.CYAN);
-
+            GeoJsonPolygonStyle poly = new GeoJsonPolygonStyle();
+            poly.setFillColor(Color.MAGENTA);
             GeoJsonPointStyle point = new GeoJsonPointStyle();
             point.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             point.setRotation(60);
 
+
             for (GeoJsonFeature feature: geoJsonCollection.getFeatures()) {
                 feature.setLineStringStyle(line);
                 feature.setPointStyle(point);
+                feature.setPolygonStyle(poly);
             }
-
-
-
 
 
 
