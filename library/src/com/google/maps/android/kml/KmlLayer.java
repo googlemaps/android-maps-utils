@@ -54,7 +54,6 @@ public class KmlLayer {
         Implement StyleMap.
         Implement BalloonStyle (Equivalent in GoogleMaps is IconWindow)
         Implement LabelStyle (Equivalent is IconGenerator Utility Library)
-        Test Multigeometry - can be recursive
     */
 
     /**
@@ -110,16 +109,60 @@ public class KmlLayer {
      * @throws XmlPullParserException if KML file cannot be parsed
      * @throws IOException            if KML file cannot be opened
      */
-    public void setKmlData() throws IOException, XmlPullParserException {
+    public void addKmlData() throws IOException, XmlPullParserException {
         KmlParser parser = new KmlParser(mParser);
         parser.parseKml();
         mStyles = parser.getStyles();
+        // Store parsed placemarks
         for (KmlPlacemark placemark : parser.getPlacemarks()) {
             mPlacemarks.put(placemark, null);
         }
         addKmlLayer();
     }
 
+    /**
+     * Removes all the KML data from the map and clears all the stored placemarks
+     */
+    public void removeKmlData() {
+        // Remove map object from the map
+        for (Object mapObject : mPlacemarks.values()) {
+            if (mapObject instanceof Marker) {
+                ((Marker) mapObject).remove();
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).remove();
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).remove();
+            }
+        }
+        // Remove the KmlPlacemark and map object from the mPlacemarks hashmap
+        mPlacemarks.clear();
+    }
+
+    /**
+     * Gets an iterator of KmlPlacemark objects
+     *
+     * @return iterator of KmlPlacemark objects
+     */
+    public java.util.Iterator<KmlPlacemark> getPlacemarks() {
+        return mPlacemarks.keySet().iterator();
+    }
+
+    /**
+     * Sets the z index of the KML layer. This affects Polyline and Polygon objects. Markers are set to appear above other data.
+     */
+    public void setZIndex(float zIndex) {
+        for (Object mapObject : mPlacemarks.values()) {
+            if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).setZIndex(zIndex););
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).setZIndex(zIndex);
+            }
+        }
+    }
+
+    /**
+     * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
+     */
     private void addKmlLayer() {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             KmlStyle style;
@@ -133,6 +176,13 @@ public class KmlLayer {
         }
     }
 
+    /**
+     * Adds a single geometry object to the map with its specified style
+     *
+     * @param geometry defines the type of object to add to the map
+     * @param style defines styling properties to add to the object when added to the map
+     * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array of either objects
+     */
     private Object addToMap(KmlGeometry geometry, KmlStyle style) {
         String geometryType = geometry.getType();
         if (geometryType.equals("Point")) {
