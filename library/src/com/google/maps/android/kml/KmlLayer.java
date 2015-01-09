@@ -153,7 +153,7 @@ public class KmlLayer {
     public void setZIndex(float zIndex) {
         for (Object mapObject : mPlacemarks.values()) {
             if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).setZIndex(zIndex););
+                ((Polyline) mapObject).setZIndex(zIndex);
             } else if (mapObject instanceof Polygon) {
                 ((Polygon) mapObject).setZIndex(zIndex);
             }
@@ -250,32 +250,6 @@ public class KmlLayer {
             geometries.add(addToMap(kmlGeometry, style));
         }
         return geometries;
-    }
-
-    // TODO: combine into 1 function, if MG, store arraylist
-
-    /**
-     * Recieves an ArrayList of objects in a MultiGeometry. It then creates a corresponding
-     * GoogleMapsOptions
-     * object, assigns styles and coordinates to this option and stores it in an ArrayList of
-     * GoogleMapsOptions
-     */
-    private void addMultiGeometryToMap(KmlPlacemark placemark) {
-        KmlStyle style = mStyles.get(placemark.getStyle());
-        ArrayList<KmlGeometry> geometries = (ArrayList<KmlGeometry>) placemark.getGeometry()
-                .getGeometry();
-        for (KmlGeometry geometry : geometries) {
-            if (style != null) {
-                String geometryType = geometry.getType();
-                if (geometryType.equals("Point")) {
-                    mPlacemarks.put(placemark, addPointToMap((KmlPoint) geometry, style));
-                } else if (geometryType.equals("LineString")) {
-                    mPlacemarks.put(placemark, addLineStringToMap((KmlLineString) geometry, style));
-                } else if (geometryType.equals("Polygon")) {
-                    mPlacemarks.put(placemark, addPolygonToMap((KmlPolygon) geometry, style));
-                }
-            }
-        }
     }
 
     /**
