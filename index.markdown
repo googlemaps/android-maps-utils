@@ -70,6 +70,12 @@ _(zip download is coming soon)_
 
 <!--a class="button" href="android-maps-utils-0.2.1.zip">Download libproject zip</a-->
 
+<p id="ios"></p>
+## iOS
+
+Are you an iOS developer? That's okay; we love you, too! You may wish to check out the
+[Google Maps for iOS SDK](https://developers.google.com/maps/documentation/ios/), as well as the [OpenInGoogleMapsController](https://github.com/googlemaps/OpenInGoogleMaps-iOS) class.
+
 <p id="feedback"></p>
 ## Feedback
 
