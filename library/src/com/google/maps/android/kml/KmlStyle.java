@@ -83,6 +83,7 @@ public class KmlStyle {
      * @param yUnits units in which the y value is specified
      */
     public void setHotSpot(float x, float y, String xUnits, String yUnits) {
+        // TODO(lavenderch): improve support for this, ignore default marker
         float xAnchor = 0.5f;
         float yAnchor = 1.0f;
         // Set x coordinate

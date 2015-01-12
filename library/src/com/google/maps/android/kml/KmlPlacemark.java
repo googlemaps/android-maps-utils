@@ -10,11 +10,11 @@ import java.util.HashMap;
  */
 public class KmlPlacemark {
 
-    private HashMap<String, String> mPlacemarkProperties;
-
     private final KmlGeometry mGeometry;
 
     private final String mStyle;
+
+    private HashMap<String, String> mPlacemarkProperties;
 
     /**
      * Creates a new KmlPlacemark object

@@ -69,7 +69,8 @@ public class KmlParser {
     }
 
     /**
-     * Iterates through the the stylemap hashmap and assigns the relevant style objects to them if they exist
+     * Iterates through the the stylemap hashmap and assigns the relevant style objects to them if
+     * they exist
      */
     private void assignStyleMapStyles() {
         for (String styleId : mStyleMaps.keySet()) {
