@@ -24,7 +24,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -44,6 +46,9 @@ public class KmlLayer {
      */
     private HashMap<String, KmlStyle> mStyles;
 
+    private final android.support.v4.util.LruCache<String, Bitmap> mMarkerIconCache;
+
+    private final HashMap<String, List<Marker>> mUrlMapMarkerHashmap;
     /**
      * XML Pull Parser, which reads in a KML Document
      */
@@ -66,11 +71,14 @@ public class KmlLayer {
      */
     public KmlLayer(GoogleMap map, int resourceId, Context context)
             throws XmlPullParserException {
-        this.mMap = map;
-        this.mStyles = new HashMap<String, KmlStyle>();
-        this.mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        mMap = map;
+        mStyles = new HashMap<String, KmlStyle>();
+        mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        mMarkerIconCache = new android.support.v4.util.LruCache<String, Bitmap>(100);
+        mUrlMapMarkerHashmap = new HashMap<String, List<Marker>>();
         InputStream stream = context.getResources().openRawResource(resourceId);
-        this.mParser = createXmlParser(stream);
+        mParser = createXmlParser(stream);
+
     }
 
     /**
@@ -82,10 +90,12 @@ public class KmlLayer {
      */
     public KmlLayer(GoogleMap map, InputStream stream)
             throws XmlPullParserException {
-        this.mMap = map;
-        this.mStyles = new HashMap<String, KmlStyle>();
-        this.mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        this.mParser = createXmlParser(stream);
+        mMap = map;
+        mStyles = new HashMap<String, KmlStyle>();
+        mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        mMarkerIconCache = new android.support.v4.util.LruCache<String, Bitmap>(100);
+        mUrlMapMarkerHashmap = new HashMap<String, List<Marker>>();
+        mParser = createXmlParser(stream);
     }
 
     /**
@@ -174,6 +184,19 @@ public class KmlLayer {
             }
             mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
         }
+        if (!mUrlMapMarkerHashmap.isEmpty()) {
+            addIconsToMarkers();
+        }
+    }
+
+    /**
+     * Downloads the marker icon from the stored URLs in mUrlMapMarkerHashmap and assigns them to the relevant icons
+     */
+    private void addIconsToMarkers() {
+        // Iterate over the URLs to download
+        for (String markerIconUrl : mUrlMapMarkerHashmap.keySet()) {
+            new IconImageDownload(mUrlMapMarkerHashmap.get(markerIconUrl)).execute(markerIconUrl);
+        }
     }
 
     /**
@@ -208,8 +231,15 @@ public class KmlLayer {
         MarkerOptions markerOptions = style.getMarkerOptions();
         markerOptions.position((LatLng) point.getGeometry());
         Marker marker = mMap.addMarker(markerOptions);
+        // Check if the marker icon needs to be downloaded
         if (style.getIconUrl() != null) {
-            new IconImageDownload(marker).execute(style.getIconUrl());
+            if (!mUrlMapMarkerHashmap.containsKey(style.getIconUrl())) {
+                // Checks if the hashmap is storing the icon URL and adds if not stored
+                mUrlMapMarkerHashmap.put(style.getIconUrl(), new ArrayList<Marker>(Arrays.asList(marker)));
+            } else {
+                // Hashmap stores icon URL, add Marker object to list
+                mUrlMapMarkerHashmap.get(style.getIconUrl()).add(marker);
+            }
         }
         return marker;
     }
@@ -257,10 +287,10 @@ public class KmlLayer {
      */
     private class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
 
-        final Marker mMarker;
+        final List<Marker> mMarkers;
 
-        public IconImageDownload(Marker marker) {
-            mMarker = marker;
+        public IconImageDownload(List<Marker> marker) {
+            mMarkers = marker;
         }
 
         @Override
@@ -278,7 +308,9 @@ public class KmlLayer {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+            for (Marker marker : mMarkers) {
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+            }
         }
     }
 }
