@@ -47,6 +47,9 @@ public class KmlLineString implements KmlGeometry {
      * @param coordinates array of coordinates
      */
     public KmlLineString(ArrayList<LatLng> coordinates) {
+        if (coordinates == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null");
+        }
         mCoordinates = coordinates;
     }
 
@@ -65,7 +68,7 @@ public class KmlLineString implements KmlGeometry {
      *
      * @return ArrayList of LatLng
      */
-    public Object getGeometry() {
+    public Object getCoordinates() {
         return mCoordinates;
     }
 

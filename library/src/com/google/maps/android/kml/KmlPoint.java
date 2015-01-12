@@ -17,6 +17,9 @@ public class KmlPoint implements KmlGeometry {
      * @param coordinate coordinate of the KmlPoint
      */
     public KmlPoint(LatLng coordinate) {
+        if (coordinate == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null");
+        }
         mCoordinate = coordinate;
     }
 
@@ -36,7 +39,7 @@ public class KmlPoint implements KmlGeometry {
      *
      * @return LatLng with the coordinate of the KmlPoint
      */
-    public Object getGeometry() {
+    public Object getCoordinates() {
         return mCoordinate;
     }
 }

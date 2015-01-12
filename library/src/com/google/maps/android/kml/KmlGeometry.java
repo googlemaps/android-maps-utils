@@ -7,6 +7,6 @@ public interface KmlGeometry {
 
     public String getType();
 
-    public Object getGeometry();
+    public Object getCoordinates();
 
 }

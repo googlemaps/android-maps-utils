@@ -39,6 +39,9 @@ public class KmlPolygon implements KmlGeometry {
      */
     public KmlPolygon(ArrayList<LatLng> outerBoundaryCoordinates,
             ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates) {
+        if (outerBoundaryCoordinates == null) {
+            throw new IllegalArgumentException("Outer boundary coordinates cannot be null");
+        }
         mOuterBoundaryCoordinates = outerBoundaryCoordinates;
         mInnerBoundaryCoordinates = innerBoundaryCoordinates;
     }
@@ -76,7 +79,7 @@ public class KmlPolygon implements KmlGeometry {
      *
      * @return ArrayList of an ArrayList of LatLng points
      */
-    public Object getGeometry() {
+    public Object getCoordinates() {
         ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
         coordinates.add(mOuterBoundaryCoordinates);
         coordinates.addAll(mInnerBoundaryCoordinates);

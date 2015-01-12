@@ -246,7 +246,7 @@ public class KmlLayer {
      */
     private Marker addPointToMap(KmlPoint point, KmlStyle style) {
         MarkerOptions markerOptions = style.getMarkerOptions();
-        markerOptions.position((LatLng) point.getGeometry());
+        markerOptions.position((LatLng) point.getCoordinates());
         Marker marker = mMap.addMarker(markerOptions);
         // Check if the marker icon needs to be downloaded
         if (style.getIconUrl() != null) {
@@ -270,7 +270,7 @@ public class KmlLayer {
      */
     private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
-        polylineOptions.addAll((Iterable<LatLng>) lineString.getGeometry());
+        polylineOptions.addAll((Iterable<LatLng>) lineString.getCoordinates());
         return mMap.addPolyline(polylineOptions);
     }
 
@@ -301,7 +301,7 @@ public class KmlLayer {
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry geometry, KmlStyle style) {
         ArrayList<Object> geometries = new ArrayList<Object>();
-        for (KmlGeometry kmlGeometry : (ArrayList<KmlGeometry>) geometry.getGeometry()) {
+        for (KmlGeometry kmlGeometry : (ArrayList<KmlGeometry>) geometry.getCoordinates()) {
             geometries.add(addToMap(kmlGeometry, style));
         }
         return geometries;

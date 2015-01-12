@@ -17,6 +17,9 @@ public class KmlMultiGeometry implements KmlGeometry {
      * @param geometries array of KmlGeometry objects contained in the MultiGeometry
      */
     public KmlMultiGeometry(ArrayList<KmlGeometry> geometries) {
+        if (geometries == null) {
+            throw new IllegalArgumentException("Geometries cannot be null");
+        }
         mGeometries = geometries;
     }
 
@@ -36,7 +39,7 @@ public class KmlMultiGeometry implements KmlGeometry {
      * @return Arraylist of KmlGeometry objects
      */
     @Override
-    public Object getGeometry() {
+    public Object getCoordinates() {
         return mGeometries;
     }
 }
