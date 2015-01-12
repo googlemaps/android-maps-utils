@@ -13,8 +13,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.kml_samples, getApplicationContext());
-            kmlLayer.setKmlData();
+            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.germany, getApplicationContext());
+            kmlLayer.addKmlData();
             Log.i("Demo", "End");
 
 
@@ -22,5 +22,4 @@ public class KmlDemoActivity extends BaseDemoActivity {
             Log.e("Exception caught", e.toString());
         }
     }
-
 }
