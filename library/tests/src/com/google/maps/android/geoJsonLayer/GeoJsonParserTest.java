@@ -101,7 +101,7 @@ public class GeoJsonParserTest extends TestCase {
         parser.parseGeoJson();
         assertTrue(parser.getFeatures().size() == 1);
         GeoJsonFeature feature = parser.getFeatures().get(0);
-        //assertTrue(feature.getGeometry().equals("MultiPolygon"));
+        //assertTrue(feature.getCoordinates().equals("MultiPolygon"));
         GeoJsonMultiPolygon polygon = ((GeoJsonMultiPolygon) feature.getGeometry());
         assertTrue(polygon.getPolygons().size() == 2);
         assertTrue(polygon.getPolygons().get(0).getType().equals("Polygon"));
