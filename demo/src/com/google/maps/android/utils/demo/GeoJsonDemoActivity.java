@@ -54,7 +54,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 feature.setLineStringStyle(line);
                 feature.setPointStyle(point);
                 feature.setPolygonStyle(poly);
-                ((GeoJsonPoint) feature.getGeometry()).
             }
             Log.i("MultiLineString", geoJsonCollection.toString());
         } catch (IOException e) {
