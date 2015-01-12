@@ -1,6 +1,7 @@
 package com.google.maps.android.kml;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -24,9 +25,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -35,10 +34,11 @@ public class KmlLayer {
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
-    /**
-     * A Google Map
-     */
     private final GoogleMap mMap;
+
+    private final android.support.v4.util.LruCache<String, Bitmap> mMarkerIconCache;
+
+    private final ArrayList<String> mMarkerIconUrls;
 
     /**
      * Hashmap of Style classes. The key is a string value which represents the id of the Style in
@@ -46,19 +46,12 @@ public class KmlLayer {
      */
     private HashMap<String, KmlStyle> mStyles;
 
-    private final android.support.v4.util.LruCache<String, Bitmap> mMarkerIconCache;
-
-    private final HashMap<String, List<Marker>> mUrlMapMarkerHashmap;
     /**
      * XML Pull Parser, which reads in a KML Document
      */
     private XmlPullParser mParser;
 
-    /*TODO:
-        Implement IconStyle (IconStyle is the style class for Point classes) - in progress
-        Implement StyleMap.
-        Implement BalloonStyle (Equivalent in GoogleMaps is IconWindow)
-        Implement LabelStyle (Equivalent is IconGenerator Utility Library)
+    /*TODO(lavenderch): IconStyle, BallonStyle, ExtendedData, Folder
     */
 
     /**
@@ -75,7 +68,7 @@ public class KmlLayer {
         mStyles = new HashMap<String, KmlStyle>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mMarkerIconCache = new android.support.v4.util.LruCache<String, Bitmap>(100);
-        mUrlMapMarkerHashmap = new HashMap<String, List<Marker>>();
+        mMarkerIconUrls = new ArrayList<String>();
         InputStream stream = context.getResources().openRawResource(resourceId);
         mParser = createXmlParser(stream);
 
@@ -94,7 +87,7 @@ public class KmlLayer {
         mStyles = new HashMap<String, KmlStyle>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mMarkerIconCache = new android.support.v4.util.LruCache<String, Bitmap>(100);
-        mUrlMapMarkerHashmap = new HashMap<String, List<Marker>>();
+        mMarkerIconUrls = new ArrayList<String>();
         mParser = createXmlParser(stream);
     }
 
@@ -158,7 +151,9 @@ public class KmlLayer {
     }
 
     /**
-     * Sets the z index of the KML layer. This affects Polyline and Polygon objects. Markers are set to appear above other data.
+     * Sets the z index of the KML layer. This affects Polyline and Polygon objects. Markers are
+     * set
+     * to appear above other data.
      */
     public void setZIndex(float zIndex) {
         for (Object mapObject : mPlacemarks.values()) {
@@ -184,18 +179,39 @@ public class KmlLayer {
             }
             mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
         }
-        if (!mUrlMapMarkerHashmap.isEmpty()) {
-            addIconsToMarkers();
+        if (!mMarkerIconUrls.isEmpty()) {
+            // If there are marker icon URLs stored, download and assign to markers
+            downloadMarkerIcons();
         }
     }
 
     /**
-     * Downloads the marker icon from the stored URLs in mUrlMapMarkerHashmap and assigns them to the relevant icons
+     * Downloads the marker icon from the stored URLs in mUrlMapMarkerHashmap and assigns them to
+     * the relevant icons
      */
-    private void addIconsToMarkers() {
+    private void downloadMarkerIcons() {
         // Iterate over the URLs to download
-        for (String markerIconUrl : mUrlMapMarkerHashmap.keySet()) {
-            new IconImageDownload(markerIconUrl, mUrlMapMarkerHashmap.get(markerIconUrl)).execute();
+        for (String markerIconUrl : mMarkerIconUrls) {
+            new IconImageDownload(markerIconUrl).execute();
+            mMarkerIconUrls.remove(markerIconUrl);
+        }
+    }
+
+    /**
+     * Adds the marker icon stored in mMarkerIconCache, to the {@link com.google.android.gms.maps.model.Marker}
+     *
+     * @param iconUrl icon url of icon to add to markers
+     */
+    private void addIconToMarkers(String iconUrl) {
+        BitmapDescriptor markerIcon = BitmapDescriptorFactory
+                .fromBitmap(mMarkerIconCache.get(iconUrl));
+        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
+            // Check if the style URL is the same and the type of geometry is a point
+            if (mStyles.get(placemark.getStyle()) != null && mStyles.get(placemark.getStyle())
+                    .getIconUrl().equals(iconUrl) && placemark.getGeometry().getType()
+                    .equals("Point")) {
+                ((Marker) mPlacemarks.get(placemark)).setIcon(markerIcon);
+            }
         }
     }
 
@@ -203,8 +219,9 @@ public class KmlLayer {
      * Adds a single geometry object to the map with its specified style
      *
      * @param geometry defines the type of object to add to the map
-     * @param style defines styling properties to add to the object when added to the map
-     * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array of either objects
+     * @param style    defines styling properties to add to the object when added to the map
+     * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
+     * of either objects
      */
     private Object addToMap(KmlGeometry geometry, KmlStyle style) {
         String geometryType = geometry.getType();
@@ -215,7 +232,7 @@ public class KmlLayer {
         } else if (geometryType.equals("Polygon")) {
             return addPolygonToMap((KmlPolygon) geometry, style);
         } else if (geometryType.equals("MultiGeometry")) {
-             return addMultiGeometryToMap((KmlMultiGeometry) geometry, style);
+            return addMultiGeometryToMap((KmlMultiGeometry) geometry, style);
         }
         return null;
     }
@@ -237,12 +254,8 @@ public class KmlLayer {
                 // Bitmap stored in cache
                 Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-            } else if (!mUrlMapMarkerHashmap.containsKey(style.getIconUrl())) {
-                // Checks if the hashmap is storing the icon URL and adds if not stored
-                mUrlMapMarkerHashmap.put(style.getIconUrl(), new ArrayList<Marker>(Arrays.asList(marker)));
-            } else {
-                // Hashmap stores icon URL, add Marker object to list
-                mUrlMapMarkerHashmap.get(style.getIconUrl()).add(marker);
+            } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
+                mMarkerIconUrls.add(style.getIconUrl());
             }
         }
         return marker;
@@ -278,6 +291,14 @@ public class KmlLayer {
         return mMap.addPolygon(polygonOptions);
     }
 
+    /**
+     * Adds all the geometries within a KML MultiGeometry to the map. Supports recursive
+     * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
+     *
+     * @param geometry contains array of geometries for the MultiGeometry
+     * @param style    contains relevant styling properties for the MultiGeometry
+     * @return array of Marker, Polyline and Polygon objects
+     */
     private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry geometry, KmlStyle style) {
         ArrayList<Object> geometries = new ArrayList<Object>();
         for (KmlGeometry kmlGeometry : (ArrayList<KmlGeometry>) geometry.getGeometry()) {
@@ -293,13 +314,21 @@ public class KmlLayer {
 
         private final String mIconUrl;
 
-        private final List<Marker> mMarkers;
-
-        public IconImageDownload(String iconUrl, List<Marker> marker) {
+        /**
+         * Creates a new IconImageDownload object
+         *
+         * @param iconUrl URL of the marker icon to download
+         */
+        public IconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
-            mMarkers = marker;
         }
 
+        /**
+         * Downloads the marker icon in another thread
+         *
+         * @param params String varargs not used
+         * @return Bitmap object downloaded
+         */
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
@@ -312,12 +341,16 @@ public class KmlLayer {
             return null;
         }
 
+        /**
+         * Adds the bitmap to the cache and adds the bitmap to the markers
+         *
+         * @param bitmap bitmap downloaded
+         */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             mMarkerIconCache.put(mIconUrl, bitmap);
-            for (Marker marker : mMarkers) {
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-            }
+            addIconToMarkers(mIconUrl);
+
         }
     }
 }
