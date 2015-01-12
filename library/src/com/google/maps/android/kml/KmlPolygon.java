@@ -4,22 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-/*
-                                                     *
-  *                                                          *
-                               *                  *        .--.
-   \/ \/  \/  \/                                        ./   /=*
-     \/     \/      *            *                ...  (_____)
-      \ ^ ^/                                       \ \_((^o^))-.     *
-      (o)(O)--)--------\.                           \   (   ) \  \._.
-      |    |  ||================((~~~~~~~~~~~~~~~~~))|   ( )   |     \
-       \__/             ,|        \. * * * * * * ./  (~~~~~~~~~~~)    \
-*        ||^||\.____./|| |          \___________/     ~||~~~~|~'\____/ *
-         || ||     || || A            ||    ||          ||    |
-  *      <> <>     <> <>          (___||____||_____)   ((~~~~~|   *
-  *      http://www.asciiworld.com/-Santa-Claus-.html
- */
-
 /**
  * Represents a series of coordinates in a placemark
  */

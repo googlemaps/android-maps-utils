@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -36,9 +38,12 @@ public class KmlLayer {
 
     private final GoogleMap mMap;
 
-    private final android.support.v4.util.LruCache<String, Bitmap> mMarkerIconCache;
+    private final LruCache<String, Bitmap> mMarkerIconCache;
 
     private final ArrayList<String> mMarkerIconUrls;
+
+    private HashMap<String, String> mStyleMaps;
+
 
     /**
      * Hashmap of Style classes. The key is a string value which represents the id of the Style in
@@ -67,7 +72,8 @@ public class KmlLayer {
         mMap = map;
         mStyles = new HashMap<String, KmlStyle>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mMarkerIconCache = new android.support.v4.util.LruCache<String, Bitmap>(100);
+        mMarkerIconCache = new LruCache<String, Bitmap>(100);
+        mStyleMaps = new HashMap<String, String>();
         mMarkerIconUrls = new ArrayList<String>();
         InputStream stream = context.getResources().openRawResource(resourceId);
         mParser = createXmlParser(stream);
@@ -86,7 +92,8 @@ public class KmlLayer {
         mMap = map;
         mStyles = new HashMap<String, KmlStyle>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mMarkerIconCache = new android.support.v4.util.LruCache<String, Bitmap>(100);
+        mStyleMaps = new HashMap<String, String>();
+        mMarkerIconCache = new LruCache<String, Bitmap>(100);
         mMarkerIconUrls = new ArrayList<String>();
         mParser = createXmlParser(stream);
     }
@@ -116,11 +123,25 @@ public class KmlLayer {
         KmlParser parser = new KmlParser(mParser);
         parser.parseKml();
         mStyles = parser.getStyles();
+        mStyleMaps = parser.getStyleMaps();
         // Store parsed placemarks
         for (KmlPlacemark placemark : parser.getPlacemarks()) {
             mPlacemarks.put(placemark, null);
         }
+        assignStyleMapStyles();
         addKmlLayer();
+    }
+
+    /**
+     * Iterates through the the stylemap hashmap and assigns the relevant style objects to them if
+     * they exist
+     */
+    private void assignStyleMapStyles() {
+        for (String styleId : mStyleMaps.keySet()) {
+            if (mStyles.containsKey(mStyleMaps.get(styleId))) {
+                mStyles.put(styleId, mStyles.get(mStyleMaps.get(styleId)));
+            }
+        }
     }
 
     /**
@@ -146,23 +167,8 @@ public class KmlLayer {
      *
      * @return iterator of KmlPlacemark objects
      */
-    public java.util.Iterator<KmlPlacemark> getPlacemarks() {
+    public Iterator<KmlPlacemark> getPlacemarks() {
         return mPlacemarks.keySet().iterator();
-    }
-
-    /**
-     * Sets the z index of the KML layer. This affects Polyline and Polygon objects. Markers are
-     * set
-     * to appear above other data.
-     */
-    public void setZIndex(float zIndex) {
-        for (Object mapObject : mPlacemarks.values()) {
-            if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).setZIndex(zIndex);
-            } else if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).setZIndex(zIndex);
-            }
-        }
     }
 
     /**
@@ -170,11 +176,9 @@ public class KmlLayer {
      */
     private void addKmlLayer() {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
-            KmlStyle style;
-            if (mStyles.get(placemark.getStyle()) == null) {
-                // Assign default style if style cannot be found
-                style = mStyles.get(null);
-            } else {
+            KmlStyle style = null;
+            if (mStyles.get(placemark.getStyle()) != null) {
+                // Assign style if found, else remains null
                 style = mStyles.get(placemark.getStyle());
             }
             mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));

@@ -120,7 +120,7 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the stored geometry object
+     * Stores the given GeoJsonGeometry or null
      *
      * @return geometry object
      */
@@ -137,10 +137,17 @@ public class GeoJsonFeature extends Observable {
         return mId;
     }
 
+    /**
+     * @return boolean value to determine if this feature contains a geometry object
+     */
     public boolean hasGeometry() {
         return (mGeoJsonGeometry != null);
     }
 
+    /**
+     * Gets the bounding box of this feature if it has been set
+     * @return null if there is no bounding box found, else it returns an arraylist of latlng points
+     */
     public ArrayList<LatLng> getBoundingBox () {
         return mBoundingBox;
     }

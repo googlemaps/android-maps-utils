@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.geoJsonLayer.GeoJsonCollection;
 import com.google.maps.android.geoJsonLayer.GeoJsonFeature;
 import com.google.maps.android.geoJsonLayer.GeoJsonLineStringStyle;
+import com.google.maps.android.geoJsonLayer.GeoJsonPoint;
 import com.google.maps.android.geoJsonLayer.GeoJsonPointStyle;
 import com.google.maps.android.geoJsonLayer.GeoJsonPolygon;
 import com.google.maps.android.geoJsonLayer.GeoJsonPolygonStyle;
@@ -45,6 +46,8 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             GeoJsonPointStyle point = new GeoJsonPointStyle();
             point.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             point.setRotation(60);
+
+
 
 
             for (GeoJsonFeature feature: geoJsonCollection.getFeatures()) {
