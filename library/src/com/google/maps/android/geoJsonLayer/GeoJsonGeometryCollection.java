@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * A GeometryCollection geometry contains a number of geometry objects.
  */
-public class GeoJsonGeometryCollection extends GeoJsonGeometry {
+public class GeoJsonGeometryCollection implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "GeometryCollection";
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 
-public class GeoJsonPolygon extends GeoJsonGeometry {
+public class GeoJsonPolygon implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "Polygon";
 

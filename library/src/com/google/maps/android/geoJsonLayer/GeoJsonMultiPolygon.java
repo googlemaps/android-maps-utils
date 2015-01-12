@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * A MultiPolygon geometry contains a number of {@link GeoJsonPolygon}s.
  */
-public class GeoJsonMultiPolygon extends GeoJsonGeometry {
+public class GeoJsonMultiPolygon implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPolygon";
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * A LineString geometry contains a number of {@link com.google.android.gms.maps.model.LatLng}s.
  */
-public class GeoJsonLineString extends GeoJsonGeometry {
+public class GeoJsonLineString implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "LineString";
 

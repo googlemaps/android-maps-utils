@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * A MultiPoint geometry contains a number of {@link GeoJsonPoint}s.
  */
-public class GeoJsonMultiPoint extends GeoJsonGeometry {
+public class GeoJsonMultiPoint implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPoint";
 

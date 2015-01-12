@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * A MultiLineString geometry contains a number of {@link GeoJsonLineString}s.
  */
-public class GeoJsonMultiLineString extends GeoJsonGeometry {
+public class GeoJsonMultiLineString implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiLineString";
 

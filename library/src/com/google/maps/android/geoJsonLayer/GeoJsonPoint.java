@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
  *
  * A Point geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
  */
-public class GeoJsonPoint extends GeoJsonGeometry {
+public class GeoJsonPoint implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "Point";
 
