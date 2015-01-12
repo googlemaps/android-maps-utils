@@ -2,7 +2,7 @@ package com.google.maps.android.geoJsonLayer;
 
 import junit.framework.TestCase;
 
-public class geoJsonGeometryGeoJsonCollectionTest extends TestCase {
+public class GeoJsonGeometryTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();

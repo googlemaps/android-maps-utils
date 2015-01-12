@@ -4,8 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import junit.framework.TestCase;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
