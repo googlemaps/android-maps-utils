@@ -48,10 +48,6 @@ public class GeoJsonParserTest extends TestCase {
             "   \"geometry\": {\n" +
             "      \"type\": \"GeometryCollection\",\n" +
             "      \"geometries\": [\n" +
-            "          {\n" +
-            "            \"type\": \"Point\",\n" +
-            "            \"coordinates\": [100.0, 0.0]\n" +
-            "          },\n" +
             "          { \"type\": \"GeometryCollection\",\n" +
             "            \"geometries\": [\n" +
             "              { \"type\": \"Point\",\n" +
@@ -68,6 +64,19 @@ public class GeoJsonParserTest extends TestCase {
             "}");
     }
 
+    public JSONObject createMultiPolygon () throws Exception {
+        return new JSONObject(
+        "  { \"type\": \"MultiPolygon\",\n" +
+        "    \"coordinates\": [\n" +
+        "      [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],\n" +
+        "      [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],\n" +
+        "       [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]\n" +
+        "      ]\n" +
+        "    }"
+        );
+
+    }
+
     //Testing for nested geometry collections
     public void testParseGeometryCollection () throws Exception {
         JSONObject geometryCollectionObject = createGeometryCollection();
@@ -75,15 +84,30 @@ public class GeoJsonParserTest extends TestCase {
         parser.parseGeoJson();
         assertTrue(parser.getFeatures().size() == 1);
         for (GeoJsonFeature feature : parser.getFeatures()) {
-            assertTrue(feature.getGeometry().equals("GeometryCollection"));
+            assertTrue(feature.getGeometry().getType().equals("GeometryCollection"));
             assertTrue(feature.getProperties().size() == 2);
             assertTrue(feature.getId().equals("Popsicles"));
             GeoJsonGeometryCollection geometry = ((GeoJsonGeometryCollection) feature.getGeometry());
-            assertTrue (geometry.getGeometries().size() == 2);
+            assertTrue (geometry.getGeometries().size() == 1);
             for (GeoJsonGeometry geoJsonGeometry : geometry.getGeometries()) {
-                assertTrue (geoJsonGeometry.getType().equals("Point"));
+                assertTrue (geoJsonGeometry.getType().equals("GeometryCollection"));
             }
         }
+    }
+
+    public void testParseMultiPolygon () throws Exception {
+        JSONObject multiPolygon = createMultiPolygon();
+        GeoJsonParser parser = new GeoJsonParser(multiPolygon);
+        parser.parseGeoJson();
+        assertTrue(parser.getFeatures().size() == 1);
+        GeoJsonFeature feature = parser.getFeatures().get(0);
+        //assertTrue(feature.getGeometry().equals("MultiPolygon"));
+        GeoJsonMultiPolygon polygon = ((GeoJsonMultiPolygon) feature.getGeometry());
+        assertTrue(polygon.getPolygons().size() == 2);
+        assertTrue(polygon.getPolygons().get(0).getType().equals("Polygon"));
+        assertTrue(polygon.getPolygons().get(0).getCoordinates().size() == 1);
+        assertTrue(polygon.getPolygons().get(1).getType().equals("Polygon"));
+        assertTrue(polygon.getPolygons().get(1).getCoordinates().size() == 2);
     }
 
     public void testGetFeatures() throws Exception {
