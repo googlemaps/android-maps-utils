@@ -1,14 +1,10 @@
 package com.google.maps.android.geoJsonLayer;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Observable;
-import java.util.Set;
 
 /**
  * Created by juliawong on 12/29/14.
@@ -21,7 +17,7 @@ public class GeoJsonFeature extends Observable {
 
     private final String mId;
 
-    private ArrayList<LatLng> mBoundingBox;
+    private final ArrayList<LatLng> mBoundingBox;
 
     private final HashMap<String, String> mProperties;
 
@@ -34,12 +30,12 @@ public class GeoJsonFeature extends Observable {
     /**
      * Creates a new Feature object
      *
-     * @param GeoJsonGeometry   type of geometry to assign to the feature
-     * @param id         id to refer to the feature by
-     * @param properties map of data containing properties related to the feature
+     * @param GeoJsonGeometry type of geometry to assign to the feature
+     * @param id              id to refer to the feature by
+     * @param properties      map of data containing properties related to the feature
      */
-    public GeoJsonFeature( GeoJsonGeometry GeoJsonGeometry, String id,
-                          HashMap<String, String> properties, ArrayList<LatLng> boundingBox) {
+    public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
+            HashMap<String, String> properties, ArrayList<LatLng> boundingBox) {
         mGeoJsonGeometry = GeoJsonGeometry;
         mId = id;
         mBoundingBox = boundingBox;
@@ -51,9 +47,9 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the iterator of the property keys. Order of keys is undefined.
+     * Gets the hashmap of the properties
      *
-     * @return iterator of property keys
+     * @return hashmap of properties
      */
     public HashMap<String, String> getProperties() {
         return mProperties;
@@ -120,7 +116,7 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Stores the given GeoJsonGeometry or null
+     * Gets the stored geometry object
      *
      * @return geometry object
      */
@@ -145,10 +141,9 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the bounding box of this feature if it has been set
-     * @return null if there is no bounding box found, else it returns an arraylist of latlng points
+     * @return boolean value to determine if this feature contains a geometry object
      */
-    public ArrayList<LatLng> getBoundingBox () {
+    public ArrayList<LatLng> getBoundingBox() {
         return mBoundingBox;
     }
 

@@ -13,7 +13,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint";
 
-    private MarkerOptions mMarkerOptions;
+    private final MarkerOptions mMarkerOptions;
 
 
     /**
@@ -116,6 +116,24 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
     }
 
     /**
+     * Gets a bitmap image for the marker
+     *
+     * @return bitmap image icon
+     */
+    public BitmapDescriptor getIcon() {
+        return mMarkerOptions.getIcon();
+    }
+
+    /**
+     * Sets a bitmap image for the marker
+     *
+     * @param bitmap Bitmap descriptor for the marker
+     */
+    public void setIcon(BitmapDescriptor bitmap) {
+        mMarkerOptions.icon(bitmap);
+    }
+
+    /**
      * Gets the info window anchor U coordinate
      *
      * @return info window anchor U coordinate
@@ -152,6 +170,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
         return mMarkerOptions.getRotation();
     }
 
+
     /**
      * Sets the rotation
      *
@@ -160,7 +179,6 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
     public void setRotation(float rotation) {
         mMarkerOptions.rotation(rotation);
     }
-
 
     /**
      * Gets the snippet
@@ -217,15 +235,6 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
     }
 
     /**
-     * Sets a bitmap image for the marker
-     *
-     * @param bitmap Bitmap descriptor for the marker
-     */
-    public void setIcon (BitmapDescriptor bitmap) {
-        mMarkerOptions.icon(bitmap);
-    }
-
-    /**
      * Gets a new MarkerOptions object
      *
      * @return new MarkerOptions object
@@ -236,7 +245,8 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
         markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
         markerOptions.draggable(mMarkerOptions.isDraggable());
         markerOptions.flat(mMarkerOptions.isFlat());
-        markerOptions.infoWindowAnchor(mMarkerOptions.getInfoWindowAnchorU(), mMarkerOptions.getInfoWindowAnchorV());
+        markerOptions.infoWindowAnchor(mMarkerOptions.getInfoWindowAnchorU(),
+                mMarkerOptions.getInfoWindowAnchorV());
         markerOptions.rotation(mMarkerOptions.getRotation());
         markerOptions.snippet(mMarkerOptions.getSnippet());
         markerOptions.title(mMarkerOptions.getTitle());

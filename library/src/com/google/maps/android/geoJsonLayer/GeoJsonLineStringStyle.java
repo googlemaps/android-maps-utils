@@ -12,7 +12,7 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Line|MultiLine";
 
-    private PolylineOptions mPolylineOptions;
+    private final PolylineOptions mPolylineOptions;
 
     /**
      * Creates a new LineStringStyle object

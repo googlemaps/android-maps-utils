@@ -12,14 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Created by juliawong on 12/29/14.
  *
  * Adds a new layer of GeoJSON data with methods to allow the developer to interact with it.
  */
-public class GeoJsonCollection {
+public class GeoJsonLayer {
 
     private final HashMap<GeoJsonFeature, Object> mFeatures;
 
@@ -29,20 +28,24 @@ public class GeoJsonCollection {
 
     private GeoJsonPolygonStyle mDefaultPolygonStyle;
 
+    private boolean mGeoJsonDataOnMap;
+
     private JSONObject mGeoJsonFile;
 
     private GeoJsonRenderer mRenderer;
+
     /**
      * Creates a new Collection object
      *
      * @param map           GoogleMap object
      * @param geoJsonObject JSONObject to parse GeoJSON data from
      */
-    public GeoJsonCollection(GoogleMap map, JSONObject geoJsonObject) {
+    public GeoJsonLayer(GoogleMap map, JSONObject geoJsonObject) {
         mFeatures = new HashMap<GeoJsonFeature, Object>();
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
+        mGeoJsonDataOnMap = false;
         mGeoJsonFile = geoJsonObject;
         mRenderer = new GeoJsonRenderer(mFeatures, map);
     }
@@ -56,17 +59,17 @@ public class GeoJsonCollection {
      * @throws IOException   if the file cannot be open for read
      * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
      */
-    public GeoJsonCollection(GoogleMap map, int resourceId, Context context)
+    public GeoJsonLayer(GoogleMap map, int resourceId, Context context)
             throws IOException, JSONException {
         mFeatures = new HashMap<GeoJsonFeature, Object>();
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
+        mGeoJsonDataOnMap = false;
         InputStream stream = context.getResources().openRawResource(resourceId);
         mGeoJsonFile = createJsonFileObject(stream);
         mRenderer = new GeoJsonRenderer(mFeatures, map);
     }
-
 
     /**
      * Takes a character input stream and converts it into a JSONObject
@@ -91,14 +94,37 @@ public class GeoJsonCollection {
         return new JSONObject(result.toString());
     }
 
-
     /**
      * Gets an iterator of all feature elements.
      *
      * @return iterator of feature elements
      */
-    public  Set<GeoJsonFeature> getFeatures() {
-        return mFeatures.keySet();
+    public java.util.Iterator<GeoJsonFeature> getFeatures() {
+        return mFeatures.keySet().iterator();
+    }
+
+    /**
+     * Returns the features with the given ID if it exists
+     *
+     * @param id of Feature object to find
+     * @return Feature object with matching ID or otherwise null
+     */
+    public GeoJsonFeature getFeatureById(String id) {
+        for (GeoJsonFeature feature : mFeatures.keySet()) {
+            if (feature.getId().equals(id)) {
+                return feature;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Removes a feature from the collection
+     *
+     * @param feature to remove
+     */
+    public void removeFeature(GeoJsonFeature feature) {
+        mFeatures.remove(feature);
     }
 
     /**
@@ -119,8 +145,26 @@ public class GeoJsonCollection {
         mRenderer.setMap(map);
     }
 
-    public void addCollectionToMap() {
-        mRenderer.addCollectionToMap();
+
+    public void addGeoJsonData() throws JSONException {
+        if (!mGeoJsonDataOnMap) {
+            GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
+            parser.parseGeoJson();
+
+            for (GeoJsonFeature geoJsonFeature : parser.getFeatures()) {
+                geoJsonFeature.addObserver(mRenderer);
+                mFeatures.put(geoJsonFeature, null);
+            }
+
+            mRenderer.setFeatures(mFeatures);
+            mRenderer.addLayerToMap();
+            mGeoJsonDataOnMap = true;
+        }
+    }
+
+    public void removeGeoJsonData() {
+        mRenderer.removeLayerFromMap();
+        mGeoJsonDataOnMap = false;
     }
 
     /**
@@ -135,8 +179,9 @@ public class GeoJsonCollection {
     /**
      * Sets the default style for the Point objects. Overrides all current styles on Point objects.
      *
-     * @param geoJsonPointStyle to set as default style, this is applied to Points as they are imported
-     *                   from the GeoJSON file
+     * @param geoJsonPointStyle to set as default style, this is applied to Points as they are
+     *                          imported
+     *                          from the GeoJSON file
      */
     public void setDefaultPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
         mDefaultPointStyle = geoJsonPointStyle;
@@ -159,8 +204,9 @@ public class GeoJsonCollection {
      * Sets the default style for the LineString objects. Overrides all current styles on
      * LineString objects.
      *
-     * @param geoJsonLineStringStyle to set as default style, this is applied to LineStrings as they are
-     *                        imported from the GeoJSON file
+     * @param geoJsonLineStringStyle to set as default style, this is applied to LineStrings as they
+     *                               are
+     *                               imported from the GeoJSON file
      */
     public void setDefaultLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mDefaultLineStringStyle = geoJsonLineStringStyle;
@@ -184,26 +230,12 @@ public class GeoJsonCollection {
      * objects.
      *
      * @param geoJsonPolygonStyle to set as default style, this is applied to Polygons as they are
-     *                     imported from the GeoJSON file
+     *                            imported from the GeoJSON file
      */
     public void setDefaultPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
         mDefaultPolygonStyle = geoJsonPolygonStyle;
         for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
             geoJsonFeature.setPolygonStyle(geoJsonPolygonStyle);
-        }
-        mRenderer.setFeatures(mFeatures);
-    }
-
-    /**
-     * Converts a GeoJson file to a parser and puts found features in set
-     * @throws JSONException
-     */
-    public void parseGeoJson() throws JSONException {
-        GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
-        parser.parseGeoJson();
-        for (GeoJsonFeature geoJsonFeature : parser.getFeatures()) {
-            geoJsonFeature.addObserver(mRenderer);
-            mFeatures.put(geoJsonFeature, null);
         }
         mRenderer.setFeatures(mFeatures);
     }

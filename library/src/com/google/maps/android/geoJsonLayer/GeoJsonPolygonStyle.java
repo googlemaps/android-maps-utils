@@ -13,7 +13,7 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon";
 
-    private PolygonOptions mPolygonOptions;
+    private final PolygonOptions mPolygonOptions;
 
     /**
      * Creates a new PolygonStyle object

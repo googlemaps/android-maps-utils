@@ -25,10 +25,20 @@ public class GeoJsonPoint implements GeoJsonGeometry {
         mCoordinates = coordinates;
     }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
+    /**
+     * Gets the coordinates of the point
+     *
+     * @return coordinates of the point
+     */
     public LatLng getCoordinates() {
         return mCoordinates;
     }
