@@ -195,7 +195,7 @@ public class KmlLayer {
     private void addIconsToMarkers() {
         // Iterate over the URLs to download
         for (String markerIconUrl : mUrlMapMarkerHashmap.keySet()) {
-            new IconImageDownload(mUrlMapMarkerHashmap.get(markerIconUrl)).execute(markerIconUrl);
+            new IconImageDownload(markerIconUrl, mUrlMapMarkerHashmap.get(markerIconUrl)).execute();
         }
     }
 
@@ -233,7 +233,11 @@ public class KmlLayer {
         Marker marker = mMap.addMarker(markerOptions);
         // Check if the marker icon needs to be downloaded
         if (style.getIconUrl() != null) {
-            if (!mUrlMapMarkerHashmap.containsKey(style.getIconUrl())) {
+            if (mMarkerIconCache.get(style.getIconUrl()) != null) {
+                // Bitmap stored in cache
+                Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+            } else if (!mUrlMapMarkerHashmap.containsKey(style.getIconUrl())) {
                 // Checks if the hashmap is storing the icon URL and adds if not stored
                 mUrlMapMarkerHashmap.put(style.getIconUrl(), new ArrayList<Marker>(Arrays.asList(marker)));
             } else {
@@ -287,17 +291,19 @@ public class KmlLayer {
      */
     private class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
 
-        final List<Marker> mMarkers;
+        private final String mIconUrl;
 
-        public IconImageDownload(List<Marker> marker) {
+        private final List<Marker> mMarkers;
+
+        public IconImageDownload(String iconUrl, List<Marker> marker) {
+            mIconUrl = iconUrl;
             mMarkers = marker;
         }
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            String imageUrl = params[0];
             try {
-                return BitmapFactory.decodeStream((InputStream) new URL(imageUrl).getContent());
+                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -308,6 +314,7 @@ public class KmlLayer {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            mMarkerIconCache.put(mIconUrl, bitmap);
             for (Marker marker : mMarkers) {
                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
             }
