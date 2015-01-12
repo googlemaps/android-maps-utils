@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.geoJsonLayer.GeoJsonCollection;
 import com.google.maps.android.geoJsonLayer.GeoJsonFeature;
 import com.google.maps.android.geoJsonLayer.GeoJsonLineStringStyle;
+import com.google.maps.android.geoJsonLayer.GeoJsonPoint;
 import com.google.maps.android.geoJsonLayer.GeoJsonPointStyle;
 import com.google.maps.android.geoJsonLayer.GeoJsonPolygon;
 import com.google.maps.android.geoJsonLayer.GeoJsonPolygonStyle;
@@ -47,10 +48,13 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             point.setRotation(60);
 
 
+
+
             for (GeoJsonFeature feature: geoJsonCollection.getFeatures()) {
                 feature.setLineStringStyle(line);
                 feature.setPointStyle(point);
                 feature.setPolygonStyle(poly);
+                ((GeoJsonPoint) feature.getGeometry()).
             }
             Log.i("MultiLineString", geoJsonCollection.toString());
         } catch (IOException e) {
