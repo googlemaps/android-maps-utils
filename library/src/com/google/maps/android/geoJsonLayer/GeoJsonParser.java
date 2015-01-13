@@ -43,19 +43,20 @@ public class GeoJsonParser {
     // GeometryCollection geometries array member
     private static final String GEOMETRY_COLLECTION_ARRAY = "geometries";
 
-    //Coordinates for bbox
+    // Coordinates for bbox
     private static final String BOUNDING_BOX = "bbox";
 
-    //Properties
     private static final String PROPERTIES = "properties";
 
-    // Geometry object except for GeometryCollection
+    // Geometry objects except for GeometryCollection
     private static final String GEOJSON_GEOMETRY_OBJECTS_REGEX
             = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
 
     private final JSONObject mGeoJsonFile;
 
     private final ArrayList<GeoJsonFeature> mGeoJsonFeatures;
+
+    private ArrayList<LatLng> mBoundingBox;
 
 
     /**
@@ -66,6 +67,8 @@ public class GeoJsonParser {
     public GeoJsonParser(JSONObject geoJsonFile) {
         mGeoJsonFile = geoJsonFile;
         mGeoJsonFeatures = new ArrayList<GeoJsonFeature>();
+        // TODO: set this somewhere
+        mBoundingBox = null;
     }
 
     /**
@@ -81,7 +84,7 @@ public class GeoJsonParser {
             mGeoJsonFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
         } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
                 .equals(GEOMETRY_COLLECTION)) {
-            mGeoJsonFeatures.add(geometrytoFeature(parseGeometry(mGeoJsonFile)));
+            mGeoJsonFeatures.add(geometryToFeature(parseGeometry(mGeoJsonFile)));
         }
     }
 
@@ -94,6 +97,9 @@ public class GeoJsonParser {
     private ArrayList<GeoJsonFeature> parseFeatureCollection(JSONObject geoJsonFeatureCollection)
             throws JSONException {
         JSONArray geoJsonFeatures = geoJsonFeatureCollection.getJSONArray(FEATURE_COLLECTION_ARRAY);
+        if (geoJsonFeatureCollection.has(BOUNDING_BOX)) {
+            mBoundingBox = parseBoundingBox(geoJsonFeatureCollection.getJSONArray(BOUNDING_BOX));
+        }
 
         ArrayList<GeoJsonFeature> features = new ArrayList<GeoJsonFeature>();
         for (int i = 0; i < geoJsonFeatures.length(); i++) {
@@ -108,8 +114,7 @@ public class GeoJsonParser {
     /**
      * Parses a single GeoJSON feature which contains a geometry and properties member both of
      * which can be null and optionally an id. If the geometry member has a null value, we do not
-     * add the
-     * geometry to the array.
+     * add the geometry to the array.
      *
      * @param geoJsonFeature GeoJSON feature to parse
      * @return Feature object parsed from the given GeoJSON feature
@@ -142,11 +147,23 @@ public class GeoJsonParser {
         return new GeoJsonFeature(geometry, id, parseProperties(properties), boundingBox);
     }
 
+    /**
+     * Parses a bounding box given as a JSONArray of 4 elements in the order of lowest values for
+     * all axes followed by highest values. Axes order of a bounding box follows the axes order of
+     * geometries.
+     *
+     * @param coordinates array of 4 coordinates
+     * @return array containing 2 LatLngs where the first element is the lowest values and the
+     * second element is the highest values
+     * @throws JSONException if the bounding box could not be parsed
+     */
     private ArrayList<LatLng> parseBoundingBox(JSONArray coordinates) throws JSONException {
-        ArrayList<LatLng> points = new ArrayList<LatLng>();
-        points.add((new LatLng(coordinates.getDouble(1), coordinates.getDouble(0))));
-        points.add((new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
-        return points;
+        ArrayList<LatLng> boundingBox = new ArrayList<LatLng>();
+        // Lowest values for all axes
+        boundingBox.add((new LatLng(coordinates.getDouble(1), coordinates.getDouble(0))));
+        // Highest value for all axes
+        boundingBox.add((new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
+        return boundingBox;
     }
 
 
@@ -179,7 +196,7 @@ public class GeoJsonParser {
      * @param GeoJsonGeometry Geometry object to convert into a Feature object
      * @return new Feature object
      */
-    private GeoJsonFeature geometrytoFeature(GeoJsonGeometry GeoJsonGeometry) {
+    private GeoJsonFeature geometryToFeature(GeoJsonGeometry GeoJsonGeometry) {
         return new GeoJsonFeature(GeoJsonGeometry, null, null, null);
     }
 
@@ -383,6 +400,17 @@ public class GeoJsonParser {
      */
     public ArrayList<GeoJsonFeature> getFeatures() {
         return mGeoJsonFeatures;
+    }
+
+    /**
+     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
+     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
+     * FeatureCollection then null will be returned.
+     *
+     * @return array containing bounding box of FeatureCollection, null if no bounding box
+     */
+    public ArrayList<LatLng> getBoundingBox() {
+        return mBoundingBox;
     }
 
 }

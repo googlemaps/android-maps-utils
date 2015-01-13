@@ -1,6 +1,7 @@
 package com.google.maps.android.geoJsonLayer;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -30,6 +32,8 @@ public class GeoJsonLayer {
 
     private boolean mGeoJsonDataOnMap;
 
+    private ArrayList<LatLng> mBoundingBox;
+
     private JSONObject mGeoJsonFile;
 
     private GeoJsonRenderer mRenderer;
@@ -46,6 +50,7 @@ public class GeoJsonLayer {
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mGeoJsonDataOnMap = false;
+        mBoundingBox = null;
         mGeoJsonFile = geoJsonObject;
         mRenderer = new GeoJsonRenderer(mFeatures, map);
     }
@@ -66,6 +71,7 @@ public class GeoJsonLayer {
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mGeoJsonDataOnMap = false;
+        mBoundingBox = null;
         InputStream stream = context.getResources().openRawResource(resourceId);
         mGeoJsonFile = createJsonFileObject(stream);
         mRenderer = new GeoJsonRenderer(mFeatures, map);
@@ -151,6 +157,9 @@ public class GeoJsonLayer {
             GeoJsonParser parser = new GeoJsonParser(mGeoJsonFile);
             parser.parseGeoJson();
 
+            // Assign GeoJSON bounding box for FeatureCollection
+            mBoundingBox = parser.getBoundingBox();
+
             for (GeoJsonFeature geoJsonFeature : parser.getFeatures()) {
                 geoJsonFeature.addObserver(mRenderer);
                 mFeatures.put(geoJsonFeature, null);
@@ -204,7 +213,8 @@ public class GeoJsonLayer {
      * Sets the default style for the LineString objects. Overrides all current styles on
      * LineString objects.
      *
-     * @param geoJsonLineStringStyle to set as default style, this is applied to LineStrings as they
+     * @param geoJsonLineStringStyle to set as default style, this is applied to LineStrings as
+     *                               they
      *                               are
      *                               imported from the GeoJSON file
      */
@@ -238,6 +248,17 @@ public class GeoJsonLayer {
             geoJsonFeature.setPolygonStyle(geoJsonPolygonStyle);
         }
         mRenderer.setFeatures(mFeatures);
+    }
+
+    /**
+     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
+     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
+     * FeatureCollection then null will be returned.
+     *
+     * @return array containing bounding box of FeatureCollection, null if no bounding box
+     */
+    public ArrayList<LatLng> getBoundingBox() {
+        return mBoundingBox;
     }
 
     @Override

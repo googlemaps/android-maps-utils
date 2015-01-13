@@ -9,7 +9,8 @@ import java.util.Observable;
 /**
  * Created by juliawong on 12/29/14.
  *
- * A feature has a geometry, id and set of properties. Styles are also stored in this class.
+ * A feature has a geometry, bounding box, id and set of properties. Styles are also stored in this
+ * class.
  */
 public class GeoJsonFeature extends Observable {
 
@@ -134,14 +135,20 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * @return boolean value to determine if this feature contains a geometry object
+     * Checks if the geometry is assigned
+     *
+     * @return true if feature contains geometry object, false if geometry is currently null
      */
     public boolean hasGeometry() {
         return (mGeoJsonGeometry != null);
     }
 
     /**
-     * @return boolean value to determine if this feature contains a geometry object
+     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
+     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
+     * FeatureCollection then null will be returned.
+     *
+     * @return array containing bounding box of FeatureCollection, null if no bounding box
      */
     public ArrayList<LatLng> getBoundingBox() {
         return mBoundingBox;

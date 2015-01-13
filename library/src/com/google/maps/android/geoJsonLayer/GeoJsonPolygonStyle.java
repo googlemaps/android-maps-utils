@@ -6,8 +6,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
  * Created by juliawong on 12/29/14.
  *
  * A class that allows for Polygon objects to be styled and for these styles to be translated into
- * a
- * PolyognOptions object
+ * a PolygonOptions object
  */
 public class GeoJsonPolygonStyle implements GeoJsonStyle {
 

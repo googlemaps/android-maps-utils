@@ -124,7 +124,7 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
     /**
      * Gets a new PolylineOptions object
      *
-     * @return new PolylineOptons object
+     * @return new PolylineOptions object
      */
     public PolylineOptions getPolylineOptions() {
         PolylineOptions polylineOptions = new PolylineOptions();
