@@ -14,13 +14,13 @@ import java.util.Observable;
  */
 public class GeoJsonFeature extends Observable {
 
-    private GeoJsonGeometry mGeoJsonGeometry;
-
     private final String mId;
 
     private final ArrayList<LatLng> mBoundingBox;
 
     private final HashMap<String, String> mProperties;
+
+    private GeoJsonGeometry mGeoJsonGeometry;
 
     private GeoJsonPointStyle mGeoJsonPointStyle;
 

@@ -62,12 +62,13 @@ public class GeoJsonRenderer implements Observer {
      */
     public void addFeature(GeoJsonFeature feature) {
         if (feature.hasGeometry()) {
-            addFeatureToMap(feature, feature.getGeometry());
+            mFeatures.put(feature, addFeatureToMap(feature, feature.getGeometry()));
         }
     }
 
     /**
-     * Helper function to remove all GeoJson objects from the current map as well as from the hashmap
+     * Helper function to remove all GeoJson objects from the current map as well as from the
+     * hashmap
      */
     public void removeLayerFromMap() {
         for (GeoJsonFeature feature : mFeatures.keySet()) {
@@ -75,6 +76,11 @@ public class GeoJsonRenderer implements Observer {
         }
     }
 
+    /**
+     * Removes a GeoJsonFeature from the map
+     *
+     * @param feature feature to remove from map
+     */
     public void removeFeature(GeoJsonFeature feature) {
         removeFromMap(mFeatures.get(feature));
     }
@@ -83,70 +89,32 @@ public class GeoJsonRenderer implements Observer {
      * Adds all objects currently stored in the mFeature array, onto the map
      *
      * @param geoJsonFeature  feature to get geometry style
-     * @param geoJsonGeometry Geometry to add to the map
+     * @param geoJsonGeometry geometry to add to the map
      */
-    private void addFeatureToMap(GeoJsonFeature geoJsonFeature, GeoJsonGeometry geoJsonGeometry) {
+    private Object addFeatureToMap(GeoJsonFeature geoJsonFeature, GeoJsonGeometry geoJsonGeometry) {
         String geometryType = geoJsonGeometry.getType();
         if (geometryType.equals("Point")) {
-            mFeatures.put(geoJsonFeature,
-                    addPointToMap(geoJsonFeature.getPointStyle(), (GeoJsonPoint) geoJsonGeometry));
+            return addPointToMap(geoJsonFeature.getPointStyle(), (GeoJsonPoint) geoJsonGeometry);
         } else if (geometryType.equals("LineString")) {
-            mFeatures.put(geoJsonFeature, addLineStringToMap(geoJsonFeature.getLineStringStyle(),
-                    (GeoJsonLineString) geoJsonGeometry));
+            return addLineStringToMap(geoJsonFeature.getLineStringStyle(),
+                    (GeoJsonLineString) geoJsonGeometry);
         } else if (geometryType.equals("Polygon")) {
-            mFeatures.put(geoJsonFeature, addPolygonToMap(geoJsonFeature.getPolygonStyle(),
-                    (GeoJsonPolygon) geoJsonGeometry));
+            return addPolygonToMap(geoJsonFeature.getPolygonStyle(),
+                    (GeoJsonPolygon) geoJsonGeometry);
         } else if (geometryType.equals("MultiPoint")) {
-            mFeatures.put(geoJsonFeature, addMultiPointToMap(geoJsonFeature));
+            return addMultiPointToMap(geoJsonFeature.getPointStyle(),
+                    (GeoJsonMultiPoint) geoJsonGeometry);
         } else if (geometryType.equals("MultiLineString")) {
-            mFeatures.put(geoJsonFeature, addMultiLineStringToMap(geoJsonFeature));
+            return addMultiLineStringToMap(geoJsonFeature.getLineStringStyle(),
+                    ((GeoJsonMultiLineString) geoJsonGeometry));
         } else if (geometryType.equals("MultiPolygon")) {
-            mFeatures.put(geoJsonFeature, addMultiPolygonToMap(geoJsonFeature));
+            return addMultiPolygonToMap(geoJsonFeature.getPolygonStyle(),
+                    ((GeoJsonMultiPolygon) geoJsonGeometry));
         } else if (geometryType.equals("GeometryCollection")) {
-            GeoJsonGeometryCollection geometryCollection
-                    = ((GeoJsonGeometryCollection) geoJsonFeature.getGeometry());
-            ArrayList<Object> geometries = new ArrayList<Object>();
-            mFeatures.put(geoJsonFeature,
-                    addGeometryCollectionToMap(geometryCollection, geometries, geoJsonFeature));
+            return addGeometryCollectionToMap(geoJsonFeature,
+                    ((GeoJsonGeometryCollection) geoJsonGeometry).getGeometries());
         }
-    }
-
-    /**
-     * Goes through a geometry collection and retrieves geometries to put to the map. If another
-     * geometry collection is detected, then it recursively goes through the list of geometries
-     * until no more geometry collections are found
-     *
-     * @param geoJsonGeometry geometry collection we wish to retrieve geometry objects from
-     * @param geometries      an arraylist of geometries that have been added to the map
-     * @param feature         class to retrieves styles from
-     * @return an arraylist of geometries which have been added to the map
-     */
-    private ArrayList<Object> addGeometryCollectionToMap(GeoJsonGeometryCollection geoJsonGeometry,
-            ArrayList<Object> geometries, GeoJsonFeature feature) {
-        for (GeoJsonGeometry geometry : geoJsonGeometry.getGeometries()) {
-            if (geometry.getType().equals("GeometryCollection")) {
-                addGeometryCollectionToMap((GeoJsonGeometryCollection) geometry, geometries,
-                        feature);
-            } else {
-                String geometryType = geometry.getType();
-                if (geometryType.equals("Point")) {
-                    geometries.add(addPointToMap(feature.getPointStyle(), (GeoJsonPoint) geometry));
-                } else if (geometryType.equals("LineString")) {
-                    geometries.add(addLineStringToMap(feature.getLineStringStyle(),
-                            (GeoJsonLineString) geometry));
-                } else if (geometryType.equals("Polygon")) {
-                    geometries.add(addPolygonToMap(feature.getPolygonStyle(),
-                            (GeoJsonPolygon) geometry));
-                } else if (geometryType.equals("MultiPoint")) {
-                    geometries.add(addMultiPointToMap(feature));
-                } else if (geometryType.equals("MultiLineString")) {
-                    geometries.add(addMultiLineStringToMap(feature));
-                } else if (geometryType.equals("MultiPolygon")) {
-                    geometries.add(addMultiPolygonToMap(feature));
-                }
-            }
-        }
-        return geometries;
+        return null;
     }
 
     /**
@@ -165,14 +133,15 @@ public class GeoJsonRenderer implements Observer {
     /**
      * Adds all Points in MultiPoint to the map as multiple Markers
      *
-     * @param geoJsonFeature contains MultiPoint and relevant style properties
+     * @param geoJsonPointStyle contains relevant styling properties for the MultiPoint
+     * @param geoJsonMultiPoint contains an array of Points
      * @return array of Markers that have been added to the map
      */
-    private ArrayList<Marker> addMultiPointToMap(GeoJsonFeature geoJsonFeature) {
+    private ArrayList<Marker> addMultiPointToMap(GeoJsonPointStyle geoJsonPointStyle,
+            GeoJsonMultiPoint geoJsonMultiPoint) {
         ArrayList<Marker> markers = new ArrayList<Marker>();
-        for (GeoJsonPoint geoJsonPoint : ((GeoJsonMultiPoint) geoJsonFeature.getGeometry())
-                .getPoints()) {
-            markers.add(addPointToMap(geoJsonFeature.getPointStyle(), geoJsonPoint));
+        for (GeoJsonPoint geoJsonPoint : geoJsonMultiPoint.getPoints()) {
+            markers.add(addPointToMap(geoJsonPointStyle, geoJsonPoint));
         }
         return markers;
     }
@@ -195,15 +164,16 @@ public class GeoJsonRenderer implements Observer {
     /**
      * Adds all LineStrings in the MultiLineString to the map as multiple Polylines
      *
-     * @param geoJsonFeature contains MultiLineString and relevant style properties
+     * @param geoJsonLineStringStyle contains relevant styling properties for the MultiLineString
+     * @param geoJsonMultiLineString contains an array of LineStrings
      * @return array of Polylines that have been added to the map
      */
-    private ArrayList<Polyline> addMultiLineStringToMap(GeoJsonFeature geoJsonFeature) {
+    private ArrayList<Polyline> addMultiLineStringToMap(
+            GeoJsonLineStringStyle geoJsonLineStringStyle,
+            GeoJsonMultiLineString geoJsonMultiLineString) {
         ArrayList<Polyline> polylines = new ArrayList<Polyline>();
-        for (GeoJsonLineString geoJsonLineString : ((GeoJsonMultiLineString) geoJsonFeature
-                .getGeometry()).getLineStrings()) {
-            polylines.add(addLineStringToMap(geoJsonFeature.getLineStringStyle(),
-                    geoJsonLineString));
+        for (GeoJsonLineString geoJsonLineString : geoJsonMultiLineString.getLineStrings()) {
+            polylines.add(addLineStringToMap(geoJsonLineStringStyle, geoJsonLineString));
         }
         return polylines;
     }
@@ -227,20 +197,38 @@ public class GeoJsonRenderer implements Observer {
         return mMap.addPolygon(polygonOptions);
     }
 
-
     /**
      * Adds all GeoJSON Polygons in the MultiPolygon to the map as multiple Polygons
      *
-     * @param geoJsonFeature contains MultiPolygon and relevant style properties
+     * @param geoJsonPolygonStyle contains relevant styling properties for the MultiPolygon
+     * @param geoJsonMultiPolygon contains an array of Polygons
      * @return array of Polygons that have been added to the map
      */
-    private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonFeature geoJsonFeature) {
+    private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle geoJsonPolygonStyle,
+            GeoJsonMultiPolygon geoJsonMultiPolygon) {
         ArrayList<Polygon> polygons = new ArrayList<Polygon>();
-        for (GeoJsonPolygon geoJsonPolygon : ((GeoJsonMultiPolygon) geoJsonFeature.getGeometry())
-                .getPolygons()) {
-            polygons.add(addPolygonToMap(geoJsonFeature.getPolygonStyle(), geoJsonPolygon));
+        for (GeoJsonPolygon geoJsonPolygon : geoJsonMultiPolygon.getPolygons()) {
+            polygons.add(addPolygonToMap(geoJsonPolygonStyle, geoJsonPolygon));
         }
         return polygons;
+    }
+
+
+    /**
+     * Adds all GeoJsonGeometry objects stored in the GeometryCollection, onto the map. Supports
+     * recursive GeometryCollections.
+     *
+     * @param geoJsonFeature    contains relevant styling properties for the GeometryCollection
+     * @param geoJsonGeometries contains an array of GeoJsonGeometry objects
+     * @return array of Marker, Polyline and/or Polygons that have been added to the map
+     */
+    private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature geoJsonFeature,
+            ArrayList<GeoJsonGeometry> geoJsonGeometries) {
+        ArrayList<Object> geometries = new ArrayList<Object>();
+        for (GeoJsonGeometry geometry : geoJsonGeometries) {
+            geometries.add(addFeatureToMap(geoJsonFeature, geometry));
+        }
+        return geometries;
     }
 
     /**
@@ -255,7 +243,7 @@ public class GeoJsonRenderer implements Observer {
             ((Polyline) mapObject).remove();
         } else if (mapObject instanceof Polygon) {
             ((Polygon) mapObject).remove();
-        }  else if (mapObject instanceof ArrayList) {
+        } else if (mapObject instanceof ArrayList) {
             for (Object mapObjectElement : (ArrayList<Object>) mapObject) {
                 removeFromMap(mapObjectElement);
             }

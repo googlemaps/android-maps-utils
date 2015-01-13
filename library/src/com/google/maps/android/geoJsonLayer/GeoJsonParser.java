@@ -88,6 +88,26 @@ public class GeoJsonParser {
     }
 
     /**
+     * Gets the array of Feature objects
+     *
+     * @return array of Features
+     */
+    public ArrayList<GeoJsonFeature> getFeatures() {
+        return mGeoJsonFeatures;
+    }
+
+    /**
+     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
+     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
+     * FeatureCollection then null will be returned.
+     *
+     * @return array containing bounding box of FeatureCollection, null if no bounding box
+     */
+    public ArrayList<LatLng> getBoundingBox() {
+        return mBoundingBox;
+    }
+
+    /**
      * Parses a GeoJSON feature collection which contains an array of features
      *
      * @return array of Feature objects parsed from the given array
@@ -146,6 +166,7 @@ public class GeoJsonParser {
         return new GeoJsonFeature(geometry, id, parseProperties(properties), boundingBox);
     }
 
+
     /**
      * Parses a bounding box given as a JSONArray of 4 elements in the order of lowest values for
      * all axes followed by highest values. Axes order of a bounding box follows the axes order of
@@ -164,7 +185,6 @@ public class GeoJsonParser {
         boundingBox.add((new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
         return boundingBox;
     }
-
 
     /**
      * Parses a single GeoJSON geometry object containing a coordinates or geometries array if it
@@ -390,26 +410,6 @@ public class GeoJsonParser {
             coordinatesArray.add(parseCoordinatesArray(coordinates.getJSONArray(i)));
         }
         return coordinatesArray;
-    }
-
-    /**
-     * Gets the array of Feature objects
-     *
-     * @return array of Features
-     */
-    public ArrayList<GeoJsonFeature> getFeatures() {
-        return mGeoJsonFeatures;
-    }
-
-    /**
-     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
-     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
-     * FeatureCollection then null will be returned.
-     *
-     * @return array containing bounding box of FeatureCollection, null if no bounding box
-     */
-    public ArrayList<LatLng> getBoundingBox() {
-        return mBoundingBox;
     }
 
 }
