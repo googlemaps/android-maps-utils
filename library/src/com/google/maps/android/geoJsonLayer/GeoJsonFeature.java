@@ -14,7 +14,7 @@ import java.util.Observable;
  */
 public class GeoJsonFeature extends Observable {
 
-    private final GeoJsonGeometry mGeoJsonGeometry;
+    private GeoJsonGeometry mGeoJsonGeometry;
 
     private final String mId;
 
@@ -123,6 +123,12 @@ public class GeoJsonFeature extends Observable {
      */
     public GeoJsonGeometry getGeometry() {
         return mGeoJsonGeometry;
+    }
+
+    public void setGeometry(GeoJsonGeometry geometry) {
+        mGeoJsonGeometry = geometry;
+        setChanged();
+        notifyObservers();
     }
 
     /**

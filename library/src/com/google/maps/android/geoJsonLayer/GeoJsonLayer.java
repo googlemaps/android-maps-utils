@@ -117,7 +117,7 @@ public class GeoJsonLayer {
      */
     public GeoJsonFeature getFeatureById(String id) {
         for (GeoJsonFeature feature : mFeatures.keySet()) {
-            if (feature.getId().equals(id)) {
+            if (feature.getId() != null && feature.getId().equals(id)) {
                 return feature;
             }
         }
@@ -125,12 +125,25 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Removes a feature from the collection
+     * Adds a feature to the layer
      *
-     * @param feature to remove
+     * @param feature feature to add
+     */
+    public void addFeature(GeoJsonFeature feature) {
+        mFeatures.put(feature, null);
+        feature.addObserver(mRenderer);
+        mRenderer.addFeature(feature);
+    }
+
+    /**
+     * Removes a feature from the layer
+     *
+     * @param feature feature to remove
      */
     public void removeFeature(GeoJsonFeature feature) {
+        mRenderer.removeFeature(feature);
         mFeatures.remove(feature);
+        feature.deleteObserver(mRenderer);
     }
 
     /**
@@ -165,14 +178,17 @@ public class GeoJsonLayer {
                 mFeatures.put(geoJsonFeature, null);
             }
 
-            mRenderer.setFeatures(mFeatures);
             mRenderer.addLayerToMap();
             mGeoJsonDataOnMap = true;
         }
     }
 
     public void removeGeoJsonData() {
+        for (GeoJsonFeature feature : mFeatures.keySet()) {
+            feature.deleteObserver(mRenderer);
+        }
         mRenderer.removeLayerFromMap();
+        mFeatures.clear();
         mGeoJsonDataOnMap = false;
     }
 
@@ -197,7 +213,6 @@ public class GeoJsonLayer {
         for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
             geoJsonFeature.setPointStyle(geoJsonPointStyle);
         }
-        mRenderer.setFeatures(mFeatures);
     }
 
     /**
@@ -214,16 +229,13 @@ public class GeoJsonLayer {
      * LineString objects.
      *
      * @param geoJsonLineStringStyle to set as default style, this is applied to LineStrings as
-     *                               they
-     *                               are
-     *                               imported from the GeoJSON file
+     *                               they are imported from the GeoJSON file
      */
     public void setDefaultLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mDefaultLineStringStyle = geoJsonLineStringStyle;
         for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
             geoJsonFeature.setLineStringStyle(geoJsonLineStringStyle);
         }
-        mRenderer.setFeatures(mFeatures);
     }
 
     /**
@@ -247,7 +259,6 @@ public class GeoJsonLayer {
         for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
             geoJsonFeature.setPolygonStyle(geoJsonPolygonStyle);
         }
-        mRenderer.setFeatures(mFeatures);
     }
 
     /**

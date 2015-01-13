@@ -67,7 +67,6 @@ public class GeoJsonParser {
     public GeoJsonParser(JSONObject geoJsonFile) {
         mGeoJsonFile = geoJsonFile;
         mGeoJsonFeatures = new ArrayList<GeoJsonFeature>();
-        // TODO: set this somewhere
         mBoundingBox = null;
     }
 
