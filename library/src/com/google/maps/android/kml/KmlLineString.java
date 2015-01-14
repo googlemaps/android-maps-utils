@@ -4,34 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-
-/*
-          .------.
-         ( #-....'`\
-          \ #      |
-         _ )"====="| _
-        (_`"======="`_)
-         /`"""""""""`\
-        |         o _o\
-        |          (_>|
-         \       '.___/--#
-          '.     ;-._:'\
-            )`===|  <)_/  __
-      .---""`====`--'\__.'  `|
-     /              ()\     /
-     \___..--'         \_.-'
-        |            () |
-        ;               ;
-         \           ()/
-          \       '.  /
-       _.'`\        `;
-      (     `\        \_
-       \    .-`\        `\
-        \___)   `.______.'
-
-    http://www.angelfire.com/ca/mathcool/christmas.html
- */
-
 /**
  * Represents a series of coordinates in a placemark
  */

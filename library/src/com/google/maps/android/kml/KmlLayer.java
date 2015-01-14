@@ -18,6 +18,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 
@@ -28,13 +29,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
 public class KmlLayer {
 
-    private final HashMap<KmlPlacemark, Object> mPlacemarks;
+    private HashMap<KMLFeature, Object> mPlacemarks;
 
     private final GoogleMap mMap;
 
@@ -43,6 +45,8 @@ public class KmlLayer {
     private final ArrayList<String> mMarkerIconUrls;
 
     private HashMap<String, String> mStyleMaps;
+
+    private Context mContext;
 
 
     /**
@@ -71,12 +75,12 @@ public class KmlLayer {
             throws XmlPullParserException {
         mMap = map;
         mStyles = new HashMap<String, KmlStyle>();
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mMarkerIconCache = new LruCache<String, Bitmap>(100);
         mStyleMaps = new HashMap<String, String>();
         mMarkerIconUrls = new ArrayList<String>();
         InputStream stream = context.getResources().openRawResource(resourceId);
         mParser = createXmlParser(stream);
+        mContext = context;
 
     }
 
@@ -87,15 +91,16 @@ public class KmlLayer {
      * @param stream InputStream containing KML file
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, InputStream stream)
+    public KmlLayer(GoogleMap map, InputStream stream, Context context)
             throws XmlPullParserException {
         mMap = map;
         mStyles = new HashMap<String, KmlStyle>();
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        mPlacemarks = null;
         mStyleMaps = new HashMap<String, String>();
         mMarkerIconCache = new LruCache<String, Bitmap>(100);
         mMarkerIconUrls = new ArrayList<String>();
         mParser = createXmlParser(stream);
+        mContext = context;
     }
 
     /**
@@ -113,6 +118,7 @@ public class KmlLayer {
         return parser;
     }
 
+
     /**
      * Adds the KML data to the map
      *
@@ -122,14 +128,16 @@ public class KmlLayer {
     public void addKmlData() throws IOException, XmlPullParserException {
         KmlParser parser = new KmlParser(mParser);
         parser.parseKml();
+        initializeFeatureLayer(parser);
+        assignStyleMapStyles();
+        addContainerLayer(parser);
+        addKmlLayer();
+    }
+
+    public void initializeFeatureLayer(KmlParser parser) {
         mStyles = parser.getStyles();
         mStyleMaps = parser.getStyleMaps();
-        // Store parsed placemarks
-        for (KmlPlacemark placemark : parser.getPlacemarks()) {
-            mPlacemarks.put(placemark, null);
-        }
-        assignStyleMapStyles();
-        addKmlLayer();
+        mPlacemarks = parser.getPlacemarks();
     }
 
     /**
@@ -167,7 +175,7 @@ public class KmlLayer {
      *
      * @return iterator of KmlPlacemark objects
      */
-    public Iterator<KmlPlacemark> getPlacemarks() {
+    public Iterator<KMLFeature> getPlacemarks() {
         return mPlacemarks.keySet().iterator();
     }
 
@@ -175,11 +183,11 @@ public class KmlLayer {
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
      */
     private void addKmlLayer() {
-        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
+        for (KMLFeature placemark : mPlacemarks.keySet()) {
             KmlStyle style = null;
-            if (mStyles.get(placemark.getStyle()) != null) {
+            if (mStyles.get(placemark.getStyleID()) != null) {
                 // Assign style if found, else remains null
-                style = mStyles.get(placemark.getStyle());
+                style = mStyles.get(placemark.getStyleID());
             }
             mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
         }
@@ -187,6 +195,20 @@ public class KmlLayer {
             // If there are marker icon URLs stored, download and assign to markers
             downloadMarkerIcons();
         }
+    }
+
+    private void addContainerLayer(KmlParser parser) {
+        KmlStyle style = null;
+        for (KmlContainer container : parser.getContainers()) {
+            HashMap<KMLFeature, Object> placemarks = container.getPlacemarks();
+            for (KMLFeature placemark : placemarks.keySet()) {
+                System.out.println(placemarks.keySet().size());
+                style = container.getStyle(placemark.getStyleID());
+
+                container.addPlacemarks(placemark, addToMap(placemark.getGeometry(), style));
+            }
+        }
+        parser.getContainers();
     }
 
     /**
@@ -207,16 +229,33 @@ public class KmlLayer {
      * @param iconUrl icon url of icon to add to markers
      */
     private void addIconToMarkers(String iconUrl) {
-        BitmapDescriptor markerIcon = BitmapDescriptorFactory
-                .fromBitmap(mMarkerIconCache.get(iconUrl));
-        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
+        for (KMLFeature placemark : mPlacemarks.keySet()) {
             // Check if the style URL is the same and the type of geometry is a point
-            if (mStyles.get(placemark.getStyle()) != null && mStyles.get(placemark.getStyle())
+            if (mStyles.get(placemark.getStyleID()) != null && mStyles.get(placemark.getStyleID())
                     .getIconUrl().equals(iconUrl) && placemark.getGeometry().getType()
                     .equals("Point")) {
-                ((Marker) mPlacemarks.get(placemark)).setIcon(markerIcon);
+                Bitmap iconBitmap = mMarkerIconCache.get(iconUrl);
+                Double scale = mStyles.get(placemark.getStyleID()).getIconScale();
+                ((Marker) mPlacemarks.get(placemark)).setIcon(scaleIconToMarkers(iconBitmap, scale));
             }
         }
+    }
+
+    /**
+     * Create a new bitmap which takes the size of the original bitmap and applies a scale as defined
+     * in the style
+     * @param unscaledIconBitmap Original bitmap image to convert to size
+     * @param scale The scale we wish to apply to the original bitmap image
+     * @return A BitMapDescriptor of the icon image
+     */
+    private BitmapDescriptor scaleIconToMarkers(Bitmap unscaledIconBitmap, Double scale) {
+        Integer width =(int) (unscaledIconBitmap.getWidth() * scale);
+        Integer height =(int) (unscaledIconBitmap.getHeight() * scale);
+        Bitmap scaledIconBitmap = Bitmap.createScaledBitmap(unscaledIconBitmap,
+                width, height, false);
+        BitmapDescriptor markerIcon = BitmapDescriptorFactory
+                .fromBitmap(scaledIconBitmap);
+        return markerIcon;
     }
 
     /**
@@ -249,20 +288,60 @@ public class KmlLayer {
      * @return Marker object
      */
     private Marker addPointToMap(KmlPoint point, KmlStyle style) {
-        MarkerOptions markerOptions = style.getMarkerOptions();
+        MarkerOptions markerOptions = new MarkerOptions();
+        if (style != null) {
+           markerOptions = style.getMarkerOptions();
+        }
         markerOptions.position((LatLng) point.getCoordinates());
         Marker marker = mMap.addMarker(markerOptions);
-        // Check if the marker icon needs to be downloaded
-        if (style.getIconUrl() != null) {
-            if (mMarkerIconCache.get(style.getIconUrl()) != null) {
-                // Bitmap stored in cache
-                Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-            } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
-                mMarkerIconUrls.add(style.getIconUrl());
-            }
+        if (markerOptions.getTitle() == null) {
+            setMarkerInfoWindow(style, marker);
+        } if (style != null && style.getIconUrl() != null) {
+            setMarkerIcon(style, marker);
         }
         return marker;
+    }
+
+    /**
+     * Sets a marker info window if no <text> tag was found in the KML document. This method sets
+     * the marker title as the text found in the <name> start tag and the snippet as <description>
+     * @param style Style to apply
+     * @param marker
+     */
+    private void setMarkerInfoWindow(KmlStyle style, Marker marker) {
+        for (KMLFeature placemark : mPlacemarks.keySet()) {
+            if (mStyles.get(placemark.getStyleID()).equals(style)) {
+                Boolean hasName = placemark.getProperty("name") != null;
+                Boolean hasDescription = placemark.getProperty("description") != null;
+                if (style.getBalloonOptions().containsKey("text")) {
+                    marker.setTitle(style.getBalloonOptions().get("text"));
+                } else if (hasName && hasDescription) {
+                    marker.setTitle(placemark.getProperty("name"));
+                    marker.setSnippet(placemark.getProperty("description"));
+                } else if (hasName && !hasDescription) {
+                    marker.setTitle(placemark.getProperty("name"));
+                } else if (hasDescription && !hasName) {
+                    marker.setTitle(placemark.getProperty("description"));
+                } else {
+                    //TODO: Figure if we should throw an illegal argument exception?
+                }
+            }
+        }
+    }
+
+    /**
+     * Sets the marker icon if there was a url that was found
+     * @param style The style which we retreieve the icon url from
+     * @param marker The marker which is displaying the icon
+     */
+    private void setMarkerIcon (KmlStyle style, Marker marker) {
+        if (mMarkerIconCache.get(style.getIconUrl()) != null) {
+            // Bitmap stored in cache
+            Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
+            mMarkerIconUrls.add(style.getIconUrl());
+        }
     }
 
     /**
@@ -289,10 +368,31 @@ public class KmlLayer {
             KmlStyle style) {
         PolygonOptions polygonOptions = style.getPolygonOptions();
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
+
         for (ArrayList<LatLng> innerBoundary : polygon.getInnerBoundaryCoordinates()) {
             polygonOptions.addHole(innerBoundary);
         }
-        return mMap.addPolygon(polygonOptions);
+        Polygon mapPolygon = mMap.addPolygon(polygonOptions);
+
+        if (style.getColorMode("Polygon") == 1) {
+            int randomColor = computeRandomColor(mapPolygon.getFillColor());
+
+            mapPolygon.setFillColor(computeRandomColor(mapPolygon.getFillColor()));
+        }
+
+        return mapPolygon;
+    }
+
+    private int computeRandomColor (int color) {
+        Random random = new Random();
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        if (red != 0) red = random.nextInt(red);
+        if (blue != 0) blue = random.nextInt(blue);
+        if (green != 0) green = random.nextInt(green);
+        int randomColor = Color.rgb(red,green,blue);
+        return randomColor;
     }
 
     /**

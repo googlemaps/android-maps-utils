@@ -12,7 +12,7 @@ import java.util.HashMap;
 /**
  * Created by lavenderch on 1/12/15.
  */
-public class KmlPlacemarkParser {
+public class KmlFeatureParser {
 
 
     private static final String GEOMETRY_TAG_REGEX = "Point|LineString|Polygon|MultiGeometry";
@@ -25,12 +25,12 @@ public class KmlPlacemarkParser {
 
     private static final String STYLE_TAG = "styleUrl";
 
-    private final ArrayList<KmlPlacemark> mPlacemarks;
+    private final HashMap<KMLFeature, Object> mPlacemarks;
 
     private XmlPullParser mParser;
 
-    public KmlPlacemarkParser(XmlPullParser parser) {
-        mPlacemarks = new ArrayList<KmlPlacemark>();
+    public KmlFeatureParser(XmlPullParser parser) {
+        mPlacemarks = new HashMap<KMLFeature, Object>();
         mParser = parser;
     }
 
@@ -48,10 +48,9 @@ public class KmlPlacemarkParser {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(STYLE_TAG)) {
                     style = mParser.nextText();
-                } else if (mParser.getName().matches(GEOMETRY_TAG_REGEX)) {
+                } if (mParser.getName().matches(GEOMETRY_TAG_REGEX)) {
                     geometry = createGeometry(mParser.getName());
-                } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
-                } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
+                }  if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
                     properties.put(mParser.getName(), mParser.nextText());
                 }
             }
@@ -59,7 +58,7 @@ public class KmlPlacemarkParser {
         }
         // If there is no geometry associated with the Placemark then we do not add it
         if (geometry != null) {
-            mPlacemarks.add(new KmlPlacemark(geometry, style, properties));
+            mPlacemarks.put(new KMLFeature(geometry, style, properties), null);
         }
     }
 
@@ -213,7 +212,7 @@ public class KmlPlacemarkParser {
      *
      * @return array of KmlPlacemark objects
      */
-    public ArrayList<KmlPlacemark> getPlacemarks() {
+    public HashMap<KMLFeature, Object> getPlacemarks() {
         return mPlacemarks;
     }
 

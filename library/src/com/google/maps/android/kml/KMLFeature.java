@@ -1,6 +1,7 @@
 package com.google.maps.android.kml;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by lavenderc on 12/3/14.
@@ -8,7 +9,7 @@ import java.util.HashMap;
  * Represents a placemark which is either a point, linestring, polygon or multigeometry
  * Stores the properties about the placemark including coordinates
  */
-public class KmlPlacemark {
+public class KMLFeature {
 
     private final KmlGeometry mGeometry;
 
@@ -23,7 +24,7 @@ public class KmlPlacemark {
      * @param style      style id to store
      * @param properties properties hashmap to store
      */
-    public KmlPlacemark(KmlGeometry geometry, String style, HashMap<String, String> properties) {
+    public KMLFeature(KmlGeometry geometry, String style, HashMap<String, String> properties) {
         mPlacemarkProperties = new HashMap<String, String>();
         mGeometry = geometry;
         mStyle = style;
@@ -35,7 +36,7 @@ public class KmlPlacemark {
      *
      * @return style id
      */
-    public String getStyle() {
+    public String getStyleID() {
         return mStyle;
     }
 
@@ -44,8 +45,12 @@ public class KmlPlacemark {
      *
      * @return properties hashmap
      */
-    public HashMap<String, String> getProperties() {
-        return mPlacemarkProperties;
+    public Iterator getProperties() {
+        return mPlacemarkProperties.keySet().iterator();
+    }
+
+    public String getProperty(String keyValue) {
+        return mPlacemarkProperties.get(keyValue);
     }
 
     /**

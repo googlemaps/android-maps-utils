@@ -1,7 +1,5 @@
 package com.google.maps.android.kml;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -14,17 +12,21 @@ import java.util.HashMap;
  */
 public class KmlParser {
 
-    private final KmlStyleParser styleParser;
+    private KmlStyleParser styleParser;
 
-    private final KmlPlacemarkParser placemarkParser;
+    private  KmlFeatureParser placemarkParser;
 
-    private final XmlPullParser mParser;
+    private KmlContainerParser containerParser;
+
+    private  XmlPullParser mParser;
 
     private final static String STYLE_START_TAG = "Style";
 
     private final static String STYLE_MAP_START_TAG = "StyleMap";
 
     private final static String PLACEMARK_START_TAG = "Placemark";
+
+    private final static String CONTAINER_START_TAG = "Folder";
 
 
     /**
@@ -34,8 +36,9 @@ public class KmlParser {
      */
     public KmlParser(XmlPullParser parser) {
         mParser = parser;
-        styleParser = new KmlStyleParser(parser);
-        placemarkParser = new KmlPlacemarkParser(parser);
+        styleParser = new KmlStyleParser(mParser);
+        placemarkParser = new KmlFeatureParser(mParser);
+        containerParser= new KmlContainerParser(mParser);
     }
 
     /**
@@ -51,19 +54,27 @@ public class KmlParser {
                     styleParser.createStyleMap();
                 } else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     placemarkParser.createPlacemark();
+                } else if (mParser.getName().equals(CONTAINER_START_TAG)) {
+                    containerParser.createFolder();
                 }
             }
             eventType = mParser.next();
         }
     }
 
+
+
     public HashMap<String, KmlStyle> getStyles() {
         return styleParser.getStyles();
     }
 
-    public ArrayList<KmlPlacemark> getPlacemarks() {
+    public HashMap<KMLFeature, Object> getPlacemarks() {
         return placemarkParser.getPlacemarks();
     }
 
     public  HashMap<String, String> getStyleMaps() { return styleParser.getStyleMaps(); }
+
+    public ArrayList<KmlContainer> getContainers() {
+        return containerParser.getContainers();
+    }
 }
