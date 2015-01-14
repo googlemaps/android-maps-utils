@@ -4,12 +4,10 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A class that allows for Point objects to be styled and for these styles to be translated into a
- * MarkerOptions object
+ * A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated
+ * into a MarkerOptions object
  */
-public class GeoJsonPointStyle implements GeoJsonStyle {
+public class GeoJsonPointStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint";
 
@@ -28,143 +26,142 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      *
      * @return type of geometries this style can be applied to
      */
-    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
 
     /**
-     * Gets the alpha
+     * Gets the alpha of the Point
      *
-     * @return alpha
+     * @return alpha of the Point
      */
     public float getAlpha() {
         return mMarkerOptions.getAlpha();
     }
 
     /**
-     * Sets the alpha
+     * Sets the alpha of the GeoJsonPoint
      *
-     * @param alpha alpha value
+     * @param alpha alpha value of the GeoJsonPoint
      */
     public void setAlpha(float alpha) {
         mMarkerOptions.alpha(alpha);
     }
 
     /**
-     * Gets the Anchor U coordinate
+     * Gets the Anchor U coordinate of the GeoJsonPoint
      *
-     * @return Anchor U coordinate
+     * @return Anchor U coordinate of the GeoJsonPoint
      */
     public float getAnchorU() {
         return mMarkerOptions.getAnchorU();
     }
 
     /**
-     * Gets the Anchor V coordinate
+     * Gets the Anchor V coordinate of the GeoJsonPoint
      *
-     * @return Anchor V coordinate
+     * @return Anchor V coordinate of the GeoJsonPoint
      */
     public float getAnchorV() {
         return mMarkerOptions.getAnchorV();
     }
 
     /**
-     * Sets the Anchor U and V coordinates
+     * Sets the Anchor U and V coordinates of the GeoJsonPoint
      *
-     * @param anchorU Anchor U coordinate
-     * @param anchorV Anchor V coordinate
+     * @param anchorU Anchor U coordinate of the GeoJsonPoint
+     * @param anchorV Anchor V coordinate of the GeoJsonPoint
      */
     public void setAnchor(float anchorU, float anchorV) {
         mMarkerOptions.anchor(anchorU, anchorV);
     }
 
     /**
-     * Gets whether the Point is draggable
+     * Gets whether the GeoJsonPoint is draggable
      *
-     * @return true if draggable, false if not draggable
+     * @return true if GeoJsonPoint is draggable, false if not draggable
      */
     public boolean isDraggable() {
         return mMarkerOptions.isDraggable();
     }
 
     /**
-     * Sets the Point to be draggable
+     * Sets the GeoJsonPoint to be draggable
      *
-     * @param draggable true if draggable, false if not draggable
+     * @param draggable true if GeoJsonPoint is draggable, false if not draggable
      */
     public void setDraggable(boolean draggable) {
         mMarkerOptions.draggable(draggable);
     }
 
     /**
-     * Gets whether the Point is flat
+     * Gets whether the GeoJsonPoint is flat
      *
-     * @return true if flat, false if not flat
+     * @return true if GeoJsonPoint is flat, false if not flat
      */
     public boolean isFlat() {
         return mMarkerOptions.isFlat();
     }
 
     /**
-     * Sets the Point to be flat
+     * Sets the GeoJsonPoint to be flat
      *
-     * @param flat true if flat, false if not flat
+     * @param flat true if GeoJsonPoint is flat, false if not flat
      */
     public void setFlat(boolean flat) {
         mMarkerOptions.flat(flat);
     }
 
     /**
-     * Gets a bitmap image for the marker
+     * Gets a bitmap image for the GeoJsonPoint
      *
-     * @return bitmap image icon
+     * @return bitmap descriptor for the GeoJsonPoint
      */
     public BitmapDescriptor getIcon() {
         return mMarkerOptions.getIcon();
     }
 
     /**
-     * Sets a bitmap image for the marker
+     * Sets a bitmap image for the GeoJsonPoint
      *
-     * @param bitmap Bitmap descriptor for the marker
+     * @param bitmap bitmap descriptor for the GeoJsonPoint
      */
     public void setIcon(BitmapDescriptor bitmap) {
         mMarkerOptions.icon(bitmap);
     }
 
     /**
-     * Gets the info window anchor U coordinate
+     * Gets the info window anchor U coordinate of the GeoJsonPoint
      *
-     * @return info window anchor U coordinate
+     * @return info window anchor U coordinate of the GeoJsonPoint
      */
     public float getInfoWindowAnchorU() {
         return mMarkerOptions.getInfoWindowAnchorU();
     }
 
     /**
-     * Gets the info window anchor V coordinate
+     * Gets the info window anchor V coordinate of the GeoJsonPoint
      *
-     * @return info window anchor V coordinate
+     * @return info window anchor V coordinate of the GeoJsonPoint
      */
     public float getInfoWindowAnchorV() {
         return mMarkerOptions.getInfoWindowAnchorV();
     }
 
     /**
-     * Sets the info window anchor U and V coordinates
+     * Sets the info window anchor U and V coordinates of the GeoJsonPoint
      *
-     * @param infoWindowAnchorU info window anchor U coordinate
-     * @param infoWindowAnchorV info window anchor V coordinate
+     * @param infoWindowAnchorU info window anchor U coordinate of the GeoJsonPoint
+     * @param infoWindowAnchorV info window anchor V coordinate of the GeoJsonPoint
      */
     public void setInfoWindowAnchor(float infoWindowAnchorU, float infoWindowAnchorV) {
         mMarkerOptions.infoWindowAnchor(infoWindowAnchorU, infoWindowAnchorV);
     }
 
     /**
-     * Gets the rotation
+     * Gets the rotation of the GeoJsonPoint
      *
-     * @return rotation
+     * @return rotation of the GeoJsonPoint
      */
     public float getRotation() {
         return mMarkerOptions.getRotation();
@@ -172,70 +169,70 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
 
 
     /**
-     * Sets the rotation
+     * Sets the rotation of the GeoJsonPoint
      *
-     * @param rotation rotation value
+     * @param rotation rotation value of the GeoJsonPoint
      */
     public void setRotation(float rotation) {
         mMarkerOptions.rotation(rotation);
     }
 
     /**
-     * Gets the snippet
+     * Gets the snippet of the GeoJsonPoint
      *
-     * @return snippet
+     * @return snippet of the GeoJsonPoint
      */
     public String getSnippet() {
         return mMarkerOptions.getSnippet();
     }
 
     /**
-     * Sets the snippet
+     * Sets the snippet of the GeoJsonPoint
      *
-     * @param snippet sets the snippet value
+     * @param snippet sets the snippet value of the GeoJsonPoint
      */
     public void setSnippet(String snippet) {
         mMarkerOptions.snippet(snippet);
     }
 
     /**
-     * Gets the title
+     * Gets the title of the GeoJsonPoint
      *
-     * @return title
+     * @return title of the GeoJsonPoint
      */
     public String getTitle() {
         return mMarkerOptions.getTitle();
     }
 
     /**
-     * Sets the title
+     * Sets the title of the GeoJsonPoint
      *
-     * @param title title value
+     * @param title title value of the GeoJsonPoint
      */
     public void setTitle(String title) {
         mMarkerOptions.title(title);
     }
 
     /**
-     * Gets whether the Point is visible
+     * Gets whether the GeoJsonPoint is visible
      *
-     * @return true if visible, false if not visible
+     * @return true if GeoJsonPoint is visible, false if not visible
      */
     public boolean isVisible() {
         return mMarkerOptions.isVisible();
     }
 
     /**
-     * Sets whether the point is visible
+     * Sets whether the GeoJsonPoint is visible
      *
-     * @param visible true if visible, false if not visible
+     * @param visible true if GeoJsonPoint is visible, false if not visible
      */
     public void setVisible(boolean visible) {
         mMarkerOptions.visible(visible);
     }
 
     /**
-     * Gets a new MarkerOptions object
+     * Gets a new MarkerOptions object containing styles for the GeoJsonPoint
      *
      * @return new MarkerOptions object
      */

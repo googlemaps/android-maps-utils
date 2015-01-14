@@ -3,9 +3,7 @@ package com.google.maps.android.geoJsonLayer;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A Point geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
+ * A GeoJsonPoint geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
  */
 public class GeoJsonPoint implements GeoJsonGeometry {
 
@@ -14,15 +12,15 @@ public class GeoJsonPoint implements GeoJsonGeometry {
     private LatLng mCoordinates;
 
     /**
-     * Creates a new Point
+     * Creates a new GeoJsonPoint
      *
-     * @param coordinates coordinates of Point to store
+     * @param coordinate coordinate of GeoJsonPoint to store
      */
-    public GeoJsonPoint(LatLng coordinates) {
-        if (coordinates == null) {
-            throw new IllegalArgumentException("Coordinates cannot be null");
+    public GeoJsonPoint(LatLng coordinate) {
+        if (coordinate == null) {
+            throw new IllegalArgumentException("Coordinate cannot be null");
         }
-        mCoordinates = coordinates;
+        mCoordinates = coordinate;
     }
 
     /**
@@ -35,9 +33,9 @@ public class GeoJsonPoint implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the coordinates of the point
+     * Gets the coordinates of the GeoJsonPoint
      *
-     * @return coordinates of the point
+     * @return coordinates of the GeoJsonPoint
      */
     public LatLng getCoordinates() {
         return mCoordinates;

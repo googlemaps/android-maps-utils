@@ -3,12 +3,10 @@ package com.google.maps.android.geoJsonLayer;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A class that allows for Polygon objects to be styled and for these styles to be translated into
- * a PolygonOptions object
+ * A class that allows for GeoJsonPolygon objects to be styled and for these styles to be
+ * translated into a PolygonOptions object
  */
-public class GeoJsonPolygonStyle implements GeoJsonStyle {
+public class GeoJsonPolygonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon";
 
@@ -26,121 +24,120 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
      *
      * @return type of geometries this style can be applied to
      */
-    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
 
     /**
-     * Gets the fill color
+     * Gets the fill color of the GeoJsonPolygon
      *
-     * @return fill color
+     * @return fill color of the GeoJsonPolygon
      */
     public int getFillColor() {
         return mPolygonOptions.getFillColor();
     }
 
     /**
-     * Sets the fill color
+     * Sets the fill color of the GeoJsonPolygon
      *
-     * @param fillColor fill color value
+     * @param fillColor fill color value of the GeoJsonPolygon
      */
     public void setFillColor(int fillColor) {
         mPolygonOptions.fillColor(fillColor);
     }
 
     /**
-     * Gets whether the object is geodesic
+     * Gets whether the GeoJsonPolygon is geodesic
      *
-     * @return true if geodesic, false if not geodesic
+     * @return true if GeoJsonPolygon is geodesic, false if not geodesic
      */
     public boolean isGeodesic() {
         return mPolygonOptions.isGeodesic();
     }
 
     /**
-     * Sets whether the object is geodesic
+     * Sets whether the GeoJsonPolygon is geodesic
      *
-     * @param geodesic true if geodesic, false if not geodesic
+     * @param geodesic true if GeoJsonPolygon is geodesic, false if not geodesic
      */
     public void setGeodesic(boolean geodesic) {
         mPolygonOptions.geodesic(geodesic);
     }
 
     /**
-     * Gets the stroke color
+     * Gets the stroke color of the GeoJsonPolygon
      *
-     * @return stroke color
+     * @return stroke color of the GeoJsonPolygon
      */
     public int getStrokeColor() {
         return mPolygonOptions.getStrokeColor();
     }
 
     /**
-     * Sets the stroke color
+     * Sets the stroke color of the GeoJsonPolygon
      *
-     * @param strokeColor stroke color value
+     * @param strokeColor stroke color value of the GeoJsonPolygon
      */
     public void setStrokeColor(int strokeColor) {
         mPolygonOptions.strokeColor(strokeColor);
     }
 
     /**
-     * Gets the stroke width
+     * Gets the stroke width of the GeoJsonPolygon
      *
-     * @return stroke width
+     * @return stroke width of the GeoJsonPolygon
      */
     public float getStrokeWidth() {
         return mPolygonOptions.getStrokeWidth();
     }
 
     /**
-     * Sets the stroke width
+     * Sets the stroke width of the GeoJsonPolygon
      *
-     * @param strokeWidth stroke width value
+     * @param strokeWidth stroke width value of the GeoJsonPolygon
      */
     public void setStrokeWidth(float strokeWidth) {
         mPolygonOptions.strokeWidth(strokeWidth);
     }
 
     /**
-     * Gets the z index
+     * Gets the z index of the GeoJsonPolygon
      *
-     * @return z index
+     * @return z index of the GeoJsonPolygon
      */
     public float getZIndex() {
         return mPolygonOptions.getZIndex();
     }
 
     /**
-     * Sets the z index
+     * Sets the z index of the GeoJsonPolygon
      *
-     * @param zIndex z index value
+     * @param zIndex z index value of the GeoJsonPolygon
      */
     public void setZIndex(float zIndex) {
         mPolygonOptions.zIndex(zIndex);
     }
 
     /**
-     * Gets whether the Polygon is visible
+     * Gets whether the GeoJsonPolygon is visible
      *
-     * @return true if visible, false if not visible
+     * @return true if GeoJsonPolygon is visible, false if not visible
      */
     public boolean isVisible() {
         return mPolygonOptions.isVisible();
     }
 
     /**
-     * Sets whether the Polygon is visible
+     * Sets whether the GeoJsonPolygon is visible
      *
-     * @param visible true if visible, false if not visible
+     * @param visible true if GeoJsonPolygon is visible, false if not visible
      */
     public void setVisible(boolean visible) {
         mPolygonOptions.visible(visible);
     }
 
     /**
-     * Gets a new PolygonOptions object
+     * Gets a new PolygonOptions object containing styles for the GeoJsonPolygon
      *
      * @return new PolygonOptions object
      */

@@ -3,9 +3,7 @@ package com.google.maps.android.geoJsonLayer;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A MultiLineString geometry contains a number of {@link GeoJsonLineString}s.
+ * A GeoJsonMultiLineString geometry contains a number of {@link GeoJsonLineString}s.
  */
 public class GeoJsonMultiLineString implements GeoJsonGeometry {
 
@@ -14,14 +12,13 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
     private ArrayList<GeoJsonLineString> mGeoJsonLineStrings;
 
     /**
-     * Creates a new MultiLineString object
+     * Creates a new GeoJsonMultiLineString object
      *
-     * @param geoJsonLineStrings array of LineStrings to add to the MultiLineString
+     * @param geoJsonLineStrings array of GeoJsonLineStrings to add to the GeoJsonMultiLineString
      */
-    public GeoJsonMultiLineString(
-            ArrayList<GeoJsonLineString> geoJsonLineStrings) {
+    public GeoJsonMultiLineString(ArrayList<GeoJsonLineString> geoJsonLineStrings) {
         if (geoJsonLineStrings == null) {
-            throw new IllegalArgumentException("LineStrings cannot be null");
+            throw new IllegalArgumentException("GeoJsonLineStrings cannot be null");
         }
         mGeoJsonLineStrings = geoJsonLineStrings;
     }
@@ -37,9 +34,9 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the array of LineStrings
+     * Gets the array of GeoJsonLineString
      *
-     * @return array of LineStrings
+     * @return array of GeoJsonLineString
      */
     public ArrayList<GeoJsonLineString> getLineStrings() {
         return mGeoJsonLineStrings;

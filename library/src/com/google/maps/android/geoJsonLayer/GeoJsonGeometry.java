@@ -1,7 +1,7 @@
 package com.google.maps.android.geoJsonLayer;
 
 /**
- * Created by juliawong on 12/29/14.
+ * Represents a GeoJSON geometry object.
  */
 public interface GeoJsonGeometry {
 

@@ -3,12 +3,10 @@ package com.google.maps.android.geoJsonLayer;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A class that allows for LineString objects to be styled and for these styles to be translated
- * into a PolylineOptions object
+ * A class that allows for GeoJsonLineString objects to be styled and for these styles to be
+ * translated into a PolylineOptions object
  */
-public class GeoJsonLineStringStyle implements GeoJsonStyle {
+public class GeoJsonLineStringStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Line|MultiLine";
 
@@ -26,103 +24,102 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
      *
      * @return type of geometries this style can be applied to
      */
-    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
 
     /**
-     * Gets the color
+     * Gets the color of the GeoJsonLineString
      *
-     * @return color
+     * @return color of the GeoJsonLineString
      */
     public int getColor() {
         return mPolylineOptions.getColor();
     }
 
     /**
-     * Sets the color
+     * Sets the color of the GeoJsonLineString
      *
-     * @param color color value
+     * @param color color value of the GeoJsonLineString
      */
     public void setColor(int color) {
         mPolylineOptions.color(color);
     }
 
     /**
-     * Gets whether the LineString is geodesic
+     * Gets whether the GeoJsonLineString is geodesic
      *
-     * @return true if geodesic, false otherwise
+     * @return true if GeoJsonLineString is geodesic, false otherwise
      */
     public boolean isGeodesic() {
         return mPolylineOptions.isGeodesic();
     }
 
     /**
-     * Sets whether the LineString is geodesic
+     * Sets whether the GeoJsonLineString is geodesic
      *
-     * @param geodesic true if geodesic, false otherwise
+     * @param geodesic true if GeoJsonLineString is geodesic, false otherwise
      */
     public void setGeodesic(boolean geodesic) {
         mPolylineOptions.geodesic(geodesic);
     }
 
     /**
-     * Gets the width
+     * Gets the width of the GeoJsonLineString
      *
-     * @return width
+     * @return width of the GeoJsonLineString
      */
     public float getWidth() {
         return mPolylineOptions.getWidth();
     }
 
     /**
-     * Sets the width
+     * Sets the width of the GeoJsonLineString
      *
-     * @param width width value
+     * @param width width value of the GeoJsonLineString
      */
     public void setWidth(float width) {
         mPolylineOptions.width(width);
     }
 
     /**
-     * Gets the z index
+     * Gets the z index of the GeoJsonLineString
      *
-     * @return z index
+     * @return z index of the GeoJsonLineString
      */
     public float getZIndex() {
         return mPolylineOptions.getZIndex();
     }
 
     /**
-     * Sets the z index
+     * Sets the z index of the GeoJsonLineString
      *
-     * @param zIndex z index value
+     * @param zIndex z index value of the GeoJsonLineString
      */
     public void setZIndex(float zIndex) {
         mPolylineOptions.zIndex(zIndex);
     }
 
     /**
-     * Gets whether the LineString is visible
+     * Gets whether the GeoJsonLineString is visible
      *
-     * @return true if visible, false if not visible
+     * @return true if the GeoJsonLineString visible, false if not visible
      */
     public boolean isVisible() {
         return mPolylineOptions.isVisible();
     }
 
     /**
-     * Sets whether the LineString is visible
+     * Sets whether the GeoJsonLineString is visible
      *
-     * @param visible true if visible, false if not visible
+     * @param visible true if the GeoJsonLineString is visible, false if not visible
      */
     public void setVisible(boolean visible) {
         mPolylineOptions.visible(visible);
     }
 
     /**
-     * Gets a new PolylineOptions object
+     * Gets a new PolylineOptions object containing styles for the GeoJsonLineString
      *
      * @return new PolylineOptions object
      */

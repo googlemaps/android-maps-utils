@@ -12,10 +12,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Created by juliawong on 12/30/14.
- *
- * Parses a JSONObject and places data into their appropriate Feature objects. Returns an array of
- * Feature objects parsed from the GeoJSON file.
+ * Parses a JSONObject and places data into their appropriate GeoJsonFeature objects. Returns an
+ * array of
+ * GeoJsonFeature objects parsed from the GeoJSON file.
  */
 public class GeoJsonParser {
 
@@ -71,7 +70,8 @@ public class GeoJsonParser {
     }
 
     /**
-     * Parses the GeoJSON file and adds the generated Feature objects to the mFeatures array
+     * Parses the GeoJSON file by type and adds the generated GeoJsonFeature objects to the
+     * mFeatures array. Supported GeoJSON types include feature, feature collection and geometry.
      *
      * @throws JSONException if the GeoJSON file could not be parsed
      */
@@ -88,9 +88,9 @@ public class GeoJsonParser {
     }
 
     /**
-     * Gets the array of Feature objects
+     * Gets the array of GeoJsonFeature objects
      *
-     * @return array of Features
+     * @return array of GeoJsonFeatures
      */
     public ArrayList<GeoJsonFeature> getFeatures() {
         return mGeoJsonFeatures;
@@ -108,9 +108,11 @@ public class GeoJsonParser {
     }
 
     /**
-     * Parses a GeoJSON feature collection which contains an array of features
+     * Parses the array of GeoJSON features in a given GeoJSON feature collection. Also parses the
+     * bounding box member of the feature collection if it exists.
      *
-     * @return array of Feature objects parsed from the given array
+     * @param geoJsonFeatureCollection feature collection to parse
+     * @return array of GeoJsonFeature objects
      * @throws JSONException if the feature collection could not be parsed
      */
     private ArrayList<GeoJsonFeature> parseFeatureCollection(JSONObject geoJsonFeatureCollection)
@@ -132,11 +134,10 @@ public class GeoJsonParser {
 
     /**
      * Parses a single GeoJSON feature which contains a geometry and properties member both of
-     * which can be null and optionally an id. If the geometry member has a null value, we do not
-     * add the geometry to the array.
+     * which can be null. Also parses the bounding box and id members of the feature if they exist.
      *
-     * @param geoJsonFeature GeoJSON feature to parse
-     * @return Feature object parsed from the given GeoJSON feature
+     * @param geoJsonFeature feature to parse
+     * @return GeoJsonFeature object
      * @throws JSONException if the feature does not have members geometry and properties or could
      *                       not be parsed for some other reason
      */
@@ -166,7 +167,6 @@ public class GeoJsonParser {
         return new GeoJsonFeature(geometry, id, parseProperties(properties), boundingBox);
     }
 
-
     /**
      * Parses a bounding box given as a JSONArray of 4 elements in the order of lowest values for
      * all axes followed by highest values. Axes order of a bounding box follows the axes order of
@@ -187,11 +187,11 @@ public class GeoJsonParser {
     }
 
     /**
-     * Parses a single GeoJSON geometry object containing a coordinates or geometries array if it
-     * has type GeometryCollection
+     * Parses a single GeoJSON geometry object containing a coordinates array or a geometries array
+     * if it has type GeometryCollection
      *
-     * @param geoJsonGeometry GeoJSON geometry object to parse
-     * @return Geometry object parsed from the given GeoJSON geometry object
+     * @param geoJsonGeometry geometry object to parse
+     * @return GeoJsonGeometry object
      * @throws JSONException if the geometry does not have a coordinates or geometries array or
      *                       could not be parsed for some other reason
      */
@@ -209,8 +209,8 @@ public class GeoJsonParser {
     }
 
     /**
-     * Converts a geometry object to a feature object. A geometry object has no ID or properties so
-     * it is set to null.
+     * Converts a GeoJsonGeometry object into a GeoJsonFeature object. A geometry object has no ID
+     * or properties so it is set to null.
      *
      * @param GeoJsonGeometry Geometry object to convert into a Feature object
      * @return new Feature object
@@ -237,15 +237,13 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a Geometry object from the given type of geometry and its coordinates or geometries
-     * array
+     * Creates a GeoJsonGeometry object from the given type of geometry and its coordinates or
+     * geometries array
      *
      * @param geometryType  type of geometry
-     * @param geometryArray coordinates or geometries of the geometry to parse and add to the
-     *                      Geometry object
-     * @return Geometry object of type geometryType and containing the given coordinates or
-     * geometries
-     * @throws JSONException if the coordinates could be parsed
+     * @param geometryArray coordinates or geometries of the geometry
+     * @return GeoJsonGeometry object
+     * @throws JSONException if the coordinates or geometries could be parsed
      */
     private GeoJsonGeometry createGeometry(String geometryType, JSONArray geometryArray)
             throws JSONException {
@@ -264,15 +262,15 @@ public class GeoJsonParser {
         } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             return createGeometryCollection(geometryArray);
         }
-
+        // TODO: if null, don't add to array or catch
         return null;
     }
 
     /**
-     * Creates a new Point object
+     * Creates a new GeoJsonPoint object
      *
-     * @param coordinates array containing the GeoJSON coordinates
-     * @return Point object
+     * @param coordinates array containing the coordinates for the GeoJsonPoint
+     * @return GeoJsonPoint object
      * @throws JSONException if coordinates cannot be parsed
      */
     private GeoJsonPoint createPoint(JSONArray coordinates) throws JSONException {
@@ -280,10 +278,10 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a new MultiPoint object containing an array of Point objects
+     * Creates a new GeoJsonMultiPoint object containing an array of GeoJsonPoint objects
      *
-     * @param coordinates array containing the GeoJSON coordinates
-     * @return MultiPoint object
+     * @param coordinates array containing the coordinates for the GeoJsonMultiPoint
+     * @return GeoJsonMultiPoint object
      * @throws JSONException if coordinates cannot be parsed
      */
     private GeoJsonMultiPoint createMultiPoint(JSONArray coordinates) throws JSONException {
@@ -295,10 +293,10 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a new LineString object
+     * Creates a new GeoJsonLineString object
      *
-     * @param coordinates array containing the GeoJSON coordinates
-     * @return LineString object
+     * @param coordinates array containing the coordinates for the GeoJsonLineString
+     * @return GeoJsonLineString object
      * @throws JSONException if coordinates cannot be parsed
      */
     private GeoJsonLineString createLineString(JSONArray coordinates) throws JSONException {
@@ -306,10 +304,10 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a new MultiLineString object containing an array of LineString objects
+     * Creates a new GeoJsonMultiLineString object containing an array of GeoJsonLineString objects
      *
-     * @param coordinates array containing the GeoJSON coordinates
-     * @return MultiLineString object
+     * @param coordinates array containing the coordinates for the GeoJsonMultiLineString
+     * @return GeoJsonMultiLineString object
      * @throws JSONException if coordinates cannot be parsed
      */
     private GeoJsonMultiLineString createMultiLineString(JSONArray coordinates)
@@ -322,10 +320,10 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a new Polygon object
+     * Creates a new GeoJsonPolygon object
      *
-     * @param coordinates array containing the GeoJSON coordinates
-     * @return Polygon object
+     * @param coordinates array containing the coordinates for the GeoJsonPolygon
+     * @return GeoJsonPolygon object
      * @throws JSONException if coordinates cannot be parsed
      */
     private GeoJsonPolygon createPolygon(JSONArray coordinates) throws JSONException {
@@ -333,10 +331,10 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a new MultiPolygon object containing an array of Polygon objects
+     * Creates a new GeoJsonMultiPolygon object containing an array of GeoJsonPolygon objects
      *
-     * @param coordinates array containing the GeoJSON coordinates
-     * @return MultiPolygon object
+     * @param coordinates array containing the coordinates for the GeoJsonMultiPolygon
+     * @return GeoJsonPolygon object
      * @throws JSONException if coordinates cannot be parsed
      */
     private GeoJsonMultiPolygon createMultiPolygon(JSONArray coordinates) throws JSONException {
@@ -348,10 +346,11 @@ public class GeoJsonParser {
     }
 
     /**
-     * Creates a new GeometryCollection object containing an array of Geometry objects
+     * Creates a new GeoJsonGeometryCollection object containing an array of GeoJsonGeometry
+     * objects
      *
-     * @param geometries array containing the elements of the GeoJSON GeometryCollection
-     * @return GeometryCollection object
+     * @param geometries array containing the geometries for the GeoJsonGeometryCollection
+     * @return GeoJsonGeometryCollection object
      * @throws JSONException if geometries cannot be parsed
      */
     private GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries)
@@ -371,7 +370,7 @@ public class GeoJsonParser {
      *
      * @param coordinates array containing the GeoJSON coordinate
      * @return LatLng object
-     * @throws JSONException if coordinates cannot be parsed
+     * @throws JSONException if coordinate cannot be parsed
      */
     private LatLng parseCoordinate(JSONArray coordinates) throws JSONException {
         // GeoJSON stores coordinates as Lng, Lat so we need to reverse

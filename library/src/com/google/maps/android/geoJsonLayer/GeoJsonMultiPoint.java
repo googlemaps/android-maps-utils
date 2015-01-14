@@ -3,9 +3,7 @@ package com.google.maps.android.geoJsonLayer;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A MultiPoint geometry contains a number of {@link GeoJsonPoint}s.
+ * A GeoJsonMultiPoint geometry contains a number of {@link GeoJsonPoint}s.
  */
 public class GeoJsonMultiPoint implements GeoJsonGeometry {
 
@@ -14,13 +12,13 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
     private ArrayList<GeoJsonPoint> mGeoJsonPoints;
 
     /**
-     * Creates a MultiPoint object
+     * Creates a GeoJsonMultiPoint object
      *
-     * @param geoJsonPoints array of Points to add to the MultiPoint
+     * @param geoJsonPoints array of GeoJsonPoints to add to the GeoJsonMultiPoint
      */
     public GeoJsonMultiPoint(ArrayList<GeoJsonPoint> geoJsonPoints) {
         if (geoJsonPoints == null) {
-            throw new IllegalArgumentException("Points cannot be null");
+            throw new IllegalArgumentException("GeoJsonPoints cannot be null");
         }
         mGeoJsonPoints = geoJsonPoints;
     }
@@ -36,9 +34,9 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the array of Points
+     * Gets the array of GeoJsonPoint
      *
-     * @return array of Points
+     * @return array of GeoJsonPoint
      */
     public ArrayList<GeoJsonPoint> getPoints() {
         return mGeoJsonPoints;

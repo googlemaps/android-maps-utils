@@ -5,9 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A Polygon geometry contains a number of arrays of {@link com.google.android.gms.maps.model.LatLng}s.
+ * A GeoJsonPolygon geometry contains an array of arrays of {@link com.google.android.gms.maps.model.LatLng}s.
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 
@@ -18,9 +16,9 @@ public class GeoJsonPolygon implements GeoJsonGeometry {
     private ArrayList<ArrayList<LatLng>> mCoordinates;
 
     /**
-     * Creates a new Polygon object
+     * Creates a new GeoJsonPolygon object
      *
-     * @param coordinates array of arrays of coordinates of Polygon to store
+     * @param coordinates array of arrays of coordinates of GeoJsonPolygon to store
      */
     public GeoJsonPolygon(
             ArrayList<ArrayList<LatLng>> coordinates) {
@@ -41,9 +39,9 @@ public class GeoJsonPolygon implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the coordinates of the Polygon
+     * Gets the coordinates of the GeoJsonPolygon
      *
-     * @return coordinates of the Polygon
+     * @return coordinates of the GeoJsonPolygon
      */
     public ArrayList<ArrayList<LatLng>> getCoordinates() {
         return mCoordinates;

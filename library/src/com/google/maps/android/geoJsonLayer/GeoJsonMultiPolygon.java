@@ -3,9 +3,7 @@ package com.google.maps.android.geoJsonLayer;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A MultiPolygon geometry contains a number of {@link GeoJsonPolygon}s.
+ * A GeoJsonMultiPolygon geometry contains a number of {@link GeoJsonPolygon}s.
  */
 public class GeoJsonMultiPolygon implements GeoJsonGeometry {
 
@@ -14,13 +12,13 @@ public class GeoJsonMultiPolygon implements GeoJsonGeometry {
     private ArrayList<GeoJsonPolygon> mGeoJsonPolygons;
 
     /**
-     * Creates a new MultiPolygon
+     * Creates a new GeoJsonMultiPolygon
      *
-     * @param geoJsonPolygons array of Polygons to add to the MultiPolygon
+     * @param geoJsonPolygons array of GeoJsonPolygons to add to the GeoJsonMultiPolygon
      */
     public GeoJsonMultiPolygon(ArrayList<GeoJsonPolygon> geoJsonPolygons) {
         if (geoJsonPolygons == null) {
-            throw new IllegalArgumentException("Polygons cannot be null");
+            throw new IllegalArgumentException("GeoJsonPolygons cannot be null");
         }
         mGeoJsonPolygons = geoJsonPolygons;
     }
@@ -36,9 +34,9 @@ public class GeoJsonMultiPolygon implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the array of Polygons
+     * Gets the array of GeoJsonPolygons
      *
-     * @return array of Polygons
+     * @return array of GeoJsonPolygons
      */
     public ArrayList<GeoJsonPolygon> getPolygons() {
         return mGeoJsonPolygons;

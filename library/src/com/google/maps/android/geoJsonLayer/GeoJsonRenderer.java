@@ -14,40 +14,58 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Created by lavenderch on 1/8/15.
+ * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
+ * removes GeoJsonFeature objects and redraws features when updated.
  */
 public class GeoJsonRenderer implements Observer {
 
-    private final static int POLYGON_OUTER_COORDINATES = 0;
+    private final static int POLYGON_OUTER_COORDINATE_INDEX = 0;
 
-    private final static int POLYGON_INNER_COORDINATES = 1;
+    private final static int POLYGON_INNER_COORDINATE_INDEX = 1;
 
-    private final static Object NOT_ON_MAP = null;
+    private final static Object FEATURE_NOT_ON_MAP_VALUE = null;
 
     private final HashMap<GeoJsonFeature, Object> mFeatures;
 
     private GoogleMap mMap;
 
+    /**
+     * Creates a new GeoJsonRender object
+     *
+     * @param features hashmap of features to store
+     * @param map      map to place GeoJsonFeature objects on
+     */
     public GeoJsonRenderer(HashMap<GeoJsonFeature, Object> features, GoogleMap map) {
         mFeatures = features;
         mMap = map;
     }
 
+    /**
+     * Gets the GoogleMap that GeoJsonFeature objects are being placed on
+     *
+     * @return GoogleMap
+     */
     public GoogleMap getMap() {
         return mMap;
     }
 
     /**
-     * Removes all feature objects from the current map, then readds feature objects to the new map
+     * Changes the map that GeoJsonFeature objects are being drawn onto. Existing objects are
+     * removed from the previous map and drawn onto the new map.
+     *
+     * @param map GoogleMap to place GeoJsonFeature objects on
      */
     public void setMap(GoogleMap map) {
         removeLayerFromMap();
-        mMap = map;
-        addLayerToMap();
+        if (map != null) {
+            // Readd to new map if it isn't null
+            mMap = map;
+            addLayerToMap();
+        }
     }
 
     /**
-     * Adds all features which are available in this collection to the map
+     * Adds all GeoJsonFeature objects stored in the mFeatures hashmap onto the map
      */
     public void addLayerToMap() {
         for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
@@ -56,7 +74,7 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Adds a new GeoJsonFeature to the map
+     * Adds a new GeoJsonFeature to the map if its geometry property is not null.
      *
      * @param feature feature to add to the map
      */
@@ -67,8 +85,7 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Helper function to remove all GeoJson objects from the current map as well as from the
-     * hashmap
+     * Removes all GeoJsonFeature objects stored in the mFeatures hashmap from the map
      */
     public void removeLayerFromMap() {
         for (GeoJsonFeature feature : mFeatures.keySet()) {
@@ -77,16 +94,19 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Removes a GeoJsonFeature from the map
+     * Removes a GeoJsonFeature from the map if its geometry property is not null
      *
      * @param feature feature to remove from map
      */
     public void removeFeature(GeoJsonFeature feature) {
-        removeFromMap(mFeatures.get(feature));
+        if (feature.hasGeometry()) {
+            removeFromMap(mFeatures.get(feature));
+        }
     }
 
     /**
-     * Adds all objects currently stored in the mFeature array, onto the map
+     * Adds a new object onto the map using the GeoJsonGeometry for the coordinates and the
+     * GeoJsonFeature for the styles.
      *
      * @param geoJsonFeature  feature to get geometry style
      * @param geoJsonGeometry geometry to add to the map
@@ -118,11 +138,11 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Adds a Point to the map as a Marker
+     * Adds a GeoJsonPoint to the map as a Marker
      *
      * @param geoJsonPointStyle contains relevant styling properties for the Marker
      * @param geoJsonPoint      contains coordinates for the Marker
-     * @return Marker object created from the given point feature
+     * @return Marker object created from the given GeoJsonPoint
      */
     private Marker addPointToMap(GeoJsonPointStyle geoJsonPointStyle, GeoJsonPoint geoJsonPoint) {
         MarkerOptions markerOptions = geoJsonPointStyle.getMarkerOptions();
@@ -131,10 +151,10 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Adds all Points in MultiPoint to the map as multiple Markers
+     * Adds all GeoJsonPoint objects in GeoJsonMultiPoint to the map as multiple Markers
      *
-     * @param geoJsonPointStyle contains relevant styling properties for the MultiPoint
-     * @param geoJsonMultiPoint contains an array of Points
+     * @param geoJsonPointStyle contains relevant styling properties for the Markers
+     * @param geoJsonMultiPoint contains an array of GeoJsonPoints
      * @return array of Markers that have been added to the map
      */
     private ArrayList<Marker> addMultiPointToMap(GeoJsonPointStyle geoJsonPointStyle,
@@ -147,11 +167,11 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Adds a LineString to the map as a Polyline
+     * Adds a GeoJsonLineString to the map as a Polyline
      *
      * @param geoJsonLineStringStyle contains relevant styling properties for the Polyline
      * @param geoJsonLineString      contains coordinates for the Polyline
-     * @return Polyline object created from given feature
+     * @return Polyline object created from given GeoJsonLineString
      */
     private Polyline addLineStringToMap(GeoJsonLineStringStyle geoJsonLineStringStyle,
             GeoJsonLineString geoJsonLineString) {
@@ -162,10 +182,11 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Adds all LineStrings in the MultiLineString to the map as multiple Polylines
+     * Adds all GeoJsonLineString objects in the GeoJsonMultiLineString to the map as multiple
+     * Polylines
      *
-     * @param geoJsonLineStringStyle contains relevant styling properties for the MultiLineString
-     * @param geoJsonMultiLineString contains an array of LineStrings
+     * @param geoJsonLineStringStyle contains relevant styling properties for the Polylines
+     * @param geoJsonMultiLineString contains an array of GeoJsonLineStrings
      * @return array of Polylines that have been added to the map
      */
     private ArrayList<Polyline> addMultiLineStringToMap(
@@ -179,29 +200,30 @@ public class GeoJsonRenderer implements Observer {
     }
 
     /**
-     * Adds a GeoJSON Polygon to the map as a Polygon
+     * Adds a GeoJsonPolygon to the map as a Polygon
      *
      * @param geoJsonPolygonStyle contains relevant styling properties for the Polygon
      * @param geoJsonPolygon      contains coordinates for the Polygon
-     * @return Polygon object created from given feature
+     * @return Polygon object created from given GeoJsonPolygon
      */
     private Polygon addPolygonToMap(GeoJsonPolygonStyle geoJsonPolygonStyle,
             GeoJsonPolygon geoJsonPolygon) {
         PolygonOptions polygonOptions = geoJsonPolygonStyle.getPolygonOptions();
         // First array of coordinates are the outline
-        polygonOptions.addAll(geoJsonPolygon.getCoordinates().get(POLYGON_OUTER_COORDINATES));
+        polygonOptions.addAll(geoJsonPolygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
         // Following arrays are holes
-        for (int i = POLYGON_INNER_COORDINATES; i < geoJsonPolygon.getCoordinates().size(); i++) {
+        for (int i = POLYGON_INNER_COORDINATE_INDEX; i < geoJsonPolygon.getCoordinates().size();
+                i++) {
             polygonOptions.addHole(geoJsonPolygon.getCoordinates().get(i));
         }
         return mMap.addPolygon(polygonOptions);
     }
 
     /**
-     * Adds all GeoJSON Polygons in the MultiPolygon to the map as multiple Polygons
+     * Adds all GeoJsonPolygon in the GeoJsonMultiPolygon to the map as multiple Polygons
      *
-     * @param geoJsonPolygonStyle contains relevant styling properties for the MultiPolygon
-     * @param geoJsonMultiPolygon contains an array of Polygons
+     * @param geoJsonPolygonStyle contains relevant styling properties for the Polygons
+     * @param geoJsonMultiPolygon contains an array of GeoJsonPolygons
      * @return array of Polygons that have been added to the map
      */
     private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle geoJsonPolygonStyle,
@@ -215,12 +237,13 @@ public class GeoJsonRenderer implements Observer {
 
 
     /**
-     * Adds all GeoJsonGeometry objects stored in the GeometryCollection, onto the map. Supports
-     * recursive GeometryCollections.
+     * Adds all GeoJsonGeometry objects stored in the GeoJsonGeometryCollection onto the map.
+     * Supports recursive GeometryCollections.
      *
-     * @param geoJsonFeature    contains relevant styling properties for the GeometryCollection
+     * @param geoJsonFeature    contains relevant styling properties for the GeoJsonGeometry inside
+     *                          the GeoJsonGeometryCollection
      * @param geoJsonGeometries contains an array of GeoJsonGeometry objects
-     * @return array of Marker, Polyline and/or Polygons that have been added to the map
+     * @return array of Marker, Polyline, Polygons that have been added to the map
      */
     private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature geoJsonFeature,
             ArrayList<GeoJsonGeometry> geoJsonGeometries) {
@@ -234,7 +257,7 @@ public class GeoJsonRenderer implements Observer {
     /**
      * Gets a Marker, Polyline, Polygon or an array of these and removes from the map
      *
-     * @param mapObject map object to remove from the map
+     * @param mapObject map object or array of map objects to remove from the map
      */
     private void removeFromMap(Object mapObject) {
         if (mapObject instanceof Marker) {
@@ -244,37 +267,39 @@ public class GeoJsonRenderer implements Observer {
         } else if (mapObject instanceof Polygon) {
             ((Polygon) mapObject).remove();
         } else if (mapObject instanceof ArrayList) {
-            for (Object mapObjectElement : (ArrayList<Object>) mapObject) {
+            for (Object mapObjectElement : (ArrayList) mapObject) {
                 removeFromMap(mapObjectElement);
             }
         }
     }
 
     /**
-     * Given a feature, removes all instances of that feature from the current map and redraws it
-     * again.
+     * Redraws a given GeoJsonFeature onto the map. The map object is obtained from the mFeatures
+     * hashmap and it is removed and added.
      *
-     * @param feature Feature to redraw to the map
+     * @param feature feature to redraw onto the map
      */
-    private void redrawCollectionToMap(GeoJsonFeature feature, Object googleMapObject) {
-        removeFromMap(googleMapObject);
-        mFeatures.put(feature, NOT_ON_MAP);
+    private void redrawCollectionToMap(GeoJsonFeature feature) {
+        removeFromMap(mFeatures.get(feature));
+        mFeatures.put(feature, FEATURE_NOT_ON_MAP_VALUE);
         addFeatureToMap(feature, feature.getGeometry());
     }
 
     /**
-     * Update is called if the developer sets a style in a Feature object
+     * Update is called if the developer sets a style in a GeoJsonFeature object
      *
-     * @param observable Feature object
+     * @param observable GeoJsonFeature object
      * @param data       null, no extra argument is passed through the notifyObservers method
      */
     public void update(Observable observable, Object data) {
         if (observable instanceof GeoJsonFeature) {
             GeoJsonFeature geoJsonFeature = ((GeoJsonFeature) observable);
-            if (mFeatures.get(geoJsonFeature) != NOT_ON_MAP) {
-                redrawCollectionToMap(geoJsonFeature, mFeatures.get(geoJsonFeature));
+            if (mFeatures.get(geoJsonFeature) != FEATURE_NOT_ON_MAP_VALUE && geoJsonFeature
+                    .hasGeometry()) {
+                // Checks if the feature has been added to the map and its geometry is not null
+                redrawCollectionToMap(geoJsonFeature);
             } else {
-                // Adds new features to the map
+                // TODO: Add new features to the map
                 // e.g. feature prev had geom defined as null, now a point
                 addFeature(geoJsonFeature);
             }

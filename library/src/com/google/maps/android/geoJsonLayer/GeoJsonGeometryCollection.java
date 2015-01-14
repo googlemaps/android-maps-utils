@@ -3,9 +3,7 @@ package com.google.maps.android.geoJsonLayer;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A GeometryCollection geometry contains a number of geometry objects.
+ * A GeoJsonGeometryCollection geometry contains a number of GeoJsonGeometry objects.
  */
 public class GeoJsonGeometryCollection implements GeoJsonGeometry {
 
@@ -14,9 +12,9 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
     private ArrayList<GeoJsonGeometry> mGeometries;
 
     /**
-     * Creates a new GeometryCollection object
+     * Creates a new GeoJsonGeometryCollection object
      *
-     * @param geometries array of Geometry objects to add to the GeometryCollection
+     * @param geometries array of GeoJsonGeometry objects to add to the GeoJsonGeometryCollection
      */
     public GeoJsonGeometryCollection(
             ArrayList<GeoJsonGeometry> geometries) {
@@ -37,9 +35,9 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the stored geometries
+     * Gets the stored GeoJsonGeometry objects
      *
-     * @return stored geometries
+     * @return stored GeoJsonGeometry objects
      */
     public ArrayList<GeoJsonGeometry> getGeometries() {
         return mGeometries;

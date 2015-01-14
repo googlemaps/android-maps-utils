@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.Observable;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A feature has a geometry, bounding box, id and set of properties. Styles are also stored in this
+ * A GeoJsonFeature has a geometry, bounding box, id and set of properties. Styles are also stored
+ * in this
  * class.
  */
 public class GeoJsonFeature extends Observable {
@@ -29,11 +28,12 @@ public class GeoJsonFeature extends Observable {
     private GeoJsonPolygonStyle mGeoJsonPolygonStyle;
 
     /**
-     * Creates a new Feature object
+     * Creates a new GeoJsonFeature object
      *
      * @param GeoJsonGeometry type of geometry to assign to the feature
      * @param id              id to refer to the feature by
-     * @param properties      map of data containing properties related to the feature
+     * @param properties      hashmap of data containing properties related to the feature
+     * @param boundingBox     array defining the bounding box of the feature
      */
     public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
             HashMap<String, String> properties, ArrayList<LatLng> boundingBox) {
@@ -57,18 +57,18 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the PointStyle of the feature
+     * Gets the GeoJsonPointStyle of the feature
      *
-     * @return PointStyle object
+     * @return GeoJsonPointStyle object
      */
     public GeoJsonPointStyle getPointStyle() {
         return mGeoJsonPointStyle;
     }
 
     /**
-     * Sets the PointStyle of the feature
+     * Sets the GeoJsonPointStyle of the feature
      *
-     * @param geoJsonPointStyle PointStyle object
+     * @param geoJsonPointStyle GeoJsonPointStyle object
      */
     public void setPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
         mGeoJsonPointStyle = geoJsonPointStyle;
@@ -77,18 +77,18 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the LineStringStyle of the feature
+     * Gets the GeoJsonLineStringStyle of the feature
      *
-     * @return LineStringStyle object
+     * @return GeoJsonLineStringStyle object
      */
     public GeoJsonLineStringStyle getLineStringStyle() {
         return mGeoJsonLineStringStyle;
     }
 
     /**
-     * Sets the LineStringStyle of the feature
+     * Sets the GeoJsonLineStringStyle of the feature
      *
-     * @param geoJsonLineStringStyle LineStringStyle object
+     * @param geoJsonLineStringStyle GeoJsonLineStringStyle object
      */
     public void setLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mGeoJsonLineStringStyle = geoJsonLineStringStyle;
@@ -97,18 +97,18 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the PolygonStyle of the feature
+     * Gets the GeoJsonPolygonStyle of the feature
      *
-     * @return PolygonStyle object
+     * @return GeoJsonPolygonStyle object
      */
     public GeoJsonPolygonStyle getPolygonStyle() {
         return mGeoJsonPolygonStyle;
     }
 
     /**
-     * Sets the PolygonStyle of the feature
+     * Sets the GeoJsonPolygonStyle of the feature
      *
-     * @param geoJsonPolygonStyle PolygonStyle object
+     * @param geoJsonPolygonStyle GeoJsonPolygonStyle object
      */
     public void setPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
         mGeoJsonPolygonStyle = geoJsonPolygonStyle;
@@ -117,9 +117,9 @@ public class GeoJsonFeature extends Observable {
     }
 
     /**
-     * Gets the stored geometry object
+     * Gets the stored GeoJsonGeometry object
      *
-     * @return geometry object
+     * @return GeoJsonGeometry object
      */
     public GeoJsonGeometry getGeometry() {
         return mGeoJsonGeometry;

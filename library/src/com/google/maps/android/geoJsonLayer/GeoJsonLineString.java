@@ -5,9 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 12/29/14.
- *
- * A LineString geometry contains a number of {@link com.google.android.gms.maps.model.LatLng}s.
+ * A GeoJsonLineString geometry contains a number of {@link com.google.android.gms.maps.model.LatLng}s.
  */
 public class GeoJsonLineString implements GeoJsonGeometry {
 
@@ -16,9 +14,9 @@ public class GeoJsonLineString implements GeoJsonGeometry {
     private ArrayList<LatLng> mCoordinates;
 
     /**
-     * Creates a new LineString object
+     * Creates a new GeoJsonLineString object
      *
-     * @param coordinates array of coordinates of LineString to store
+     * @param coordinates array of coordinates of GeoJsonLineString to store
      */
     public GeoJsonLineString(ArrayList<LatLng> coordinates) {
         if (coordinates == null) {
@@ -38,9 +36,9 @@ public class GeoJsonLineString implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the coordinates of the LineString
+     * Gets the coordinates of the GeoJsonLineString
      *
-     * @return coordinates of the LineString
+     * @return coordinates of the GeoJsonLineString
      */
     public ArrayList<LatLng> getCoordinates() {
         return mCoordinates;
