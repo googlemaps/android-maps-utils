@@ -1,11 +1,16 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
+
+import java.util.HashMap;
 
 /**
  * Created by lavenderc on 12/2/14.
@@ -20,11 +25,21 @@ public class KmlStyle {
 
     private final PolygonOptions mPolygonOptions;
 
+    private HashMap<String, String> mBalloonOptions;
+
     private boolean mFill = true;
 
     private boolean mOutline = true;
 
     private String mIconUrl;
+
+    private double mScale;
+
+    private HashMap<String, Integer> mColorModeOptions;
+
+    private static int NORMAL_COLOR_MODE = 0;
+
+    private static int RANDOM_COLOR_MODE = 1;
 
     /**
      * Creates a new Style object
@@ -33,6 +48,9 @@ public class KmlStyle {
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
+        mBalloonOptions = new HashMap<String, String>();
+        mColorModeOptions = new HashMap<String, Integer>();
+        mScale = 1.0;
     }
 
     /**
@@ -119,6 +137,31 @@ public class KmlStyle {
         }
     }
 
+    public void setIconScale(double scale) {
+        mScale = scale;
+    }
+
+    public double getIconScale() {
+        return mScale;
+    }
+
+    public void setInfoWindow(String text) {
+        mBalloonOptions.put("text", text);
+    }
+
+    public void setColorMode(String geometryType, String colorModeString) {
+        if (colorModeString.equals("normal")) {
+            mColorModeOptions.put(geometryType, NORMAL_COLOR_MODE);
+        } else {
+            mColorModeOptions.put(geometryType, RANDOM_COLOR_MODE);
+        }
+    }
+
+    public int getColorMode(String geometryType) {
+        return mColorModeOptions.get(geometryType);
+    }
+
+
     /**
      * Gets whether the Polygon has an outline
      *
@@ -168,6 +211,10 @@ public class KmlStyle {
         markerOptions.rotation(mMarkerOptions.getRotation());
         markerOptions.icon(mMarkerOptions.getIcon());
         return markerOptions;
+    }
+
+    public HashMap<String, String> getBalloonOptions() {
+        return mBalloonOptions;
     }
 
     /**

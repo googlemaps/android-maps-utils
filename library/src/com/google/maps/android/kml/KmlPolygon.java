@@ -25,9 +25,10 @@ public class KmlPolygon implements KmlGeometry {
             ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates) {
         if (outerBoundaryCoordinates == null) {
             throw new IllegalArgumentException("Outer boundary coordinates cannot be null");
+        } else {
+            mOuterBoundaryCoordinates = outerBoundaryCoordinates;
+            mInnerBoundaryCoordinates = innerBoundaryCoordinates;
         }
-        mOuterBoundaryCoordinates = outerBoundaryCoordinates;
-        mInnerBoundaryCoordinates = innerBoundaryCoordinates;
     }
 
     /**
