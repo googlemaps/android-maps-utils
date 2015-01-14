@@ -26,8 +26,6 @@ public class GeoJsonLayer {
 
     private final GeoJsonRenderer mRenderer;
 
-    private final JSONObject mGeoJsonFile;
-
     private final GeoJsonParser mParser;
 
     private GeoJsonPointStyle mDefaultPointStyle;
@@ -36,9 +34,6 @@ public class GeoJsonLayer {
 
     private GeoJsonPolygonStyle mDefaultPolygonStyle;
 
-    // Flag indicating whether the GeoJSON data has been added to the map
-    private boolean mGeoJsonDataOnMap;
-
     private ArrayList<LatLng> mBoundingBox;
 
     /**
@@ -46,15 +41,12 @@ public class GeoJsonLayer {
      *
      * @param map         GoogleMap object
      * @param geoJsonFile JSONObject to parse GeoJSON data from
-     * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
      */
     public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile) {
         mFeatures = new HashMap<GeoJsonFeature, Object>();
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
-        mGeoJsonDataOnMap = false;
-        mGeoJsonFile = geoJsonFile;
         mBoundingBox = null;
         mRenderer = new GeoJsonRenderer(mFeatures, map);
         mParser = new GeoJsonParser(geoJsonFile);
@@ -139,9 +131,12 @@ public class GeoJsonLayer {
      * @param feature GeoJsonFeature to remove
      */
     public void removeFeature(GeoJsonFeature feature) {
-        mRenderer.removeFeature(feature);
-        mFeatures.remove(feature);
-        feature.deleteObserver(mRenderer);
+        // Check if given feature is stored
+        if (mFeatures.containsKey(feature)) {
+            mRenderer.removeFeature(feature);
+            mFeatures.remove(feature);
+            feature.deleteObserver(mRenderer);
+        }
     }
 
     /**
@@ -166,32 +161,24 @@ public class GeoJsonLayer {
     /**
      * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map
      */
-    public void addGeoJsonData() throws JSONException {
-        if (!mGeoJsonDataOnMap) {
-            parseGeoJsonFile();
-            for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
-                geoJsonFeature.addObserver(mRenderer);
-            }
-
-            mRenderer.addLayerToMap();
-            mGeoJsonDataOnMap = true;
+    public void addGeoJsonDataToLayer() throws JSONException {
+        parseGeoJsonFile();
+        for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
+            geoJsonFeature.addObserver(mRenderer);
         }
+
+        mRenderer.addLayerToMap();
     }
 
     /**
-     * Removes all of the stored GeoJsonFeature objects from the map and mFeatures
+     * Removes all of the stored GeoJsonFeature objects from the map and clears the mFeatures hashmap
      */
-    public void removeGeoJsonData() {
-        if (mGeoJsonDataOnMap) {
-            for (GeoJsonFeature feature : mFeatures.keySet()) {
-                feature.deleteObserver(mRenderer);
-            }
-            mRenderer.removeLayerFromMap();
-            mFeatures.clear();
-            // TODO: cater for when the developer uses addFeature()
-            //
-            mGeoJsonDataOnMap = false;
+    public void removeGeoJsonLayer() {
+        for (GeoJsonFeature feature : mFeatures.keySet()) {
+            feature.deleteObserver(mRenderer);
         }
+        mRenderer.removeLayerFromMap();
+        mFeatures.clear();
     }
 
     /**
