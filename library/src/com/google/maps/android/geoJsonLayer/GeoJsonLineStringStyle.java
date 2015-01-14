@@ -6,9 +6,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
  * A class that allows for GeoJsonLineString objects to be styled and for these styles to be
  * translated into a PolylineOptions object
  */
-public class GeoJsonLineStringStyle {
+public class GeoJsonLineStringStyle implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "Line|MultiLine";
+    private final static String GEOMETRY_TYPE_REGEX = "LineString|MultiLineString|GeometryCollection";
 
     private final PolylineOptions mPolylineOptions;
 
@@ -24,6 +24,7 @@ public class GeoJsonLineStringStyle {
      *
      * @return type of geometries this style can be applied to
      */
+    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
@@ -105,6 +106,7 @@ public class GeoJsonLineStringStyle {
      *
      * @return true if the GeoJsonLineString visible, false if not visible
      */
+    @Override
     public boolean isVisible() {
         return mPolylineOptions.isVisible();
     }
@@ -114,6 +116,7 @@ public class GeoJsonLineStringStyle {
      *
      * @param visible true if the GeoJsonLineString is visible, false if not visible
      */
+    @Override
     public void setVisible(boolean visible) {
         mPolylineOptions.visible(visible);
     }

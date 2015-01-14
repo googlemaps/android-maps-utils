@@ -6,9 +6,9 @@ import com.google.android.gms.maps.model.PolygonOptions;
  * A class that allows for GeoJsonPolygon objects to be styled and for these styles to be
  * translated into a PolygonOptions object
  */
-public class GeoJsonPolygonStyle {
+public class GeoJsonPolygonStyle implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon";
+    private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon||GeometryCollection";
 
     private final PolygonOptions mPolygonOptions;
 
@@ -24,6 +24,7 @@ public class GeoJsonPolygonStyle {
      *
      * @return type of geometries this style can be applied to
      */
+    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
@@ -123,6 +124,7 @@ public class GeoJsonPolygonStyle {
      *
      * @return true if GeoJsonPolygon is visible, false if not visible
      */
+    @Override
     public boolean isVisible() {
         return mPolygonOptions.isVisible();
     }
@@ -132,6 +134,7 @@ public class GeoJsonPolygonStyle {
      *
      * @param visible true if GeoJsonPolygon is visible, false if not visible
      */
+    @Override
     public void setVisible(boolean visible) {
         mPolygonOptions.visible(visible);
     }

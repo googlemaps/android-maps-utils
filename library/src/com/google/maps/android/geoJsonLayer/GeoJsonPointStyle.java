@@ -7,9 +7,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated
  * into a MarkerOptions object
  */
-public class GeoJsonPointStyle {
+public class GeoJsonPointStyle implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint";
+    private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint|GeometryCollection";
 
     private final MarkerOptions mMarkerOptions;
 
@@ -26,6 +26,7 @@ public class GeoJsonPointStyle {
      *
      * @return type of geometries this style can be applied to
      */
+    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE_REGEX;
     }
@@ -218,6 +219,7 @@ public class GeoJsonPointStyle {
      *
      * @return true if GeoJsonPoint is visible, false if not visible
      */
+    @Override
     public boolean isVisible() {
         return mMarkerOptions.isVisible();
     }
@@ -227,6 +229,7 @@ public class GeoJsonPointStyle {
      *
      * @param visible true if GeoJsonPoint is visible, false if not visible
      */
+    @Override
     public void setVisible(boolean visible) {
         mMarkerOptions.visible(visible);
     }

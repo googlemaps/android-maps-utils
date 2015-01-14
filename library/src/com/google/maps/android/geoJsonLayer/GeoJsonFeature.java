@@ -72,8 +72,7 @@ public class GeoJsonFeature extends Observable {
      */
     public void setPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
         mGeoJsonPointStyle = geoJsonPointStyle;
-        setChanged();
-        notifyObservers();
+        checkRedrawFeature(mGeoJsonPointStyle);
     }
 
     /**
@@ -92,8 +91,7 @@ public class GeoJsonFeature extends Observable {
      */
     public void setLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mGeoJsonLineStringStyle = geoJsonLineStringStyle;
-        setChanged();
-        notifyObservers();
+        checkRedrawFeature(mGeoJsonLineStringStyle);
     }
 
     /**
@@ -112,8 +110,21 @@ public class GeoJsonFeature extends Observable {
      */
     public void setPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
         mGeoJsonPolygonStyle = geoJsonPolygonStyle;
-        setChanged();
-        notifyObservers();
+        checkRedrawFeature(mGeoJsonPolygonStyle);
+    }
+
+    /**
+     * Checks whether the new style that was set requires the feature to be redrawn. If the geometry
+     * and the style that was set match, then the feature is redrawn.
+     *
+     * @param style style to check if a redraw is needed
+     */
+    private void checkRedrawFeature(GeoJsonStyle style) {
+        if (mGeoJsonGeometry != null && mGeoJsonGeometry.getType()
+                .matches(style.getGeometryType())) {
+            setChanged();
+            notifyObservers();
+        }
     }
 
     /**
