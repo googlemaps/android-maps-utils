@@ -9,7 +9,7 @@ import java.util.Iterator;
  * Represents a placemark which is either a point, linestring, polygon or multigeometry
  * Stores the properties about the placemark including coordinates
  */
-public class KMLFeature {
+public class KmlPlacemark {
 
     private final KmlGeometry mGeometry;
 
@@ -24,7 +24,7 @@ public class KMLFeature {
      * @param style      style id to store
      * @param properties properties hashmap to store
      */
-    public KMLFeature(KmlGeometry geometry, String style, HashMap<String, String> properties) {
+    public KmlPlacemark(KmlGeometry geometry, String style, HashMap<String, String> properties) {
         mPlacemarkProperties = new HashMap<String, String>();
         mGeometry = geometry;
         mStyle = style;

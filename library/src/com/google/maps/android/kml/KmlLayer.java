@@ -36,7 +36,7 @@ import java.util.Random;
  */
 public class KmlLayer {
 
-    private HashMap<KMLFeature, Object> mPlacemarks;
+    private HashMap<KmlPlacemark, Object> mPlacemarks;
 
     private final GoogleMap mMap;
 
@@ -46,7 +46,11 @@ public class KmlLayer {
 
     private HashMap<String, String> mStyleMaps;
 
-    private Context mContext;
+    private ArrayList<KmlFolder> mFolders;
+
+    private static int NORMAL_COLOR_MODE = 0;
+
+    private static int RANDOM_COLOR_MODE = 1;
 
 
     /**
@@ -80,8 +84,6 @@ public class KmlLayer {
         mMarkerIconUrls = new ArrayList<String>();
         InputStream stream = context.getResources().openRawResource(resourceId);
         mParser = createXmlParser(stream);
-        mContext = context;
-
     }
 
     /**
@@ -100,7 +102,6 @@ public class KmlLayer {
         mMarkerIconCache = new LruCache<String, Bitmap>(100);
         mMarkerIconUrls = new ArrayList<String>();
         mParser = createXmlParser(stream);
-        mContext = context;
     }
 
     /**
@@ -127,18 +128,16 @@ public class KmlLayer {
      */
     public void addKmlData() throws IOException, XmlPullParserException {
         KmlParser parser = new KmlParser(mParser);
-        parser.parseKml();
-        initializeFeatureLayer(parser);
-        assignStyleMapStyles();
-        addContainerLayer(parser);
-        addKmlLayer();
-    }
-
-    public void initializeFeatureLayer(KmlParser parser) {
         mStyles = parser.getStyles();
         mStyleMaps = parser.getStyleMaps();
         mPlacemarks = parser.getPlacemarks();
+        mFolders = parser.getFolders();
+        parser.parseKml();
+        assignStyleMapStyles();
+        addFolderToMap(mFolders, true);
+        addKmlLayer();
     }
+
 
     /**
      * Iterates through the the stylemap hashmap and assigns the relevant style objects to them if
@@ -175,7 +174,7 @@ public class KmlLayer {
      *
      * @return iterator of KmlPlacemark objects
      */
-    public Iterator<KMLFeature> getPlacemarks() {
+    public Iterator<KmlPlacemark> getPlacemarks() {
         return mPlacemarks.keySet().iterator();
     }
 
@@ -183,13 +182,15 @@ public class KmlLayer {
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
      */
     private void addKmlLayer() {
-        for (KMLFeature placemark : mPlacemarks.keySet()) {
-            KmlStyle style = null;
-            if (mStyles.get(placemark.getStyleID()) != null) {
-                // Assign style if found, else remains null
-                style = mStyles.get(placemark.getStyleID());
+        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
+            KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
+            Boolean visibility = true;
+            if (placemark.getProperty("visibility") != null) {
+                visibility = Boolean.parseBoolean(placemark.getProperty("visibility"));
             }
-            mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
+            if (visibility == true) {
+                mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
+            }
         }
         if (!mMarkerIconUrls.isEmpty()) {
             // If there are marker icon URLs stored, download and assign to markers
@@ -197,18 +198,45 @@ public class KmlLayer {
         }
     }
 
-    private void addContainerLayer(KmlParser parser) {
+    /**
+     * Obtains the styleUrl from a placemark and finds the corresponding style in a list
+     * @param styleId   StyleUrl from a placemark
+     * @return  Style which corresponds to an ID
+     */
+    private KmlStyle getPlacemarkStyle(String styleId) {
         KmlStyle style = null;
-        for (KmlContainer container : parser.getContainers()) {
-            HashMap<KMLFeature, Object> placemarks = container.getPlacemarks();
-            for (KMLFeature placemark : placemarks.keySet()) {
-                System.out.println(placemarks.keySet().size());
-                style = container.getStyle(placemark.getStyleID());
+        if (mStyles.get(styleId) != null) {
+            style = mStyles.get(styleId);
+        }
+        return style;
+    }
 
-                container.addPlacemarks(placemark, addToMap(placemark.getGeometry(), style));
+
+    private void addFolderStyles(KmlFolder folder) {
+        for (KmlPlacemark placemark : folder.getPlacemarks().keySet()) {
+            KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
+            Boolean visibility = true;
+            if (placemark.getProperty("visibility") != null) {
+                visibility = Boolean.parseBoolean(placemark.getProperty("visibility"));
+            }
+            if (visibility == true) {
+                folder.setPlacemark(placemark, addToMap(placemark.getGeometry(), style));
             }
         }
-        parser.getContainers();
+    }
+
+    /**
+     * Adds placemarks with their corresponding styles onto the map
+     * @param folders   An arraylist of folders
+     */
+    private void addFolderToMap(ArrayList<KmlFolder> folders, boolean isVisible) {
+        for (KmlFolder folder: folders) {
+            mStyles.putAll(folder.getStyles());
+            addFolderStyles(folder);
+            if (folder.hasChildren()) {
+                addFolderToMap(folder.getChildren(), isVisible);
+            }
+        }
     }
 
     /**
@@ -229,7 +257,7 @@ public class KmlLayer {
      * @param iconUrl icon url of icon to add to markers
      */
     private void addIconToMarkers(String iconUrl) {
-        for (KMLFeature placemark : mPlacemarks.keySet()) {
+        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             // Check if the style URL is the same and the type of geometry is a point
             if (mStyles.get(placemark.getStyleID()) != null && mStyles.get(placemark.getStyleID())
                     .getIconUrl().equals(iconUrl) && placemark.getGeometry().getType()
@@ -302,6 +330,8 @@ public class KmlLayer {
         return marker;
     }
 
+
+
     /**
      * Sets a marker info window if no <text> tag was found in the KML document. This method sets
      * the marker title as the text found in the <name> start tag and the snippet as <description>
@@ -309,7 +339,7 @@ public class KmlLayer {
      * @param marker
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker) {
-        for (KMLFeature placemark : mPlacemarks.keySet()) {
+        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             if (mStyles.get(placemark.getStyleID()).equals(style)) {
                 Boolean hasName = placemark.getProperty("name") != null;
                 Boolean hasDescription = placemark.getProperty("description") != null;
@@ -354,7 +384,11 @@ public class KmlLayer {
     private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
         polylineOptions.addAll((Iterable<LatLng>) lineString.getCoordinates());
-        return mMap.addPolyline(polylineOptions);
+        Polyline polyline = mMap.addPolyline(polylineOptions);
+        if (style.getColorMode("Polyline") == RANDOM_COLOR_MODE) {
+            polyline.setColor(computeRandomColor(polyline.getColor()));
+        }
+        return polyline;
     }
 
     /**
@@ -374,20 +408,23 @@ public class KmlLayer {
         }
         Polygon mapPolygon = mMap.addPolygon(polygonOptions);
 
-        if (style.getColorMode("Polygon") == 1) {
-            int randomColor = computeRandomColor(mapPolygon.getFillColor());
-
+        if (style.getColorMode("Polygon") == RANDOM_COLOR_MODE) {
             mapPolygon.setFillColor(computeRandomColor(mapPolygon.getFillColor()));
         }
-
         return mapPolygon;
     }
 
-    private int computeRandomColor (int color) {
+    /**
+     * Computes a random color given an integer.
+     * @param color Integer value representing a color
+     * @return  Integer representing a random color
+     */
+    private static int computeRandomColor (int color) {
         Random random = new Random();
         int red = Color.red(color);
         int green = Color.green(color);
         int blue = Color.blue(color);
+        //Random number can only be computed in range [0, n)
         if (red != 0) red = random.nextInt(red);
         if (blue != 0) blue = random.nextInt(blue);
         if (green != 0) green = random.nextInt(green);

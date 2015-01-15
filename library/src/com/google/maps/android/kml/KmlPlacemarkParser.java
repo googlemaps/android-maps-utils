@@ -12,7 +12,7 @@ import java.util.HashMap;
 /**
  * Created by lavenderch on 1/12/15.
  */
-public class KmlFeatureParser {
+public class KmlPlacemarkParser {
 
 
     private static final String GEOMETRY_TAG_REGEX = "Point|LineString|Polygon|MultiGeometry";
@@ -25,13 +25,13 @@ public class KmlFeatureParser {
 
     private static final String STYLE_TAG = "styleUrl";
 
-    private final HashMap<KMLFeature, Object> mPlacemarks;
-
     private XmlPullParser mParser;
 
-    public KmlFeatureParser(XmlPullParser parser) {
-        mPlacemarks = new HashMap<KMLFeature, Object>();
+    private KmlPlacemark mPlacemark;
+
+    public KmlPlacemarkParser(XmlPullParser parser) {
         mParser = parser;
+        mPlacemark = null;
     }
 
     /**
@@ -42,7 +42,6 @@ public class KmlFeatureParser {
         String style = null;
         HashMap<String, String> properties = new HashMap<String, String>();
         KmlGeometry geometry = null;
-
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Placemark"))) {
             if (eventType == XmlPullParser.START_TAG) {
@@ -58,7 +57,7 @@ public class KmlFeatureParser {
         }
         // If there is no geometry associated with the Placemark then we do not add it
         if (geometry != null) {
-            mPlacemarks.put(new KMLFeature(geometry, style, properties), null);
+            mPlacemark = new KmlPlacemark(geometry, style, properties);
         }
     }
 
@@ -206,16 +205,7 @@ public class KmlFeatureParser {
         return new KmlMultiGeometry(geometries);
     }
 
-
-    /**
-     * Gets the array of KmlPlacemark objects
-     *
-     * @return array of KmlPlacemark objects
-     */
-    public HashMap<KMLFeature, Object> getPlacemarks() {
-        return mPlacemarks;
+    public KmlPlacemark getPlacemark() {
+        return mPlacemark;
     }
-
-
-
 }

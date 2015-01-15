@@ -41,16 +41,27 @@ public class KmlStyle {
 
     private static int RANDOM_COLOR_MODE = 1;
 
+    private String mStyleId;
+
     /**
      * Creates a new Style object
      */
     public KmlStyle() {
+        mStyleId = null;
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
         mBalloonOptions = new HashMap<String, String>();
         mColorModeOptions = new HashMap<String, Integer>();
         mScale = 1.0;
+    }
+
+    public void setStyleId (String styleId) {
+        mStyleId = styleId;
+    }
+
+    public String getStyleId () {
+        return mStyleId;
     }
 
     /**
