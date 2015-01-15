@@ -5,13 +5,14 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  * A GeoJsonFeature has a geometry, bounding box, id and set of properties. Styles are also stored
  * in this
  * class.
  */
-public class GeoJsonFeature extends Observable {
+public class GeoJsonFeature extends Observable implements Observer {
 
     private final String mId;
 
@@ -71,7 +72,9 @@ public class GeoJsonFeature extends Observable {
      * @param geoJsonPointStyle GeoJsonPointStyle object
      */
     public void setPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
+        mGeoJsonPointStyle.deleteObserver(this);
         mGeoJsonPointStyle = geoJsonPointStyle;
+        mGeoJsonPointStyle.addObserver(this);
         checkRedrawFeature(mGeoJsonPointStyle);
     }
 
@@ -90,7 +93,9 @@ public class GeoJsonFeature extends Observable {
      * @param geoJsonLineStringStyle GeoJsonLineStringStyle object
      */
     public void setLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
+        mGeoJsonLineStringStyle.deleteObserver(this);
         mGeoJsonLineStringStyle = geoJsonLineStringStyle;
+        mGeoJsonLineStringStyle.addObserver(this);
         checkRedrawFeature(mGeoJsonLineStringStyle);
     }
 
@@ -109,12 +114,15 @@ public class GeoJsonFeature extends Observable {
      * @param geoJsonPolygonStyle GeoJsonPolygonStyle object
      */
     public void setPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
+        mGeoJsonPolygonStyle.deleteObserver(this);
         mGeoJsonPolygonStyle = geoJsonPolygonStyle;
+        mGeoJsonPolygonStyle.addObserver(this);
         checkRedrawFeature(mGeoJsonPolygonStyle);
     }
 
     /**
-     * Checks whether the new style that was set requires the feature to be redrawn. If the geometry
+     * Checks whether the new style that was set requires the feature to be redrawn. If the
+     * geometry
      * and the style that was set match, then the feature is redrawn.
      *
      * @param style style to check if a redraw is needed
@@ -136,6 +144,12 @@ public class GeoJsonFeature extends Observable {
         return mGeoJsonGeometry;
     }
 
+    /**
+     * Sets the stored GeoJsonGeometry object and redraws it to the map if it has been added to the
+     * layer
+     *
+     * @param geometry GeoJsonGeometry object to set
+     */
     public void setGeometry(GeoJsonGeometry geometry) {
         mGeoJsonGeometry = geometry;
         setChanged();
@@ -183,5 +197,18 @@ public class GeoJsonFeature extends Observable {
         sb.append(",\n properties=").append(mProperties);
         sb.append("\n}\n");
         return sb.toString();
+    }
+
+    /**
+     * Update is called if the developer modifies a style that is stored in this feature
+     *
+     * @param observable GeoJsonStyle object
+     * @param data       null, no extra argument is passed through the notifyObservers method
+     */
+    @Override
+    public void update(Observable observable, Object data) {
+        if (observable instanceof GeoJsonStyle) {
+            checkRedrawFeature((GeoJsonStyle) observable);
+        }
     }
 }

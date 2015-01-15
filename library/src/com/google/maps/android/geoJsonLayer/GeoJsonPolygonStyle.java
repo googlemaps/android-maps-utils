@@ -2,11 +2,13 @@ package com.google.maps.android.geoJsonLayer;
 
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.util.Observable;
+
 /**
  * A class that allows for GeoJsonPolygon objects to be styled and for these styles to be
  * translated into a PolygonOptions object
  */
-public class GeoJsonPolygonStyle implements GeoJsonStyle {
+public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon||GeometryCollection";
 
@@ -45,6 +47,7 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
      */
     public void setFillColor(int fillColor) {
         mPolygonOptions.fillColor(fillColor);
+        styleChanged();
     }
 
     /**
@@ -63,6 +66,7 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
      */
     public void setGeodesic(boolean geodesic) {
         mPolygonOptions.geodesic(geodesic);
+        styleChanged();
     }
 
     /**
@@ -81,6 +85,7 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
      */
     public void setStrokeColor(int strokeColor) {
         mPolygonOptions.strokeColor(strokeColor);
+        styleChanged();
     }
 
     /**
@@ -99,6 +104,7 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
      */
     public void setStrokeWidth(float strokeWidth) {
         mPolygonOptions.strokeWidth(strokeWidth);
+        styleChanged();
     }
 
     /**
@@ -117,6 +123,7 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
      */
     public void setZIndex(float zIndex) {
         mPolygonOptions.zIndex(zIndex);
+        styleChanged();
     }
 
     /**
@@ -137,6 +144,16 @@ public class GeoJsonPolygonStyle implements GeoJsonStyle {
     @Override
     public void setVisible(boolean visible) {
         mPolygonOptions.visible(visible);
+        styleChanged();
+    }
+
+    /**
+     * Notifies the observers, GeoJsonFeature objects, that the style has changed. Indicates to the
+     * GeoJsonFeature that it should check whether a redraw is needed for the feature.
+     */
+    private void styleChanged() {
+        setChanged();
+        notifyObservers();
     }
 
     /**

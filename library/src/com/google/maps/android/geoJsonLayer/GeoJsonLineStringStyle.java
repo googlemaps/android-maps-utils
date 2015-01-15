@@ -2,13 +2,16 @@ package com.google.maps.android.geoJsonLayer;
 
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.Observable;
+
 /**
  * A class that allows for GeoJsonLineString objects to be styled and for these styles to be
  * translated into a PolylineOptions object
  */
-public class GeoJsonLineStringStyle implements GeoJsonStyle {
+public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "LineString|MultiLineString|GeometryCollection";
+    private final static String GEOMETRY_TYPE_REGEX
+            = "LineString|MultiLineString|GeometryCollection";
 
     private final PolylineOptions mPolylineOptions;
 
@@ -45,6 +48,7 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
      */
     public void setColor(int color) {
         mPolylineOptions.color(color);
+        styleChanged();
     }
 
     /**
@@ -63,6 +67,7 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
      */
     public void setGeodesic(boolean geodesic) {
         mPolylineOptions.geodesic(geodesic);
+        styleChanged();
     }
 
     /**
@@ -81,6 +86,7 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
      */
     public void setWidth(float width) {
         mPolylineOptions.width(width);
+        styleChanged();
     }
 
     /**
@@ -99,6 +105,7 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
      */
     public void setZIndex(float zIndex) {
         mPolylineOptions.zIndex(zIndex);
+        styleChanged();
     }
 
     /**
@@ -119,6 +126,16 @@ public class GeoJsonLineStringStyle implements GeoJsonStyle {
     @Override
     public void setVisible(boolean visible) {
         mPolylineOptions.visible(visible);
+        styleChanged();
+    }
+
+    /**
+     * Notifies the observers, GeoJsonFeature objects, that the style has changed. Indicates to the
+     * GeoJsonFeature that it should check whether a redraw is needed for the feature.
+     */
+    private void styleChanged() {
+        setChanged();
+        notifyObservers();
     }
 
     /**

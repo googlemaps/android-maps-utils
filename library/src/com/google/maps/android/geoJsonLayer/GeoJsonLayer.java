@@ -171,7 +171,8 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Removes all of the stored GeoJsonFeature objects from the map and clears the mFeatures hashmap
+     * Removes all of the stored GeoJsonFeature objects from the map and clears the mFeatures
+     * hashmap
      */
     public void removeGeoJsonLayer() {
         for (GeoJsonFeature feature : mFeatures.keySet()) {

@@ -3,11 +3,13 @@ package com.google.maps.android.geoJsonLayer;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Observable;
+
 /**
  * A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated
  * into a MarkerOptions object
  */
-public class GeoJsonPointStyle implements GeoJsonStyle {
+public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
     private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint|GeometryCollection";
 
@@ -47,6 +49,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setAlpha(float alpha) {
         mMarkerOptions.alpha(alpha);
+        styleChanged();
     }
 
     /**
@@ -75,6 +78,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setAnchor(float anchorU, float anchorV) {
         mMarkerOptions.anchor(anchorU, anchorV);
+        styleChanged();
     }
 
     /**
@@ -93,6 +97,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setDraggable(boolean draggable) {
         mMarkerOptions.draggable(draggable);
+        styleChanged();
     }
 
     /**
@@ -111,6 +116,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setFlat(boolean flat) {
         mMarkerOptions.flat(flat);
+        styleChanged();
     }
 
     /**
@@ -129,6 +135,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setIcon(BitmapDescriptor bitmap) {
         mMarkerOptions.icon(bitmap);
+        styleChanged();
     }
 
     /**
@@ -157,6 +164,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setInfoWindowAnchor(float infoWindowAnchorU, float infoWindowAnchorV) {
         mMarkerOptions.infoWindowAnchor(infoWindowAnchorU, infoWindowAnchorV);
+        styleChanged();
     }
 
     /**
@@ -176,6 +184,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setRotation(float rotation) {
         mMarkerOptions.rotation(rotation);
+        styleChanged();
     }
 
     /**
@@ -194,6 +203,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setSnippet(String snippet) {
         mMarkerOptions.snippet(snippet);
+        styleChanged();
     }
 
     /**
@@ -212,6 +222,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
      */
     public void setTitle(String title) {
         mMarkerOptions.title(title);
+        styleChanged();
     }
 
     /**
@@ -232,6 +243,16 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
     @Override
     public void setVisible(boolean visible) {
         mMarkerOptions.visible(visible);
+        styleChanged();
+    }
+
+    /**
+     * Notifies the observers, GeoJsonFeature objects, that the style has changed. Indicates to the
+     * GeoJsonFeature that it should check whether a redraw is needed for the feature.
+     */
+    private void styleChanged() {
+        setChanged();
+        notifyObservers();
     }
 
     /**
@@ -245,6 +266,7 @@ public class GeoJsonPointStyle implements GeoJsonStyle {
         markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
         markerOptions.draggable(mMarkerOptions.isDraggable());
         markerOptions.flat(mMarkerOptions.isFlat());
+        markerOptions.icon(mMarkerOptions.getIcon());
         markerOptions.infoWindowAnchor(mMarkerOptions.getInfoWindowAnchorU(),
                 mMarkerOptions.getInfoWindowAnchorV());
         markerOptions.rotation(mMarkerOptions.getRotation());
