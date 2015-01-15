@@ -10,7 +10,7 @@ import java.util.Observable;
  */
 public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon||GeometryCollection";
+    private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon|GeometryCollection";
 
     private final PolygonOptions mPolygonOptions;
 

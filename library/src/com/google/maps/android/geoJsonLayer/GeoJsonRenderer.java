@@ -299,8 +299,6 @@ public class GeoJsonRenderer implements Observer {
                 // Checks if the feature has been added to the map and its geometry is not null
                 redrawCollectionToMap(geoJsonFeature);
             } else {
-                // TODO: Add new features to the map
-                // e.g. feature prev had geom defined as null, now a point
                 addFeature(geoJsonFeature);
             }
 
