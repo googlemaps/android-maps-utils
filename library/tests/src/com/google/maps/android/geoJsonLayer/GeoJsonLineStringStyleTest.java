@@ -17,7 +17,8 @@ public class GeoJsonLineStringStyleTest extends TestCase {
         assertTrue("LineString".matches(lineStringStyle.getGeometryType()));
         assertTrue("MultiLineString".matches(lineStringStyle.getGeometryType()));
         assertTrue("GeometryCollection".matches(lineStringStyle.getGeometryType()));
-        assertEquals("LineString|MultiLineString|GeometryCollection", lineStringStyle.getGeometryType());
+        assertEquals("LineString|MultiLineString|GeometryCollection",
+                lineStringStyle.getGeometryType());
     }
 
     public void testColor() throws Exception {

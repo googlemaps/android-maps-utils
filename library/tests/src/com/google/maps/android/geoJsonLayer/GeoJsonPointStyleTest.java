@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 
 public class GeoJsonPointStyleTest extends TestCase {
 
-
     GeoJsonPointStyle pointStyle;
 
     public void setUp() throws Exception {
@@ -48,9 +47,12 @@ public class GeoJsonPointStyleTest extends TestCase {
     }
 
     public void testIcon() throws Exception {
-        pointStyle.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        assertEquals(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN), pointStyle.getIcon());
-        assertEquals(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN), pointStyle.getMarkerOptions().getIcon());
+        pointStyle
+                .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        assertEquals(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+                pointStyle.getIcon());
+        assertEquals(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+                pointStyle.getMarkerOptions().getIcon());
     }
 
     public void testInfoWindowAnchor() throws Exception {
@@ -106,7 +108,8 @@ public class GeoJsonPointStyleTest extends TestCase {
         assertEquals(1.0f, pointStyle.getMarkerOptions().getAnchorV());
         assertFalse(pointStyle.getMarkerOptions().isDraggable());
         assertFalse(pointStyle.getMarkerOptions().isFlat());
-        assertEquals(BitmapDescriptorFactory.defaultMarker(), pointStyle.getMarkerOptions().getIcon());
+        assertEquals(BitmapDescriptorFactory.defaultMarker(),
+                pointStyle.getMarkerOptions().getIcon());
         assertEquals(0.5f, pointStyle.getMarkerOptions().getInfoWindowAnchorU());
         assertEquals(0.0f, pointStyle.getMarkerOptions().getInfoWindowAnchorV());
         assertEquals(0.0f, pointStyle.getMarkerOptions().getRotation());

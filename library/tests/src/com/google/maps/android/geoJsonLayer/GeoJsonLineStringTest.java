@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 
 public class GeoJsonLineStringTest extends TestCase {
+
     GeoJsonLineString ls;
 
     public void testGetType() throws Exception {

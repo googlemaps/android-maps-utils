@@ -51,7 +51,8 @@ public class GeoJsonPolygonStyleTest extends TestCase {
 
         polygonStyle.setStrokeColor(Color.parseColor("#000000"));
         assertEquals(Color.parseColor("#000000"), polygonStyle.getStrokeColor());
-        assertEquals(Color.parseColor("#000000"), polygonStyle.getPolygonOptions().getStrokeColor());
+        assertEquals(Color.parseColor("#000000"),
+                polygonStyle.getPolygonOptions().getStrokeColor());
     }
 
     public void testStrokeWidth() throws Exception {

@@ -17,7 +17,7 @@ import java.util.Observer;
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
  * removes GeoJsonFeature objects and redraws features when updated.
  */
-public class GeoJsonRenderer implements Observer {
+class GeoJsonRenderer implements Observer {
 
     private final static int POLYGON_OUTER_COORDINATE_INDEX = 0;
 
@@ -58,7 +58,7 @@ public class GeoJsonRenderer implements Observer {
     public void setMap(GoogleMap map) {
         removeLayerFromMap();
         if (map != null) {
-            // Readd to new map if it isn't null
+            // Re add to new map if it isn't null
             mMap = map;
             addLayerToMap();
         }

@@ -80,12 +80,15 @@ public class GeoJsonLayer {
         StringBuilder result = new StringBuilder();
         // Reads from stream
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
-        // Read each line of the GeoJSON file into a string
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
+        try {
+            // Read each line of the GeoJSON file into a string
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+                // TODO: catch something derp
+            }
+        } finally {
+            reader.close();
         }
-
         // Converts the result string into a JSONObject
         return new JSONObject(result.toString());
     }
