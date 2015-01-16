@@ -35,5 +35,13 @@ public class GeoJsonPolygonTest extends TestCase {
                         new LatLng(0, 0))));
         p = new GeoJsonPolygon(coordinates);
 
+
+        try {
+            p = new GeoJsonPolygon(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("Coordinates cannot be null", e.getMessage());
+        }
+
     }
 }
