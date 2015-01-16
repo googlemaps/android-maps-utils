@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +19,8 @@ import java.util.Iterator;
  * GeoJsonFeature objects parsed from the GeoJSON file.
  */
 public class GeoJsonParser {
+
+    private static final String LOG_TAG = "GeoJsonParser";
 
     // Feature object type
     private static final String FEATURE = "Feature";
@@ -72,18 +76,29 @@ public class GeoJsonParser {
     /**
      * Parses the GeoJSON file by type and adds the generated GeoJsonFeature objects to the
      * mFeatures array. Supported GeoJSON types include feature, feature collection and geometry.
-     *
-     * @throws JSONException if the GeoJSON file could not be parsed
      */
-    public void parseGeoJson() throws JSONException {
-        String type = mGeoJsonFile.getString("type");
-        if (type.equals(FEATURE)) {
-            mGeoJsonFeatures.add(parseFeature(mGeoJsonFile));
-        } else if (type.equals(FEATURE_COLLECTION)) {
-            mGeoJsonFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
-        } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
-                .equals(GEOMETRY_COLLECTION)) {
-            mGeoJsonFeatures.add(geometryToFeature(parseGeometry(mGeoJsonFile)));
+    public void parseGeoJson() {
+        try {
+            GeoJsonFeature feature;
+            String type = mGeoJsonFile.getString("type");
+
+            if (type.equals(FEATURE)) {
+                feature = parseFeature(mGeoJsonFile);
+                if (feature != null) {
+                    mGeoJsonFeatures.add(feature);
+                }
+            } else if (type.equals(FEATURE_COLLECTION)) {
+                mGeoJsonFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
+            } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
+                    .equals(GEOMETRY_COLLECTION)) {
+                feature = parseGeometryToFeature(mGeoJsonFile);
+                if (feature != null) {
+                    // Don't add null features
+                    mGeoJsonFeatures.add(feature);
+                }
+            }
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "GeoJSON file could not be parsed. Did not contain type member.");
         }
     }
 
@@ -113,20 +128,34 @@ public class GeoJsonParser {
      *
      * @param geoJsonFeatureCollection feature collection to parse
      * @return array of GeoJsonFeature objects
-     * @throws JSONException if the feature collection could not be parsed
      */
-    private ArrayList<GeoJsonFeature> parseFeatureCollection(JSONObject geoJsonFeatureCollection)
-            throws JSONException {
-        JSONArray geoJsonFeatures = geoJsonFeatureCollection.getJSONArray(FEATURE_COLLECTION_ARRAY);
-        if (geoJsonFeatureCollection.has(BOUNDING_BOX)) {
-            mBoundingBox = parseBoundingBox(geoJsonFeatureCollection.getJSONArray(BOUNDING_BOX));
+    private ArrayList<GeoJsonFeature> parseFeatureCollection(JSONObject geoJsonFeatureCollection) {
+        JSONArray geoJsonFeatures;
+        ArrayList<GeoJsonFeature> features = new ArrayList<GeoJsonFeature>();
+        try {
+            geoJsonFeatures = geoJsonFeatureCollection.getJSONArray(FEATURE_COLLECTION_ARRAY);
+            if (geoJsonFeatureCollection.has(BOUNDING_BOX)) {
+                mBoundingBox = parseBoundingBox(
+                        geoJsonFeatureCollection.getJSONArray(BOUNDING_BOX));
+            }
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "Feature Collection could not be created.");
+            return features;
         }
 
-        ArrayList<GeoJsonFeature> features = new ArrayList<GeoJsonFeature>();
         for (int i = 0; i < geoJsonFeatures.length(); i++) {
-            JSONObject feature = geoJsonFeatures.getJSONObject(i);
-            if (feature.getString("type").equals(FEATURE)) {
-                features.add(parseFeature(feature));
+            try {
+                JSONObject feature = geoJsonFeatures.getJSONObject(i);
+                if (feature.getString("type").equals(FEATURE)) {
+                    GeoJsonFeature parsedFeature = parseFeature(feature);
+                    if (parsedFeature != null) {
+                        // Don't add null features
+                        features.add(parsedFeature);
+                    }
+                }
+            } catch (JSONException e) {
+                Log.w(LOG_TAG,
+                        "Index of Feature in Feature Collection that could not be created: " + i);
             }
         }
         return features;
@@ -138,33 +167,43 @@ public class GeoJsonParser {
      *
      * @param geoJsonFeature feature to parse
      * @return GeoJsonFeature object
-     * @throws JSONException if the feature does not have members geometry and properties or could
-     *                       not be parsed for some other reason
      */
-    private GeoJsonFeature parseFeature(JSONObject geoJsonFeature) throws JSONException {
+    private GeoJsonFeature parseFeature(JSONObject geoJsonFeature) {
         String id = null;
         ArrayList<LatLng> boundingBox = null;
         GeoJsonGeometry geometry = null;
-        JSONObject properties = null;
+        HashMap<String, String> properties = new HashMap<String, String>();
 
-        // TODO: if any of these are missing, log an error
-        if (geoJsonFeature.has(FEATURE_ID)) {
-            id = geoJsonFeature.getString(FEATURE_ID);
-        }
-        if (geoJsonFeature.has(PROPERTIES)) {
-            properties = geoJsonFeature.getJSONObject("properties");
-        }
-        if (geoJsonFeature.has(FEATURE_GEOMETRY)) {
-            if (!geoJsonFeature.isNull(FEATURE_GEOMETRY)) {
-                // Parse geometry if it isn't null
-                geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
+        try {
+            if (geoJsonFeature.has(FEATURE_ID)) {
+                id = geoJsonFeature.getString(FEATURE_ID);
             }
+            if (geoJsonFeature.has(BOUNDING_BOX)) {
+                boundingBox = parseBoundingBox(geoJsonFeature.getJSONArray(BOUNDING_BOX));
+            }
+            if (!geoJsonFeature.isNull(FEATURE_GEOMETRY)) {
+                geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
+            } else if (!geoJsonFeature.has(FEATURE_GEOMETRY)) {
+                // geometry member doesn't exist
+                Log.w(LOG_TAG,
+                        "Feature could not be successfully parsed, geometry member is missing "
+                                + geoJsonFeature.toString());
+                return null;
+            }
+            if (!geoJsonFeature.isNull(PROPERTIES)) {
+                properties = parseProperties(geoJsonFeature.getJSONObject("properties"));
+            } else if (!geoJsonFeature.has(PROPERTIES)) {
+                // properties member doesn't exist
+                Log.w(LOG_TAG,
+                        "Feature could not be successfully parsed, properties member is missing "
+                                + geoJsonFeature.toString());
+                return null;
+            }
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "Feature could not be successfully parsed " + geoJsonFeature.toString());
+            return null;
         }
-        if (geoJsonFeature.has(BOUNDING_BOX)) {
-            boundingBox = parseBoundingBox(geoJsonFeature.getJSONArray(BOUNDING_BOX));
-        }
-
-        return new GeoJsonFeature(geometry, id, parseProperties(properties), boundingBox);
+        return new GeoJsonFeature(geometry, id, properties, boundingBox);
     }
 
     /**
@@ -192,31 +231,39 @@ public class GeoJsonParser {
      *
      * @param geoJsonGeometry geometry object to parse
      * @return GeoJsonGeometry object
-     * @throws JSONException if the geometry does not have a coordinates or geometries array or
-     *                       could not be parsed for some other reason
      */
     private GeoJsonGeometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
         String geometryType = geoJsonGeometry.getString("type");
         JSONArray geometryArray;
         if (geometryType.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
             geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COORDINATES_ARRAY);
-        } else {
+        } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             // GeometryCollection
             geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
+        } else {
+            Log.w(LOG_TAG,
+                    "Geometry could not be created as it did not contain a coordinates or geometries member "
+                            + geoJsonGeometry.toString());
+            return null;
         }
-
         return createGeometry(geometryType, geometryArray);
     }
 
     /**
-     * Converts a GeoJsonGeometry object into a GeoJsonFeature object. A geometry object has no ID
-     * or properties so it is set to null.
+     * Converts a GeoJsonGeometry object into a GeoJsonFeature object. A geometry object has no ID,
+     * properties or bounding box so it is set to null.
      *
-     * @param GeoJsonGeometry Geometry object to convert into a Feature object
+     * @param geoJsonGeometry Geometry object to convert into a Feature object
      * @return new Feature object
      */
-    private GeoJsonFeature geometryToFeature(GeoJsonGeometry GeoJsonGeometry) {
-        return new GeoJsonFeature(GeoJsonGeometry, null, null, null);
+    private GeoJsonFeature parseGeometryToFeature(JSONObject geoJsonGeometry) {
+        try {
+            GeoJsonGeometry geometry = parseGeometry(geoJsonGeometry);
+            return new GeoJsonFeature(geometry, null, new HashMap<String, String>(), null);
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "Geometry could not be created " + geoJsonGeometry.toString());
+            return null;
+        }
     }
 
     /**
@@ -262,7 +309,6 @@ public class GeoJsonParser {
         } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             return createGeometryCollection(geometryArray);
         }
-        // TODO: if null, don't add to array or catch
         return null;
     }
 
@@ -355,14 +401,18 @@ public class GeoJsonParser {
      */
     private GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries)
             throws JSONException {
-        ArrayList<GeoJsonGeometry> geoJsonGeometryCollectionElements
+        ArrayList<GeoJsonGeometry> geometryCollectionElements
                 = new ArrayList<GeoJsonGeometry>();
 
         for (int i = 0; i < geometries.length(); i++) {
             JSONObject geometryElement = geometries.getJSONObject(i);
-            geoJsonGeometryCollectionElements.add(parseGeometry(geometryElement));
+            GeoJsonGeometry geometry = parseGeometry(geometryElement);
+            if (geometry != null) {
+                // Do not add geometries that could not be parsed
+                geometryCollectionElements.add(geometry);
+            }
         }
-        return new GeoJsonGeometryCollection(geoJsonGeometryCollectionElements);
+        return new GeoJsonGeometryCollection(geometryCollectionElements);
     }
 
     /**
