@@ -44,4 +44,5 @@ public class KmlLineString implements KmlGeometry {
         return mCoordinates;
     }
 
+
 }

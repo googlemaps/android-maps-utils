@@ -48,20 +48,10 @@ public class KmlLayer {
 
     private ArrayList<KmlFolder> mFolders;
 
-    private static int NORMAL_COLOR_MODE = 0;
-
     private static int RANDOM_COLOR_MODE = 1;
 
-
-    /**
-     * Hashmap of Style classes. The key is a string value which represents the id of the Style in
-     * the KML document.
-     */
     private HashMap<String, KmlStyle> mStyles;
 
-    /**
-     * XML Pull Parser, which reads in a KML Document
-     */
     private XmlPullParser mParser;
 
     /*TODO(lavenderch): IconStyle, BallonStyle, ExtendedData, Folder
@@ -128,26 +118,77 @@ public class KmlLayer {
      */
     public void addKmlData() throws IOException, XmlPullParserException {
         KmlParser parser = new KmlParser(mParser);
+        parser.parseKml();
         mStyles = parser.getStyles();
         mStyleMaps = parser.getStyleMaps();
         mPlacemarks = parser.getPlacemarks();
         mFolders = parser.getFolders();
-        parser.parseKml();
-        assignStyleMapStyles();
-        addFolderToMap(mFolders, true);
-        addKmlLayer();
+        assignStyleMapStyles(mStyleMaps, mStyles);
+        addFoldersToMap(mFolders);
+        addPlacemarksToMap(mPlacemarks);
+        addIconsToMarkers(mMarkerIconUrls);
     }
 
 
     /**
-     * Iterates through the the stylemap hashmap and assigns the relevant style objects to them if
-     * they exist
+     *  Iterates through a list of
      */
-    private void assignStyleMapStyles() {
-        for (String styleId : mStyleMaps.keySet()) {
-            if (mStyles.containsKey(mStyleMaps.get(styleId))) {
-                mStyles.put(styleId, mStyles.get(mStyleMaps.get(styleId)));
+    private void assignStyleMapStyles(HashMap<String, String> styleMap,
+        HashMap<String, KmlStyle> styles) {
+        for (String styleId : styleMap.keySet()) {
+            if (styles.containsKey(styleMap.get(styleId))) {
+                styles.put(styleId, styles.get(styleMap.get(styleId)));
             }
+        }
+    }
+
+    /**
+     * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
+     */
+    private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
+        for (KmlPlacemark placemark : placemarks.keySet()) {
+            KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
+            Boolean visibility = getVisibility(placemark);
+            placemarks.put(placemark, addToMap(placemark.getGeometry(), style, visibility));
+        }
+    }
+
+
+    /**
+     * Adds placemarks with their corresponding styles onto the map
+     * @param folders   An arraylist of folders
+     */
+    private void addFoldersToMap(ArrayList<KmlFolder> folders) {
+        for (KmlFolder folder: folders) {
+            if (folder.getStyles() != null) {
+                mStyles.putAll(folder.getStyles());
+                assignStyleMapStyles(mStyleMaps, mStyles);
+            }
+            addFolderStyles(folder);
+            if (folder.hasChildren()) {
+                addFoldersToMap(folder.getChildren());
+            }
+        }
+    }
+
+
+    private void addFolderStyles(KmlFolder folder) {
+        for (KmlPlacemark placemark : folder.getPlacemarks().keySet()) {
+            KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
+            Boolean visibility = getVisibility(placemark);
+            Object mapObject =  addToMap(placemark.getGeometry(), style, visibility);
+            folder.setPlacemark(placemark, mapObject);
+        }
+    }
+
+    /**
+     * Determines if there are any icons to add to markers
+     * @param iconUrls String value represent path to obtain icon from
+     */
+    private void addIconsToMarkers (ArrayList<String> iconUrls) {
+        if (!iconUrls.isEmpty()) {
+            // If there are marker icon URLs stored, download and assign to markers
+            downloadMarkerIcons();
         }
     }
 
@@ -169,6 +210,7 @@ public class KmlLayer {
         mPlacemarks.clear();
     }
 
+
     /**
      * Gets an iterator of KmlPlacemark objects
      *
@@ -179,24 +221,12 @@ public class KmlLayer {
     }
 
     /**
-     * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
+     * @return An iterator of Folder objects
      */
-    private void addKmlLayer() {
-        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
-            KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
-            Boolean visibility = true;
-            if (placemark.getProperty("visibility") != null) {
-                visibility = Boolean.parseBoolean(placemark.getProperty("visibility"));
-            }
-            if (visibility == true) {
-                mPlacemarks.put(placemark, addToMap(placemark.getGeometry(), style));
-            }
-        }
-        if (!mMarkerIconUrls.isEmpty()) {
-            // If there are marker icon URLs stored, download and assign to markers
-            downloadMarkerIcons();
-        }
+    public Iterator<KmlFolder> getFolders() {
+        return mFolders.iterator();
     }
+
 
     /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
@@ -204,39 +234,26 @@ public class KmlLayer {
      * @return  Style which corresponds to an ID
      */
     private KmlStyle getPlacemarkStyle(String styleId) {
-        KmlStyle style = null;
+        KmlStyle style = mStyles.get(null);
         if (mStyles.get(styleId) != null) {
             style = mStyles.get(styleId);
         }
         return style;
     }
 
-
-    private void addFolderStyles(KmlFolder folder) {
-        for (KmlPlacemark placemark : folder.getPlacemarks().keySet()) {
-            KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
-            Boolean visibility = true;
-            if (placemark.getProperty("visibility") != null) {
-                visibility = Boolean.parseBoolean(placemark.getProperty("visibility"));
-            }
-            if (visibility == true) {
-                folder.setPlacemark(placemark, addToMap(placemark.getGeometry(), style));
-            }
-        }
-    }
-
     /**
-     * Adds placemarks with their corresponding styles onto the map
-     * @param folders   An arraylist of folders
+     * Gets the visibility of the placemark if it is defined. The default visibility is true
+     * @param placemark Placemark to obtain visibility from
+     * @return true if visibility is set to 1 or visibility undefined, false if visibility is 0
      */
-    private void addFolderToMap(ArrayList<KmlFolder> folders, boolean isVisible) {
-        for (KmlFolder folder: folders) {
-            mStyles.putAll(folder.getStyles());
-            addFolderStyles(folder);
-            if (folder.hasChildren()) {
-                addFolderToMap(folder.getChildren(), isVisible);
+    private static boolean getVisibility (KmlPlacemark placemark) {
+        Boolean visibility = true;
+        if (placemark.getProperty("visibility") != null) {
+            if (placemark.getProperty("visibility").equals("0")) {
+                visibility = false;
             }
         }
+        return visibility;
     }
 
     /**
@@ -256,7 +273,7 @@ public class KmlLayer {
      *
      * @param iconUrl icon url of icon to add to markers
      */
-    private void addIconToMarkers(String iconUrl) {
+    private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> mPlacemarks) {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             // Check if the style URL is the same and the type of geometry is a point
             if (mStyles.get(placemark.getStyleID()) != null && mStyles.get(placemark.getStyleID())
@@ -265,6 +282,15 @@ public class KmlLayer {
                 Bitmap iconBitmap = mMarkerIconCache.get(iconUrl);
                 Double scale = mStyles.get(placemark.getStyleID()).getIconScale();
                 ((Marker) mPlacemarks.get(placemark)).setIcon(scaleIconToMarkers(iconBitmap, scale));
+            }
+        }
+    }
+
+    private void addFolderIconToMarkers (String iconUrl, ArrayList<KmlFolder> folders) {
+        for (KmlFolder folder : folders) {
+            addIconToMarkers(iconUrl, folder.getPlacemarks());
+            if (folder.hasChildren()) {
+                addFolderIconToMarkers(iconUrl, folder.getChildren());
             }
         }
     }
@@ -294,16 +320,22 @@ public class KmlLayer {
      * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
      * of either objects
      */
-    private Object addToMap(KmlGeometry geometry, KmlStyle style) {
+    private Object addToMap(KmlGeometry geometry, KmlStyle style, Boolean isVisible) {
         String geometryType = geometry.getType();
         if (geometryType.equals("Point")) {
-            return addPointToMap((KmlPoint) geometry, style);
+            Marker marker = addPointToMap((KmlPoint) geometry, style);
+            marker.setVisible(isVisible);
+            return marker;
         } else if (geometryType.equals("LineString")) {
-            return addLineStringToMap((KmlLineString) geometry, style);
+            Polyline polyline = addLineStringToMap((KmlLineString) geometry, style);
+            polyline.setVisible(isVisible);
+            return polyline;
         } else if (geometryType.equals("Polygon")) {
-            return addPolygonToMap((KmlPolygon) geometry, style);
+            Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style);
+            polygon.setVisible(isVisible);
+            return polygon;
         } else if (geometryType.equals("MultiGeometry")) {
-            return addMultiGeometryToMap((KmlMultiGeometry) geometry, style);
+            return addMultiGeometryToMap((KmlMultiGeometry) geometry, style, isVisible);
         }
         return null;
     }
@@ -316,10 +348,7 @@ public class KmlLayer {
      * @return Marker object
      */
     private Marker addPointToMap(KmlPoint point, KmlStyle style) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        if (style != null) {
-           markerOptions = style.getMarkerOptions();
-        }
+        MarkerOptions markerOptions = style.getMarkerOptions();
         markerOptions.position((LatLng) point.getCoordinates());
         Marker marker = mMap.addMarker(markerOptions);
         if (markerOptions.getTitle() == null) {
@@ -384,10 +413,11 @@ public class KmlLayer {
     private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
         polylineOptions.addAll((Iterable<LatLng>) lineString.getCoordinates());
-        Polyline polyline = mMap.addPolyline(polylineOptions);
-        if (style.getColorMode("Polyline") == RANDOM_COLOR_MODE) {
-            polyline.setColor(computeRandomColor(polyline.getColor()));
+        if (style.hasColorMode("LineString") && style.getColorMode("LineString")
+                == RANDOM_COLOR_MODE) {
+            polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
         }
+        Polyline polyline = mMap.addPolyline(polylineOptions);
         return polyline;
     }
 
@@ -440,13 +470,16 @@ public class KmlLayer {
      * @param style    contains relevant styling properties for the MultiGeometry
      * @return array of Marker, Polyline and Polygon objects
      */
-    private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry geometry, KmlStyle style) {
+    private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry geometry, KmlStyle style, Boolean isVisible) {
         ArrayList<Object> geometries = new ArrayList<Object>();
-        for (KmlGeometry kmlGeometry : (ArrayList<KmlGeometry>) geometry.getCoordinates()) {
-            geometries.add(addToMap(kmlGeometry, style));
+        ArrayList<KmlGeometry> geo = (ArrayList<KmlGeometry>) geometry.getCoordinates();
+        for (KmlGeometry kmlGeometry : geo) {
+            geometries.add(addToMap(kmlGeometry, style, isVisible));
         }
         return geometries;
     }
+
+
 
     /**
      * Downloads images for use as marker icons
@@ -490,8 +523,8 @@ public class KmlLayer {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             mMarkerIconCache.put(mIconUrl, bitmap);
-            addIconToMarkers(mIconUrl);
-
+            addIconToMarkers(mIconUrl, mPlacemarks);
+            addFolderIconToMarkers(mIconUrl, mFolders);
         }
     }
 }

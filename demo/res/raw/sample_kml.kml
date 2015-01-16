@@ -1,53 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-<Folder>
-    <Folder>
-        <Style id="examplePolyStyle">
-            <PolyStyle>
-                <color>ffffffcc</color>
-                <colorMode>random</colorMode>
-            </PolyStyle>
-        </Style>
-        <Placemark>
-            <name>Folder object 2 (Polygon)</name>
-            <styleUrl>#examplePolyStyle</styleUrl>
-            <Polygon>
-                <outerBoundaryIs>
-                    <LinearRing>
-                        <coordinates>
-                        -122.377830,37.830445,0
-                        -122.377576,37.830631,0
-                        -122.377840,37.830642,0
-                        -122.377830,37.830445,0
-                        </coordinates>
-                    </LinearRing>
-                </outerBoundaryIs>
-            </Polygon>
-        </Placemark>
-    </Folder>
-</Folder>
-<Folder>
-  <name>Document.kml</name>
-  <open>1</open>
-  <visibility>1</visibility>
-  <Style id="exampleStyleDocument">
-    <LabelStyle>
-      <color>ff0000cc</color>
+<Document>
+  <Style id="normalPlacemark">
+    <IconStyle>
+      <scale>0.6</scale>
+      <Icon>
+        <href>http://www.visualtravelguide.com/cible.png</href>
+        <w>32</w>
+        <h>32</h>
+      </Icon>
+    </IconStyle>
+    <LabelStyle id="defaultLabelStyle">
+      <color>00ffffff</color>
     </LabelStyle>
   </Style>
-  <Placemark>
-    <name>Document Feature 1</name>
-    <styleUrl>#exampleStyleDocument</styleUrl>
+  <Style id="highlightPlacemark">
+    <IconStyle>
+      <scale>0.7</scale>
+      <Icon>
+        <href>http://www.visualtravelguide.com/cible.png</href>
+        <w>32</w>
+        <h>32</h>
+      </Icon>
+    </IconStyle>
+    <LabelStyle id="defaultLabelStyle">
+      <color>ffffffff</color>
+      <scale>1.0</scale>
+    </LabelStyle>
+  </Style>
+  <StyleMap id="vtgStyleMap">
+    <Pair>
+      <key>normal</key>
+      <styleUrl>#normalPlacemark</styleUrl>
+    </Pair>
+    <Pair>
+      <key>highlight</key>
+      <styleUrl>#highlightPlacemark</styleUrl>
+    </Pair>
+  </StyleMap>
+  <Style id="pushpin">
+    <IconStyle id="mystyle">
+      <Icon>
+        <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+        <scale>1.0</scale>
+      </Icon>
+    </IconStyle>
+  </Style>
+<Folder>
+  <Placemark id="mountainpin1">
+    <name>Pin on a mountaintop</name>
+    <styleUrl>#vtgStyleMap</styleUrl>
     <Point>
-      <coordinates>-122.371,37.816,0</coordinates>
+      <coordinates>170.1435558771009,-43.60505741890396,0</coordinates>
     </Point>
-  </Placemark>
-  <Placemark>
-    <name>Document Feature 2</name>
-    <styleUrl>#exampleStyleDocument</styleUrl>
-    <Point>
-      <coordinates>5,7,0</coordinates>
-    </Point>
-  </Placemark>
+    </Placemark>
 </Folder>
+</Document>
+
 </kml>

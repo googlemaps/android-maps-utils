@@ -1,11 +1,5 @@
 package com.google.maps.android.kml;
 
-import android.graphics.Bitmap;
-
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Marker;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -79,6 +73,10 @@ public class KmlStyleParser {
                     setIconUrl(style);
                 } else if (mParser.getName().equals("hotSpot")) {
                     setIconHotSpot(style);
+                } else if (mParser.getName().equals("color")) {
+                    setIconColor(style);
+                } else if (mParser.getName().equals("colorMode")) {
+                    setIconColorMode(style);
                 }
             }
             eventType = mParser.next();
@@ -101,6 +99,7 @@ public class KmlStyleParser {
                     isNormalKey = true;
                 } else if (mParser.getName().equals(STYLE_TAG) && isNormalKey) {
                     mStyleMaps.put(styleId, mParser.nextText());
+                    isNormalKey = false;
                 }
             }
             eventType = mParser.next();
@@ -144,6 +143,10 @@ public class KmlStyleParser {
         style.setHeading(iconHeadingFloat);
     }
 
+    private void setIconColorMode(KmlStyle style)  throws XmlPullParserException, IOException {
+        style.setColorMode("Point", mParser.nextText());
+    }
+
     /**
      * Sets the icon url for the style
      *
@@ -173,6 +176,11 @@ public class KmlStyleParser {
         xUnits =  mParser.getAttributeValue(null, "xunits");
         yUnits = mParser.getAttributeValue(null, "yunits");
         style.setHotSpot(xValue, yValue, xUnits, yUnits);
+    }
+
+    private void setIconColor(KmlStyle style)  throws XmlPullParserException, IOException {
+       String colorString = mParser.nextText();
+       style.setMarkerColor(colorString);
     }
 
     /**
@@ -228,6 +236,7 @@ public class KmlStyleParser {
      * @return hashmap of KmlStyle objects
      */
     public HashMap<String, KmlStyle> getStyles() {
+        mStyles.put(null, new KmlStyle());
         return mStyles;
     }
 

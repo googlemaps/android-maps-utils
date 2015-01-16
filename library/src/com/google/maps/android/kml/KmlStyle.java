@@ -92,6 +92,13 @@ public class KmlStyle {
         mPolygonOptions.fillColor(Color.parseColor("#" + color));
     }
 
+    public void setMarkerColor (String color) {
+        float[] hsvValues = new float[3];
+        Color.colorToHSV(Color.parseColor("#" + color), hsvValues);
+        float hue = hsvValues[0];
+        mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(hue));
+    }
+
     /**
      * Sets the heading for Points. This is also known as rotation
      *
@@ -172,6 +179,9 @@ public class KmlStyle {
         return mColorModeOptions.get(geometryType);
     }
 
+    public boolean hasColorMode(String geometryType) {
+        return mColorModeOptions.containsKey(geometryType);
+    }
 
     /**
      * Gets whether the Polygon has an outline

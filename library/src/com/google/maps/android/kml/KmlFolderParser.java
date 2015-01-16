@@ -13,7 +13,7 @@ public class KmlFolderParser {
 
     private static final String PROPERTY_TAG_REGEX = "name|description|visibility|open";
 
-    private ArrayList<KmlFolder> mContainers;
+    private KmlFolder mContainer;
 
     private XmlPullParser mParser;
 
@@ -25,7 +25,7 @@ public class KmlFolderParser {
 
     public KmlFolderParser(XmlPullParser parser) {
         mParser = parser;
-        mContainers = new  ArrayList<KmlFolder>();
+        mContainer = null;
     }
 
     /**
@@ -35,7 +35,7 @@ public class KmlFolderParser {
     public void createContainer() throws XmlPullParserException, IOException {
         KmlFolder folder = new KmlFolder();
         assignFolderProperties(folder);
-        mContainers.add(folder);
+        mContainer = folder;
     }
 
     /**
@@ -72,8 +72,8 @@ public class KmlFolderParser {
     /**
      * @return List of containers
      */
-    public ArrayList<KmlFolder> getContainers() {
-        return mContainers;
+    public KmlFolder getContainer() {
+        return mContainer;
     }
 
 

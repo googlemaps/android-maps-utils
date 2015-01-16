@@ -30,6 +30,8 @@ public class KmlParser {
 
     private final static String CONTAINER_START_TAG = "Folder";
 
+    private ArrayList<KmlFolder> mFolders;
+
 
     /**
      * Creates a new KmlParser object
@@ -38,10 +40,11 @@ public class KmlParser {
      */
     public KmlParser(XmlPullParser parser) {
         mParser = parser;
+        mPlacemarks = new HashMap<KmlPlacemark, Object>();
+        mFolders = new ArrayList<KmlFolder>();
         styleParser = new KmlStyleParser(mParser);
         placemarkParser = new KmlPlacemarkParser(mParser);
         containerParser= new KmlFolderParser(mParser);
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
     }
 
     /**
@@ -53,19 +56,19 @@ public class KmlParser {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(STYLE_START_TAG)) {
                     styleParser.createStyle();
-                } else if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
+                } if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
                     styleParser.createStyleMap();
-                } else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
+                } if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     placemarkParser.createPlacemark();
                     mPlacemarks.put(placemarkParser.getPlacemark(), null);
-                } else if (mParser.getName().equals(CONTAINER_START_TAG)) {
+                } if (mParser.getName().equals(CONTAINER_START_TAG)) {
                     containerParser.createContainer();
+                    mFolders.add(containerParser.getContainer());
                 }
             }
             eventType = mParser.next();
         }
     }
-
 
 
     public HashMap<String, KmlStyle> getStyles() {
@@ -79,6 +82,6 @@ public class KmlParser {
     public  HashMap<String, String> getStyleMaps() { return styleParser.getStyleMaps(); }
 
     public ArrayList<KmlFolder> getFolders() {
-        return containerParser.getContainers();
+        return mFolders;
     }
 }
