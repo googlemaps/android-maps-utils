@@ -26,7 +26,7 @@ public class KmlPolygonTest extends TestCase {
         ArrayList<ArrayList<LatLng>> innerCoordinates = new ArrayList<ArrayList<LatLng>>();
         innerCoordinates.add(new ArrayList<LatLng>(Arrays.asList(new LatLng(0,0), new LatLng(20, 20), new LatLng(60, 60), new LatLng(0, 0))));
         p = new KmlPolygon(outerCoordinates, innerCoordinates);
-        assertEquals("Polygon", p.getType());
+        assertEquals("Polygon", p.getKmlGeometryType());
     }
 
     public void testGetOuterBoundaryCoordinates() throws Exception {

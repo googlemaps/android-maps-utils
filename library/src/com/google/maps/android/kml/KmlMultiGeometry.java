@@ -29,7 +29,7 @@ public class KmlMultiGeometry implements KmlGeometry {
      * @return type of geometry
      */
     @Override
-    public String getType() {
+    public String getKmlGeometryType() {
         return GEOMETRY_TYPE;
     }
 
@@ -39,7 +39,7 @@ public class KmlMultiGeometry implements KmlGeometry {
      * @return Arraylist of KmlGeometry objects
      */
     @Override
-    public Object getCoordinates() {
+    public Object getKmlGeometryCoordinates() {
         return mGeometries;
     }
 }

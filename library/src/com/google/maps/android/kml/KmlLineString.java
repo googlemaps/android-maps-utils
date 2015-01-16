@@ -31,7 +31,7 @@ public class KmlLineString implements KmlGeometry {
      * @return type of geometry
      */
     @Override
-    public String getType() {
+    public String getKmlGeometryType() {
         return GEOMETRY_TYPE;
     }
 
@@ -40,7 +40,7 @@ public class KmlLineString implements KmlGeometry {
      *
      * @return ArrayList of LatLng
      */
-    public Object getCoordinates() {
+    public Object getKmlGeometryCoordinates() {
         return mCoordinates;
     }
 

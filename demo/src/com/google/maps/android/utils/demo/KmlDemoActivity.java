@@ -1,5 +1,7 @@
 package com.google.maps.android.utils.demo;
 
+import com.google.maps.android.kml.KmlContainer;
+import com.google.maps.android.kml.KmlFolder;
 import com.google.maps.android.kml.KmlLayer;
 
 import android.util.Log;
@@ -17,12 +19,6 @@ public class KmlDemoActivity extends BaseDemoActivity {
             Log.i("Demo", "Start");
             KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.germany, getApplicationContext());
             kmlLayer.addKmlData();
-
-
-
-
-
-
 
 
             Log.i("Demo", "End");

@@ -34,7 +34,7 @@ import java.util.Random;
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
-public class KmlLayer {
+public class KmlLayer implements KmlContainer {
 
     private HashMap<KmlPlacemark, Object> mPlacemarks;
 
@@ -48,11 +48,13 @@ public class KmlLayer {
 
     private ArrayList<KmlContainer> mFolders;
 
-    private static int RANDOM_COLOR_MODE = 1;
-
     private HashMap<String, KmlStyle> mStyles;
 
     private XmlPullParser mParser;
+
+    private static int RANDOM_COLOR_MODE = 1;
+
+    private static int LRU_CACHE_SIZE = 100;
 
     /*TODO(lavenderch): IconStyle, BallonStyle, ExtendedData, Folder
     */
@@ -69,7 +71,7 @@ public class KmlLayer {
             throws XmlPullParserException {
         mMap = map;
         mStyles = new HashMap<String, KmlStyle>();
-        mMarkerIconCache = new LruCache<String, Bitmap>(100);
+        mMarkerIconCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mStyleMaps = new HashMap<String, String>();
         mMarkerIconUrls = new ArrayList<String>();
         InputStream stream = context.getResources().openRawResource(resourceId);
@@ -89,7 +91,7 @@ public class KmlLayer {
         mStyles = new HashMap<String, KmlStyle>();
         mPlacemarks = null;
         mStyleMaps = new HashMap<String, String>();
-        mMarkerIconCache = new LruCache<String, Bitmap>(100);
+        mMarkerIconCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
         mParser = createXmlParser(stream);
     }
@@ -109,32 +111,11 @@ public class KmlLayer {
         return parser;
     }
 
-
-    /**
-     * Adds the KML data to the map
-     *
-     * @throws XmlPullParserException if KML file cannot be parsed
-     * @throws IOException            if KML file cannot be opened
-     */
-    public void addKmlData() throws IOException, XmlPullParserException {
-        KmlParser parser = new KmlParser(mParser);
-        parser.parseKml();
-        mStyles = parser.getStyles();
-        mStyleMaps = parser.getStyleMaps();
-        mPlacemarks = parser.getPlacemarks();
-        mFolders = parser.getFolders();
-        assignStyleMapStyles(mStyleMaps, mStyles);
-        addFoldersToMap(mFolders);
-        addPlacemarksToMap(mPlacemarks);
-        addIconsToMarkers(mMarkerIconUrls);
-    }
-
-
     /**
      *  Iterates through a list of
      */
     private void assignStyleMapStyles(HashMap<String, String> styleMap,
-        HashMap<String, KmlStyle> styles) {
+                                      HashMap<String, KmlStyle> styles) {
         for (String styleId : styleMap.keySet()) {
             if (styles.containsKey(styleMap.get(styleId))) {
                 styles.put(styleId, styles.get(styleMap.get(styleId)));
@@ -153,7 +134,6 @@ public class KmlLayer {
         }
     }
 
-
     /**
      * Adds placemarks with their corresponding styles onto the map
      * @param folders   An arraylist of folders
@@ -166,13 +146,16 @@ public class KmlLayer {
                 assignStyleMapStyles(mStyleMaps, mStyles);
             }
             addFolderStyles(folder);
-            if (folder.hasChildren()) {
+            if (folder.hasNestedKmlFolders()) {
                 addFoldersToMap(folder.getChildren());
             }
         }
     }
 
-
+    /**
+     * Goes through the every placemark, style and properties object within a <Folder> tag
+     * @param folder    Folder to obtain placemark and styles from
+     */
     private void addFolderStyles(KmlFolder folder) {
         for (KmlPlacemark placemark : folder.getPlacemarks().keySet()) {
             KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
@@ -192,43 +175,7 @@ public class KmlLayer {
             downloadMarkerIcons();
         }
     }
-
-    /**
-     * Removes all the KML data from the map and clears all the stored placemarks
-     */
-    public void removeKmlData() {
-        // Remove map object from the map
-        for (Object mapObject : mPlacemarks.values()) {
-            if (mapObject instanceof Marker) {
-                ((Marker) mapObject).remove();
-            } else if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).remove();
-            } else if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).remove();
-            }
-        }
-        // Remove the KmlPlacemark and map object from the mPlacemarks hashmap
-        mPlacemarks.clear();
-    }
-
-
-    /**
-     * Gets an iterator of KmlPlacemark objects
-     *
-     * @return iterator of KmlPlacemark objects
-     */
-    public Iterator<KmlPlacemark> getPlacemarks() {
-        return mPlacemarks.keySet().iterator();
-    }
-
-    /**
-     * @return An iterator of Folder objects
-     */
-    public Iterator<KmlContainer> getFolders() {
-        return mFolders.iterator();
-    }
-
-
+    
     /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
      * @param styleId   StyleUrl from a placemark
@@ -278,7 +225,7 @@ public class KmlLayer {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             // Check if the style URL is the same and the type of geometry is a point
             if (mStyles.get(placemark.getStyleID()) != null && mStyles.get(placemark.getStyleID())
-                    .getIconUrl().equals(iconUrl) && placemark.getGeometry().getType()
+                    .getIconUrl().equals(iconUrl) && placemark.getGeometry().getKmlGeometryType()
                     .equals("Point")) {
                 Bitmap iconBitmap = mMarkerIconCache.get(iconUrl);
                 Double scale = mStyles.get(placemark.getStyleID()).getIconScale();
@@ -291,7 +238,7 @@ public class KmlLayer {
         for (KmlContainer kmlContainer : folders) {
             KmlFolder folder = ((KmlFolder) kmlContainer);
             addIconToMarkers(iconUrl, folder.getPlacemarks());
-            if (folder.hasChildren()) {
+            if (folder.hasNestedKmlFolders()) {
                 addFolderIconToMarkers(iconUrl, folder.getChildren());
             }
         }
@@ -323,7 +270,7 @@ public class KmlLayer {
      * of either objects
      */
     private Object addToMap(KmlGeometry geometry, KmlStyle style, Boolean isVisible) {
-        String geometryType = geometry.getType();
+        String geometryType = geometry.getKmlGeometryType();
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap((KmlPoint) geometry, style);
             marker.setVisible(isVisible);
@@ -351,7 +298,7 @@ public class KmlLayer {
      */
     private Marker addPointToMap(KmlPoint point, KmlStyle style) {
         MarkerOptions markerOptions = style.getMarkerOptions();
-        markerOptions.position((LatLng) point.getCoordinates());
+        markerOptions.position((LatLng) point.getKmlGeometryCoordinates());
         Marker marker = mMap.addMarker(markerOptions);
         if (markerOptions.getTitle() == null) {
             setMarkerInfoWindow(style, marker);
@@ -360,8 +307,6 @@ public class KmlLayer {
         }
         return marker;
     }
-
-
 
     /**
      * Sets a marker info window if no <text> tag was found in the KML document. This method sets
@@ -414,7 +359,7 @@ public class KmlLayer {
      */
     private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
-        polylineOptions.addAll((Iterable<LatLng>) lineString.getCoordinates());
+        polylineOptions.addAll((Iterable<LatLng>) lineString.getKmlGeometryCoordinates());
         if (style.hasColorMode("LineString") && style.getColorMode("LineString")
                 == RANDOM_COLOR_MODE) {
             polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
@@ -430,16 +375,13 @@ public class KmlLayer {
      * @param style   contains relevant styling properties for the Polygon
      * @return Polygon object
      */
-    private Polygon addPolygonToMap(KmlPolygon polygon,
-            KmlStyle style) {
+    private Polygon addPolygonToMap(KmlPolygon polygon, KmlStyle style) {
         PolygonOptions polygonOptions = style.getPolygonOptions();
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
-
         for (ArrayList<LatLng> innerBoundary : polygon.getInnerBoundaryCoordinates()) {
             polygonOptions.addHole(innerBoundary);
         }
         Polygon mapPolygon = mMap.addPolygon(polygonOptions);
-
         if (style.getColorMode("Polygon") == RANDOM_COLOR_MODE) {
             mapPolygon.setFillColor(computeRandomColor(mapPolygon.getFillColor()));
         }
@@ -468,20 +410,84 @@ public class KmlLayer {
      * Adds all the geometries within a KML MultiGeometry to the map. Supports recursive
      * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
      *
-     * @param geometry contains array of geometries for the MultiGeometry
+     * @param multiGeometry contains array of geometries for the MultiGeometry
      * @param style    contains relevant styling properties for the MultiGeometry
      * @return array of Marker, Polyline and Polygon objects
      */
-    private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry geometry, KmlStyle style, Boolean isVisible) {
+    private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry multiGeometry, KmlStyle style, Boolean isVisible) {
         ArrayList<Object> geometries = new ArrayList<Object>();
-        ArrayList<KmlGeometry> geo = (ArrayList<KmlGeometry>) geometry.getCoordinates();
-        for (KmlGeometry kmlGeometry : geo) {
+        ArrayList<KmlGeometry> geometry
+                = (ArrayList<KmlGeometry>) multiGeometry.getKmlGeometryCoordinates();
+        for (KmlGeometry kmlGeometry : geometry) {
             geometries.add(addToMap(kmlGeometry, style, isVisible));
         }
         return geometries;
     }
 
+    /**
+     * Removes all the KML data from the map and clears all the stored placemarks
+     */
+    public void removeKmlData() {
+        // Remove map object from the map
+        for (Object mapObject : mPlacemarks.values()) {
+            if (mapObject instanceof Marker) {
+                ((Marker) mapObject).remove();
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).remove();
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).remove();
+            }
+        }
+        // Remove the KmlPlacemark and map object from the mPlacemarks hashmap
+        mPlacemarks.clear();
+    }
 
+    /**
+     * Adds the KML data to the map
+     *
+     * @throws XmlPullParserException if KML file cannot be parsed
+     * @throws IOException            if KML file cannot be opened
+     */
+    public void addKmlData() throws IOException, XmlPullParserException {
+        KmlParser parser = new KmlParser(mParser);
+        parser.parseKml();
+        mStyles = parser.getStyles();
+        mStyleMaps = parser.getStyleMaps();
+        mPlacemarks = parser.getPlacemarks();
+        mFolders = parser.getFolders();
+        assignStyleMapStyles(mStyleMaps, mStyles);
+        addFoldersToMap(mFolders);
+        addPlacemarksToMap(mPlacemarks);
+        addIconsToMarkers(mMarkerIconUrls);
+    }
+
+
+    @Override
+    public Iterator getKmlPlacemarks() {
+        return mPlacemarks.entrySet().iterator();
+    }
+
+    @Override
+    public String getKmlProperty(String propertyName) {
+        //TODO: Return kml property
+        return null;
+    }
+
+    @Override
+    public Iterator getKmlProperties() {
+      //TODO: return kml property
+        return null;
+    }
+
+    @Override
+    public boolean hasNestedKmlFolders() {
+        return mFolders.size() > 0;
+    }
+
+    @Override
+    public Iterator getNestedKmlFolders() {
+        return mFolders.iterator();
+    }
 
     /**
      * Downloads images for use as marker icons

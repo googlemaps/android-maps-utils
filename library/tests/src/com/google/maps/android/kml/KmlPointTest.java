@@ -18,7 +18,7 @@ public class KmlPointTest extends TestCase {
 
     public void testGetType() throws Exception {
         p = new KmlPoint(new LatLng(0, 0));
-        assertEquals("Point", p.getType());
+        assertEquals("Point", p.getKmlGeometryType());
     }
 
     public void testGetGeometry() throws Exception {

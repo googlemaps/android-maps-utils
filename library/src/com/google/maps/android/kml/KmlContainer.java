@@ -8,11 +8,14 @@ import java.util.Iterator;
  */
 public interface KmlContainer {
 
-    public HashMap<KmlPlacemark, Object> getPlacemarks();
+    public Iterator getKmlPlacemarks();
 
-    public String getProperty(String propertyName);
+    public String getKmlProperty(String propertyName);
 
-    public Iterator getProperties();
+    public Iterator getKmlProperties();
 
+    public boolean hasNestedKmlFolders();
+
+    public Iterator getNestedKmlFolders();
 
 }

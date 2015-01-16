@@ -37,7 +37,7 @@ public class KmlPolygon implements KmlGeometry {
      * @return type of geometry
      */
     @Override
-    public String getType() {
+    public String getKmlGeometryType() {
         return GEOMETRY_TYPE;
     }
 
@@ -64,7 +64,7 @@ public class KmlPolygon implements KmlGeometry {
      *
      * @return ArrayList of an ArrayList of LatLng points
      */
-    public Object getCoordinates() {
+    public Object getKmlGeometryCoordinates() {
         ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
         coordinates.add(mOuterBoundaryCoordinates);
         coordinates.addAll(mInnerBoundaryCoordinates);

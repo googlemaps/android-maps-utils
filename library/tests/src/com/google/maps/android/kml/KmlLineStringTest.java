@@ -23,7 +23,7 @@ public class KmlLineStringTest extends TestCase {
         coordinates.add(new LatLng(50, 50));
         coordinates.add(new LatLng(100, 100));
         ls = new KmlLineString(coordinates);
-        assertEquals("LineString", ls.getType());
+        assertEquals("LineString", ls.getKmlGeometryType());
     }
 
     public void testGetGeometry() throws Exception {

@@ -5,8 +5,8 @@ package com.google.maps.android.kml;
  */
 public interface KmlGeometry {
 
-    public String getType();
+    public String getKmlGeometryType();
 
-    public Object getCoordinates();
+    public Object getKmlGeometryCoordinates();
 
 }

@@ -65,20 +65,26 @@ public class KmlFolder implements KmlContainer {
         mStyles.put(styleId, style);
     }
 
-    public String getProperty(String propertyName) {
+    public String getKmlProperty(String propertyName) {
         return mContainerProperties.get(propertyName);
     }
 
-    public boolean hasChildren() {
+    public boolean hasNestedKmlFolders() {
         return mContainers.size() > 0;
     }
+
+    public Iterator getNestedKmlFolders() { return mContainers.iterator(); }
 
     public ArrayList<KmlContainer> getChildren() {
         return mContainers;
     }
 
-    public Iterator getProperties() {
+    public Iterator getKmlProperties() {
         return mContainerProperties.entrySet().iterator();
+    }
+
+    public Iterator getKmlPlacemarks()  {
+        return mPlacemarks.entrySet().iterator();
     }
 
 }
