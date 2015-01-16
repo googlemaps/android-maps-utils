@@ -18,8 +18,6 @@ public class KmlDemoActivity extends BaseDemoActivity {
             KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.germany, getApplicationContext());
             kmlLayer.addKmlData();
 
-            Iterator iterator = kmlLayer.getPlacemarks();
-
 
 
 

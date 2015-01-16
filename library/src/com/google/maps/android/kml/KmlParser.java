@@ -30,7 +30,9 @@ public class KmlParser {
 
     private final static String CONTAINER_START_TAG = "Folder";
 
-    private ArrayList<KmlFolder> mFolders;
+    private ArrayList<KmlContainer> mFolders;
+
+    private HashMap<String, KmlStyle> mStyles;
 
 
     /**
@@ -41,7 +43,8 @@ public class KmlParser {
     public KmlParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mFolders = new ArrayList<KmlFolder>();
+        mFolders = new ArrayList<KmlContainer>();
+        mStyles = new HashMap<String, KmlStyle>();
         styleParser = new KmlStyleParser(mParser);
         placemarkParser = new KmlPlacemarkParser(mParser);
         containerParser= new KmlFolderParser(mParser);
@@ -56,6 +59,7 @@ public class KmlParser {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(STYLE_START_TAG)) {
                     styleParser.createStyle();
+                    mStyles.put(styleParser.getStyle().getStyleId(), styleParser.getStyle());
                 } if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
                     styleParser.createStyleMap();
                 } if (mParser.getName().equals(PLACEMARK_START_TAG)) {
@@ -72,7 +76,7 @@ public class KmlParser {
 
 
     public HashMap<String, KmlStyle> getStyles() {
-        return styleParser.getStyles();
+        return mStyles;
     }
 
     public HashMap<KmlPlacemark, Object> getPlacemarks() {
@@ -81,7 +85,7 @@ public class KmlParser {
 
     public  HashMap<String, String> getStyleMaps() { return styleParser.getStyleMaps(); }
 
-    public ArrayList<KmlFolder> getFolders() {
+    public ArrayList<KmlContainer> getFolders() {
         return mFolders;
     }
 }

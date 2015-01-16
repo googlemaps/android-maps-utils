@@ -11,8 +11,6 @@ import java.util.HashMap;
  */
 public class KmlStyleParser {
 
-    private final HashMap<String, KmlStyle> mStyles;
-
     private final HashMap<String, String> mStyleMaps;
 
     private static final String STYLE_TAG = "styleUrl";
@@ -21,11 +19,13 @@ public class KmlStyleParser {
 
     private int scale;
 
+    private KmlStyle mStyle;
+
     public KmlStyleParser(XmlPullParser parser) {
         scale = 1;
-        mStyles = new HashMap<String, KmlStyle>();
         mStyleMaps = new HashMap<String, String>();
         mParser = parser;
+        mStyle = new KmlStyle();
     }
 
     /**
@@ -37,6 +37,7 @@ public class KmlStyleParser {
         KmlStyle styleProperties = new KmlStyle();
         // Append # to a local styleUrl
         String styleId = "#" + mParser.getAttributeValue(null, "id");
+        styleProperties.setStyleId(styleId);
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Style"))) {
             if (eventType == XmlPullParser.START_TAG) {
@@ -55,10 +56,8 @@ public class KmlStyleParser {
 
         // Check if supported styles are added, unsupported styles are not saved
         if (isValidStyle) {
-            mStyles.put(styleId, styleProperties);
+            mStyle = styleProperties;
         }
-        //Adds a default style
-        mStyles.put(null, new KmlStyle());
     }
 
     public boolean createIconStyle(KmlStyle style) throws XmlPullParserException, IOException {
@@ -235,9 +234,8 @@ public class KmlStyleParser {
      *
      * @return hashmap of KmlStyle objects
      */
-    public HashMap<String, KmlStyle> getStyles() {
-        mStyles.put(null, new KmlStyle());
-        return mStyles;
+    public KmlStyle getStyle() {
+        return mStyle;
     }
 
     /**
