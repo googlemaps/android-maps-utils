@@ -58,7 +58,7 @@ public class KmlFolderParser {
                 }  else if (mParser.getName().equals(STYLE_START_TAG)) {
                     KmlStyleParser styleParser = new KmlStyleParser(mParser);
                     styleParser.createStyle();
-                    kmlFolder.setStyles(styleParser.getStyles());
+                    kmlFolder.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
                 }  else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     KmlPlacemarkParser placemarkParser = new KmlPlacemarkParser(mParser);
                     placemarkParser.createPlacemark();

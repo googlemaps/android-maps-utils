@@ -2,11 +2,12 @@ package com.google.maps.android.kml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by lavenderch on 1/14/15.
  */
-public class KmlFolder {
+public class KmlFolder implements KmlContainer {
 
     private HashMap<String, String> mContainerProperties;
 
@@ -14,13 +15,13 @@ public class KmlFolder {
 
     private HashMap<String, KmlStyle> mStyles;
 
-    private ArrayList<KmlFolder> mContainers;
+    private ArrayList<KmlContainer> mContainers;
 
     public KmlFolder() {
         mContainerProperties = new HashMap<String, String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mStyles = new  HashMap<String, KmlStyle>();
-        mContainers = new ArrayList<KmlFolder>();
+        mContainers = new ArrayList<KmlContainer>();
     }
 
     /**
@@ -60,10 +61,6 @@ public class KmlFolder {
         mContainerProperties.put(propertyName, propertyValue);
     }
 
-    public void setPlacemarks(HashMap<KmlPlacemark, Object> placemarks) {
-        mPlacemarks = placemarks;
-    }
-
     public void setStyle(String styleId, KmlStyle style) {
         mStyles.put(styleId, style);
     }
@@ -76,12 +73,12 @@ public class KmlFolder {
         return mContainers.size() > 0;
     }
 
-    public ArrayList<KmlFolder> getChildren() {
+    public ArrayList<KmlContainer> getChildren() {
         return mContainers;
     }
 
-    public HashMap<String, String> getProperties() {
-        return mContainerProperties;
+    public Iterator getProperties() {
+        return mContainerProperties.entrySet().iterator();
     }
 
 }

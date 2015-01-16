@@ -46,7 +46,7 @@ public class KmlLayer {
 
     private HashMap<String, String> mStyleMaps;
 
-    private ArrayList<KmlFolder> mFolders;
+    private ArrayList<KmlContainer> mFolders;
 
     private static int RANDOM_COLOR_MODE = 1;
 
@@ -158,8 +158,9 @@ public class KmlLayer {
      * Adds placemarks with their corresponding styles onto the map
      * @param folders   An arraylist of folders
      */
-    private void addFoldersToMap(ArrayList<KmlFolder> folders) {
-        for (KmlFolder folder: folders) {
+    private void addFoldersToMap(ArrayList<KmlContainer> folders) {
+        for (KmlContainer kmlContainer : folders) {
+            KmlFolder folder = ((KmlFolder) kmlContainer);
             if (folder.getStyles() != null) {
                 mStyles.putAll(folder.getStyles());
                 assignStyleMapStyles(mStyleMaps, mStyles);
@@ -223,7 +224,7 @@ public class KmlLayer {
     /**
      * @return An iterator of Folder objects
      */
-    public Iterator<KmlFolder> getFolders() {
+    public Iterator<KmlContainer> getFolders() {
         return mFolders.iterator();
     }
 
@@ -286,8 +287,9 @@ public class KmlLayer {
         }
     }
 
-    private void addFolderIconToMarkers (String iconUrl, ArrayList<KmlFolder> folders) {
-        for (KmlFolder folder : folders) {
+    private void addFolderIconToMarkers (String iconUrl, ArrayList<KmlContainer> folders) {
+        for (KmlContainer kmlContainer : folders) {
+            KmlFolder folder = ((KmlFolder) kmlContainer);
             addIconToMarkers(iconUrl, folder.getPlacemarks());
             if (folder.hasChildren()) {
                 addFolderIconToMarkers(iconUrl, folder.getChildren());
