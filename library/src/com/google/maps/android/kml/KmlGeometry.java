@@ -3,10 +3,11 @@ package com.google.maps.android.kml;
 /**
  * Created by lavenderch on 12/29/14.
  */
-public interface KmlGeometry {
+
+public interface KmlGeometry<T> {
 
     public String getKmlGeometryType();
 
-    public Object getKmlGeometryCoordinates();
+    public T getKmlGeometryCoordinates();
 
 }

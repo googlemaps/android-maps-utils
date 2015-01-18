@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Represents a series of coordinates in a placemark
  */
-public class KmlLineString implements KmlGeometry {
+public class KmlLineString implements KmlGeometry<ArrayList<LatLng>> {
 
     public static final String GEOMETRY_TYPE = "LineString";
 
@@ -40,7 +40,7 @@ public class KmlLineString implements KmlGeometry {
      *
      * @return ArrayList of LatLng
      */
-    public Object getKmlGeometryCoordinates() {
+    public ArrayList<LatLng> getKmlGeometryCoordinates() {
         return mCoordinates;
     }
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by juliawong on 1/7/15.
  */
-public class KmlMultiGeometry implements KmlGeometry {
+public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
 
     private static final String GEOMETRY_TYPE = "MultiGeometry";
 
@@ -39,7 +39,7 @@ public class KmlMultiGeometry implements KmlGeometry {
      * @return Arraylist of KmlGeometry objects
      */
     @Override
-    public Object getKmlGeometryCoordinates() {
+    public ArrayList<KmlGeometry> getKmlGeometryCoordinates() {
         return mGeometries;
     }
 }

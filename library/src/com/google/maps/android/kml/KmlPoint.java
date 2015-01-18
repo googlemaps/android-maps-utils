@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by lavenderch on 12/22/14.
  */
-public class KmlPoint implements KmlGeometry {
+public class KmlPoint implements KmlGeometry<LatLng> {
 
     public static final String GEOMETRY_TYPE = "Point";
 
@@ -39,7 +39,7 @@ public class KmlPoint implements KmlGeometry {
      *
      * @return LatLng with the coordinate of the KmlPoint
      */
-    public Object getKmlGeometryCoordinates() {
+    public LatLng getKmlGeometryCoordinates() {
         return mCoordinate;
     }
 }
