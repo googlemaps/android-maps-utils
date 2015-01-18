@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Represents a series of coordinates in a placemark
  */
-public class KmlPolygon implements KmlGeometry {
+public class KmlPolygon implements KmlGeometry<ArrayList<ArrayList<LatLng>>> {
 
     public static final String GEOMETRY_TYPE = "Polygon";
 
@@ -64,7 +64,7 @@ public class KmlPolygon implements KmlGeometry {
      *
      * @return ArrayList of an ArrayList of LatLng points
      */
-    public Object getKmlGeometryCoordinates() {
+    public ArrayList<ArrayList<LatLng>> getKmlGeometryCoordinates() {
         ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
         coordinates.add(mOuterBoundaryCoordinates);
         coordinates.addAll(mInnerBoundaryCoordinates);

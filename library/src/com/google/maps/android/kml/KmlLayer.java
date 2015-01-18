@@ -1,5 +1,12 @@
 package com.google.maps.android.kml;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -14,13 +21,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.support.v4.util.LruCache;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -298,7 +298,7 @@ public class KmlLayer implements KmlContainer {
      */
     private Marker addPointToMap(KmlPoint point, KmlStyle style) {
         MarkerOptions markerOptions = style.getMarkerOptions();
-        markerOptions.position((LatLng) point.getKmlGeometryCoordinates());
+        markerOptions.position(point.getKmlGeometryCoordinates());
         Marker marker = mMap.addMarker(markerOptions);
         if (markerOptions.getTitle() == null) {
             setMarkerInfoWindow(style, marker);
@@ -359,7 +359,7 @@ public class KmlLayer implements KmlContainer {
      */
     private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
-        polylineOptions.addAll((Iterable<LatLng>) lineString.getKmlGeometryCoordinates());
+        polylineOptions.addAll(lineString.getKmlGeometryCoordinates());
         if (style.hasColorMode("LineString") && style.getColorMode("LineString")
                 == RANDOM_COLOR_MODE) {
             polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
@@ -416,8 +416,7 @@ public class KmlLayer implements KmlContainer {
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry multiGeometry, KmlStyle style, Boolean isVisible) {
         ArrayList<Object> geometries = new ArrayList<Object>();
-        ArrayList<KmlGeometry> geometry
-                = (ArrayList<KmlGeometry>) multiGeometry.getKmlGeometryCoordinates();
+        ArrayList<KmlGeometry> geometry = multiGeometry.getKmlGeometryCoordinates();
         for (KmlGeometry kmlGeometry : geometry) {
             geometries.add(addToMap(kmlGeometry, style, isVisible));
         }
