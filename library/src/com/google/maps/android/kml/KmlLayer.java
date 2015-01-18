@@ -145,7 +145,7 @@ public class KmlLayer implements KmlContainer {
                 mStyles.putAll(folder.getStyles());
                 assignStyleMapStyles(mStyleMaps, mStyles);
             }
-            addFolderStyles(folder);
+            addFolderToMap(folder);
             if (folder.hasNestedKmlFolders()) {
                 addFoldersToMap(folder.getChildren());
             }
@@ -156,7 +156,7 @@ public class KmlLayer implements KmlContainer {
      * Goes through the every placemark, style and properties object within a <Folder> tag
      * @param folder    Folder to obtain placemark and styles from
      */
-    private void addFolderStyles(KmlFolder folder) {
+    private void addFolderToMap(KmlFolder folder) {
         for (KmlPlacemark placemark : folder.getPlacemarks().keySet()) {
             KmlStyle style = getPlacemarkStyle(placemark.getStyleID());
             Boolean visibility = getVisibility(placemark);
@@ -175,7 +175,7 @@ public class KmlLayer implements KmlContainer {
             downloadMarkerIcons();
         }
     }
-    
+
     /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
      * @param styleId   StyleUrl from a placemark
@@ -425,24 +425,6 @@ public class KmlLayer implements KmlContainer {
     }
 
     /**
-     * Removes all the KML data from the map and clears all the stored placemarks
-     */
-    public void removeKmlData() {
-        // Remove map object from the map
-        for (Object mapObject : mPlacemarks.values()) {
-            if (mapObject instanceof Marker) {
-                ((Marker) mapObject).remove();
-            } else if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).remove();
-            } else if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).remove();
-            }
-        }
-        // Remove the KmlPlacemark and map object from the mPlacemarks hashmap
-        mPlacemarks.clear();
-    }
-
-    /**
      * Adds the KML data to the map
      *
      * @throws XmlPullParserException if KML file cannot be parsed
@@ -459,6 +441,24 @@ public class KmlLayer implements KmlContainer {
         addFoldersToMap(mFolders);
         addPlacemarksToMap(mPlacemarks);
         addIconsToMarkers(mMarkerIconUrls);
+    }
+
+    /**
+     * Removes all the KML data from the map and clears all the stored placemarks
+     */
+    public void removeKmlData() {
+        // Remove map object from the map
+        for (Object mapObject : mPlacemarks.values()) {
+            if (mapObject instanceof Marker) {
+                ((Marker) mapObject).remove();
+            } else if (mapObject instanceof Polyline) {
+                ((Polyline) mapObject).remove();
+            } else if (mapObject instanceof Polygon) {
+                ((Polygon) mapObject).remove();
+            }
+        }
+        // Remove the KmlPlacemark and map object from the mPlacemarks hashmap
+        mPlacemarks.clear();
     }
 
 
