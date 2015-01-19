@@ -9,7 +9,7 @@ public class GeoJsonPoint implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "Point";
 
-    private LatLng mCoordinates;
+    private final LatLng mCoordinates;
 
     /**
      * Creates a new GeoJsonPoint

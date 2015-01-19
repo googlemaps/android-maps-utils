@@ -9,7 +9,7 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPoint";
 
-    private ArrayList<GeoJsonPoint> mGeoJsonPoints;
+    private final ArrayList<GeoJsonPoint> mGeoJsonPoints;
 
     /**
      * Creates a GeoJsonMultiPoint object
