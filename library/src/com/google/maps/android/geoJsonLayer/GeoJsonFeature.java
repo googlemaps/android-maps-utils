@@ -1,8 +1,7 @@
 package com.google.maps.android.geoJsonLayer;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -16,7 +15,7 @@ public class GeoJsonFeature extends Observable implements Observer {
 
     private final String mId;
 
-    private final ArrayList<LatLng> mBoundingBox;
+    private final LatLngBounds mBoundingBox;
 
     private final HashMap<String, String> mProperties;
 
@@ -37,7 +36,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param boundingBox     array defining the bounding box of the feature
      */
     public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
-            HashMap<String, String> properties, ArrayList<LatLng> boundingBox) {
+            HashMap<String, String> properties, LatLngBounds boundingBox) {
         mGeoJsonGeometry = GeoJsonGeometry;
         mId = id;
         mBoundingBox = boundingBox;
@@ -45,7 +44,6 @@ public class GeoJsonFeature extends Observable implements Observer {
         mGeoJsonPointStyle = new GeoJsonPointStyle();
         mGeoJsonLineStringStyle = new GeoJsonLineStringStyle();
         mGeoJsonPolygonStyle = new GeoJsonPolygonStyle();
-
     }
 
     /**
@@ -179,9 +177,9 @@ public class GeoJsonFeature extends Observable implements Observer {
      * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
      * FeatureCollection then null will be returned.
      *
-     * @return array containing bounding box of FeatureCollection, null if no bounding box
+     * @return LatLngBounds containing bounding box of FeatureCollection, null if no bounding box
      */
-    public ArrayList<LatLng> getBoundingBox() {
+    public LatLngBounds getBoundingBox() {
         return mBoundingBox;
     }
 

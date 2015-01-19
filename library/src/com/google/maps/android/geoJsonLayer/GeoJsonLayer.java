@@ -1,18 +1,17 @@
 package com.google.maps.android.geoJsonLayer;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -34,7 +33,7 @@ public class GeoJsonLayer {
 
     private GeoJsonPolygonStyle mDefaultPolygonStyle;
 
-    private ArrayList<LatLng> mBoundingBox;
+    private LatLngBounds mBoundingBox;
 
     /**
      * Creates a new GeoJsonLayer object
@@ -164,7 +163,7 @@ public class GeoJsonLayer {
     /**
      * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map
      */
-    public void addGeoJsonDataToLayer() throws JSONException {
+    public void addGeoJsonDataToLayer() {
         parseGeoJsonFile();
         for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
             geoJsonFeature.addObserver(mRenderer);
@@ -187,10 +186,8 @@ public class GeoJsonLayer {
 
     /**
      * Parses the stored GeoJSON file into GeoJsonFeature objects
-     *
-     * @throws JSONException if GeoJSON file cannot be parsed
      */
-    private void parseGeoJsonFile() throws JSONException {
+    private void parseGeoJsonFile() {
         mParser.parseGeoJson();
         for (GeoJsonFeature feature : mParser.getFeatures()) {
             mFeatures.put(feature, null);
@@ -273,10 +270,9 @@ public class GeoJsonLayer {
      * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
      * FeatureCollection then null will be returned.
      *
-     * @return array of 2 LatLng containing bounding box of FeatureCollection, null if no bounding
-     * box
+     * @return LatLngBounds containing bounding box of FeatureCollection, null if no bounding box
      */
-    public ArrayList<LatLng> getBoundingBox() {
+    public LatLngBounds getBoundingBox() {
         return mBoundingBox;
     }
 

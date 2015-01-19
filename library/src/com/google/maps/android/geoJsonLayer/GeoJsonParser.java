@@ -2,6 +2,7 @@ package com.google.maps.android.geoJsonLayer;
 
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +60,7 @@ public class GeoJsonParser {
 
     private final ArrayList<GeoJsonFeature> mGeoJsonFeatures;
 
-    private ArrayList<LatLng> mBoundingBox;
+    private LatLngBounds mBoundingBox;
 
 
     /**
@@ -116,9 +117,9 @@ public class GeoJsonParser {
      * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
      * FeatureCollection then null will be returned.
      *
-     * @return array containing bounding box of FeatureCollection, null if no bounding box
+     * @return LatLngBounds object containing bounding box of FeatureCollection, null if no bounding box
      */
-    public ArrayList<LatLng> getBoundingBox() {
+    public LatLngBounds getBoundingBox() {
         return mBoundingBox;
     }
 
@@ -170,7 +171,7 @@ public class GeoJsonParser {
      */
     private GeoJsonFeature parseFeature(JSONObject geoJsonFeature) {
         String id = null;
-        ArrayList<LatLng> boundingBox = null;
+        LatLngBounds boundingBox = null;
         GeoJsonGeometry geometry = null;
         HashMap<String, String> properties = new HashMap<String, String>();
 
@@ -212,17 +213,15 @@ public class GeoJsonParser {
      * geometries.
      *
      * @param coordinates array of 4 coordinates
-     * @return array containing 2 LatLngs where the first element is the lowest values and the
-     * second element is the highest values
+     * @return LatLngBounds containing the coordinates of the bounding box
      * @throws JSONException if the bounding box could not be parsed
      */
-    private ArrayList<LatLng> parseBoundingBox(JSONArray coordinates) throws JSONException {
-        ArrayList<LatLng> boundingBox = new ArrayList<LatLng>();
+    private LatLngBounds parseBoundingBox(JSONArray coordinates) throws JSONException {
         // Lowest values for all axes
-        boundingBox.add((new LatLng(coordinates.getDouble(1), coordinates.getDouble(0))));
+        LatLng southWestCorner = new LatLng(coordinates.getDouble(1), coordinates.getDouble(0));
         // Highest value for all axes
-        boundingBox.add((new LatLng(coordinates.getDouble(3), coordinates.getDouble(2))));
-        return boundingBox;
+        LatLng northEastCorner = new LatLng(coordinates.getDouble(3), coordinates.getDouble(2));
+        return new LatLngBounds(southWestCorner, northEastCorner);
     }
 
     /**
