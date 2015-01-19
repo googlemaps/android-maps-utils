@@ -2,6 +2,7 @@ package com.google.maps.android.kml;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by lavenderc on 12/3/14.
@@ -45,8 +46,8 @@ public class KmlPlacemark {
      *
      * @return properties hashmap
      */
-    public Iterator getProperties() {
-        return mPlacemarkProperties.keySet().iterator();
+    public Iterator<Map.Entry<String, String>> getProperties() {
+        return mPlacemarkProperties.entrySet().iterator();
     }
 
     public String getProperty(String keyValue) {
@@ -60,6 +61,10 @@ public class KmlPlacemark {
      */
     public KmlGeometry getGeometry() {
         return mGeometry;
+    }
+
+    public boolean hasProperty (String keyValue) {
+        return mPlacemarkProperties.containsKey(keyValue);
     }
 
 }

@@ -40,7 +40,7 @@ public class KmlLineString implements KmlGeometry<ArrayList<LatLng>> {
      *
      * @return ArrayList of LatLng
      */
-    public ArrayList<LatLng> getKmlGeometryCoordinates() {
+    public ArrayList<LatLng> getKmlGeometryObject() {
         return mCoordinates;
     }
 

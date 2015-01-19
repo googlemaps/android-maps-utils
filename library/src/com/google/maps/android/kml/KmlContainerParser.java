@@ -4,16 +4,15 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by lavenderch on 1/14/15.
  */
-public class KmlFolderParser {
+public class KmlContainerParser {
 
     private static final String PROPERTY_TAG_REGEX = "name|description|visibility|open";
 
-    private KmlFolder mContainer;
+    private KmlContainer mContainer;
 
     private XmlPullParser mParser;
 
@@ -23,7 +22,11 @@ public class KmlFolderParser {
 
     private final static String FOLDER_START_TAG = "Folder";
 
-    public KmlFolderParser(XmlPullParser parser) {
+    private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
+
+    private final static String STYLE_MAP_START_TAG = "StyleMap";
+
+    public KmlContainerParser(XmlPullParser parser) {
         mParser = parser;
         mContainer = null;
     }
@@ -33,7 +36,7 @@ public class KmlFolderParser {
      */
 
     public void createContainer() throws XmlPullParserException, IOException {
-        KmlFolder folder = new KmlFolder();
+        KmlContainer folder = new KmlContainer();
         assignFolderProperties(folder);
         mContainer = folder;
     }
@@ -42,27 +45,33 @@ public class KmlFolderParser {
      * Takes a parser and assigns variables to a Folder instances
      * @param kmlFolder Folder to assign variables to
      */
-    public void assignFolderProperties(KmlFolder kmlFolder)
+    public void assignFolderProperties(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         mParser.next();
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Folder"))) {
-            System.out.println(mParser.getText());
+        while (!(eventType == XmlPullParser.END_TAG &&
+                mParser.getName().matches(CONTAINER_START_TAG_REGEX))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(FOLDER_START_TAG)) {
-                    KmlFolder container = new KmlFolder();
+                    KmlContainer container = new KmlContainer();
                     kmlFolder.addChildContainer(container);
                     assignFolderProperties(container);
                 } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
                     kmlFolder.setProperty(mParser.getName(), mParser.nextText());
-                }  else if (mParser.getName().equals(STYLE_START_TAG)) {
+                } else if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
+                    KmlStyleParser styleParser = new KmlStyleParser(mParser);
+                    styleParser.createStyleMap();
+                    kmlFolder.setStyleMap(styleParser.getStyleMaps());
+                } else if (mParser.getName().equals(STYLE_START_TAG)) {
                     KmlStyleParser styleParser = new KmlStyleParser(mParser);
                     styleParser.createStyle();
                     kmlFolder.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
                 }  else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     KmlPlacemarkParser placemarkParser = new KmlPlacemarkParser(mParser);
                     placemarkParser.createPlacemark();
-                    kmlFolder.setPlacemark(placemarkParser.getPlacemark(), null);
+                    if (placemarkParser.getPlacemark() != null) {
+                        kmlFolder.setPlacemark(placemarkParser.getPlacemark(), null);
+                    }
                 }
             }
             eventType = mParser.next();
@@ -72,7 +81,7 @@ public class KmlFolderParser {
     /**
      * @return List of containers
      */
-    public KmlFolder getContainer() {
+    public KmlContainer getContainer() {
         return mContainer;
     }
 

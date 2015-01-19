@@ -39,7 +39,7 @@ public class KmlPoint implements KmlGeometry<LatLng> {
      *
      * @return LatLng with the coordinate of the KmlPoint
      */
-    public LatLng getKmlGeometryCoordinates() {
+    public LatLng getKmlGeometryObject() {
         return mCoordinate;
     }
 }

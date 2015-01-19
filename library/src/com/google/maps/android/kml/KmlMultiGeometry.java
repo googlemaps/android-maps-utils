@@ -38,8 +38,8 @@ public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
      *
      * @return Arraylist of KmlGeometry objects
      */
-    @Override
-    public ArrayList<KmlGeometry> getKmlGeometryCoordinates() {
+
+    public ArrayList<KmlGeometry> getKmlGeometryObject() {
         return mGeometries;
     }
 }

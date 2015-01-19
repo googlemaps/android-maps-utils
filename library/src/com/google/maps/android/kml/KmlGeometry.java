@@ -8,6 +8,6 @@ public interface KmlGeometry<T> {
 
     public String getKmlGeometryType();
 
-    public T getKmlGeometryCoordinates();
+    public T getKmlGeometryObject();
 
 }

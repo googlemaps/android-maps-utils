@@ -64,7 +64,7 @@ public class KmlPolygon implements KmlGeometry<ArrayList<ArrayList<LatLng>>> {
      *
      * @return ArrayList of an ArrayList of LatLng points
      */
-    public ArrayList<ArrayList<LatLng>> getKmlGeometryCoordinates() {
+    public ArrayList<ArrayList<LatLng>> getKmlGeometryObject() {
         ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
         coordinates.add(mOuterBoundaryCoordinates);
         coordinates.addAll(mInnerBoundaryCoordinates);

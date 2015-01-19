@@ -3,6 +3,7 @@ package com.google.maps.android.utils.demo;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.geoJsonLayer.GeoJsonFeature;
+import com.google.maps.android.geoJsonLayer.GeoJsonLayer;
 import com.google.maps.android.geoJsonLayer.GeoJsonLineStringStyle;
 import com.google.maps.android.geoJsonLayer.GeoJsonPoint;
 import com.google.maps.android.geoJsonLayer.GeoJsonPointStyle;
