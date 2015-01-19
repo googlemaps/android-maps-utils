@@ -293,31 +293,34 @@ class GeoJsonRenderer implements Observer {
         removeFromMap(mFeatures.get(feature));
         mFeatures.put(feature, FEATURE_NOT_ON_MAP_VALUE);
         mMap = map;
-        if (map != null) {
-            addFeatureToMap(feature, feature.getGeometry());
+        if (map != null && feature.hasGeometry()) {
+            mFeatures.put(feature, addFeatureToMap(feature, feature.getGeometry()));
         }
     }
 
     /**
-     * Update is called if the developer sets a style in a GeoJsonFeature object
+     * Update is called if the developer sets a style or geometry in a GeoJsonFeature object
      *
      * @param observable GeoJsonFeature object
      * @param data       null, no extra argument is passed through the notifyObservers method
      */
     public void update(Observable observable, Object data) {
         if (observable instanceof GeoJsonFeature) {
-            GeoJsonFeature geoJsonFeature = ((GeoJsonFeature) observable);
-            if (mFeatures.get(geoJsonFeature) != FEATURE_NOT_ON_MAP_VALUE && geoJsonFeature
-                    .hasGeometry()) {
+            GeoJsonFeature feature = ((GeoJsonFeature) observable);
+            boolean featureIsOnMap = mFeatures.get(feature) != FEATURE_NOT_ON_MAP_VALUE;
+            if (featureIsOnMap&& feature.hasGeometry()) {
                 // Checks if the feature has been added to the map and its geometry is not null
-                // TODO: cater for when geometry is changed to null
                 // TODO: change this so that we don't add and remove
-                redrawFeatureToMap(geoJsonFeature);
-            } else {
-                addFeature(geoJsonFeature);
+                redrawFeatureToMap(feature);
+            } else if (featureIsOnMap && !feature.hasGeometry()) {
+                // Checks if feature is on map and geometry is null
+                removeFromMap(mFeatures.get(feature));
+                mFeatures.put(feature, FEATURE_NOT_ON_MAP_VALUE);
             }
-
+            else if (featureIsOnMap && feature.hasGeometry()) {
+                // Checks if the feature isn't on the map and geometry is not null
+                addFeature(feature);
+            }
         }
-
     }
 }
