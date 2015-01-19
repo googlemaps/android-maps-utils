@@ -12,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.Set;
 
 
 /**
@@ -20,8 +20,6 @@ import java.util.HashMap;
  * data.
  */
 public class GeoJsonLayer {
-
-    private final HashMap<GeoJsonFeature, Object> mFeatures;
 
     private final GeoJsonRenderer mRenderer;
 
@@ -42,13 +40,14 @@ public class GeoJsonLayer {
      * @param geoJsonFile JSONObject to parse GeoJSON data from
      */
     public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile) {
-        mFeatures = new HashMap<GeoJsonFeature, Object>();
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mBoundingBox = null;
-        mRenderer = new GeoJsonRenderer(mFeatures, map);
+        mRenderer = new GeoJsonRenderer(map);
         mParser = new GeoJsonParser(geoJsonFile);
+        // Assign GeoJSON bounding box for FeatureCollection
+        mBoundingBox = mParser.getBoundingBox();
     }
 
     /**
@@ -70,8 +69,8 @@ public class GeoJsonLayer {
      *
      * @param stream Character input stream representing the GeoJSON file
      * @return JSONObject representing the GeoJSON file
-     * @throws java.io.IOException    if the file cannot be opened for read
-     * @throws org.json.JSONException if the JSON file has poor structure
+     * @throws IOException   if the file cannot be opened for read
+     * @throws JSONException if the JSON file has poor structure
      */
     private static JSONObject createJsonFileObject(InputStream stream)
             throws IOException, JSONException {
@@ -93,12 +92,12 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Gets an iterator of all GeoJsonFeature elements stored
+     * Gets a set of all GeoJsonFeature elements stored
      *
-     * @return iterator of GeoJsonFeature elements
+     * @return set of GeoJsonFeature elements
      */
-    public java.util.Iterator<GeoJsonFeature> getFeatures() {
-        return mFeatures.keySet().iterator();
+    public Set<GeoJsonFeature> getFeatures() {
+        return mRenderer.getFeatures();
     }
 
     /**
@@ -108,7 +107,7 @@ public class GeoJsonLayer {
      * @return GeoJsonFeature object with matching ID or otherwise null
      */
     public GeoJsonFeature getFeatureById(String id) {
-        for (GeoJsonFeature feature : mFeatures.keySet()) {
+        for (GeoJsonFeature feature : getFeatures()) {
             if (feature.getId() != null && feature.getId().equals(id)) {
                 return feature;
             }
@@ -117,13 +116,24 @@ public class GeoJsonLayer {
     }
 
     /**
+     * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map
+     */
+    public void addGeoJsonDataToLayer() {
+        for (GeoJsonFeature feature : mParser.getFeatures()) {
+            addFeature(feature);
+        }
+    }
+
+    /**
      * Adds a GeoJsonFeature to the GeoJsonLayer
      *
      * @param feature GeoJsonFeature to add
      */
     public void addFeature(GeoJsonFeature feature) {
-        mFeatures.put(feature, null);
-        feature.addObserver(mRenderer);
+        // Set default styles
+        feature.setPointStyle(mDefaultPointStyle);
+        feature.setLineStringStyle(mDefaultLineStringStyle);
+        feature.setPolygonStyle(mDefaultPolygonStyle);
         mRenderer.addFeature(feature);
     }
 
@@ -133,12 +143,7 @@ public class GeoJsonLayer {
      * @param feature GeoJsonFeature to remove
      */
     public void removeFeature(GeoJsonFeature feature) {
-        // Check if given feature is stored
-        if (mFeatures.containsKey(feature)) {
-            mRenderer.removeFeature(feature);
-            mFeatures.remove(feature);
-            feature.deleteObserver(mRenderer);
-        }
+        mRenderer.removeFeature(feature);
     }
 
     /**
@@ -161,39 +166,11 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map
-     */
-    public void addGeoJsonDataToLayer() {
-        parseGeoJsonFile();
-        for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
-            geoJsonFeature.addObserver(mRenderer);
-        }
-
-        mRenderer.addLayerToMap();
-    }
-
-    /**
      * Removes all of the stored GeoJsonFeature objects from the map and clears the mFeatures
      * hashmap
      */
     public void removeGeoJsonLayer() {
-        for (GeoJsonFeature feature : mFeatures.keySet()) {
-            feature.deleteObserver(mRenderer);
-        }
         mRenderer.removeLayerFromMap();
-        mFeatures.clear();
-    }
-
-    /**
-     * Parses the stored GeoJSON file into GeoJsonFeature objects
-     */
-    private void parseGeoJsonFile() {
-        mParser.parseGeoJson();
-        for (GeoJsonFeature feature : mParser.getFeatures()) {
-            mFeatures.put(feature, null);
-        }
-        // Assign GeoJSON bounding box for FeatureCollection
-        mBoundingBox = mParser.getBoundingBox();
     }
 
     /**
@@ -206,17 +183,13 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Sets the default style for the GeoJsonPoint objects. Overrides all current styles on
-     * GeoJsonPoint objects.
+     * Sets the default style for the GeoJsonPoint objects. This style is only applied to
+     * GeoJsonFeature objects that are added after this method is called.
      *
-     * @param geoJsonPointStyle to set as default style, this is applied to all GeoJsonPoints that
-     *                          are stored
+     * @param geoJsonPointStyle to set as default style
      */
     public void setDefaultPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
         mDefaultPointStyle = geoJsonPointStyle;
-        for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
-            geoJsonFeature.setPointStyle(geoJsonPointStyle);
-        }
     }
 
     /**
@@ -229,17 +202,13 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Sets the default style for the GeoJsonLineString objects. Overrides all current styles on
-     * GeoJsonLineString objects.
+     * Sets the default style for the GeoJsonLineString objects. This style is only applied to
+     * GeoJsonFeature objects that are added after this method is called.
      *
-     * @param geoJsonLineStringStyle to set as default style, this is applied to all
-     *                               GeoJsonLineString that are stored
+     * @param geoJsonLineStringStyle to set as default style
      */
     public void setDefaultLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mDefaultLineStringStyle = geoJsonLineStringStyle;
-        for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
-            geoJsonFeature.setLineStringStyle(geoJsonLineStringStyle);
-        }
     }
 
     /**
@@ -252,17 +221,13 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Sets the default style for the GeoJsonPolygon objects. Overrides all current styles on
-     * GeoJsonPolygon objects.
+     * Sets the default style for the GeoJsonPolygon objects. This style is only applied to
+     * GeoJsonFeature objects that are added after this method is called.
      *
-     * @param geoJsonPolygonStyle to set as default style, this is applied to all GeoJsonPolygon
-     *                            that are stored
+     * @param geoJsonPolygonStyle to set as default style
      */
     public void setDefaultPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
         mDefaultPolygonStyle = geoJsonPolygonStyle;
-        for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
-            geoJsonFeature.setPolygonStyle(geoJsonPolygonStyle);
-        }
     }
 
     /**
@@ -279,7 +244,6 @@ public class GeoJsonLayer {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Collection{");
-        sb.append("\n features=").append(mFeatures);
         sb.append(",\n Point style=").append(mDefaultPointStyle);
         sb.append(",\n LineString style=").append(mDefaultLineStringStyle);
         sb.append(",\n Polygon style=").append(mDefaultPolygonStyle);

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 /**
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
@@ -25,6 +26,10 @@ class GeoJsonRenderer implements Observer {
 
     private final static Object FEATURE_NOT_ON_MAP_VALUE = null;
 
+    /**
+     * Value is a Marker, Polyline, Polygon or an array of these that have been created from the
+     * corresponding key
+     */
     private final HashMap<GeoJsonFeature, Object> mFeatures;
 
     private GoogleMap mMap;
@@ -32,11 +37,10 @@ class GeoJsonRenderer implements Observer {
     /**
      * Creates a new GeoJsonRender object
      *
-     * @param features hashmap of features to store
-     * @param map      map to place GeoJsonFeature objects on
+     * @param map map to place GeoJsonFeature objects on
      */
-    public GeoJsonRenderer(HashMap<GeoJsonFeature, Object> features, GoogleMap map) {
-        mFeatures = features;
+    public GeoJsonRenderer(GoogleMap map) {
+        mFeatures = new HashMap<GeoJsonFeature, Object>();
         mMap = map;
     }
 
@@ -56,21 +60,18 @@ class GeoJsonRenderer implements Observer {
      * @param map GoogleMap to place GeoJsonFeature objects on
      */
     public void setMap(GoogleMap map) {
-        removeLayerFromMap();
-        if (map != null) {
-            // Re add to new map if it isn't null
-            mMap = map;
-            addLayerToMap();
+        for (GeoJsonFeature feature : mFeatures.keySet()) {
+            redrawFeatureToMap(feature, map);
         }
     }
 
     /**
-     * Adds all GeoJsonFeature objects stored in the mFeatures hashmap onto the map
+     * Gets a set containing GeoJsonFeatures
+     *
+     * @return set containing GeoJsonFeatures
      */
-    public void addLayerToMap() {
-        for (GeoJsonFeature geoJsonFeature : mFeatures.keySet()) {
-            addFeature(geoJsonFeature);
-        }
+    public Set<GeoJsonFeature> getFeatures() {
+        return mFeatures.keySet();
     }
 
     /**
@@ -79,9 +80,12 @@ class GeoJsonRenderer implements Observer {
      * @param feature feature to add to the map
      */
     public void addFeature(GeoJsonFeature feature) {
+        feature.addObserver(this);
+        Object mapObject = null;
         if (feature.hasGeometry()) {
-            mFeatures.put(feature, addFeatureToMap(feature, feature.getGeometry()));
+            mapObject = addFeatureToMap(feature, feature.getGeometry());
         }
+        mFeatures.put(feature, mapObject);
     }
 
     /**
@@ -99,8 +103,10 @@ class GeoJsonRenderer implements Observer {
      * @param feature feature to remove from map
      */
     public void removeFeature(GeoJsonFeature feature) {
-        if (feature.hasGeometry()) {
-            removeFromMap(mFeatures.get(feature));
+        // Check if given feature is stored
+        if (mFeatures.containsKey(feature)) {
+            removeFromMap(mFeatures.remove(feature));
+            feature.deleteObserver(this);
         }
     }
 
@@ -158,7 +164,7 @@ class GeoJsonRenderer implements Observer {
      * @return array of Markers that have been added to the map
      */
     private ArrayList<Marker> addMultiPointToMap(GeoJsonPointStyle geoJsonPointStyle,
-            GeoJsonMultiPoint geoJsonMultiPoint) {
+                                                 GeoJsonMultiPoint geoJsonMultiPoint) {
         ArrayList<Marker> markers = new ArrayList<Marker>();
         for (GeoJsonPoint geoJsonPoint : geoJsonMultiPoint.getPoints()) {
             markers.add(addPointToMap(geoJsonPointStyle, geoJsonPoint));
@@ -174,7 +180,7 @@ class GeoJsonRenderer implements Observer {
      * @return Polyline object created from given GeoJsonLineString
      */
     private Polyline addLineStringToMap(GeoJsonLineStringStyle geoJsonLineStringStyle,
-            GeoJsonLineString geoJsonLineString) {
+                                        GeoJsonLineString geoJsonLineString) {
         PolylineOptions polylineOptions = geoJsonLineStringStyle.getPolylineOptions();
         // Add coordinates
         polylineOptions.addAll(geoJsonLineString.getCoordinates());
@@ -207,13 +213,13 @@ class GeoJsonRenderer implements Observer {
      * @return Polygon object created from given GeoJsonPolygon
      */
     private Polygon addPolygonToMap(GeoJsonPolygonStyle geoJsonPolygonStyle,
-            GeoJsonPolygon geoJsonPolygon) {
+                                    GeoJsonPolygon geoJsonPolygon) {
         PolygonOptions polygonOptions = geoJsonPolygonStyle.getPolygonOptions();
         // First array of coordinates are the outline
         polygonOptions.addAll(geoJsonPolygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
         // Following arrays are holes
         for (int i = POLYGON_INNER_COORDINATE_INDEX; i < geoJsonPolygon.getCoordinates().size();
-                i++) {
+             i++) {
             polygonOptions.addHole(geoJsonPolygon.getCoordinates().get(i));
         }
         return mMap.addPolygon(polygonOptions);
@@ -227,7 +233,7 @@ class GeoJsonRenderer implements Observer {
      * @return array of Polygons that have been added to the map
      */
     private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle geoJsonPolygonStyle,
-            GeoJsonMultiPolygon geoJsonMultiPolygon) {
+                                                    GeoJsonMultiPolygon geoJsonMultiPolygon) {
         ArrayList<Polygon> polygons = new ArrayList<Polygon>();
         for (GeoJsonPolygon geoJsonPolygon : geoJsonMultiPolygon.getPolygons()) {
             polygons.add(addPolygonToMap(geoJsonPolygonStyle, geoJsonPolygon));
@@ -246,7 +252,7 @@ class GeoJsonRenderer implements Observer {
      * @return array of Marker, Polyline, Polygons that have been added to the map
      */
     private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature geoJsonFeature,
-            ArrayList<GeoJsonGeometry> geoJsonGeometries) {
+                                                         ArrayList<GeoJsonGeometry> geoJsonGeometries) {
         ArrayList<Object> geometries = new ArrayList<Object>();
         for (GeoJsonGeometry geometry : geoJsonGeometries) {
             geometries.add(addFeatureToMap(geoJsonFeature, geometry));
@@ -259,7 +265,7 @@ class GeoJsonRenderer implements Observer {
      *
      * @param mapObject map object or array of map objects to remove from the map
      */
-    private void removeFromMap(Object mapObject) {
+    private static void removeFromMap(Object mapObject) {
         if (mapObject instanceof Marker) {
             ((Marker) mapObject).remove();
         } else if (mapObject instanceof Polyline) {
@@ -279,10 +285,17 @@ class GeoJsonRenderer implements Observer {
      *
      * @param feature feature to redraw onto the map
      */
-    private void redrawCollectionToMap(GeoJsonFeature feature) {
+    private void redrawFeatureToMap(GeoJsonFeature feature) {
+        redrawFeatureToMap(feature, mMap);
+    }
+
+    private void redrawFeatureToMap(GeoJsonFeature feature, GoogleMap map) {
         removeFromMap(mFeatures.get(feature));
         mFeatures.put(feature, FEATURE_NOT_ON_MAP_VALUE);
-        addFeatureToMap(feature, feature.getGeometry());
+        mMap = map;
+        if (map != null) {
+            addFeatureToMap(feature, feature.getGeometry());
+        }
     }
 
     /**
@@ -297,7 +310,9 @@ class GeoJsonRenderer implements Observer {
             if (mFeatures.get(geoJsonFeature) != FEATURE_NOT_ON_MAP_VALUE && geoJsonFeature
                     .hasGeometry()) {
                 // Checks if the feature has been added to the map and its geometry is not null
-                redrawCollectionToMap(geoJsonFeature);
+                // TODO: cater for when geometry is changed to null
+                // TODO: change this so that we don't add and remove
+                redrawFeatureToMap(geoJsonFeature);
             } else {
                 addFeature(geoJsonFeature);
             }

@@ -25,7 +25,6 @@ public class GeoJsonParserTest extends TestCase {
                 + "    }");
 
         GeoJsonParser parser = new GeoJsonParser(geoJsonObject);
-        parser.parseGeoJson();
         GeoJsonLineString ls1 = new GeoJsonLineString(
                 new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 100), new LatLng(1, 101))));
         GeoJsonLineString ls2 = new GeoJsonLineString(
@@ -83,7 +82,6 @@ public class GeoJsonParserTest extends TestCase {
     public void testParseGeometryCollection() throws Exception {
         JSONObject geometryCollectionObject = createGeometryCollection();
         GeoJsonParser parser = new GeoJsonParser(geometryCollectionObject);
-        parser.parseGeoJson();
         assertTrue(parser.getFeatures().size() == 1);
         for (GeoJsonFeature feature : parser.getFeatures()) {
             assertTrue(feature.getGeometry().getType().equals("GeometryCollection"));
@@ -101,10 +99,8 @@ public class GeoJsonParserTest extends TestCase {
     public void testParseMultiPolygon() throws Exception {
         JSONObject multiPolygon = createMultiPolygon();
         GeoJsonParser parser = new GeoJsonParser(multiPolygon);
-        parser.parseGeoJson();
         assertTrue(parser.getFeatures().size() == 1);
         GeoJsonFeature feature = parser.getFeatures().get(0);
-        //assertTrue(feature.getKmlGeometryObject().equals("MultiPolygon"));
         GeoJsonMultiPolygon polygon = ((GeoJsonMultiPolygon) feature.getGeometry());
         assertTrue(polygon.getPolygons().size() == 2);
         assertTrue(polygon.getPolygons().get(0).getType().equals("Polygon"));
