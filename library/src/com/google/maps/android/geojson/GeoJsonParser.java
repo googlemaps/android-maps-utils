@@ -52,9 +52,17 @@ public class GeoJsonParser {
 
     private static final String PROPERTIES = "properties";
 
-    // Geometry objects except for GeometryCollection
-    private static final String GEOJSON_GEOMETRY_OBJECTS_REGEX
-            = "Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon";
+    private static final String POINT = "Point";
+
+    private static final String MULTIPOINT = "MultiPoint";
+
+    private static final String LINESTRING = "LineString";
+
+    private static final String MULTILINESTRING = "MultiLineString";
+
+    private static final String POLYGON = "Polygon";
+
+    private static final String MULTIPOLYGON = "MultiPolygon";
 
     private final JSONObject mGeoJsonFile;
 
@@ -75,6 +83,11 @@ public class GeoJsonParser {
         parseGeoJson();
     }
 
+    private static boolean isGeometry(String type) {
+        return type.matches(POINT + "|" + MULTIPOINT + "|" + LINESTRING + "|" + MULTILINESTRING +
+                "|" + POLYGON + "|" + MULTIPOLYGON + "|" + GEOMETRY_COLLECTION);
+    }
+
     /**
      * Parses the GeoJSON file by type and adds the generated GeoJsonFeature objects to the
      * mFeatures array. Supported GeoJSON types include feature, feature collection and geometry.
@@ -91,8 +104,7 @@ public class GeoJsonParser {
                 }
             } else if (type.equals(FEATURE_COLLECTION)) {
                 mGeoJsonFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
-            } else if (type.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX) || type
-                    .equals(GEOMETRY_COLLECTION)) {
+            } else if (isGeometry(type)) {
                 feature = parseGeometryToFeature(mGeoJsonFile);
                 if (feature != null) {
                     // Don't add null features
@@ -235,12 +247,13 @@ public class GeoJsonParser {
     private static GeoJsonGeometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
         String geometryType = geoJsonGeometry.getString("type");
         JSONArray geometryArray;
-        if (geometryType.matches(GEOJSON_GEOMETRY_OBJECTS_REGEX)) {
-            geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COORDINATES_ARRAY);
-        } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
+        if (geometryType.equals(GEOMETRY_COLLECTION)) {
             // GeometryCollection
             geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
-        } else {
+        } else if (isGeometry(geometryType)) {
+            geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COORDINATES_ARRAY);
+        }
+        else {
             Log.w(LOG_TAG,
                     "Geometry could not be created as it did not contain a coordinates or geometries member "
                             + geoJsonGeometry.toString());
@@ -294,17 +307,17 @@ public class GeoJsonParser {
      */
     private static GeoJsonGeometry createGeometry(String geometryType, JSONArray geometryArray)
             throws JSONException {
-        if (geometryType.equals("Point")) {
+        if (geometryType.equals(POINT)) {
             return createPoint(geometryArray);
-        } else if (geometryType.equals("MultiPoint")) {
+        } else if (geometryType.equals(MULTIPOINT)) {
             return createMultiPoint(geometryArray);
-        } else if (geometryType.equals("LineString")) {
+        } else if (geometryType.equals(LINESTRING)) {
             return createLineString(geometryArray);
-        } else if (geometryType.equals("MultiLineString")) {
+        } else if (geometryType.equals(MULTILINESTRING)) {
             return createMultiLineString(geometryArray);
-        } else if (geometryType.equals("Polygon")) {
+        } else if (geometryType.equals(POLYGON)) {
             return createPolygon(geometryArray);
-        } else if (geometryType.equals("MultiPolygon")) {
+        } else if (geometryType.equals(MULTIPOLYGON)) {
             return createMultiPolygon(geometryArray);
         } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             return createGeometryCollection(geometryArray);
