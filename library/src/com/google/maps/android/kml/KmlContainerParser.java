@@ -12,19 +12,19 @@ public class KmlContainerParser {
 
     private static final String PROPERTY_TAG_REGEX = "name|description|visibility|open";
 
-    private KmlContainer mContainer;
-
-    private XmlPullParser mParser;
+    private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
 
     private final static String PLACEMARK_START_TAG = "Placemark";
 
     private final static String STYLE_START_TAG = "Style";
 
-    private final static String FOLDER_START_TAG = "Folder";
-
-    private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
-
     private final static String STYLE_MAP_START_TAG = "StyleMap";
+
+    private final static String GROUND_OVERLAY_START_TAG = "GroundOverlay";
+
+    private KmlContainer mContainer;
+
+    private XmlPullParser mParser;
 
     public KmlContainerParser(XmlPullParser parser) {
         mParser = parser;
@@ -52,29 +52,79 @@ public class KmlContainerParser {
         while (!(eventType == XmlPullParser.END_TAG &&
                 mParser.getName().matches(CONTAINER_START_TAG_REGEX))) {
             if (eventType == XmlPullParser.START_TAG) {
-                if (mParser.getName().equals(FOLDER_START_TAG)) {
-                    KmlContainer container = new KmlContainer();
-                    kmlFolder.addChildContainer(container);
-                    assignFolderProperties(container);
+                if (mParser.getName().equals(CONTAINER_START_TAG_REGEX)) {
+                    createContainerObject(kmlFolder);
                 } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
-                    kmlFolder.setProperty(mParser.getName(), mParser.nextText());
+                    setContainerProperty(kmlFolder);
                 } else if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
-                    KmlStyleParser styleParser = new KmlStyleParser(mParser);
-                    styleParser.createStyleMap();
-                    kmlFolder.setStyleMap(styleParser.getStyleMaps());
+                    createContainerStyleMap (kmlFolder);
                 } else if (mParser.getName().equals(STYLE_START_TAG)) {
-                    KmlStyleParser styleParser = new KmlStyleParser(mParser);
-                    styleParser.createStyle();
-                    kmlFolder.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+                    createContainerStyle (kmlFolder);
                 }  else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
-                    KmlPlacemarkParser placemarkParser = new KmlPlacemarkParser(mParser);
-                    placemarkParser.createPlacemark();
-                    if (placemarkParser.getPlacemark() != null) {
-                        kmlFolder.setPlacemark(placemarkParser.getPlacemark(), null);
-                    }
+                    createContainerPlacemark(kmlFolder);
+                } else if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
+                    //TODO: Ground overlay in containers
                 }
             }
             eventType = mParser.next();
+        }
+    }
+
+    /**
+     * Creates a new container object
+     *
+     * @param kmlFolder Stores new container object
+     */
+    private void createContainerObject (KmlContainer kmlFolder)
+            throws XmlPullParserException, IOException {
+        KmlContainer container = new KmlContainer();
+        assignFolderProperties(container);
+        kmlFolder.addChildContainer(container);
+    }
+
+    /**
+     * Creates a new hash map representing a style map
+     * @param kmlFolder Stores hash map
+     */
+    private void createContainerStyleMap(KmlContainer kmlFolder)
+            throws XmlPullParserException, IOException {
+        KmlStyleParser styleParser = new KmlStyleParser(mParser);
+        styleParser.createStyleMap();
+        kmlFolder.setStyleMap(styleParser.getStyleMaps());
+    }
+
+    /**
+     * Sets a property value in folder
+     * @param kmlFolder Stores property
+     */
+    private void setContainerProperty(KmlContainer kmlFolder)
+            throws XmlPullParserException, IOException {
+        String propertyName = mParser.getName();
+        String propertyValue = mParser.nextText();
+        kmlFolder.setProperty(propertyName, propertyValue);
+    }
+
+    /**
+     * Creates a new kml style
+     * @param kmlFolder stores the new kml style
+     */
+    private void createContainerStyle (KmlContainer kmlFolder)
+            throws XmlPullParserException, IOException {
+        KmlStyleParser styleParser = new KmlStyleParser(mParser);
+        styleParser.createStyle();
+        kmlFolder.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+    }
+
+    /**
+     * Creates a new placemark
+     * @param kmlFolder folder to store placemark
+     */
+    private void createContainerPlacemark(KmlContainer kmlFolder)
+            throws XmlPullParserException, IOException {
+        KmlFeatureParser placemarkParser = new KmlFeatureParser(mParser);
+        placemarkParser.createPlacemark();
+        if (placemarkParser.getPlacemark() != null) {
+            kmlFolder.setPlacemark(placemarkParser.getPlacemark(), null);
         }
     }
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <GroundOverlay>
+      <name>Large-scale overlay on terrain</name>
+      <description>Overlay shows Mount Etna erupting
+          on July 13th, 2001.</description>
+      <Icon>
+        <href>http://developers.google.com/kml/documentation/images/etna.jpg</href>
+      </Icon>
+      <LatLonBox>
+        <north>37.91904192681665</north>
+        <south>37.46543388598137</south>
+        <east>15.35832653742206</east>
+        <west>14.60128369746704</west>
+        <rotation>-0.1556640799496235</rotation>
+      </LatLonBox>
+    </GroundOverlay>
+</kml>

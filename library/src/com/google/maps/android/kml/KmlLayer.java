@@ -51,6 +51,8 @@ public class KmlLayer {
 
     private HashMap<String, KmlStyle> mStyles;
 
+    private ArrayList<KmlGroundOverlay> mGroundOverlays;
+
     private XmlPullParser mParser;
 
     private static int RANDOM_COLOR_MODE = 1;
@@ -134,6 +136,12 @@ public class KmlLayer {
         }
     }
 
+    /**
+     * Adds a placemark object to a map
+     * @param placemark
+     * @param isVisible
+     * @return
+     */
     private Object addPlacemarkObjectToMap (KmlPlacemark placemark, Boolean isVisible) {
         String placemarkId = placemark.getStyleID();
         KmlGeometry kmlGeometry = placemark.getGeometry();
@@ -141,6 +149,12 @@ public class KmlLayer {
         return addToMap(kmlGeometry, kmlStyle, isVisible);
     }
 
+    /**
+     * Obtains the visibility of the placemark if it is specified, otherwise it returns true as a
+     * default
+     * @param placemark Placemark to obtain visibility from
+     * @return  true if placemark visibility is set to the true or unspecified, false otherwise
+     */
     private boolean getPlacemarkVisibility (KmlPlacemark placemark) {
         Boolean isPlacemarkVisible = true;
         if (placemark.hasProperty("visibility")) {
@@ -162,10 +176,16 @@ public class KmlLayer {
             KmlContainer kmlContainer = (KmlContainer) kmlContainers.next();
             Boolean isContainerVisible = getContainerVisibility(kmlContainer, parentVisibility);
             if (kmlContainer.getStyles() != null) {
+                //Stores all found styles from the container
                 mStyles.putAll(kmlContainer.getStyles());
-                assignStyleMapStyles(mStyleMaps, mStyles);
-                assignStyleMapStyles(kmlContainer.getStyleMap(), mStyles);
+            } if (kmlContainer.getStyleMap() != null) {
+                //Stores all found style maps from the container
+                mStyleMaps.putAll(kmlContainer.getStyleMap());
             }
+            //TODO: Inefficient, maybe we can add a flag in the two conditions above, if those
+            //flags have been set, then do the code below.
+            //Reassign style maps to styles in case new styles or style maps have been added
+            assignStyleMapStyles(mStyleMaps, mStyles);
             addContainerObjectToMap(kmlContainer, isContainerVisible);
             if (kmlContainer.hasNestedKmlContainers()) {
                 addContainerGroupToMap(kmlContainer.getNestedKmlContainers(), isContainerVisible);
@@ -187,6 +207,15 @@ public class KmlLayer {
         }
     }
 
+
+    /**
+     * Determines whether the container is visible, based on the visibility of the parent container
+     * and its own specified visibility
+     * @param kmlContainer  The kml container to retrieve visibility
+     * @param isParentContainerVisible  Boolean value representing that parents visibility
+     * @return  Visibility of the container
+     */
+
     private Boolean getContainerVisibility (KmlContainerInterface kmlContainer, Boolean
             isParentContainerVisible) {
         Boolean isChildContainerVisible = true;
@@ -197,21 +226,6 @@ public class KmlLayer {
             }
         }
         return (isParentContainerVisible && isChildContainerVisible);
-    }
-
-    /**
-     * Gets the visibility of the placemark if it is defined. The default visibility is true
-     * @param placemark Placemark to obtain visibility from
-     * @return true if visibility is set to 1 or visibility undefined, false if visibility is 0
-     */
-    private static boolean getVisibility (KmlPlacemark placemark) {
-        Boolean visibility = true;
-        if (placemark.getProperty("visibility") != null) {
-            if (placemark.getProperty("visibility").equals("0")) {
-                visibility = false;
-            }
-        }
-        return visibility;
     }
 
     /**
@@ -251,7 +265,7 @@ public class KmlLayer {
             if (placemarkStyle != null && placemarkStyle.getIconUrl().equals(iconUrl)
                     && placemark.getGeometry().getKmlGeometryType().equals("Point")) {
                 Bitmap iconBitmap = mMarkerIconCache.get(iconUrl);
-                Double scale = mStyles.get(placemark.getStyleID()).getIconScale();
+                Double scale = placemarkStyle.getIconScale();
                 ((Marker) mPlacemarks.get(placemark)).setIcon(scaleIconToMarkers(iconBitmap, scale));
             }
         }
@@ -328,10 +342,13 @@ public class KmlLayer {
         MarkerOptions markerOptions = style.getMarkerOptions();
         markerOptions.position(point.getKmlGeometryObject());
         Marker marker = mMap.addMarker(markerOptions);
+        //If there exists style options for a ballonStyle
         if (style.getBalloonOptions().size() > 0) {
+            //Set info window if ballonStyle is set
             setMarkerInfoWindow(style, marker, mPlacemarks.entrySet().iterator());
             setContainerMarkerInfoWindow(style, marker, mContainers.iterator());
         } if (style != null && style.getIconUrl() != null) {
+            //Sets an icon image if there is a url for it
             setMarkerIcon(style, marker);
         }
         return marker;
@@ -366,6 +383,12 @@ public class KmlLayer {
         }
     }
 
+    /**
+     * Determines if a marker inside a container needs to be set
+     * @param style Style containting the style of the marker
+     * @param marker    The marker to display the info window on
+     * @param containers    List of containers to find an info window of
+     */
     private void setContainerMarkerInfoWindow(KmlStyle style, Marker marker,
         Iterator<KmlContainerInterface> containers) {
         while (containers.hasNext()) {
@@ -432,7 +455,9 @@ public class KmlLayer {
     }
 
     /**
-     * Computes a random color given an integer.
+     * Computes a random color given an integer. Algorithm to compute the random color can be
+     * found in https://developers.google.com/kml/documentation/kmlreference#colormode
+     *
      * @param color Integer value representing a color
      * @return  Integer representing a random color
      */
@@ -478,6 +503,8 @@ public class KmlLayer {
         mStyles = parser.getStyles();
         mStyleMaps = parser.getStyleMaps();
         mPlacemarks = parser.getPlacemarks();
+        mGroundOverlays = parser.getGroundOverlays();
+        //TODO: Figure out how to put a ground overlay to the map
         mContainers = parser.getFolders();
         assignStyleMapStyles(mStyleMaps, mStyles);
         addContainerGroupToMap(mContainers.iterator(), true);
@@ -490,10 +517,27 @@ public class KmlLayer {
      */
     public void removeKmlData() {
         removeKmlPlacemarks(mPlacemarks);
-        //TODO: Remove kml placemarks in folders
-        //removeKmlFolders();
+        if (hasNestedKmlContainers()) {
+            removeKmlContainers(getNestedKmlContainers());
+        }
     }
 
+    /**
+     * Removes all the KML data from the map and clears all the stored placemarks of those which
+     * are in a container.
+     * @param containers
+     */
+    public void removeKmlContainers(Iterator<KmlContainerInterface> containers) {
+        while (containers.hasNext()) {
+            KmlContainer container = (KmlContainer) containers.next();
+            if (container.hasKmlPlacemarks()) {
+                removeKmlPlacemarks(container.getPlacemarks());
+            }
+            if (container.hasNestedKmlContainers()) {
+                removeKmlContainers(container.getNestedKmlContainers());
+            }
+        }
+    }
 
     private void removeKmlPlacemarks(HashMap<KmlPlacemark, Object> placemarks) {
         // Remove map object from the map

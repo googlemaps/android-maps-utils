@@ -2,13 +2,13 @@ package com.google.maps.android.utils.demo;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.maps.android.geoJsonLayer.GeoJsonFeature;
-import com.google.maps.android.geoJsonLayer.GeoJsonLayer;
-import com.google.maps.android.geoJsonLayer.GeoJsonLineStringStyle;
-import com.google.maps.android.geoJsonLayer.GeoJsonPoint;
-import com.google.maps.android.geoJsonLayer.GeoJsonPointStyle;
-import com.google.maps.android.geoJsonLayer.GeoJsonPolygon;
-import com.google.maps.android.geoJsonLayer.GeoJsonPolygonStyle;
+import com.google.maps.android.geojson.GeoJsonFeature;
+import com.google.maps.android.geojson.GeoJsonLayer;
+import com.google.maps.android.geojson.GeoJsonLineStringStyle;
+import com.google.maps.android.geojson.GeoJsonPoint;
+import com.google.maps.android.geojson.GeoJsonPointStyle;
+import com.google.maps.android.geojson.GeoJsonPolygon;
+import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 
 import org.json.JSONException;
 

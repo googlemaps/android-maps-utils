@@ -14,7 +14,7 @@ public class KmlParser {
 
     private KmlStyleParser styleParser;
 
-    private KmlPlacemarkParser placemarkParser;
+    private KmlFeatureParser placemarkParser;
 
     private KmlContainerParser containerParser;
 
@@ -28,11 +28,15 @@ public class KmlParser {
 
     private final static String PLACEMARK_START_TAG = "Placemark";
 
+    private final static String GROUND_OVERLAY_START_TAG = "GroundOverlay";
+
     private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
 
     private ArrayList<KmlContainerInterface> mFolders;
 
     private HashMap<String, KmlStyle> mStyles;
+
+    private ArrayList<KmlGroundOverlay> mGroundOverlays;
 
 
     /**
@@ -46,8 +50,9 @@ public class KmlParser {
         mFolders = new ArrayList<KmlContainerInterface>();
         mStyles = new HashMap<String, KmlStyle>();
         styleParser = new KmlStyleParser(mParser);
-        placemarkParser = new KmlPlacemarkParser(mParser);
+        placemarkParser = new KmlFeatureParser(mParser);
         containerParser= new KmlContainerParser(mParser);
+        mGroundOverlays = new ArrayList<KmlGroundOverlay>();
     }
 
     /**
@@ -68,6 +73,9 @@ public class KmlParser {
                 } if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     placemarkParser.createPlacemark();
                     if (placemarkParser != null) mPlacemarks.put(placemarkParser.getPlacemark(), null);
+                } if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
+                    placemarkParser.createGroundOverlay();
+                    mGroundOverlays.add(placemarkParser.getGroundOverlay());
                 }
             }
             eventType = mParser.next();
@@ -76,6 +84,7 @@ public class KmlParser {
 
 
     public HashMap<String, KmlStyle> getStyles() {
+        //TODO: Need to put an empty new style, can probably be put somewhere better
         mStyles.put(null, new KmlStyle());
         return mStyles;
     }
@@ -89,4 +98,6 @@ public class KmlParser {
     public ArrayList<KmlContainerInterface> getFolders() {
         return mFolders;
     }
+
+    public ArrayList<KmlGroundOverlay> getGroundOverlays() { return mGroundOverlays; }
 }
