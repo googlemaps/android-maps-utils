@@ -1,12 +1,12 @@
 package com.google.maps.android.geojson;
 
-import android.content.Context;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.IOException;
