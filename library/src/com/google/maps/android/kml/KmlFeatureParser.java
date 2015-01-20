@@ -234,6 +234,7 @@ public class KmlFeatureParser {
         Double south = 0.0;
         Double east = 0.0;
         Double west = 0.0;
+
         int eventType = mParser.next();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("LatLonBox"))) {
             if (eventType == XmlPullParser.START_TAG) {

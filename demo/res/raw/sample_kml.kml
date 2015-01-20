@@ -49,7 +49,7 @@
 <Folder>
   <Placemark id="mountainpin1">
     <name>Pin on a mountaintop</name>
-    <styleUrl>#vtgStyleMap</styleUrl>
+    <styleUrl>#pushpin</styleUrl>
     <Point>
       <coordinates>170.1435558771009,-43.60505741890396,0</coordinates>
     </Point>

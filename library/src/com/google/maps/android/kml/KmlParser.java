@@ -38,7 +38,6 @@ public class KmlParser {
 
     private ArrayList<KmlGroundOverlay> mGroundOverlays;
 
-
     /**
      * Creates a new KmlParser object
      *
@@ -82,22 +81,36 @@ public class KmlParser {
         }
     }
 
-
+    /**
+     * @return List of styles created by the parser
+     */
     public HashMap<String, KmlStyle> getStyles() {
         //TODO: Need to put an empty new style, can probably be put somewhere better
         mStyles.put(null, new KmlStyle());
         return mStyles;
     }
 
+    /**
+     * @return List of placemark object created by the parser
+     */
     public HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;
     }
 
+    /**
+     * @return A list of stylemaps created by the parser
+     */
     public  HashMap<String, String> getStyleMaps() { return styleParser.getStyleMaps(); }
 
+    /**
+     * @return List of folder objects created by the parser
+     */
     public ArrayList<KmlContainerInterface> getFolders() {
         return mFolders;
     }
 
+    /**
+     * @return List of ground overlays created by the parser
+     */
     public ArrayList<KmlGroundOverlay> getGroundOverlays() { return mGroundOverlays; }
 }

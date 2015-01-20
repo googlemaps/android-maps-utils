@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -58,9 +59,6 @@ public class KmlLayer {
     private static int RANDOM_COLOR_MODE = 1;
 
     private static int LRU_CACHE_SIZE = 100;
-
-    /*TODO(lavenderch): IconStyle, BallonStyle, ExtendedData, Folder
-    */
 
     /**
      * Creates a new KmlLayer object
@@ -117,11 +115,12 @@ public class KmlLayer {
     /**
      *  Iterates a list of styles and assigns a style
      */
-    private void assignStyleMapStyles(HashMap<String, String> styleMap,
-            HashMap<String, KmlStyle> styles) {
-        for (String styleId : styleMap.keySet()) {
-            if (styles.containsKey(styleMap.get(styleId))) {
-                styles.put(styleId, styles.get(styleMap.get(styleId)));
+    private void assignStyleMap(HashMap<String, String> styleMap,
+        HashMap<String, KmlStyle> styles) {
+        for (String styleMapKey : styleMap.keySet()) {
+            String styleMapValue = styleMap.get(styleMapKey);
+            if (styles.containsKey(styleMapValue)) {
+                styles.put(styleMapKey, styles.get(styleMapValue));
             }
         }
     }
@@ -131,22 +130,27 @@ public class KmlLayer {
      */
     private void addPlacemarkGroupToMap(HashMap<KmlPlacemark, Object> placemarks) {
         for (KmlPlacemark placemark : placemarks.keySet()) {
-            Boolean isVisible = getPlacemarkVisibility(placemark);
-            placemarks.put(placemark, addPlacemarkObjectToMap(placemark, isVisible));
+            Boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
+            Object mapObject = addPlacemarkObjectToMap(placemark, isPlacemarkVisible);
+            //Placemark stores a KmlPlacemark as a key, and GoogleMap Object as its value
+            placemarks.put(placemark, mapObject);
         }
     }
 
     /**
-     * Adds a placemark object to a map
-     * @param placemark
-     * @param isVisible
-     * @return
+     * Combines style and visibility to apply to a placemark geometry object and adds it to the map
+     *
+     * @param placemark Placemark to obtain geometry object to add to the map
+     * @param placemarkVisibility Boolean value, where true indicates the placemark geometry is
+     *                            shown initially on the map, false for not shown initially on the
+     *                            map.
+     * @return  Google Map Object of the placemark geometry after it has been added to the map.
      */
-    private Object addPlacemarkObjectToMap (KmlPlacemark placemark, Boolean isVisible) {
+    private Object addPlacemarkObjectToMap (KmlPlacemark placemark, Boolean placemarkVisibility) {
         String placemarkId = placemark.getStyleID();
         KmlGeometry kmlGeometry = placemark.getGeometry();
         KmlStyle kmlStyle = getPlacemarkStyle(placemarkId);
-        return addToMap(kmlGeometry, kmlStyle, isVisible);
+        return addToMap(kmlGeometry, kmlStyle, placemarkVisibility);
     }
 
     /**
@@ -171,10 +175,10 @@ public class KmlLayer {
      * @param kmlContainers   An arraylist of folders
      */
     private void addContainerGroupToMap(Iterator<KmlContainerInterface> kmlContainers,
-            boolean parentVisibility) {
+            boolean containerVisibility) {
         while (kmlContainers.hasNext()) {
             KmlContainer kmlContainer = (KmlContainer) kmlContainers.next();
-            Boolean isContainerVisible = getContainerVisibility(kmlContainer, parentVisibility);
+            Boolean isContainerVisible = getContainerVisibility(kmlContainer, containerVisibility);
             if (kmlContainer.getStyles() != null) {
                 //Stores all found styles from the container
                 mStyles.putAll(kmlContainer.getStyles());
@@ -182,10 +186,7 @@ public class KmlLayer {
                 //Stores all found style maps from the container
                 mStyleMaps.putAll(kmlContainer.getStyleMap());
             }
-            //TODO: Inefficient, maybe we can add a flag in the two conditions above, if those
-            //flags have been set, then do the code below.
-            //Reassign style maps to styles in case new styles or style maps have been added
-            assignStyleMapStyles(mStyleMaps, mStyles);
+            assignStyleMap(mStyleMaps, mStyles);
             addContainerObjectToMap(kmlContainer, isContainerVisible);
             if (kmlContainer.hasNestedKmlContainers()) {
                 addContainerGroupToMap(kmlContainer.getNestedKmlContainers(), isContainerVisible);
@@ -197,16 +198,15 @@ public class KmlLayer {
      * Goes through the every placemark, style and properties object within a <Folder> tag
      * @param kmlContainer    Folder to obtain placemark and styles from
      */
-    private void addContainerObjectToMap(KmlContainer kmlContainer, boolean containerVisibility) {
-        for (KmlPlacemark placemark : kmlContainer.getPlacemarks().keySet()) {
-            if (containerVisibility && getPlacemarkVisibility(placemark)) {
-                kmlContainer.setPlacemark(placemark, addPlacemarkObjectToMap(placemark,true));
-            } else {
-                kmlContainer.setPlacemark(placemark, addPlacemarkObjectToMap(placemark,false));
-            }
+    private void addContainerObjectToMap(KmlContainer kmlContainer, boolean isContainerVisible) {
+        Set<KmlPlacemark> containerPlacemarks =  kmlContainer.getPlacemarks().keySet();
+        for (KmlPlacemark placemark : containerPlacemarks) {
+            Boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
+            Boolean isObjectVisible = isContainerVisible && isPlacemarkVisible;
+            Object mapObject = addPlacemarkObjectToMap(placemark,isObjectVisible);
+            kmlContainer.setPlacemark(placemark, mapObject);
         }
     }
-
 
     /**
      * Determines whether the container is visible, based on the visibility of the parent container
@@ -506,7 +506,7 @@ public class KmlLayer {
         mGroundOverlays = parser.getGroundOverlays();
         //TODO: Figure out how to put a ground overlay to the map
         mContainers = parser.getFolders();
-        assignStyleMapStyles(mStyleMaps, mStyles);
+        assignStyleMap(mStyleMaps, mStyles);
         addContainerGroupToMap(mContainers.iterator(), true);
         addPlacemarkGroupToMap(mPlacemarks);
         addIconsToMarkers(mMarkerIconUrls);
