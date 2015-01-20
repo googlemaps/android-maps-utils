@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Set;
 
 
 /**
@@ -95,7 +94,7 @@ public class GeoJsonLayer {
      *
      * @return set of GeoJsonFeature elements
      */
-    public Set<GeoJsonFeature> getFeatures() {
+    public Iterable<GeoJsonFeature> getFeatures() {
         return mRenderer.getFeatures();
     }
 
