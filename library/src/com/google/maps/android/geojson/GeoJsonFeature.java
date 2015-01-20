@@ -36,7 +36,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param boundingBox     array defining the bounding box of the feature
      */
     public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
-            HashMap<String, String> properties, LatLngBounds boundingBox) {
+                          HashMap<String, String> properties, LatLngBounds boundingBox) {
         mGeoJsonGeometry = GeoJsonGeometry;
         mId = id;
         mBoundingBox = boundingBox;
@@ -187,7 +187,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");
         sb.append("\n bounding box=").append(mBoundingBox);
-        sb.append("\n geometry=").append(mGeoJsonGeometry);
+        sb.append(",\n geometry=").append(mGeoJsonGeometry);
         sb.append(",\n point style=").append(mGeoJsonPointStyle);
         sb.append(",\n line string style=").append(mGeoJsonLineStringStyle);
         sb.append(",\n polygon style=").append(mGeoJsonPolygonStyle);

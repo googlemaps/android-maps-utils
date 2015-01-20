@@ -9,7 +9,7 @@ public class GeoJsonMultiPolygon implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPolygon";
 
-    private ArrayList<GeoJsonPolygon> mGeoJsonPolygons;
+    private final ArrayList<GeoJsonPolygon> mGeoJsonPolygons;
 
     /**
      * Creates a new GeoJsonMultiPolygon

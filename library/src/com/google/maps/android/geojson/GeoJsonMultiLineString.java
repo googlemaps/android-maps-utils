@@ -9,7 +9,7 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiLineString";
 
-    private ArrayList<GeoJsonLineString> mGeoJsonLineStrings;
+    private final ArrayList<GeoJsonLineString> mGeoJsonLineStrings;
 
     /**
      * Creates a new GeoJsonMultiLineString object

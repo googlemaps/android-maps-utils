@@ -11,7 +11,7 @@ public class GeoJsonLineString implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "LineString";
 
-    private ArrayList<LatLng> mCoordinates;
+    private final ArrayList<LatLng> mCoordinates;
 
     /**
      * Creates a new GeoJsonLineString object

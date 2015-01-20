@@ -13,7 +13,7 @@ public class GeoJsonPolygon implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "Polygon";
 
-    private ArrayList<ArrayList<LatLng>> mCoordinates;
+    private final ArrayList<ArrayList<LatLng>> mCoordinates;
 
     /**
      * Creates a new GeoJsonPolygon object

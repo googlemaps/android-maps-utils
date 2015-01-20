@@ -9,7 +9,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "GeometryCollection";
 
-    private ArrayList<GeoJsonGeometry> mGeometries;
+    private final ArrayList<GeoJsonGeometry> mGeometries;
 
     /**
      * Creates a new GeoJsonGeometryCollection object

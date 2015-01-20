@@ -1,5 +1,6 @@
 package com.google.maps.android.utils.demo;
 
+<<<<<<< HEAD
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.geojson.GeoJsonFeature;
@@ -17,6 +18,8 @@ import android.util.Log;
 
 import java.io.IOException;
 
+=======
+>>>>>>> 44f0b6a02c71e38cbf5f7587dd3423d2aafe3d66
 /**
  * Created by juliawong on 12/1/14.
  */
