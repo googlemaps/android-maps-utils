@@ -82,7 +82,6 @@ public class GeoJsonLayer {
             // Read each line of the GeoJSON file into a string
             while ((line = reader.readLine()) != null) {
                 result.append(line);
-                // TODO: catch something derp
             }
         } finally {
             reader.close();
