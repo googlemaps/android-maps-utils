@@ -95,11 +95,17 @@ public class KmlContainer implements KmlContainerInterface {
         mStyles.put(styleId, style);
     }
 
+
+    /**
+     * @return A map of strings representing a style map, null if no style maps exist
+     */
     public HashMap<String, String> getStyleMap() {
         return mStyleMap;
     }
 
-
+    /**
+     * @param styleMap Adds a map of strings representing a style map
+     */
     public void setStyleMap(HashMap<String, String> styleMap) {
         mStyleMap.putAll(styleMap);
     }

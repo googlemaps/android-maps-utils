@@ -41,6 +41,10 @@ public class KmlStyle {
 
     private static int RANDOM_COLOR_MODE = 1;
 
+    private static int HSV_VALUES = 3;
+
+    private static int HUE_VALUE = 0;
+
     private String mStyleId;
 
     /**
@@ -56,10 +60,16 @@ public class KmlStyle {
         mScale = 1.0;
     }
 
+    /**
+     * @param styleId style id for this style
+     */
     public void setStyleId (String styleId) {
         mStyleId = styleId;
     }
 
+    /**
+     * @return the string representing a style id, null otherwise
+     */
     public String getStyleId () {
         return mStyleId;
     }
@@ -92,10 +102,17 @@ public class KmlStyle {
         mPolygonOptions.fillColor(Color.parseColor("#" + color));
     }
 
-    public void setMarkerColor (String color) {
-        float[] hsvValues = new float[3];
-        Color.colorToHSV(Color.parseColor("#" + color), hsvValues);
-        float hue = hsvValues[0];
+    /**
+     * @param stringColor String representation of a color
+     */
+    public void setMarkerColor (String stringColor) {
+        float[] hsvValues = new float[HSV_VALUES];
+        //make hexadecimal representation
+        int integerColor = Color.parseColor("#" + stringColor);
+        //make hexadecimal representation into hsv values, store in array
+        Color.colorToHSV(integerColor, hsvValues);
+        //first element is the hue value
+        float hue = hsvValues[HUE_VALUE];
         mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(hue));
     }
 
@@ -155,18 +172,33 @@ public class KmlStyle {
         }
     }
 
+    /**
+     * @param scale scale value
+     */
     public void setIconScale(double scale) {
         mScale = scale;
     }
 
+    /**
+     * @return Scale value, can be any double value
+     */
     public double getIconScale() {
         return mScale;
     }
 
+    /**
+     * Sets the text for the info window; no other ballonstyles are supported
+     * @param text text to put in an info window
+     */
     public void setInfoWindow(String text) {
         mBalloonOptions.put("text", text);
     }
 
+    /**
+     * Sets the color mode; either random or normal
+     * @param geometryType  geometry type which colormode is applied to
+     * @param colorModeString string representing the mode; either random or normal
+     */
     public void setColorMode(String geometryType, String colorModeString) {
         if (colorModeString.equals("normal")) {
             mColorModeOptions.put(geometryType, NORMAL_COLOR_MODE);
@@ -175,10 +207,19 @@ public class KmlStyle {
         }
     }
 
+    /**
+     * @param geometryType type of geometry which has a color mode
+     * @return  color mode, 1 for random, 0 or normal
+     */
     public int getColorMode(String geometryType) {
         return mColorModeOptions.get(geometryType);
     }
 
+    /**
+     * Determines if the geometry has a random color mode
+     * @param geometryType  geometry type which colormode is applied to
+     * @return  boolean value, true if the geometry has a colormode, false otherwise
+     */
     public boolean hasColorMode(String geometryType) {
         return mColorModeOptions.containsKey(geometryType);
     }

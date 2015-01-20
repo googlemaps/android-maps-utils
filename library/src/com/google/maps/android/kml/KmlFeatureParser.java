@@ -1,6 +1,7 @@
 package com.google.maps.android.kml;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 /**
  * Created by lavenderch on 1/12/15.
  */
-public class KmlPlacemarkParser {
+public class KmlFeatureParser {
 
 
     private static final String GEOMETRY_TAG_REGEX = "Point|LineString|Polygon|MultiGeometry";
@@ -29,9 +30,12 @@ public class KmlPlacemarkParser {
 
     private KmlPlacemark mPlacemark;
 
-    public KmlPlacemarkParser(XmlPullParser parser) {
+    private KmlGroundOverlay mGroundOverlay;
+
+    public KmlFeatureParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemark = null;
+        mGroundOverlay = null;
     }
 
     /**
@@ -58,6 +62,26 @@ public class KmlPlacemarkParser {
         // If there is no geometry associated with the Placemark then we do not add it
         if (geometry != null) {
             mPlacemark = new KmlPlacemark(geometry, style, properties);
+        }
+    }
+
+    public void createGroundOverlay() throws IOException, XmlPullParserException {
+        mGroundOverlay = new KmlGroundOverlay();
+        int eventType = mParser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("GroundOverlay"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().equals("Icon")) {
+                    while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Icon"))) {
+                        if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("href")) {
+                            mGroundOverlay.setImage(mParser.nextText());
+                        }
+                        eventType = mParser.next();
+                    }
+                } if  (mParser.getName().equals("LatLonBox")) {
+                        createLatLonBox();
+                }
+            }
+            eventType = mParser.next();
         }
     }
 
@@ -205,7 +229,36 @@ public class KmlPlacemarkParser {
         return new KmlMultiGeometry(geometries);
     }
 
+    private void createLatLonBox() throws XmlPullParserException, IOException {
+        Double north = 0.0;
+        Double south = 0.0;
+        Double east = 0.0;
+        Double west = 0.0;
+
+        int eventType = mParser.next();
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("LatLonBox"))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().equals("north")) {
+                   north = Double.parseDouble(mParser.nextText());
+                } if (mParser.getName().equals("south")) {
+                    south = Double.parseDouble(mParser.nextText());
+                } if (mParser.getName().equals("east")) {
+                    east = Double.parseDouble(mParser.nextText());
+                } if (mParser.getName().equals("west")) {
+                    west = Double.parseDouble(mParser.nextText());
+                }
+            }
+            eventType = mParser.next();
+        }
+        LatLngBounds bounds = new LatLngBounds(new LatLng(west, south), new LatLng(east, north));
+        mGroundOverlay.setLatLngBounds(bounds);
+    }
+
     public KmlPlacemark getPlacemark() {
         return mPlacemark;
+    }
+
+    public KmlGroundOverlay getGroundOverlay() {
+        return mGroundOverlay;
     }
 }
