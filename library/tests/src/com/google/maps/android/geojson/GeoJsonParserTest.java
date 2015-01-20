@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import junit.framework.TestCase;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -78,6 +79,232 @@ public class GeoJsonParserTest extends TestCase {
 
     }
 
+    public JSONObject createEmptyFile() {
+        return new JSONObject();
+    }
+
+    public JSONObject createNoType() throws Exception {
+        return new JSONObject(
+                "{\n"
+                        + "    \"coordinates\": [100.0, 0.0] \n"
+                        + "}"
+        );
+    }
+
+    public JSONObject createFeatureNoGeometry() throws Exception {
+        return new JSONObject(
+                "{\n"
+                        + "  \"type\": \"Feature\",\n"
+                        + "  \"properties\": {\n"
+                        + "    \"name\": \"Dinagat Islands\"\n"
+                        + "  }\n"
+                        + "}"
+        );
+    }
+
+    public JSONObject createFeatureNoProperties() throws Exception {
+        return new JSONObject(
+                "{\n"
+                        + "  \"type\": \"Feature\",\n"
+                        + "  \"geometry\": {\n"
+                        + "    \"type\": \"Point\",\n"
+                        + "    \"coordinates\": [125.6, 10.1]\n"
+                        + "  }\n"
+                        + "}"
+        );
+    }
+
+    public JSONObject createInvalidFeatureInFeatureCollection() throws Exception {
+        return new JSONObject(
+                "{ \"type\": \"FeatureCollection\",\n"
+                        + "    \"features\": [\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},\n"
+                        + "        \"properties\": {\"prop0\": \"value0\"}\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\n"
+                        + "          \"type\": \"LineString\",\n"
+                        + "          \"coordinates\": [\n"
+                        + "            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]\n"
+                        + "            ]\n"
+                        + "          },\n"
+                        + "        \"properties\": {\n"
+                        + "          \"prop0\": \"value0\",\n"
+                        + "          \"prop1\": 0.0\n"
+                        + "          }\n"
+                        + "        },\n"
+                        + "      {\n"
+                        + "         \"geometry\": {\n"
+                        + "           \"type\": \"Polygon\",\n"
+                        + "           \"coordinates\": [\n"
+                        + "             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],\n"
+                        + "               [100.0, 1.0], [100.0, 0.0] ]\n"
+                        + "             ]\n"
+                        + "         },\n"
+                        + "         \"properties\": {\n"
+                        + "           \"prop0\": \"value0\",\n"
+                        + "           \"prop1\": {\"this\": \"that\"}\n"
+                        + "           }\n"
+                        + "         }\n"
+                        + "       ]\n"
+                        + "     }"
+
+        );
+    }
+
+    public JSONObject createInvalidFeaturesArrayFeatureCollection() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"FeatureCollection\",\n"
+                        + "    \"INVALID\": [\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},\n"
+                        + "        \"properties\": {\"prop0\": \"value0\"}\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\n"
+                        + "          \"type\": \"LineString\",\n"
+                        + "          \"coordinates\": [\n"
+                        + "            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]\n"
+                        + "            ]\n"
+                        + "          },\n"
+                        + "        \"properties\": {\n"
+                        + "          \"prop0\": \"value0\",\n"
+                        + "          \"prop1\": 0.0\n"
+                        + "          }\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "         \"geometry\": {\n"
+                        + "           \"type\": \"Polygon\",\n"
+                        + "           \"coordinates\": [\n"
+                        + "             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],\n"
+                        + "               [100.0, 1.0], [100.0, 0.0] ]\n"
+                        + "             ]\n"
+                        + "         },\n"
+                        + "         \"properties\": {\n"
+                        + "           \"prop0\": \"value0\",\n"
+                        + "           \"prop1\": {\"this\": \"that\"}\n"
+                        + "           }\n"
+                        + "         }\n"
+                        + "       ]\n"
+                        + "     }"
+        );
+    }
+
+    public JSONObject createInvalidGeometry() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"LineString\",\n"
+                        + "    \"banana\": [ [100.0, 0.0], [101.0, 1.0] ]\n"
+                        + "    }"
+        );
+    }
+
+    public JSONObject createInvalidGeometryCoordinatesInFeature() throws JSONException {
+        return new JSONObject(
+                "{\n"
+                        + "  \"type\": \"Feature\",\n"
+                        + "  \"geometry\": {\n"
+                        + "    \"type\": \"Point\",\n"
+                        + "    \"mango\": [125.6, 10.1]\n"
+                        + "  },\n"
+                        + "  \"properties\": {\n"
+                        + "    \"name\": \"Dinagat Islands\"\n"
+                        + "  }\n"
+                        + "}"
+        );
+    }
+
+    public JSONObject createInvalidGeometryTypeInFeature() throws JSONException {
+        return new JSONObject(
+                "{\n"
+                        + "  \"cow\": \"Feature\",\n"
+                        + "  \"geometry\": {\n"
+                        + "    \"type\": \"Point\",\n"
+                        + "    \"coordinates\": [125.6, 10.1]\n"
+                        + "  },\n"
+                        + "  \"properties\": {\n"
+                        + "    \"name\": \"Dinagat Islands\"\n"
+                        + "  }\n"
+                        + "}"
+        );
+    }
+
+    public JSONObject createInvalidGeometryCoordinatesInFeatureCollection() throws Exception {
+        return new JSONObject(
+                "{ \"type\": \"FeatureCollection\",\n"
+                        + "    \"features\": [\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},\n"
+                        + "        \"properties\": {\"prop0\": \"value0\"}\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\n"
+                        + "          \"type\": \"LineString\",\n"
+                        + "          \"aardvark\": [\n"
+                        + "            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]\n"
+                        + "            ]\n"
+                        + "          },\n"
+                        + "        \"properties\": {\n"
+                        + "          \"prop0\": \"value0\",\n"
+                        + "          \"prop1\": 0.0\n"
+                        + "          }\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "         \"geometry\": {\n"
+                        + "           \"type\": \"Polygon\",\n"
+                        + "           \"coordinates\": [\n"
+                        + "             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],\n"
+                        + "               [100.0, 1.0], [100.0, 0.0] ]\n"
+                        + "             ]\n"
+                        + "         },\n"
+                        + "         \"properties\": {\n"
+                        + "           \"prop0\": \"value0\",\n"
+                        + "           \"prop1\": {\"this\": \"that\"}\n"
+                        + "           }\n"
+                        + "         }\n"
+                        + "       ]\n"
+                        + "     }"
+        );
+    }
+
+    public JSONObject createInvalidGeometryTypeInFeatureCollection() throws Exception {
+        return new JSONObject(
+                "{ \"type\": \"FeatureCollection\",\n"
+                        + "    \"features\": [\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},\n"
+                        + "        \"properties\": {\"prop0\": \"value0\"}\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"geometry\": {\n"
+                        + "          \"type\": \"LineString\",\n"
+                        + "          \"coordinates\": [\n"
+                        + "            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]\n"
+                        + "            ]\n"
+                        + "          },\n"
+                        + "        \"properties\": {\n"
+                        + "          \"prop0\": \"value0\",\n"
+                        + "          \"prop1\": 0.0\n"
+                        + "          }\n"
+                        + "        },\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "         \"geometry\": {\n"
+                        + "           \"crocodile\": \"Polygon\",\n"
+                        + "           \"coordinates\": [\n"
+                        + "             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],\n"
+                        + "               [100.0, 1.0], [100.0, 0.0] ]\n"
+                        + "             ]\n"
+                        + "         },\n"
+                        + "         \"properties\": {\n"
+                        + "           \"prop0\": \"value0\",\n"
+                        + "           \"prop1\": {\"this\": \"that\"}\n"
+                        + "           }\n"
+                        + "         }\n"
+                        + "       ]\n"
+                        + "     }"
+        );
+    }
+
     //Testing for nested geometry collections
     public void testParseGeometryCollection() throws Exception {
         JSONObject geometryCollectionObject = createGeometryCollection();
@@ -109,7 +336,51 @@ public class GeoJsonParserTest extends TestCase {
         assertTrue(polygon.getPolygons().get(1).getCoordinates().size() == 2);
     }
 
-    public void testGetFeatures() throws Exception {
+    public void testEmptyFile() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(createEmptyFile());
+        assertNull(parser.getBoundingBox());
+        assertEquals(0, parser.getFeatures().size());
+    }
 
+    public void testInvalidGeoJson() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(createNoType());
+        assertNull(parser.getBoundingBox());
+        assertEquals(0, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createFeatureNoGeometry());
+        assertNull(parser.getBoundingBox());
+        assertEquals(1, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createFeatureNoProperties());
+        assertNull(parser.getBoundingBox());
+        assertEquals(1, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidFeatureInFeatureCollection());
+        assertNull(parser.getBoundingBox());
+        assertEquals(2, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidFeaturesArrayFeatureCollection());
+        assertNull(parser.getBoundingBox());
+        assertEquals(0, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidGeometry());
+        assertNull(parser.getBoundingBox());
+        assertEquals(0, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidGeometryCoordinatesInFeature());
+        assertNull(parser.getBoundingBox());
+        assertEquals(1, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidGeometryTypeInFeature());
+        assertNull(parser.getBoundingBox());
+        assertEquals(0, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidGeometryCoordinatesInFeatureCollection());
+        assertNull(parser.getBoundingBox());
+        assertEquals(3, parser.getFeatures().size());
+
+        parser = new GeoJsonParser(createInvalidGeometryTypeInFeatureCollection());
+        assertNull(parser.getBoundingBox());
+        assertEquals(3, parser.getFeatures().size());
     }
 }

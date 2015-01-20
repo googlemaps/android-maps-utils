@@ -108,23 +108,11 @@ import java.util.Iterator;
             if (geoJsonFeature.has(BOUNDING_BOX)) {
                 boundingBox = parseBoundingBox(geoJsonFeature.getJSONArray(BOUNDING_BOX));
             }
-            if (!geoJsonFeature.isNull(FEATURE_GEOMETRY)) {
+            if (geoJsonFeature.has(FEATURE_GEOMETRY) && !geoJsonFeature.isNull(FEATURE_GEOMETRY)) {
                 geometry = parseGeometry(geoJsonFeature.getJSONObject(FEATURE_GEOMETRY));
-            } else if (!geoJsonFeature.has(FEATURE_GEOMETRY)) {
-                // geometry member doesn't exist
-                Log.w(LOG_TAG,
-                        "Feature could not be successfully parsed, geometry member is missing "
-                                + geoJsonFeature.toString());
-                return null;
             }
-            if (!geoJsonFeature.isNull(PROPERTIES)) {
+            if (geoJsonFeature.has(PROPERTIES) && !geoJsonFeature.isNull(PROPERTIES)) {
                 properties = parseProperties(geoJsonFeature.getJSONObject("properties"));
-            } else if (!geoJsonFeature.has(PROPERTIES)) {
-                // properties member doesn't exist
-                Log.w(LOG_TAG,
-                        "Feature could not be successfully parsed, properties member is missing "
-                                + geoJsonFeature.toString());
-                return null;
             }
         } catch (JSONException e) {
             Log.w(LOG_TAG, "Feature could not be successfully parsed " + geoJsonFeature.toString());
@@ -157,21 +145,25 @@ import java.util.Iterator;
      * @param geoJsonGeometry geometry object to parse
      * @return GeoJsonGeometry object
      */
-    private static GeoJsonGeometry parseGeometry(JSONObject geoJsonGeometry) throws JSONException {
-        String geometryType = geoJsonGeometry.getString("type");
-        JSONArray geometryArray;
-        if (geometryType.equals(GEOMETRY_COLLECTION)) {
-            // GeometryCollection
-            geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
-        } else if (isGeometry(geometryType)) {
-            geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COORDINATES_ARRAY);
-        } else {
-            Log.w(LOG_TAG,
-                    "Geometry could not be created as it did not contain a coordinates or geometries member "
-                            + geoJsonGeometry.toString());
+    private static GeoJsonGeometry parseGeometry(JSONObject geoJsonGeometry) {
+        try {
+
+            String geometryType = geoJsonGeometry.getString("type");
+
+            JSONArray geometryArray;
+            if (geometryType.equals(GEOMETRY_COLLECTION)) {
+                // GeometryCollection
+                geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COLLECTION_ARRAY);
+            } else if (isGeometry(geometryType)) {
+                geometryArray = geoJsonGeometry.getJSONArray(GEOMETRY_COORDINATES_ARRAY);
+            } else {
+                // No geometries or coordinates array
+                return null;
+            }
+            return createGeometry(geometryType, geometryArray);
+        } catch (JSONException e) {
             return null;
         }
-        return createGeometry(geometryType, geometryArray);
     }
 
     /**
@@ -182,13 +174,13 @@ import java.util.Iterator;
      * @return new Feature object
      */
     private static GeoJsonFeature parseGeometryToFeature(JSONObject geoJsonGeometry) {
-        try {
-            GeoJsonGeometry geometry = parseGeometry(geoJsonGeometry);
+        GeoJsonGeometry geometry = parseGeometry(geoJsonGeometry);
+        if (geometry != null) {
             return new GeoJsonFeature(geometry, null, new HashMap<String, String>(), null);
-        } catch (JSONException e) {
-            Log.w(LOG_TAG, "Geometry could not be created " + geoJsonGeometry.toString());
-            return null;
         }
+        Log.w(LOG_TAG, "Geometry could not be parsed");
+        return null;
+
     }
 
     /**
@@ -411,31 +403,12 @@ import java.util.Iterator;
                     // Don't add null features
                     mGeoJsonFeatures.add(feature);
                 }
+            } else {
+                Log.w(LOG_TAG, "GeoJSON file could not be parsed.");
             }
         } catch (JSONException e) {
-            Log.w(LOG_TAG, "GeoJSON file could not be parsed. Did not contain type member.");
+            Log.w(LOG_TAG, "GeoJSON file could not be parsed.");
         }
-    }
-
-    /**
-     * Gets the array of GeoJsonFeature objects
-     *
-     * @return array of GeoJsonFeatures
-     */
-    /* package */ ArrayList<GeoJsonFeature> getFeatures() {
-        return mGeoJsonFeatures;
-    }
-
-    /**
-     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
-     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
-     * FeatureCollection then null will be returned.
-     *
-     * @return LatLngBounds object containing bounding box of FeatureCollection, null if no bounding
-     * box
-     */
-    /* package */ LatLngBounds getBoundingBox() {
-        return mBoundingBox;
     }
 
     /**
@@ -467,6 +440,10 @@ import java.util.Iterator;
                     if (parsedFeature != null) {
                         // Don't add null features
                         features.add(parsedFeature);
+                    } else {
+                        Log.w(LOG_TAG,
+                                "Index of Feature in Feature Collection that could not be created: "
+                                        + i);
                     }
                 }
             } catch (JSONException e) {
@@ -475,6 +452,27 @@ import java.util.Iterator;
             }
         }
         return features;
+    }
+
+    /**
+     * Gets the array of GeoJsonFeature objects
+     *
+     * @return array of GeoJsonFeatures
+     */
+    /* package */ ArrayList<GeoJsonFeature> getFeatures() {
+        return mGeoJsonFeatures;
+    }
+
+    /**
+     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
+     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
+     * FeatureCollection then null will be returned.
+     *
+     * @return LatLngBounds object containing bounding box of FeatureCollection, null if no bounding
+     * box
+     */
+    /* package */ LatLngBounds getBoundingBox() {
+        return mBoundingBox;
     }
 
 }
