@@ -8,8 +8,7 @@ import java.util.Observer;
 
 /**
  * A GeoJsonFeature has a geometry, bounding box, id and set of properties. Styles are also stored
- * in this
- * class.
+ * in this class.
  */
 public class GeoJsonFeature extends Observable implements Observer {
 
@@ -36,7 +35,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param boundingBox     array defining the bounding box of the feature
      */
     public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
-                          HashMap<String, String> properties, LatLngBounds boundingBox) {
+            HashMap<String, String> properties, LatLngBounds boundingBox) {
         mGeoJsonGeometry = GeoJsonGeometry;
         mId = id;
         mBoundingBox = boundingBox;
