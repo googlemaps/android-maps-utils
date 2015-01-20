@@ -1,15 +1,18 @@
 package com.google.maps.android.geojson;
 
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
-import junit.framework.TestCase;
+import android.test.AndroidTestCase;
 
-public class GeoJsonPointStyleTest extends TestCase {
+public class GeoJsonPointStyleTest extends AndroidTestCase {
 
     GeoJsonPointStyle pointStyle;
 
     public void setUp() throws Exception {
         super.setUp();
+        MapsInitializer.initialize(getContext());
         pointStyle = new GeoJsonPointStyle();
     }
 
@@ -47,11 +50,12 @@ public class GeoJsonPointStyleTest extends TestCase {
     }
 
     public void testIcon() throws Exception {
+        BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
         pointStyle
-                .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        assertEquals(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+                .setIcon(icon);
+        assertEquals(icon,
                 pointStyle.getIcon());
-        assertEquals(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+        assertEquals(icon,
                 pointStyle.getMarkerOptions().getIcon());
     }
 
@@ -93,12 +97,12 @@ public class GeoJsonPointStyleTest extends TestCase {
         assertEquals(1.0f, pointStyle.getAnchorV());
         assertFalse(pointStyle.isDraggable());
         assertFalse(pointStyle.isFlat());
-        assertEquals(BitmapDescriptorFactory.defaultMarker(), pointStyle.getIcon());
+        assertNull(pointStyle.getIcon());
         assertEquals(0.5f, pointStyle.getInfoWindowAnchorU());
         assertEquals(0.0f, pointStyle.getInfoWindowAnchorV());
         assertEquals(0.0f, pointStyle.getRotation());
-        assertNotNull(pointStyle.getSnippet());
-        assertNotNull(pointStyle.getTitle());
+        assertNull(pointStyle.getSnippet());
+        assertNull(pointStyle.getTitle());
         assertTrue(pointStyle.isVisible());
     }
 
@@ -108,13 +112,12 @@ public class GeoJsonPointStyleTest extends TestCase {
         assertEquals(1.0f, pointStyle.getMarkerOptions().getAnchorV());
         assertFalse(pointStyle.getMarkerOptions().isDraggable());
         assertFalse(pointStyle.getMarkerOptions().isFlat());
-        assertEquals(BitmapDescriptorFactory.defaultMarker(),
-                pointStyle.getMarkerOptions().getIcon());
+        assertNull(pointStyle.getMarkerOptions().getIcon());
         assertEquals(0.5f, pointStyle.getMarkerOptions().getInfoWindowAnchorU());
         assertEquals(0.0f, pointStyle.getMarkerOptions().getInfoWindowAnchorV());
         assertEquals(0.0f, pointStyle.getMarkerOptions().getRotation());
-        assertNotNull(pointStyle.getMarkerOptions().getSnippet());
-        assertNotNull(pointStyle.getMarkerOptions().getTitle());
+        assertNull(pointStyle.getMarkerOptions().getSnippet());
+        assertNull(pointStyle.getMarkerOptions().getTitle());
         assertTrue(pointStyle.getMarkerOptions().isVisible());
     }
 
