@@ -13,15 +13,15 @@ import java.util.HashMap;
  */
 /* package */ class KmlParser {
 
-    private final static String STYLE_START_TAG = "Style";
+    private final static String STYLE = "Style";
 
-    private final static String STYLE_MAP_START_TAG = "StyleMap";
+    private final static String STYLE_MAP = "StyleMap";
 
-    private final static String PLACEMARK_START_TAG = "Placemark";
+    private final static String PLACEMARK = "Placemark";
 
-    private final static String GROUND_OVERLAY_START_TAG = "GroundOverlay";
+    private final static String GROUND_OVERLAY = "GroundOverlay";
 
-    private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
+    private final static String CONTAINER_REGEX = "Folder|Document";
 
     private final KmlStyleParser styleParser;
 
@@ -62,24 +62,22 @@ import java.util.HashMap;
         int eventType = mParser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
-                if (mParser.getName().matches(CONTAINER_START_TAG_REGEX)) {
+                if (mParser.getName().matches(CONTAINER_REGEX)) {
                     containerParser.createContainer();
                     mFolders.add(containerParser.getContainer());
                 }
-                if (mParser.getName().equals(STYLE_START_TAG)) {
+                if (mParser.getName().equals(STYLE)) {
                     styleParser.createStyle();
                     mStyles.put(styleParser.getStyle().getStyleId(), styleParser.getStyle());
                 }
-                if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
+                if (mParser.getName().equals(STYLE_MAP)) {
                     styleParser.createStyleMap();
                 }
-                if (mParser.getName().equals(PLACEMARK_START_TAG)) {
+                if (mParser.getName().equals(PLACEMARK)) {
                     placemarkParser.createPlacemark();
-                    if (placemarkParser != null) {
-                        mPlacemarks.put(placemarkParser.getPlacemark(), null);
-                    }
+                    mPlacemarks.put(placemarkParser.getPlacemark(), null);
                 }
-                if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
+                if (mParser.getName().equals(GROUND_OVERLAY)) {
                     placemarkParser.createGroundOverlay();
                     mGroundOverlays.add(placemarkParser.getGroundOverlay());
                 }

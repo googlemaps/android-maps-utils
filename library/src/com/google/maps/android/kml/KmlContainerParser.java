@@ -48,12 +48,12 @@ import java.io.IOException;
      */
     /* package */ void assignFolderProperties(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
+        String startTag = mParser.getName();
         mParser.next();
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG &&
-                mParser.getName().matches(CONTAINER_START_TAG_REGEX))) {
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(startTag))) {
             if (eventType == XmlPullParser.START_TAG) {
-                if (mParser.getName().equals(CONTAINER_START_TAG_REGEX)) {
+                if (mParser.getName().matches(CONTAINER_START_TAG_REGEX)) {
                     createContainerObject(kmlFolder);
                 } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
                     setContainerProperty(kmlFolder);
