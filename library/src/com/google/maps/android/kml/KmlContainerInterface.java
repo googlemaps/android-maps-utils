@@ -11,7 +11,7 @@ public interface KmlContainerInterface {
      *
      * @return iterable of KmlPlacemarks
      */
-    public Iterable getKmlPlacemarks();
+    public Iterable<KmlPlacemark> getKmlPlacemarks();
 
     /**
      * Gets whether the container has any placemarks

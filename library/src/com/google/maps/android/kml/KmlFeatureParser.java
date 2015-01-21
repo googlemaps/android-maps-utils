@@ -15,13 +15,15 @@ import java.util.HashMap;
  */
 /* package */ class KmlFeatureParser {
 
-    private static final String GEOMETRY_TAG_REGEX = "Point|LineString|Polygon|MultiGeometry";
+    private static final String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
 
     private static final int LONGITUDE_INDEX = 0;
 
     private static final int LATITUDE_INDEX = 1;
 
-    private static final String PROPERTY_TAG_REGEX = "name|description|visibility";
+    private static final String PROPERTY_REGEX = "name|description|visibility";
+
+    private final static String EXTENDED_DATA = "ExtendedData";
 
     private static final String STYLE_TAG = "styleUrl";
 
@@ -51,11 +53,14 @@ import java.util.HashMap;
                 if (mParser.getName().equals(STYLE_TAG)) {
                     style = mParser.nextText();
                 }
-                if (mParser.getName().matches(GEOMETRY_TAG_REGEX)) {
+                if (mParser.getName().matches(GEOMETRY_REGEX)) {
                     geometry = createGeometry(mParser.getName());
                 }
-                if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
+                if (mParser.getName().matches(PROPERTY_REGEX)) {
                     properties.put(mParser.getName(), mParser.nextText());
+                }
+                if (mParser.getName().equals(EXTENDED_DATA)) {
+                    setExtendedDataProperties(properties);
                 }
             }
             eventType = mParser.next();
@@ -112,6 +117,23 @@ import java.util.HashMap;
             eventType = mParser.next();
         }
         return null;
+    }
+
+    private void setExtendedDataProperties(HashMap<String, String> properties)
+            throws XmlPullParserException, IOException {
+        String propertyKey = null;
+        int eventType = mParser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().equals("Data")) {
+                    propertyKey = mParser.getAttributeValue(null, "name");
+                } else if (mParser.getName().equals("value") && propertyKey != null) {
+                    properties.put(propertyKey, mParser.nextText());
+                    propertyKey = null;
+                }
+            }
+            eventType = mParser.next();
+        }
     }
 
     /**
@@ -225,7 +247,7 @@ import java.util.HashMap;
         int eventType = mParser.next();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("MultiGeometry"))) {
             if (eventType == XmlPullParser.START_TAG && mParser.getName()
-                    .matches(GEOMETRY_TAG_REGEX)) {
+                    .matches(GEOMETRY_REGEX)) {
                 geometries.add(createGeometry(mParser.getName()));
             }
             eventType = mParser.next();

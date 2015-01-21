@@ -160,8 +160,8 @@ public class KmlContainer implements KmlContainerInterface {
      * {@inheritDoc}
      */
     @Override
-    public Iterable getKmlPlacemarks() {
-        return mPlacemarks.entrySet();
+    public Iterable<KmlPlacemark> getKmlPlacemarks() {
+        return mPlacemarks.keySet();
     }
 
     /**

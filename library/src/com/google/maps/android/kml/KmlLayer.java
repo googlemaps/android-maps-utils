@@ -28,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -397,7 +396,7 @@ public class KmlLayer {
         //If there exists style options for a ballonStyle
         if (style.getBalloonOptions().size() > 0) {
             //Set info window if ballonStyle is set
-            setMarkerInfoWindow(style, marker, mPlacemarks.entrySet());
+            setMarkerInfoWindow(style, marker, mPlacemarks.keySet());
             setContainerMarkerInfoWindow(style, marker, mContainers);
         }
         if (style.getIconUrl() != null) {
@@ -414,9 +413,8 @@ public class KmlLayer {
      * @param style Style to apply
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker,
-            Iterable<Map.Entry<KmlPlacemark, Object>> mPlacemarks) {
-        for (Map.Entry<KmlPlacemark, Object> placemarkEntry : mPlacemarks) {
-            KmlPlacemark placemark = placemarkEntry.getKey();
+            Iterable<KmlPlacemark> mPlacemarks) {
+        for (KmlPlacemark placemark : mPlacemarks) {
             if (mStyles.get(placemark.getStyleID()).equals(style)) {
                 Boolean hasName = placemark.getProperty("name") != null;
                 Boolean hasDescription = placemark.getProperty("description") != null;
