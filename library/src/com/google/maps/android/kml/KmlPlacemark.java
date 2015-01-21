@@ -1,14 +1,12 @@
 package com.google.maps.android.kml;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
- * Created by lavenderc on 12/3/14.
- *
- * Represents a placemark which is either a point, linestring, polygon or multigeometry
- * Stores the properties about the placemark including coordinates
+ * Represents a placemark which is either a {@link com.google.maps.android.kml.KmlPoint}, {@link
+ * com.google.maps.android.kml.KmlLineString}, {@link com.google.maps.android.kml.KmlPolygon} or a
+ * {@link com.google.maps.android.kml.KmlMultiGeometry}. Stores the properties and styles of the
+ * placemark.
  */
 public class KmlPlacemark {
 
@@ -42,12 +40,12 @@ public class KmlPlacemark {
     }
 
     /**
-     * Gets the properties hashmap
+     * Gets the property entry set
      *
-     * @return properties hashmap
+     * @return property entry set
      */
-    public Iterator<Map.Entry<String, String>> getProperties() {
-        return mPlacemarkProperties.entrySet().iterator();
+    public Iterable getProperties() {
+        return mPlacemarkProperties.entrySet();
     }
 
     public String getProperty(String keyValue) {
@@ -63,7 +61,13 @@ public class KmlPlacemark {
         return mGeometry;
     }
 
-    public boolean hasProperty (String keyValue) {
+    /**
+     * Gets whether the placemark has a given property
+     *
+     * @param keyValue key value to check
+     * @return true if the key is stored in the properties, false otherwise
+     */
+    public boolean hasProperty(String keyValue) {
         return mPlacemarkProperties.containsKey(keyValue);
     }
 

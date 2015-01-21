@@ -7,42 +7,42 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Created by lavenderch on 1/12/15.
+ * Parses the styles of a given KML file into a KmlStyle object
  */
-public class KmlStyleParser {
+/* package */ class KmlStyleParser {
+
+    private final static String STYLE_TAG = "styleUrl";
+
+    private final static String ICON_STYLE_HEADING = "heading";
+
+    private final static String ICON_STYLE_URL = "Icon";
+
+    private final static String ICON_STYLE_SCALE = "scale";
+
+    private final static String ICON_STYLE_HOTSPOT = "hotSpot";
+
+    private final static String COLOR_STYLE_COLOR = "color";
+
+    private final static String COLOR_STYLE_MODE = "colorMode";
+
+    private final static String STYLE_MAP_KEY = "key";
+
+    private final static String STYLE_MAP_NORMAL_STYLE = "normal";
+
+    private final static String LINE_STYLE_WIDTH = "width";
+
+    private final static String POLY_STYLE_OUTLINE = "outline";
+
+    private final static String POLY_STYLE_FILL = "fill";
 
     private final HashMap<String, String> mStyleMaps;
 
-    private static final String STYLE_TAG = "styleUrl";
-
-    private XmlPullParser mParser;
+    private final XmlPullParser mParser;
 
     private KmlStyle mStyle;
 
-    private static String ICON_STYLE_HEADING = "heading";
 
-    private static String ICON_STYLE_URL = "Icon";
-
-    private static String ICON_STYLE_SCALE = "scale";
-
-    private static String ICON_STYLE_HOTSPOT = "hotSpot";
-
-    private static String COLOR_STYLE_COLOR = "color";
-
-    private static String COLOR_STYLE_MODE = "colorMode";
-
-    private static String STYLE_MAP_KEY = "key";
-
-    private static String STYLE_MAP_NORMAL_STYLE = "normal";
-
-    private static String LINE_STYLE_WIDTH = "width";
-
-    private static String POLY_STYLE_OUTLINE = "outline";
-
-    private static String POLY_STYLE_FILL = "fill";
-
-
-    public KmlStyleParser(XmlPullParser parser) {
+    /* package */ KmlStyleParser(XmlPullParser parser) {
         mStyleMaps = new HashMap<String, String>();
         mParser = parser;
         mStyle = new KmlStyle();
@@ -51,7 +51,7 @@ public class KmlStyleParser {
     /**
      * Parses the IconStyle, LineStyle and PolyStyle tags into a KmlStyle object
      */
-    public void createStyle() throws IOException, XmlPullParserException {
+    /* package */ void createStyle() throws IOException, XmlPullParserException {
         // Indicates if any valid style tags have been found
         Boolean isValidStyle = false;
         KmlStyle styleProperties = new KmlStyle();
@@ -82,15 +82,17 @@ public class KmlStyleParser {
 
     /**
      * Adds icon properties to a KmlStyle
+     *
      * @param style Style to apply properties to
-     * @return  true if icon style has been set
+     * @return true if icon style has been set
      */
-    public boolean createIconStyle(KmlStyle style) throws XmlPullParserException, IOException {
+    /* package */ boolean createIconStyle(KmlStyle style)
+            throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("IconStyle"))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(ICON_STYLE_HEADING)) {
-                    style.setHeading( Float.parseFloat(mParser.nextText()));
+                    style.setHeading(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals(ICON_STYLE_URL)) {
                     setIconUrl(style);
                 } else if (mParser.getName().equals(ICON_STYLE_HOTSPOT)) {
@@ -111,7 +113,7 @@ public class KmlStyleParser {
     /**
      * Parses the StyleMap property and stores the id and the normal style tag
      */
-    public void createStyleMap() throws XmlPullParserException, IOException {
+    /* package */ void createStyleMap() throws XmlPullParserException, IOException {
         // Indicates if a normal style is to be stored
         Boolean isNormalStyleMapValue = false;
         // Append # to style id
@@ -154,7 +156,7 @@ public class KmlStyleParser {
      * @param style Style to set the icon url to
      */
 
-    private void setIconUrl (KmlStyle style) throws XmlPullParserException, IOException {
+    private void setIconUrl(KmlStyle style) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(ICON_STYLE_URL))) {
             if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("href")) {
@@ -173,21 +175,20 @@ public class KmlStyleParser {
         Float xValue, yValue;
         String xUnits, yUnits;
         xValue = Float.parseFloat(mParser.getAttributeValue(null, "x"));
-        yValue =  Float.parseFloat(mParser.getAttributeValue(null, "y"));
-        xUnits =  mParser.getAttributeValue(null, "xunits");
+        yValue = Float.parseFloat(mParser.getAttributeValue(null, "y"));
+        xUnits = mParser.getAttributeValue(null, "xunits");
         yUnits = mParser.getAttributeValue(null, "yunits");
         style.setHotSpot(xValue, yValue, xUnits, yUnits);
     }
 
     /**
      * Sets the marker color
+     *
      * @param style Style to store the color of the marker
-     * @throws XmlPullParserException
-     * @throws IOException
      */
-    private void setIconColor(KmlStyle style)  throws XmlPullParserException, IOException {
-       String colorString = mParser.nextText();
-       style.setMarkerColor(colorString);
+    private void setIconColor(KmlStyle style) throws XmlPullParserException, IOException {
+        String colorString = mParser.nextText();
+        style.setMarkerColor(colorString);
     }
 
     /**
@@ -237,19 +238,23 @@ public class KmlStyleParser {
         }
         return true;
     }
+
     /**
      * Gets the hashmap of KmlStyle objects
      *
      * @return hashmap of KmlStyle objects
      */
-    public KmlStyle getStyle() {
+    /* package */ KmlStyle getStyle() {
         return mStyle;
     }
 
     /**
      * Gets the hashmap of StyleMap objects
+     *
      * @return hashmap of KmlStyleMap objects
      */
-    public  HashMap<String, String> getStyleMaps() { return mStyleMaps; }
+    /* package */ HashMap<String, String> getStyleMaps() {
+        return mStyleMaps;
+    }
 
 }

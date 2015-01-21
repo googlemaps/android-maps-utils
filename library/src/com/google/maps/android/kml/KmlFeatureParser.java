@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by lavenderch on 1/12/15.
+ * Parses the feature of a given KML file into a KmlPlacemark or KmlGroundOverlay object
  */
-public class KmlFeatureParser {
-
+/* package */ class KmlFeatureParser {
 
     private static final String GEOMETRY_TAG_REGEX = "Point|LineString|Polygon|MultiGeometry";
 
@@ -26,7 +25,7 @@ public class KmlFeatureParser {
 
     private static final String STYLE_TAG = "styleUrl";
 
-    private XmlPullParser mParser;
+    private final XmlPullParser mParser;
 
     private KmlPlacemark mPlacemark;
 
@@ -42,7 +41,7 @@ public class KmlFeatureParser {
      * Creates a KmlPlacemark object for each placemark detected if they contain a geometry. Also
      * stores styles and properties for the given placemark.
      */
-    public void createPlacemark() throws IOException, XmlPullParserException {
+    /* package */ void createPlacemark() throws IOException, XmlPullParserException {
         String style = null;
         HashMap<String, String> properties = new HashMap<String, String>();
         KmlGeometry geometry = null;
@@ -51,9 +50,11 @@ public class KmlFeatureParser {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(STYLE_TAG)) {
                     style = mParser.nextText();
-                } if (mParser.getName().matches(GEOMETRY_TAG_REGEX)) {
+                }
+                if (mParser.getName().matches(GEOMETRY_TAG_REGEX)) {
                     geometry = createGeometry(mParser.getName());
-                }  if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
+                }
+                if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
                     properties.put(mParser.getName(), mParser.nextText());
                 }
             }
@@ -65,20 +66,23 @@ public class KmlFeatureParser {
         }
     }
 
-    public void createGroundOverlay() throws IOException, XmlPullParserException {
+    /* package */ void createGroundOverlay() throws IOException, XmlPullParserException {
         mGroundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("GroundOverlay"))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals("Icon")) {
-                    while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Icon"))) {
-                        if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("href")) {
+                    while (!(eventType == XmlPullParser.END_TAG && mParser.getName()
+                            .equals("Icon"))) {
+                        if (eventType == XmlPullParser.START_TAG && mParser.getName()
+                                .equals("href")) {
                             mGroundOverlay.setImage(mParser.nextText());
                         }
                         eventType = mParser.next();
                     }
-                } if  (mParser.getName().equals("LatLonBox")) {
-                        createLatLonBox();
+                }
+                if (mParser.getName().equals("LatLonBox")) {
+                    createLatLonBox();
                 }
             }
             eventType = mParser.next();
@@ -239,12 +243,15 @@ public class KmlFeatureParser {
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("LatLonBox"))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals("north")) {
-                   north = Double.parseDouble(mParser.nextText());
-                } if (mParser.getName().equals("south")) {
+                    north = Double.parseDouble(mParser.nextText());
+                }
+                if (mParser.getName().equals("south")) {
                     south = Double.parseDouble(mParser.nextText());
-                } if (mParser.getName().equals("east")) {
+                }
+                if (mParser.getName().equals("east")) {
                     east = Double.parseDouble(mParser.nextText());
-                } if (mParser.getName().equals("west")) {
+                }
+                if (mParser.getName().equals("west")) {
                     west = Double.parseDouble(mParser.nextText());
                 }
             }
@@ -254,11 +261,11 @@ public class KmlFeatureParser {
         mGroundOverlay.setLatLngBounds(bounds);
     }
 
-    public KmlPlacemark getPlacemark() {
+    /* package */ KmlPlacemark getPlacemark() {
         return mPlacemark;
     }
 
-    public KmlGroundOverlay getGroundOverlay() {
+    /* package */ KmlGroundOverlay getGroundOverlay() {
         return mGroundOverlay;
     }
 }

@@ -1,23 +1,26 @@
 package com.google.maps.android.kml;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import java.util.HashMap;
 
 /**
- * Created by lavenderc on 12/2/14.
- *
  * Represents the defined styles in the KML document
  */
 public class KmlStyle {
+
+    private final static int NORMAL_COLOR_MODE = 0;
+
+    private final static int RANDOM_COLOR_MODE = 1;
+
+    private final static int HSV_VALUES = 3;
+
+    private final static int HUE_VALUE = 0;
 
     private final MarkerOptions mMarkerOptions;
 
@@ -25,7 +28,7 @@ public class KmlStyle {
 
     private final PolygonOptions mPolygonOptions;
 
-    private HashMap<String, String> mBalloonOptions;
+    private final HashMap<String, String> mBalloonOptions;
 
     private boolean mFill = true;
 
@@ -35,15 +38,7 @@ public class KmlStyle {
 
     private double mScale;
 
-    private HashMap<String, Integer> mColorModeOptions;
-
-    private static int NORMAL_COLOR_MODE = 0;
-
-    private static int RANDOM_COLOR_MODE = 1;
-
-    private static int HSV_VALUES = 3;
-
-    private static int HUE_VALUE = 0;
+    private final HashMap<String, Integer> mColorModeOptions;
 
     private String mStyleId;
 
@@ -61,17 +56,17 @@ public class KmlStyle {
     }
 
     /**
-     * @param styleId style id for this style
+     * @return the string representing a style id, null otherwise
      */
-    public void setStyleId (String styleId) {
-        mStyleId = styleId;
+    public String getStyleId() {
+        return mStyleId;
     }
 
     /**
-     * @return the string representing a style id, null otherwise
+     * @param styleId style id for this style
      */
-    public String getStyleId () {
-        return mStyleId;
+    public void setStyleId(String styleId) {
+        mStyleId = styleId;
     }
 
     /**
@@ -103,21 +98,23 @@ public class KmlStyle {
     }
 
     /**
-     * @param stringColor String representation of a color
+     * Sets the marker color
+     *
+     * @param stringColor string of color to set
      */
-    public void setMarkerColor (String stringColor) {
+    public void setMarkerColor(String stringColor) {
         float[] hsvValues = new float[HSV_VALUES];
-        //make hexadecimal representation
+        // make hexadecimal representation
         int integerColor = Color.parseColor("#" + stringColor);
-        //make hexadecimal representation into hsv values, store in array
+        // make hexadecimal representation into hsv values, store in array
         Color.colorToHSV(integerColor, hsvValues);
-        //first element is the hue value
+        // first element is the hue value
         float hue = hsvValues[HUE_VALUE];
         mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(hue));
     }
 
     /**
-     * Sets the heading for Points. This is also known as rotation
+     * Sets the heading for Points. This is also known as rotation.
      *
      * @param heading heading to set
      */
@@ -128,7 +125,7 @@ public class KmlStyle {
     // TODO support pixel and inset for custom marker images
 
     /**
-     * Sets the hotspot for Points. This is also known as anchor point
+     * Sets the hotspot for Points. This is also known as anchor point.
      *
      * @param x      x value of a point on the icon
      * @param y      y value of a point on the icon
@@ -173,6 +170,17 @@ public class KmlStyle {
     }
 
     /**
+     * Gets the icon scale
+     *
+     * @return scale value
+     */
+    public double getIconScale() {
+        return mScale;
+    }
+
+    /**
+     * Sets the icon scale
+     *
      * @param scale scale value
      */
     public void setIconScale(double scale) {
@@ -180,14 +188,8 @@ public class KmlStyle {
     }
 
     /**
-     * @return Scale value, can be any double value
-     */
-    public double getIconScale() {
-        return mScale;
-    }
-
-    /**
      * Sets the text for the info window; no other ballonstyles are supported
+     *
      * @param text text to put in an info window
      */
     public void setInfoWindow(String text) {
@@ -196,7 +198,8 @@ public class KmlStyle {
 
     /**
      * Sets the color mode; either random or normal
-     * @param geometryType  geometry type which colormode is applied to
+     *
+     * @param geometryType    geometry type which colormode is applied to
      * @param colorModeString string representing the mode; either random or normal
      */
     public void setColorMode(String geometryType, String colorModeString) {
@@ -208,8 +211,10 @@ public class KmlStyle {
     }
 
     /**
+     * Gets the color mode
+     *
      * @param geometryType type of geometry which has a color mode
-     * @return  color mode, 1 for random, 0 or normal
+     * @return color mode, 1 for random, 0 or normal
      */
     public int getColorMode(String geometryType) {
         return mColorModeOptions.get(geometryType);
@@ -217,8 +222,9 @@ public class KmlStyle {
 
     /**
      * Determines if the geometry has a random color mode
-     * @param geometryType  geometry type which colormode is applied to
-     * @return  boolean value, true if the geometry has a colormode, false otherwise
+     *
+     * @param geometryType geometry type which colormode is applied to
+     * @return boolean value, true if the geometry has a colormode, false otherwise
      */
     public boolean hasColorMode(String geometryType) {
         return mColorModeOptions.containsKey(geometryType);

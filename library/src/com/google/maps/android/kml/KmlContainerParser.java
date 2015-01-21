@@ -6,11 +6,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 /**
- * Created by lavenderch on 1/14/15.
+ * Parses the container of a given KML file into a KmlContainer object
  */
-public class KmlContainerParser {
+/* package */ class KmlContainerParser {
 
-    private static final String PROPERTY_TAG_REGEX = "name|description|visibility|open";
+    private final static String PROPERTY_TAG_REGEX = "name|description|visibility|open";
 
     private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
 
@@ -24,9 +24,9 @@ public class KmlContainerParser {
 
     private KmlContainer mContainer;
 
-    private XmlPullParser mParser;
+    private final XmlPullParser mParser;
 
-    public KmlContainerParser(XmlPullParser parser) {
+    /* package */ KmlContainerParser(XmlPullParser parser) {
         mParser = parser;
         mContainer = null;
     }
@@ -35,7 +35,7 @@ public class KmlContainerParser {
      * Creates a new folder and adds this to an ArrayList of folders
      */
 
-    public void createContainer() throws XmlPullParserException, IOException {
+    /* package */ void createContainer() throws XmlPullParserException, IOException {
         KmlContainer folder = new KmlContainer();
         assignFolderProperties(folder);
         mContainer = folder;
@@ -43,9 +43,10 @@ public class KmlContainerParser {
 
     /**
      * Takes a parser and assigns variables to a Folder instances
+     *
      * @param kmlFolder Folder to assign variables to
      */
-    public void assignFolderProperties(KmlContainer kmlFolder)
+    /* package */ void assignFolderProperties(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         mParser.next();
         int eventType = mParser.getEventType();
@@ -57,10 +58,10 @@ public class KmlContainerParser {
                 } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
                     setContainerProperty(kmlFolder);
                 } else if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
-                    createContainerStyleMap (kmlFolder);
+                    createContainerStyleMap(kmlFolder);
                 } else if (mParser.getName().equals(STYLE_START_TAG)) {
-                    createContainerStyle (kmlFolder);
-                }  else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
+                    createContainerStyle(kmlFolder);
+                } else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     createContainerPlacemark(kmlFolder);
                 } else if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
                     //TODO: Ground overlay in containers
@@ -75,7 +76,7 @@ public class KmlContainerParser {
      *
      * @param kmlFolder Stores new container object
      */
-    private void createContainerObject (KmlContainer kmlFolder)
+    private void createContainerObject(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlContainer container = new KmlContainer();
         assignFolderProperties(container);
@@ -84,6 +85,7 @@ public class KmlContainerParser {
 
     /**
      * Creates a new hash map representing a style map
+     *
      * @param kmlFolder Stores hash map
      */
     private void createContainerStyleMap(KmlContainer kmlFolder)
@@ -95,6 +97,7 @@ public class KmlContainerParser {
 
     /**
      * Sets a property value in folder
+     *
      * @param kmlFolder Stores property
      */
     private void setContainerProperty(KmlContainer kmlFolder)
@@ -106,9 +109,10 @@ public class KmlContainerParser {
 
     /**
      * Creates a new kml style
+     *
      * @param kmlFolder stores the new kml style
      */
-    private void createContainerStyle (KmlContainer kmlFolder)
+    private void createContainerStyle(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyle();
@@ -117,6 +121,7 @@ public class KmlContainerParser {
 
     /**
      * Creates a new placemark
+     *
      * @param kmlFolder folder to store placemark
      */
     private void createContainerPlacemark(KmlContainer kmlFolder)
@@ -131,7 +136,7 @@ public class KmlContainerParser {
     /**
      * @return List of containers
      */
-    public KmlContainer getContainer() {
+    /* package */ KmlContainer getContainer() {
         return mContainer;
     }
 

@@ -1,24 +1,19 @@
 package com.google.maps.android.kml;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
- * Created by lavenderch on 1/20/15.
+ * Represents a KML Ground Overlay
  */
 public class KmlGroundOverlay {
 
     private LatLngBounds mBounds;
+
     private String mGroundOverlayImage;
 
-    private HashMap<String, String> mProperties;
+    private final HashMap<String, String> mProperties;
 
     public KmlGroundOverlay() {
         mBounds = null;
@@ -46,8 +41,8 @@ public class KmlGroundOverlay {
         mProperties.put(propertyName, propertyValue);
     }
 
-    public Iterator<Map.Entry<String, String>> getProperties() {
-        return mProperties.entrySet().iterator();
+    public Iterable getProperties() {
+        return mProperties.entrySet();
     }
 
     public String getProperty(String keyValue) {

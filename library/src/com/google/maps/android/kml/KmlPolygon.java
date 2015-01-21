@@ -5,7 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 /**
- * Represents a series of coordinates in a placemark
+ * Represents a KML Polygon. Contains a single array of outer boundary coordinates and an array of
+ * arrays for the inner boundary coordinates.
  */
 public class KmlPolygon implements KmlGeometry<ArrayList<ArrayList<LatLng>>> {
 

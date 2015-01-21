@@ -7,20 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
- * Created by juliawong on 1/7/15.
+ * Parses a given KML file into KmlStyle, KmlPlacemark, KmlGroundOverlay and KmlContainer objects
  */
-public class KmlParser {
-
-    private KmlStyleParser styleParser;
-
-    private KmlFeatureParser placemarkParser;
-
-    private KmlContainerParser containerParser;
-
-    private  XmlPullParser mParser;
-
-    private HashMap<KmlPlacemark, Object> mPlacemarks;
+/* package */ class KmlParser {
 
     private final static String STYLE_START_TAG = "Style";
 
@@ -32,47 +23,63 @@ public class KmlParser {
 
     private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
 
-    private ArrayList<KmlContainerInterface> mFolders;
+    private final KmlStyleParser styleParser;
 
-    private HashMap<String, KmlStyle> mStyles;
+    private final KmlFeatureParser placemarkParser;
 
-    private ArrayList<KmlGroundOverlay> mGroundOverlays;
+    private final KmlContainerParser containerParser;
+
+    private final XmlPullParser mParser;
+
+    private final HashMap<KmlPlacemark, Object> mPlacemarks;
+
+    private final ArrayList<KmlContainerInterface> mFolders;
+
+    private final HashMap<String, KmlStyle> mStyles;
+
+    private final ArrayList<KmlGroundOverlay> mGroundOverlays;
 
     /**
      * Creates a new KmlParser object
      *
      * @param parser parser containing the KML file to parse
      */
-    public KmlParser(XmlPullParser parser) {
+    /* package */ KmlParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mFolders = new ArrayList<KmlContainerInterface>();
         mStyles = new HashMap<String, KmlStyle>();
         styleParser = new KmlStyleParser(mParser);
         placemarkParser = new KmlFeatureParser(mParser);
-        containerParser= new KmlContainerParser(mParser);
+        containerParser = new KmlContainerParser(mParser);
         mGroundOverlays = new ArrayList<KmlGroundOverlay>();
     }
 
     /**
      * Parses the KML file and stores the created KmlStyle and KmlPlacemark
      */
-    public void parseKml() throws XmlPullParserException, IOException {
+    /* package */ void parseKml() throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_START_TAG_REGEX)) {
                     containerParser.createContainer();
                     mFolders.add(containerParser.getContainer());
-                }if (mParser.getName().equals(STYLE_START_TAG)) {
+                }
+                if (mParser.getName().equals(STYLE_START_TAG)) {
                     styleParser.createStyle();
                     mStyles.put(styleParser.getStyle().getStyleId(), styleParser.getStyle());
-                } if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
+                }
+                if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
                     styleParser.createStyleMap();
-                } if (mParser.getName().equals(PLACEMARK_START_TAG)) {
+                }
+                if (mParser.getName().equals(PLACEMARK_START_TAG)) {
                     placemarkParser.createPlacemark();
-                    if (placemarkParser != null) mPlacemarks.put(placemarkParser.getPlacemark(), null);
-                } if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
+                    if (placemarkParser != null) {
+                        mPlacemarks.put(placemarkParser.getPlacemark(), null);
+                    }
+                }
+                if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
                     placemarkParser.createGroundOverlay();
                     mGroundOverlays.add(placemarkParser.getGroundOverlay());
                 }
@@ -84,7 +91,7 @@ public class KmlParser {
     /**
      * @return List of styles created by the parser
      */
-    public HashMap<String, KmlStyle> getStyles() {
+    /* package */ HashMap<String, KmlStyle> getStyles() {
         //TODO: Need to put an empty new style, can probably be put somewhere better
         mStyles.put(null, new KmlStyle());
         return mStyles;
@@ -93,24 +100,28 @@ public class KmlParser {
     /**
      * @return List of placemark object created by the parser
      */
-    public HashMap<KmlPlacemark, Object> getPlacemarks() {
+    /* package */ HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;
     }
 
     /**
      * @return A list of stylemaps created by the parser
      */
-    public  HashMap<String, String> getStyleMaps() { return styleParser.getStyleMaps(); }
+    /* package */ HashMap<String, String> getStyleMaps() {
+        return styleParser.getStyleMaps();
+    }
 
     /**
      * @return List of folder objects created by the parser
      */
-    public ArrayList<KmlContainerInterface> getFolders() {
+    /* package */ ArrayList<KmlContainerInterface> getFolders() {
         return mFolders;
     }
 
     /**
      * @return List of ground overlays created by the parser
      */
-    public ArrayList<KmlGroundOverlay> getGroundOverlays() { return mGroundOverlays; }
+    /* package */ ArrayList<KmlGroundOverlay> getGroundOverlays() {
+        return mGroundOverlays;
+    }
 }

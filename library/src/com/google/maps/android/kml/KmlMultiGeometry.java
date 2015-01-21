@@ -3,7 +3,7 @@ package com.google.maps.android.kml;
 import java.util.ArrayList;
 
 /**
- * Created by juliawong on 1/7/15.
+ * Represents a KML MultiGeometry. Contains an array of KmlGeometry objects.
  */
 public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
 
@@ -36,7 +36,7 @@ public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
     /**
      * Gets an ArrayList of KmlGeometry objects
      *
-     * @return Arraylist of KmlGeometry objects
+     * @return ArrayList of KmlGeometry objects
      */
 
     public ArrayList<KmlGeometry> getKmlGeometryObject() {
