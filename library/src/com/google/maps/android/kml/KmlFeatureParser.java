@@ -119,6 +119,11 @@ import java.util.HashMap;
         return null;
     }
 
+    /**
+     * Adds untyped name value pairs parsed from the ExtendedData
+     *
+     * @param properties hashmap of properties to add data to
+     */
     private void setExtendedDataProperties(HashMap<String, String> properties)
             throws XmlPullParserException, IOException {
         String propertyKey = null;

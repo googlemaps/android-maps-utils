@@ -10,17 +10,19 @@ import java.io.IOException;
  */
 /* package */ class KmlContainerParser {
 
-    private final static String PROPERTY_TAG_REGEX = "name|description|visibility|open";
+    private final static String PROPERTY_REGEX = "name|description|visibility|open";
 
-    private final static String CONTAINER_START_TAG_REGEX = "Folder|Document";
+    private final static String CONTAINER_REGEX = "Folder|Document";
 
-    private final static String PLACEMARK_START_TAG = "Placemark";
+    private final static String PLACEMARK = "Placemark";
 
-    private final static String STYLE_START_TAG = "Style";
+    private final static String STYLE = "Style";
 
-    private final static String STYLE_MAP_START_TAG = "StyleMap";
+    private final static String STYLE_MAP = "StyleMap";
 
-    private final static String GROUND_OVERLAY_START_TAG = "GroundOverlay";
+    private final static String EXTENDED_DATA = "ExtendedData";
+
+    private final static String GROUND_OVERLAY = "GroundOverlay";
 
     private KmlContainer mContainer;
 
@@ -53,17 +55,19 @@ import java.io.IOException;
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(startTag))) {
             if (eventType == XmlPullParser.START_TAG) {
-                if (mParser.getName().matches(CONTAINER_START_TAG_REGEX)) {
+                if (mParser.getName().matches(CONTAINER_REGEX)) {
                     createContainerObject(kmlFolder);
-                } else if (mParser.getName().matches(PROPERTY_TAG_REGEX)) {
+                } else if (mParser.getName().matches(PROPERTY_REGEX)) {
                     setContainerProperty(kmlFolder);
-                } else if (mParser.getName().equals(STYLE_MAP_START_TAG)) {
+                } else if (mParser.getName().equals(STYLE_MAP)) {
                     createContainerStyleMap(kmlFolder);
-                } else if (mParser.getName().equals(STYLE_START_TAG)) {
+                } else if (mParser.getName().equals(STYLE)) {
                     createContainerStyle(kmlFolder);
-                } else if (mParser.getName().equals(PLACEMARK_START_TAG)) {
+                } else if (mParser.getName().equals(PLACEMARK)) {
                     createContainerPlacemark(kmlFolder);
-                } else if (mParser.getName().equals(GROUND_OVERLAY_START_TAG)) {
+                } else if (mParser.getName().equals(EXTENDED_DATA)) {
+                    setExtendedDataProperties(kmlFolder);
+                } else if (mParser.getName().equals(GROUND_OVERLAY)) {
                     //TODO: Ground overlay in containers
                 }
             }
@@ -105,6 +109,27 @@ import java.io.IOException;
         String propertyName = mParser.getName();
         String propertyValue = mParser.nextText();
         kmlFolder.setProperty(propertyName, propertyValue);
+    }
+
+    /**
+     * Adds untyped name value pairs parsed from the ExtendedData
+     * @param kmlFolder folder to add properties to
+     */
+    private void setExtendedDataProperties(KmlContainer kmlFolder)
+            throws XmlPullParserException, IOException {
+        String propertyKey = null;
+        int eventType = mParser.getEventType();
+        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
+            if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().equals("Data")) {
+                    propertyKey = mParser.getAttributeValue(null, "name");
+                } else if (mParser.getName().equals("value") && propertyKey != null) {
+                    kmlFolder.setProperty(propertyKey, mParser.nextText());
+                    propertyKey = null;
+                }
+            }
+            eventType = mParser.next();
+        }
     }
 
     /**
