@@ -313,4 +313,18 @@ public class KmlStyle {
         }
         return polygonOptions;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Style").append("{");
+        sb.append("\n balloon options=").append(mBalloonOptions);
+        sb.append(",\n color mode options=").append(mColorModeOptions);
+        sb.append(",\n fill=").append(mFill);
+        sb.append(",\n outline=").append(mOutline);
+        sb.append(",\n icon url=").append(mIconUrl);
+        sb.append(",\n scale=").append(mScale);
+        sb.append(",\n style id=").append(mStyleId);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

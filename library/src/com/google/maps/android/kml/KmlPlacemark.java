@@ -14,7 +14,7 @@ public class KmlPlacemark {
 
     private final String mStyle;
 
-    private HashMap<String, String> mPlacemarkProperties;
+    private HashMap<String, String> mProperties;
 
     /**
      * Creates a new KmlPlacemark object
@@ -24,10 +24,10 @@ public class KmlPlacemark {
      * @param properties properties hashmap to store
      */
     public KmlPlacemark(KmlGeometry geometry, String style, HashMap<String, String> properties) {
-        mPlacemarkProperties = new HashMap<String, String>();
+        mProperties = new HashMap<String, String>();
         mGeometry = geometry;
         mStyle = style;
-        mPlacemarkProperties = properties;
+        mProperties = properties;
     }
 
     /**
@@ -45,11 +45,11 @@ public class KmlPlacemark {
      * @return property entry set
      */
     public Iterable getProperties() {
-        return mPlacemarkProperties.entrySet();
+        return mProperties.entrySet();
     }
 
     public String getProperty(String keyValue) {
-        return mPlacemarkProperties.get(keyValue);
+        return mProperties.get(keyValue);
     }
 
     /**
@@ -68,7 +68,16 @@ public class KmlPlacemark {
      * @return true if the key is stored in the properties, false otherwise
      */
     public boolean hasProperty(String keyValue) {
-        return mPlacemarkProperties.containsKey(keyValue);
+        return mProperties.containsKey(keyValue);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Placemark").append("{");
+        sb.append("\n geometry=").append(mGeometry);
+        sb.append(",\n style=").append(mStyle);
+        sb.append(",\n properties=").append(mProperties);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

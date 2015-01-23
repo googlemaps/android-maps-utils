@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class KmlContainer implements KmlContainerInterface {
 
-    private final HashMap<String, String> mContainerProperties;
+    private final HashMap<String, String> mProperties;
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
@@ -23,7 +23,7 @@ public class KmlContainer implements KmlContainerInterface {
     private HashMap<String, KmlStyle> mStyles;
 
     public KmlContainer() {
-        mContainerProperties = new HashMap<String, String>();
+        mProperties = new HashMap<String, String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mStyles = new HashMap<String, KmlStyle>();
         mStyleMap = new HashMap<String, String>();
@@ -85,7 +85,7 @@ public class KmlContainer implements KmlContainerInterface {
      * @param propertyValue Value of the property, ie "Arizona"
      */
     public void setProperty(String propertyName, String propertyValue) {
-        mContainerProperties.put(propertyName, propertyValue);
+        mProperties.put(propertyName, propertyValue);
     }
 
     /**
@@ -130,7 +130,7 @@ public class KmlContainer implements KmlContainerInterface {
      */
     @Override
     public String getKmlProperty(String propertyName) {
-        return mContainerProperties.get(propertyName);
+        return mProperties.get(propertyName);
     }
 
     /**
@@ -138,7 +138,7 @@ public class KmlContainer implements KmlContainerInterface {
      */
     @Override
     public boolean hasKmlProperties() {
-        return mContainerProperties.size() > 0;
+        return mProperties.size() > 0;
     }
 
     /**
@@ -146,7 +146,7 @@ public class KmlContainer implements KmlContainerInterface {
      */
     @Override
     public boolean hasKmlProperty(String keyValue) {
-        return mContainerProperties.containsKey(keyValue);
+        return mProperties.containsKey(keyValue);
     }
 
     /**
@@ -170,7 +170,7 @@ public class KmlContainer implements KmlContainerInterface {
      */
     @Override
     public Iterable getKmlProperties() {
-        return mContainerProperties.entrySet();
+        return mProperties.entrySet();
     }
 
     /**
@@ -195,5 +195,18 @@ public class KmlContainer implements KmlContainerInterface {
     @Override
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return mGroundOverlays.keySet();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Container").append("{");
+        sb.append("\n properties=").append(mProperties);
+        sb.append(",\n placemarks=").append(mPlacemarks);
+        sb.append(",\n containers=").append(mContainers);
+        sb.append(",\n ground overlays=").append(mGroundOverlays);
+        sb.append(",\n style maps=").append(mStyleMap);
+        sb.append(",\n styles=").append(mStyles);
+        sb.append("\n}\n");
+        return sb.toString();
     }
 }

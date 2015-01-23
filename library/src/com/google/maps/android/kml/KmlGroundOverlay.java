@@ -85,4 +85,14 @@ public class KmlGroundOverlay {
     public GroundOverlayOptions getGroundOverlayOptions() {
         return mGroundOverlayOptions;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("GroundOverlay").append("{");
+        sb.append("\n properties=").append(mProperties);
+        sb.append(",\n image url=").append(mImageUrl);
+        sb.append(",\n LatLngBox=").append(mLatLngBox);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

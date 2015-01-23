@@ -44,5 +44,11 @@ public class KmlLineString implements KmlGeometry<ArrayList<LatLng>> {
         return mCoordinates;
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
+        sb.append("\n coordinates=").append(mCoordinates);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

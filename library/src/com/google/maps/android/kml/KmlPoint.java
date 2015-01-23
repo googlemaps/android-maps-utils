@@ -42,4 +42,12 @@ public class KmlPoint implements KmlGeometry<LatLng> {
     public LatLng getKmlGeometryObject() {
         return mCoordinate;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
+        sb.append("\n coordinates=").append(mCoordinate);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

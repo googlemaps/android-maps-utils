@@ -42,4 +42,12 @@ public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
     public ArrayList<KmlGeometry> getKmlGeometryObject() {
         return mGeometries;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
+        sb.append("\n geometries=").append(mGeometries);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }

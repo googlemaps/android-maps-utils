@@ -72,4 +72,12 @@ public class KmlPolygon implements KmlGeometry<ArrayList<ArrayList<LatLng>>> {
         return coordinates;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
+        sb.append("\n outer coordinates=").append(mOuterBoundaryCoordinates);
+        sb.append(",\n inner coordinates=").append(mInnerBoundaryCoordinates);
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }
