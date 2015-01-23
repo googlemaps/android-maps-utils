@@ -64,4 +64,11 @@ public interface KmlContainerInterface {
      */
     public Iterable<KmlContainerInterface> getNestedKmlContainers();
 
+    /**
+     * Gets an iterable of KmlGroundOverlay objects
+     *
+     * @return iterable of KmlGroundOverlay objects
+     */
+    public Iterable<KmlGroundOverlay> getGroundOverlays();
+
 }

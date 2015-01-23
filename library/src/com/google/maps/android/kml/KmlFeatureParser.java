@@ -15,28 +15,25 @@ import java.util.HashMap;
  */
 /* package */ class KmlFeatureParser {
 
-    private static final String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
+    private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
 
-    private static final int LONGITUDE_INDEX = 0;
+    private final static int LONGITUDE_INDEX = 0;
 
-    private static final int LATITUDE_INDEX = 1;
+    private final static int LATITUDE_INDEX = 1;
 
-    private static final String PROPERTY_REGEX = "name|description|visibility";
+    private final static String PROPERTY_REGEX = "name|description|visibility";
 
     private final static String EXTENDED_DATA = "ExtendedData";
 
-    private static final String STYLE_TAG = "styleUrl";
+    private final static String STYLE_TAG = "styleUrl";
 
     private final XmlPullParser mParser;
 
     private KmlPlacemark mPlacemark;
 
-    private KmlGroundOverlay mGroundOverlay;
-
     public KmlFeatureParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemark = null;
-        mGroundOverlay = null;
     }
 
     /**
@@ -60,7 +57,7 @@ import java.util.HashMap;
                     properties.put(mParser.getName(), mParser.nextText());
                 }
                 if (mParser.getName().equals(EXTENDED_DATA)) {
-                    setExtendedDataProperties(properties);
+                    properties = setExtendedDataProperties();
                 }
             }
             eventType = mParser.next();
@@ -71,8 +68,10 @@ import java.util.HashMap;
         }
     }
 
-    /* package */ void createGroundOverlay() throws IOException, XmlPullParserException {
-        mGroundOverlay = new KmlGroundOverlay();
+    /* package */ KmlGroundOverlay createGroundOverlay()
+            throws IOException, XmlPullParserException {
+        // TODO: add support for color
+        KmlGroundOverlay groundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("GroundOverlay"))) {
             if (eventType == XmlPullParser.START_TAG) {
@@ -81,17 +80,27 @@ import java.util.HashMap;
                             .equals("Icon"))) {
                         if (eventType == XmlPullParser.START_TAG && mParser.getName()
                                 .equals("href")) {
-                            mGroundOverlay.setImage(mParser.nextText());
+                            groundOverlay.setImageUrl(mParser.nextText());
                         }
                         eventType = mParser.next();
                     }
                 }
                 if (mParser.getName().equals("LatLonBox")) {
-                    createLatLonBox();
+                    createLatLonBox(groundOverlay);
+                }
+                if (mParser.getName().equals("drawOrder")) {
+                    groundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
+                }
+                if (mParser.getName().equals("visibility")) {
+                    groundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
+                }
+                if (mParser.getName().equals("ExtendedData")) {
+                    groundOverlay.setProperties(setExtendedDataProperties());
                 }
             }
             eventType = mParser.next();
         }
+        return groundOverlay;
     }
 
     /**
@@ -121,11 +130,10 @@ import java.util.HashMap;
 
     /**
      * Adds untyped name value pairs parsed from the ExtendedData
-     *
-     * @param properties hashmap of properties to add data to
      */
-    private void setExtendedDataProperties(HashMap<String, String> properties)
+    private HashMap<String, String> setExtendedDataProperties()
             throws XmlPullParserException, IOException {
+        HashMap<String, String> properties = new HashMap<String, String>();
         String propertyKey = null;
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
@@ -139,6 +147,7 @@ import java.util.HashMap;
             }
             eventType = mParser.next();
         }
+        return properties;
     }
 
     /**
@@ -260,7 +269,8 @@ import java.util.HashMap;
         return new KmlMultiGeometry(geometries);
     }
 
-    private void createLatLonBox() throws XmlPullParserException, IOException {
+    private void createLatLonBox(KmlGroundOverlay groundOverlay)
+            throws XmlPullParserException, IOException {
         Double north = 0.0;
         Double south = 0.0;
         Double east = 0.0;
@@ -281,18 +291,17 @@ import java.util.HashMap;
                 if (mParser.getName().equals("west")) {
                     west = Double.parseDouble(mParser.nextText());
                 }
+                if (mParser.getName().equals("rotation")) {
+                    groundOverlay.setRotation(Float.parseFloat(mParser.nextText()));
+                }
             }
             eventType = mParser.next();
         }
-        LatLngBounds bounds = new LatLngBounds(new LatLng(west, south), new LatLng(east, north));
-        mGroundOverlay.setLatLngBounds(bounds);
+        groundOverlay
+                .setLatLngBox(new LatLngBounds(new LatLng(south, west), new LatLng(north, east)));
     }
 
     /* package */ KmlPlacemark getPlacemark() {
         return mPlacemark;
-    }
-
-    /* package */ KmlGroundOverlay getGroundOverlay() {
-        return mGroundOverlay;
     }
 }

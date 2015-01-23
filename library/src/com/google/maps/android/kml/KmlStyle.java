@@ -30,6 +30,8 @@ public class KmlStyle {
 
     private final HashMap<String, String> mBalloonOptions;
 
+    private final HashMap<String, Integer> mColorModeOptions;
+
     private boolean mFill = true;
 
     private boolean mOutline = true;
@@ -37,8 +39,6 @@ public class KmlStyle {
     private String mIconUrl;
 
     private double mScale;
-
-    private final HashMap<String, Integer> mColorModeOptions;
 
     private String mStyleId;
 

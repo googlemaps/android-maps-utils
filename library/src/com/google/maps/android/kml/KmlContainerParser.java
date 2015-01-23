@@ -24,12 +24,15 @@ import java.io.IOException;
 
     private final static String GROUND_OVERLAY = "GroundOverlay";
 
-    private KmlContainer mContainer;
+    private final KmlFeatureParser mFeatureParser;
 
     private final XmlPullParser mParser;
 
+    private KmlContainer mContainer;
+
     /* package */ KmlContainerParser(XmlPullParser parser) {
         mParser = parser;
+        mFeatureParser = new KmlFeatureParser(parser);
         mContainer = null;
     }
 
@@ -68,7 +71,7 @@ import java.io.IOException;
                 } else if (mParser.getName().equals(EXTENDED_DATA)) {
                     setExtendedDataProperties(kmlFolder);
                 } else if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    //TODO: Ground overlay in containers
+                    addGroundOverlay(kmlFolder);
                 }
             }
             eventType = mParser.next();
@@ -113,6 +116,7 @@ import java.io.IOException;
 
     /**
      * Adds untyped name value pairs parsed from the ExtendedData
+     *
      * @param kmlFolder folder to add properties to
      */
     private void setExtendedDataProperties(KmlContainer kmlFolder)
@@ -130,6 +134,11 @@ import java.io.IOException;
             }
             eventType = mParser.next();
         }
+    }
+
+    private void addGroundOverlay(KmlContainer kmlFolder)
+            throws IOException, XmlPullParserException {
+        kmlFolder.addGroundOverlay(mFeatureParser.createGroundOverlay());
     }
 
     /**
@@ -151,15 +160,14 @@ import java.io.IOException;
      */
     private void createContainerPlacemark(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
-        KmlFeatureParser placemarkParser = new KmlFeatureParser(mParser);
-        placemarkParser.createPlacemark();
-        if (placemarkParser.getPlacemark() != null) {
-            kmlFolder.setPlacemark(placemarkParser.getPlacemark(), null);
+        mFeatureParser.createPlacemark();
+        if (mFeatureParser.getPlacemark() != null) {
+            kmlFolder.setPlacemark(mFeatureParser.getPlacemark(), null);
         }
     }
 
     /**
-     * @return List of containers
+     * @return container
      */
     /* package */ KmlContainer getContainer() {
         return mContainer;

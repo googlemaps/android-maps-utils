@@ -3,6 +3,8 @@ package com.google.maps.android.kml;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,13 +40,17 @@ public class KmlLayer {
 
     private static final int RANDOM_COLOR_MODE = 1;
 
-    private static final int LRU_CACHE_SIZE = 100;
+    private static final int LRU_CACHE_SIZE = 50;
 
     private final GoogleMap mMap;
 
     private final LruCache<String, Bitmap> mMarkerIconCache;
 
+    private final LruCache<String, Bitmap> mGroundOverlayCache;
+
     private final ArrayList<String> mMarkerIconUrls;
+
+    private final ArrayList<String> mGroundOverlayUrls;
 
     private HashMap<KmlPlacemark, Object> mPlacemarks;
 
@@ -54,7 +60,7 @@ public class KmlLayer {
 
     private HashMap<String, KmlStyle> mStyles;
 
-    private ArrayList<KmlGroundOverlay> mGroundOverlays;
+    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
     private XmlPullParser mParser;
 
@@ -84,10 +90,12 @@ public class KmlLayer {
         mStyles = new HashMap<String, KmlStyle>();
         mStyleMaps = new HashMap<String, String>();
         mMarkerIconCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
+        mGroundOverlayCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
+        mGroundOverlayUrls = new ArrayList<String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mContainers = new ArrayList<KmlContainerInterface>();
-        mGroundOverlays = new ArrayList<KmlGroundOverlay>();
+        mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
         mParser = createXmlParser(stream);
     }
 
@@ -200,13 +208,35 @@ public class KmlLayer {
     }
 
     /**
+     * Adds the KML data to the map
+     *
+     * @throws XmlPullParserException if KML file cannot be parsed
+     * @throws IOException            if KML file cannot be opened
+     */
+    public void addKmlData() throws IOException, XmlPullParserException {
+        KmlParser parser = new KmlParser(mParser);
+        parser.parseKml();
+        mStyles = parser.getStyles();
+        mStyleMaps = parser.getStyleMaps();
+        mPlacemarks = parser.getPlacemarks();
+        mGroundOverlays = parser.getGroundOverlays();
+        mContainers = parser.getFolders();
+        assignStyleMap(mStyleMaps, mStyles);
+        addGroundOverlays(mGroundOverlays, mContainers);
+        downloadGroundOverlays();
+        addContainerGroupToMap(mContainers, true);
+        addPlacemarksToMap(mPlacemarks);
+        downloadMarkerIcons();
+    }
+
+    /**
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
      */
     private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
         for (KmlPlacemark placemark : placemarks.keySet()) {
             Boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
             Object mapObject = addPlacemarkToMap(placemark, isPlacemarkVisible);
-            //Placemark stores a KmlPlacemark as a key, and GoogleMap Object as its value
+            // Placemark stores a KmlPlacemark as a key, and GoogleMap Object as its value
             placemarks.put(placemark, mapObject);
         }
     }
@@ -290,20 +320,6 @@ public class KmlLayer {
     }
 
     /**
-     * Determines if there are any icons to add to markers
-     *
-     * @param iconUrls String value represent path to obtain icon from
-     */
-    private void addIconsToMarkers(ArrayList<String> iconUrls) {
-        if (!iconUrls.isEmpty()) {
-            for (String markerIconUrl : mMarkerIconUrls) {
-                new IconImageDownload(markerIconUrl).execute();
-                mMarkerIconUrls.remove(markerIconUrl);
-            }
-        }
-    }
-
-    /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
      *
      * @param styleId StyleUrl from a placemark
@@ -315,6 +331,32 @@ public class KmlLayer {
             style = mStyles.get(styleId);
         }
         return style;
+    }
+
+    /**
+     * Sets the marker icon if there was a url that was found
+     *
+     * @param style  The style which we retrieve the icon url from
+     * @param marker The marker which is displaying the icon
+     */
+    private void addMarkerIcons(KmlStyle style, Marker marker) {
+        if (mMarkerIconCache.get(style.getIconUrl()) != null) {
+            // Bitmap stored in cache
+            Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
+            mMarkerIconUrls.add(style.getIconUrl());
+        }
+    }
+
+    /**
+     * Determines if there are any icons to add to markers
+     */
+    private void downloadMarkerIcons() {
+        for (String markerIconUrl : mMarkerIconUrls) {
+            new IconImageDownload(markerIconUrl).execute();
+        }
+        mMarkerIconUrls.clear();
     }
 
     /**
@@ -342,7 +384,6 @@ public class KmlLayer {
      * @param iconUrl       url to obtain marker image
      * @param kmlContainers kml container which contains the marker
      */
-
     private void addContainerGroupIconsToMarkers(String iconUrl,
             Iterable<KmlContainerInterface> kmlContainers) {
         for (KmlContainerInterface container : kmlContainers) {
@@ -393,15 +434,15 @@ public class KmlLayer {
         MarkerOptions markerOptions = style.getMarkerOptions();
         markerOptions.position(point.getKmlGeometryObject());
         Marker marker = mMap.addMarker(markerOptions);
-        //If there exists style options for a ballonStyle
+        // If there exists style options for a balloonStyle
         if (style.getBalloonOptions().size() > 0) {
-            //Set info window if ballonStyle is set
+            // Set info window if balloonStyle is set
             setMarkerInfoWindow(style, marker, mPlacemarks.keySet());
             setContainerMarkerInfoWindow(style, marker, mContainers);
         }
         if (style.getIconUrl() != null) {
-            //Sets an icon image if there is a url for it
-            setMarkerIcon(style, marker);
+            // Sets an icon image if there is a url for it
+            addMarkerIcons(style, marker);
         }
         return marker;
     }
@@ -450,22 +491,6 @@ public class KmlLayer {
             if (hasNestedKmlContainers()) {
                 setContainerMarkerInfoWindow(style, marker, container.getNestedKmlContainers());
             }
-        }
-    }
-
-    /**
-     * Sets the marker icon if there was a url that was found
-     *
-     * @param style  The style which we retreieve the icon url from
-     * @param marker The marker which is displaying the icon
-     */
-    private void setMarkerIcon(KmlStyle style, Marker marker) {
-        if (mMarkerIconCache.get(style.getIconUrl()) != null) {
-            // Bitmap stored in cache
-            Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-        } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
-            mMarkerIconUrls.add(style.getIconUrl());
         }
     }
 
@@ -525,30 +550,10 @@ public class KmlLayer {
     }
 
     /**
-     * Adds the KML data to the map
-     *
-     * @throws XmlPullParserException if KML file cannot be parsed
-     * @throws IOException            if KML file cannot be opened
-     */
-    public void addKmlData() throws IOException, XmlPullParserException {
-        KmlParser parser = new KmlParser(mParser);
-        parser.parseKml();
-        mStyles = parser.getStyles();
-        mStyleMaps = parser.getStyleMaps();
-        mPlacemarks = parser.getPlacemarks();
-        mGroundOverlays = parser.getGroundOverlays();
-        //TODO: Figure out how to put a ground overlay to the map
-        mContainers = parser.getFolders();
-        assignStyleMap(mStyleMaps, mStyles);
-        addContainerGroupToMap(mContainers, true);
-        addPlacemarksToMap(mPlacemarks);
-        addIconsToMarkers(mMarkerIconUrls);
-    }
-
-    /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
     public void removeKmlData() {
+        // TODO: remove all ground overlays
         removeKmlPlacemarks(mPlacemarks);
         if (hasNestedKmlContainers()) {
             removeKmlContainers(getNestedKmlContainers());
@@ -609,9 +614,75 @@ public class KmlLayer {
     }
 
     /**
+     * Gets an iterable of KmlGroundOverlay objects
+     *
+     * @return iterable of KmlGroundOverlay objects
+     */
+    public Iterable<KmlGroundOverlay> getGroundOverlays() {
+        return mGroundOverlays.keySet();
+    }
+
+    private void addGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
+            Iterable<KmlContainerInterface> kmlContainers) {
+        addGroundOverlays(groundOverlays);
+        for (KmlContainerInterface kmlContainer : kmlContainers) {
+            KmlContainer container = (KmlContainer) kmlContainer;
+            addGroundOverlays(container.getGroundOverlayHashMap(),
+                    kmlContainer.getNestedKmlContainers());
+        }
+    }
+
+    private void addGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+        for (KmlGroundOverlay groundOverlay : groundOverlays.keySet()) {
+            String groundOverlayUrl = groundOverlay.getImageUrl();
+            if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
+                // Can't draw overlay if url and coordinates are missing
+                if (mGroundOverlayCache.get(groundOverlayUrl) != null) {
+                    addGroundOverlayToMap(groundOverlayUrl, mGroundOverlays);
+                } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
+                    mGroundOverlayUrls.add(groundOverlayUrl);
+                }
+            }
+        }
+    }
+
+    private void downloadGroundOverlays() {
+        for (String groundOverlayUrl : mGroundOverlayUrls) {
+            new GroundOverlayImageDownload(groundOverlayUrl).execute();
+        }
+        mGroundOverlayUrls.clear();
+    }
+
+    private void addGroundOverlayToMap(String groundOverlayUrl,
+            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+        BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
+                .fromBitmap(mGroundOverlayCache.get(groundOverlayUrl));
+        for (KmlGroundOverlay groundOverlay : groundOverlays.keySet()) {
+            if (groundOverlay.getImageUrl().equals(groundOverlayUrl)) {
+                GroundOverlayOptions groundOverlayOptions = groundOverlay.getGroundOverlayOptions()
+                        .image(groundOverlayBitmap);
+                groundOverlays.put(groundOverlay, mMap.addGroundOverlay(groundOverlayOptions));
+            }
+        }
+    }
+
+    private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
+            Iterable<KmlContainerInterface> kmlContainers) {
+        for (KmlContainerInterface kmlContainer : kmlContainers) {
+            KmlContainer container = (KmlContainer) kmlContainer;
+            addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap());
+            if (container.hasNestedKmlContainers()) {
+                addGroundOverlayInContainerGroups(groundOverlayUrl,
+                        container.getNestedKmlContainers());
+            }
+        }
+    }
+
+    /**
      * Downloads images for use as marker icons
      */
-    private class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
+
+    class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
 
         private final String mIconUrl;
 
@@ -652,6 +723,49 @@ public class KmlLayer {
             mMarkerIconCache.put(mIconUrl, bitmap);
             addIconToMarkers(mIconUrl, mPlacemarks);
             addContainerGroupIconsToMarkers(mIconUrl, mContainers);
+        }
+    }
+
+    /**
+     * Downloads images for use as ground overlays
+     */
+    private class GroundOverlayImageDownload extends AsyncTask<String, Void, Bitmap> {
+
+        private final String mGroundOverlayUrl;
+
+        private GroundOverlayImageDownload(String groundOverlayUrl) {
+            mGroundOverlayUrl = groundOverlayUrl;
+        }
+
+        /**
+         * Downloads the ground overlay image in another thread
+         *
+         * @param params String varargs not used
+         * @return Bitmap object downloaded
+         */
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                return BitmapFactory
+                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * Adds the bitmap to the ground overlay and places it on a map
+         *
+         * @param bitmap bitmap downloaded
+         */
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            mGroundOverlayCache.put(mGroundOverlayUrl, bitmap);
+            addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
+            addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
         }
     }
 }

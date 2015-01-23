@@ -1,5 +1,7 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.GroundOverlay;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,11 +14,13 @@ public class KmlContainer implements KmlContainerInterface {
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
-    private HashMap<String, KmlStyle> mStyles;
-
     private final ArrayList<KmlContainerInterface> mContainers;
 
+    private final HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
+
     private final HashMap<String, String> mStyleMap;
+
+    private HashMap<String, KmlStyle> mStyles;
 
     public KmlContainer() {
         mContainerProperties = new HashMap<String, String>();
@@ -24,6 +28,7 @@ public class KmlContainer implements KmlContainerInterface {
         mStyles = new HashMap<String, KmlStyle>();
         mStyleMap = new HashMap<String, String>();
         mContainers = new ArrayList<KmlContainerInterface>();
+        mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
     /**
@@ -37,14 +42,14 @@ public class KmlContainer implements KmlContainerInterface {
      * @return HashMap of styles, with key values representing style name (ie, color) and
      * value representing style value (ie #FFFFFF)
      */
-    public HashMap<String, KmlStyle> getStyles() {
+    /* package */ HashMap<String, KmlStyle> getStyles() {
         return mStyles;
     }
 
     /**
-     * Takes an ArrayList of styles and assings these folders with the styles
+     * Takes an ArrayList of styles and assigns these folders with the styles
      */
-    public void setStyles(HashMap<String, KmlStyle> styles) {
+    /* package */ void setStyles(HashMap<String, KmlStyle> styles) {
         mStyles = styles;
     }
 
@@ -53,7 +58,7 @@ public class KmlContainer implements KmlContainerInterface {
      * @param object     Corresponding GoogleMap map object of the placemark (if it has been added
      *                   to the map)
      */
-    public void setPlacemark(KmlPlacemark placemarks, Object object) {
+    /* package */ void setPlacemark(KmlPlacemark placemarks, Object object) {
         mPlacemarks.put(placemarks, object);
     }
 
@@ -62,7 +67,7 @@ public class KmlContainer implements KmlContainerInterface {
      *
      * @param container Container to nest within the current instance of the container
      */
-    public void addChildContainer(KmlContainer container) {
+    /* package */ void addChildContainer(KmlContainer container) {
         mContainers.add(container);
     }
 
@@ -93,19 +98,31 @@ public class KmlContainer implements KmlContainerInterface {
         mStyles.put(styleId, style);
     }
 
-
     /**
      * @return A map of strings representing a style map, null if no style maps exist
      */
-    public HashMap<String, String> getStyleMap() {
+    /* package */ HashMap<String, String> getStyleMap() {
         return mStyleMap;
     }
 
     /**
      * @param styleMap Adds a map of strings representing a style map
      */
-    public void setStyleMap(HashMap<String, String> styleMap) {
+    /* package */ void setStyleMap(HashMap<String, String> styleMap) {
         mStyleMap.putAll(styleMap);
+    }
+
+    /**
+     * Add a ground overlay for this container
+     *
+     * @param groundOverlay ground overlay to add
+     */
+    /* package */ void addGroundOverlay(KmlGroundOverlay groundOverlay) {
+        mGroundOverlays.put(groundOverlay, null);
+    }
+
+    /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayHashMap() {
+        return mGroundOverlays;
     }
 
     /**
@@ -172,4 +189,11 @@ public class KmlContainer implements KmlContainerInterface {
         return mPlacemarks.size() > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<KmlGroundOverlay> getGroundOverlays() {
+        return mGroundOverlays.keySet();
+    }
 }

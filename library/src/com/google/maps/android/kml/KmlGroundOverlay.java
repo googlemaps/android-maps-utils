@@ -1,5 +1,6 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.HashMap;
@@ -9,32 +10,36 @@ import java.util.HashMap;
  */
 public class KmlGroundOverlay {
 
-    private LatLngBounds mBounds;
-
-    private String mGroundOverlayImage;
-
     private final HashMap<String, String> mProperties;
 
+    private final GroundOverlayOptions mGroundOverlayOptions;
+
+    private String mImageUrl;
+
+    private LatLngBounds mLatLngBox;
+
     public KmlGroundOverlay() {
-        mBounds = null;
-        mGroundOverlayImage = null;
+        mImageUrl = null;
+        mLatLngBox = null;
         mProperties = new HashMap<String, String>();
+        mGroundOverlayOptions = new GroundOverlayOptions();
     }
 
     public String getImageUrl() {
-        return mGroundOverlayImage;
+        return mImageUrl;
     }
 
-    public void setImage(String imageUrl) {
-        mGroundOverlayImage = imageUrl;
+    /* package */ void setImageUrl(String imageUrl) {
+        mImageUrl = imageUrl;
     }
 
-    public LatLngBounds getBounds() {
-        return mBounds;
+    public LatLngBounds getLatLngBox() {
+        return mLatLngBox;
     }
 
-    public void setLatLngBounds(LatLngBounds bounds) {
-        mBounds = bounds;
+    /* package */ void setLatLngBox(LatLngBounds latLngBox) {
+        mLatLngBox = latLngBox;
+        mGroundOverlayOptions.positionFromBounds(latLngBox);
     }
 
     public void setProperty(String propertyName, String propertyValue) {
@@ -45,11 +50,39 @@ public class KmlGroundOverlay {
         return mProperties.entrySet();
     }
 
+    /* package */ void setProperties(HashMap<String, String> properties) {
+        mProperties.putAll(properties);
+    }
+
     public String getProperty(String keyValue) {
         return mProperties.get(keyValue);
     }
 
     public boolean hasProperty(String keyValue) {
         return mProperties.get(keyValue) != null;
+    }
+
+    public void setDrawOrder(float zIndex) {
+        mGroundOverlayOptions.zIndex(zIndex);
+    }
+
+    public void setVisibility(int visibility) {
+        if (visibility == 0) {
+            mGroundOverlayOptions.visible(false);
+        }
+    }
+
+    public void setRotation(float rotation) {
+        if (rotation > 0.0 && rotation <= 180.0) {
+            mGroundOverlayOptions.bearing(rotation + 180);
+        } else if (rotation < 0.0 && rotation >= -180.0) {
+            mGroundOverlayOptions.bearing(Math.abs(rotation));
+        } else {
+            mGroundOverlayOptions.bearing(rotation);
+        }
+    }
+
+    public GroundOverlayOptions getGroundOverlayOptions() {
+        return mGroundOverlayOptions;
     }
 }

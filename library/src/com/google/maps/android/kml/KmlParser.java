@@ -1,5 +1,7 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.GroundOverlay;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -37,7 +39,7 @@ import java.util.HashMap;
 
     private final HashMap<String, KmlStyle> mStyles;
 
-    private final ArrayList<KmlGroundOverlay> mGroundOverlays;
+    private final HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
     /**
      * Creates a new KmlParser object
@@ -52,7 +54,7 @@ import java.util.HashMap;
         styleParser = new KmlStyleParser(mParser);
         placemarkParser = new KmlFeatureParser(mParser);
         containerParser = new KmlContainerParser(mParser);
-        mGroundOverlays = new ArrayList<KmlGroundOverlay>();
+        mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
     /**
@@ -78,8 +80,7 @@ import java.util.HashMap;
                     mPlacemarks.put(placemarkParser.getPlacemark(), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    placemarkParser.createGroundOverlay();
-                    mGroundOverlays.add(placemarkParser.getGroundOverlay());
+                    mGroundOverlays.put(placemarkParser.createGroundOverlay(), null);
                 }
             }
             eventType = mParser.next();
@@ -117,9 +118,9 @@ import java.util.HashMap;
     }
 
     /**
-     * @return List of ground overlays created by the parser
+     * @return hashmap of ground overlays created by the parser
      */
-    /* package */ ArrayList<KmlGroundOverlay> getGroundOverlays() {
+    /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlays() {
         return mGroundOverlays;
     }
 }
