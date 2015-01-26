@@ -469,7 +469,7 @@ public class KmlLayer {
                 } else if (hasDescription) {
                     marker.setTitle(placemark.getProperty("description"));
                 } else {
-                    //TODO: Figure if we should throw an illegal argument exception?
+                    throw new IllegalArgumentException("Can't display BalloonStyle; no text found");
                 }
             }
         }
