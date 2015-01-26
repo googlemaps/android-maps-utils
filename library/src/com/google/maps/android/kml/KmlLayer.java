@@ -720,6 +720,9 @@ public class KmlLayer {
          */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap == null) {
+                throw new NullPointerException("Image not found!");
+            }
             mMarkerIconCache.put(mIconUrl, bitmap);
             addIconToMarkers(mIconUrl, mPlacemarks);
             addContainerGroupIconsToMarkers(mIconUrl, mContainers);
@@ -763,6 +766,9 @@ public class KmlLayer {
          */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap == null) {
+                throw new NullPointerException("Image not found!");
+            }
             mGroundOverlayCache.put(mGroundOverlayUrl, bitmap);
             addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
             addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
