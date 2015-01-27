@@ -150,13 +150,8 @@ import java.io.IOException;
             throws XmlPullParserException, IOException {
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyle();
-        if (styleParser.getStyle().getStyleId() != null) {
-            // Define a shared style
-            kmlContainer.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
-        } else {
-            // Define an inline style
-            kmlContainer.setInlineStyle(styleParser.getStyle());
-        }
+        kmlContainer.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+
     }
 
     /**
