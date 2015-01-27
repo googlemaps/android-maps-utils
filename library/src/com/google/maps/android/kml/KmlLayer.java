@@ -44,9 +44,7 @@ public class KmlLayer {
 
     private final GoogleMap mMap;
 
-    private final LruCache<String, Bitmap> mMarkerIconCache;
-
-    private final LruCache<String, Bitmap> mGroundOverlayCache;
+    private final LruCache<String, Bitmap> mImagesCache;
 
     private final ArrayList<String> mMarkerIconUrls;
 
@@ -89,8 +87,7 @@ public class KmlLayer {
         mMap = map;
         mStyles = new HashMap<String, KmlStyle>();
         mStyleMaps = new HashMap<String, String>();
-        mMarkerIconCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
-        mGroundOverlayCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
+        mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
         mGroundOverlayUrls = new ArrayList<String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
@@ -340,9 +337,9 @@ public class KmlLayer {
      * @param marker The marker which is displaying the icon
      */
     private void addMarkerIcons(KmlStyle style, Marker marker) {
-        if (mMarkerIconCache.get(style.getIconUrl()) != null) {
+        if (mImagesCache.get(style.getIconUrl()) != null) {
             // Bitmap stored in cache
-            Bitmap bitmap = mMarkerIconCache.get(style.getIconUrl());
+            Bitmap bitmap = mImagesCache.get(style.getIconUrl());
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
         } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
             mMarkerIconUrls.add(style.getIconUrl());
@@ -370,7 +367,7 @@ public class KmlLayer {
             // Check if the style URL is the same and the type of geometry is a point
             if (placemarkStyle != null && iconUrl.equals(placemarkStyle.getIconUrl())
                     && "Point".equals(placemark.getGeometry().getKmlGeometryType())) {
-                Bitmap iconBitmap = mMarkerIconCache.get(iconUrl);
+                Bitmap iconBitmap = mImagesCache.get(iconUrl);
                 Double scale = placemarkStyle.getIconScale();
                 ((Marker) mPlacemarks.get(placemark))
                         .setIcon(scaleIconToMarkers(iconBitmap, scale));
@@ -637,7 +634,7 @@ public class KmlLayer {
             String groundOverlayUrl = groundOverlay.getImageUrl();
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
-                if (mGroundOverlayCache.get(groundOverlayUrl) != null) {
+                if (mImagesCache.get(groundOverlayUrl) != null) {
                     addGroundOverlayToMap(groundOverlayUrl, mGroundOverlays);
                 } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
                     mGroundOverlayUrls.add(groundOverlayUrl);
@@ -656,7 +653,7 @@ public class KmlLayer {
     private void addGroundOverlayToMap(String groundOverlayUrl,
             HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
-                .fromBitmap(mGroundOverlayCache.get(groundOverlayUrl));
+                .fromBitmap(mImagesCache.get(groundOverlayUrl));
         for (KmlGroundOverlay groundOverlay : groundOverlays.keySet()) {
             if (groundOverlay.getImageUrl().equals(groundOverlayUrl)) {
                 GroundOverlayOptions groundOverlayOptions = groundOverlay.getGroundOverlayOptions()
@@ -723,7 +720,7 @@ public class KmlLayer {
             if (bitmap == null) {
                 throw new NullPointerException("Image not found!");
             }
-            mMarkerIconCache.put(mIconUrl, bitmap);
+            mImagesCache.put(mIconUrl, bitmap);
             addIconToMarkers(mIconUrl, mPlacemarks);
             addContainerGroupIconsToMarkers(mIconUrl, mContainers);
         }
@@ -769,7 +766,7 @@ public class KmlLayer {
             if (bitmap == null) {
                 throw new NullPointerException("Image not found!");
             }
-            mGroundOverlayCache.put(mGroundOverlayUrl, bitmap);
+            mImagesCache.put(mGroundOverlayUrl, bitmap);
             addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
             addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
         }
