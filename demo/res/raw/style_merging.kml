@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <open>1</open>
+    <!--
+
+  There are two ways of styling data in KML: globally and locally. (In this
+  sense, "local" means local to the feature.)
+
+  A global style must have an XML id and can be referred to from any feature's
+  <styleUrl>. A local style does not necessarily need an id and applies only
+  to the feature in which it is contained.
+
+  The rules regarding inheritancy, overriding and merging are given by example
+  in this file.
+
+  -->
+    <Style id="globalStyles">
+      <!-- A single style specifying an instance of each StyleSelector -->
+      <IconStyle id="icon">
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-stars.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle id="label">
+        <color>ff0000cc</color>
+      </LabelStyle>
+      <LineStyle id="line">
+        <color>7f0000ff</color>
+        <width>4</width>
+      </LineStyle>
+      <PolyStyle id="poly">
+        <color>ff0000cc</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+      <BalloonStyle id="balloon">
+        <!--
+      white background, black text, bolded name followed by description
+      -->
+        <bgColor>ffffffff</bgColor>
+        <textColor>ff000000</textColor>
+        <text>
+          <![CDATA[<b>$[name]</b><br/><br/>$[description]<br/>]]>
+        </text>
+      </BalloonStyle>
+      <ListStyle id="list">
+        <listItemType>radioFolder</listItemType>
+      </ListStyle>
+    </Style>
+    <Folder>
+      <name>Wideawake field</name>
+      <open>1</open>
+      <Placemark>
+        <name>Airport</name>
+        <description>Is this the world's most remote airfield?</description>
+        <styleUrl>#globalStyles</styleUrl>
+        <!-- global style -->
+        <Style>
+          <BalloonStyle>
+            <!--
+          Local balloon style overrides background and text colors defined
+          in global style.
+          -->
+            <bgColor>ff000000</bgColor>
+            <textColor>ffffffff</textColor>
+            <!--
+          The <text> styling is not specified here and is therefore merged
+          from the global style.
+          -->
+          </BalloonStyle>
+        </Style>
+        <Point>
+          <coordinates>-14.392095,-7.967700,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>runway</name>
+        <styleUrl>#globalStyles</styleUrl>
+        <Style>
+          <LineStyle>
+            <!--
+          Coloring is implicitly merged from the global style, width is
+          explicitly overridden.
+          -->
+            <width>10</width>
+          </LineStyle>
+        </Style>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>-14.405821,-7.963539 -14.381448,-7.975707</coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>apron</name>
+        <styleUrl>#globalStyles</styleUrl>
+        <Style>
+          <LineStyle>
+            <!--
+          Overriding the LineStyle here will change the appearance of the
+          outline of the polygon. We'll make it leprechaun green and much
+          thicker. Gross, isn't it?
+          -->
+            <color>ff00ff00</color>
+            <width>16</width>
+          </LineStyle>
+        </Style>
+        <Polygon>
+          <tessellate>1</tessellate>
+          <outerBoundaryIs>
+            <LinearRing>
+              <coordinates>
+                -14.405214,-7.968981
+                -14.402106,-7.970539
+                -14.399850,-7.968762
+                -14.399670,-7.968411
+                -14.403875,-7.966311
+                -14.405214,-7.968981
+              </coordinates>
+            </LinearRing>
+          </outerBoundaryIs>
+        </Polygon>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

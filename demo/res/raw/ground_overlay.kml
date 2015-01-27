@@ -1,18 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+       <Style id="randomColorIcon">
+          <IconStyle>
+             <color>ff00ff00</color>
+             <colorMode>random</colorMode>
+             <scale>1.1</scale>
+             <Icon>
+                <href>http://maps.google.com/mapfiles/kml/pal3/icon21.png</href>
+             </Icon>
+          </IconStyle>
+       </Style>
+       <Placemark>
+          <name>IconStyle.kml</name>
+          <styleUrl>#randomColorIcon</styleUrl>
+          <Point>
+             <coordinates>-122.36868,37.831145,0</coordinates>
+          </Point>
+       </Placemark>
+       <Folder>
+           <Style>
+              <IconStyle>
+                 <color>ff00ff00</color>
+                 <colorMode>random</colorMode>
+                 <scale>1.1</scale>
+                 <Icon>
+                    <href>http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/4/11/1397210130748/Spring-Lamb.-Image-shot-2-011.jpg</href>
+                 </Icon>
+              </IconStyle>
+           </Style>
+           <Placemark>
+              <name>IconStyle.kml</name>
+
+              <Point>
+                 <coordinates>40,40,0</coordinates>
+              </Point>
+           </Placemark>
+       </Folder>
+    </Document>
     <GroundOverlay>
-      <name>Large-scale overlay on terrain</name>
-      <description>Overlay shows Mount Etna erupting
-          on July 13th, 2001.</description>
-      <Icon>
-        <href>http://geology.com/volcanoes/etna/mount-etna-volcano.jpg</href>
-      </Icon>
-      <LatLonBox>
-        <north>37.91904192681665</north>
-        <south>37.46543388598137</south>
-        <east>15.35832653742206</east>
-        <west>14.60128369746704</west>
-        <rotation>-0.1556640799496235</rotation>
-      </LatLonBox>
+       <name>GroundOverlay.kml</name>
+       <color>7fffffff</color>
+       <drawOrder>10</drawOrder>
+       <Icon>
+          <href>http://www.google.com/intl/en/images/logo.gif</href>
+          <refreshMode>onInterval</refreshMode>
+          <refreshInterval>86400</refreshInterval>
+          <viewBoundScale>0.75</viewBoundScale>
+       </Icon>
+       <LatLonBox>
+          <north>20.83234</north>
+          <south>-20.832122</south>
+          <east>20.373033</east>
+          <west>-20.373724</west>
+          <rotation>45</rotation>
+       </LatLonBox>
     </GroundOverlay>
+
+    <Folder>
+        <Document>
+            <GroundOverlay>
+               <name>GroundOverlay.kml</name>
+               <color>7fffffff</color>
+               <drawOrder>500</drawOrder>
+               <Icon>
+                  <href>http://www.joomlaworks.net/images/demos/galleries/abstract/7.jpg</href>
+                  <refreshMode>onInterval</refreshMode>
+                  <refreshInterval>86400</refreshInterval>
+                  <viewBoundScale>0.75</viewBoundScale>
+               </Icon>
+               <LatLonBox>
+                  <north>37.83234</north>
+                  <south>37.832122</south>
+                  <east>-122.373033</east>
+                  <west>-122.373724</west>
+                  <rotation>45</rotation>
+               </LatLonBox>
+            </GroundOverlay>
+        </Document>
+    </Folder>
 </kml>

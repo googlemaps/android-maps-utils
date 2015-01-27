@@ -59,8 +59,15 @@
 			<name>bleh</name>
 			<open>1</open>
 			<Placemark>
+                <Style>
+                    <LineStyle>
+                        <color>00000000</color>
+                        <width>5</width>
+                    </LineStyle>
+                </Style>
 				<name>Untitled Polygon</name>
 				<styleUrl>#m_ylw-pushpin</styleUrl>
+
 				<Polygon>
 					<tessellate>1</tessellate>
 					<outerBoundaryIs>
