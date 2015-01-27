@@ -52,17 +52,13 @@ import java.util.HashMap;
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals(STYLE_URL_TAG)) {
                     styleId = mParser.nextText();
-                }
-                if (mParser.getName().matches(GEOMETRY_REGEX)) {
+                } else if (mParser.getName().matches(GEOMETRY_REGEX)) {
                     geometry = createGeometry(mParser.getName());
-                }
-                if (mParser.getName().matches(PROPERTY_REGEX)) {
+                } else if (mParser.getName().matches(PROPERTY_REGEX)) {
                     properties.put(mParser.getName(), mParser.nextText());
-                }
-                if (mParser.getName().equals(EXTENDED_DATA)) {
-                    properties = setExtendedDataProperties();
-                }
-                if (mParser.getName().equals(STYLE_TAG)) {
+                } else if (mParser.getName().equals(EXTENDED_DATA)) {
+                    properties.putAll(setExtendedDataProperties());
+                } else if (mParser.getName().equals(STYLE_TAG)) {
                     KmlStyleParser styleParser = new KmlStyleParser(mParser);
                     styleParser.createStyle();
                     inlineStyle = styleParser.getStyle();
@@ -93,7 +89,7 @@ import java.util.HashMap;
                         eventType = mParser.next();
                     }
                 } else if (mParser.getName().equals("LatLonBox")) {
-                    createLatLonBox(groundOverlay);
+                    groundOverlay.setLatLngBox(createLatLonBox(groundOverlay));
                 } else if (mParser.getName().equals("drawOrder")) {
                     groundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals("visibility")) {
@@ -273,7 +269,7 @@ import java.util.HashMap;
         return new KmlMultiGeometry(geometries);
     }
 
-    private void createLatLonBox(KmlGroundOverlay groundOverlay)
+    private LatLngBounds createLatLonBox(KmlGroundOverlay groundOverlay)
             throws XmlPullParserException, IOException {
         Double north = 0.0;
         Double south = 0.0;
@@ -297,7 +293,7 @@ import java.util.HashMap;
             }
             eventType = mParser.next();
         }
-        groundOverlay.setLatLngBox(createLatLngBounds(north, south, east, west));
+        return createLatLngBounds(north, south, east, west);
     }
 
     /**
