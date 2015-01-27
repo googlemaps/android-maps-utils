@@ -22,10 +22,13 @@ public class KmlContainer {
 
     private HashMap<String, KmlStyle> mStyles;
 
+    private KmlStyle mInlineStyle;
+
     public KmlContainer() {
         mProperties = new HashMap<String, String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mStyles = new HashMap<String, KmlStyle>();
+        mInlineStyle = new KmlStyle();
         mStyleMap = new HashMap<String, String>();
         mContainers = new ArrayList<KmlContainer>();
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
@@ -36,6 +39,15 @@ public class KmlContainer {
      */
     public KmlStyle getStyle(String styleID) {
         return mStyles.get(styleID);
+    }
+
+    /**
+     * Gets the stored inline style
+     *
+     * @return inline style
+     */
+    /* package */ KmlStyle getInlineStyle() {
+        return mInlineStyle;
     }
 
     /**
@@ -51,6 +63,15 @@ public class KmlContainer {
      */
     /* package */ void setStyles(HashMap<String, KmlStyle> styles) {
         mStyles = styles;
+    }
+
+    /**
+     * Sets the stored inline style to the given style
+     *
+     * @param inlineStyle inline style to store
+     */
+    /* package */ void setInlineStyle(KmlStyle inlineStyle) {
+        mInlineStyle = inlineStyle;
     }
 
     /**
@@ -215,6 +236,7 @@ public class KmlContainer {
         sb.append(",\n placemarks=").append(mPlacemarks);
         sb.append(",\n containers=").append(mContainers);
         sb.append(",\n ground overlays=").append(mGroundOverlays);
+        sb.append(",\n inline style=").append(mInlineStyle);
         sb.append(",\n style maps=").append(mStyleMap);
         sb.append(",\n styles=").append(mStyles);
         sb.append("\n}\n");

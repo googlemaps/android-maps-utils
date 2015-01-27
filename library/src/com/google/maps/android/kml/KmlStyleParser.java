@@ -55,9 +55,11 @@ import java.util.HashMap;
         // Indicates if any valid style tags have been found
         Boolean isValidStyle = false;
         KmlStyle styleProperties = new KmlStyle();
-        // Append # to a local styleUrl
-        String styleId = "#" + mParser.getAttributeValue(null, "id");
-        styleProperties.setStyleId(styleId);
+        if (mParser.getAttributeValue(null, "id") != null) {
+            // Append # to a local styleUrl
+            String styleId = "#" + mParser.getAttributeValue(null, "id");
+            styleProperties.setStyleId(styleId);
+        }
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Style"))) {
             if (eventType == XmlPullParser.START_TAG) {
