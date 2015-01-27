@@ -150,11 +150,11 @@ public class KmlLayer {
     }
 
     /**
-     * Obtains the visibility of the placemark if it is specified, otherwise it returns true as a
+     * Obtains the visibility of the basic_placemark if it is specified, otherwise it returns true as a
      * default
      *
      * @param placemark Placemark to obtain visibility from
-     * @return true if placemark visibility is set to the true or unspecified, false otherwise
+     * @return true if basic_placemark visibility is set to the true or unspecified, false otherwise
      */
     private static boolean getPlacemarkVisibility(KmlPlacemark placemark) {
         Boolean isPlacemarkVisible = true;
@@ -239,13 +239,13 @@ public class KmlLayer {
     }
 
     /**
-     * Combines style and visibility to apply to a placemark geometry object and adds it to the map
+     * Combines style and visibility to apply to a basic_placemark geometry object and adds it to the map
      *
      * @param placemark           Placemark to obtain geometry object to add to the map
-     * @param placemarkVisibility Boolean value, where true indicates the placemark geometry is
+     * @param placemarkVisibility Boolean value, where true indicates the basic_placemark geometry is
      *                            shown initially on the map, false for not shown initially on the
      *                            map.
-     * @return Google Map Object of the placemark geometry after it has been added to the map.
+     * @return Google Map Object of the basic_placemark geometry after it has been added to the map.
      */
     private Object addPlacemarkToMap(KmlPlacemark placemark, Boolean placemarkVisibility) {
         String placemarkId = placemark.getStyleID();
@@ -281,9 +281,9 @@ public class KmlLayer {
     }
 
     /**
-     * Goes through the every placemark, style and properties object within a <Folder> tag
+     * Goes through the every basic_placemark, style and properties object within a <Folder> tag
      *
-     * @param kmlContainer Folder to obtain placemark and styles from
+     * @param kmlContainer Folder to obtain basic_placemark and styles from
      */
     private void addContainerObjectToMap(KmlContainer kmlContainer, boolean isContainerVisible) {
         Set<KmlPlacemark> containerPlacemarks = kmlContainer.getPlacemarks().keySet();
@@ -317,9 +317,9 @@ public class KmlLayer {
     }
 
     /**
-     * Obtains the styleUrl from a placemark and finds the corresponding style in a list
+     * Obtains the styleUrl from a basic_placemark and finds the corresponding style in a list
      *
-     * @param styleId StyleUrl from a placemark
+     * @param styleId StyleUrl from a basic_placemark
      * @return Style which corresponds to an ID
      */
     private KmlStyle getPlacemarkStyle(String styleId) {
@@ -376,7 +376,7 @@ public class KmlLayer {
     }
 
     /**
-     * Assigns icons to markers with a url if put in a placemark tag that is nested in a folder.
+     * Assigns icons to markers with a url if put in a basic_placemark tag that is nested in a folder.
      *
      * @param iconUrl       url to obtain marker image
      * @param kmlContainers kml container which contains the marker
@@ -530,7 +530,7 @@ public class KmlLayer {
 
     /**
      * Adds all the geometries within a KML MultiGeometry to the map. Supports recursive
-     * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
+     * MultiGeometry. Combines styling of the basic_placemark with the coordinates of each geometry.
      *
      * @param multiGeometry contains array of geometries for the MultiGeometry
      * @param style         contains relevant styling properties for the MultiGeometry

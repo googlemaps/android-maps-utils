@@ -55,7 +55,7 @@ public class KmlContainer {
 
     /**
      * @param placemarks Placemark for the container to contain
-     * @param object     Corresponding GoogleMap map object of the placemark (if it has been added
+     * @param object     Corresponding GoogleMap map object of the basic_placemark (if it has been added
      *                   to the map)
      */
     /* package */ void setPlacemark(KmlPlacemark placemarks, Object object) {

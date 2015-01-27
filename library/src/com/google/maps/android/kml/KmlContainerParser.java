@@ -155,9 +155,9 @@ import java.io.IOException;
     }
 
     /**
-     * Creates a new placemark
+     * Creates a new basic_placemark
      *
-     * @param kmlContainer folder to store placemark
+     * @param kmlContainer folder to store basic_placemark
      */
     /* package */ void createContainerPlacemark(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {

@@ -1,7 +1,6 @@
 package com.google.maps.android.utils.demo;
 
 import com.google.maps.android.kml.KmlContainer;
-import com.google.maps.android.kml.KmlContainerInterface;
 import com.google.maps.android.kml.KmlLayer;
 
 import android.util.Log;

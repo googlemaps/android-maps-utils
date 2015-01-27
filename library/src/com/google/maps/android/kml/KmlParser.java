@@ -97,7 +97,7 @@ import java.util.HashMap;
     }
 
     /**
-     * @return List of placemark object created by the parser
+     * @return List of basic_placemark object created by the parser
      */
     /* package */ HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;

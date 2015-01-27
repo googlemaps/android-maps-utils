@@ -1,0 +1,37 @@
+package com.google.maps.android.kml;
+
+import android.test.ActivityTestCase;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import com.google.maps.android.test.R;
+
+/**
+ * Created by lavenderch on 1/28/15.
+ */
+public class KmlFeatureParserTest extends ActivityTestCase {
+
+    public XmlPullParser createParser(int res) throws Exception {
+        InputStream stream = getInstrumentation().getContext().getResources().openRawResource(res);
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlPullParser parser = factory.newPullParser();
+        parser.setInput(stream, null);
+        parser.next();
+        return parser;
+    }
+
+    public void testPolygon() throws Exception {
+        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.basic_placemark));
+        parser.createPlacemark();
+        assertNotNull(parser.getPlacemark());
+        assertEquals(parser.getPlacemark().getGeometry().getKmlGeometryType(), "Polygon");
+        KmlPolygon polygon = ((KmlPolygon) parser.getPlacemark().getGeometry());
+        assertEquals(polygon.getInnerBoundaryCoordinates().size(), 2);
+        assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
+    }
+}
