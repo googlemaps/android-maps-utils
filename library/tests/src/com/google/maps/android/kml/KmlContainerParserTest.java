@@ -17,8 +17,6 @@ public class KmlContainerParserTest extends TestCase {
     KmlContainerParser parser;
     KmlContainer kmlContainer;
 
-
-
     public XmlPullParser createSimpleContainer() throws Exception {
         String folder =
                 "<Folder>\n" +
@@ -44,8 +42,6 @@ public class KmlContainerParserTest extends TestCase {
         String folder =
                 "<Folder>\n" +
                         "<Folder>\n" +
-                            "<Folder>\n" +
-                            "</Folder>\n" +
                         "</Folder>\n" +
                         "<Folder>\n" +
                         "</Folder>\n" +
@@ -75,19 +71,24 @@ public class KmlContainerParserTest extends TestCase {
         assertEquals(kmlContainer.getPlacemarks().size(), 1);
     }
 
+    public void testCreateContainerGroundOverlay() throws Exception {
+        KmlContainerParser parser = new KmlContainerParser(createSimpleContainer());
+        KmlContainer kmlContainer = new KmlContainer();
+        parser.assignFolderProperties(kmlContainer);
+        //TODO: Test for Ground Overlay
+    }
+
     public void testCreateContainerObjects() throws Exception {
         KmlContainerParser parser = new KmlContainerParser(createNestedContainer());
         KmlContainer kmlContainer = new KmlContainer();
         parser.assignFolderProperties(kmlContainer);
         assertNotNull(kmlContainer.getNestedKmlContainers());
         int numberOfNestedContainers = 0;
-        for (KmlContainerInterface container : kmlContainer.getNestedKmlContainers()) {
+        for (KmlContainer container : kmlContainer.getNestedKmlContainers()) {
             numberOfNestedContainers++;
         }
         assertEquals(numberOfNestedContainers, 2);
     }
-
-
 
 
 }
