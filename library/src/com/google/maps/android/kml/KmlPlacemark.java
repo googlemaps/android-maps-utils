@@ -3,10 +3,10 @@ package com.google.maps.android.kml;
 import java.util.HashMap;
 
 /**
- * Represents a placemark which is either a {@link com.google.maps.android.kml.KmlPoint}, {@link
+ * Represents a basic_placemark which is either a {@link com.google.maps.android.kml.KmlPoint}, {@link
  * com.google.maps.android.kml.KmlLineString}, {@link com.google.maps.android.kml.KmlPolygon} or a
  * {@link com.google.maps.android.kml.KmlMultiGeometry}. Stores the properties and styles of the
- * placemark.
+ * basic_placemark.
  */
 public class KmlPlacemark {
 
@@ -34,7 +34,7 @@ public class KmlPlacemark {
     }
 
     /**
-     * Gets the style id associated with the placemark
+     * Gets the style id associated with the basic_placemark
      *
      * @return style id
      */
@@ -69,7 +69,7 @@ public class KmlPlacemark {
     }
 
     /**
-     * Gets whether the placemark has a given property
+     * Gets whether the basic_placemark has a given property
      *
      * @param keyValue key value to check
      * @return true if the key is stored in the properties, false otherwise

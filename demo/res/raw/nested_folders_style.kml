@@ -55,9 +55,16 @@
 	<Folder>
 		<name>stuff</name>
 		<open>1</open>
+
 		<Folder>
 			<name>bleh</name>
 			<open>1</open>
+            <Style>
+                <LineStyle>
+                    <color>00000000</color>
+                    <width>20</width>
+                </LineStyle>
+            </Style>
 			<Placemark>
                 <Style>
                     <LineStyle>

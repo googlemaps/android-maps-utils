@@ -23,6 +23,8 @@ import java.util.HashMap;
 
     private final static String PROPERTY_REGEX = "name|description|visibility";
 
+    private final static String BOUNDARY_REGEX = "outerBoundaryIs|innerBoundaryIs";
+
     private final static String EXTENDED_DATA = "ExtendedData";
 
     private final static String STYLE_URL_TAG = "styleUrl";
@@ -39,8 +41,8 @@ import java.util.HashMap;
     }
 
     /**
-     * Creates a KmlPlacemark object for each placemark detected if they contain a geometry. Also
-     * stores styles and properties for the given placemark.
+     * Creates a KmlPlacemark object for each basic_placemark detected if they contain a geometry. Also
+     * stores styles and properties for the given basic_placemark.
      */
     /* package */ void createPlacemark() throws IOException, XmlPullParserException {
         String styleId = null;
@@ -224,24 +226,18 @@ import java.util.HashMap;
         // Indicates if an outer boundary needs to be defined
         Boolean isOuterBoundary = false;
         // Indicates if an inner boundary needs to be defined
-        Boolean isInnerBoundary = false;
         ArrayList<LatLng> outerBoundaryCoordinates = new ArrayList<LatLng>();
         ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates = new ArrayList<ArrayList<LatLng>>();
-
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Polygon"))) {
             if (eventType == XmlPullParser.START_TAG) {
-                if (mParser.getName().equals("outerBoundaryIs")) {
-                    isOuterBoundary = true;
-                } else if (mParser.getName().equals("innerBoundaryIs")) {
-                    isInnerBoundary = true;
+                if (mParser.getName().matches(BOUNDARY_REGEX)) {
+                    isOuterBoundary = mParser.getName().equals("outerBoundaryIs");
                 } else if (mParser.getName().equals("coordinates")) {
                     if (isOuterBoundary) {
                         outerBoundaryCoordinates = convertToLatLngArray(mParser.nextText());
-                        isOuterBoundary = false;
-                    } else if (isInnerBoundary) {
+                    } else {
                         innerBoundaryCoordinates.add(convertToLatLngArray(mParser.nextText()));
-                        isInnerBoundary = false;
                     }
                 }
             }
