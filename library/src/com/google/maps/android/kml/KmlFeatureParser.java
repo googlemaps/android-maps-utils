@@ -92,17 +92,13 @@ import java.util.HashMap;
                         }
                         eventType = mParser.next();
                     }
-                }
-                if (mParser.getName().equals("LatLonBox")) {
+                } else if (mParser.getName().equals("LatLonBox")) {
                     createLatLonBox(groundOverlay);
-                }
-                if (mParser.getName().equals("drawOrder")) {
+                } else if (mParser.getName().equals("drawOrder")) {
                     groundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
-                }
-                if (mParser.getName().equals("visibility")) {
+                } else if (mParser.getName().equals("visibility")) {
                     groundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
-                }
-                if (mParser.getName().equals("ExtendedData")) {
+                } else if (mParser.getName().equals("ExtendedData")) {
                     groundOverlay.setProperties(setExtendedDataProperties());
                 }
             }
@@ -289,24 +285,33 @@ import java.util.HashMap;
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().equals("north")) {
                     north = Double.parseDouble(mParser.nextText());
-                }
-                if (mParser.getName().equals("south")) {
+                } else if (mParser.getName().equals("south")) {
                     south = Double.parseDouble(mParser.nextText());
-                }
-                if (mParser.getName().equals("east")) {
+                } else if (mParser.getName().equals("east")) {
                     east = Double.parseDouble(mParser.nextText());
-                }
-                if (mParser.getName().equals("west")) {
+                } else if (mParser.getName().equals("west")) {
                     west = Double.parseDouble(mParser.nextText());
-                }
-                if (mParser.getName().equals("rotation")) {
+                } else if (mParser.getName().equals("rotation")) {
                     groundOverlay.setRotation(Float.parseFloat(mParser.nextText()));
                 }
             }
             eventType = mParser.next();
         }
-        groundOverlay
-                .setLatLngBox(new LatLngBounds(new LatLng(south, west), new LatLng(north, east)));
+        groundOverlay.setLatLngBox(createLatLngBounds(north, south, east, west));
+    }
+
+    /**
+     * Given a set of four latLng coordinates, creates a LatLng Bound
+     * @param north North coordinate of the bounding box
+     * @param south South coordinate of the bounding box
+     * @param east  East coordinate of the bounding box
+     * @param west  West coordinate of the bounding box
+     * @return
+     */
+    private LatLngBounds createLatLngBounds(Double north, Double south, Double east, Double west) {
+        LatLng southWest = new LatLng(south, west);
+        LatLng northEast = new LatLng(north, east);
+        return new LatLngBounds(southWest, northEast);
     }
 
     /* package */ KmlPlacemark getPlacemark() {
