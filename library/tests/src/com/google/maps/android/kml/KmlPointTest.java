@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import junit.framework.TestCase;
 
 public class KmlPointTest extends TestCase {
-    KmlPoint p;
+    KmlPoint kmlPoint;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -16,9 +16,12 @@ public class KmlPointTest extends TestCase {
 
     }
 
+    public KmlPoint createPoint() {
+        return new KmlPoint(new LatLng(0, 0));
+    }
+
     public void testGetType() throws Exception {
-        p = new KmlPoint(new LatLng(0, 0));
-        assertEquals("Point", p.getKmlGeometryType());
+
     }
 
     public void testGetGeometry() throws Exception {
