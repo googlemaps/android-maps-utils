@@ -83,7 +83,7 @@ import java.io.IOException;
      *
      * @param kmlFolder Stores new container object
      */
-    private void createContainerObject(KmlContainer kmlFolder)
+    /* package */ void createContainerObject(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlContainer container = new KmlContainer();
         assignFolderProperties(container);
@@ -95,7 +95,7 @@ import java.io.IOException;
      *
      * @param kmlFolder Stores hash map
      */
-    private void createContainerStyleMap(KmlContainer kmlFolder)
+    /* package */ void createContainerStyleMap(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyleMap();
@@ -107,7 +107,7 @@ import java.io.IOException;
      *
      * @param kmlFolder Stores property
      */
-    private void setContainerProperty(KmlContainer kmlFolder)
+    /* package */ void setContainerProperty(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         String propertyName = mParser.getName();
         String propertyValue = mParser.nextText();
@@ -117,9 +117,9 @@ import java.io.IOException;
     /**
      * Adds untyped name value pairs parsed from the ExtendedData
      *
-     * @param kmlFolder folder to add properties to
+     * @param kmlContainer folder to add properties to
      */
-    private void setExtendedDataProperties(KmlContainer kmlFolder)
+    /* package */ void setExtendedDataProperties(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         String propertyKey = null;
         int eventType = mParser.getEventType();
@@ -128,7 +128,7 @@ import java.io.IOException;
                 if (mParser.getName().equals("Data")) {
                     propertyKey = mParser.getAttributeValue(null, "name");
                 } else if (mParser.getName().equals("value") && propertyKey != null) {
-                    kmlFolder.setProperty(propertyKey, mParser.nextText());
+                    kmlContainer.setProperty(propertyKey, mParser.nextText());
                     propertyKey = null;
                 }
             }
@@ -136,33 +136,33 @@ import java.io.IOException;
         }
     }
 
-    private void addGroundOverlay(KmlContainer kmlFolder)
+    /* package */ void addGroundOverlay(KmlContainer kmlContainer)
             throws IOException, XmlPullParserException {
-        kmlFolder.addGroundOverlay(mFeatureParser.createGroundOverlay());
+        kmlContainer.addGroundOverlay(mFeatureParser.createGroundOverlay());
     }
 
     /**
      * Creates a new kml style
      *
-     * @param kmlFolder stores the new kml style
+     * @param kmlContainer stores the new kml style
      */
-    private void createContainerStyle(KmlContainer kmlFolder)
+    /* package */ void createContainerStyle(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyle();
-        kmlFolder.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+        kmlContainer.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
     }
 
     /**
      * Creates a new placemark
      *
-     * @param kmlFolder folder to store placemark
+     * @param kmlContainer folder to store placemark
      */
-    private void createContainerPlacemark(KmlContainer kmlFolder)
+    /* package */ void createContainerPlacemark(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         mFeatureParser.createPlacemark();
         if (mFeatureParser.getPlacemark() != null) {
-            kmlFolder.setPlacemark(mFeatureParser.getPlacemark(), null);
+            kmlContainer.setPlacemark(mFeatureParser.getPlacemark(), null);
         }
     }
 

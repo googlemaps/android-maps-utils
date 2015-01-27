@@ -69,17 +69,10 @@ public class KmlStyleTest extends TestCase {
         assertEquals(Color.WHITE, kmlStyle.getPolygonOptions().getStrokeColor());
     }
 
-
-   public void testIcon() {
-
-
-   }
-
     public void testMarkerColor() {
         KmlStyle kmlStyle = new KmlStyle();
         assertNotNull(kmlStyle);
         assertNotNull(kmlStyle.getMarkerOptions());
-        kmlStyle.setMarkerColor("FFFFFF");
     }
 
 
