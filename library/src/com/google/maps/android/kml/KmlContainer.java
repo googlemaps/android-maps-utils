@@ -8,13 +8,13 @@ import java.util.HashMap;
 /**
  * Represents a KML Document or Folder.
  */
-public class KmlContainer implements KmlContainerInterface {
+public class KmlContainer {
 
     private final HashMap<String, String> mProperties;
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
-    private final ArrayList<KmlContainerInterface> mContainers;
+    private final ArrayList<KmlContainer> mContainers;
 
     private final HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
@@ -27,7 +27,7 @@ public class KmlContainer implements KmlContainerInterface {
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mStyles = new HashMap<String, KmlStyle>();
         mStyleMap = new HashMap<String, String>();
-        mContainers = new ArrayList<KmlContainerInterface>();
+        mContainers = new ArrayList<KmlContainer>();
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
@@ -126,73 +126,84 @@ public class KmlContainer implements KmlContainerInterface {
     }
 
     /**
-     * {@inheritDoc}
+     * Gets the value of a property based on the given key
+     *
+     * @param propertyName property key to find
+     * @return value of property found, null if key doesn't exist
      */
-    @Override
     public String getKmlProperty(String propertyName) {
         return mProperties.get(propertyName);
     }
 
     /**
-     * {@inheritDoc}
+     * Gets whether the container has any properties
+     *
+     * @return true if there are properties, false otherwise
      */
-    @Override
     public boolean hasKmlProperties() {
         return mProperties.size() > 0;
     }
 
     /**
-     * {@inheritDoc}
+     * Gets whether the given key exists in the properties
+     *
+     * @param keyValue property key to find
+     * @return true if key was found, false otherwise
      */
-    @Override
     public boolean hasKmlProperty(String keyValue) {
         return mProperties.containsKey(keyValue);
     }
 
     /**
-     * {@inheritDoc}
+     * Gets whether the container has containers
+     *
+     * @return true if there are containers, false otherwise
      */
-    @Override
     public boolean hasNestedKmlContainers() {
         return mContainers.size() > 0;
     }
 
     /**
-     * {@inheritDoc}
+     * Gets an iterable of nested KmlContainers
+     *
+     * @return iterable of KmlContainers
      */
-    @Override
-    public Iterable<KmlContainerInterface> getNestedKmlContainers() {
+    public Iterable<KmlContainer> getNestedKmlContainers() {
         return mContainers;
     }
 
     /**
-     * {@inheritDoc}
+     * Gets an iterable of the properties hashmap entries
+     *
+     * @return iterable of the properties hashmap entries
      */
-    @Override
     public Iterable getKmlProperties() {
         return mProperties.entrySet();
     }
 
     /**
-     * {@inheritDoc}
+     * Gets an iterable of KmlPlacemarks
+     *
+     * @return iterable of KmlPlacemarks
      */
-    @Override
     public Iterable<KmlPlacemark> getKmlPlacemarks() {
         return mPlacemarks.keySet();
     }
 
     /**
-     * {@inheritDoc}
+     * Gets whether the container has any placemarks
+     *
+     * @return true if there are placemarks, false otherwise
      */
-    @Override
     public boolean hasKmlPlacemarks() {
         return mPlacemarks.size() > 0;
     }
 
     /**
-     * {@inheritDoc}
+     * Gets an iterable of KmlGroundOverlay objects
+     *
+     * @return iterable of KmlGroundOverlay objects
      */
-    @Override
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return mGroundOverlays.keySet();
     }

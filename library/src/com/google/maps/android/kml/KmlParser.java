@@ -35,7 +35,7 @@ import java.util.HashMap;
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
-    private final ArrayList<KmlContainerInterface> mFolders;
+    private final ArrayList<KmlContainer> mFolders;
 
     private final HashMap<String, KmlStyle> mStyles;
 
@@ -49,7 +49,7 @@ import java.util.HashMap;
     /* package */ KmlParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mFolders = new ArrayList<KmlContainerInterface>();
+        mFolders = new ArrayList<KmlContainer>();
         mStyles = new HashMap<String, KmlStyle>();
         styleParser = new KmlStyleParser(mParser);
         placemarkParser = new KmlFeatureParser(mParser);
@@ -113,7 +113,7 @@ import java.util.HashMap;
     /**
      * @return List of folder objects created by the parser
      */
-    /* package */ ArrayList<KmlContainerInterface> getFolders() {
+    /* package */ ArrayList<KmlContainer> getFolders() {
         return mFolders;
     }
 

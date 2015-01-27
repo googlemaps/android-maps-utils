@@ -56,7 +56,7 @@ public class KmlLayer {
 
     private HashMap<String, String> mStyleMaps;
 
-    private ArrayList<KmlContainerInterface> mContainers;
+    private ArrayList<KmlContainer> mContainers;
 
     private HashMap<String, KmlStyle> mStyles;
 
@@ -94,7 +94,7 @@ public class KmlLayer {
         mMarkerIconUrls = new ArrayList<String>();
         mGroundOverlayUrls = new ArrayList<String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mContainers = new ArrayList<KmlContainerInterface>();
+        mContainers = new ArrayList<KmlContainer>();
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
         mParser = createXmlParser(stream);
     }
@@ -262,9 +262,9 @@ public class KmlLayer {
      *
      * @param kmlContainers An arraylist of folders
      */
-    private void addContainerGroupToMap(Iterable<KmlContainerInterface> kmlContainers,
+    private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
             boolean containerVisibility) {
-        for (KmlContainerInterface containerInterface : kmlContainers) {
+        for (KmlContainer containerInterface : kmlContainers) {
             KmlContainer container = (KmlContainer) containerInterface;
             Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
@@ -307,7 +307,7 @@ public class KmlLayer {
      * @return Visibility of the container
      */
 
-    private Boolean getContainerVisibility(KmlContainerInterface kmlContainer, Boolean
+    private Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
             isParentContainerVisible) {
         Boolean isChildContainerVisible = true;
         if (kmlContainer.hasKmlProperty("visibility")) {
@@ -385,8 +385,8 @@ public class KmlLayer {
      * @param kmlContainers kml container which contains the marker
      */
     private void addContainerGroupIconsToMarkers(String iconUrl,
-            Iterable<KmlContainerInterface> kmlContainers) {
-        for (KmlContainerInterface container : kmlContainers) {
+            Iterable<KmlContainer> kmlContainers) {
+        for (KmlContainer container : kmlContainers) {
             KmlContainer containerObject = (KmlContainer) container;
             addIconToMarkers(iconUrl, containerObject.getPlacemarks());
             if (containerObject.hasNestedKmlContainers()) {
@@ -483,8 +483,8 @@ public class KmlLayer {
      * @param containers List of containers to find an info window of
      */
     private void setContainerMarkerInfoWindow(KmlStyle style, Marker marker,
-            Iterable<KmlContainerInterface> containers) {
-        for (KmlContainerInterface container : containers) {
+            Iterable<KmlContainer> containers) {
+        for (KmlContainer container : containers) {
             if (container.hasKmlPlacemarks()) {
                 setMarkerInfoWindow(style, marker, container.getKmlPlacemarks());
             }
@@ -564,8 +564,8 @@ public class KmlLayer {
      * Removes all the KML data from the map and clears all the stored placemarks of those which
      * are in a container.
      */
-    public void removeKmlContainers(Iterable<KmlContainerInterface> containers) {
-        for (KmlContainerInterface container : containers) {
+    public void removeKmlContainers(Iterable<KmlContainer> containers) {
+        for (KmlContainer container : containers) {
             KmlContainer containerObject = (KmlContainer) container;
             if (containerObject.hasKmlPlacemarks()) {
                 removeKmlPlacemarks(containerObject.getPlacemarks());
@@ -609,7 +609,7 @@ public class KmlLayer {
      *
      * @return iterable of KmlContainerInterface objects
      */
-    public Iterable<KmlContainerInterface> getNestedKmlContainers() {
+    public Iterable<KmlContainer> getNestedKmlContainers() {
         return mContainers;
     }
 
@@ -623,9 +623,9 @@ public class KmlLayer {
     }
 
     private void addGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
-            Iterable<KmlContainerInterface> kmlContainers) {
+            Iterable<KmlContainer> kmlContainers) {
         addGroundOverlays(groundOverlays);
-        for (KmlContainerInterface kmlContainer : kmlContainers) {
+        for (KmlContainer kmlContainer : kmlContainers) {
             KmlContainer container = (KmlContainer) kmlContainer;
             addGroundOverlays(container.getGroundOverlayHashMap(),
                     kmlContainer.getNestedKmlContainers());
@@ -667,8 +667,8 @@ public class KmlLayer {
     }
 
     private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
-            Iterable<KmlContainerInterface> kmlContainers) {
-        for (KmlContainerInterface kmlContainer : kmlContainers) {
+            Iterable<KmlContainer> kmlContainers) {
+        for (KmlContainer kmlContainer : kmlContainers) {
             KmlContainer container = (KmlContainer) kmlContainer;
             addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap());
             if (container.hasNestedKmlContainers()) {
