@@ -68,7 +68,10 @@ public class KmlPolygon implements KmlGeometry<ArrayList<ArrayList<LatLng>>> {
     public ArrayList<ArrayList<LatLng>> getKmlGeometryObject() {
         ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
         coordinates.add(mOuterBoundaryCoordinates);
-        coordinates.addAll(mInnerBoundaryCoordinates);
+        //Polygon objects do not have to have inner holes
+        if (mInnerBoundaryCoordinates != null) {
+            coordinates.addAll(mInnerBoundaryCoordinates);
+        }
         return coordinates;
     }
 
