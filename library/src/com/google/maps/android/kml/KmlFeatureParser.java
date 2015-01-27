@@ -25,7 +25,9 @@ import java.util.HashMap;
 
     private final static String EXTENDED_DATA = "ExtendedData";
 
-    private final static String STYLE_TAG = "styleUrl";
+    private final static String STYLE_URL_TAG = "styleUrl";
+
+    private final static String STYLE_TAG = "Style";
 
     private final XmlPullParser mParser;
 
@@ -41,14 +43,15 @@ import java.util.HashMap;
      * stores styles and properties for the given placemark.
      */
     /* package */ void createPlacemark() throws IOException, XmlPullParserException {
-        String style = null;
+        String styleId = null;
+        KmlStyle inlineStyle = null;
         HashMap<String, String> properties = new HashMap<String, String>();
         KmlGeometry geometry = null;
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Placemark"))) {
             if (eventType == XmlPullParser.START_TAG) {
-                if (mParser.getName().equals(STYLE_TAG)) {
-                    style = mParser.nextText();
+                if (mParser.getName().equals(STYLE_URL_TAG)) {
+                    styleId = mParser.nextText();
                 }
                 if (mParser.getName().matches(GEOMETRY_REGEX)) {
                     geometry = createGeometry(mParser.getName());
@@ -59,12 +62,17 @@ import java.util.HashMap;
                 if (mParser.getName().equals(EXTENDED_DATA)) {
                     properties = setExtendedDataProperties();
                 }
+                if (mParser.getName().equals(STYLE_TAG)) {
+                    KmlStyleParser styleParser = new KmlStyleParser(mParser);
+                    styleParser.createStyle();
+                    inlineStyle = styleParser.getStyle();
+                }
             }
             eventType = mParser.next();
         }
         // If there is no geometry associated with the Placemark then we do not add it
         if (geometry != null) {
-            mPlacemark = new KmlPlacemark(geometry, style, properties);
+            mPlacemark = new KmlPlacemark(geometry, styleId, inlineStyle, properties);
         }
     }
 

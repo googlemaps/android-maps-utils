@@ -368,8 +368,8 @@ public class KmlLayer {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             KmlStyle placemarkStyle = mStyles.get(placemark.getStyleID());
             // Check if the style URL is the same and the type of geometry is a point
-            if (placemarkStyle != null && placemarkStyle.getIconUrl().equals(iconUrl)
-                    && placemark.getGeometry().getKmlGeometryType().equals("Point")) {
+            if (placemarkStyle != null && iconUrl.equals(placemarkStyle.getIconUrl())
+                    && "Point".equals(placemark.getGeometry().getKmlGeometryType())) {
                 Bitmap iconBitmap = mMarkerIconCache.get(iconUrl);
                 Double scale = placemarkStyle.getIconScale();
                 ((Marker) mPlacemarks.get(placemark))

@@ -14,6 +14,8 @@ public class KmlPlacemark {
 
     private final String mStyle;
 
+    private final KmlStyle mInlineStyle;
+
     private HashMap<String, String> mProperties;
 
     /**
@@ -23,10 +25,11 @@ public class KmlPlacemark {
      * @param style      style id to store
      * @param properties properties hashmap to store
      */
-    public KmlPlacemark(KmlGeometry geometry, String style, HashMap<String, String> properties) {
+    public KmlPlacemark(KmlGeometry geometry, String style, KmlStyle inlineStyle, HashMap<String, String> properties) {
         mProperties = new HashMap<String, String>();
         mGeometry = geometry;
         mStyle = style;
+        mInlineStyle = inlineStyle;
         mProperties = properties;
     }
 
@@ -37,6 +40,10 @@ public class KmlPlacemark {
      */
     public String getStyleID() {
         return mStyle;
+    }
+
+    public KmlStyle getInlineStyle() {
+        return mInlineStyle;
     }
 
     /**
@@ -74,9 +81,10 @@ public class KmlPlacemark {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Placemark").append("{");
-        sb.append("\n geometry=").append(mGeometry);
-        sb.append(",\n style=").append(mStyle);
+        sb.append("\n style id=").append(mStyle);
+        sb.append(",\n inline style=").append(mInlineStyle);
         sb.append(",\n properties=").append(mProperties);
+        sb.append(",\n geometry=").append(mGeometry);
         sb.append("\n}\n");
         return sb.toString();
     }

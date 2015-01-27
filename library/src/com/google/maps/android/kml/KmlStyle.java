@@ -278,7 +278,12 @@ public class KmlStyle {
      * @return new MarkerOptions
      */
     public MarkerOptions getMarkerOptions() {
-        return mMarkerOptions;
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.rotation(mMarkerOptions.getRotation());
+        markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
+
+        markerOptions.icon(mMarkerOptions.getIcon());
+        return markerOptions;
     }
 
     /**
@@ -287,7 +292,10 @@ public class KmlStyle {
      * @return new PolylineOptions
      */
     public PolylineOptions getPolylineOptions() {
-        return mPolylineOptions;
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.color(mPolylineOptions.getColor());
+        polylineOptions.width(mPolylineOptions.getWidth());
+        return polylineOptions;
     }
 
     /**
@@ -296,7 +304,15 @@ public class KmlStyle {
      * @return new PolygonOptions
      */
     public PolygonOptions getPolygonOptions() {
-        return mPolygonOptions;
+        PolygonOptions polygonOptions = new PolygonOptions();
+        if (mFill) {
+            polygonOptions.fillColor(mPolygonOptions.getFillColor());
+        }
+        if (mOutline) {
+            polygonOptions.strokeColor(mPolygonOptions.getStrokeColor());
+            polygonOptions.strokeWidth(mPolygonOptions.getStrokeWidth());
+        }
+        return polygonOptions;
     }
 
     @Override
