@@ -22,6 +22,8 @@ public class KmlStyle {
 
     private final static int HUE_VALUE = 0;
 
+    private final static int INITIAL_SCALE = 1;
+
     private final MarkerOptions mMarkerOptions;
 
     private final PolylineOptions mPolylineOptions;
@@ -52,7 +54,16 @@ public class KmlStyle {
         mPolygonOptions = new PolygonOptions();
         mBalloonOptions = new HashMap<String, String>();
         mColorModeOptions = new HashMap<String, Integer>();
-        mScale = 1.0;
+        mScale = INITIAL_SCALE;
+    }
+
+    /**
+     * Sets the text for the info window; no other ballonstyles are supported
+     *
+     * @param text text to put in an info window
+     */
+    public void setInfoWindowText(String text) {
+        mBalloonOptions.put("text", text);
     }
 
     /**
@@ -74,7 +85,7 @@ public class KmlStyle {
      *
      * @return true if there is a fill, false if no fill
      */
-    public boolean isFill() {
+    public boolean hasFill() {
         return mFill;
     }
 
@@ -85,6 +96,71 @@ public class KmlStyle {
      */
     public void setFill(boolean fill) {
         mFill = fill;
+    }
+
+    /**
+     * Gets the icon scale
+     *
+     * @return scale value
+     */
+    public double getIconScale() {
+        return mScale;
+    }
+
+    /**
+     * Sets the icon scale
+     *
+     * @param scale scale value
+     */
+    public void setIconScale(double scale) {
+        mScale = scale;
+    }
+
+    /**
+     * Gets whether the Polygon has an outline
+     *
+     * @return true if Polygon has an outline, false if no outline
+     */
+    public boolean hasOutline() {
+        return mOutline;
+    }
+
+    /**
+     * Sets whether the Polygon will have an outline
+     *
+     * @param outline true if there is an outline, false if no outline
+     */
+    public void setOutline(boolean outline) {
+        mOutline = outline;
+    }
+
+    /**
+     * Gets the icon url
+     *
+     * @return icon url
+     */
+    public String getIconUrl() {
+        return mIconUrl;
+    }
+
+    /**
+     * Gets the color mode
+     *
+     * @param geometryType type of geometry which has a color mode
+     * @return color mode, 1 for random, 0 or normal
+     */
+    public int getColorMode(String geometryType) {
+        return mColorModeOptions.get(geometryType);
+    }
+
+    /**
+     * Determines if the geometry has a random color mode
+     *
+     * @param geometryType geometry type which colormode is applied to
+     * @return boolean value, true if the geometry has a colormode, false otherwise
+     */
+    public boolean hasColorMode(String geometryType) {
+        return mColorModeOptions.containsKey(geometryType);
     }
 
     /**
@@ -122,8 +198,6 @@ public class KmlStyle {
         mMarkerOptions.rotation(heading);
     }
 
-    // TODO support pixel and inset for custom marker images
-
     /**
      * Sets the hotspot for Points. This is also known as anchor point.
      *
@@ -133,7 +207,6 @@ public class KmlStyle {
      * @param yUnits units in which the y value is specified
      */
     public void setHotSpot(float x, float y, String xUnits, String yUnits) {
-        // TODO(lavenderch): improve support for this, ignore default marker
         float xAnchor = 0.5f;
         float yAnchor = 1.0f;
         // Set x coordinate
@@ -145,15 +218,6 @@ public class KmlStyle {
         }
 
         mMarkerOptions.anchor(xAnchor, yAnchor);
-    }
-
-    /**
-     * Gets the icon url
-     *
-     * @return icon url
-     */
-    public String getIconUrl() {
-        return mIconUrl;
     }
 
     /**
@@ -170,33 +234,6 @@ public class KmlStyle {
     }
 
     /**
-     * Gets the icon scale
-     *
-     * @return scale value
-     */
-    public double getIconScale() {
-        return mScale;
-    }
-
-    /**
-     * Sets the icon scale
-     *
-     * @param scale scale value
-     */
-    public void setIconScale(double scale) {
-        mScale = scale;
-    }
-
-    /**
-     * Sets the text for the info window; no other ballonstyles are supported
-     *
-     * @param text text to put in an info window
-     */
-    public void setInfoWindow(String text) {
-        mBalloonOptions.put("text", text);
-    }
-
-    /**
      * Sets the color mode; either random or normal
      *
      * @param geometryType    geometry type which colormode is applied to
@@ -208,44 +245,6 @@ public class KmlStyle {
         } else {
             mColorModeOptions.put(geometryType, RANDOM_COLOR_MODE);
         }
-    }
-
-    /**
-     * Gets the color mode
-     *
-     * @param geometryType type of geometry which has a color mode
-     * @return color mode, 1 for random, 0 or normal
-     */
-    public int getColorMode(String geometryType) {
-        return mColorModeOptions.get(geometryType);
-    }
-
-    /**
-     * Determines if the geometry has a random color mode
-     *
-     * @param geometryType geometry type which colormode is applied to
-     * @return boolean value, true if the geometry has a colormode, false otherwise
-     */
-    public boolean hasColorMode(String geometryType) {
-        return mColorModeOptions.containsKey(geometryType);
-    }
-
-    /**
-     * Gets whether the Polygon has an outline
-     *
-     * @return true if Polygon has an outline, false if no outline
-     */
-    public boolean isOutline() {
-        return mOutline;
-    }
-
-    /**
-     * Sets whether the Polygon will have an outline
-     *
-     * @param outline true if there is an outline, false if no outline
-     */
-    public void setOutline(boolean outline) {
-        mOutline = outline;
     }
 
     /**
@@ -269,20 +268,17 @@ public class KmlStyle {
         mPolygonOptions.strokeWidth(width);
     }
 
+    public HashMap<String, String> getBalloonOptions() {
+        return mBalloonOptions;
+    }
+
     /**
      * Creates a new MarkerOptions object
      *
      * @return new MarkerOptions
      */
     public MarkerOptions getMarkerOptions() {
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.rotation(mMarkerOptions.getRotation());
-        markerOptions.icon(mMarkerOptions.getIcon());
-        return markerOptions;
-    }
-
-    public HashMap<String, String> getBalloonOptions() {
-        return mBalloonOptions;
+        return mMarkerOptions;
     }
 
     /**
@@ -291,10 +287,7 @@ public class KmlStyle {
      * @return new PolylineOptions
      */
     public PolylineOptions getPolylineOptions() {
-        PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.color(mPolylineOptions.getColor());
-        polylineOptions.width(mPolylineOptions.getWidth());
-        return polylineOptions;
+        return mPolylineOptions;
     }
 
     /**
@@ -303,15 +296,7 @@ public class KmlStyle {
      * @return new PolygonOptions
      */
     public PolygonOptions getPolygonOptions() {
-        PolygonOptions polygonOptions = new PolygonOptions();
-        if (mFill) {
-            polygonOptions.fillColor(mPolygonOptions.getFillColor());
-        }
-        if (mOutline) {
-            polygonOptions.strokeColor(mPolygonOptions.getStrokeColor());
-            polygonOptions.strokeWidth(mPolygonOptions.getStrokeWidth());
-        }
-        return polygonOptions;
+        return mPolygonOptions;
     }
 
     @Override

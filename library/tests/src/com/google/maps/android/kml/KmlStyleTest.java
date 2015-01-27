@@ -22,9 +22,9 @@ public class KmlStyleTest extends TestCase {
     public void testFill() throws Exception {
         KmlStyle kmlStyle = new KmlStyle();
         kmlStyle.setFill(true);
-        assertTrue(kmlStyle.isFill());
+        assertTrue(kmlStyle.hasFill());
         kmlStyle.setFill(false);
-        assertFalse(kmlStyle.isFill());
+        assertFalse(kmlStyle.hasFill());
     }
 
     public void testFillColor() throws Exception {
@@ -67,6 +67,19 @@ public class KmlStyleTest extends TestCase {
         kmlStyle.setOutlineColor("FFFFFF");
         assertEquals(Color.WHITE, kmlStyle.getPolylineOptions().getColor());
         assertEquals(Color.WHITE, kmlStyle.getPolygonOptions().getStrokeColor());
+    }
+
+
+   public void testIcon() {
+
+
+   }
+
+    public void testMarkerColor() {
+        KmlStyle kmlStyle = new KmlStyle();
+        assertNotNull(kmlStyle);
+        assertNotNull(kmlStyle.getMarkerOptions());
+        kmlStyle.setMarkerColor("FFFFFF");
     }
 
 

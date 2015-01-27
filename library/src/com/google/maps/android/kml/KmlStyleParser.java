@@ -143,7 +143,7 @@ import java.util.HashMap;
         int eventType = mParser.getEventType();
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("BalloonStyle"))) {
             if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("text")) {
-                style.setInfoWindow(mParser.nextText());
+                style.setInfoWindowText(mParser.nextText());
             }
             eventType = mParser.next();
         }
