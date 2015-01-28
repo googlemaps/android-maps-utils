@@ -1,5 +1,7 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.GroundOverlay;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -59,19 +61,20 @@ import java.io.IOException;
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(startTag))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    createContainerObject(kmlFolder);
+                    setNestedContainerObject(kmlFolder);
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
                     setContainerProperty(kmlFolder);
                 } else if (mParser.getName().equals(STYLE_MAP)) {
-                    createContainerStyleMap(kmlFolder);
+                    setContainerStyleMap(kmlFolder);
                 } else if (mParser.getName().equals(STYLE)) {
-                    createContainerStyle(kmlFolder);
+                    setContainerStyle(kmlFolder);
                 } else if (mParser.getName().equals(PLACEMARK)) {
-                    createContainerPlacemark(kmlFolder);
+                    setContainerPlacemark(kmlFolder);
                 } else if (mParser.getName().equals(EXTENDED_DATA)) {
                     setExtendedDataProperties(kmlFolder);
                 } else if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    addGroundOverlay(kmlFolder);
+                    KmlGroundOverlay kmlGroundOverlay = mFeatureParser.createGroundOverlay();
+                    kmlFolder.addGroundOverlay(kmlGroundOverlay);
                 }
             }
             eventType = mParser.next();
@@ -83,7 +86,7 @@ import java.io.IOException;
      *
      * @param kmlFolder Stores new container object
      */
-    /* package */ void createContainerObject(KmlContainer kmlFolder)
+    /* package */ void setNestedContainerObject(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlContainer container = new KmlContainer();
         assignFolderProperties(container);
@@ -95,7 +98,7 @@ import java.io.IOException;
      *
      * @param kmlFolder Stores hash map
      */
-    /* package */ void createContainerStyleMap(KmlContainer kmlFolder)
+    /* package */ void setContainerStyleMap(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyleMap();
@@ -119,7 +122,7 @@ import java.io.IOException;
      *
      * @param kmlContainer folder to add properties to
      */
-    /* package */ void setExtendedDataProperties(KmlContainer kmlContainer)
+        /* package */ void setExtendedDataProperties(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         String propertyKey = null;
         int eventType = mParser.getEventType();
@@ -136,17 +139,12 @@ import java.io.IOException;
         }
     }
 
-    /* package */ void addGroundOverlay(KmlContainer kmlContainer)
-            throws IOException, XmlPullParserException {
-        kmlContainer.addGroundOverlay(mFeatureParser.createGroundOverlay());
-    }
-
     /**
      * Creates a new kml style
      *
      * @param kmlContainer stores the new kml style
      */
-    /* package */ void createContainerStyle(KmlContainer kmlContainer)
+    /* package */ void setContainerStyle(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyle();
@@ -158,7 +156,7 @@ import java.io.IOException;
      *
      * @param kmlContainer folder to store basic_placemark
      */
-    /* package */ void createContainerPlacemark(KmlContainer kmlContainer)
+    /* package */ void setContainerPlacemark(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         mFeatureParser.createPlacemark();
         if (mFeatureParser.getPlacemark() != null) {

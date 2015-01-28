@@ -42,6 +42,12 @@ public class KmlContainerParserTest extends ActivityTestCase {
         parser.assignFolderProperties(kmlContainer);
         assertTrue(kmlContainer.hasKmlPlacemarks());
         assertEquals(kmlContainer.getPlacemarks().size(), 1);
+        parser = new KmlContainerParser(createParser(R.raw.multiple_placemarks));
+        kmlContainer = new KmlContainer();
+        parser.assignFolderProperties(kmlContainer);
+        assertTrue(kmlContainer.hasKmlPlacemarks());
+        assertEquals(kmlContainer.getPlacemarks().size(), 2);
+
     }
 
     public void testCreateContainerGroundOverlay() throws Exception {
@@ -62,6 +68,7 @@ public class KmlContainerParserTest extends ActivityTestCase {
         }
         assertEquals(numberOfNestedContainers, 2);
     }
+
 
 
 }

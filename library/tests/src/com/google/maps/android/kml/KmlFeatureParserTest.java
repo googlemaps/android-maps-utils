@@ -36,7 +36,7 @@ public class KmlFeatureParserTest extends ActivityTestCase {
     }
 
     public void testMultiGeometry() throws Exception {
-        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemark));
+        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemarks));
         parser.createPlacemark();
         assertNotNull(parser.getPlacemark());
         assertEquals(parser.getPlacemark().getGeometry().getKmlGeometryType(), "MultiGeometry");
@@ -45,11 +45,12 @@ public class KmlFeatureParserTest extends ActivityTestCase {
     }
 
     public void testProperties() throws Exception {
-        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemark));
+        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemarks));
         parser.createPlacemark();
         assertTrue(parser.getPlacemark().hasProperties());
         assertEquals(parser.getPlacemark().getProperty("name"), "Placemark Test");
         assertNull(parser.getPlacemark().getProperty("description"));
     }
+
 
 }

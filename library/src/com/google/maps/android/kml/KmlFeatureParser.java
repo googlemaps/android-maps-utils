@@ -229,6 +229,7 @@ import java.util.HashMap;
         ArrayList<LatLng> outerBoundaryCoordinates = new ArrayList<LatLng>();
         ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates = new ArrayList<ArrayList<LatLng>>();
         int eventType = mParser.getEventType();
+
         while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Polygon"))) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(BOUNDARY_REGEX)) {

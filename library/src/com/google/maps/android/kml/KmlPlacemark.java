@@ -44,7 +44,7 @@ public class KmlPlacemark {
 
     /**
      * Gets the inline style that was found
-     * @return  InlineStyle or null if not found 
+     * @return  InlineStyle or null if not found
      */
     public KmlStyle getInlineStyle() {
         return mInlineStyle;
