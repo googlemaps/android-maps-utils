@@ -76,7 +76,7 @@ import java.util.Set;
      * @param color Integer value representing a color
      * @return Integer representing a random color
      */
-    private static int computeRandomColor(int color) {
+    public static int computeRandomColor(int color) {
         Random random = new Random();
         int red = Color.red(color);
         int green = Color.green(color);
@@ -530,6 +530,9 @@ import java.util.Set;
             if (inlineStyle.isStyleSet("markerColor")) {
                 markerOptions.icon(inlineMarkerOptions.getIcon());
             }
+            if (inlineStyle.isIconRandomColorMode()) {
+                System.out.println("H");
+            }
         }
 
         Marker marker = mMap.addMarker(markerOptions);
@@ -544,6 +547,7 @@ import java.util.Set;
             // Sets an icon image if there is a url for it
             addMarkerIcons(style, marker);
         }
+
         return marker;
     }
 

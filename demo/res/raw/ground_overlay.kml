@@ -19,19 +19,15 @@
           </Point>
        </Placemark>
        <Folder>
-           <Style>
-              <IconStyle>
-                 <color>ff00ff00</color>
-                 <colorMode>random</colorMode>
-                 <scale>1.1</scale>
-                 <Icon>
-                    <href>http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/4/11/1397210130748/Spring-Lamb.-Image-shot-2-011.jpg</href>
-                 </Icon>
-              </IconStyle>
-           </Style>
            <Placemark>
+              <Style>
+                 <IconStyle>
+                    <color>ff00ff00</color>
+                    <colorMode>random</colorMode>
+                    <scale>1.1</scale>
+                 </IconStyle>
+              </Style>
               <name>IconStyle.kml</name>
-
               <Point>
                  <coordinates>40,40,0</coordinates>
               </Point>

@@ -47,6 +47,9 @@ public class KmlStyle {
 
     private boolean mPolyRandomColorMode;
 
+    private int mMarkerColor;
+
+
     /**
      * Creates a new Style object
      */
@@ -58,6 +61,7 @@ public class KmlStyle {
         mBalloonOptions = new HashMap<String, String>();
         mStylesSet = new HashSet<String>();
         mScale = INITIAL_SCALE;
+        mMarkerColor = Color.parseColor("#ffffff");
         mIconRandomColorMode = false;
         mLineRandomColorMode = false;
         mPolyRandomColorMode = false;
@@ -192,10 +196,11 @@ public class KmlStyle {
      * @param stringColor string of color to set
      */
     public void setMarkerColor(String stringColor) {
-        // TODO: implement random colorMode
+
         float[] hsvValues = new float[HSV_VALUES];
         // make hexadecimal representation
         int integerColor = Color.parseColor("#" + stringColor);
+        mMarkerColor = integerColor;
         // make hexadecimal representation into hsv values, store in array
         Color.colorToHSV(integerColor, hsvValues);
         // first element is the hue value
@@ -300,7 +305,19 @@ public class KmlStyle {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.rotation(mMarkerOptions.getRotation());
         markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
+        if (isIconRandomColorMode()) {
+            int randomColor = KmlRenderer.computeRandomColor(mMarkerColor);
+            float[] hsvValues = new float[HSV_VALUES];
+            // make hexadecimal representation
+            mMarkerColor = randomColor;
+            // make hexadecimal representation into hsv values, store in array
+            Color.colorToHSV(randomColor, hsvValues);
+            // first element is the hue value
+            float hue = hsvValues[HUE_VALUE];
+            mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(hue));
+        }
         markerOptions.icon(mMarkerOptions.getIcon());
+
         return markerOptions;
     }
 
