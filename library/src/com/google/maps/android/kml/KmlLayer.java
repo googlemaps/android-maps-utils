@@ -70,8 +70,9 @@ public class KmlLayer {
     public void addKmlData() throws IOException, XmlPullParserException {
         KmlParser parser = new KmlParser(mParser);
         parser.parseKml();
-        mRenderer.addKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+        mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
                 parser.getFolders(), parser.getGroundOverlays());
+        mRenderer.addKmlData();
         // TODO: rethink this method, do we need to reparse?
     }
 

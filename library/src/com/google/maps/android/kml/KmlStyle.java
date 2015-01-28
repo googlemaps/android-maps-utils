@@ -147,6 +147,12 @@ public class KmlStyle {
     }
 
     /**
+     * Gets whether the style has balloonstyle properties
+     * @return  true if this style has balloonstyle properties, false otherwise
+     */
+    public boolean hasBalloonStyle() { return mBalloonOptions.size() > 0;}
+
+    /**
      * Sets whether the Polygon will have an outline
      *
      * @param outline true if there is an outline, false if no outline
@@ -306,10 +312,9 @@ public class KmlStyle {
         markerOptions.rotation(mMarkerOptions.getRotation());
         markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
         if (isIconRandomColorMode()) {
+            System.out.println(mMarkerColor);
             int randomColor = KmlRenderer.computeRandomColor(mMarkerColor);
             float[] hsvValues = new float[HSV_VALUES];
-            // make hexadecimal representation
-            mMarkerColor = randomColor;
             // make hexadecimal representation into hsv values, store in array
             Color.colorToHSV(randomColor, hsvValues);
             // first element is the hue value
