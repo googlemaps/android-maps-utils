@@ -42,6 +42,10 @@ public class KmlPlacemark {
         return mStyle;
     }
 
+    /**
+     * Gets the inline style that was found
+     * @return  InlineStyle or null if not found 
+     */
     public KmlStyle getInlineStyle() {
         return mInlineStyle;
     }
@@ -55,6 +59,11 @@ public class KmlPlacemark {
         return mProperties.entrySet();
     }
 
+    /**
+     * Gets the property based on property name
+     * @param keyValue  Property name to retrieve value
+     * @return  property value, null if not found
+     */
     public String getProperty(String keyValue) {
         return mProperties.get(keyValue);
     }

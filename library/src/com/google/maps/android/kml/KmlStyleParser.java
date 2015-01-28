@@ -102,7 +102,7 @@ import java.util.HashMap;
                 } else if (mParser.getName().equals(ICON_STYLE_SCALE)) {
                     style.setIconScale(Double.parseDouble(mParser.nextText()));
                 } else if (mParser.getName().equals(COLOR_STYLE_COLOR)) {
-                    setIconColor(style);
+                    style.setMarkerColor(mParser.nextText());
                 } else if (mParser.getName().equals(COLOR_STYLE_MODE)) {
                     style.setColorMode("Point", mParser.nextText());
                 }
@@ -181,16 +181,6 @@ import java.util.HashMap;
         xUnits = mParser.getAttributeValue(null, "xunits");
         yUnits = mParser.getAttributeValue(null, "yunits");
         style.setHotSpot(xValue, yValue, xUnits, yUnits);
-    }
-
-    /**
-     * Sets the marker color
-     *
-     * @param style Style to store the color of the marker
-     */
-    private void setIconColor(KmlStyle style) throws XmlPullParserException, IOException {
-        String colorString = mParser.nextText();
-        style.setMarkerColor(colorString);
     }
 
     /**

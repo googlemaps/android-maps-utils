@@ -151,7 +151,6 @@ import java.io.IOException;
         KmlStyleParser styleParser = new KmlStyleParser(mParser);
         styleParser.createStyle();
         kmlContainer.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
-
     }
 
     /**

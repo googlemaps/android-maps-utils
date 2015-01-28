@@ -10,6 +10,7 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -18,7 +19,6 @@ public class KmlLayer {
     private final KmlRenderer mRenderer;
 
     private XmlPullParser mParser;
-
     /**
      * Creates a new KmlLayer object
      *
@@ -54,7 +54,8 @@ public class KmlLayer {
     public void addKmlData() throws IOException, XmlPullParserException {
         KmlParser parser = new KmlParser(mParser);
         parser.parseKml();
-        mRenderer.addKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(), parser.getFolders(), parser.getGroundOverlays());
+        mRenderer.addKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+                parser.getFolders(), parser.getGroundOverlays());
         // TODO: rethink this method, do we need to reparse?
     }
 
