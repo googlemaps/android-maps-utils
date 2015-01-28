@@ -35,8 +35,6 @@ import java.util.Set;
  */
 /* package */ class KmlRenderer {
 
-    private static final int RANDOM_COLOR_MODE = 1;
-
     private static final int LRU_CACHE_SIZE = 50;
 
     private final LruCache<String, Bitmap> mImagesCache;
@@ -354,7 +352,7 @@ import java.util.Set;
      * @return Visibility of the container
      */
 
-    private Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
+    /*package*/ static Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
             isParentContainerVisible) {
         Boolean isChildContainerVisible = true;
         if (kmlContainer.hasKmlProperty("visibility")) {
@@ -526,38 +524,40 @@ import java.util.Set;
      * @param style contains relevant styling properties for the Marker
      * @return Marker object
      */
-    private Marker addPointToMap(KmlPoint point, KmlStyle style, KmlStyle inlineStyle) {
-        MarkerOptions markerOptions = style.getMarkerOptions();
-        markerOptions.position(point.getKmlGeometryObject());
-        if (inlineStyle != null) {
-            setInlinePointStyle(markerOptions, inlineStyle);
+    private Marker addPointToMap(KmlPoint point, KmlStyle style, KmlStyle markerInlineStyle) {
+        MarkerOptions markerUrlStyle = style.getMarkerOptions();
+        markerUrlStyle.position(point.getKmlGeometryObject());
+        if (markerInlineStyle != null) {
+            setInlinePointStyle(markerUrlStyle, markerInlineStyle);
         }
-        Marker marker = mMap.addMarker(markerOptions);
+        Marker marker = mMap.addMarker(markerUrlStyle);
         // If there exists style options for a balloonStyle
-        if (style.hasBalloonStyle()) {
+        if (style.getBalloonOptions().size() > 0) {
             // Set info window if balloonStyle is set
             setMarkerInfoWindow(style, marker, mPlacemarks.keySet());
             setContainerMarkerInfoWindow(style, marker, mContainers);
         }
+
         if (style.getIconUrl() != null) {
             // Sets an icon image if there is a url for it
             addMarkerIcons(style, marker);
         }
+
         return marker;
     }
 
-    private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle) {
+    private void setInlinePointStyle(MarkerOptions markerUrlStyle, KmlStyle inlineStyle) {
         // TODO: icon scale, icon URL
         MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
         if (inlineStyle.isStyleSet("heading")) {
-            markerOptions.rotation(inlineMarkerOptions.getRotation());
+            markerUrlStyle.rotation(inlineMarkerOptions.getRotation());
         }
         if (inlineStyle.isStyleSet("hotSpot")) {
-            markerOptions
+            markerUrlStyle
                     .anchor(inlineMarkerOptions.getAnchorU(), inlineMarkerOptions.getAnchorV());
         }
         if (inlineStyle.isStyleSet("markerColor")) {
-            markerOptions.icon(inlineMarkerOptions.getIcon());
+            markerUrlStyle.icon(inlineMarkerOptions.getIcon());
         }
     }
 
@@ -614,21 +614,21 @@ import java.util.Set;
         return mMap.addPolygon(polygonOptions);
     }
 
-    private void setInlinePolygonStyle(PolygonOptions polygonOptions, KmlStyle inlineStyle) {
+    private void setInlinePolygonStyle(PolygonOptions polygonUrlStyle, KmlStyle inlineStyle) {
         PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
         if (inlineStyle.hasFill() && inlineStyle.isStyleSet("fillColor")) {
-            polygonOptions.fillColor(inlinePolygonOptions.getFillColor());
+            polygonUrlStyle.fillColor(inlinePolygonOptions.getFillColor());
         }
         if (inlineStyle.hasOutline()) {
             if (inlineStyle.isStyleSet("outlineColor")) {
-                polygonOptions.strokeColor(inlinePolygonOptions.getStrokeColor());
+                polygonUrlStyle.strokeColor(inlinePolygonOptions.getStrokeColor());
             }
             if (inlineStyle.isStyleSet("width")) {
-                polygonOptions.strokeWidth(inlinePolygonOptions.getStrokeWidth());
+                polygonUrlStyle.strokeWidth(inlinePolygonOptions.getStrokeWidth());
             }
         }
         if (inlineStyle.isPolyRandomColorMode()) {
-            polygonOptions.fillColor(computeRandomColor(inlinePolygonOptions.getFillColor()));
+            polygonUrlStyle.fillColor(computeRandomColor(inlinePolygonOptions.getFillColor()));
         }
     }
 
