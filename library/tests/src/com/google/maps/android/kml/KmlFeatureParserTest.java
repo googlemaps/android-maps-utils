@@ -46,10 +46,16 @@ public class KmlFeatureParserTest extends ActivityTestCase {
 
     public void testProperties() throws Exception {
         KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemarks));
-        parser.createPlacemark();
+        parser.createPlacemark();s
         assertTrue(parser.getPlacemark().hasProperties());
         assertEquals(parser.getPlacemark().getProperty("name"), "Placemark Test");
         assertNull(parser.getPlacemark().getProperty("description"));
+    }
+
+    public void testExtendedData() throws Exception {
+        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multiple_placemarks));
+        parser.createPlacemark();
+        assertNotNull(parser.getPlacemark().getProperty("holeNumber"));
     }
 
 
