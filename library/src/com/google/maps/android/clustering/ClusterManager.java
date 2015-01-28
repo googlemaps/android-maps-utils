@@ -11,6 +11,7 @@ import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
+import com.google.maps.android.clustering.algo.VisibleAlgorithm;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
@@ -43,6 +44,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
     private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
+    private boolean mShowOnlyVisibleArea;
 
     public ClusterManager(Context context, GoogleMap map) {
         this(context, map, new MarkerManager(map));
@@ -92,11 +94,23 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             if (mAlgorithm != null) {
                 algorithm.addItems(mAlgorithm.getItems());
             }
-            mAlgorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
+
+            if (algorithm instanceof VisibleAlgorithm) {
+                ((VisibleAlgorithm) algorithm).setVisibleRegion(mMap.getProjection().getVisibleRegion());
+                mAlgorithm = algorithm;
+            } else {
+                algorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
+            }
+
+            mAlgorithm = algorithm;
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
         cluster();
+    }
+
+    public void setClusterOnlyVisibleArea(boolean onlyVisibleArea) {
+        mShowOnlyVisibleArea = onlyVisibleArea;
     }
 
     public void clearItems() {
@@ -166,12 +180,17 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             ((GoogleMap.OnCameraChangeListener) mRenderer).onCameraChange(cameraPosition);
         }
 
-        // Don't re-compute clusters if the map has just been panned/tilted/rotated.
-        CameraPosition position = mMap.getCameraPosition();
-        if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
-            return;
+        if (mShowOnlyVisibleArea && mAlgorithm instanceof VisibleAlgorithm) {
+            // compute every move to show side elements
+            ((VisibleAlgorithm) mAlgorithm).setVisibleRegion(mMap.getProjection().getVisibleRegion());
+        } else {
+            // Don't re-compute clusters if the map has just been panned/tilted/rotated.
+            CameraPosition position = mMap.getCameraPosition();
+            if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
+                return;
+            }
+            mPreviousCameraPosition = mMap.getCameraPosition();
         }
-        mPreviousCameraPosition = mMap.getCameraPosition();
 
         cluster();
     }
