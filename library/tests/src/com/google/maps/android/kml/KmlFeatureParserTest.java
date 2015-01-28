@@ -34,4 +34,19 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         assertEquals(polygon.getInnerBoundaryCoordinates().size(), 2);
         assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
     }
+
+    public void testMultiGeometry() throws Exception {
+        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemark));
+        parser.createPlacemark();
+        assertNotNull(parser.getPlacemark());
+        assertEquals(parser.getPlacemark().getGeometry().getKmlGeometryType(), "MultiGeometry");
+        KmlMultiGeometry multiGeometry = ((KmlMultiGeometry)parser.getPlacemark().getGeometry());
+        assertEquals(multiGeometry.getKmlGeometryObject().size(), 3);
+    }
+
+    public void testProperties() throws Exception {
+        KmlFeatureParser parser = new KmlFeatureParser(createParser(R.raw.multigeometry_placemark));
+        parser.createPlacemark();
+
+    }
 }
