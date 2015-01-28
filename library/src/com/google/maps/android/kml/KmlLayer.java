@@ -10,15 +10,16 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
 public class KmlLayer {
+
     private final KmlRenderer mRenderer;
 
     private XmlPullParser mParser;
+
     /**
      * Creates a new KmlLayer object
      *
@@ -46,20 +47,6 @@ public class KmlLayer {
     }
 
     /**
-     * Adds the KML data to the map
-     *
-     * @throws XmlPullParserException if KML file cannot be parsed
-     * @throws IOException            if KML file cannot be opened
-     */
-    public void addKmlData() throws IOException, XmlPullParserException {
-        KmlParser parser = new KmlParser(mParser);
-        parser.parseKml();
-        mRenderer.addKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
-                parser.getFolders(), parser.getGroundOverlays());
-        // TODO: rethink this method, do we need to reparse?
-    }
-
-    /**
      * Creates a new XmlPullParser to allow for the KML file to be parsed
      *
      * @param stream InputStream containing KML file
@@ -72,6 +59,20 @@ public class KmlLayer {
         XmlPullParser parser = factory.newPullParser();
         parser.setInput(stream, null);
         return parser;
+    }
+
+    /**
+     * Adds the KML data to the map
+     *
+     * @throws XmlPullParserException if KML file cannot be parsed
+     * @throws IOException            if KML file cannot be opened
+     */
+    public void addKmlData() throws IOException, XmlPullParserException {
+        KmlParser parser = new KmlParser(mParser);
+        parser.parseKml();
+        mRenderer.addKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+                parser.getFolders(), parser.getGroundOverlays());
+        // TODO: rethink this method, do we need to reparse?
     }
 
     /**

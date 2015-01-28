@@ -3,7 +3,8 @@ package com.google.maps.android.kml;
 import java.util.HashMap;
 
 /**
- * Represents a basic_placemark which is either a {@link com.google.maps.android.kml.KmlPoint}, {@link
+ * Represents a basic_placemark which is either a {@link com.google.maps.android.kml.KmlPoint},
+ * {@link
  * com.google.maps.android.kml.KmlLineString}, {@link com.google.maps.android.kml.KmlPolygon} or a
  * {@link com.google.maps.android.kml.KmlMultiGeometry}. Stores the properties and styles of the
  * basic_placemark.
@@ -25,7 +26,8 @@ public class KmlPlacemark {
      * @param style      style id to store
      * @param properties properties hashmap to store
      */
-    public KmlPlacemark(KmlGeometry geometry, String style, KmlStyle inlineStyle, HashMap<String, String> properties) {
+    public KmlPlacemark(KmlGeometry geometry, String style, KmlStyle inlineStyle,
+            HashMap<String, String> properties) {
         mProperties = new HashMap<String, String>();
         mGeometry = geometry;
         mStyle = style;
@@ -44,7 +46,8 @@ public class KmlPlacemark {
 
     /**
      * Gets the inline style that was found
-     * @return  InlineStyle or null if not found
+     *
+     * @return InlineStyle or null if not found
      */
     public KmlStyle getInlineStyle() {
         return mInlineStyle;
@@ -61,8 +64,9 @@ public class KmlPlacemark {
 
     /**
      * Gets the property based on property name
-     * @param keyValue  Property name to retrieve value
-     * @return  property value, null if not found
+     *
+     * @param keyValue Property name to retrieve value
+     * @return property value, null if not found
      */
     public String getProperty(String keyValue) {
         return mProperties.get(keyValue);

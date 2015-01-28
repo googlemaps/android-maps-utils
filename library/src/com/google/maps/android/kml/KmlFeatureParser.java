@@ -41,7 +41,8 @@ import java.util.HashMap;
     }
 
     /**
-     * Creates a KmlPlacemark object for each basic_placemark detected if they contain a geometry. Also
+     * Creates a KmlPlacemark object for each basic_placemark detected if they contain a geometry.
+     * Also
      * stores styles and properties for the given basic_placemark.
      */
     /* package */ void createPlacemark() throws IOException, XmlPullParserException {
@@ -295,11 +296,11 @@ import java.util.HashMap;
 
     /**
      * Given a set of four latLng coordinates, creates a LatLng Bound
+     *
      * @param north North coordinate of the bounding box
      * @param south South coordinate of the bounding box
      * @param east  East coordinate of the bounding box
      * @param west  West coordinate of the bounding box
-     * @return
      */
     private LatLngBounds createLatLngBounds(Double north, Double south, Double east, Double west) {
         LatLng southWest = new LatLng(south, west);

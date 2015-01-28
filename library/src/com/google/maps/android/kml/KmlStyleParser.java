@@ -104,7 +104,7 @@ import java.util.HashMap;
                 } else if (mParser.getName().equals(COLOR_STYLE_COLOR)) {
                     style.setMarkerColor(mParser.nextText());
                 } else if (mParser.getName().equals(COLOR_STYLE_MODE)) {
-                    style.setColorMode("Point", mParser.nextText());
+                    style.setIconColorMode(mParser.nextText());
                 }
             }
             eventType = mParser.next();
@@ -198,7 +198,7 @@ import java.util.HashMap;
                 } else if (mParser.getName().equals(LINE_STYLE_WIDTH)) {
                     style.setWidth(Float.valueOf(mParser.nextText()));
                 } else if (mParser.getName().equals(COLOR_STYLE_MODE)) {
-                    style.setColorMode("LineString", mParser.nextText());
+                    style.setLineColorMode(mParser.nextText());
                 }
             }
             eventType = mParser.next();
@@ -223,7 +223,7 @@ import java.util.HashMap;
                 } else if (mParser.getName().equals(POLY_STYLE_FILL)) {
                     style.setFill(Boolean.parseBoolean(mParser.nextText()));
                 } else if (mParser.getName().equals(COLOR_STYLE_MODE)) {
-                    style.setColorMode("Polygon", mParser.nextText());
+                    style.setPolyColorMode(mParser.nextText());
                 }
             }
             eventType = mParser.next();

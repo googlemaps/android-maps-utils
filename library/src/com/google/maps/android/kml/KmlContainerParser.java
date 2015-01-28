@@ -1,7 +1,5 @@
 package com.google.maps.android.kml;
 
-import com.google.android.gms.maps.model.GroundOverlay;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -146,9 +144,12 @@ import java.io.IOException;
      */
     /* package */ void setContainerStyle(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
-        KmlStyleParser styleParser = new KmlStyleParser(mParser);
-        styleParser.createStyle();
-        kmlContainer.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+        if (mParser.getAttributeValue(null, "id") != null) {
+            // Don't parse inline styles
+            KmlStyleParser styleParser = new KmlStyleParser(mParser);
+            styleParser.createStyle();
+            kmlContainer.setStyle(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+        }
     }
 
     /**

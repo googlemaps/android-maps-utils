@@ -29,12 +29,11 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * Renders KmlPlacemark, KmlContainer and KmlGroundOverlay objects onto the GoogleMap as Marker, Polyline, Polygon, GroundOverlay objects. Also
+ * Renders KmlPlacemark, KmlContainer and KmlGroundOverlay objects onto the GoogleMap as Marker,
+ * Polyline, Polygon, GroundOverlay objects. Also
  * removes objects.
  */
 /* package */ class KmlRenderer {
-
-    private GoogleMap mMap;
 
     private static final int RANDOM_COLOR_MODE = 1;
 
@@ -45,6 +44,8 @@ import java.util.Set;
     private final ArrayList<String> mMarkerIconUrls;
 
     private final ArrayList<String> mGroundOverlayUrls;
+
+    private GoogleMap mMap;
 
     private HashMap<KmlPlacemark, Object> mPlacemarks;
 
@@ -66,105 +67,6 @@ import java.util.Set;
         mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
         mGroundOverlayUrls = new ArrayList<String>();
-    }
-
-    /**
-     * Stores all given data and adds it onto the map
-     *
-     * @param styles hashmap of styles
-     * @param styleMaps hashmap of style maps
-     * @param placemarks hashmap of placemarks
-     * @param folders array of containers
-     * @param groundOverlays hashmap of ground overlays
-     */
-    /* package */ void addKmlData(HashMap<String, KmlStyle> styles, HashMap<String, String> styleMaps,
-            HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
-            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
-        mStyles = styles;
-        mStyleMaps = styleMaps;
-        mPlacemarks = placemarks;
-        mContainers = folders;
-        mGroundOverlays = groundOverlays;
-        assignStyleMap(mStyleMaps, mStyles);
-        addGroundOverlays(mGroundOverlays, mContainers);
-        downloadGroundOverlays();
-        addContainerGroupToMap(mContainers, true);
-        addPlacemarksToMap(mPlacemarks);
-        downloadMarkerIcons();
-    }
-
-    /**
-     * Gets the map that objects are being placed on
-     *
-     * @return map
-     */
-    /* package */ GoogleMap getMap() {
-        return mMap;
-    }
-
-    /**
-     * Sets the map that objects are being placed on
-     *
-     * @param map map to place placemark, container, style and ground overlays on
-     */
-    /* package */ void setMap(GoogleMap map) {
-        // TODO: implement this
-        mMap = map;
-    }
-
-    /**
-     * Checks if the layer contains placemarks
-     *
-     * @return true if there are placemarks, false otherwise
-     */
-    /* package */ Boolean hasKmlPlacemarks() {
-        return mPlacemarks.size() > 0;
-    }
-
-    /**
-     * Gets an iterable of KmlPlacemark objects
-     *
-     * @return iterable of KmlPlacemark objects
-     */
-    /* package */ Iterable<KmlPlacemark> getKmlPlacemarks() {
-        return mPlacemarks.keySet();
-    }
-
-    /**
-     * Checks if the layer contains any KmlContainers
-     *
-     * @return true if there is at least 1 container within the KmlLayer, false otherwise
-     */
-    /* package */ boolean hasNestedContainers() {
-        return mContainers.size() > 0;
-    }
-
-    /**
-     * Gets an iterable of KmlContainerInterface objects
-     *
-     * @return iterable of KmlContainerInterface objects
-     */
-    /* package */ Iterable<KmlContainer> getNestedContainers() {
-        return mContainers;
-    }
-
-    /**
-     * Gets an iterable of KmlGroundOverlay objects
-     *
-     * @return iterable of KmlGroundOverlay objects
-     */
-    /* package */ Iterable<KmlGroundOverlay> getGroundOverlays() {
-        return mGroundOverlays.keySet();
-    }
-
-    /**
-     * Removes all the KML data from the map and clears all the stored placemarks
-     */
-    /* package */ void removeKmlData() {
-        removeKmlPlacemarks(mPlacemarks);
-        if (hasNestedContainers()) {
-            removeContainers(getNestedContainers());
-        }
     }
 
     /**
@@ -261,6 +163,106 @@ import java.util.Set;
     }
 
     /**
+     * Stores all given data and adds it onto the map
+     *
+     * @param styles         hashmap of styles
+     * @param styleMaps      hashmap of style maps
+     * @param placemarks     hashmap of placemarks
+     * @param folders        array of containers
+     * @param groundOverlays hashmap of ground overlays
+     */
+    /* package */ void addKmlData(HashMap<String, KmlStyle> styles,
+            HashMap<String, String> styleMaps,
+            HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
+            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+        mStyles = styles;
+        mStyleMaps = styleMaps;
+        mPlacemarks = placemarks;
+        mContainers = folders;
+        mGroundOverlays = groundOverlays;
+        assignStyleMap(mStyleMaps, mStyles);
+        addGroundOverlays(mGroundOverlays, mContainers);
+        downloadGroundOverlays();
+        addContainerGroupToMap(mContainers, true);
+        addPlacemarksToMap(mPlacemarks);
+        downloadMarkerIcons();
+    }
+
+    /**
+     * Gets the map that objects are being placed on
+     *
+     * @return map
+     */
+    /* package */ GoogleMap getMap() {
+        return mMap;
+    }
+
+    /**
+     * Sets the map that objects are being placed on
+     *
+     * @param map map to place placemark, container, style and ground overlays on
+     */
+    /* package */ void setMap(GoogleMap map) {
+        // TODO: implement this
+        mMap = map;
+    }
+
+    /**
+     * Checks if the layer contains placemarks
+     *
+     * @return true if there are placemarks, false otherwise
+     */
+    /* package */ Boolean hasKmlPlacemarks() {
+        return mPlacemarks.size() > 0;
+    }
+
+    /**
+     * Gets an iterable of KmlPlacemark objects
+     *
+     * @return iterable of KmlPlacemark objects
+     */
+    /* package */ Iterable<KmlPlacemark> getKmlPlacemarks() {
+        return mPlacemarks.keySet();
+    }
+
+    /**
+     * Checks if the layer contains any KmlContainers
+     *
+     * @return true if there is at least 1 container within the KmlLayer, false otherwise
+     */
+    /* package */ boolean hasNestedContainers() {
+        return mContainers.size() > 0;
+    }
+
+    /**
+     * Gets an iterable of KmlContainerInterface objects
+     *
+     * @return iterable of KmlContainerInterface objects
+     */
+    /* package */ Iterable<KmlContainer> getNestedContainers() {
+        return mContainers;
+    }
+
+    /**
+     * Gets an iterable of KmlGroundOverlay objects
+     *
+     * @return iterable of KmlGroundOverlay objects
+     */
+    /* package */ Iterable<KmlGroundOverlay> getGroundOverlays() {
+        return mGroundOverlays.keySet();
+    }
+
+    /**
+     * Removes all the KML data from the map and clears all the stored placemarks
+     */
+    /* package */ void removeKmlData() {
+        removeKmlPlacemarks(mPlacemarks);
+        if (hasNestedContainers()) {
+            removeContainers(getNestedContainers());
+        }
+    }
+
+    /**
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
      */
     private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
@@ -283,9 +285,10 @@ import java.util.Set;
      */
     private Object addPlacemarkToMap(KmlPlacemark placemark, Boolean placemarkVisibility) {
         String placemarkId = placemark.getStyleID();
-        KmlGeometry kmlGeometry = placemark.getGeometry();
-        KmlStyle kmlStyle = getPlacemarkStyle(placemarkId);
-        return addToMap(kmlGeometry, kmlStyle, placemarkVisibility);
+        KmlGeometry geometry = placemark.getGeometry();
+        KmlStyle style = getPlacemarkStyle(placemarkId);
+        KmlStyle inlineStyle = placemark.getInlineStyle();
+        return addToMap(geometry, style, inlineStyle, placemarkVisibility);
     }
 
     /**
@@ -296,7 +299,7 @@ import java.util.Set;
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
             boolean containerVisibility) {
         for (KmlContainer containerInterface : kmlContainers) {
-            KmlContainer container = (KmlContainer) containerInterface;
+            KmlContainer container = containerInterface;
             Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
                 // Stores all found styles from the container
@@ -418,7 +421,7 @@ import java.util.Set;
     private void addContainerGroupIconsToMarkers(String iconUrl,
             Iterable<KmlContainer> kmlContainers) {
         for (KmlContainer container : kmlContainers) {
-            KmlContainer containerObject = (KmlContainer) container;
+            KmlContainer containerObject = container;
             addIconToMarkers(iconUrl, containerObject.getPlacemarks());
             if (containerObject.hasNestedKmlContainers()) {
                 addContainerGroupIconsToMarkers(iconUrl, containerObject.getNestedKmlContainers());
@@ -434,48 +437,26 @@ import java.util.Set;
      * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
      * of either objects
      */
-    private Object addToMap(KmlGeometry geometry, KmlStyle style, Boolean isVisible) {
+    private Object addToMap(KmlGeometry geometry, KmlStyle style, KmlStyle inlineStyle,
+            Boolean isVisible) {
         String geometryType = geometry.getKmlGeometryType();
         if (geometryType.equals("Point")) {
-            Marker marker = addPointToMap((KmlPoint) geometry, style);
+            Marker marker = addPointToMap((KmlPoint) geometry, style, inlineStyle);
             marker.setVisible(isVisible);
             return marker;
         } else if (geometryType.equals("LineString")) {
-            Polyline polyline = addLineStringToMap((KmlLineString) geometry, style);
+            Polyline polyline = addLineStringToMap((KmlLineString) geometry, style, inlineStyle);
             polyline.setVisible(isVisible);
             return polyline;
         } else if (geometryType.equals("Polygon")) {
-            Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style);
+            Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style, inlineStyle);
             polygon.setVisible(isVisible);
             return polygon;
         } else if (geometryType.equals("MultiGeometry")) {
-            return addMultiGeometryToMap((KmlMultiGeometry) geometry, style, isVisible);
+            return addMultiGeometryToMap((KmlMultiGeometry) geometry, style, inlineStyle,
+                    isVisible);
         }
         return null;
-    }
-
-    /**
-     * Adds a KML Point to the map as a Marker by combining the styling and coordinates
-     *
-     * @param point contains coordinates for the Marker
-     * @param style contains relevant styling properties for the Marker
-     * @return Marker object
-     */
-    private Marker addPointToMap(KmlPoint point, KmlStyle style) {
-        MarkerOptions markerOptions = style.getMarkerOptions();
-        markerOptions.position(point.getKmlGeometryObject());
-        Marker marker = mMap.addMarker(markerOptions);
-        // If there exists style options for a balloonStyle
-        if (style.getBalloonOptions().size() > 0) {
-            // Set info window if balloonStyle is set
-            setMarkerInfoWindow(style, marker, mPlacemarks.keySet());
-            setContainerMarkerInfoWindow(style, marker, mContainers);
-        }
-        if (style.getIconUrl() != null) {
-            // Sets an icon image if there is a url for it
-            addMarkerIcons(style, marker);
-        }
-        return marker;
     }
 
     /**
@@ -526,18 +507,73 @@ import java.util.Set;
     }
 
     /**
+     * Adds a KML Point to the map as a Marker by combining the styling and coordinates
+     *
+     * @param point contains coordinates for the Marker
+     * @param style contains relevant styling properties for the Marker
+     * @return Marker object
+     */
+    private Marker addPointToMap(KmlPoint point, KmlStyle style, KmlStyle inlineStyle) {
+        MarkerOptions markerOptions = style.getMarkerOptions();
+        markerOptions.position(point.getKmlGeometryObject());
+
+        if (inlineStyle != null) {
+            // TODO: icon scale, icon URL
+            MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
+            if (inlineStyle.isStyleSet("heading")) {
+                markerOptions.rotation(inlineMarkerOptions.getRotation());
+            }
+            if (inlineStyle.isStyleSet("hotSpot")) {
+                markerOptions
+                        .anchor(inlineMarkerOptions.getAnchorU(), inlineMarkerOptions.getAnchorV());
+            }
+            if (inlineStyle.isStyleSet("markerColor")) {
+                markerOptions.icon(inlineMarkerOptions.getIcon());
+            }
+        }
+
+        Marker marker = mMap.addMarker(markerOptions);
+        // If there exists style options for a balloonStyle
+        if (style.getBalloonOptions().size() > 0) {
+            // Set info window if balloonStyle is set
+            setMarkerInfoWindow(style, marker, mPlacemarks.keySet());
+            setContainerMarkerInfoWindow(style, marker, mContainers);
+        }
+
+        if (style.getIconUrl() != null) {
+            // Sets an icon image if there is a url for it
+            addMarkerIcons(style, marker);
+        }
+        return marker;
+    }
+
+    /**
      * Adds a KML LineString to the map as a Polyline by combining the styling and coordinates
      *
      * @param lineString contains coordinates for the Polyline
      * @param style      contains relevant styling properties for the Polyline
      * @return Polyline object
      */
-    private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style) {
+    private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style,
+            KmlStyle inlineStyle) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
         polylineOptions.addAll(lineString.getKmlGeometryObject());
-        if (style.hasColorMode("LineString") && style.getColorMode("LineString")
-                == RANDOM_COLOR_MODE) {
-            polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
+
+        if (inlineStyle != null) {
+            PolylineOptions inlinePolylineOptions = inlineStyle.getPolylineOptions();
+            if (inlineStyle.isStyleSet("outlineColor")) {
+                polylineOptions.color(inlinePolylineOptions.getColor());
+            }
+            if (inlineStyle.isStyleSet("width")) {
+                polylineOptions.width(inlinePolylineOptions.getWidth());
+            }
+            if (inlineStyle.isLineRandomColorMode()) {
+                polylineOptions.color(computeRandomColor(inlinePolylineOptions.getColor()));
+            }
+        } else {
+            if (style.isLineRandomColorMode()) {
+                polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
+            }
         }
         return mMap.addPolyline(polylineOptions);
     }
@@ -549,17 +585,35 @@ import java.util.Set;
      * @param style   contains relevant styling properties for the Polygon
      * @return Polygon object
      */
-    private Polygon addPolygonToMap(KmlPolygon polygon, KmlStyle style) {
+    private Polygon addPolygonToMap(KmlPolygon polygon, KmlStyle style, KmlStyle inlineStyle) {
         PolygonOptions polygonOptions = style.getPolygonOptions();
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         for (ArrayList<LatLng> innerBoundary : polygon.getInnerBoundaryCoordinates()) {
             polygonOptions.addHole(innerBoundary);
         }
-        Polygon mapPolygon = mMap.addPolygon(polygonOptions);
-        if (style.getColorMode("Polygon") == RANDOM_COLOR_MODE) {
-            mapPolygon.setFillColor(computeRandomColor(mapPolygon.getFillColor()));
+
+        if (inlineStyle != null) {
+            PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
+            if (inlineStyle.hasFill() && inlineStyle.isStyleSet("fillColor")) {
+                polygonOptions.fillColor(inlinePolygonOptions.getFillColor());
+            }
+            if (inlineStyle.hasOutline()) {
+                if (inlineStyle.isStyleSet("outlineColor")) {
+                    polygonOptions.strokeColor(inlinePolygonOptions.getStrokeColor());
+                }
+                if (inlineStyle.isStyleSet("width")) {
+                    polygonOptions.strokeWidth(inlinePolygonOptions.getStrokeWidth());
+                }
+            }
+            if (inlineStyle.isPolyRandomColorMode()) {
+                polygonOptions.fillColor(computeRandomColor(inlinePolygonOptions.getFillColor()));
+            }
+        } else {
+            if (style.isPolyRandomColorMode()) {
+                polygonOptions.fillColor(computeRandomColor(polygonOptions.getFillColor()));
+            }
         }
-        return mapPolygon;
+        return mMap.addPolygon(polygonOptions);
     }
 
     /**
@@ -571,28 +625,28 @@ import java.util.Set;
      * @return array of Marker, Polyline and Polygon objects
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry multiGeometry, KmlStyle style,
-            Boolean isVisible) {
+            KmlStyle inlineStyle, Boolean isVisible) {
         ArrayList<Object> geometries = new ArrayList<Object>();
         ArrayList<KmlGeometry> geometry = multiGeometry.getKmlGeometryObject();
         for (KmlGeometry kmlGeometry : geometry) {
-            geometries.add(addToMap(kmlGeometry, style, isVisible));
+            geometries.add(addToMap(kmlGeometry, style, inlineStyle, isVisible));
         }
         return geometries;
     }
 
     /**
-     * Adds a ground overlay adds all the ground overlays onto the map and recursively adds all ground overlays stored in the given containers
+     * Adds a ground overlay adds all the ground overlays onto the map and recursively adds all
+     * ground overlays stored in the given containers
      *
      * @param groundOverlays ground overlays to add to the map
-     * @param kmlContainers containers to check for ground overlays
+     * @param kmlContainers  containers to check for ground overlays
      */
     private void addGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
             Iterable<KmlContainer> kmlContainers) {
         addGroundOverlays(groundOverlays);
-        for (KmlContainer kmlContainer : kmlContainers) {
-            KmlContainer container = (KmlContainer) kmlContainer;
+        for (KmlContainer container : kmlContainers) {
             addGroundOverlays(container.getGroundOverlayHashMap(),
-                    kmlContainer.getNestedKmlContainers());
+                    container.getNestedKmlContainers());
         }
     }
 
@@ -629,7 +683,7 @@ import java.util.Set;
      * Adds ground overlays from a given URL onto the map
      *
      * @param groundOverlayUrl url of ground overlay
-     * @param groundOverlays hashmap of ground overlays to add to the map
+     * @param groundOverlays   hashmap of ground overlays to add to the map
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
             HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
@@ -648,12 +702,11 @@ import java.util.Set;
      * Adds ground overlays in containers from a given URL onto the map
      *
      * @param groundOverlayUrl url of ground overlay
-     * @param kmlContainers containers containing ground overlays to add to the map
+     * @param kmlContainers    containers containing ground overlays to add to the map
      */
     private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
             Iterable<KmlContainer> kmlContainers) {
-        for (KmlContainer kmlContainer : kmlContainers) {
-            KmlContainer container = (KmlContainer) kmlContainer;
+        for (KmlContainer container : kmlContainers) {
             addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap());
             if (container.hasNestedKmlContainers()) {
                 addGroundOverlayInContainerGroups(groundOverlayUrl,
@@ -668,12 +721,11 @@ import java.util.Set;
      */
     private void removeContainers(Iterable<KmlContainer> containers) {
         for (KmlContainer container : containers) {
-            KmlContainer containerObject = (KmlContainer) container;
-            if (containerObject.hasKmlPlacemarks()) {
-                removeKmlPlacemarks(containerObject.getPlacemarks());
+            if (container.hasKmlPlacemarks()) {
+                removeKmlPlacemarks(container.getPlacemarks());
             }
-            if (containerObject.hasNestedKmlContainers()) {
-                removeContainers(containerObject.getNestedKmlContainers());
+            if (container.hasNestedKmlContainers()) {
+                removeContainers(container.getNestedKmlContainers());
             }
         }
     }
@@ -681,7 +733,6 @@ import java.util.Set;
     /**
      * Downloads images for use as marker icons
      */
-
     private class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
 
         private final String mIconUrl;
@@ -729,6 +780,7 @@ import java.util.Set;
         }
 
     }
+
     /**
      * Downloads images for use as ground overlays
      */
