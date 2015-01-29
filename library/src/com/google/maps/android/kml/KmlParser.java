@@ -27,7 +27,7 @@ import java.util.HashMap;
 
     private final KmlStyleParser styleParser;
 
-    private final KmlFeatureParser placemarkParser;
+    private final KmlFeatureParser featureParser;
 
     private final KmlContainerParser containerParser;
 
@@ -52,7 +52,7 @@ import java.util.HashMap;
         mFolders = new ArrayList<KmlContainer>();
         mStyles = new HashMap<String, KmlStyle>();
         styleParser = new KmlStyleParser(mParser);
-        placemarkParser = new KmlFeatureParser(mParser);
+        featureParser = new KmlFeatureParser(mParser);
         containerParser = new KmlContainerParser(mParser);
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
@@ -76,11 +76,11 @@ import java.util.HashMap;
                     styleParser.createStyleMap();
                 }
                 if (mParser.getName().equals(PLACEMARK)) {
-                    placemarkParser.createPlacemark();
-                    mPlacemarks.put(placemarkParser.getPlacemark(), null);
+                    featureParser.createPlacemark();
+                    mPlacemarks.put(featureParser.getPlacemark(), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    mGroundOverlays.put(placemarkParser.createGroundOverlay(), null);
+                    mGroundOverlays.put(featureParser.createGroundOverlay(), null);
                 }
             }
             eventType = mParser.next();

@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <GroundOverlay>
+    <name>Sample Ground Overlay</name>
+    <Icon>
+      <href>http://ecn.t5.tiles.virtualearth.net/tiles/r0230102033300.png?g=414&amp;shading=hill</href>
+    </Icon>
+    <drawOrder>5</drawOrder>
+    <visibility>0</visibility>
+    <LatLonBox>
+      <north>37.8575071563</north>
+      <south>37.8228024335</south>
+      <west>-122.475585938</west>
+      <east>-122.51953125</east>
+    </LatLonBox>
+  </GroundOverlay>
+</kml>

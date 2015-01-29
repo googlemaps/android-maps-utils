@@ -95,6 +95,8 @@ import java.util.HashMap;
                     groundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
                 } else if (mParser.getName().equals("ExtendedData")) {
                     groundOverlay.setProperties(setExtendedDataProperties());
+                } else if (mParser.getName().matches(PROPERTY_REGEX)) {
+                    groundOverlay.setProperty(mParser.getName(), mParser.nextText());
                 }
             }
             eventType = mParser.next();

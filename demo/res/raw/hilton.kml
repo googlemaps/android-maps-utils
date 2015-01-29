@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+	<Document>
+		<name>Hilton Garden Inn Indianapolis Downtown</name>
+		<atom:author>
+			<atom:name>Hilton Garden Inn Indianapolis Downtown</atom:name>
+		</atom:author>
+		<atom:link rel="related" href="http://www.hiltongardenindianapolis.com" />
+		<Folder>
+			<Placemark>
+				<name><![CDATA[Hilton Garden Inn Indianapolis Downtown]]></name>
+				<address><![CDATA[10 East Market Street, Indianapolis, Indiana 46204, US]]></address>
+				<description><![CDATA[Welcome to the Hilton Garden Inn Indianapolis Downtown Hotel, a unique, stylish hotel located in an historic building in the heart of Indianapolis, Indiana. We are a 4 Green Key rated hotel and our beautiful, architectural building is listed on the National Register of Historic Places. Stay with us for your next business or leisure trip and enjoy the best that downtown Indianapolis has to offer!]]></description>
+				<Point>
+					<coordinates>-86.1567837,39.7684906,0</coordinates>
+				</Point>
+			</Placemark>
+		</Folder>
+	</Document>
+</kml>

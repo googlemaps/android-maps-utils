@@ -1,0 +1,2253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Hattusa.kml</name>
+	<Style id="sh_grn-blank21">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank11">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank29</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank4</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank25">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank12">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank26">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank32">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank5">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank12</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank9</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank28">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank15</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank5</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank13">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank23">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank5">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank37">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank6</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank13</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank23">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank28</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank17</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank30">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank5</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank11</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank8">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank22</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank24</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank11">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank7">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank22">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank31">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank9</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank37</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank1">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank17</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank15</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank19">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank2</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank23</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank0</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank7">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank8</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank8</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank22">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank23</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank10</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank9">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank26">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank32</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank6</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank14">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank7</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank30</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank2">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank4">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank37">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank5">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank27">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank18">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank18</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank19</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank24">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank4">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank31</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank27</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank0">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank30">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank22">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank17">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank27</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank36</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank16">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank13">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank26</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank25</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank16">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank34</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank21</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank0">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank17">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="failed0">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank21">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank27">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank24</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank12</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank28">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank32">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank10</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank14</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="failed">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank24">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#failed</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#failed0</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank29">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank35">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank1">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank19">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank10">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank33</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank0</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank10">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank3">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank37</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank29</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank2">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank2</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank18">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank6">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank1</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank16</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_grn-blank25">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank16</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank22</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank8">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank32">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank30">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank16">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank110">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank33">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank36</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank34</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank1">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank34">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank35</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank1</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank14">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank14">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank36">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank31">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank26">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank17">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank19">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank21">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank30</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank110</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank24">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank12">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank11">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank6">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank36">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank15">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank36">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank20</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank33</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank10">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank3">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank15">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank15">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank19</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank35</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank33">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank12">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank14</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank3</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank2">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank9">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank3</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank18</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank18">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank33">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank34">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank3">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank8">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank23">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank35">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank20">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank6">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank13">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank28">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sn_grn-blank9">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank34">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank37">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank20">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank21</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank32</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_grn-blank27">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<Style id="sh_grn-blank29">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank29">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank13</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank26</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_grn-blank">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>
+			</Icon>
+			<hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<ListStyle>
+			<ItemIcon>
+				<href>http://maps.google.com/mapfiles/kml/paddle/grn-blank-lv.png</href>
+			</ItemIcon>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_grn-blank35">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_grn-blank11</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_grn-blank28</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Folder>
+		<name>Hattusa</name>
+		<open>1</open>
+		<GroundOverlay>
+			<name>Hattusa</name>
+			<description>Hattusa</description>
+			<color>52ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/plan-fuehrer2002.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.02719042146131</north>
+				<south>40.00449227350234</south>
+				<east>34.62608838537817</east>
+				<west>34.60732506567221</west>
+				<rotation>-1.674579570205123</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>1 Außenmauer der Unterstadtbefestigung</name>
+			<LookAt>
+				<longitude>34.61499739970563</longitude>
+				<latitude>40.02154261802169</latitude>
+				<altitude>0</altitude>
+				<heading>-0.001098950038064236</heading>
+				<tilt>0</tilt>
+				<range>1458.602036591873</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank21</styleUrl>
+			<Point>
+				<coordinates>34.61202107076825,40.0228515872673,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>2 Abschnittsmauer</name>
+			<description>http://www.hattuscha.de/Deutsch/stadtmauer.htm</description>
+			<LookAt>
+				<longitude>34.61499739970563</longitude>
+				<latitude>40.02154261802169</latitude>
+				<altitude>0</altitude>
+				<heading>-0.001098950038064236</heading>
+				<tilt>0</tilt>
+				<range>1458.602036591873</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank</styleUrl>
+			<Point>
+				<coordinates>34.61387439352714,40.0208401338361,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>3 Kassenhaus</name>
+			<LookAt>
+				<longitude>34.61499739970563</longitude>
+				<latitude>40.02154261802169</latitude>
+				<altitude>0</altitude>
+				<heading>-0.001098950038064236</heading>
+				<tilt>0</tilt>
+				<range>1458.602036591873</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank30</styleUrl>
+			<Point>
+				<coordinates>34.6148344581238,40.02119452116378,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>4 Grabungsbereich Unterstadtsiedlung</name>
+			<LookAt>
+				<longitude>34.61499739970563</longitude>
+				<latitude>40.02154261802169</latitude>
+				<altitude>0</altitude>
+				<heading>-0.001098950038064236</heading>
+				<tilt>0</tilt>
+				<range>1458.602036591873</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank22</styleUrl>
+			<Point>
+				<coordinates>34.61380001509407,40.01979310735469,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Unterstadtsiedlung - map</name>
+			<color>42ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/00-planunterstadt-360x332.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.02159307562868</north>
+				<south>40.01850729747488</south>
+				<east>34.61716924847408</east>
+				<west>34.61281572075651</west>
+				<rotation>-1.677130325695005</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>5 Tempel 1 mit Magazinen</name>
+			<description>http://www.hattuscha.de/Deutsch/tempel1.htm</description>
+			<LookAt>
+				<longitude>34.61499740027744</longitude>
+				<latitude>40.02154261843314</latitude>
+				<altitude>0</altitude>
+				<heading>-0.001098949670342354</heading>
+				<tilt>0</tilt>
+				<range>1458.602404332806</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank3</styleUrl>
+			<Point>
+				<coordinates>34.61594489772055,40.01907828871524,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>6 Haus am Hang</name>
+			<description>http://www.hattuscha.de/Deutsch/hausamhang.htm</description>
+			<LookAt>
+				<longitude>34.62099896437007</longitude>
+				<latitude>40.02071073063651</latitude>
+				<altitude>0</altitude>
+				<heading>0.002759979363843457</heading>
+				<tilt>0</tilt>
+				<range>1568.901786329519</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank37</styleUrl>
+			<Point>
+				<coordinates>34.61673749555172,40.01873535411711,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>7 Kesikkaya</name>
+			<LookAt>
+				<longitude>34.61549614914119</longitude>
+				<latitude>40.01796571296753</latitude>
+				<altitude>0</altitude>
+				<heading>-0.0007786103720013515</heading>
+				<tilt>0</tilt>
+				<range>1582.214505339799</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank25</styleUrl>
+			<Point>
+				<coordinates>34.61445132143024,40.01821800332733,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>8 Poternenmauer</name>
+			<description>http://www.hattuscha.de/Deutsch/poternenmauer.htm</description>
+			<LookAt>
+				<longitude>34.61647487465018</longitude>
+				<latitude>40.01623364093737</latitude>
+				<altitude>0</altitude>
+				<heading>-0.0001485932460751478</heading>
+				<tilt>0</tilt>
+				<range>916.6834199513297</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank13</styleUrl>
+			<Point>
+				<coordinates>34.61481445195142,40.01704833641605,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>8a Getreidesilokomplex</name>
+			<description>http://www.hattuscha.de/Deutsch/getreidesilo.htm</description>
+			<LookAt>
+				<longitude>34.61647487465018</longitude>
+				<latitude>40.01623364093737</latitude>
+				<altitude>0</altitude>
+				<heading>-0.0001485932460751478</heading>
+				<tilt>0</tilt>
+				<range>916.6834199513297</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank23</styleUrl>
+			<Point>
+				<coordinates>34.61600668710123,40.01650783586466,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Getreidesilokomplex  - map</name>
+			<color>2effffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/00-fo-silo-abb-001-730x633.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01704456591337</north>
+				<south>40.0157699636485</south>
+				<east>34.61666816729419</east>
+				<west>34.61491366041096</west>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>9 Kizlar Kaya</name>
+			<description>http://www.hattuscha.de/Deutsch/kizlarkaya.htm</description>
+			<LookAt>
+				<longitude>34.61549614900121</longitude>
+				<latitude>40.01796571305501</latitude>
+				<altitude>0</altitude>
+				<heading>-0.0007786104620137062</heading>
+				<tilt>0</tilt>
+				<range>1582.214671536069</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank24</styleUrl>
+			<Point>
+				<coordinates>34.61365932760449,40.01724077655692,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>10 Unteres Westtor</name>
+			<description>http://www.hattuscha.de/Deutsch/westtore.htm</description>
+			<LookAt>
+				<longitude>34.61786938383459</longitude>
+				<latitude>40.01941691001039</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007474432527264557</heading>
+				<tilt>0</tilt>
+				<range>1594.257907930011</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank29</styleUrl>
+			<Point>
+				<coordinates>34.61228254500253,40.01803872713228,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>11 Oberes Westtor</name>
+			<description>http://www.hattuscha.de/Deutsch/westtore.htm</description>
+			<LookAt>
+				<longitude>34.61549614914119</longitude>
+				<latitude>40.01796571296753</latitude>
+				<altitude>0</altitude>
+				<heading>-0.0007786103720013515</heading>
+				<tilt>0</tilt>
+				<range>1582.214505339799</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank8</styleUrl>
+			<Point>
+				<coordinates>34.61110485734078,40.01649201075879,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>12 Sarikale</name>
+			<description>http://www.hattuscha.de/Deutsch/sarikale.htm</description>
+			<LookAt>
+				<longitude>34.6165176938374</longitude>
+				<latitude>40.00801837364185</latitude>
+				<altitude>0</altitude>
+				<heading>3.403412916346523</heading>
+				<tilt>29.60550743550345</tilt>
+				<range>1027.066693441778</range>
+				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank26</styleUrl>
+			<Point>
+				<coordinates>34.61526645481403,40.01264400893753,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Sarikale - map</name>
+			<color>36ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/02-034-360x413.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01372634271996</north>
+				<south>40.01108022763062</south>
+				<east>34.61670390416596</east>
+				<west>34.61393593752218</west>
+				<rotation>-3.347841554230668</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>13 Löwentor</name>
+			<description>http://www.hattuscha.de/Deutsch/lowentor.htm</description>
+			<LookAt>
+				<longitude>34.61260431722693</longitude>
+				<latitude>40.01116754925617</latitude>
+				<altitude>0</altitude>
+				<heading>-0.002637288241134512</heading>
+				<tilt>0</tilt>
+				<range>871.6235045547685</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank7</styleUrl>
+			<Point>
+				<coordinates>34.61055583458739,40.01005652717978,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>14 Tempel 30</name>
+			<LookAt>
+				<longitude>34.61260431722693</longitude>
+				<latitude>40.01116754925617</latitude>
+				<altitude>0</altitude>
+				<heading>-0.002637288241134512</heading>
+				<tilt>0</tilt>
+				<range>871.6235045547685</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank18</styleUrl>
+			<Point>
+				<coordinates>34.61132608717919,40.00945497506984,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>15 Yenicekale</name>
+			<description>http://www.hattuscha.de/Deutsch/yenicekale.htm</description>
+			<LookAt>
+				<longitude>34.61260431722693</longitude>
+				<latitude>40.01116754925617</latitude>
+				<altitude>0</altitude>
+				<heading>-0.002637288241134512</heading>
+				<tilt>0</tilt>
+				<range>871.6235045547685</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank5</styleUrl>
+			<Point>
+				<coordinates>34.6124873718934,40.01054813626701,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>16 Südteiche</name>
+			<description>http://www.hattuscha.de/Deutsch/sudteiche.htm</description>
+			<LookAt>
+				<longitude>34.61696157792791</longitude>
+				<latitude>40.00875759852179</latitude>
+				<altitude>0</altitude>
+				<heading>0.0001640722859134444</heading>
+				<tilt>0</tilt>
+				<range>813.4935777311699</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank20</styleUrl>
+			<Point>
+				<coordinates>34.61419516881749,40.00847578022739,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Sudteiche - map</name>
+			<color>29ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/00-fo-suedteich-abb-003-360x516.gif</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.00920272608864</north>
+				<south>40.00715864388425</south>
+				<east>34.61502794155196</east>
+				<west>34.61301069819573</west>
+				<rotation>-4.636966335536997</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>17 Wall von Yerkapi</name>
+			<description>http://www.hattuscha.de/Deutsch/yerkapi.htm</description>
+			<LookAt>
+				<longitude>34.61842194542851</longitude>
+				<latitude>40.00672530662879</latitude>
+				<altitude>0</altitude>
+				<heading>0.001102888647447278</heading>
+				<tilt>0</tilt>
+				<range>775.9860064586643</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank10</styleUrl>
+			<Point>
+				<coordinates>34.6161332969668,40.00630361316511,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>18 Sphinxtor</name>
+			<description>http://www.hattuscha.de/Deutsch/yerkapi.htm</description>
+			<LookAt>
+				<longitude>34.61842194542851</longitude>
+				<latitude>40.00672530662879</latitude>
+				<altitude>0</altitude>
+				<heading>0.001102888647447278</heading>
+				<tilt>0</tilt>
+				<range>775.9860064586643</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank32</styleUrl>
+			<Point>
+				<coordinates>34.61700643362332,40.00634531291204,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>19 Zentrales Tempelviertel</name>
+			<description>http://www.hattuscha.de/Deutsch/tempelviertel.htm</description>
+			<LookAt>
+				<longitude>34.61842194542851</longitude>
+				<latitude>40.00672530662879</latitude>
+				<altitude>0</altitude>
+				<heading>0.001102888647447278</heading>
+				<tilt>0</tilt>
+				<range>775.9860064586643</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank12</styleUrl>
+			<Point>
+				<coordinates>34.61695299691056,40.00933079312298,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Zentrales Tempelviertel</name>
+			<color>2effffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/02-070-450x531.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01128126848061</north>
+				<south>40.00724759036048</south>
+				<east>34.6194966761765</east>
+				<west>34.61513205617634</west>
+				<rotation>-1.561365556174165</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>20 Tempel 3</name>
+			<description>http://www.hattuscha.de/Deutsch/tempel235.htm</description>
+			<LookAt>
+				<longitude>34.61842194542851</longitude>
+				<latitude>40.00672530662879</latitude>
+				<altitude>0</altitude>
+				<heading>0.001102888647447278</heading>
+				<tilt>0</tilt>
+				<range>775.9860064586643</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank9</styleUrl>
+			<Point>
+				<coordinates>34.61772920151871,40.00781906885029,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>21 Tempel 2</name>
+			<description>http://www.hattuscha.de/Deutsch/tempel235.htm</description>
+			<LookAt>
+				<longitude>34.61842194542851</longitude>
+				<latitude>40.00672530662879</latitude>
+				<altitude>0</altitude>
+				<heading>0.001102888647447278</heading>
+				<tilt>0</tilt>
+				<range>775.9860064586643</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank15</styleUrl>
+			<Point>
+				<coordinates>34.61904460181135,40.00852727619489,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>22 Tempel 5</name>
+			<description>http://www.hattuscha.de/Deutsch/tempel235.htm</description>
+			<LookAt>
+				<longitude>34.61842194542851</longitude>
+				<latitude>40.00672530662879</latitude>
+				<altitude>0</altitude>
+				<heading>0.001102888647447278</heading>
+				<tilt>0</tilt>
+				<range>775.9860064586643</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank34</styleUrl>
+			<Point>
+				<coordinates>34.62096865091753,40.0086684988663,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>23 Königstor</name>
+			<description>http://www.hattuscha.de/Deutsch/konigstor.htm</description>
+			<LookAt>
+				<longitude>34.6224452991514</longitude>
+				<latitude>40.00866029597172</latitude>
+				<altitude>0</altitude>
+				<heading>0.00368962951883676</heading>
+				<tilt>0</tilt>
+				<range>813.808856796999</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank16</styleUrl>
+			<Point>
+				<coordinates>34.62262573142199,40.00934360005577,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>24 Ostteiche</name>
+			<description>http://www.hattuscha.de/Deutsch/ostteiche.htm</description>
+			<LookAt>
+				<longitude>34.61997196787123</longitude>
+				<latitude>40.01244955087381</latitude>
+				<altitude>0</altitude>
+				<heading>0.002099457577954992</heading>
+				<tilt>0</tilt>
+				<range>849.6794369895325</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank17</styleUrl>
+			<Point>
+				<coordinates>34.61997196787123,40.01244955087381,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Ostteiche</name>
+			<color>2bffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/02-090-360x305.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01353089300655</north>
+				<south>40.01193329094779</south>
+				<east>34.62087554374604</east>
+				<west>34.61834467255149</west>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>25 Byzantinische Kirche</name>
+			<LookAt>
+				<longitude>34.61941376345558</longitude>
+				<latitude>40.01234664392594</latitude>
+				<altitude>0</altitude>
+				<heading>0.001740549260546273</heading>
+				<tilt>0</tilt>
+				<range>846.3179970436923</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank35</styleUrl>
+			<Point>
+				<coordinates>34.61657714956191,40.01112772272862,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>26 Tempel 7</name>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank28</styleUrl>
+			<Point>
+				<coordinates>34.61597934216938,40.01259310651314,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>27 Kammer 1</name>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank27</styleUrl>
+			<Point>
+				<coordinates>34.61841423653136,40.01246652493396,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>28 Hieroglyphenkammer (Kammer 2)</name>
+			<description>http://www.hattuscha.de/Deutsch/kammer2.htm</description>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank36</styleUrl>
+			<Point>
+				<coordinates>34.61911145645981,40.0132321369536,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>29 Südburg</name>
+			<description>http://www.hattuscha.de/Deutsch/sudburg.htm</description>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank31</styleUrl>
+			<Point>
+				<coordinates>34.61840154123476,40.01340299778717,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>30 Tempel 31</name>
+			<description>http://www.hattuscha.de/Deutsch/sudburg.htm</description>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank33</styleUrl>
+			<Point>
+				<coordinates>34.619270852507,40.0138504117831,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Südburg &amp; Tempel 31 - map</name>
+			<color>30ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/02-090-360x357.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01425951539748</north>
+				<south>40.01259219144264</south>
+				<east>34.62013889180165</east>
+				<west>34.61788211696911</west>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>31 Nisantas/Nisantepe</name>
+			<description>http://www.hattuscha.de/Deutsch/nisantas.htm</description>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank4</styleUrl>
+			<Point>
+				<coordinates>34.61728956375024,40.01309239299442,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>32 Nordbaukomplex</name>
+			<description>http://www.hattuscha.de/Deutsch/nisantas.htm</description>
+			<LookAt>
+				<longitude>34.6178625644085</longitude>
+				<latitude>40.01240838581394</latitude>
+				<altitude>0</altitude>
+				<heading>0.0007432193877072033</heading>
+				<tilt>0</tilt>
+				<range>856.6722209486819</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank11</styleUrl>
+			<Point>
+				<coordinates>34.6172719998346,40.01412563253285,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>33 Büyükkale</name>
+			<description>http://www.hattuscha.de/Deutsch/konigsburg.htm</description>
+			<LookAt>
+				<longitude>34.62099152431598</longitude>
+				<latitude>40.01501963983579</latitude>
+				<altitude>0</altitude>
+				<heading>0.00275510084040548</heading>
+				<tilt>0</tilt>
+				<range>901.1345328347198</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank26</styleUrl>
+			<Point>
+				<coordinates>34.62011696398199,40.01572120830025,0</coordinates>
+			</Point>
+		</Placemark>
+		<GroundOverlay>
+			<name>Büyükkale - photo</name>
+			<color>61ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/02-107-375x550.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01708148914189</north>
+				<south>40.01429575021074</south>
+				<east>34.62093689625349</east>
+				<west>34.61830753998581</west>
+				<rotation>-48.09991675799522</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<GroundOverlay>
+			<name>Büyükkale - map</name>
+			<color>36ffffff</color>
+			<Icon>
+				<href>http://www.hattuscha.de/02-109-365x374.jpg</href>
+				<viewBoundScale>0.75</viewBoundScale>
+			</Icon>
+			<LatLonBox>
+				<north>40.01723416575887</north>
+				<south>40.01421568025084</south>
+				<east>34.62139660398819</east>
+				<west>34.61762531743019</west>
+				<rotation>-0.7475639378536312</rotation>
+			</LatLonBox>
+		</GroundOverlay>
+		<Placemark>
+			<name>34 Ostplateau</name>
+			<LookAt>
+				<longitude>34.62099152431598</longitude>
+				<latitude>40.01501963983579</latitude>
+				<altitude>0</altitude>
+				<heading>0.00275510084040548</heading>
+				<tilt>0</tilt>
+				<range>901.1345328347198</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank1</styleUrl>
+			<Point>
+				<coordinates>34.62330151439341,40.01432796743301,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>35 Ambarlikaya</name>
+			<LookAt>
+				<longitude>34.62017931393974</longitude>
+				<latitude>40.01817251223014</latitude>
+				<altitude>0</altitude>
+				<heading>0.00223295538239558</heading>
+				<tilt>0</tilt>
+				<range>1577.618962786667</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank2</styleUrl>
+			<Point>
+				<coordinates>34.6190882488798,40.01929879950457,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>36 Mihraplikaya</name>
+			<LookAt>
+				<longitude>34.62099896437007</longitude>
+				<latitude>40.02071073063651</latitude>
+				<altitude>0</altitude>
+				<heading>0.002759979363843457</heading>
+				<tilt>0</tilt>
+				<range>1568.901786329519</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank19</styleUrl>
+			<Point>
+				<coordinates>34.61636800045075,40.02199704614267,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>37 Büyükkaya</name>
+			<description>http://www.hattuscha.de/Deutsch/buyukkaya.htm</description>
+			<LookAt>
+				<longitude>34.62099896437007</longitude>
+				<latitude>40.02071073063651</latitude>
+				<altitude>0</altitude>
+				<heading>0.002759979363843457</heading>
+				<tilt>0</tilt>
+				<range>1568.901786329519</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank14</styleUrl>
+			<Point>
+				<coordinates>34.62130247491945,40.02395538665337,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>38 Nordstadtmauer</name>
+			<LookAt>
+				<longitude>34.62099896437007</longitude>
+				<latitude>40.02071073063651</latitude>
+				<altitude>0</altitude>
+				<heading>0.002759979363843457</heading>
+				<tilt>0</tilt>
+				<range>1568.901786329519</range>
+				<altitudeMode>relativeToGround</altitudeMode>
+			</LookAt>
+			<styleUrl>#msn_grn-blank6</styleUrl>
+			<Point>
+				<coordinates>34.61769451778247,40.02572044155625,0</coordinates>
+			</Point>
+		</Placemark>
+	</Folder>
+</Document>
+</kml>
