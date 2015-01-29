@@ -98,7 +98,7 @@ import java.util.Set;
     /**
      * Iterates a list of styles and assigns a style
      */
-    private static void assignStyleMap(HashMap<String, String> styleMap,
+    /*package*/ void assignStyleMap(HashMap<String, String> styleMap,
             HashMap<String, KmlStyle> styles) {
         for (String styleMapKey : styleMap.keySet()) {
             String styleMapValue = styleMap.get(styleMapKey);
