@@ -48,9 +48,9 @@ import java.util.HashMap;
     }
 
     /**
-     * Creates a KmlPlacemark object for each basic_placemark detected if they contain a geometry.
-     * Also
-     * stores styles and properties for the given basic_placemark.
+     * Creates a new Placemark object (created if a Placemark start tag is read by the
+     * XmlPullParser and if a Geometry tag is contained within the Placemark tag)
+     * and assigns specific elements read from the parser to the Placemark.
      */
     /* package */ void createPlacemark() throws IOException, XmlPullParserException {
         String styleId = null;
@@ -82,6 +82,12 @@ import java.util.HashMap;
         }
     }
 
+    /**
+     * Creates a new GroundOverlay object (created if a GroundOverlay tag is read by the
+     * XmlPullParser) and assigns specific elements read from the parser to the GroundOverlay
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     /* package */ void createGroundOverlay()
             throws IOException, XmlPullParserException {
         mGroundOverlay = new KmlGroundOverlay();
@@ -98,12 +104,15 @@ import java.util.HashMap;
                     mGroundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
                 } else if (mParser.getName().equals("ExtendedData")) {
                     mGroundOverlay.setProperties(setExtendedDataProperties());
+                } else if (mParser.getName().equals("color")) {
+                    mGroundOverlay.setColor(mParser.nextText());
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
                     mGroundOverlay.setProperty(mParser.getName(), mParser.nextText());
                 }
             }
             eventType = mParser.next();
         }
+        //TODO: Change constructor of Groundoverlay instead of having set methods
     }
 
     /**

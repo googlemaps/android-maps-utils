@@ -1,5 +1,9 @@
 package com.google.maps.android.kml;
 
+import android.graphics.Color;
+
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -18,11 +22,27 @@ public class KmlGroundOverlay {
 
     private LatLngBounds mLatLngBox;
 
+    private final static int HSV_VALUES = 3;
+
+    private final static int HUE_VALUE = 0;
+
+    private String mGroundOverlayColor;
+
+
     public KmlGroundOverlay() {
         mImageUrl = null;
         mLatLngBox = null;
+        mGroundOverlayColor = null;
         mProperties = new HashMap<String, String>();
         mGroundOverlayOptions = new GroundOverlayOptions();
+    }
+
+    public void setColor(String stringColor) {
+        mGroundOverlayColor = stringColor;
+    }
+
+    public String getColor() {
+        return mGroundOverlayColor;
     }
 
     public String getImageUrl() {

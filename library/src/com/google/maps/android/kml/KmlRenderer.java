@@ -691,7 +691,7 @@ import java.util.Set;
                 } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
                     mGroundOverlayUrls.add(groundOverlayUrl);
                 }
-            }
+            } 
         }
     }
 
