@@ -72,7 +72,6 @@ public class KmlLayer {
         parser.parseKml();
         mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
                 parser.getFolders(), parser.getGroundOverlays());
-        mRenderer.addKmlData();
         // TODO: rethink this method, do we need to reparse?
     }
 

@@ -30,8 +30,7 @@ import java.util.Set;
 
 /**
  * Renders KmlPlacemark, KmlContainer and KmlGroundOverlay objects onto the GoogleMap as Marker,
- * Polyline, Polygon, GroundOverlay objects. Also
- * removes objects.
+ * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
 /* package */ class KmlRenderer {
 
@@ -77,7 +76,8 @@ import java.util.Set;
      * @param color Integer value representing a color
      * @return Integer representing a random color
      */
-    public static int computeRandomColor(int color) {
+    /* package */
+    static int computeRandomColor(int color) {
         Random random = new Random();
         int red = Color.red(color);
         int green = Color.green(color);
@@ -93,19 +93,6 @@ import java.util.Set;
             green = random.nextInt(green);
         }
         return Color.rgb(red, green, blue);
-    }
-
-    /**
-     * Iterates a list of styles and assigns a style
-     */
-    /*package*/ void assignStyleMap(HashMap<String, String> styleMap,
-            HashMap<String, KmlStyle> styles) {
-        for (String styleMapKey : styleMap.keySet()) {
-            String styleMapValue = styleMap.get(styleMapKey);
-            if (styles.containsKey(styleMapValue)) {
-                styles.put(styleMapKey, styles.get(styleMapValue));
-            }
-        }
     }
 
     /**
@@ -164,6 +151,41 @@ import java.util.Set;
     }
 
     /**
+     * Determines whether the container is visible, based on the visibility of the parent container
+     * and its own specified visibility
+     *
+     * @param kmlContainer             The kml container to retrieve visibility
+     * @param isParentContainerVisible Boolean value representing that parents visibility
+     * @return Visibility of the container
+     */
+
+    /*package*/
+    static Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
+            isParentContainerVisible) {
+        Boolean isChildContainerVisible = true;
+        if (kmlContainer.hasKmlProperty("visibility")) {
+            String placemarkVisibility = kmlContainer.getKmlProperty("visibility");
+            if (Integer.parseInt(placemarkVisibility) == 0) {
+                isChildContainerVisible = false;
+            }
+        }
+        return (isParentContainerVisible && isChildContainerVisible);
+    }
+
+    /**
+     * Iterates a list of styles and assigns a style
+     */
+    /*package*/ void assignStyleMap(HashMap<String, String> styleMap,
+            HashMap<String, KmlStyle> styles) {
+        for (String styleMapKey : styleMap.keySet()) {
+            String styleMapValue = styleMap.get(styleMapKey);
+            if (styles.containsKey(styleMapValue)) {
+                styles.put(styleMapKey, styles.get(styleMapValue));
+            }
+        }
+    }
+
+    /**
      * Stores all given data and adds it onto the map
      *
      * @param styles         hashmap of styles
@@ -173,9 +195,9 @@ import java.util.Set;
      * @param groundOverlays hashmap of ground overlays
      */
     /* package */ void storeKmlData(HashMap<String, KmlStyle> styles,
-                                    HashMap<String, String> styleMaps,
-                                    HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
-                                    HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+            HashMap<String, String> styleMaps,
+            HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
+            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;
         mPlacemarks = placemarks;
@@ -184,10 +206,9 @@ import java.util.Set;
         //Need to keep an original copy of the styles in case we override
         mOriginalStyles = styles;
         addKmlData();
-
     }
 
-    /*package*/ void addKmlData() {
+    private void addKmlData() {
         assignStyleMap(mStyleMaps, mStyles);
         addGroundOverlays(mGroundOverlays, mContainers);
         addContainerGroupToMap(mContainers, true);
@@ -212,7 +233,6 @@ import java.util.Set;
      */
     /* package */ void setMap(GoogleMap map) {
         removeKmlData();
-        // TODO: implement this
         mMap = map;
         mStyles = mOriginalStyles;
         addKmlData();
@@ -309,8 +329,7 @@ import java.util.Set;
      */
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
             boolean containerVisibility) {
-        for (KmlContainer containerInterface : kmlContainers) {
-            KmlContainer container = containerInterface;
+        for (KmlContainer container : kmlContainers) {
             Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
                 // Stores all found styles from the container
@@ -344,27 +363,6 @@ import java.util.Set;
     }
 
     /**
-     * Determines whether the container is visible, based on the visibility of the parent container
-     * and its own specified visibility
-     *
-     * @param kmlContainer             The kml container to retrieve visibility
-     * @param isParentContainerVisible Boolean value representing that parents visibility
-     * @return Visibility of the container
-     */
-
-    /*package*/ static Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
-            isParentContainerVisible) {
-        Boolean isChildContainerVisible = true;
-        if (kmlContainer.hasKmlProperty("visibility")) {
-            String placemarkVisibility = kmlContainer.getKmlProperty("visibility");
-            if (Integer.parseInt(placemarkVisibility) == 0) {
-                isChildContainerVisible = false;
-            }
-        }
-        return (isParentContainerVisible && isChildContainerVisible);
-    }
-
-    /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
      *
      * @param styleId StyleUrl from a placemark
@@ -381,16 +379,16 @@ import java.util.Set;
     /**
      * Sets the marker icon if there was a url that was found
      *
-     * @param style  The style which we retrieve the icon url from
-     * @param marker The marker which is displaying the icon
+     * @param styleUrl      The style which we retrieve the icon url from
+     * @param markerOptions The marker which is displaying the icon
      */
-    private void addMarkerIcons(KmlStyle style, Marker marker) {
-        if (mImagesCache.get(style.getIconUrl()) != null) {
+    private void addMarkerIcons(String styleUrl, MarkerOptions markerOptions) {
+        if (mImagesCache.get(styleUrl) != null) {
             // Bitmap stored in cache
-            Bitmap bitmap = mImagesCache.get(style.getIconUrl());
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-        } else if (!mMarkerIconUrls.contains(style.getIconUrl())) {
-            mMarkerIconUrls.add(style.getIconUrl());
+            Bitmap bitmap = mImagesCache.get(styleUrl);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        } else if (!mMarkerIconUrls.contains(styleUrl)) {
+            mMarkerIconUrls.add(styleUrl);
         }
     }
 
@@ -412,13 +410,22 @@ import java.util.Set;
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> mPlacemarks) {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
             KmlStyle placemarkStyle = mStyles.get(placemark.getStyleID());
-            // Check if the style URL is the same and the type of geometry is a point
-            if (placemarkStyle != null && iconUrl.equals(placemarkStyle.getIconUrl())
-                    && "Point".equals(placemark.getGeometry().getKmlGeometryType())) {
-                Bitmap iconBitmap = mImagesCache.get(iconUrl);
-                Double scale = placemarkStyle.getIconScale();
-                ((Marker) mPlacemarks.get(placemark))
-                        .setIcon(scaleIconToMarkers(iconBitmap, scale));
+            if ("Point".equals(placemark.getGeometry().getKmlGeometryType())) {
+                boolean isInlineStyleIcon = placemark.getInlineStyle() != null && iconUrl
+                        .equals(placemark.getInlineStyle().getIconUrl());
+                boolean isPlacemarkStyleIcon = placemarkStyle != null && iconUrl
+                        .equals(placemarkStyle.getIconUrl());
+                if (isInlineStyleIcon) {
+                    Bitmap iconBitmap = mImagesCache.get(iconUrl);
+                    Double scale = placemark.getInlineStyle().getIconScale();
+                    ((Marker) mPlacemarks.get(placemark)).setIcon(
+                            scaleIconToMarkers(iconBitmap, scale));
+                } else if (isPlacemarkStyleIcon) {
+                    Bitmap iconBitmap = mImagesCache.get(iconUrl);
+                    Double scale = placemarkStyle.getIconScale();
+                    ((Marker) mPlacemarks.get(placemark)).setIcon(
+                            scaleIconToMarkers(iconBitmap, scale));
+                }
             }
         }
     }
@@ -432,10 +439,9 @@ import java.util.Set;
     private void addContainerGroupIconsToMarkers(String iconUrl,
             Iterable<KmlContainer> kmlContainers) {
         for (KmlContainer container : kmlContainers) {
-            KmlContainer containerObject = container;
-            addIconToMarkers(iconUrl, containerObject.getPlacemarks());
-            if (containerObject.hasNestedKmlContainers()) {
-                addContainerGroupIconsToMarkers(iconUrl, containerObject.getNestedKmlContainers());
+            addIconToMarkers(iconUrl, container.getPlacemarks());
+            if (container.hasNestedKmlContainers()) {
+                addContainerGroupIconsToMarkers(iconUrl, container.getNestedKmlContainers());
             }
         }
     }
@@ -528,7 +534,10 @@ import java.util.Set;
         MarkerOptions markerUrlStyle = style.getMarkerOptions();
         markerUrlStyle.position(point.getKmlGeometryObject());
         if (markerInlineStyle != null) {
-            setInlinePointStyle(markerUrlStyle, markerInlineStyle);
+            setInlinePointStyle(markerUrlStyle, markerInlineStyle, style.getIconUrl());
+        } else if (style.getIconUrl() != null) {
+            // Use shared style
+            addMarkerIcons(style.getIconUrl(), markerUrlStyle);
         }
         Marker marker = mMap.addMarker(markerUrlStyle);
         // If there exists style options for a balloonStyle
@@ -538,16 +547,11 @@ import java.util.Set;
             setContainerMarkerInfoWindow(style, marker, mContainers);
         }
 
-        if (style.getIconUrl() != null) {
-            // Sets an icon image if there is a url for it
-            addMarkerIcons(style, marker);
-        }
-
         return marker;
     }
 
-    private void setInlinePointStyle(MarkerOptions markerUrlStyle, KmlStyle inlineStyle) {
-        // TODO: icon scale, icon URL
+    private void setInlinePointStyle(MarkerOptions markerUrlStyle, KmlStyle inlineStyle,
+            String markerUrlIconUrl) {
         MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
         if (inlineStyle.isStyleSet("heading")) {
             markerUrlStyle.rotation(inlineMarkerOptions.getRotation());
@@ -558,6 +562,12 @@ import java.util.Set;
         }
         if (inlineStyle.isStyleSet("markerColor")) {
             markerUrlStyle.icon(inlineMarkerOptions.getIcon());
+        }
+        if (inlineStyle.isStyleSet("iconUrl")) {
+            addMarkerIcons(inlineStyle.getIconUrl(), markerUrlStyle);
+        } else if (markerUrlIconUrl != null) {
+            // Inline style with no icon defined
+            addMarkerIcons(markerUrlIconUrl, markerUrlStyle);
         }
     }
 
@@ -574,7 +584,7 @@ import java.util.Set;
         polylineOptions.addAll(lineString.getKmlGeometryObject());
         if (inlineStyle != null) {
             setInlineLineStringStyle(polylineOptions, inlineStyle);
-        } else if (inlineStyle == null && style.isLineRandomColorMode()) {
+        } else if (style.isLineRandomColorMode()) {
             polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
         }
         return mMap.addPolyline(polylineOptions);
@@ -608,7 +618,7 @@ import java.util.Set;
         }
         if (inlineStyle != null) {
             setInlinePolygonStyle(polygonOptions, inlineStyle);
-        } else if (inlineStyle == null && style.isPolyRandomColorMode()) {
+        } else if (style.isPolyRandomColorMode()) {
             polygonOptions.fillColor(computeRandomColor(polygonOptions.getFillColor()));
         }
         return mMap.addPolygon(polygonOptions);
@@ -804,7 +814,7 @@ import java.util.Set;
 
         private final String mGroundOverlayUrl;
 
-        private GroundOverlayImageDownload(String groundOverlayUrl) {
+        public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
         }
 

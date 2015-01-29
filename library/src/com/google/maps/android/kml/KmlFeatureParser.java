@@ -81,7 +81,6 @@ import java.util.HashMap;
 
     /* package */ KmlGroundOverlay createGroundOverlay()
             throws IOException, XmlPullParserException {
-        // TODO: add support for color
         KmlGroundOverlay groundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("GroundOverlay"))) {
