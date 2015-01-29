@@ -58,5 +58,10 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         assertNotNull(parser.getPlacemark().getProperty("holeNumber"));
     }
 
+    public void testGroundOverlay() throws Exception {
+
+
+    }
+
 
 }

@@ -17,6 +17,10 @@ import java.util.HashMap;
 
     private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
 
+    private final static int START_TAG = XmlPullParser.START_TAG;
+
+    private final static int END_TAG = XmlPullParser.END_TAG;
+
     private final static int LONGITUDE_INDEX = 0;
 
     private final static int LATITUDE_INDEX = 1;
@@ -51,8 +55,8 @@ import java.util.HashMap;
         HashMap<String, String> properties = new HashMap<String, String>();
         KmlGeometry geometry = null;
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Placemark"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("Placemark"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals(STYLE_URL_TAG)) {
                     styleId = mParser.nextText();
                 } else if (mParser.getName().matches(GEOMETRY_REGEX)) {
@@ -80,17 +84,10 @@ import java.util.HashMap;
         // TODO: add support for color
         KmlGroundOverlay groundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("GroundOverlay"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("GroundOverlay"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals("Icon")) {
-                    while (!(eventType == XmlPullParser.END_TAG && mParser.getName()
-                            .equals("Icon"))) {
-                        if (eventType == XmlPullParser.START_TAG && mParser.getName()
-                                .equals("href")) {
-                            groundOverlay.setImageUrl(mParser.nextText());
-                        }
-                        eventType = mParser.next();
-                    }
+                    groundOverlay.setImageUrl(getImageUrl());
                 } else if (mParser.getName().equals("LatLonBox")) {
                     groundOverlay.setLatLngBox(createLatLonBox(groundOverlay));
                 } else if (mParser.getName().equals("drawOrder")) {
@@ -107,6 +104,24 @@ import java.util.HashMap;
     }
 
     /**
+     * Gets an image url for the ground overlay
+     * @return image url for the ground overlay
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
+
+    private String getImageUrl () throws IOException, XmlPullParserException {
+        int eventType = mParser.getEventType();
+        while (!(eventType == END_TAG && mParser.getName().equals("Icon"))) {
+            if (eventType == START_TAG && mParser.getName().equals("href")) {
+                return mParser.nextText();
+            }
+            eventType = mParser.next();
+        }
+        return null;
+    }
+
+    /**
      * Creates a new KmlGeometry object of type Point, LineString, Polygon or MultiGeometry
      *
      * @param geometryType type of geometry object to create
@@ -114,8 +129,8 @@ import java.util.HashMap;
     private KmlGeometry createGeometry(String geometryType)
             throws IOException, XmlPullParserException {
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(geometryType))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals(geometryType))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals("Point")) {
                     return createPoint();
                 } else if (mParser.getName().equals("LineString")) {
@@ -139,8 +154,8 @@ import java.util.HashMap;
         HashMap<String, String> properties = new HashMap<String, String>();
         String propertyKey = null;
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals("Data")) {
                     propertyKey = mParser.getAttributeValue(null, "name");
                 } else if (mParser.getName().equals("value") && propertyKey != null) {
@@ -191,8 +206,8 @@ import java.util.HashMap;
     private KmlPoint createPoint() throws XmlPullParserException, IOException {
         LatLng coordinate = null;
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Point"))) {
-            if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("coordinates")) {
+        while (!(eventType == END_TAG && mParser.getName().equals("Point"))) {
+            if (eventType == START_TAG && mParser.getName().equals("coordinates")) {
                 coordinate = convertToLatLng(mParser.nextText());
             }
             eventType = mParser.next();
@@ -208,8 +223,8 @@ import java.util.HashMap;
     private KmlLineString createLineString() throws XmlPullParserException, IOException {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("LineString"))) {
-            if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("coordinates")) {
+        while (!(eventType == END_TAG && mParser.getName().equals("LineString"))) {
+            if (eventType == START_TAG && mParser.getName().equals("coordinates")) {
                 coordinates = convertToLatLngArray(mParser.nextText());
             }
             eventType = mParser.next();
@@ -231,8 +246,8 @@ import java.util.HashMap;
         ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates = new ArrayList<ArrayList<LatLng>>();
         int eventType = mParser.getEventType();
 
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Polygon"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("Polygon"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().matches(BOUNDARY_REGEX)) {
                     isOuterBoundary = mParser.getName().equals("outerBoundaryIs");
                 } else if (mParser.getName().equals("coordinates")) {
@@ -257,9 +272,8 @@ import java.util.HashMap;
         ArrayList<KmlGeometry> geometries = new ArrayList<KmlGeometry>();
         // Get next otherwise have an infinite loop
         int eventType = mParser.next();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("MultiGeometry"))) {
-            if (eventType == XmlPullParser.START_TAG && mParser.getName()
-                    .matches(GEOMETRY_REGEX)) {
+        while (!(eventType == END_TAG && mParser.getName().equals("MultiGeometry"))) {
+            if (eventType == START_TAG && mParser.getName().matches(GEOMETRY_REGEX)) {
                 geometries.add(createGeometry(mParser.getName()));
             }
             eventType = mParser.next();
@@ -275,8 +289,8 @@ import java.util.HashMap;
         Double west = 0.0;
 
         int eventType = mParser.next();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("LatLonBox"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("LatLonBox"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals("north")) {
                     north = Double.parseDouble(mParser.nextText());
                 } else if (mParser.getName().equals("south")) {
