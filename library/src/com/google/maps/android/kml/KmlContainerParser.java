@@ -10,6 +10,10 @@ import java.io.IOException;
  */
 /* package */ class KmlContainerParser {
 
+    private final static int START_TAG = XmlPullParser.START_TAG;
+
+    private final static int END_TAG = XmlPullParser.END_TAG;
+
     private final static String PROPERTY_REGEX = "name|description|visibility|open";
 
     private final static String CONTAINER_REGEX = "Folder|Document";
@@ -37,27 +41,29 @@ import java.io.IOException;
     }
 
     /**
-     * Creates a new folder and adds this to an ArrayList of folders
+     * Creates a new Container object (created if a Document or Folder start tag is read by the
+     * XmlPullParser) and assigns specific elements to the container.
      */
 
     /* package */ void createContainer() throws XmlPullParserException, IOException {
-        KmlContainer folder = new KmlContainer();
-        assignFolderProperties(folder);
-        mContainer = folder;
+        KmlContainer kmlContainer = new KmlContainer();
+        assignContainerProperties(kmlContainer);
+        mContainer = kmlContainer;
     }
 
     /**
-     * Takes a parser and assigns variables to a Folder instances
+     * Obtains values from an XML start tag and corresponding text and assigns these values to
+     * values in a KmlContainer class
      *
      * @param kmlFolder Folder to assign variables to
      */
-    /* package */ void assignFolderProperties(KmlContainer kmlFolder)
+    /* package */ void assignContainerProperties(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         String startTag = mParser.getName();
         mParser.next();
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(startTag))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals(startTag))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
                     setNestedContainerObject(kmlFolder);
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
@@ -80,14 +86,15 @@ import java.io.IOException;
     }
 
     /**
-     * Creates a new container object
+     * Creates a new Container object (created if a Document or Folder start tag is read by the
+     * XmlPullParser) and assigns specific elements to the container.
      *
      * @param kmlFolder Stores new container object
      */
     /* package */ void setNestedContainerObject(KmlContainer kmlFolder)
             throws XmlPullParserException, IOException {
         KmlContainer container = new KmlContainer();
-        assignFolderProperties(container);
+        assignContainerProperties(container);
         kmlFolder.addChildContainer(container);
     }
 
@@ -124,8 +131,8 @@ import java.io.IOException;
             throws XmlPullParserException, IOException {
         String propertyKey = null;
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals("Data")) {
                     propertyKey = mParser.getAttributeValue(null, "name");
                 } else if (mParser.getName().equals("value") && propertyKey != null) {
