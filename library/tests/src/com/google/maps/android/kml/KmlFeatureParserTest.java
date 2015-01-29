@@ -64,15 +64,9 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         assertNotNull(groundOverlay);
         assertEquals(groundOverlay.getProperty("name"), "Sample Ground Overlay");
         assertNotNull(groundOverlay.getImageUrl());
-        assertEquals(groundOverlay.getGroundOverlayOptions().getZIndex(), 5.0f);
-        assertFalse(groundOverlay.getGroundOverlayOptions().isVisible());
-        assertNotNull(groundOverlay.getLatLngBox());
-        parser = new KmlFeatureParser(createParser(R.raw.draw_order_ground_overlay));
-        groundOverlay = parser.createGroundOverlay();
-        KmlGroundOverlay anotherGroundOverlay = parser.createGroundOverlay();
-        assertNotNull(groundOverlay);
-        assertNotNull(anotherGroundOverlay);
         assertEquals(groundOverlay.getGroundOverlayOptions().getZIndex(), 99.0f);
+        assertTrue(groundOverlay.getGroundOverlayOptions().isVisible());
+        assertNotNull(groundOverlay.getLatLngBox());
 
     }
 

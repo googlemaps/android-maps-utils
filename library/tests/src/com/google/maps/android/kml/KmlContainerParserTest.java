@@ -28,6 +28,13 @@ public class KmlContainerParserTest extends ActivityTestCase {
         return parser;
     }
 
+    public void testCDataEntity() throws Exception {
+        KmlContainerParser parser = new KmlContainerParser(createParser(R.raw.cdata));
+        KmlContainer kmlContainer = new KmlContainer();
+        parser.assignFolderProperties(kmlContainer);
+        assertEquals(kmlContainer.getKmlProperty("description"), "TELEPORT");
+    }
+
     public void testCreateContainerProperty() throws Exception {
         KmlContainerParser parser = new KmlContainerParser(createParser(R.raw.basic_folder));
         KmlContainer kmlContainer = new KmlContainer();
@@ -47,14 +54,13 @@ public class KmlContainerParserTest extends ActivityTestCase {
         parser.assignFolderProperties(kmlContainer);
         assertTrue(kmlContainer.hasKmlPlacemarks());
         assertEquals(kmlContainer.getPlacemarks().size(), 2);
-
     }
 
     public void testCreateContainerGroundOverlay() throws Exception {
-        KmlContainerParser parser = new KmlContainerParser(createParser(R.raw.basic_folder));
+        KmlContainerParser parser = new KmlContainerParser(createParser(R.raw.ground_overlay));
         KmlContainer kmlContainer = new KmlContainer();
         parser.assignFolderProperties(kmlContainer);
-        //TODO: Test for Ground Overlay
+        assertEquals(kmlContainer.getGroundOverlayHashMap().size(), 2);
     }
 
     public void testCreateContainerObjects() throws Exception {

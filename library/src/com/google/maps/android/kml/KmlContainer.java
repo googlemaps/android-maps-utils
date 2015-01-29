@@ -31,6 +31,10 @@ public class KmlContainer {
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
+    /*package*/ ArrayList<KmlContainer> getNestedContainers() {
+        return mContainers;
+    }
+
     /**
      * Gets a style based on an ID
      */

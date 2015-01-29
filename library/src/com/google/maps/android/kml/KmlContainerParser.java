@@ -75,7 +75,7 @@ import java.io.IOException;
                     kmlFolder.addGroundOverlay(kmlGroundOverlay);
                 }
             }
-            eventType = mParser.next();
+            eventType = mParser.nextToken();
         }
     }
 

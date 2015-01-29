@@ -1,17 +1,29 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-  <GroundOverlay>
-    <name>Sample Ground Overlay</name>
-    <Icon>
-      <href>http://ecn.t5.tiles.virtualearth.net/tiles/r0230102033300.png?g=414&amp;shading=hill</href>
-    </Icon>
-    <drawOrder>5</drawOrder>
-    <visibility>0</visibility>
-    <LatLonBox>
-      <north>37.8575071563</north>
-      <south>37.8228024335</south>
-      <west>-122.475585938</west>
-      <east>-122.51953125</east>
-    </LatLonBox>
-  </GroundOverlay>
+	<GroundOverlay>
+		<name>Sample Ground Overlay</name>
+		<drawOrder>99</drawOrder>
+		<Icon>
+		<href>http://ge-map-overlays.appspot.com/images/blue-triangle.png</href>
+		</Icon>
+		<LatLonBox>
+			<north>37.85</north>
+			<south>37.82</south>
+			<east>-122.47</east>
+			<west>-122.51</west>
+		</LatLonBox>
+	</GroundOverlay>
+	<GroundOverlay>
+		<name>Ground overlay with draw order</name>
+		<drawOrder>88</drawOrder>
+		<Icon>
+		<href>http://www.colorcombos.com/images/colors/FF00FF.png</href>
+		</Icon>
+		<LatLonBox>
+			<north>37.85</north>
+			<south>37.82</south>
+			<east>-122.47</east>
+			<west>-122.51</west>
+		</LatLonBox>
+	</GroundOverlay>
 </kml>
