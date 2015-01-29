@@ -312,7 +312,6 @@ public class KmlStyle {
         markerOptions.rotation(mMarkerOptions.getRotation());
         markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());
         if (isIconRandomColorMode()) {
-            System.out.println(mMarkerColor);
             int randomColor = KmlRenderer.computeRandomColor(mMarkerColor);
             float[] hsvValues = new float[HSV_VALUES];
             // make hexadecimal representation into hsv values, store in array

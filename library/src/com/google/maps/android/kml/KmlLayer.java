@@ -29,7 +29,7 @@ public class KmlLayer {
      * @throws XmlPullParserException if file cannot be parsed
      */
     public KmlLayer(GoogleMap map, int resourceId, Context context)
-            throws XmlPullParserException {
+            throws XmlPullParserException, IOException {
         this(map, context.getResources().openRawResource(resourceId));
     }
 
@@ -41,9 +41,13 @@ public class KmlLayer {
      * @throws XmlPullParserException if file cannot be parsed
      */
     public KmlLayer(GoogleMap map, InputStream stream)
-            throws XmlPullParserException {
+            throws XmlPullParserException, IOException {
         mRenderer = new KmlRenderer(map);
         mParser = createXmlParser(stream);
+        KmlParser parser = new KmlParser(mParser);
+        parser.parseKml();
+        mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+                parser.getFolders(), parser.getGroundOverlays());
     }
 
     /**
@@ -68,18 +72,13 @@ public class KmlLayer {
      * @throws IOException            if KML file cannot be opened
      */
     public void addKmlData() throws IOException, XmlPullParserException {
-        KmlParser parser = new KmlParser(mParser);
-        parser.parseKml();
-        mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
-                parser.getFolders(), parser.getGroundOverlays());
-        // TODO: rethink this method, do we need to reparse?
+        mRenderer.addKmlData();
     }
 
     /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
     public void removeKmlData() {
-        // TODO: remove all ground overlays
         mRenderer.removeKmlData();
     }
 

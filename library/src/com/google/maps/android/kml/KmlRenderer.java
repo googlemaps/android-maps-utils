@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -56,6 +57,11 @@ import java.util.Set;
 
     private HashMap<String, KmlStyle> mOriginalStyles;
 
+    private boolean mLayerVisible;
+
+    private boolean mMarkerIconsDownloaded;
+
+    private boolean mGroundOverlayImagesDownloaded;
 
     /**
      * Creates a new KmlRenderer object
@@ -67,6 +73,9 @@ import java.util.Set;
         mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
         mGroundOverlayUrls = new ArrayList<String>();
+        mLayerVisible = false;
+        mMarkerIconsDownloaded = false;
+        mGroundOverlayImagesDownloaded = false;
     }
 
     /**
@@ -135,7 +144,7 @@ import java.util.Set;
      *
      * @param placemarks placemarks to remove
      */
-    private static void removeKmlPlacemarks(HashMap<KmlPlacemark, Object> placemarks) {
+    private static void removePlacemarks(HashMap<KmlPlacemark, Object> placemarks) {
         // Remove map object from the map
         for (Object mapObject : placemarks.values()) {
             if (mapObject instanceof Marker) {
@@ -146,8 +155,6 @@ import java.util.Set;
                 ((Polygon) mapObject).remove();
             }
         }
-        // Remove the KmlPlacemark and map object from the mPlacemarks hashmap
-        placemarks.clear();
     }
 
     /**
@@ -170,6 +177,26 @@ import java.util.Set;
             }
         }
         return (isParentContainerVisible && isChildContainerVisible);
+    }
+
+    private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+        for (GroundOverlay groundOverlay : groundOverlays.values()) {
+            if (groundOverlay != null) {
+                groundOverlay.remove();
+            }
+        }
+    }
+
+    /**
+     * Removes all the KML data from the map and clears all the stored placemarks of those which
+     * are in a container.
+     */
+    private void removeContainers(Iterable<KmlContainer> containers) {
+        for (KmlContainer container : containers) {
+            removePlacemarks(container.getPlacemarks());
+            removeGroundOverlays(container.getGroundOverlayHashMap());
+            removeContainers(container.getNestedKmlContainers());
+        }
     }
 
     /**
@@ -203,18 +230,23 @@ import java.util.Set;
         mPlacemarks = placemarks;
         mContainers = folders;
         mGroundOverlays = groundOverlays;
-        //Need to keep an original copy of the styles in case we override
+        // Need to keep an original copy of the styles in case we override
         mOriginalStyles = styles;
-        addKmlData();
     }
 
-    private void addKmlData() {
+    /* package */ void addKmlData() {
+        mStyles = mOriginalStyles;
         assignStyleMap(mStyleMaps, mStyles);
         addGroundOverlays(mGroundOverlays, mContainers);
         addContainerGroupToMap(mContainers, true);
         addPlacemarksToMap(mPlacemarks);
-        downloadGroundOverlays();
-        downloadMarkerIcons();
+        if (!mGroundOverlayImagesDownloaded) {
+            downloadGroundOverlays();
+        }
+        if (!mMarkerIconsDownloaded) {
+            downloadMarkerIcons();
+        }
+        mLayerVisible = true;
     }
 
     /**
@@ -287,10 +319,12 @@ import java.util.Set;
      * Removes all the KML data from the map and clears all the stored placemarks
      */
     /* package */ void removeKmlData() {
-        removeKmlPlacemarks(mPlacemarks);
+        removePlacemarks(mPlacemarks);
+        removeGroundOverlays(mGroundOverlays);
         if (hasNestedContainers()) {
             removeContainers(getNestedContainers());
         }
+        mLayerVisible = false;
     }
 
     /**
@@ -396,10 +430,12 @@ import java.util.Set;
      * Determines if there are any icons to add to markers
      */
     private void downloadMarkerIcons() {
-        for (String markerIconUrl : mMarkerIconUrls) {
-            new IconImageDownload(markerIconUrl).execute();
+        mMarkerIconsDownloaded = true;
+        for (Iterator<String> iterator = mMarkerIconUrls.iterator(); iterator.hasNext(); ) {
+            String markerIconUrl = iterator.next();
+            new MarkerIconImageDownload(markerIconUrl).execute();
+            iterator.remove();
         }
-        mMarkerIconUrls.clear();
     }
 
     /**
@@ -699,10 +735,12 @@ import java.util.Set;
      * Downloads images of all ground overlays
      */
     private void downloadGroundOverlays() {
-        for (String groundOverlayUrl : mGroundOverlayUrls) {
+        mGroundOverlayImagesDownloaded = true;
+        for (Iterator<String> iterator = mGroundOverlayUrls.iterator(); iterator.hasNext(); ) {
+            String groundOverlayUrl = iterator.next();
             new GroundOverlayImageDownload(groundOverlayUrl).execute();
+            iterator.remove();
         }
-        mGroundOverlayUrls.clear();
     }
 
     /**
@@ -742,24 +780,9 @@ import java.util.Set;
     }
 
     /**
-     * Removes all the KML data from the map and clears all the stored placemarks of those which
-     * are in a container.
-     */
-    private void removeContainers(Iterable<KmlContainer> containers) {
-        for (KmlContainer container : containers) {
-            if (container.hasKmlPlacemarks()) {
-                removeKmlPlacemarks(container.getPlacemarks());
-            }
-            if (container.hasNestedKmlContainers()) {
-                removeContainers(container.getNestedKmlContainers());
-            }
-        }
-    }
-
-    /**
      * Downloads images for use as marker icons
      */
-    private class IconImageDownload extends AsyncTask<String, Void, Bitmap> {
+    private class MarkerIconImageDownload extends AsyncTask<String, Void, Bitmap> {
 
         private final String mIconUrl;
 
@@ -768,7 +791,7 @@ import java.util.Set;
          *
          * @param iconUrl URL of the marker icon to download
          */
-        public IconImageDownload(String iconUrl) {
+        public MarkerIconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
         }
 
@@ -801,10 +824,11 @@ import java.util.Set;
                 throw new NullPointerException("Image not found!");
             }
             mImagesCache.put(mIconUrl, bitmap);
-            addIconToMarkers(mIconUrl, mPlacemarks);
-            addContainerGroupIconsToMarkers(mIconUrl, mContainers);
+            if (mLayerVisible) {
+                addIconToMarkers(mIconUrl, mPlacemarks);
+                addContainerGroupIconsToMarkers(mIconUrl, mContainers);
+            }
         }
-
     }
 
     /**
@@ -847,10 +871,11 @@ import java.util.Set;
             if (bitmap == null) {
                 throw new NullPointerException("Image not found!");
             }
-            mImagesCache.put(mGroundOverlayUrl, bitmap);
-            addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
-            addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
+            if (mLayerVisible) {
+                mImagesCache.put(mGroundOverlayUrl, bitmap);
+                addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
+                addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
+            }
         }
-
     }
 }
