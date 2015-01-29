@@ -80,7 +80,8 @@ import java.util.HashMap;
                     mPlacemarks.put(featureParser.getPlacemark(), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    mGroundOverlays.put(featureParser.createGroundOverlay(), null);
+                    featureParser.createGroundOverlay();
+                    mGroundOverlays.put(featureParser.getGroundOverlay(), null);
                 }
             }
             eventType = mParser.next();

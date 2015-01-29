@@ -15,11 +15,11 @@ import java.util.HashMap;
  */
 /* package */ class KmlFeatureParser {
 
-    private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
-
     private final static int START_TAG = XmlPullParser.START_TAG;
 
     private final static int END_TAG = XmlPullParser.END_TAG;
+
+    private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
 
     private final static int LONGITUDE_INDEX = 0;
 
@@ -39,9 +39,12 @@ import java.util.HashMap;
 
     private KmlPlacemark mPlacemark;
 
+    private KmlGroundOverlay mGroundOverlay;
+
     public KmlFeatureParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemark = null;
+        mGroundOverlay = null;
     }
 
     /**
@@ -79,29 +82,28 @@ import java.util.HashMap;
         }
     }
 
-    /* package */ KmlGroundOverlay createGroundOverlay()
+    /* package */ void createGroundOverlay()
             throws IOException, XmlPullParserException {
-        KmlGroundOverlay groundOverlay = new KmlGroundOverlay();
+        mGroundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("GroundOverlay"))) {
             if (eventType == START_TAG) {
                 if (mParser.getName().equals("Icon")) {
-                    groundOverlay.setImageUrl(getImageUrl());
+                    mGroundOverlay.setImageUrl(getImageUrl());
                 } else if (mParser.getName().equals("LatLonBox")) {
-                    groundOverlay.setLatLngBox(createLatLonBox(groundOverlay));
+                    mGroundOverlay.setLatLngBox(createLatLonBox(mGroundOverlay));
                 } else if (mParser.getName().equals("drawOrder")) {
-                    groundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
+                    mGroundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals("visibility")) {
-                    groundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
+                    mGroundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
                 } else if (mParser.getName().equals("ExtendedData")) {
-                    groundOverlay.setProperties(setExtendedDataProperties());
+                    mGroundOverlay.setProperties(setExtendedDataProperties());
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
-                    groundOverlay.setProperty(mParser.getName(), mParser.nextText());
+                    mGroundOverlay.setProperty(mParser.getName(), mParser.nextText());
                 }
             }
             eventType = mParser.next();
         }
-        return groundOverlay;
     }
 
     /**
@@ -325,5 +327,9 @@ import java.util.HashMap;
 
     /* package */ KmlPlacemark getPlacemark() {
         return mPlacemark;
+    }
+
+    /* package */ KmlGroundOverlay getGroundOverlay() {
+        return mGroundOverlay;
     }
 }
