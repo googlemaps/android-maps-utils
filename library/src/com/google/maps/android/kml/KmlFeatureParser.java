@@ -85,8 +85,6 @@ import java.util.HashMap;
     /**
      * Creates a new GroundOverlay object (created if a GroundOverlay tag is read by the
      * XmlPullParser) and assigns specific elements read from the parser to the GroundOverlay
-     * @throws IOException
-     * @throws XmlPullParserException
      */
     /* package */ void createGroundOverlay()
             throws IOException, XmlPullParserException {
@@ -116,10 +114,10 @@ import java.util.HashMap;
     }
 
     /**
-     * Gets an image url for the ground overlay
-     * @return image url for the ground overlay
-     * @throws IOException
-     * @throws XmlPullParserException
+     * Retrieves an image url from the "href" tag nested within a "GroundOverlay" tag, read by
+     * the XmlPullParser.
+     *
+     * @return Image Url for the GroundOverlay
      */
 
     private String getImageUrl () throws IOException, XmlPullParserException {
@@ -134,9 +132,10 @@ import java.util.HashMap;
     }
 
     /**
-     * Creates a new KmlGeometry object of type Point, LineString, Polygon or MultiGeometry
+     * Creates a new KmlGeometry object (Created if "Point", "LineString", "Polygon" or
+     * "MultiGeometry" tag is read by the XmlPullParser)
      *
-     * @param geometryType type of geometry object to create
+     * @param geometryType Type of geometry object to create
      */
     private KmlGeometry createGeometry(String geometryType)
             throws IOException, XmlPullParserException {
@@ -253,26 +252,24 @@ import java.util.HashMap;
     private KmlPolygon createPolygon() throws XmlPullParserException, IOException {
         // Indicates if an outer boundary needs to be defined
         Boolean isOuterBoundary = false;
-        // Indicates if an inner boundary needs to be defined
-        ArrayList<LatLng> outerBoundaryCoordinates = new ArrayList<LatLng>();
-        ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates = new ArrayList<ArrayList<LatLng>>();
+        ArrayList<LatLng> outerBoundary = new ArrayList<LatLng>();
+        ArrayList<ArrayList<LatLng>> innerBoundaries = new ArrayList<ArrayList<LatLng>>();
         int eventType = mParser.getEventType();
-
         while (!(eventType == END_TAG && mParser.getName().equals("Polygon"))) {
-            if (eventType == START_TAG) {
+            if (eventType == START_TAG && mParser.getName().matches(BOUNDARY_REGEX)) {
                 if (mParser.getName().matches(BOUNDARY_REGEX)) {
                     isOuterBoundary = mParser.getName().equals("outerBoundaryIs");
-                } else if (mParser.getName().equals("coordinates")) {
+                } else if (eventType == START_TAG && mParser.getName().equals("coordinates")) {
                     if (isOuterBoundary) {
-                        outerBoundaryCoordinates = convertToLatLngArray(mParser.nextText());
+                        outerBoundary = convertToLatLngArray(mParser.nextText());
                     } else {
-                        innerBoundaryCoordinates.add(convertToLatLngArray(mParser.nextText()));
+                        innerBoundaries.add(convertToLatLngArray(mParser.nextText()));
                     }
                 }
             }
             eventType = mParser.next();
         }
-        return new KmlPolygon(outerBoundaryCoordinates, innerBoundaryCoordinates);
+        return new KmlPolygon(outerBoundary, innerBoundaries);
     }
 
     /**

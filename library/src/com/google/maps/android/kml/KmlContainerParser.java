@@ -114,7 +114,8 @@ import java.io.IOException;
 
     /**
      * Assigns properties which are obtained from an XmlPullParser and stores it into
-     * the container
+     * the container. Only <name>, <description>, <visibility> and <open> are supported as
+     * properties.
      *
      * @param kmlContainer Stores properties
      */
@@ -151,8 +152,8 @@ import java.io.IOException;
 
     /**
      * Creates a new default Kml Style with a specified ID (given as an attribute value in the
-     * start tag) and stores it into the container. A new style is not created if it does not
-     * have an ID.
+     * start tag) and assigns specific elements read from the XmlPullParser to the Style. A new
+     * style is not created if it does not have an ID.
      *
      * @param kmlContainer Stores styles
      */
@@ -169,7 +170,8 @@ import java.io.IOException;
     }
 
     /**
-     * Creates a new placemark object and stores this into the given container.
+     * Creates a new placemark object  and assigns specific elements read from the XmlPullParser
+     * to the Placemark and stores this into the given Container.
      *
      * @param kmlContainer Container object to store the Placemark object
      */
