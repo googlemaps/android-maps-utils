@@ -34,10 +34,20 @@ public class KmlContainer {
         mContainerId = null;
     }
 
+    /**
+     * Gets the Container ID if it is specified
+     *
+     * @return Container ID or null if not set
+     */
     public String getContainerId() {
         return mContainerId;
     }
 
+    /**
+     * Assigns a string value to the Contianer
+     *
+     * @param containerId   String value to assign to the contianer
+     */
     public void setContainerId(String containerId) {
         mContainerId = containerId;
     }
@@ -137,6 +147,11 @@ public class KmlContainer {
         mGroundOverlays.put(groundOverlay, null);
     }
 
+    /**
+     * Gets all of the ground overlays which were set in the container
+     *
+     * @return  A set of ground overlays
+     */
     /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayHashMap() {
         return mGroundOverlays;
     }

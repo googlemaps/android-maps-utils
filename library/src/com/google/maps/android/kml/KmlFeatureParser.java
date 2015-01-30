@@ -290,6 +290,12 @@ import java.util.HashMap;
         return new KmlMultiGeometry(geometries);
     }
 
+    /**
+     * Creates a bound for a LatLonBox and sets the GroundOverlay to contain this bound
+     *
+     * @param groundOverlay GroundOverlay to set the bound
+     * @return LatLngBounds
+     */
     private LatLngBounds createLatLonBox(KmlGroundOverlay groundOverlay)
             throws XmlPullParserException, IOException {
         Double north = 0.0;
