@@ -575,7 +575,7 @@ import java.util.Set;
             marker.setSnippet(placemark.getProperty("description"));
         } else if (hasDescription) {
             marker.setTitle(placemark.getProperty("description"));
-        } 
+        }
     }
 
     private void setInlinePointStyle(MarkerOptions markerUrlStyle, KmlStyle inlineStyle,
