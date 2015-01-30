@@ -489,7 +489,7 @@ import java.util.Set;
      * of either objects
      */
     private Object addToMap(KmlPlacemark placemark, KmlGeometry geometry, KmlStyle style,
-                            KmlStyle inlineStyle, Boolean isVisible) {
+            KmlStyle inlineStyle, Boolean isVisible) {
         String geometryType = geometry.getKmlGeometryType();
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
@@ -511,7 +511,6 @@ import java.util.Set;
     }
 
 
-
     /**
      * Determines if a marker inside a container needs to be set
      *
@@ -523,7 +522,7 @@ import java.util.Set;
             Iterable<KmlContainer> containers) {
         for (KmlContainer container : containers) {
             if (container.hasKmlPlacemarks()) {
-                for (KmlPlacemark placemark: container.getPlacemarks().keySet()) {
+                for (KmlPlacemark placemark : container.getPlacemarks().keySet()) {
                     setMarkerInfoWindow(style, marker, placemark);
                 }
             }
@@ -540,8 +539,8 @@ import java.util.Set;
      * @param style contains relevant styling properties for the Marker
      * @return Marker object
      */
-    private Marker addPointToMap(KmlPlacemark placemark,KmlPoint point, KmlStyle style,
-                                 KmlStyle markerInlineStyle) {
+    private Marker addPointToMap(KmlPlacemark placemark, KmlPoint point, KmlStyle style,
+            KmlStyle markerInlineStyle) {
         MarkerOptions markerUrlStyle = style.getMarkerOptions();
         markerUrlStyle.position(point.getKmlGeometryObject());
         if (markerInlineStyle != null) {
@@ -563,7 +562,7 @@ import java.util.Set;
      * @param style Style to apply
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker,
-                                     KmlPlacemark placemark) {
+            KmlPlacemark placemark) {
         Boolean hasName = placemark.getProperty("name") != null;
         Boolean hasDescription = placemark.getProperty("description") != null;
         if (style.getBalloonOptions() != null && style.getBalloonOptions().containsKey("text")) {
@@ -676,7 +675,7 @@ import java.util.Set;
      * @param style         contains relevant styling properties for the MultiGeometry
      * @return array of Marker, Polyline and Polygon objects
      */
-    private ArrayList<Object> addMultiGeometryToMap (KmlPlacemark placemark,
+    private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
             KmlMultiGeometry multiGeometry, KmlStyle style, KmlStyle inlineStyle,
             Boolean isVisible) {
         ArrayList<Object> geometries = new ArrayList<Object>();
