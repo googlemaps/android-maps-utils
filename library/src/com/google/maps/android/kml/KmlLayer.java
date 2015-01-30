@@ -18,8 +18,6 @@ public class KmlLayer {
 
     private final KmlRenderer mRenderer;
 
-    private XmlPullParser mParser;
-
     /**
      * Creates a new KmlLayer object
      *
@@ -43,9 +41,10 @@ public class KmlLayer {
     public KmlLayer(GoogleMap map, InputStream stream)
             throws XmlPullParserException, IOException {
         mRenderer = new KmlRenderer(map);
-        mParser = createXmlParser(stream);
-        KmlParser parser = new KmlParser(mParser);
+        XmlPullParser parser1 = createXmlParser(stream);
+        KmlParser parser = new KmlParser(parser1);
         parser.parseKml();
+        stream.close();
         mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
                 parser.getFolders(), parser.getGroundOverlays());
     }
