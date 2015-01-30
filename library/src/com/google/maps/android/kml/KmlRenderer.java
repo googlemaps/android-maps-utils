@@ -30,7 +30,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * Renders KmlPlacemark, KmlContainer and KmlGroundOverlay objects onto the GoogleMap as Marker,
+ * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
 /* package */ class KmlRenderer {
@@ -159,14 +159,12 @@ import java.util.Set;
     }
 
     /**
-     * Determines whether the container is visible, based on the visibility of the parent container
-     * and its own specified visibility
+     * Gets the visibility of the container
      *
-     * @param kmlContainer             The kml container to retrieve visibility
-     * @param isParentContainerVisible Boolean value representing that parents visibility
-     * @return Visibility of the container
+     * @param kmlContainer container to check visibility of
+     * @param isParentContainerVisible true if the parent container is visible, false otherwise
+     * @return true if this container is visible, false otherwise
      */
-
     /*package*/
     static Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
             isParentContainerVisible) {
@@ -180,6 +178,11 @@ import java.util.Set;
         return (isParentContainerVisible && isChildContainerVisible);
     }
 
+    /**
+     * Removes all ground overlays in the given hashmap
+     *
+     * @param groundOverlays hashmap of ground overlays to remove
+     */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
             if (groundOverlay != null) {
@@ -510,11 +513,10 @@ import java.util.Set;
         return null;
     }
 
-
     /**
      * Determines if a marker inside a container needs to be set
      *
-     * @param style      Style containting the style of the marker
+     * @param style      Style containing the style of the marker
      * @param marker     The marker to display the info window on
      * @param containers List of containers to find an info window of
      */
@@ -575,24 +577,31 @@ import java.util.Set;
         }
     }
 
-    private void setInlinePointStyle(MarkerOptions markerUrlStyle, KmlStyle inlineStyle,
+    /**
+     * Sets the inline point style by copying over the styles that have been set
+     *
+     * @param markerOptions marker options object to add inline styles to
+     * @param inlineStyle inline styles to apply
+     * @param markerUrlIconUrl default marker icon URL from shared style
+     */
+    private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
             String markerUrlIconUrl) {
         MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
         if (inlineStyle.isStyleSet("heading")) {
-            markerUrlStyle.rotation(inlineMarkerOptions.getRotation());
+            markerOptions.rotation(inlineMarkerOptions.getRotation());
         }
         if (inlineStyle.isStyleSet("hotSpot")) {
-            markerUrlStyle
+            markerOptions
                     .anchor(inlineMarkerOptions.getAnchorU(), inlineMarkerOptions.getAnchorV());
         }
         if (inlineStyle.isStyleSet("markerColor")) {
-            markerUrlStyle.icon(inlineMarkerOptions.getIcon());
+            markerOptions.icon(inlineMarkerOptions.getIcon());
         }
         if (inlineStyle.isStyleSet("iconUrl")) {
-            addMarkerIcons(inlineStyle.getIconUrl(), markerUrlStyle);
+            addMarkerIcons(inlineStyle.getIconUrl(), markerOptions);
         } else if (markerUrlIconUrl != null) {
             // Inline style with no icon defined
-            addMarkerIcons(markerUrlIconUrl, markerUrlStyle);
+            addMarkerIcons(markerUrlIconUrl, markerOptions);
         }
     }
 
@@ -615,6 +624,12 @@ import java.util.Set;
         return mMap.addPolyline(polylineOptions);
     }
 
+    /**
+     * Sets the inline linestring style by copying over the styles that have been set
+     *
+     * @param polylineOptions polygon options object to add inline styles to
+     * @param inlineStyle inline styles to apply
+     */
     private void setInlineLineStringStyle(PolylineOptions polylineOptions, KmlStyle inlineStyle) {
         PolylineOptions inlinePolylineOptions = inlineStyle.getPolylineOptions();
         if (inlineStyle.isStyleSet("outlineColor")) {
@@ -649,21 +664,27 @@ import java.util.Set;
         return mMap.addPolygon(polygonOptions);
     }
 
-    private void setInlinePolygonStyle(PolygonOptions polygonUrlStyle, KmlStyle inlineStyle) {
+    /**
+     * Sets the inline polygon style by copying over the styles that have been set
+     *
+     * @param polygonOptions polygon options object to add inline styles to
+     * @param inlineStyle inline styles to apply
+     */
+    private void setInlinePolygonStyle(PolygonOptions polygonOptions, KmlStyle inlineStyle) {
         PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
         if (inlineStyle.hasFill() && inlineStyle.isStyleSet("fillColor")) {
-            polygonUrlStyle.fillColor(inlinePolygonOptions.getFillColor());
+            polygonOptions.fillColor(inlinePolygonOptions.getFillColor());
         }
         if (inlineStyle.hasOutline()) {
             if (inlineStyle.isStyleSet("outlineColor")) {
-                polygonUrlStyle.strokeColor(inlinePolygonOptions.getStrokeColor());
+                polygonOptions.strokeColor(inlinePolygonOptions.getStrokeColor());
             }
             if (inlineStyle.isStyleSet("width")) {
-                polygonUrlStyle.strokeWidth(inlinePolygonOptions.getStrokeWidth());
+                polygonOptions.strokeWidth(inlinePolygonOptions.getStrokeWidth());
             }
         }
         if (inlineStyle.isPolyRandomColorMode()) {
-            polygonUrlStyle.fillColor(computeRandomColor(inlinePolygonOptions.getFillColor()));
+            polygonOptions.fillColor(computeRandomColor(inlinePolygonOptions.getFillColor()));
         }
     }
 
