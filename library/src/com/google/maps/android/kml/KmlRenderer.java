@@ -861,8 +861,8 @@ import java.util.Set;
             if (bitmap == null) {
                 throw new NullPointerException("Image not found!");
             }
+            mImagesCache.put(mGroundOverlayUrl, bitmap);
             if (mLayerVisible) {
-                mImagesCache.put(mGroundOverlayUrl, bitmap);
                 addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
                 addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
             }
