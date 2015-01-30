@@ -53,9 +53,9 @@ import java.util.Set;
 
     private HashMap<String, KmlStyle> mStyles;
 
-    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
+    private HashMap<String, KmlStyle> mStylesRenderer;
 
-    private HashMap<String, KmlStyle> mOriginalStyles;
+    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
     private boolean mLayerVisible;
 
@@ -73,6 +73,7 @@ import java.util.Set;
         mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
         mGroundOverlayUrls = new ArrayList<String>();
+        mStylesRenderer = new HashMap<String, KmlStyle>();
         mLayerVisible = false;
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
@@ -230,13 +231,11 @@ import java.util.Set;
         mPlacemarks = placemarks;
         mContainers = folders;
         mGroundOverlays = groundOverlays;
-        // Need to keep an original copy of the styles in case we override
-        mOriginalStyles = styles;
     }
 
     /* package */ void addKmlData() {
-        mStyles = mOriginalStyles;
-        assignStyleMap(mStyleMaps, mStyles);
+        mStylesRenderer.putAll(mStyles);
+        assignStyleMap(mStyleMaps, mStylesRenderer);
         addGroundOverlays(mGroundOverlays, mContainers);
         addContainerGroupToMap(mContainers, true);
         addPlacemarksToMap(mPlacemarks);
@@ -266,7 +265,6 @@ import java.util.Set;
     /* package */ void setMap(GoogleMap map) {
         removeKmlData();
         mMap = map;
-        mStyles = mOriginalStyles;
         addKmlData();
     }
 
@@ -325,6 +323,7 @@ import java.util.Set;
             removeContainers(getNestedContainers());
         }
         mLayerVisible = false;
+        mStylesRenderer.clear();
     }
 
     /**
@@ -367,13 +366,13 @@ import java.util.Set;
             Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
                 // Stores all found styles from the container
-                mStyles.putAll(container.getStyles());
+                mStylesRenderer.putAll(container.getStyles());
             }
             if (container.getStyleMap() != null) {
                 // Stores all found style maps from the container
                 mStyleMaps.putAll(container.getStyleMap());
             }
-            assignStyleMap(mStyleMaps, mStyles);
+            assignStyleMap(mStyleMaps, mStylesRenderer);
             addContainerObjectToMap(container, isContainerVisible);
             if (container.hasNestedKmlContainers()) {
                 addContainerGroupToMap(container.getNestedKmlContainers(), isContainerVisible);
@@ -403,9 +402,9 @@ import java.util.Set;
      * @return Style which corresponds to an ID
      */
     private KmlStyle getPlacemarkStyle(String styleId) {
-        KmlStyle style = mStyles.get(null);
-        if (mStyles.get(styleId) != null) {
-            style = mStyles.get(styleId);
+        KmlStyle style = mStylesRenderer.get(null);
+        if (mStylesRenderer.get(styleId) != null) {
+            style = mStylesRenderer.get(styleId);
         }
         return style;
     }
@@ -445,7 +444,7 @@ import java.util.Set;
      */
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> mPlacemarks) {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
-            KmlStyle placemarkStyle = mStyles.get(placemark.getStyleID());
+            KmlStyle placemarkStyle = mStylesRenderer.get(placemark.getStyleID());
             if ("Point".equals(placemark.getGeometry().getKmlGeometryType())) {
                 boolean isInlineStyleIcon = placemark.getInlineStyle() != null && iconUrl
                         .equals(placemark.getInlineStyle().getIconUrl());
