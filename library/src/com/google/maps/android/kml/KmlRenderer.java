@@ -353,7 +353,7 @@ import java.util.Set;
         KmlGeometry geometry = placemark.getGeometry();
         KmlStyle style = getPlacemarkStyle(placemarkId);
         KmlStyle inlineStyle = placemark.getInlineStyle();
-        return addToMap(geometry, style, inlineStyle, placemarkVisibility);
+        return addToMap(placemark, geometry, style, inlineStyle, placemarkVisibility);
     }
 
     /**
@@ -490,11 +490,11 @@ import java.util.Set;
      * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
      * of either objects
      */
-    private Object addToMap(KmlGeometry geometry, KmlStyle style, KmlStyle inlineStyle,
-            Boolean isVisible) {
+    private Object addToMap(KmlPlacemark placemark, KmlGeometry geometry, KmlStyle style,
+                            KmlStyle inlineStyle, Boolean isVisible) {
         String geometryType = geometry.getKmlGeometryType();
         if (geometryType.equals("Point")) {
-            Marker marker = addPointToMap((KmlPoint) geometry, style, inlineStyle);
+            Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
             marker.setVisible(isVisible);
             return marker;
         } else if (geometryType.equals("LineString")) {
@@ -506,39 +506,13 @@ import java.util.Set;
             polygon.setVisible(isVisible);
             return polygon;
         } else if (geometryType.equals("MultiGeometry")) {
-            return addMultiGeometryToMap((KmlMultiGeometry) geometry, style, inlineStyle,
+            return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
                     isVisible);
         }
         return null;
     }
 
-    /**
-     * Sets a marker info window if no <text> tag was found in the KML document. This method sets
-     * the marker title as the text found in the <name> start tag and the snippet as <description>
-     *
-     * @param style Style to apply
-     */
-    private void setMarkerInfoWindow(KmlStyle style, Marker marker,
-            Iterable<KmlPlacemark> mPlacemarks) {
-        for (KmlPlacemark placemark : mPlacemarks) {
-            if (mStyles.get(placemark.getStyleID()).equals(style)) {
-                Boolean hasName = placemark.getProperty("name") != null;
-                Boolean hasDescription = placemark.getProperty("description") != null;
-                if (style.getBalloonOptions().containsKey("text")) {
-                    marker.setTitle(style.getBalloonOptions().get("text"));
-                } else if (hasName && hasDescription) {
-                    marker.setTitle(placemark.getProperty("name"));
-                    marker.setSnippet(placemark.getProperty("description"));
-                } else if (hasName) {
-                    marker.setTitle(placemark.getProperty("name"));
-                } else if (hasDescription) {
-                    marker.setTitle(placemark.getProperty("description"));
-                } else {
-                    throw new IllegalArgumentException("Can't display BalloonStyle; no text found");
-                }
-            }
-        }
-    }
+
 
     /**
      * Determines if a marker inside a container needs to be set
@@ -551,7 +525,9 @@ import java.util.Set;
             Iterable<KmlContainer> containers) {
         for (KmlContainer container : containers) {
             if (container.hasKmlPlacemarks()) {
-                setMarkerInfoWindow(style, marker, container.getKmlPlacemarks());
+                for (KmlPlacemark placemark: container.getPlacemarks().keySet()) {
+                    setMarkerInfoWindow(style, marker, placemark);
+                }
             }
             if (hasNestedContainers()) {
                 setContainerMarkerInfoWindow(style, marker, container.getNestedKmlContainers());
@@ -566,7 +542,8 @@ import java.util.Set;
      * @param style contains relevant styling properties for the Marker
      * @return Marker object
      */
-    private Marker addPointToMap(KmlPoint point, KmlStyle style, KmlStyle markerInlineStyle) {
+    private Marker addPointToMap(KmlPlacemark placemark,KmlPoint point, KmlStyle style,
+                                 KmlStyle markerInlineStyle) {
         MarkerOptions markerUrlStyle = style.getMarkerOptions();
         markerUrlStyle.position(point.getKmlGeometryObject());
         if (markerInlineStyle != null) {
@@ -576,14 +553,29 @@ import java.util.Set;
             addMarkerIcons(style.getIconUrl(), markerUrlStyle);
         }
         Marker marker = mMap.addMarker(markerUrlStyle);
-        // If there exists style options for a balloonStyle
-        if (style.getBalloonOptions().size() > 0) {
-            // Set info window if balloonStyle is set
-            setMarkerInfoWindow(style, marker, mPlacemarks.keySet());
-            setContainerMarkerInfoWindow(style, marker, mContainers);
-        }
-
+        setMarkerInfoWindow(style, marker, placemark);
+        setContainerMarkerInfoWindow(style, marker, mContainers);
         return marker;
+    }
+
+    /**
+     * Sets a marker info window if no <text> tag was found in the KML document. This method sets
+     * the marker title as the text found in the <name> start tag and the snippet as <description>
+     *
+     * @param style Style to apply
+     */
+    private void setMarkerInfoWindow(KmlStyle style, Marker marker,
+                                     KmlPlacemark placemark) {
+        Boolean hasName = placemark.getProperty("name") != null;
+        Boolean hasDescription = placemark.getProperty("description") != null;
+        if (style.getBalloonOptions() != null && style.getBalloonOptions().containsKey("text")) {
+            marker.setTitle(style.getBalloonOptions().get("text"));
+        } else if (hasName && hasDescription) {
+            marker.setTitle(placemark.getProperty("name"));
+            marker.setSnippet(placemark.getProperty("description"));
+        } else if (hasDescription) {
+            marker.setTitle(placemark.getProperty("description"));
+        } 
     }
 
     private void setInlinePointStyle(MarkerOptions markerUrlStyle, KmlStyle inlineStyle,
@@ -686,12 +678,13 @@ import java.util.Set;
      * @param style         contains relevant styling properties for the MultiGeometry
      * @return array of Marker, Polyline and Polygon objects
      */
-    private ArrayList<Object> addMultiGeometryToMap(KmlMultiGeometry multiGeometry, KmlStyle style,
-            KmlStyle inlineStyle, Boolean isVisible) {
+    private ArrayList<Object> addMultiGeometryToMap (KmlPlacemark placemark,
+            KmlMultiGeometry multiGeometry, KmlStyle style, KmlStyle inlineStyle,
+            Boolean isVisible) {
         ArrayList<Object> geometries = new ArrayList<Object>();
         ArrayList<KmlGeometry> geometry = multiGeometry.getKmlGeometryObject();
         for (KmlGeometry kmlGeometry : geometry) {
-            geometries.add(addToMap(kmlGeometry, style, inlineStyle, isVisible));
+            geometries.add(addToMap(placemark, kmlGeometry, style, inlineStyle, isVisible));
         }
         return geometries;
     }

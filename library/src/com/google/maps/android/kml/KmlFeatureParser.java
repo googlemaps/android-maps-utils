@@ -256,10 +256,10 @@ import java.util.HashMap;
         ArrayList<ArrayList<LatLng>> innerBoundaries = new ArrayList<ArrayList<LatLng>>();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("Polygon"))) {
-            if (eventType == START_TAG && mParser.getName().matches(BOUNDARY_REGEX)) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().matches(BOUNDARY_REGEX)) {
                     isOuterBoundary = mParser.getName().equals("outerBoundaryIs");
-                } else if (eventType == START_TAG && mParser.getName().equals("coordinates")) {
+                } else if (mParser.getName().equals("coordinates")) {
                     if (isOuterBoundary) {
                         outerBoundary = convertToLatLngArray(mParser.nextText());
                     } else {

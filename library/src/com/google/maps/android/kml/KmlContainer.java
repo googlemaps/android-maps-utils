@@ -22,6 +22,8 @@ public class KmlContainer {
 
     private HashMap<String, KmlStyle> mStyles;
 
+    private String mContainerId;
+
     public KmlContainer() {
         mProperties = new HashMap<String, String>();
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
@@ -29,6 +31,15 @@ public class KmlContainer {
         mStyleMap = new HashMap<String, String>();
         mContainers = new ArrayList<KmlContainer>();
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
+        mContainerId = null;
+    }
+
+    public String getContainerId() {
+        return mContainerId;
+    }
+
+    public void setContainerId(String containerId) {
+        mContainerId = containerId;
     }
 
     /*package*/ ArrayList<KmlContainer> getNestedContainers() {

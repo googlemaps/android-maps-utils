@@ -34,7 +34,10 @@ import java.io.IOException;
 
     private KmlContainer mContainer;
 
+
+
     /* package */ KmlContainerParser(XmlPullParser parser) {
+
         mParser = parser;
         mFeatureParser = new KmlFeatureParser(parser);
         mContainer = null;
@@ -60,6 +63,11 @@ import java.io.IOException;
     /* package */ void assignContainerProperties(KmlContainer kmlContainer)
             throws XmlPullParserException, IOException {
         String startTag = mParser.getName();
+
+        if (mParser.getAttributeValue(null, "id") != null) {
+            kmlContainer.setContainerId(mParser.getAttributeValue(null, "id"));
+        }
+
         mParser.next();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals(startTag))) {
