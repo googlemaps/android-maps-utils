@@ -370,9 +370,8 @@ import java.util.Set;
             }
             if (container.getStyleMap() != null) {
                 // Stores all found style maps from the container
-                mStyleMaps.putAll(container.getStyleMap());
+                assignStyleMap(container.getStyleMap(), mStylesRenderer);
             }
-            assignStyleMap(mStyleMaps, mStylesRenderer);
             addContainerObjectToMap(container, isContainerVisible);
             if (container.hasNestedKmlContainers()) {
                 addContainerGroupToMap(container.getNestedKmlContainers(), isContainerVisible);
