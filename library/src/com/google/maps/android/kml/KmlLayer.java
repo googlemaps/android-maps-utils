@@ -46,7 +46,7 @@ public class KmlLayer {
         parser.parseKml();
         stream.close();
         mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
-                parser.getFolders(), parser.getGroundOverlays());
+                parser.getContainers(), parser.getGroundOverlays());
     }
 
     /**

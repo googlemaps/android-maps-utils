@@ -47,9 +47,9 @@ public class KmlParserTest extends ActivityTestCase {
         XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.document_nest);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
-        assertEquals(mParser.getFolders().get(0).getContainerId(), "hasId");
-        assertEquals(mParser.getFolders().size(), 1);
-        assertTrue(mParser.getFolders().get(0).hasNestedKmlContainers());
+        assertEquals(mParser.getContainers().get(0).getContainerId(), "hasId");
+        assertEquals(mParser.getContainers().size(), 1);
+        assertTrue(mParser.getContainers().get(0).hasNestedKmlContainers());
 
     }
 

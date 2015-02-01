@@ -35,7 +35,7 @@ import java.util.HashMap;
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
 
-    private final ArrayList<KmlContainer> mFolders;
+    private final ArrayList<KmlContainer> mContainers;
 
     private final HashMap<String, KmlStyle> mStyles;
 
@@ -49,7 +49,7 @@ import java.util.HashMap;
     /* package */ KmlParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mFolders = new ArrayList<KmlContainer>();
+        mContainers = new ArrayList<KmlContainer>();
         mStyles = new HashMap<String, KmlStyle>();
         styleParser = new KmlStyleParser(mParser);
         featureParser = new KmlFeatureParser(mParser);
@@ -66,7 +66,7 @@ import java.util.HashMap;
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
                     containerParser.createContainer();
-                    mFolders.add(containerParser.getContainer());
+                    mContainers.add(containerParser.getContainer());
                 }
                 if (mParser.getName().equals(STYLE)) {
                     styleParser.createStyle();
@@ -114,8 +114,8 @@ import java.util.HashMap;
     /**
      * @return List of folder objects created by the parser
      */
-    /* package */ ArrayList<KmlContainer> getFolders() {
-        return mFolders;
+    /* package */ ArrayList<KmlContainer> getContainers() {
+        return mContainers;
     }
 
     /**
