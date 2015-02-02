@@ -30,6 +30,7 @@ public class KmlGroundOverlay {
         if (latLonBox == null) {
             throw new IllegalArgumentException("No LatLonBox given");
         }
+        mLatLngBox = latLonBox;
         mGroundOverlayOptions.positionFromBounds(latLonBox);
         mGroundOverlayOptions.bearing(rotation);
         mGroundOverlayOptions.zIndex(drawOrder);
@@ -51,12 +52,6 @@ public class KmlGroundOverlay {
     public LatLngBounds getLatLngBox() {
         return mLatLngBox;
     }
-
-    /* package */ void setLatLngBox(LatLngBounds latLngBox) {
-        mLatLngBox = latLngBox;
-        mGroundOverlayOptions.positionFromBounds(latLngBox);
-    }
-
     public Iterable getProperties() {
         return mProperties.entrySet();
     }

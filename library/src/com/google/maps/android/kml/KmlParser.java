@@ -24,12 +24,6 @@ import java.util.HashMap;
 
     private final static String CONTAINER_REGEX = "Folder|Document";
 
-    private final KmlStyleParser mStyleParser;
-
-    private final KmlFeatureParser mFeatureParser;
-
-    private final KmlContainerParser mContainerParser;
-
     private final XmlPullParser mParser;
 
     private final HashMap<KmlPlacemark, Object> mPlacemarks;
@@ -37,6 +31,8 @@ import java.util.HashMap;
     private final ArrayList<KmlContainer> mContainers;
 
     private final HashMap<String, KmlStyle> mStyles;
+
+    private final HashMap<String, String> mStyleMaps;
 
     private final HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
@@ -50,9 +46,7 @@ import java.util.HashMap;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mContainers = new ArrayList<KmlContainer>();
         mStyles = new HashMap<String, KmlStyle>();
-        mStyleParser = new KmlStyleParser();
-        mFeatureParser = new KmlFeatureParser();
-        mContainerParser = new KmlContainerParser();
+        mStyleMaps = new HashMap<String, String>();
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
@@ -64,15 +58,14 @@ import java.util.HashMap;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    mContainerParser.createContainer(mParser);
-                    mContainers.add(mContainerParser.getContainer());
+                    mContainers.add(KmlContainerParser.createContainer(mParser));
                 }
                 if (mParser.getName().equals(STYLE)) {
                     KmlStyle style = KmlStyleParser.createStyle(mParser);
                     mStyles.put(style.getStyleId(), style);
                 }
                 if (mParser.getName().equals(STYLE_MAP)) {
-                    mStyleParser.createStyleMap(mParser);
+                    mStyleMaps.putAll(KmlStyleParser.createStyleMap(mParser));
                 }
                 if (mParser.getName().equals(PLACEMARK)) {
                     mPlacemarks.put(KmlFeatureParser.createPlacemark(mParser), null);
@@ -105,7 +98,7 @@ import java.util.HashMap;
      * @return A list of stylemaps created by the parser
      */
     /* package */ HashMap<String, String> getStyleMaps() {
-        return mStyleParser.getStyleMaps();
+        return mStyleMaps;
     }
 
     /**
