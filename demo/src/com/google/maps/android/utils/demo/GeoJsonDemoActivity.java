@@ -18,9 +18,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo()  {
-<<<<<<< HEAD
-=======
-
         try {
             JSONObject geoJson = new JSONObject(
                     "{ \"type\": \"FeatureCollection\",\n"
@@ -66,12 +63,11 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
             polygonStyle.setFillColor(Color.BLUE);
             layer.setDefaultPolygonStyle(polygonStyle);
-            layer.removeGeoJsonLayer();
+            layer.removeLayer();
             layer.addDataToLayer();
         } catch (Exception e) {
             e.printStackTrace();
         }
->>>>>>> 8f81f5390e1cbeb73c6598b5e56dbda8ba58140a
     }
 }
 
