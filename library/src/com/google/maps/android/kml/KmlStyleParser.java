@@ -40,18 +40,16 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     private final HashMap<String, String> mStyleMaps;
 
-    private KmlStyle mStyle;
 
 
     /* package */ KmlStyleParser() {
         mStyleMaps = new HashMap<String, String>();
-        mStyle = new KmlStyle();
     }
 
     /**
      * Parses the IconStyle, LineStyle and PolyStyle tags into a KmlStyle object
      */
-    /* package */ void createStyle(XmlPullParser mParser)
+    /* package */ static KmlStyle createStyle(XmlPullParser mParser)
             throws IOException, XmlPullParserException {
         // Indicates if any valid style tags have been found
         Boolean isValidStyle = false;
@@ -79,8 +77,9 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
         // Check if supported styles are added, unsupported styles are not saved
         if (isValidStyle) {
-            mStyle = styleProperties;
+           return styleProperties;
         }
+        return null;
     }
 
     /**
@@ -89,7 +88,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * @param style Style to apply properties to
      * @return true if icon style has been set
      */
-    /* package */ boolean createIconStyle(KmlStyle style, XmlPullParser mParser)
+    /* package */ static boolean createIconStyle(KmlStyle style, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("IconStyle"))) {
@@ -143,7 +142,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to add properties to
      */
-    private boolean createBalloonStyle(KmlStyle style, XmlPullParser mParser)
+    private static boolean createBalloonStyle(KmlStyle style, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("BalloonStyle"))) {
@@ -161,7 +160,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * @param style Style to set the icon url to
      */
 
-    private void setIconUrl(KmlStyle style, XmlPullParser mParser)
+    private static void setIconUrl(KmlStyle style, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals(ICON_STYLE_URL))) {
@@ -177,7 +176,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to apply hotspot properties to
      */
-    private void setIconHotSpot(KmlStyle style, XmlPullParser mParser) {
+    private static void setIconHotSpot(KmlStyle style, XmlPullParser mParser) {
         Float xValue, yValue;
         String xUnits, yUnits;
         xValue = Float.parseFloat(mParser.getAttributeValue(null, "x"));
@@ -193,7 +192,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to add properties to
      */
-    private boolean createLineStyle(KmlStyle style, XmlPullParser mParser)
+    private static boolean createLineStyle(KmlStyle style, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("LineStyle"))) {
@@ -217,7 +216,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to add properties to
      */
-    private boolean createPolyStyle(KmlStyle style, XmlPullParser mParser)
+    private static boolean createPolyStyle(KmlStyle style, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("PolyStyle"))) {
@@ -235,15 +234,6 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             eventType = mParser.next();
         }
         return true;
-    }
-
-    /**
-     * Gets the hashmap of KmlStyle objects
-     *
-     * @return hashmap of KmlStyle objects
-     */
-    /* package */ KmlStyle getStyle() {
-        return mStyle;
     }
 
     /**

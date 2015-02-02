@@ -144,9 +144,9 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             XmlPullParser mParser) throws XmlPullParserException, IOException {
         Boolean hasStyleId = mParser.getAttributeValue(null, "id") != null;
         if (hasStyleId) {
-            mStyleParser.createStyle(mParser);
-            String styleId = mStyleParser.getStyle().getStyleId();
-            KmlStyle style = mStyleParser.getStyle();
+            KmlStyleParser.createStyle(mParser);
+            String styleId = KmlStyleParser.createStyle(mParser).getStyleId();
+            KmlStyle style = KmlStyleParser.createStyle(mParser);
             containerStyles.put(styleId, style);
         }
     }

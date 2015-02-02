@@ -58,9 +58,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 } else if (mParser.getName().equals(EXTENDED_DATA)) {
                     properties.putAll(setExtendedDataProperties(mParser));
                 } else if (mParser.getName().equals(STYLE_TAG)) {
-                    KmlStyleParser styleParser = new KmlStyleParser();
-                    styleParser.createStyle(mParser);
-                    inlineStyle = styleParser.getStyle();
+                    inlineStyle = KmlStyleParser.createStyle(mParser);
                 }
             }
             eventType = mParser.next();
