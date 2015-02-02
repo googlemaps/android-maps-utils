@@ -26,16 +26,16 @@ public class KmlContainer {
 
 
     public KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
-                        HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
-                        ArrayList<KmlContainer> containers,
-                        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlay, String containerId) {
+    HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
+    ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
+    groundOverlay, String Id) {
         mProperties = properties;
         mPlacemarks = placemarks;
         mStyles = styles;
         mStyleMap = styleMaps;
         mContainers = containers;
         mGroundOverlays = groundOverlay;
-        mContainerId = containerId;
+        mContainerId = Id;
     }
 
     /**
@@ -65,13 +65,6 @@ public class KmlContainer {
      */
     /* package */ HashMap<String, KmlStyle> getStyles() {
         return mStyles;
-    }
-
-    /**
-     * Takes an ArrayList of styles and assigns these folders with the styles
-     */
-    /* package */ void setStyles(HashMap<String, KmlStyle> styles) {
-        mStyles = styles;
     }
 
     /**

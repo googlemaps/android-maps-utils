@@ -8,7 +8,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
@@ -36,27 +35,32 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private KmlContainer mContainer;
 
+    private KmlStyleParser mStyleParser;
+
     /* package */ KmlContainerParser() {
+        mStyleParser = new KmlStyleParser();
         mFeatureParser = new KmlFeatureParser();
         mContainer = null;
     }
 
     /**
-     * Creates a new Container object (created if a Document or Folder start tag is read by the
+     * Obtains a Container object (created if a Document or Folder start tag is read by the
      * XmlPullParser) and assigns specific elements read from the XmlPullParser to the container.
      */
 
-    public void assignContainerProperties(XmlPullParser mParser) throws XmlPullParserException, IOException {
-        mContainer = setContainer(mParser);
+    public void createContainer(XmlPullParser mParser) throws XmlPullParserException, IOException {
+        mContainer = assignPropertiesToContainer(mParser);
     }
 
     /**
-     * Obtains relevant values from an XML start tag and assigns these values to variables
-     * within a KmlContainer class
+     * Creates a new KmlContainer objects and assigns specific elements read from the XmlPullParser
+     * to the new KmlContainer.
      *
+     * @param mParser   XmlPullParser object reading from a KML file
+     * @return  KmlContainer object with properties read from the XmlPullParser
      */
-    /* package */ KmlContainer setContainer(XmlPullParser mParser)
-            throws XmlPullParserException, IOException {
+    /* package */ KmlContainer assignPropertiesToContainer(XmlPullParser mParser)
+                  throws XmlPullParserException, IOException {
         String startTag = mParser.getName();
         String containerId = null;
         HashMap<String, String> containerProperties = new HashMap<String, String>();
@@ -76,11 +80,11 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         while (!(eventType == END_TAG && mParser.getName().equals(startTag))) {
             if (eventType == START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    nestedContainers.add(setNestedContainerObject(mParser));
+                    nestedContainers.add(assignPropertiesToContainer(mParser));
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
                     containerProperties.put(mParser.getName(), mParser.nextText());
                 } else if (mParser.getName().equals(STYLE_MAP)) {
-                    containerStyleMaps.putAll(setContainerStyleMap(mParser));
+                    setContainerStyleMap(mParser, containerStyleMaps);
                 } else if (mParser.getName().equals(STYLE)) {
                     setContainerStyle(containerStyles, mParser);
                 } else if (mParser.getName().equals(PLACEMARK)) {
@@ -101,28 +105,14 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
     }
 
     /**
-     * Creates a new Container object (created if a Document or Folder start tag is read by the
-     * XmlPullParser) and assigns specific elements read from the XmlPullParser to the container.
-     *
-     */
-    /* package */ KmlContainer setNestedContainerObject(XmlPullParser mParser)
-            throws XmlPullParserException, IOException {
-        KmlContainerParser parser = new KmlContainerParser();
-        parser.assignContainerProperties(mParser);
-        KmlContainer container = parser.getContainer();
-        return container;
-    }
-
-    /**
-     * Creates a new style map and assigns values from the input parser
+     * Creates a new style map and assigns values from the XmlPullParser parser
      * and stores it into the container.
      *
      */
-    /* package */ HashMap<String, String> setContainerStyleMap(XmlPullParser mParser)
-            throws XmlPullParserException, IOException {
-        KmlStyleParser styleParser = new KmlStyleParser();
-        styleParser.createStyleMap(mParser);
-        return styleParser.getStyleMaps();
+    /* package */ void setContainerStyleMap(XmlPullParser mParser,
+     HashMap<String, String> containerStyleMap) throws XmlPullParserException, IOException {
+        mStyleParser.createStyleMap(mParser);
+        containerStyleMap.putAll(mStyleParser.getStyleMaps());
     }
 
     /**
@@ -158,10 +148,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
     XmlPullParser mParser) throws XmlPullParserException, IOException {
         Boolean hasStyleId = mParser.getAttributeValue(null, "id") != null;
         if (hasStyleId) {
-            KmlStyleParser styleParser = new KmlStyleParser();
-            styleParser.createStyle(mParser);
-            String styleId = styleParser.getStyle().getStyleId();
-            KmlStyle style = styleParser.getStyle();
+            mStyleParser.createStyle(mParser);
+            String styleId = mStyleParser.getStyle().getStyleId();
+            KmlStyle style = mStyleParser.getStyle();
             containerStyles.put(styleId, style);
         }
     }
@@ -173,16 +162,13 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      */
     /* package */ void setContainerPlacemark(HashMap<KmlPlacemark, Object> containerPlacemarks,
         XmlPullParser mParser) throws XmlPullParserException, IOException {
-        mFeatureParser.createPlacemark(mParser);
-        if (mFeatureParser.getPlacemark() != null) {
-            containerPlacemarks.put(mFeatureParser.getPlacemark(), null);
-        }
+            containerPlacemarks.put(KmlFeatureParser.createPlacemark(mParser), null);
     }
 
     /**
-     * Retrieves this container
+     * Retrieves this KmlContainer instance
      *
-     * @return container Container to get
+     * @return KmlContainer instance if it exists, null otherwise
      */
     /* package */ KmlContainer getContainer() {
         return mContainer;

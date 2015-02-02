@@ -24,39 +24,35 @@ public class KmlFeatureParserTest extends ActivityTestCase {
 
     public void testPolygon() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.basic_placemark);
-        KmlFeatureParser parser = new KmlFeatureParser();
-        parser.createPlacemark(xmlPullParser);
-        assertNotNull(parser.getPlacemark());
-        assertEquals(parser.getPlacemark().getGeometry().getKmlGeometryType(), "Polygon");
-        KmlPolygon polygon = ((KmlPolygon) parser.getPlacemark().getGeometry());
+        KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
+        assertNotNull(placemark);
+        assertEquals(placemark.getGeometry().getKmlGeometryType(), "Polygon");
+        KmlPolygon polygon = ((KmlPolygon) placemark.getGeometry());
         assertEquals(polygon.getInnerBoundaryCoordinates().size(), 2);
         assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
     }
 
     public void testMultiGeometry() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.multigeometry_placemarks);
-        KmlFeatureParser parser = new KmlFeatureParser();
-        parser.createPlacemark(xmlPullParser);
-        assertNotNull(parser.getPlacemark());
-        assertEquals(parser.getPlacemark().getGeometry().getKmlGeometryType(), "MultiGeometry");
-        KmlMultiGeometry multiGeometry = ((KmlMultiGeometry)parser.getPlacemark().getGeometry());
+        KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
+        assertNotNull( placemark );
+        assertEquals( placemark .getGeometry().getKmlGeometryType(), "MultiGeometry");
+        KmlMultiGeometry multiGeometry = ((KmlMultiGeometry) placemark .getGeometry());
         assertEquals(multiGeometry.getKmlGeometryObject().size(), 3);
     }
 
     public void testProperties() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.multigeometry_placemarks);
-        KmlFeatureParser parser = new KmlFeatureParser();
-        parser.createPlacemark(xmlPullParser);
-        assertTrue(parser.getPlacemark().hasProperties());
-        assertEquals(parser.getPlacemark().getProperty("name"), "Placemark Test");
-        assertNull(parser.getPlacemark().getProperty("description"));
+        KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
+        assertTrue( placemark.hasProperties());
+        assertEquals( placemark .getProperty("name"), "Placemark Test");
+        assertNull( placemark .getProperty("description"));
     }
 
     public void testExtendedData() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.multiple_placemarks);
-        KmlFeatureParser parser = new KmlFeatureParser();
-        parser.createPlacemark(xmlPullParser);
-        assertNotNull(parser.getPlacemark().getProperty("holeNumber"));
+        KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
+        assertNotNull(placemark.getProperty("holeNumber"));
     }
 
     public void testGroundOverlay() throws Exception {

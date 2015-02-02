@@ -48,7 +48,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * XmlPullParser and if a Geometry tag is contained within the Placemark tag)
      * and assigns specific elements read from the parser to the Placemark.
      */
-    /* package */ void createPlacemark(XmlPullParser mParser) throws IOException, XmlPullParserException {
+    /* package */ static KmlPlacemark createPlacemark(XmlPullParser mParser) throws IOException, XmlPullParserException {
         String styleId = null;
         KmlStyle inlineStyle = null;
         HashMap<String, String> properties = new HashMap<String, String>();
@@ -74,8 +74,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         }
         // If there is no geometry associated with the Placemark then we do not add it
         if (geometry != null) {
-            mPlacemark = new KmlPlacemark(geometry, styleId, inlineStyle, properties);
+            return new KmlPlacemark(geometry, styleId, inlineStyle, properties);
         }
+        return null;
     }
 
     /**
@@ -133,7 +134,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @param geometryType Type of geometry object to create
      */
-    private KmlGeometry createGeometry(String geometryType, XmlPullParser mParser)
+    private static KmlGeometry createGeometry(String geometryType, XmlPullParser mParser)
             throws IOException, XmlPullParserException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals(geometryType))) {
@@ -175,15 +176,12 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         return properties;
     }
 
-
-
-
     /**
      * Creates a new KmlPoint object
      *
      * @return KmlPoint object
      */
-    private KmlPoint createPoint(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlPoint createPoint(XmlPullParser mParser) throws XmlPullParserException, IOException {
         LatLng coordinate = null;
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("Point"))) {
@@ -200,7 +198,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlLineString object
      */
-    private KmlLineString createLineString(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlLineString createLineString(XmlPullParser mParser) throws XmlPullParserException, IOException {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("LineString"))) {
@@ -218,7 +216,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlPolygon object
      */
-    private KmlPolygon createPolygon(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlPolygon createPolygon(XmlPullParser mParser) throws XmlPullParserException, IOException {
         // Indicates if an outer boundary needs to be defined
         Boolean isOuterBoundary = false;
         ArrayList<LatLng> outerBoundary = new ArrayList<LatLng>();
@@ -246,7 +244,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlMultiGeometry object
      */
-    private KmlMultiGeometry createMultiGeometry(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlMultiGeometry createMultiGeometry(XmlPullParser mParser) throws XmlPullParserException, IOException {
         ArrayList<KmlGeometry> geometries = new ArrayList<KmlGeometry>();
         // Get next otherwise have an infinite loop
         int eventType = mParser.next();
@@ -335,10 +333,6 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         LatLng southWest = new LatLng(south, west);
         LatLng northEast = new LatLng(north, east);
         return new LatLngBounds(southWest, northEast);
-    }
-
-    /* package */ KmlPlacemark getPlacemark() {
-        return mPlacemark;
     }
 
     /* package */ KmlGroundOverlay getGroundOverlay() {

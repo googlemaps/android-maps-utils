@@ -64,7 +64,7 @@ import java.util.HashMap;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    mContainerParser.assignContainerProperties(mParser);
+                    mContainerParser.createContainer(mParser);
                     mContainers.add(mContainerParser.getContainer());
                 }
                 if (mParser.getName().equals(STYLE)) {
@@ -75,8 +75,7 @@ import java.util.HashMap;
                     mStyleParser.createStyleMap(mParser);
                 }
                 if (mParser.getName().equals(PLACEMARK)) {
-                    mFeatureParser.createPlacemark(mParser);
-                    mPlacemarks.put(mFeatureParser.getPlacemark(), null);
+                    mPlacemarks.put(KmlFeatureParser.createPlacemark(mParser), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
                     mFeatureParser.createGroundOverlay(mParser);
