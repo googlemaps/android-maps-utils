@@ -10,14 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.xmlpull.v1.XmlPullParser.START_TAG;
+import static org.xmlpull.v1.XmlPullParser.END_TAG;
+
 /**
  * Parses the feature of a given KML file into a KmlPlacemark or KmlGroundOverlay object
  */
 /* package */ class KmlFeatureParser {
-
-    private final static int START_TAG = XmlPullParser.START_TAG;
-
-    private final static int END_TAG = XmlPullParser.END_TAG;
 
     private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
 

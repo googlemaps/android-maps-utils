@@ -5,14 +5,13 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import static org.xmlpull.v1.XmlPullParser.START_TAG;
+import static org.xmlpull.v1.XmlPullParser.END_TAG;
+
 /**
  * Parses the container of a given KML file into a KmlContainer object
  */
 /* package */ class KmlContainerParser {
-
-    private final static int START_TAG = XmlPullParser.START_TAG;
-
-    private final static int END_TAG = XmlPullParser.END_TAG;
 
     private final static String PROPERTY_REGEX = "name|description|visibility|open";
 

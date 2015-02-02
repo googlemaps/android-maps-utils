@@ -9,9 +9,6 @@ import java.io.InputStream;
 
 import com.google.maps.android.test.R;
 
-/**
- * Created by lavenderch on 1/27/15.
- */
 public class KmlContainerParserTest extends ActivityTestCase {
 
     public XmlPullParser createParser(int res) throws Exception {

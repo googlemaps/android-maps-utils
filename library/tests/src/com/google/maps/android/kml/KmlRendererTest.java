@@ -8,9 +8,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by lavenderch on 1/29/15.
- */
 public class KmlRendererTest extends ActivityTestCase {
 
     public void testGetContainerVisibility() {

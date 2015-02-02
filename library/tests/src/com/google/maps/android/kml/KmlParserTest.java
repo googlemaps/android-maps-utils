@@ -8,10 +8,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 
-
-/**
- * Created by lavenderch on 1/30/15.
- */
 public class KmlParserTest extends ActivityTestCase {
 
     public XmlPullParser createParser(int res) throws Exception {

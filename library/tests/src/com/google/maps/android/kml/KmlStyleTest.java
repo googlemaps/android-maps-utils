@@ -4,11 +4,6 @@ import android.graphics.Color;
 
 import junit.framework.TestCase;
 
-
-
-/**
- * Created by lavenderch on 1/27/15.
- */
 public class KmlStyleTest extends TestCase {
 
     //TODO: Marker Color

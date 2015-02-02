@@ -6,6 +6,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static org.xmlpull.v1.XmlPullParser.START_TAG;
+import static org.xmlpull.v1.XmlPullParser.END_TAG;
+
 /**
  * Parses the styles of a given KML file into a KmlStyle object
  */
@@ -61,8 +64,8 @@ import java.util.HashMap;
             styleProperties.setStyleId(styleId);
         }
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("Style"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("Style"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals("IconStyle")) {
                     isValidStyle = createIconStyle(styleProperties);
                 } else if (mParser.getName().equals("LineStyle")) {
@@ -91,8 +94,8 @@ import java.util.HashMap;
     /* package */ boolean createIconStyle(KmlStyle style)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("IconStyle"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("IconStyle"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals(ICON_STYLE_HEADING)) {
                     style.setHeading(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals(ICON_STYLE_URL)) {
@@ -121,8 +124,8 @@ import java.util.HashMap;
         // Append # to style id
         String styleId = "#" + mParser.getAttributeValue(null, "id");
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("StyleMap"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("StyleMap"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals(STYLE_MAP_KEY)
                         && mParser.nextText().equals(STYLE_MAP_NORMAL_STYLE)) {
                     isNormalStyleMapValue = true;
@@ -143,8 +146,8 @@ import java.util.HashMap;
      */
     private boolean createBalloonStyle(KmlStyle style) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("BalloonStyle"))) {
-            if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("text")) {
+        while (!(eventType == END_TAG && mParser.getName().equals("BalloonStyle"))) {
+            if (eventType == START_TAG && mParser.getName().equals("text")) {
                 style.setInfoWindowText(mParser.nextText());
             }
             eventType = mParser.next();
@@ -160,8 +163,8 @@ import java.util.HashMap;
 
     private void setIconUrl(KmlStyle style) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals(ICON_STYLE_URL))) {
-            if (eventType == XmlPullParser.START_TAG && mParser.getName().equals("href")) {
+        while (!(eventType == END_TAG && mParser.getName().equals(ICON_STYLE_URL))) {
+            if (eventType == START_TAG && mParser.getName().equals("href")) {
                 style.setIconUrl(mParser.nextText());
             }
             eventType = mParser.next();
@@ -191,8 +194,8 @@ import java.util.HashMap;
      */
     private boolean createLineStyle(KmlStyle style) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("LineStyle"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("LineStyle"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals(COLOR_STYLE_COLOR)) {
                     style.setOutlineColor(mParser.nextText());
                 } else if (mParser.getName().equals(LINE_STYLE_WIDTH)) {
@@ -214,8 +217,8 @@ import java.util.HashMap;
      */
     private boolean createPolyStyle(KmlStyle style) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
-        while (!(eventType == XmlPullParser.END_TAG && mParser.getName().equals("PolyStyle"))) {
-            if (eventType == XmlPullParser.START_TAG) {
+        while (!(eventType == END_TAG && mParser.getName().equals("PolyStyle"))) {
+            if (eventType == START_TAG) {
                 if (mParser.getName().equals(COLOR_STYLE_COLOR)) {
                     style.setFillColor(mParser.nextText());
                 } else if (mParser.getName().equals(POLY_STYLE_OUTLINE)) {
