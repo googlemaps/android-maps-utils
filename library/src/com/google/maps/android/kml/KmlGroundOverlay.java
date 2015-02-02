@@ -1,9 +1,5 @@
 package com.google.maps.android.kml;
 
-import android.graphics.Color;
-
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -23,28 +19,25 @@ public class KmlGroundOverlay {
 
     private LatLngBounds mLatLngBox;
 
-    private String mGroundOverlayColor;
+    private String mColor;
 
-
-    public KmlGroundOverlay() {
-        mImageUrl = null;
-        mLatLngBox = null;
-        mGroundOverlayColor = null;
-        mProperties = new HashMap<String, String>();
+    public KmlGroundOverlay(String imageUrl, LatLngBounds latLonBox, float drawOrder,
+            int visibility, String color, HashMap<String, String> properties, float rotation) {
         mGroundOverlayOptions = new GroundOverlayOptions();
-    }
-
-    /**
-     * Sets the string color
-     *
-     * @param stringColor Hexadecimal string value
-     */
-    public void setColor(String stringColor) {
-        mGroundOverlayColor = stringColor;
+        mImageUrl = imageUrl;
+        mProperties = properties;
+        mColor = color;
+        if (latLonBox == null) {
+            throw new IllegalArgumentException("No LatLonBox given");
+        }
+        mGroundOverlayOptions.positionFromBounds(latLonBox);
+        mGroundOverlayOptions.bearing(rotation);
+        mGroundOverlayOptions.zIndex(drawOrder);
+        mGroundOverlayOptions.visible(visibility != 0);
     }
 
     public String getColor() {
-        return mGroundOverlayColor;
+        return mColor;
     }
 
     public String getImageUrl() {
@@ -64,16 +57,8 @@ public class KmlGroundOverlay {
         mGroundOverlayOptions.positionFromBounds(latLngBox);
     }
 
-    public void setProperty(String propertyName, String propertyValue) {
-        mProperties.put(propertyName, propertyValue);
-    }
-
     public Iterable getProperties() {
         return mProperties.entrySet();
-    }
-
-    /* package */ void setProperties(HashMap<String, String> properties) {
-        mProperties.putAll(properties);
     }
 
     public String getProperty(String keyValue) {
@@ -82,24 +67,6 @@ public class KmlGroundOverlay {
 
     public boolean hasProperty(String keyValue) {
         return mProperties.get(keyValue) != null;
-    }
-
-    public void setDrawOrder(float zIndex) {
-        mGroundOverlayOptions.zIndex(zIndex);
-    }
-
-    public void setVisibility(int visibility) {
-        mGroundOverlayOptions.visible(visibility != 0);
-    }
-
-    public void setRotation(float rotation) {
-        if (rotation > 0.0 && rotation <= 180.0) {
-            mGroundOverlayOptions.bearing(rotation + 180);
-        } else if (rotation < 0.0 && rotation >= -180.0) {
-            mGroundOverlayOptions.bearing(Math.abs(rotation));
-        } else {
-            mGroundOverlayOptions.bearing(rotation);
-        }
     }
 
     public GroundOverlayOptions getGroundOverlayOptions() {

@@ -26,9 +26,9 @@ public class KmlContainer {
 
 
     public KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
-    HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
-    ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
-    groundOverlay, String Id) {
+            HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
+            ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
+            groundOverlay, String Id) {
         mProperties = properties;
         mPlacemarks = placemarks;
         mStyles = styles;
@@ -76,6 +76,7 @@ public class KmlContainer {
     /* package */ void setPlacemark(KmlPlacemark placemarks, Object object) {
         mPlacemarks.put(placemarks, object);
     }
+
     /**
      * @return HashMap of containers
      */
@@ -94,7 +95,7 @@ public class KmlContainer {
     /**
      * Gets all of the ground overlays which were set in the container
      *
-     * @return  A set of ground overlays
+     * @return A set of ground overlays
      */
     /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayHashMap() {
         return mGroundOverlays;

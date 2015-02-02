@@ -148,9 +148,12 @@ public class KmlStyle {
 
     /**
      * Gets whether the style has balloonstyle properties
-     * @return  true if this style has balloonstyle properties, false otherwise
+     *
+     * @return true if this style has balloonstyle properties, false otherwise
      */
-    public boolean hasBalloonStyle() { return mBalloonOptions.size() > 0;}
+    public boolean hasBalloonStyle() {
+        return mBalloonOptions.size() > 0;
+    }
 
     /**
      * Sets whether the Polygon will have an outline
