@@ -34,14 +34,11 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private final static String STYLE_TAG = "Style";
 
-    private final XmlPullParser mParser;
-
     private KmlPlacemark mPlacemark;
 
     private KmlGroundOverlay mGroundOverlay;
 
-    public KmlFeatureParser(XmlPullParser parser) {
-        mParser = parser;
+    public KmlFeatureParser() {
         mPlacemark = null;
         mGroundOverlay = null;
     }
@@ -51,7 +48,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * XmlPullParser and if a Geometry tag is contained within the Placemark tag)
      * and assigns specific elements read from the parser to the Placemark.
      */
-    /* package */ void createPlacemark() throws IOException, XmlPullParserException {
+    /* package */ void createPlacemark(XmlPullParser mParser) throws IOException, XmlPullParserException {
         String styleId = null;
         KmlStyle inlineStyle = null;
         HashMap<String, String> properties = new HashMap<String, String>();
@@ -62,14 +59,14 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
                 if (mParser.getName().equals(STYLE_URL_TAG)) {
                     styleId = mParser.nextText();
                 } else if (mParser.getName().matches(GEOMETRY_REGEX)) {
-                    geometry = createGeometry(mParser.getName());
+                    geometry = createGeometry(mParser.getName(), mParser);
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
                     properties.put(mParser.getName(), mParser.nextText());
                 } else if (mParser.getName().equals(EXTENDED_DATA)) {
-                    properties.putAll(setExtendedDataProperties());
+                    properties.putAll(setExtendedDataProperties(mParser));
                 } else if (mParser.getName().equals(STYLE_TAG)) {
-                    KmlStyleParser styleParser = new KmlStyleParser(mParser);
-                    styleParser.createStyle();
+                    KmlStyleParser styleParser = new KmlStyleParser();
+                    styleParser.createStyle(mParser);
                     inlineStyle = styleParser.getStyle();
                 }
             }
@@ -85,22 +82,22 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * Creates a new GroundOverlay object (created if a GroundOverlay tag is read by the
      * XmlPullParser) and assigns specific elements read from the parser to the GroundOverlay
      */
-    /* package */ void createGroundOverlay()
+    /* package */ void createGroundOverlay(XmlPullParser mParser)
             throws IOException, XmlPullParserException {
         mGroundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("GroundOverlay"))) {
             if (eventType == START_TAG) {
                 if (mParser.getName().equals("Icon")) {
-                    mGroundOverlay.setImageUrl(getImageUrl());
+                    mGroundOverlay.setImageUrl(getImageUrl(mParser));
                 } else if (mParser.getName().equals("LatLonBox")) {
-                    mGroundOverlay.setLatLngBox(createLatLonBox(mGroundOverlay));
+                    mGroundOverlay.setLatLngBox(createLatLonBox(mGroundOverlay, mParser));
                 } else if (mParser.getName().equals("drawOrder")) {
                     mGroundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals("visibility")) {
                     mGroundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
                 } else if (mParser.getName().equals("ExtendedData")) {
-                    mGroundOverlay.setProperties(setExtendedDataProperties());
+                    mGroundOverlay.setProperties(setExtendedDataProperties(mParser));
                 } else if (mParser.getName().equals("color")) {
                     mGroundOverlay.setColor(mParser.nextText());
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
@@ -119,7 +116,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @return Image Url for the GroundOverlay
      */
 
-    private String getImageUrl () throws IOException, XmlPullParserException {
+    private static String getImageUrl (XmlPullParser mParser) throws IOException, XmlPullParserException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("Icon"))) {
             if (eventType == START_TAG && mParser.getName().equals("href")) {
@@ -136,19 +133,19 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @param geometryType Type of geometry object to create
      */
-    private KmlGeometry createGeometry(String geometryType)
+    private KmlGeometry createGeometry(String geometryType, XmlPullParser mParser)
             throws IOException, XmlPullParserException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals(geometryType))) {
             if (eventType == START_TAG) {
                 if (mParser.getName().equals("Point")) {
-                    return createPoint();
+                    return createPoint(mParser);
                 } else if (mParser.getName().equals("LineString")) {
-                    return createLineString();
+                    return createLineString(mParser);
                 } else if (mParser.getName().equals("Polygon")) {
-                    return createPolygon();
+                    return createPolygon(mParser);
                 } else if (mParser.getName().equals("MultiGeometry")) {
-                    return createMultiGeometry();
+                    return createMultiGeometry(mParser);
                 }
             }
             eventType = mParser.next();
@@ -159,7 +156,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
     /**
      * Adds untyped name value pairs parsed from the ExtendedData
      */
-    private HashMap<String, String> setExtendedDataProperties()
+    private static HashMap<String, String> setExtendedDataProperties(XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         HashMap<String, String> properties = new HashMap<String, String>();
         String propertyKey = null;
@@ -184,7 +181,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param coordinateString coordinate string to convert from
      * @return LatLng object created from given coordinate string
      */
-    private LatLng convertToLatLng(String coordinateString) {
+    private static LatLng convertToLatLng(String coordinateString) {
         // Lat and Lng are separated by a ,
         String[] coordinate = coordinateString.split(",");
         Double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
@@ -198,7 +195,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param coordinatesString coordinates string to convert from
      * @return array of LatLng objects created from the given coordinate string array
      */
-    private ArrayList<LatLng> convertToLatLngArray(String coordinatesString) {
+    private static ArrayList<LatLng> convertToLatLngArray(String coordinatesString) {
         ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
         // Need to trim to avoid whitespace around the coordinates such as tabs
         String[] coordinates = coordinatesString.trim().split("(\\s+)");
@@ -213,7 +210,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlPoint object
      */
-    private KmlPoint createPoint() throws XmlPullParserException, IOException {
+    private KmlPoint createPoint(XmlPullParser mParser) throws XmlPullParserException, IOException {
         LatLng coordinate = null;
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("Point"))) {
@@ -230,7 +227,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlLineString object
      */
-    private KmlLineString createLineString() throws XmlPullParserException, IOException {
+    private KmlLineString createLineString(XmlPullParser mParser) throws XmlPullParserException, IOException {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("LineString"))) {
@@ -248,7 +245,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlPolygon object
      */
-    private KmlPolygon createPolygon() throws XmlPullParserException, IOException {
+    private KmlPolygon createPolygon(XmlPullParser mParser) throws XmlPullParserException, IOException {
         // Indicates if an outer boundary needs to be defined
         Boolean isOuterBoundary = false;
         ArrayList<LatLng> outerBoundary = new ArrayList<LatLng>();
@@ -276,13 +273,13 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlMultiGeometry object
      */
-    private KmlMultiGeometry createMultiGeometry() throws XmlPullParserException, IOException {
+    private KmlMultiGeometry createMultiGeometry(XmlPullParser mParser) throws XmlPullParserException, IOException {
         ArrayList<KmlGeometry> geometries = new ArrayList<KmlGeometry>();
         // Get next otherwise have an infinite loop
         int eventType = mParser.next();
         while (!(eventType == END_TAG && mParser.getName().equals("MultiGeometry"))) {
             if (eventType == START_TAG && mParser.getName().matches(GEOMETRY_REGEX)) {
-                geometries.add(createGeometry(mParser.getName()));
+                geometries.add(createGeometry(mParser.getName(), mParser));
             }
             eventType = mParser.next();
         }
@@ -295,7 +292,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param groundOverlay GroundOverlay to set the bound
      * @return LatLngBounds
      */
-    private LatLngBounds createLatLonBox(KmlGroundOverlay groundOverlay)
+    private static LatLngBounds createLatLonBox(KmlGroundOverlay groundOverlay, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         Double north = 0.0;
         Double south = 0.0;
@@ -330,7 +327,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param east  East coordinate of the bounding box
      * @param west  West coordinate of the bounding box
      */
-    private LatLngBounds createLatLngBounds(Double north, Double south, Double east, Double west) {
+    private static LatLngBounds createLatLngBounds(Double north, Double south, Double east, Double west) {
         LatLng southWest = new LatLng(south, west);
         LatLng northEast = new LatLng(north, east);
         return new LatLngBounds(southWest, northEast);

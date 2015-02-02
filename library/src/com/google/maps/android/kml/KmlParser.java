@@ -50,9 +50,9 @@ import java.util.HashMap;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mContainers = new ArrayList<KmlContainer>();
         mStyles = new HashMap<String, KmlStyle>();
-        mStyleParser = new KmlStyleParser(mParser);
-        mFeatureParser = new KmlFeatureParser(mParser);
-        mContainerParser = new KmlContainerParser(mParser);
+        mStyleParser = new KmlStyleParser();
+        mFeatureParser = new KmlFeatureParser();
+        mContainerParser = new KmlContainerParser();
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
@@ -64,22 +64,22 @@ import java.util.HashMap;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    mContainerParser.createContainer();
+                    mContainerParser.createContainer(mParser);
                     mContainers.add(mContainerParser.getContainer());
                 }
                 if (mParser.getName().equals(STYLE)) {
-                    mStyleParser.createStyle();
+                    mStyleParser.createStyle(mParser);
                     mStyles.put(mStyleParser.getStyle().getStyleId(), mStyleParser.getStyle());
                 }
                 if (mParser.getName().equals(STYLE_MAP)) {
-                    mStyleParser.createStyleMap();
+                    mStyleParser.createStyleMap(mParser);
                 }
                 if (mParser.getName().equals(PLACEMARK)) {
-                    mFeatureParser.createPlacemark();
+                    mFeatureParser.createPlacemark(mParser);
                     mPlacemarks.put(mFeatureParser.getPlacemark(), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    mFeatureParser.createGroundOverlay();
+                    mFeatureParser.createGroundOverlay(mParser);
                     mGroundOverlays.put(mFeatureParser.getGroundOverlay(), null);
                 }
             }
