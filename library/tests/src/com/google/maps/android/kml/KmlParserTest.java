@@ -49,10 +49,7 @@ public class KmlParserTest extends ActivityTestCase {
     }
 
     public void testContainerPlacemarks() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.ballon_gx_prefix);
-        KmlParser mParser = new KmlParser(parser);
-        mParser.parseKml();
-        assertEquals(mParser.getPlacemarks().size(), 3);
+
     }
 
     public void testStyleMaps() throws Exception {

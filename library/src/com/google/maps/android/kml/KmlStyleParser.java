@@ -40,21 +40,18 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private final HashMap<String, String> mStyleMaps;
 
-    private final XmlPullParser mParser;
-
     private KmlStyle mStyle;
 
 
-    /* package */ KmlStyleParser(XmlPullParser parser) {
+    /* package */ KmlStyleParser() {
         mStyleMaps = new HashMap<String, String>();
-        mParser = parser;
         mStyle = new KmlStyle();
     }
 
     /**
      * Parses the IconStyle, LineStyle and PolyStyle tags into a KmlStyle object
      */
-    /* package */ void createStyle() throws IOException, XmlPullParserException {
+    /* package */ void createStyle(XmlPullParser mParser) throws IOException, XmlPullParserException {
         // Indicates if any valid style tags have been found
         Boolean isValidStyle = false;
         KmlStyle styleProperties = new KmlStyle();
@@ -67,13 +64,13 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         while (!(eventType == END_TAG && mParser.getName().equals("Style"))) {
             if (eventType == START_TAG) {
                 if (mParser.getName().equals("IconStyle")) {
-                    isValidStyle = createIconStyle(styleProperties);
+                    isValidStyle = createIconStyle(styleProperties, mParser);
                 } else if (mParser.getName().equals("LineStyle")) {
-                    isValidStyle = createLineStyle(styleProperties);
+                    isValidStyle = createLineStyle(styleProperties, mParser);
                 } else if (mParser.getName().equals("PolyStyle")) {
-                    isValidStyle = createPolyStyle(styleProperties);
+                    isValidStyle = createPolyStyle(styleProperties, mParser);
                 } else if (mParser.getName().equals("BalloonStyle")) {
-                    isValidStyle = createBalloonStyle(styleProperties);
+                    isValidStyle = createBalloonStyle(styleProperties, mParser);
                 }
             }
             eventType = mParser.next();
@@ -91,7 +88,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param style Style to apply properties to
      * @return true if icon style has been set
      */
-    /* package */ boolean createIconStyle(KmlStyle style)
+    /* package */ boolean createIconStyle(KmlStyle style, XmlPullParser mParser)
             throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("IconStyle"))) {
@@ -99,9 +96,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
                 if (mParser.getName().equals(ICON_STYLE_HEADING)) {
                     style.setHeading(Float.parseFloat(mParser.nextText()));
                 } else if (mParser.getName().equals(ICON_STYLE_URL)) {
-                    setIconUrl(style);
+                    setIconUrl(style, mParser);
                 } else if (mParser.getName().equals(ICON_STYLE_HOTSPOT)) {
-                    setIconHotSpot(style);
+                    setIconHotSpot(style, mParser);
                 } else if (mParser.getName().equals(ICON_STYLE_SCALE)) {
                     style.setIconScale(Double.parseDouble(mParser.nextText()));
                 } else if (mParser.getName().equals(COLOR_STYLE_COLOR)) {
@@ -118,7 +115,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
     /**
      * Parses the StyleMap property and stores the id and the normal style tag
      */
-    /* package */ void createStyleMap() throws XmlPullParserException, IOException {
+    /* package */ void createStyleMap(XmlPullParser mParser) throws XmlPullParserException, IOException {
         // Indicates if a normal style is to be stored
         Boolean isNormalStyleMapValue = false;
         // Append # to style id
@@ -144,7 +141,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @param style Style object to add properties to
      */
-    private boolean createBalloonStyle(KmlStyle style) throws XmlPullParserException, IOException {
+    private boolean createBalloonStyle(KmlStyle style, XmlPullParser mParser) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("BalloonStyle"))) {
             if (eventType == START_TAG && mParser.getName().equals("text")) {
@@ -161,7 +158,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param style Style to set the icon url to
      */
 
-    private void setIconUrl(KmlStyle style) throws XmlPullParserException, IOException {
+    private void setIconUrl(KmlStyle style, XmlPullParser mParser) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals(ICON_STYLE_URL))) {
             if (eventType == START_TAG && mParser.getName().equals("href")) {
@@ -176,7 +173,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @param style Style object to apply hotspot properties to
      */
-    private void setIconHotSpot(KmlStyle style) {
+    private void setIconHotSpot(KmlStyle style, XmlPullParser mParser) {
         Float xValue, yValue;
         String xUnits, yUnits;
         xValue = Float.parseFloat(mParser.getAttributeValue(null, "x"));
@@ -192,7 +189,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @param style Style object to add properties to
      */
-    private boolean createLineStyle(KmlStyle style) throws XmlPullParserException, IOException {
+    private boolean createLineStyle(KmlStyle style, XmlPullParser mParser) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("LineStyle"))) {
             if (eventType == START_TAG) {
@@ -215,7 +212,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @param style Style object to add properties to
      */
-    private boolean createPolyStyle(KmlStyle style) throws XmlPullParserException, IOException {
+    private boolean createPolyStyle(KmlStyle style, XmlPullParser mParser) throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("PolyStyle"))) {
             if (eventType == START_TAG) {
