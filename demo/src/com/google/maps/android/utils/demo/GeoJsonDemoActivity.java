@@ -17,12 +17,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo()  {
-        try {
-            GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.basic, getApplicationContext());
-            layer.addGeoJsonDataToLayer();
-        } catch (Exception e ) {
-
-        }
     }
 }
 
