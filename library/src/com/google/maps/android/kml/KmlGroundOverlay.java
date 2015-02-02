@@ -88,9 +88,7 @@ public class KmlGroundOverlay {
     }
 
     public void setVisibility(int visibility) {
-        if (visibility == 0) {
-            mGroundOverlayOptions.visible(false);
-        }
+        mGroundOverlayOptions.visible(visibility != 0);
     }
 
     public void setRotation(float rotation) {

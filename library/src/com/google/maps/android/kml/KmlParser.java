@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.xmlpull.v1.XmlPullParser.START_TAG;
-import static org.xmlpull.v1.XmlPullParser.END_TAG;
-
 /**
  * Parses a given KML file into KmlStyle, KmlPlacemark, KmlGroundOverlay and KmlContainer objects
  */
@@ -27,11 +24,11 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private final static String CONTAINER_REGEX = "Folder|Document";
 
-    private final KmlStyleParser styleParser;
+    private final KmlStyleParser mStyleParser;
 
-    private final KmlFeatureParser featureParser;
+    private final KmlFeatureParser mFeatureParser;
 
-    private final KmlContainerParser containerParser;
+    private final KmlContainerParser mContainerParser;
 
     private final XmlPullParser mParser;
 
@@ -53,9 +50,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         mPlacemarks = new HashMap<KmlPlacemark, Object>();
         mContainers = new ArrayList<KmlContainer>();
         mStyles = new HashMap<String, KmlStyle>();
-        styleParser = new KmlStyleParser(mParser);
-        featureParser = new KmlFeatureParser(mParser);
-        containerParser = new KmlContainerParser(mParser);
+        mStyleParser = new KmlStyleParser(mParser);
+        mFeatureParser = new KmlFeatureParser(mParser);
+        mContainerParser = new KmlContainerParser(mParser);
         mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
     }
 
@@ -67,23 +64,23 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    containerParser.createContainer();
-                    mContainers.add(containerParser.getContainer());
+                    mContainerParser.createContainer();
+                    mContainers.add(mContainerParser.getContainer());
                 }
                 if (mParser.getName().equals(STYLE)) {
-                    styleParser.createStyle();
-                    mStyles.put(styleParser.getStyle().getStyleId(), styleParser.getStyle());
+                    mStyleParser.createStyle();
+                    mStyles.put(mStyleParser.getStyle().getStyleId(), mStyleParser.getStyle());
                 }
                 if (mParser.getName().equals(STYLE_MAP)) {
-                    styleParser.createStyleMap();
+                    mStyleParser.createStyleMap();
                 }
                 if (mParser.getName().equals(PLACEMARK)) {
-                    featureParser.createPlacemark();
-                    mPlacemarks.put(featureParser.getPlacemark(), null);
+                    mFeatureParser.createPlacemark();
+                    mPlacemarks.put(mFeatureParser.getPlacemark(), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    featureParser.createGroundOverlay();
-                    mGroundOverlays.put(featureParser.getGroundOverlay(), null);
+                    mFeatureParser.createGroundOverlay();
+                    mGroundOverlays.put(mFeatureParser.getGroundOverlay(), null);
                 }
             }
             eventType = mParser.next();
@@ -110,7 +107,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @return A list of stylemaps created by the parser
      */
     /* package */ HashMap<String, String> getStyleMaps() {
-        return styleParser.getStyleMaps();
+        return mStyleParser.getStyleMaps();
     }
 
     /**

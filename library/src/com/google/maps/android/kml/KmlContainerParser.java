@@ -33,10 +33,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private KmlContainer mContainer;
 
-
-
     /* package */ KmlContainerParser(XmlPullParser parser) {
-
         mParser = parser;
         mFeatureParser = new KmlFeatureParser(parser);
         mContainer = null;
