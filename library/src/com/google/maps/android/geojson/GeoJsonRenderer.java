@@ -39,9 +39,9 @@ import java.util.Set;
      *
      * @param map map to place GeoJsonFeature objects on
      */
-    /* package */ GeoJsonRenderer(GoogleMap map) {
-        mFeatures = new HashMap<GeoJsonFeature, Object>();
+    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
         mMap = map;
+        mFeatures = features;
     }
 
     /**
@@ -112,7 +112,10 @@ import java.util.Set;
      */
     /* package */ void removeLayerFromMap() {
         for (GeoJsonFeature feature : mFeatures.keySet()) {
-            removeFeature(feature);
+            if (mFeatures.containsKey(feature)) {
+                removeFromMap(feature);
+                feature.deleteObserver(this);
+            }
         }
     }
 
