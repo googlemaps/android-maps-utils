@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
+import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
 /**
  * Parses the feature of a given KML file into a KmlPlacemark or KmlGroundOverlay object
@@ -39,7 +39,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * XmlPullParser and if a Geometry tag is contained within the Placemark tag)
      * and assigns specific elements read from the parser to the Placemark.
      */
-    /* package */ static KmlPlacemark createPlacemark(XmlPullParser mParser) throws IOException, XmlPullParserException {
+    /* package */
+    static KmlPlacemark createPlacemark(XmlPullParser mParser)
+            throws IOException, XmlPullParserException {
         String styleId = null;
         KmlStyle inlineStyle = null;
         HashMap<String, String> properties = new HashMap<String, String>();
@@ -76,30 +78,37 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      */
     /* package */ static KmlGroundOverlay createGroundOverlay(XmlPullParser mParser)
             throws IOException, XmlPullParserException {
-        KmlGroundOverlay mGroundOverlay = new KmlGroundOverlay();
+        String imageUrl = null;
+        LatLngBounds latLonBox = null;
+        float drawOrder = 0.0f;
+        int visibility = 1;
+        String color = null;
+        HashMap<String, String> properties = new HashMap<String, String>();
+        float rotation = 0.0f;
+
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("GroundOverlay"))) {
             if (eventType == START_TAG) {
                 if (mParser.getName().equals("Icon")) {
-                    mGroundOverlay.setImageUrl(getImageUrl(mParser));
+                    imageUrl = getImageUrl(mParser);
                 } else if (mParser.getName().equals("LatLonBox")) {
-                    mGroundOverlay.setLatLngBox(createLatLonBox(mGroundOverlay, mParser));
+                    latLonBox = parseLatLonBox(mParser, rotation);
                 } else if (mParser.getName().equals("drawOrder")) {
-                    mGroundOverlay.setDrawOrder(Float.parseFloat(mParser.nextText()));
+                    drawOrder = Float.parseFloat(mParser.nextText());
                 } else if (mParser.getName().equals("visibility")) {
-                    mGroundOverlay.setVisibility(Integer.parseInt(mParser.nextText()));
+                    visibility = Integer.parseInt(mParser.nextText());
                 } else if (mParser.getName().equals("ExtendedData")) {
-                    mGroundOverlay.setProperties(setExtendedDataProperties(mParser));
+                    properties.putAll(setExtendedDataProperties(mParser));
                 } else if (mParser.getName().equals("color")) {
-                    mGroundOverlay.setColor(mParser.nextText());
+                    color = mParser.nextText();
                 } else if (mParser.getName().matches(PROPERTY_REGEX)) {
-                    mGroundOverlay.setProperty(mParser.getName(), mParser.nextText());
+                    properties.put(mParser.getName(), mParser.nextText());
                 }
             }
             eventType = mParser.next();
         }
-        //TODO: Change constructor of GroundOverlay instead of having set methods
-        return mGroundOverlay;
+        return new KmlGroundOverlay(imageUrl, latLonBox, drawOrder, visibility, color, properties,
+                rotation);
     }
 
     /**
@@ -109,7 +118,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @return Image Url for the GroundOverlay
      */
 
-    private static String getImageUrl (XmlPullParser mParser) throws IOException, XmlPullParserException {
+    private static String getImageUrl(XmlPullParser mParser)
+            throws IOException, XmlPullParserException {
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("Icon"))) {
             if (eventType == START_TAG && mParser.getName().equals("href")) {
@@ -173,7 +183,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlPoint object
      */
-    private static KmlPoint createPoint(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlPoint createPoint(XmlPullParser mParser)
+            throws XmlPullParserException, IOException {
         LatLng coordinate = null;
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("Point"))) {
@@ -190,7 +201,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlLineString object
      */
-    private static KmlLineString createLineString(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlLineString createLineString(XmlPullParser mParser)
+            throws XmlPullParserException, IOException {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("LineString"))) {
@@ -208,7 +220,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlPolygon object
      */
-    private static KmlPolygon createPolygon(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlPolygon createPolygon(XmlPullParser mParser)
+            throws XmlPullParserException, IOException {
         // Indicates if an outer boundary needs to be defined
         Boolean isOuterBoundary = false;
         ArrayList<LatLng> outerBoundary = new ArrayList<LatLng>();
@@ -236,7 +249,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      *
      * @return KmlMultiGeometry object
      */
-    private static KmlMultiGeometry createMultiGeometry(XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static KmlMultiGeometry createMultiGeometry(XmlPullParser mParser)
+            throws XmlPullParserException, IOException {
         ArrayList<KmlGeometry> geometries = new ArrayList<KmlGeometry>();
         // Get next otherwise have an infinite loop
         int eventType = mParser.next();
@@ -252,10 +266,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
     /**
      * Creates a bound for a LatLonBox and sets the GroundOverlay to contain this bound
      *
-     * @param groundOverlay GroundOverlay to set the bound
      * @return LatLngBounds
      */
-    private static LatLngBounds createLatLonBox(KmlGroundOverlay groundOverlay, XmlPullParser mParser)
+    private static LatLngBounds parseLatLonBox(XmlPullParser mParser, float rotation)
             throws XmlPullParserException, IOException {
         Double north = 0.0;
         Double south = 0.0;
@@ -274,7 +287,14 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
                 } else if (mParser.getName().equals("west")) {
                     west = Double.parseDouble(mParser.nextText());
                 } else if (mParser.getName().equals("rotation")) {
-                    groundOverlay.setRotation(Float.parseFloat(mParser.nextText()));
+                    float parsedRotation = Float.parseFloat(mParser.nextText());
+                    if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
+                        rotation = parsedRotation + 180;
+                    } else if (parsedRotation < 0.0 && parsedRotation >= -180.0) {
+                        rotation = Math.abs(parsedRotation);
+                    } else {
+                        rotation = parsedRotation;
+                    }
                 }
             }
             eventType = mParser.next();
@@ -320,7 +340,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * @param east  East coordinate of the bounding box
      * @param west  West coordinate of the bounding box
      */
-    private static LatLngBounds createLatLngBounds(Double north, Double south, Double east, Double west) {
+    private static LatLngBounds createLatLngBounds(Double north, Double south, Double east,
+            Double west) {
         LatLng southWest = new LatLng(south, west);
         LatLng northEast = new LatLng(north, east);
         return new LatLngBounds(southWest, northEast);

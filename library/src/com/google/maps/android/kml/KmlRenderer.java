@@ -161,7 +161,7 @@ import java.util.Set;
     /**
      * Gets the visibility of the container
      *
-     * @param kmlContainer container to check visibility of
+     * @param kmlContainer             container to check visibility of
      * @param isParentContainerVisible true if the parent container is visible, false otherwise
      * @return true if this container is visible, false otherwise
      */
@@ -558,8 +558,8 @@ import java.util.Set;
     /**
      * Sets the inline point style by copying over the styles that have been set
      *
-     * @param markerOptions marker options object to add inline styles to
-     * @param inlineStyle inline styles to apply
+     * @param markerOptions    marker options object to add inline styles to
+     * @param inlineStyle      inline styles to apply
      * @param markerUrlIconUrl default marker icon URL from shared style
      */
     private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
@@ -606,7 +606,7 @@ import java.util.Set;
      * Sets the inline linestring style by copying over the styles that have been set
      *
      * @param polylineOptions polygon options object to add inline styles to
-     * @param inlineStyle inline styles to apply
+     * @param inlineStyle     inline styles to apply
      */
     private void setInlineLineStringStyle(PolylineOptions polylineOptions, KmlStyle inlineStyle) {
         PolylineOptions inlinePolylineOptions = inlineStyle.getPolylineOptions();
@@ -646,7 +646,7 @@ import java.util.Set;
      * Sets the inline polygon style by copying over the styles that have been set
      *
      * @param polygonOptions polygon options object to add inline styles to
-     * @param inlineStyle inline styles to apply
+     * @param inlineStyle    inline styles to apply
      */
     private void setInlinePolygonStyle(PolygonOptions polygonOptions, KmlStyle inlineStyle) {
         PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
