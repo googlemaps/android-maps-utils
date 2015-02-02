@@ -68,7 +68,8 @@ import java.util.HashMap;
                     mContainers.add(mContainerParser.getContainer());
                 }
                 if (mParser.getName().equals(STYLE)) {
-                    mStyles.put(KmlStyleParser.createStyle(mParser).getStyleId(), KmlStyleParser.createStyle(mParser));
+                    KmlStyle style = KmlStyleParser.createStyle(mParser);
+                    mStyles.put(style.getStyleId(), style);
                 }
                 if (mParser.getName().equals(STYLE_MAP)) {
                     mStyleParser.createStyleMap(mParser);
