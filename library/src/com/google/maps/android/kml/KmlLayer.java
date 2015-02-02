@@ -87,7 +87,7 @@ public class KmlLayer {
      * @return true if there are placemarks, false otherwise
      */
 
-    public Boolean hasKmlPlacemarks() {
+    public boolean hasKmlPlacemarks() {
         return mRenderer.hasKmlPlacemarks();
     }
 

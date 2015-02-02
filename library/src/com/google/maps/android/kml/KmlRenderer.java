@@ -454,12 +454,12 @@ import java.util.Set;
                         .equals(placemarkStyle.getIconUrl());
                 if (isInlineStyleIcon) {
                     Bitmap iconBitmap = mImagesCache.get(iconUrl);
-                    Double scale = placemark.getInlineStyle().getIconScale();
+                    double scale = placemark.getInlineStyle().getIconScale();
                     ((Marker) mPlacemarks.get(placemark)).setIcon(
                             scaleIconToMarkers(iconBitmap, scale));
                 } else if (isPlacemarkStyleIcon) {
                     Bitmap iconBitmap = mImagesCache.get(iconUrl);
-                    Double scale = placemarkStyle.getIconScale();
+                    double scale = placemarkStyle.getIconScale();
                     ((Marker) mPlacemarks.get(placemark)).setIcon(
                             scaleIconToMarkers(iconBitmap, scale));
                 }
