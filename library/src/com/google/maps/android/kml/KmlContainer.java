@@ -24,14 +24,18 @@ public class KmlContainer {
 
     private String mContainerId;
 
-    public KmlContainer() {
-        mProperties = new HashMap<String, String>();
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mStyles = new HashMap<String, KmlStyle>();
-        mStyleMap = new HashMap<String, String>();
-        mContainers = new ArrayList<KmlContainer>();
-        mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
-        mContainerId = null;
+
+    public KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
+                        HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
+                        ArrayList<KmlContainer> containers,
+                        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlay, String containerId) {
+        mProperties = properties;
+        mPlacemarks = placemarks;
+        mStyles = styles;
+        mStyleMap = styleMaps;
+        mContainers = containers;
+        mGroundOverlays = groundOverlay;
+        mContainerId = containerId;
     }
 
     /**
@@ -43,14 +47,6 @@ public class KmlContainer {
         return mContainerId;
     }
 
-    /**
-     * Assigns a string value to the Contianer
-     *
-     * @param containerId   String value to assign to the contianer
-     */
-    public void setContainerId(String containerId) {
-        mContainerId = containerId;
-    }
 
     /*package*/ ArrayList<KmlContainer> getNestedContainers() {
         return mContainers;
@@ -87,41 +83,11 @@ public class KmlContainer {
     /* package */ void setPlacemark(KmlPlacemark placemarks, Object object) {
         mPlacemarks.put(placemarks, object);
     }
-
-    /**
-     * Add a nested container
-     *
-     * @param container Container to nest within the current instance of the container
-     */
-    /* package */ void addChildContainer(KmlContainer container) {
-        mContainers.add(container);
-    }
-
     /**
      * @return HashMap of containers
      */
     public HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;
-    }
-
-    /**
-     * Sets a property to be contained by the container
-     *
-     * @param propertyName  Name of the property, ie "name"
-     * @param propertyValue Value of the property, ie "Arizona"
-     */
-    public void setProperty(String propertyName, String propertyValue) {
-        mProperties.put(propertyName, propertyValue);
-    }
-
-    /**
-     * Sets a style to be contained by the container
-     *
-     * @param styleId Name or ID of the style
-     * @param style   KmlStyle object
-     */
-    public void setStyle(String styleId, KmlStyle style) {
-        mStyles.put(styleId, style);
     }
 
     /**
@@ -131,21 +97,6 @@ public class KmlContainer {
         return mStyleMap;
     }
 
-    /**
-     * @param styleMap Adds a map of strings representing a style map
-     */
-    /* package */ void setStyleMap(HashMap<String, String> styleMap) {
-        mStyleMap.putAll(styleMap);
-    }
-
-    /**
-     * Add a ground overlay for this container
-     *
-     * @param groundOverlay ground overlay to add
-     */
-    /* package */ void addGroundOverlay(KmlGroundOverlay groundOverlay) {
-        mGroundOverlays.put(groundOverlay, null);
-    }
 
     /**
      * Gets all of the ground overlays which were set in the container

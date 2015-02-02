@@ -8,13 +8,14 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a KML Ground Overlay
  */
 public class KmlGroundOverlay {
 
-    private final HashMap<String, String> mProperties;
+    private final Map<String, String> mProperties;
 
     private final GroundOverlayOptions mGroundOverlayOptions;
 

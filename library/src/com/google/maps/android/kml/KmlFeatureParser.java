@@ -38,7 +38,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private KmlGroundOverlay mGroundOverlay;
 
-    public KmlFeatureParser() {
+    /* package */ KmlFeatureParser() {
         mPlacemark = null;
         mGroundOverlay = null;
     }
@@ -175,35 +175,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         return properties;
     }
 
-    /**
-     * Convert a string coordinate from a string into a LatLng object
-     *
-     * @param coordinateString coordinate string to convert from
-     * @return LatLng object created from given coordinate string
-     */
-    private static LatLng convertToLatLng(String coordinateString) {
-        // Lat and Lng are separated by a ,
-        String[] coordinate = coordinateString.split(",");
-        Double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
-        Double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
-        return new LatLng(lat, lon);
-    }
 
-    /**
-     * Convert a string of coordinates into an array of LatLngs
-     *
-     * @param coordinatesString coordinates string to convert from
-     * @return array of LatLng objects created from the given coordinate string array
-     */
-    private static ArrayList<LatLng> convertToLatLngArray(String coordinatesString) {
-        ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
-        // Need to trim to avoid whitespace around the coordinates such as tabs
-        String[] coordinates = coordinatesString.trim().split("(\\s+)");
-        for (String coordinate : coordinates) {
-            coordinatesArray.add(convertToLatLng(coordinate));
-        }
-        return coordinatesArray;
-    }
+
 
     /**
      * Creates a new KmlPoint object
@@ -317,6 +290,37 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
             eventType = mParser.next();
         }
         return createLatLngBounds(north, south, east, west);
+    }
+
+    /**
+     * Convert a string of coordinates into an array of LatLngs
+     *
+     * @param coordinatesString coordinates string to convert from
+     * @return array of LatLng objects created from the given coordinate string array
+     */
+    private static ArrayList<LatLng> convertToLatLngArray(String coordinatesString) {
+        ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
+        // Need to trim to avoid whitespace around the coordinates such as tabs
+        String[] coordinates = coordinatesString.trim().split("(\\s+)");
+        for (String coordinate : coordinates) {
+            coordinatesArray.add(convertToLatLng(coordinate));
+        }
+        return coordinatesArray;
+    }
+
+
+    /**
+     * Convert a string coordinate from a string into a LatLng object
+     *
+     * @param coordinateString coordinate string to convert from
+     * @return LatLng object created from given coordinate string
+     */
+    private static LatLng convertToLatLng(String coordinateString) {
+        // Lat and Lng are separated by a ,
+        String[] coordinate = coordinateString.split(",");
+        Double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
+        Double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
+        return new LatLng(lat, lon);
     }
 
     /**

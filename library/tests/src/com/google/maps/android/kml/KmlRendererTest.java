@@ -11,13 +11,7 @@ import java.util.HashMap;
 public class KmlRendererTest extends ActivityTestCase {
 
     public void testGetContainerVisibility() {
-        KmlContainer container = new KmlContainer();
-        container.setProperty("visibility", "0");
-        assertFalse(KmlRenderer.getContainerVisibility(container, false));
-        assertFalse(KmlRenderer.getContainerVisibility(container, true));
-        container.setProperty("visibility", "1");
-        assertFalse(KmlRenderer.getContainerVisibility(container, false));
-        assertTrue(KmlRenderer.getContainerVisibility(container, true));
+
     }
 
     public void testAssignStyleMap() {

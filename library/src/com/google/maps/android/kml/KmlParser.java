@@ -64,7 +64,7 @@ import java.util.HashMap;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    mContainerParser.createContainer(mParser);
+                    mContainerParser.assignContainerProperties(mParser);
                     mContainers.add(mContainerParser.getContainer());
                 }
                 if (mParser.getName().equals(STYLE)) {
