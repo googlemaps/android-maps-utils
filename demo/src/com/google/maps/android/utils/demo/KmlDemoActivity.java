@@ -14,7 +14,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.default_balloon, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.ballon_gx_prefix, getApplicationContext());
             kmlLayer.addKmlData();
             Log.i("Demo", "End");
 

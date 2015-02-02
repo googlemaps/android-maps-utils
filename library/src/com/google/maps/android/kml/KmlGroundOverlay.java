@@ -22,10 +22,6 @@ public class KmlGroundOverlay {
 
     private LatLngBounds mLatLngBox;
 
-    private final static int HSV_VALUES = 3;
-
-    private final static int HUE_VALUE = 0;
-
     private String mGroundOverlayColor;
 
 
@@ -37,6 +33,11 @@ public class KmlGroundOverlay {
         mGroundOverlayOptions = new GroundOverlayOptions();
     }
 
+    /**
+     * Sets the string color
+     *
+     * @param stringColor Hexadecimal string value
+     */
     public void setColor(String stringColor) {
         mGroundOverlayColor = stringColor;
     }

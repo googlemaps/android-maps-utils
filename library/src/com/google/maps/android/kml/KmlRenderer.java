@@ -514,27 +514,6 @@ import java.util.Set;
     }
 
     /**
-     * Determines if a marker inside a container needs to be set
-     *
-     * @param style      Style containing the style of the marker
-     * @param marker     The marker to display the info window on
-     * @param containers List of containers to find an info window of
-     */
-    private void setContainerMarkerInfoWindow(KmlStyle style, Marker marker,
-            Iterable<KmlContainer> containers) {
-        for (KmlContainer container : containers) {
-            if (container.hasKmlPlacemarks()) {
-                for (KmlPlacemark placemark : container.getPlacemarks().keySet()) {
-                    setMarkerInfoWindow(style, marker, placemark);
-                }
-            }
-            if (hasNestedContainers()) {
-                setContainerMarkerInfoWindow(style, marker, container.getNestedKmlContainers());
-            }
-        }
-    }
-
-    /**
      * Adds a KML Point to the map as a Marker by combining the styling and coordinates
      *
      * @param point contains coordinates for the Marker
@@ -553,7 +532,6 @@ import java.util.Set;
         }
         Marker marker = mMap.addMarker(markerUrlStyle);
         setMarkerInfoWindow(style, marker, placemark);
-        setContainerMarkerInfoWindow(style, marker, mContainers);
         return marker;
     }
 
