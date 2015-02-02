@@ -78,8 +78,7 @@ import java.util.HashMap;
                     mPlacemarks.put(KmlFeatureParser.createPlacemark(mParser), null);
                 }
                 if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    mFeatureParser.createGroundOverlay(mParser);
-                    mGroundOverlays.put(mFeatureParser.getGroundOverlay(), null);
+                    mGroundOverlays.put(KmlFeatureParser.createGroundOverlay(mParser), null);
                 }
             }
             eventType = mParser.next();

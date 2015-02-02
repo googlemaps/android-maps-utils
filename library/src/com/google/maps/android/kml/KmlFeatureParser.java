@@ -34,15 +34,6 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 
     private final static String STYLE_TAG = "Style";
 
-    private KmlPlacemark mPlacemark;
-
-    private KmlGroundOverlay mGroundOverlay;
-
-    /* package */ KmlFeatureParser() {
-        mPlacemark = null;
-        mGroundOverlay = null;
-    }
-
     /**
      * Creates a new Placemark object (created if a Placemark start tag is read by the
      * XmlPullParser and if a Geometry tag is contained within the Placemark tag)
@@ -83,9 +74,9 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
      * Creates a new GroundOverlay object (created if a GroundOverlay tag is read by the
      * XmlPullParser) and assigns specific elements read from the parser to the GroundOverlay
      */
-    /* package */ void createGroundOverlay(XmlPullParser mParser)
+    /* package */ static KmlGroundOverlay createGroundOverlay(XmlPullParser mParser)
             throws IOException, XmlPullParserException {
-        mGroundOverlay = new KmlGroundOverlay();
+        KmlGroundOverlay mGroundOverlay = new KmlGroundOverlay();
         int eventType = mParser.getEventType();
         while (!(eventType == END_TAG && mParser.getName().equals("GroundOverlay"))) {
             if (eventType == START_TAG) {
@@ -107,7 +98,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
             }
             eventType = mParser.next();
         }
-        //TODO: Change constructor of Groundoverlay instead of having set methods
+        //TODO: Change constructor of GroundOverlay instead of having set methods
+        return mGroundOverlay;
     }
 
     /**
@@ -306,7 +298,6 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         return coordinatesArray;
     }
 
-
     /**
      * Convert a string coordinate from a string into a LatLng object
      *
@@ -333,9 +324,5 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
         LatLng southWest = new LatLng(south, west);
         LatLng northEast = new LatLng(north, east);
         return new LatLngBounds(southWest, northEast);
-    }
-
-    /* package */ KmlGroundOverlay getGroundOverlay() {
-        return mGroundOverlay;
     }
 }

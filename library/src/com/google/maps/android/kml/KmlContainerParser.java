@@ -92,9 +92,7 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
                 } else if (mParser.getName().equals(EXTENDED_DATA)) {
                     setExtendedDataProperties(containerProperties, mParser);
                 } else if (mParser.getName().equals(GROUND_OVERLAY)) {
-                    mFeatureParser.createGroundOverlay(mParser);
-                    KmlGroundOverlay kmlGroundOverlay = mFeatureParser.getGroundOverlay();
-                    containerGroundOverlays.put(kmlGroundOverlay, null);
+                    containerGroundOverlays.put(KmlFeatureParser.createGroundOverlay(mParser), null);
                 }
             }
             eventType = mParser.next();

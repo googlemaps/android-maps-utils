@@ -57,9 +57,7 @@ public class KmlFeatureParserTest extends ActivityTestCase {
 
     public void testGroundOverlay() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.ground_overlay);
-        KmlFeatureParser parser = new KmlFeatureParser();
-        parser.createGroundOverlay(xmlPullParser);
-        KmlGroundOverlay groundOverlay = parser.getGroundOverlay();
+        KmlGroundOverlay groundOverlay = KmlFeatureParser.createGroundOverlay(xmlPullParser);
         assertNotNull(groundOverlay);
         assertEquals(groundOverlay.getProperty("name"), "Sample Ground Overlay");
         assertNotNull(groundOverlay.getImageUrl());
@@ -67,8 +65,7 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         assertTrue(groundOverlay.getGroundOverlayOptions().isVisible());
         assertNotNull(groundOverlay.getLatLngBox());
         xmlPullParser = createParser(R.raw.ground_overlay_color);
-        parser.createGroundOverlay(xmlPullParser);
-        groundOverlay = parser.getGroundOverlay();
+        groundOverlay = KmlFeatureParser.createGroundOverlay(xmlPullParser);
         assertNotNull(groundOverlay);
     }
 
