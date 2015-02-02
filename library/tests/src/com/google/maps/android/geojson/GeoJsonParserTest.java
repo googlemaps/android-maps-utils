@@ -38,36 +38,120 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(geoJsonFeatures.get(0).getId(), parser.getFeatures().get(0).getId());
     }
 
-    // TODO: Testing for nested geometry collections
     public void testParseGeometryCollection() throws Exception {
-        JSONObject geometryCollectionObject = validGeometryCollection();
-        GeoJsonParser parser = new GeoJsonParser(geometryCollectionObject);
-        assertTrue(parser.getFeatures().size() == 1);
+        GeoJsonParser parser = new GeoJsonParser(validGeometryCollection());
+        assertEquals(1, parser.getFeatures().size());
         for (GeoJsonFeature feature : parser.getFeatures()) {
-            assertTrue(feature.getGeometry().getType().equals("GeometryCollection"));
-            assertTrue(feature.getProperties().size() == 2);
-            assertTrue(feature.getId().equals("Popsicles"));
+            assertEquals("GeometryCollection", feature.getGeometry().getType());
+            assertEquals(2, feature.getProperties().size());
+            assertEquals("Popsicles", feature.getId());
             GeoJsonGeometryCollection geometry = ((GeoJsonGeometryCollection) feature
                     .getGeometry());
-            assertTrue(geometry.getGeometries().size() == 1);
+            assertEquals(1, geometry.getGeometries().size());
             for (GeoJsonGeometry geoJsonGeometry : geometry.getGeometries()) {
-                assertTrue(geoJsonGeometry.getType().equals("GeometryCollection"));
+                assertEquals("GeometryCollection", geoJsonGeometry.getType());
             }
         }
     }
 
-    // TODO: parse each feature type
+    public void testParsePoint() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(validPoint());
+        assertEquals(1, parser.getFeatures().size());
+        assertNull(parser.getFeatures().get(0).getBoundingBox());
+        assertNull(parser.getFeatures().get(0).getId());
+        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonPoint);
+        GeoJsonPoint point = (GeoJsonPoint) parser.getFeatures().get(0).getGeometry();
+        assertEquals(new LatLng(0.0, 100.0), point.getCoordinates());
+    }
+
+    public void testParseLineString() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(validLineString());
+        assertEquals(1, parser.getFeatures().size());
+        assertNull(parser.getFeatures().get(0).getBoundingBox());
+        assertNull(parser.getFeatures().get(0).getId());
+        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonLineString);
+        GeoJsonLineString lineString = (GeoJsonLineString) parser.getFeatures().get(0)
+                .getGeometry();
+        assertEquals(2, lineString.getCoordinates().size());
+        ArrayList<LatLng> ls = new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(0, 100), new LatLng(1, 101)));
+        assertEquals(ls, lineString.getCoordinates());
+    }
+
+    public void testParsePolygon() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(validPolygon());
+        assertEquals(1, parser.getFeatures().size());
+        assertNull(parser.getFeatures().get(0).getBoundingBox());
+        assertNull(parser.getFeatures().get(0).getId());
+        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonPolygon);
+        GeoJsonPolygon polygon = (GeoJsonPolygon) parser.getFeatures().get(0).getGeometry();
+        assertEquals(2, polygon.getCoordinates().size());
+        assertEquals(5, polygon.getCoordinates().get(0).size());
+        assertEquals(5, polygon.getCoordinates().get(1).size());
+        ArrayList<ArrayList<LatLng>> p = new ArrayList<ArrayList<LatLng>>();
+        p.add(new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(0, 100), new LatLng(0, 101), new LatLng(1, 101),
+                        new LatLng(1, 100), new LatLng(0, 100))));
+        p.add(new ArrayList<LatLng>(Arrays.asList(new LatLng(0.2, 100.2), new LatLng(0.2, 100.8),
+                new LatLng(0.8, 100.8), new LatLng(0.8, 100.2), new LatLng(0.2, 100.2))));
+        assertEquals(p, polygon.getCoordinates());
+    }
+
+    public void testParseMultiPoint() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(validMultiPoint());
+        assertEquals(1, parser.getFeatures().size());
+        assertNull(parser.getFeatures().get(0).getBoundingBox());
+        assertNull(parser.getFeatures().get(0).getId());
+        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonMultiPoint);
+        GeoJsonMultiPoint multiPoint = (GeoJsonMultiPoint) parser.getFeatures().get(0)
+                .getGeometry();
+        assertEquals(2, multiPoint.getPoints().size());
+        assertEquals(new LatLng(0, 100), multiPoint.getPoints().get(0).getCoordinates());
+        assertEquals(new LatLng(1, 101), multiPoint.getPoints().get(1).getCoordinates());
+    }
+
+    public void testParseMultiLineString() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(validMultiLineString());
+        assertEquals(1, parser.getFeatures().size());
+        assertNull(parser.getFeatures().get(0).getBoundingBox());
+        assertNull(parser.getFeatures().get(0).getId());
+        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonMultiLineString);
+        GeoJsonMultiLineString multiLineString = (GeoJsonMultiLineString) parser.getFeatures()
+                .get(0).getGeometry();
+        assertEquals(2, multiLineString.getLineStrings().size());
+        ArrayList<LatLng> ls = new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(0, 100), new LatLng(1, 101)));
+        assertEquals(ls, multiLineString.getLineStrings().get(0).getCoordinates());
+        ls = new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(2, 102), new LatLng(3, 103)));
+        assertEquals(ls, multiLineString.getLineStrings().get(1).getCoordinates());
+    }
+
     public void testParseMultiPolygon() throws Exception {
-        JSONObject multiPolygon = validMultiPolygon();
-        GeoJsonParser parser = new GeoJsonParser(multiPolygon);
-        assertTrue(parser.getFeatures().size() == 1);
+        GeoJsonParser parser = new GeoJsonParser(validMultiPolygon());
+        assertEquals(1, parser.getFeatures().size());
         GeoJsonFeature feature = parser.getFeatures().get(0);
         GeoJsonMultiPolygon polygon = ((GeoJsonMultiPolygon) feature.getGeometry());
-        assertTrue(polygon.getPolygons().size() == 2);
-        assertTrue(polygon.getPolygons().get(0).getType().equals("Polygon"));
-        assertTrue(polygon.getPolygons().get(0).getCoordinates().size() == 1);
-        assertTrue(polygon.getPolygons().get(1).getType().equals("Polygon"));
-        assertTrue(polygon.getPolygons().get(1).getCoordinates().size() == 2);
+        assertEquals(2, polygon.getPolygons().size());
+        assertEquals(1, polygon.getPolygons().get(0).getCoordinates().size());
+        ArrayList<ArrayList<LatLng>> p1 = new ArrayList<ArrayList<LatLng>>();
+        p1.add(new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(2, 102), new LatLng(2, 103), new LatLng(3, 103),
+                        new LatLng(3, 102), new LatLng(2, 102))));
+        assertEquals(p1, polygon.getPolygons().get(0).getCoordinates());
+        assertEquals(2, polygon.getPolygons().get(1).getCoordinates().size());
+        ArrayList<ArrayList<LatLng>> p2 = new ArrayList<ArrayList<LatLng>>();
+        p2.add(new ArrayList<LatLng>(
+                Arrays.asList(new LatLng(0, 100), new LatLng(0, 101), new LatLng(1, 101),
+                        new LatLng(1, 100), new LatLng(0, 100))));
+        p2.add(new ArrayList<LatLng>(Arrays.asList(new LatLng(0.2, 100.2), new LatLng(0.2, 100.8),
+                new LatLng(0.8, 100.8), new LatLng(0.8, 100.2), new LatLng(0.2, 100.2))));
+        assertEquals(p2, polygon.getPolygons().get(1).getCoordinates());
     }
 
     public void testEmptyFile() throws Exception {
@@ -101,7 +185,8 @@ public class GeoJsonParserTest extends TestCase {
         parser = new GeoJsonParser(invalidFeatureGeometryCollectionInvalidGeometry());
         assertNull(parser.getBoundingBox());
         assertEquals(1, parser.getFeatures().size());
-        assertEquals(1, ((GeoJsonGeometryCollection) parser.getFeatures().get(0).getGeometry()).getGeometries().size());
+        assertEquals(1, ((GeoJsonGeometryCollection) parser.getFeatures().get(0).getGeometry())
+                .getGeometries().size());
 
         // No geometry due to no geometries array member
         parser = new GeoJsonParser(invalidFeatureGeometryCollectionNoGeometries());
@@ -165,7 +250,8 @@ public class GeoJsonParserTest extends TestCase {
         parser = new GeoJsonParser(invalidGeometryCollectionInvalidGeometry());
         assertNull(parser.getBoundingBox());
         assertEquals(1, parser.getFeatures().size());
-        assertEquals(1, ((GeoJsonGeometryCollection) parser.getFeatures().get(0).getGeometry()).getGeometries().size());
+        assertEquals(1, ((GeoJsonGeometryCollection) parser.getFeatures().get(0).getGeometry())
+                .getGeometries().size());
 
         // No geometry due to invalid geometry collection
         parser = new GeoJsonParser(invalidGeometryCollectionInvalidGeometries());
@@ -205,18 +291,59 @@ public class GeoJsonParserTest extends TestCase {
                         "}");
     }
 
+    public JSONObject validPoint() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"Point\", \"coordinates\": [100.0, 0.0] }"
+        );
+    }
+
+    public JSONObject validLineString() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"LineString\",\n"
+                        + "    \"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ]\n"
+                        + "    }"
+        );
+    }
+
+    public JSONObject validPolygon() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"Polygon\",\n"
+                        + "    \"coordinates\": [\n"
+                        + "      [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],\n"
+                        + "      [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]\n"
+                        + "      ]\n"
+                        + "   }"
+        );
+    }
+
+    public JSONObject validMultiPoint() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"MultiPoint\",\n"
+                        + "    \"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ]\n"
+                        + "    }"
+        );
+    }
+
+    public JSONObject validMultiLineString() throws JSONException {
+        return new JSONObject(
+                "{ \"type\": \"MultiLineString\",\n"
+                        + "    \"coordinates\": [\n"
+                        + "        [ [100.0, 0.0], [101.0, 1.0] ],\n"
+                        + "        [ [102.0, 2.0], [103.0, 3.0] ]\n"
+                        + "      ]\n"
+                        + "    }"
+        );
+    }
+
     public JSONObject validMultiPolygon() throws Exception {
         return new JSONObject(
-                "  { \"type\": \"MultiPolygon\",\n" +
-                        "    \"coordinates\": [\n" +
-                        "      [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],\n"
-                        +
-                        "      [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],\n"
-                        +
-                        "       [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]\n"
-                        +
-                        "      ]\n" +
-                        "    }"
+                "{ \"type\": \"MultiPolygon\",\n"
+                        + "    \"coordinates\": [\n"
+                        + "      [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],\n"
+                        + "      [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],\n"
+                        + "       [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]\n"
+                        + "      ]\n"
+                        + "    }"
         );
 
     }
@@ -241,12 +368,22 @@ public class GeoJsonParserTest extends TestCase {
         );
     }
 
+    /**
+     * Geometry has coordinates member which is a single double instead of a pair of doubles
+     *
+     * @return geometry with invalid coordinates member
+     */
     public JSONObject invalidGeometryInvalidCoordinatesPair() throws Exception {
         return new JSONObject("{ \"type\": \"Point\", \"coordinates\": [100.0] }");
     }
 
+    /**
+     * Geometry has coordinates member which is a pair of strings instead of a pair of doubles
+     *
+     * @return geometry with invalid coordinates member
+     */
     public JSONObject invalidGeometryInvalidCoordinatesString() throws Exception {
-        return new JSONObject("{ \"type\": \"Point\", \"coordinates\": [\"BANANA\"] }");
+        return new JSONObject("{ \"type\": \"Point\", \"coordinates\": [\"BANANA\", \"BOAT\"] }");
     }
 
     /**
@@ -265,21 +402,31 @@ public class GeoJsonParserTest extends TestCase {
         );
     }
 
+    /**
+     * Geometry collection with a geometry missing the coordinates array member
+     *
+     * @return Geometry collection with invalid geometry
+     */
     public JSONObject invalidGeometryCollectionInvalidGeometry() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"GeometryCollection\",\n"
-                + "  \"geometries\": [\n"
-                + "    { \"type\": \"Point\",\n"
-                + "      \"shark\": [100.0, 0.0]\n"
-                + "      },\n"
-                + "    { \"type\": \"LineString\",\n"
-                + "      \"coordinates\": [ [101.0, 0.0], [102.0, 1.0] ]\n"
-                + "      }\n"
-                + "  ]\n"
-                + "}"
+                        + "  \"geometries\": [\n"
+                        + "    { \"type\": \"Point\",\n"
+                        + "      \"shark\": [100.0, 0.0]\n"
+                        + "      },\n"
+                        + "    { \"type\": \"LineString\",\n"
+                        + "      \"coordinates\": [ [101.0, 0.0], [102.0, 1.0] ]\n"
+                        + "      }\n"
+                        + "  ]\n"
+                        + "}"
         );
     }
 
+    /**
+     * Geometry collection with a geometry that is missing the geometries array member
+     *
+     * @return Geometry collection with no geometries
+     */
     public JSONObject invalidGeometryCollectionInvalidGeometries() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"GeometryCollection\",\n"
@@ -295,47 +442,58 @@ public class GeoJsonParserTest extends TestCase {
         );
     }
 
+    /**
+     * Feature containing a geometry collection with an geometry that is missing the coordinates
+     * member
+     *
+     * @return Feature containing a geometry collection with an invalid geometry
+     */
     public JSONObject invalidFeatureGeometryCollectionInvalidGeometry() throws Exception {
         return new JSONObject(
                 "{\n"
-                + "  \"type\":\"FeatureCollection\",\n"
-                + "  \"features\":[\n"
-                + "    {\n"
-                + "      \"type\":\"Feature\",\n"
-                + "      \"geometry\":{\n"
-                + "        \"type\":\"GeometryCollection\",\n"
-                + "        \"geometries\":[\n"
-                + "          {\n"
-                + "            \"type\":\"Point\",\n"
-                + "            \"shark\":[\n"
-                + "              100.0,\n"
-                + "              0.0\n"
-                + "            ]\n"
-                + "          },\n"
-                + "          {\n"
-                + "            \"type\":\"LineString\",\n"
-                + "            \"coordinates\":[\n"
-                + "              [\n"
-                + "                101.0,\n"
-                + "                0.0\n"
-                + "              ],\n"
-                + "              [\n"
-                + "                102.0,\n"
-                + "                1.0\n"
-                + "              ]\n"
-                + "            ]\n"
-                + "          }\n"
-                + "        ]\n"
-                + "      },\n"
-                + "      \"properties\":{\n"
-                + "        \"prop0\":\"value0\"\n"
-                + "      }\n"
-                + "    }\n"
-                + "  ]\n"
-                + "}"
+                        + "  \"type\":\"FeatureCollection\",\n"
+                        + "  \"features\":[\n"
+                        + "    {\n"
+                        + "      \"type\":\"Feature\",\n"
+                        + "      \"geometry\":{\n"
+                        + "        \"type\":\"GeometryCollection\",\n"
+                        + "        \"geometries\":[\n"
+                        + "          {\n"
+                        + "            \"type\":\"Point\",\n"
+                        + "            \"shark\":[\n"
+                        + "              100.0,\n"
+                        + "              0.0\n"
+                        + "            ]\n"
+                        + "          },\n"
+                        + "          {\n"
+                        + "            \"type\":\"LineString\",\n"
+                        + "            \"coordinates\":[\n"
+                        + "              [\n"
+                        + "                101.0,\n"
+                        + "                0.0\n"
+                        + "              ],\n"
+                        + "              [\n"
+                        + "                102.0,\n"
+                        + "                1.0\n"
+                        + "              ]\n"
+                        + "            ]\n"
+                        + "          }\n"
+                        + "        ]\n"
+                        + "      },\n"
+                        + "      \"properties\":{\n"
+                        + "        \"prop0\":\"value0\"\n"
+                        + "      }\n"
+                        + "    }\n"
+                        + "  ]\n"
+                        + "}"
         );
     }
 
+    /**
+     * Feature collection with no geometries array member
+     *
+     * @return Feature collection with no geometries array
+     */
     public JSONObject invalidFeatureGeometryCollectionNoGeometries() throws Exception {
         return new JSONObject(
                 "{\n"
