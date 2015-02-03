@@ -31,37 +31,27 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     private final static String GROUND_OVERLAY = "GroundOverlay";
 
-    private final KmlFeatureParser mFeatureParser;
-
-    private KmlContainer mContainer;
-
-    private KmlStyleParser mStyleParser;
-
-    /* package */ KmlContainerParser() {
-        mStyleParser = new KmlStyleParser();
-        mFeatureParser = new KmlFeatureParser();
-        mContainer = null;
-    }
-
     /**
      * Obtains a Container object (created if a Document or Folder start tag is read by the
      * XmlPullParser) and assigns specific elements read from the XmlPullParser to the container.
      */
 
-    public void createContainer(XmlPullParser mParser) throws XmlPullParserException, IOException {
-        mContainer = assignPropertiesToContainer(mParser);
+    /* package */
+    static KmlContainer createContainer(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
+        return assignPropertiesToContainer(parser);
     }
 
     /**
      * Creates a new KmlContainer objects and assigns specific elements read from the XmlPullParser
      * to the new KmlContainer.
      *
-     * @param mParser XmlPullParser object reading from a KML file
+     * @param parser XmlPullParser object reading from a KML file
      * @return KmlContainer object with properties read from the XmlPullParser
      */
-    /* package */ KmlContainer assignPropertiesToContainer(XmlPullParser mParser)
+    private static KmlContainer assignPropertiesToContainer(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        String startTag = mParser.getName();
+        String startTag = parser.getName();
         String containerId = null;
         HashMap<String, String> containerProperties = new HashMap<String, String>();
         HashMap<String, KmlStyle> containerStyles = new HashMap<String, KmlStyle>();
@@ -71,32 +61,32 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         HashMap<KmlGroundOverlay, GroundOverlay> containerGroundOverlays
                 = new HashMap<KmlGroundOverlay, GroundOverlay>();
 
-        if (mParser.getAttributeValue(null, "id") != null) {
-            containerId = mParser.getAttributeValue(null, "id");
+        if (parser.getAttributeValue(null, "id") != null) {
+            containerId = parser.getAttributeValue(null, "id");
         }
 
-        mParser.next();
-        int eventType = mParser.getEventType();
-        while (!(eventType == END_TAG && mParser.getName().equals(startTag))) {
+        parser.next();
+        int eventType = parser.getEventType();
+        while (!(eventType == END_TAG && parser.getName().equals(startTag))) {
             if (eventType == START_TAG) {
-                if (mParser.getName().matches(CONTAINER_REGEX)) {
-                    nestedContainers.add(assignPropertiesToContainer(mParser));
-                } else if (mParser.getName().matches(PROPERTY_REGEX)) {
-                    containerProperties.put(mParser.getName(), mParser.nextText());
-                } else if (mParser.getName().equals(STYLE_MAP)) {
-                    setContainerStyleMap(mParser, containerStyleMaps);
-                } else if (mParser.getName().equals(STYLE)) {
-                    setContainerStyle(containerStyles, mParser);
-                } else if (mParser.getName().equals(PLACEMARK)) {
-                    setContainerPlacemark(containerPlacemarks, mParser);
-                } else if (mParser.getName().equals(EXTENDED_DATA)) {
-                    setExtendedDataProperties(containerProperties, mParser);
-                } else if (mParser.getName().equals(GROUND_OVERLAY)) {
+                if (parser.getName().matches(CONTAINER_REGEX)) {
+                    nestedContainers.add(assignPropertiesToContainer(parser));
+                } else if (parser.getName().matches(PROPERTY_REGEX)) {
+                    containerProperties.put(parser.getName(), parser.nextText());
+                } else if (parser.getName().equals(STYLE_MAP)) {
+                    setContainerStyleMap(parser, containerStyleMaps);
+                } else if (parser.getName().equals(STYLE)) {
+                    setContainerStyle(parser, containerStyles);
+                } else if (parser.getName().equals(PLACEMARK)) {
+                    setContainerPlacemark(parser, containerPlacemarks);
+                } else if (parser.getName().equals(EXTENDED_DATA)) {
+                    setExtendedDataProperties(parser, containerProperties);
+                } else if (parser.getName().equals(GROUND_OVERLAY)) {
                     containerGroundOverlays
-                            .put(KmlFeatureParser.createGroundOverlay(mParser), null);
+                            .put(KmlFeatureParser.createGroundOverlay(parser), null);
                 }
             }
-            eventType = mParser.next();
+            eventType = parser.next();
         }
 
         return new KmlContainer(containerProperties, containerStyles, containerPlacemarks,
@@ -107,10 +97,9 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * Creates a new style map and assigns values from the XmlPullParser parser
      * and stores it into the container.
      */
-    /* package */ void setContainerStyleMap(XmlPullParser mParser,
+    private static void setContainerStyleMap(XmlPullParser parser,
             HashMap<String, String> containerStyleMap) throws XmlPullParserException, IOException {
-        mStyleParser.createStyleMap(mParser);
-        containerStyleMap.putAll(mStyleParser.getStyleMaps());
+        containerStyleMap.putAll(KmlStyleParser.createStyleMap(parser));
     }
 
     /**
@@ -118,20 +107,21 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * XmlPullParser and stores it in a container, Untyped <Data> only, no <SimpleData>
      * or <Schema>, and entity replacements of the form $[dataName] are unsupported.
      */
-    /* package */ void setExtendedDataProperties(HashMap<String, String> mContainerProperties,
-            XmlPullParser mParser) throws XmlPullParserException, IOException {
+    private static void setExtendedDataProperties(XmlPullParser parser,
+            HashMap<String, String> mContainerProperties)
+            throws XmlPullParserException, IOException {
         String propertyKey = null;
-        int eventType = mParser.getEventType();
-        while (!(eventType == END_TAG && mParser.getName().equals(EXTENDED_DATA))) {
+        int eventType = parser.getEventType();
+        while (!(eventType == END_TAG && parser.getName().equals(EXTENDED_DATA))) {
             if (eventType == START_TAG) {
-                if (mParser.getName().equals("Data")) {
-                    propertyKey = mParser.getAttributeValue(null, "name");
-                } else if (mParser.getName().equals("value") && propertyKey != null) {
-                    mContainerProperties.put(propertyKey, mParser.nextText());
+                if (parser.getName().equals("Data")) {
+                    propertyKey = parser.getAttributeValue(null, "name");
+                } else if (parser.getName().equals("value") && propertyKey != null) {
+                    mContainerProperties.put(propertyKey, parser.nextText());
                     propertyKey = null;
                 }
             }
-            eventType = mParser.next();
+            eventType = parser.next();
         }
     }
 
@@ -140,13 +130,12 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * start tag) and assigns specific elements read from the XmlPullParser to the Style. A new
      * style is not created if it does not have an ID.
      */
-    /* package */ void setContainerStyle(HashMap<String, KmlStyle> containerStyles,
-            XmlPullParser mParser) throws XmlPullParserException, IOException {
-        Boolean hasStyleId = mParser.getAttributeValue(null, "id") != null;
+    private static void setContainerStyle(XmlPullParser parser,
+            HashMap<String, KmlStyle> containerStyles) throws XmlPullParserException, IOException {
+        Boolean hasStyleId = parser.getAttributeValue(null, "id") != null;
         if (hasStyleId) {
-            KmlStyleParser.createStyle(mParser);
-            String styleId = KmlStyleParser.createStyle(mParser).getStyleId();
-            KmlStyle style = KmlStyleParser.createStyle(mParser);
+            KmlStyle style = KmlStyleParser.createStyle(parser);
+            String styleId = style.getStyleId();
             containerStyles.put(styleId, style);
         }
     }
@@ -155,19 +144,10 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * Creates a new placemark object  and assigns specific elements read from the XmlPullParser
      * to the Placemark and stores this into the given Container.
      */
-    /* package */ void setContainerPlacemark(HashMap<KmlPlacemark, Object> containerPlacemarks,
-            XmlPullParser mParser) throws XmlPullParserException, IOException {
-        containerPlacemarks.put(KmlFeatureParser.createPlacemark(mParser), null);
+    private static void setContainerPlacemark(XmlPullParser parser,
+            HashMap<KmlPlacemark, Object> containerPlacemarks)
+            throws XmlPullParserException, IOException {
+        containerPlacemarks.put(KmlFeatureParser.createPlacemark(parser), null);
     }
-
-    /**
-     * Retrieves this KmlContainer instance
-     *
-     * @return KmlContainer instance if it exists, null otherwise
-     */
-    /* package */ KmlContainer getContainer() {
-        return mContainer;
-    }
-
 
 }

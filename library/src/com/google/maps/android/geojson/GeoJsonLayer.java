@@ -23,8 +23,6 @@ public class GeoJsonLayer {
 
     private final GeoJsonRenderer mRenderer;
 
-    private final GeoJsonParser mParser;
-
     private GeoJsonPointStyle mDefaultPointStyle;
 
     private GeoJsonLineStringStyle mDefaultLineStringStyle;
@@ -44,11 +42,11 @@ public class GeoJsonLayer {
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mBoundingBox = null;
-        mParser = new GeoJsonParser(geoJsonFile);
+        GeoJsonParser parser = new GeoJsonParser(geoJsonFile);
         // Assign GeoJSON bounding box for FeatureCollection
-        mBoundingBox = mParser.getBoundingBox();
+        mBoundingBox = parser.getBoundingBox();
         HashMap<GeoJsonFeature, Object> geoJsonFeatures = new HashMap<GeoJsonFeature, Object>();
-        for (GeoJsonFeature feature : mParser.getFeatures()) {
+        for (GeoJsonFeature feature : parser.getFeatures()) {
             geoJsonFeatures.put(feature, null);
         }
         mRenderer = new GeoJsonRenderer(map, geoJsonFeatures);
@@ -122,7 +120,7 @@ public class GeoJsonLayer {
      * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map
      */
     public void addDataToLayer() {
-        for (GeoJsonFeature feature : mParser.getFeatures()) {
+        for (GeoJsonFeature feature : mRenderer.getFeatures()) {
             addFeature(feature);
         }
     }
@@ -147,7 +145,6 @@ public class GeoJsonLayer {
      */
     public void removeFeature(GeoJsonFeature feature) {
         mRenderer.removeFeature(feature);
-        mParser.getFeatures().remove(feature);
     }
 
     /**
