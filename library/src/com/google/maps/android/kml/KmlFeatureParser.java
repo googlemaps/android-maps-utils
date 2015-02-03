@@ -98,11 +98,9 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                     visibility = Integer.parseInt(parser.nextText());
                 } else if (parser.getName().equals("ExtendedData")) {
                     properties.putAll(setExtendedDataProperties(parser));
-                } else if (parser.getName().equals("color")) {
-                    properties.put("color", parser.nextText());
                 } else if (parser.getName().equals("rotation")) {
                     rotation = getRotation(parser);
-                } else if (parser.getName().matches(PROPERTY_REGEX)) {
+                } else if (parser.getName().matches(PROPERTY_REGEX) || parser.getName().equals("color")) {
                     properties.put(parser.getName(), parser.nextText());
                 } else if (parser.getName().matches(COMPASS_REGEX)) {
                     compassPoints.put(parser.getName(), Double.parseDouble(parser.nextText()));
