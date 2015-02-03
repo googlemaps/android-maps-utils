@@ -34,6 +34,8 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     private final static String STYLE_TAG = "Style";
 
+    private final static String COMPASS_REGEX = "north|south|east|west";
+
     /**
      * Creates a new Placemark object (created if a Placemark start tag is read by the
      * XmlPullParser and if a Geometry tag is contained within the Placemark tag)
@@ -77,17 +79,14 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     /* package */
     static KmlGroundOverlay createGroundOverlay(XmlPullParser parser)
             throws IOException, XmlPullParserException {
-        String imageUrl = null;
-        LatLngBounds latLonBox = null;
         float drawOrder = 0.0f;
-        int visibility = 1;
-        String color = null;
-        HashMap<String, String> properties = new HashMap<String, String>();
         float rotation = 0.0f;
-        Double north = 0.0;
-        Double south = 0.0;
-        Double east = 0.0;
-        Double west = 0.0;
+        int visibility = 1;
+        String imageUrl = null;
+        String color = null;
+        LatLngBounds latLonBox = null;
+        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, Double> compassPoints = new HashMap<String, Double>();
 
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("GroundOverlay"))) {
@@ -102,33 +101,34 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                     properties.putAll(setExtendedDataProperties(parser));
                 } else if (parser.getName().equals("color")) {
                     color = parser.nextText();
+                }  else if (parser.getName().equals("rotation")) {
+                    rotation = getRotation(parser);
                 } else if (parser.getName().matches(PROPERTY_REGEX)) {
                     properties.put(parser.getName(), parser.nextText());
-                } else if (parser.getName().equals("north")) {
-                    north = getPolarCoordinate(parser);
-                } else if (parser.getName().equals("south")) {
-                    south = getPolarCoordinate(parser);
-                }else if (parser.getName().equals("east")) {
-                    east = getPolarCoordinate(parser);
-                }else if (parser.getName().equals("west")) {
-                    west = getPolarCoordinate(parser);
-                } else if (parser.getName().equals("rotation")) {
-                    float parsedRotation = Float.parseFloat(parser.nextText());
-                    if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
-                        rotation = parsedRotation + 180;
-                    } else if (parsedRotation < 0.0 && parsedRotation >= -180.0) {
-                        rotation = Math.abs(parsedRotation);
-                    } else {
-                        rotation = parsedRotation;
-                    }
+                } else if (parser.getName().matches(COMPASS_REGEX)) {
+                    compassPoints.put(parser.getName(), Double.parseDouble(parser.nextText()));
                 }
             }
             eventType = parser.next();
         }
-
-        latLonBox = createLatLngBounds(north, south, east, west);
+        latLonBox = createLatLngBounds(compassPoints.get("north"), compassPoints.get("south"),
+                compassPoints.get("east"), compassPoints.get("west"));
         return new KmlGroundOverlay(imageUrl, latLonBox, drawOrder, visibility, color, properties,
                 rotation);
+    }
+
+    private static float getRotation(XmlPullParser parser)
+            throws IOException, XmlPullParserException {
+        float rotation = 0.0f;
+        float parsedRotation = Float.parseFloat(parser.nextText());
+        if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
+            rotation = parsedRotation + 180;
+        } else if (parsedRotation < 0.0 && parsedRotation >= -180.0) {
+            rotation = Math.abs(parsedRotation);
+        } else {
+            rotation = parsedRotation;
+        }
+        return rotation;
     }
 
     /**
@@ -281,13 +281,6 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             eventType = parser.next();
         }
         return new KmlMultiGeometry(geometries);
-    }
-
-    private static Double getPolarCoordinate(XmlPullParser parser)
-            throws XmlPullParserException, IOException {
-        Double polarCoordinate = Double.parseDouble(parser.nextText());
-        parser.next();
-        return polarCoordinate;
     }
 
     /**

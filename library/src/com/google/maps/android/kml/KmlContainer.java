@@ -24,7 +24,6 @@ public class KmlContainer {
 
     private String mContainerId;
 
-
     public KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
             HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
             ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
@@ -36,27 +35,6 @@ public class KmlContainer {
         mContainers = containers;
         mGroundOverlays = groundOverlay;
         mContainerId = Id;
-    }
-
-    /**
-     * Gets the Container ID if it is specified
-     *
-     * @return Container ID or null if not set
-     */
-    public String getContainerId() {
-        return mContainerId;
-    }
-
-
-    /*package*/ ArrayList<KmlContainer> getNestedContainers() {
-        return mContainers;
-    }
-
-    /**
-     * Gets a style based on an ID
-     */
-    public KmlStyle getStyle(String styleID) {
-        return mStyles.get(styleID);
     }
 
     /**
@@ -78,19 +56,11 @@ public class KmlContainer {
     }
 
     /**
-     * @return HashMap of containers
-     */
-    public HashMap<KmlPlacemark, Object> getPlacemarks() {
-        return mPlacemarks;
-    }
-
-    /**
      * @return A map of strings representing a style map, null if no style maps exist
      */
     /* package */ HashMap<String, String> getStyleMap() {
         return mStyleMap;
     }
-
 
     /**
      * Gets all of the ground overlays which were set in the container
@@ -99,6 +69,33 @@ public class KmlContainer {
      */
     /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayHashMap() {
         return mGroundOverlays;
+    }
+
+    /**
+     * Gets the Container ID if it is specified
+     *
+     * @return Container ID or null if not set
+     */
+    public String getContainerId() {
+        return mContainerId;
+    }
+
+    /*package*/ ArrayList<KmlContainer> getNestedContainers() {
+        return mContainers;
+    }
+
+    /**
+     * Gets a style based on an ID
+     */
+    public KmlStyle getStyle(String styleID) {
+        return mStyles.get(styleID);
+    }
+
+    /**
+     * @return HashMap of containers
+     */
+    public HashMap<KmlPlacemark, Object> getPlacemarks() {
+        return mPlacemarks;
     }
 
     /**
