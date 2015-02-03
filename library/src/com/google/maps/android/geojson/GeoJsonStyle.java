@@ -3,7 +3,7 @@ package com.google.maps.android.geojson;
 /**
  * Class used to apply styles for the GeoJsonFeature objects
  */
-public interface GeoJsonStyle {
+interface GeoJsonStyle {
 
     public String getGeometryType();
 
