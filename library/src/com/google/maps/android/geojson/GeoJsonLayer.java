@@ -117,7 +117,8 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map
+     * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map. Default
+     * styles are applied to all features each time this method is called.
      */
     public void addDataToLayer() {
         for (GeoJsonFeature feature : mRenderer.getFeatures()) {
