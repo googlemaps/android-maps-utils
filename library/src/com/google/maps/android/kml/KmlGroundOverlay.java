@@ -19,14 +19,21 @@ public class KmlGroundOverlay {
 
     private LatLngBounds mLatLngBox;
 
-    private String mColor;
-
+    /**
+     * Creates a new Ground Overlay
+     *
+     * @param imageUrl   url of the ground overlay image
+     * @param latLonBox  bounds of the image
+     * @param drawOrder  z index of the image
+     * @param visibility true if visible, false otherwise
+     * @param properties properties hashmap
+     * @param rotation   rotation of image
+     */
     /* package */ KmlGroundOverlay(String imageUrl, LatLngBounds latLonBox, float drawOrder,
-            int visibility, String color, HashMap<String, String> properties, float rotation) {
+            int visibility, HashMap<String, String> properties, float rotation) {
         mGroundOverlayOptions = new GroundOverlayOptions();
         mImageUrl = imageUrl;
         mProperties = properties;
-        mColor = color;
         if (latLonBox == null) {
             throw new IllegalArgumentException("No LatLonBox given");
         }
@@ -38,30 +45,12 @@ public class KmlGroundOverlay {
     }
 
     /**
-     * Gets the color of the ground overlay
-     *
-     * @return String representation of a hexadecimal value
-     */
-    /* package */ String getColor() {
-        return mColor;
-    }
-
-    /**
      * Gets the image url of the image used for the ground overlay
      *
-     * @return  Image url of the ground overlay
+     * @return Image url of the ground overlay
      */
-    /* package */ String getImageUrl() {
+    public String getImageUrl() {
         return mImageUrl;
-    }
-
-    /**
-     * Sets the image url of the image used for the ground overlay
-     *
-     * @param imageUrl  Image url for the ground overlay
-     */
-    /* package */ void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
     }
 
     /**
@@ -69,16 +58,16 @@ public class KmlGroundOverlay {
      *
      * @return latlngbound representing the outer boundary of the ground overlay
      */
-    /* package */ LatLngBounds getLatLngBox() {
+    public LatLngBounds getLatLngBox() {
         return mLatLngBox;
     }
 
     /**
      * Gets an iterable of the properties
      *
-     * @return  Iterable of the properties of the ground overlay
+     * @return Iterable of the properties of the ground overlay
      */
-    /* package */ Iterable getProperties() {
+    public Iterable getProperties() {
         return mProperties.entrySet();
     }
 
@@ -88,22 +77,24 @@ public class KmlGroundOverlay {
      * @param keyValue key value of the property
      * @return Value of property
      */
-    /* package */ String getProperty(String keyValue) {
+    public String getProperty(String keyValue) {
         return mProperties.get(keyValue);
     }
 
     /**
      * Returns a boolean value determining whether the ground overlay has a property
-     * @param keyValue  Value to retrieve
-     * @return  True if the property exists, false otherwise
+     *
+     * @param keyValue Value to retrieve
+     * @return True if the property exists, false otherwise
      */
-    /* package */ boolean hasProperty(String keyValue) {
+    public boolean hasProperty(String keyValue) {
         return mProperties.get(keyValue) != null;
     }
 
     /**
      * Gets the ground overlay option of the ground overlay on the map
-     * @return  GroundOverlayOptions
+     *
+     * @return GroundOverlayOptions
      */
     /* package */ GroundOverlayOptions getGroundOverlayOptions() {
         return mGroundOverlayOptions;

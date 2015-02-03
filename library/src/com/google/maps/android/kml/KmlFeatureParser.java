@@ -83,7 +83,6 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         float rotation = 0.0f;
         int visibility = 1;
         String imageUrl = null;
-        String color = null;
         LatLngBounds latLonBox;
         HashMap<String, String> properties = new HashMap<String, String>();
         HashMap<String, Double> compassPoints = new HashMap<String, Double>();
@@ -100,8 +99,8 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 } else if (parser.getName().equals("ExtendedData")) {
                     properties.putAll(setExtendedDataProperties(parser));
                 } else if (parser.getName().equals("color")) {
-                    color = parser.nextText();
-                }  else if (parser.getName().equals("rotation")) {
+                    properties.put("color", parser.nextText());
+                } else if (parser.getName().equals("rotation")) {
                     rotation = getRotation(parser);
                 } else if (parser.getName().matches(PROPERTY_REGEX)) {
                     properties.put(parser.getName(), parser.nextText());
@@ -113,7 +112,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         }
         latLonBox = createLatLngBounds(compassPoints.get("north"), compassPoints.get("south"),
                 compassPoints.get("east"), compassPoints.get("west"));
-        return new KmlGroundOverlay(imageUrl, latLonBox, drawOrder, visibility, color, properties,
+        return new KmlGroundOverlay(imageUrl, latLonBox, drawOrder, visibility, properties,
                 rotation);
     }
 
