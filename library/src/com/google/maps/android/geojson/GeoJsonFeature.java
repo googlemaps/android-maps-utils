@@ -46,6 +46,15 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
+     * Returns all the stored property keys
+     *
+     * @return set of property keys
+     */
+    public Iterable<String> getPropertyKeys() {
+        return mProperties.keySet();
+    }
+
+    /**
      * Get the value for a stored property
      *
      * @param property key of the property
@@ -157,6 +166,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param style style to check if a redraw is needed
      */
     private void checkRedrawFeature(GeoJsonStyle style) {
+        // TODO: if mGeoJsonGeometry is null
         if (mGeoJsonGeometry != null && mGeoJsonGeometry.getType()
                 .matches(style.getGeometryType())) {
             setChanged();

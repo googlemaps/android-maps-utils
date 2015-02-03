@@ -43,7 +43,11 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(1, parser.getFeatures().size());
         for (GeoJsonFeature feature : parser.getFeatures()) {
             assertEquals("GeometryCollection", feature.getGeometry().getType());
-            assertEquals(2, feature.getProperties().size());
+            int size = 0;
+            for (String property : feature.getPropertyKeys()) {
+                size++;
+            }
+            assertEquals(2, size);
             assertEquals("Popsicles", feature.getId());
             GeoJsonGeometryCollection geometry = ((GeoJsonGeometryCollection) feature
                     .getGeometry());
@@ -59,7 +63,11 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(1, parser.getFeatures().size());
         assertNull(parser.getFeatures().get(0).getBoundingBox());
         assertNull(parser.getFeatures().get(0).getId());
-        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        int size = 0;
+        for (String property : parser.getFeatures().get(0).getPropertyKeys()) {
+            size++;
+        }
+        assertEquals(0, size);
         assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonPoint);
         GeoJsonPoint point = (GeoJsonPoint) parser.getFeatures().get(0).getGeometry();
         assertEquals(new LatLng(0.0, 100.0), point.getCoordinates());
@@ -70,7 +78,11 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(1, parser.getFeatures().size());
         assertNull(parser.getFeatures().get(0).getBoundingBox());
         assertNull(parser.getFeatures().get(0).getId());
-        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        int size = 0;
+        for (String property : parser.getFeatures().get(0).getPropertyKeys()) {
+            size++;
+        }
+        assertEquals(0, size);
         assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonLineString);
         GeoJsonLineString lineString = (GeoJsonLineString) parser.getFeatures().get(0)
                 .getGeometry();
@@ -85,7 +97,11 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(1, parser.getFeatures().size());
         assertNull(parser.getFeatures().get(0).getBoundingBox());
         assertNull(parser.getFeatures().get(0).getId());
-        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        int size = 0;
+        for (String property : parser.getFeatures().get(0).getPropertyKeys()) {
+            size++;
+        }
+        assertEquals(0, size);
         assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonPolygon);
         GeoJsonPolygon polygon = (GeoJsonPolygon) parser.getFeatures().get(0).getGeometry();
         assertEquals(2, polygon.getCoordinates().size());
@@ -105,7 +121,11 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(1, parser.getFeatures().size());
         assertNull(parser.getFeatures().get(0).getBoundingBox());
         assertNull(parser.getFeatures().get(0).getId());
-        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        int size = 0;
+        for (String property : parser.getFeatures().get(0).getPropertyKeys()) {
+            size++;
+        }
+        assertEquals(0, size);
         assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonMultiPoint);
         GeoJsonMultiPoint multiPoint = (GeoJsonMultiPoint) parser.getFeatures().get(0)
                 .getGeometry();
@@ -119,7 +139,11 @@ public class GeoJsonParserTest extends TestCase {
         assertEquals(1, parser.getFeatures().size());
         assertNull(parser.getFeatures().get(0).getBoundingBox());
         assertNull(parser.getFeatures().get(0).getId());
-        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        int size = 0;
+        for (String property : parser.getFeatures().get(0).getPropertyKeys()) {
+            size++;
+        }
+        assertEquals(0, size);
         assertTrue(parser.getFeatures().get(0).getGeometry() instanceof GeoJsonMultiLineString);
         GeoJsonMultiLineString multiLineString = (GeoJsonMultiLineString) parser.getFeatures()
                 .get(0).getGeometry();
@@ -168,13 +192,17 @@ public class GeoJsonParserTest extends TestCase {
         assertNull(parser.getBoundingBox());
         assertEquals(1, parser.getFeatures().size());
         assertNull(parser.getFeatures().get(0).getGeometry());
-        assertEquals("Dinagat Islands", parser.getFeatures().get(0).getProperties().get("name"));
+        assertEquals("Dinagat Islands", parser.getFeatures().get(0).getProperty("name"));
 
         // Feature exists without properties
         parser = new GeoJsonParser(invalidFeatureNoProperties());
         assertNull(parser.getBoundingBox());
         assertEquals(1, parser.getFeatures().size());
-        assertEquals(0, parser.getFeatures().get(0).getProperties().size());
+        int size = 0;
+        for (String property : parser.getFeatures().get(0).getPropertyKeys()) {
+            size++;
+        }
+        assertEquals(0, size);
 
         // No features exist due to no type
         parser = new GeoJsonParser(invalidFeatureMissingType());

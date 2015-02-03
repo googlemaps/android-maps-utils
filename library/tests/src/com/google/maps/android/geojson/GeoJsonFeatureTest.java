@@ -21,18 +21,20 @@ public class GeoJsonFeatureTest extends TestCase {
         assertNull(feature.getId());
     }
 
-    public void testGetProperty() throws Exception {
+    public void testProperty() throws Exception {
         HashMap<String, String> properties = new HashMap<String, String>();
         properties.put("Color", "Yellow");
         properties.put("Width", "5");
         feature = new GeoJsonFeature(null, null, properties, null);
-        assertNotNull(feature.getProperties());
-        for (String string : feature.getProperties().keySet()) {
-            assertTrue(string.equals("Color") || string.equals("Width"));
-        }
-        for (String string : feature.getProperties().values()) {
-            assertTrue(string.equals("Yellow") || string.equals("5"));
-        }
+        assertFalse(feature.hasProperty("llama"));
+        assertTrue(feature.hasProperty("Color"));
+        assertEquals("Yellow", feature.getProperty("Color"));
+        assertTrue(feature.hasProperty("Width"));
+        assertEquals("5", feature.getProperty("Width"));
+        assertNull(feature.removeProperty("banana"));
+        assertEquals("5", feature.removeProperty("Width"));
+        assertNull(feature.setProperty("Width", "10"));
+        assertEquals("10", feature.setProperty("Width", "500"));
     }
 
     public void testPointStyle() {
