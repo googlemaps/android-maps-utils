@@ -73,18 +73,16 @@ public class KmlFeatureParserTest extends ActivityTestCase {
     public void testMultiGeometries() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.nested_multigeometry);
         KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
-        assertEquals(feature.getProperty("name"), "MultiPointLine");
+        assertEquals(feature.getProperty("name"), "multiPointLine");
         assertEquals(feature.getProperty("description"), "Nested MultiGeometry structure");
         assertEquals(feature.getGeometry().getKmlGeometryType(), "MultiGeometry");
-        KmlMultiGeometry geometry = (KmlMultiGeometry) feature.getGeometry().getKmlGeometryObject();
-        ArrayList<KmlGeometry> objects = geometry.getKmlGeometryObject();
+        ArrayList<KmlGeometry> objects = (ArrayList<KmlGeometry>) feature.getGeometry().getKmlGeometryObject();
         assertEquals(objects.get(0).getKmlGeometryType(), "Point");
         assertEquals(objects.get(1).getKmlGeometryType(), "LineString");
         assertEquals(objects.get(2).getKmlGeometryType(), "MultiGeometry");
-        geometry = (KmlMultiGeometry) objects.get(2).getKmlGeometryObject();
-        objects = geometry.getKmlGeometryObject();
-        assertEquals(objects.get(0).getKmlGeometryType(), "Point");
-        assertEquals(objects.get(1).getKmlGeometryType(), "LineString");
+        ArrayList<KmlGeometry> subObjects = (ArrayList<KmlGeometry>) objects.get(2).getKmlGeometryObject();
+        assertEquals(subObjects.get(0).getKmlGeometryType(), "Point");
+        assertEquals(subObjects.get(1).getKmlGeometryType(), "LineString");
     }
 
 

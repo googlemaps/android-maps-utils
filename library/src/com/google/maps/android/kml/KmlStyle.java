@@ -206,6 +206,8 @@ public class KmlStyle {
      */
     public void setMarkerColor(String stringColor) {
 
+        stringColor = new StringBuilder(stringColor).reverse().toString();
+
         float[] hsvValues = new float[HSV_VALUES];
         // make hexadecimal representation
         int integerColor = Color.parseColor("#" + stringColor);
