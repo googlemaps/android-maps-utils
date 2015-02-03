@@ -132,7 +132,7 @@ import java.util.Set;
      * @param scale              The scale we wish to apply to the original bitmap image
      * @return A BitMapDescriptor of the icon image
      */
-    private static BitmapDescriptor scaleIconToMarkers(Bitmap unscaledIconBitmap, Double scale) {
+    private static BitmapDescriptor scaleIcon(Bitmap unscaledIconBitmap, Double scale) {
         Integer width = (int) (unscaledIconBitmap.getWidth() * scale);
         Integer height = (int) (unscaledIconBitmap.getHeight() * scale);
         Bitmap scaledIconBitmap = Bitmap.createScaledBitmap(unscaledIconBitmap,
@@ -453,19 +453,22 @@ import java.util.Set;
                 boolean isPlacemarkStyleIcon = placemarkStyle != null && iconUrl
                         .equals(placemarkStyle.getIconUrl());
                 if (isInlineStyleIcon) {
-                    Bitmap iconBitmap = mImagesCache.get(iconUrl);
                     double scale = placemark.getInlineStyle().getIconScale();
-                    ((Marker) mPlacemarks.get(placemark)).setIcon(
-                            scaleIconToMarkers(iconBitmap, scale));
+                    scaleMarkerIcon(scale, iconUrl, placemark);
                 } else if (isPlacemarkStyleIcon) {
-                    Bitmap iconBitmap = mImagesCache.get(iconUrl);
                     double scale = placemarkStyle.getIconScale();
-                    ((Marker) mPlacemarks.get(placemark)).setIcon(
-                            scaleIconToMarkers(iconBitmap, scale));
+                    scaleMarkerIcon(scale, iconUrl, placemark);
                 }
             }
         }
     }
+
+    private void scaleMarkerIcon(double scale, String iconUrl, KmlPlacemark placemark) {
+        Bitmap iconBitmap = mImagesCache.get(iconUrl);
+        BitmapDescriptor scaledBitmap = scaleIcon(iconBitmap, scale);
+        ((Marker) mPlacemarks.get(placemark)).setIcon(scaledBitmap);
+    }
+
 
     /**
      * Assigns icons to markers with a url if put in a placemark tag that is nested in a folder.
@@ -545,11 +548,15 @@ import java.util.Set;
             KmlPlacemark placemark) {
         Boolean hasName = placemark.getProperty("name") != null;
         Boolean hasDescription = placemark.getProperty("description") != null;
-        if (style.getBalloonOptions() != null && style.getBalloonOptions().containsKey("text")) {
+        Boolean hasBalloonOptions = style.getBalloonOptions() != null;
+        Boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
+        if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
         } else if (hasName && hasDescription) {
             marker.setTitle(placemark.getProperty("name"));
             marker.setSnippet(placemark.getProperty("description"));
+        } else if (hasBalloonOptions && hasName) {
+            marker.setTitle(placemark.getProperty("name"));
         } else if (hasDescription) {
             marker.setTitle(placemark.getProperty("description"));
         }
@@ -677,12 +684,12 @@ import java.util.Set;
     private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
             KmlMultiGeometry multiGeometry, KmlStyle style, KmlStyle inlineStyle,
             Boolean isVisible) {
-        ArrayList<Object> geometries = new ArrayList<Object>();
-        ArrayList<KmlGeometry> geometry = multiGeometry.getKmlGeometryObject();
-        for (KmlGeometry kmlGeometry : geometry) {
-            geometries.add(addToMap(placemark, kmlGeometry, style, inlineStyle, isVisible));
+        ArrayList<Object> mapObjects = new ArrayList<Object>();
+        ArrayList<KmlGeometry> kmlObjects = multiGeometry.getKmlGeometryObject();
+        for (KmlGeometry kmlGeometry : kmlObjects) {
+            mapObjects.add(addToMap(placemark, kmlGeometry, style, inlineStyle, isVisible));
         }
-        return geometries;
+        return mapObjects;
     }
 
     /**

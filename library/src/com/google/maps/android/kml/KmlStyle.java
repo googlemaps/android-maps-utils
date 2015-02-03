@@ -208,6 +208,10 @@ public class KmlStyle {
 
         stringColor = new StringBuilder(stringColor).reverse().toString();
 
+        String alpha = stringColor.substring(6, 8);
+        String color = stringColor.substring(0, 6);
+        stringColor = alpha + color;
+
         float[] hsvValues = new float[HSV_VALUES];
         // make hexadecimal representation
         int integerColor = Color.parseColor("#" + stringColor);

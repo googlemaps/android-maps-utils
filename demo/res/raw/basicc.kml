@@ -1,7 +1,7 @@
 <kml>
     <Style id="markerStyle">
     <IconStyle>
-    <color>7fff0000</color>
+    <color>eeff0000</color>
     </IconStyle>
     </Style>
     <Placemark>
