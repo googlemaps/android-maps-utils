@@ -1,5 +1,6 @@
 package com.google.maps.android.utils.demo;
 
+import com.google.maps.android.geojson.GeoJsonFeature;
 import com.google.maps.android.geojson.GeoJsonLayer;
 import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 
@@ -65,6 +66,13 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             layer.setDefaultPolygonStyle(polygonStyle);
             layer.removeLayer();
             layer.addDataToLayer();
+
+            for (GeoJsonFeature feature : layer.getFeatures()) {
+                feature.getGeometry().getType();
+
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

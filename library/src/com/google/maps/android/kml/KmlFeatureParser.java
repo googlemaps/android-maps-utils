@@ -84,15 +84,16 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         String color = null;
         HashMap<String, String> properties = new HashMap<String, String>();
         float rotation = 0.0f;
+        Double north = 0.0;
+        Double south = 0.0;
+        Double east = 0.0;
+        Double west = 0.0;
 
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("GroundOverlay"))) {
             if (eventType == START_TAG) {
                 if (parser.getName().equals("Icon")) {
                     imageUrl = getImageUrl(parser);
-                } else if (parser.getName().equals("LatLonBox")) {
-                    // TODO change so that rotation is being used
-                    latLonBox = parseLatLonBox(parser, rotation);
                 } else if (parser.getName().equals("drawOrder")) {
                     drawOrder = Float.parseFloat(parser.nextText());
                 } else if (parser.getName().equals("visibility")) {
@@ -103,10 +104,29 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                     color = parser.nextText();
                 } else if (parser.getName().matches(PROPERTY_REGEX)) {
                     properties.put(parser.getName(), parser.nextText());
+                } else if (parser.getName().equals("north")) {
+                    north = getPolarCoordinate(parser);
+                } else if (parser.getName().equals("south")) {
+                    south = getPolarCoordinate(parser);
+                }else if (parser.getName().equals("east")) {
+                    east = getPolarCoordinate(parser);
+                }else if (parser.getName().equals("west")) {
+                    west = getPolarCoordinate(parser);
+                } else if (parser.getName().equals("rotation")) {
+                    float parsedRotation = Float.parseFloat(parser.nextText());
+                    if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
+                        rotation = parsedRotation + 180;
+                    } else if (parsedRotation < 0.0 && parsedRotation >= -180.0) {
+                        rotation = Math.abs(parsedRotation);
+                    } else {
+                        rotation = parsedRotation;
+                    }
                 }
             }
             eventType = parser.next();
         }
+
+        latLonBox = createLatLngBounds(north, south, east, west);
         return new KmlGroundOverlay(imageUrl, latLonBox, drawOrder, visibility, color, properties,
                 rotation);
     }
@@ -263,43 +283,11 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         return new KmlMultiGeometry(geometries);
     }
 
-    /**
-     * Creates a bound for a LatLonBox and sets the GroundOverlay to contain this bound
-     *
-     * @return LatLngBounds
-     */
-    private static LatLngBounds parseLatLonBox(XmlPullParser parser, float rotation)
+    private static Double getPolarCoordinate(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        Double north = 0.0;
-        Double south = 0.0;
-        Double east = 0.0;
-        Double west = 0.0;
-
-        int eventType = parser.next();
-        while (!(eventType == END_TAG && parser.getName().equals("LatLonBox"))) {
-            if (eventType == START_TAG) {
-                if (parser.getName().equals("north")) {
-                    north = Double.parseDouble(parser.nextText());
-                } else if (parser.getName().equals("south")) {
-                    south = Double.parseDouble(parser.nextText());
-                } else if (parser.getName().equals("east")) {
-                    east = Double.parseDouble(parser.nextText());
-                } else if (parser.getName().equals("west")) {
-                    west = Double.parseDouble(parser.nextText());
-                } else if (parser.getName().equals("rotation")) {
-                    float parsedRotation = Float.parseFloat(parser.nextText());
-                    if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
-                        rotation = parsedRotation + 180;
-                    } else if (parsedRotation < 0.0 && parsedRotation >= -180.0) {
-                        rotation = Math.abs(parsedRotation);
-                    } else {
-                        rotation = parsedRotation;
-                    }
-                }
-            }
-            eventType = parser.next();
-        }
-        return createLatLngBounds(north, south, east, west);
+        Double polarCoordinate = Double.parseDouble(parser.nextText());
+        parser.next();
+        return polarCoordinate;
     }
 
     /**
