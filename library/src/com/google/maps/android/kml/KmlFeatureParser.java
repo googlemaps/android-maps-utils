@@ -84,7 +84,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         int visibility = 1;
         String imageUrl = null;
         String color = null;
-        LatLngBounds latLonBox = null;
+        LatLngBounds latLonBox;
         HashMap<String, String> properties = new HashMap<String, String>();
         HashMap<String, Double> compassPoints = new HashMap<String, Double>();
 
@@ -119,7 +119,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     private static float getRotation(XmlPullParser parser)
             throws IOException, XmlPullParserException {
-        float rotation = 0.0f;
+        float rotation;
         float parsedRotation = Float.parseFloat(parser.nextText());
         if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
             rotation = parsedRotation + 180;

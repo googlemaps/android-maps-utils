@@ -7,6 +7,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import com.google.maps.android.test.R;
 
@@ -67,6 +68,23 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         xmlPullParser = createParser(R.raw.ground_overlay_color);
         groundOverlay = KmlFeatureParser.createGroundOverlay(xmlPullParser);
         assertNotNull(groundOverlay);
+    }
+
+    public void testMultiGeometries() throws Exception {
+        XmlPullParser xmlPullParser = createParser(R.raw.nested_multigeometry);
+        KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
+        assertEquals(feature.getProperty("name"), "MultiPointLine");
+        assertEquals(feature.getProperty("description"), "Nested MultiGeometry structure");
+        assertEquals(feature.getGeometry().getKmlGeometryType(), "MultiGeometry");
+        KmlMultiGeometry geometry = (KmlMultiGeometry) feature.getGeometry().getKmlGeometryObject();
+        ArrayList<KmlGeometry> objects = geometry.getKmlGeometryObject();
+        assertEquals(objects.get(0).getKmlGeometryType(), "Point");
+        assertEquals(objects.get(1).getKmlGeometryType(), "LineString");
+        assertEquals(objects.get(2).getKmlGeometryType(), "MultiGeometry");
+        geometry = (KmlMultiGeometry) objects.get(2).getKmlGeometryObject();
+        objects = geometry.getKmlGeometryObject();
+        assertEquals(objects.get(0).getKmlGeometryType(), "Point");
+        assertEquals(objects.get(1).getKmlGeometryType(), "LineString");
     }
 
 

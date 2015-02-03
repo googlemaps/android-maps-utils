@@ -21,7 +21,7 @@ public class KmlGroundOverlay {
 
     private String mColor;
 
-    public KmlGroundOverlay(String imageUrl, LatLngBounds latLonBox, float drawOrder,
+    /* package */ KmlGroundOverlay(String imageUrl, LatLngBounds latLonBox, float drawOrder,
             int visibility, String color, HashMap<String, String> properties, float rotation) {
         mGroundOverlayOptions = new GroundOverlayOptions();
         mImageUrl = imageUrl;
@@ -37,34 +37,75 @@ public class KmlGroundOverlay {
         mGroundOverlayOptions.visible(visibility != 0);
     }
 
-    public String getColor() {
+    /**
+     * Gets the color of the ground overlay
+     *
+     * @return String representation of a hexadecimal value
+     */
+    /* package */ String getColor() {
         return mColor;
     }
 
-    public String getImageUrl() {
+    /**
+     * Gets the image url of the image used for the ground overlay
+     *
+     * @return  Image url of the ground overlay
+     */
+    /* package */ String getImageUrl() {
         return mImageUrl;
     }
 
+    /**
+     * Sets the image url of the image used for the ground overlay
+     *
+     * @param imageUrl  Image url for the ground overlay
+     */
     /* package */ void setImageUrl(String imageUrl) {
         mImageUrl = imageUrl;
     }
 
-    public LatLngBounds getLatLngBox() {
+    /**
+     * Returns a latlngbounds representing the outer boundaries of the ground overlay
+     *
+     * @return latlngbound representing the outer boundary of the ground overlay
+     */
+    /* package */ LatLngBounds getLatLngBox() {
         return mLatLngBox;
     }
-    public Iterable getProperties() {
+
+    /**
+     * Gets an iterable of the properties
+     *
+     * @return  Iterable of the properties of the ground overlay
+     */
+    /* package */ Iterable getProperties() {
         return mProperties.entrySet();
     }
 
-    public String getProperty(String keyValue) {
+    /**
+     * Gets a property value based on key
+     *
+     * @param keyValue key value of the property
+     * @return Value of property
+     */
+    /* package */ String getProperty(String keyValue) {
         return mProperties.get(keyValue);
     }
 
-    public boolean hasProperty(String keyValue) {
+    /**
+     * Returns a boolean value determining whether the ground overlay has a property
+     * @param keyValue  Value to retrieve
+     * @return  True if the property exists, false otherwise
+     */
+    /* package */ boolean hasProperty(String keyValue) {
         return mProperties.get(keyValue) != null;
     }
 
-    public GroundOverlayOptions getGroundOverlayOptions() {
+    /**
+     * Gets the ground overlay option of the ground overlay on the map
+     * @return  GroundOverlayOptions
+     */
+    /* package */ GroundOverlayOptions getGroundOverlayOptions() {
         return mGroundOverlayOptions;
     }
 
