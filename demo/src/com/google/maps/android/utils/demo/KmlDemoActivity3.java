@@ -4,7 +4,7 @@ import com.google.maps.android.kml.KmlLayer;
 
 import android.util.Log;
 
-public class KmlDemoActivity extends BaseDemoActivity {
+public class KmlDemoActivity3 extends BaseDemoActivity {
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
@@ -13,7 +13,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.japan_earthquake_tsunami, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.germany, getApplicationContext());
             kmlLayer.addKmlData();
             Log.i("Demo", "End");
 
