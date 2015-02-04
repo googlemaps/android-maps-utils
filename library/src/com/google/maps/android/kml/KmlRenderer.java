@@ -129,16 +129,16 @@ import java.util.Set;
      * defined
      * in the style
      *
-     * @param unscaledIconBitmap Original bitmap image to convert to size
+     * @param unscaledBitmap Original bitmap image to convert to size
      * @param scale              The scale we wish to apply to the original bitmap image
      * @return A BitMapDescriptor of the icon image
      */
-    private static BitmapDescriptor scaleIconToMarkers(Bitmap unscaledIconBitmap, Double scale) {
-        Integer width = (int) (unscaledIconBitmap.getWidth() * scale);
-        Integer height = (int) (unscaledIconBitmap.getHeight() * scale);
-        Bitmap scaledIconBitmap = Bitmap.createScaledBitmap(unscaledIconBitmap,
+    private static BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, Double scale) {
+        Integer width = (int) (unscaledBitmap.getWidth() * scale);
+        Integer height = (int) (unscaledBitmap.getHeight() * scale);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(unscaledBitmap,
                 width, height, false);
-        return BitmapDescriptorFactory.fromBitmap(scaledIconBitmap);
+        return BitmapDescriptorFactory.fromBitmap(scaledBitmap);
     }
 
     /**
@@ -186,9 +186,7 @@ import java.util.Set;
      */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            if (groundOverlay != null) {
-                groundOverlay.remove();
-            }
+            groundOverlay.remove();
         }
     }
 
@@ -455,19 +453,21 @@ import java.util.Set;
                 boolean isPlacemarkStyleIcon = placemarkStyle != null && iconUrl
                         .equals(placemarkStyle.getIconUrl());
                 if (isInlineStyleIcon) {
-                    Bitmap iconBitmap = mImagesCache.get(iconUrl);
                     double scale = placemark.getInlineStyle().getIconScale();
-                    ((Marker) mPlacemarks.get(placemark)).setIcon(
-                            scaleIconToMarkers(iconBitmap, scale));
+                    scaleMarkerIcon(scale, iconUrl, placemark);
                 } else if (isPlacemarkStyleIcon) {
-                    Bitmap iconBitmap = mImagesCache.get(iconUrl);
                     double scale = placemarkStyle.getIconScale();
-                    ((Marker) mPlacemarks.get(placemark)).setIcon(
-                            scaleIconToMarkers(iconBitmap, scale));
+                    scaleMarkerIcon(scale, iconUrl, placemark);
                 }
             }
         }
     }
+
+    private void scaleMarkerIcon(double scale, String iconUrl, KmlPlacemark placemark) {
+        Bitmap iconBitmap = mImagesCache.get(iconUrl);
+        BitmapDescriptor scaledBitmap = scaleIcon(iconBitmap, scale);
+        ((Marker) mPlacemarks.get(placemark)).setIcon(scaledBitmap);
+     }
 
     /**
      * Assigns icons to markers with a url if put in a placemark tag that is nested in a folder.
@@ -547,7 +547,9 @@ import java.util.Set;
             KmlPlacemark placemark) {
         Boolean hasName = placemark.getProperty("name") != null;
         Boolean hasDescription = placemark.getProperty("description") != null;
-        if (style.getBalloonOptions() != null && style.getBalloonOptions().containsKey("text")) {
+        Boolean hasBalloonOptions = style.getBalloonOptions() != null;
+        Boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
+        if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
         } else if (hasName && hasDescription) {
             marker.setTitle(placemark.getProperty("name"));
@@ -679,12 +681,12 @@ import java.util.Set;
     private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
             KmlMultiGeometry multiGeometry, KmlStyle style, KmlStyle inlineStyle,
             Boolean isVisible) {
-        ArrayList<Object> geometries = new ArrayList<Object>();
-        ArrayList<KmlGeometry> geometry = multiGeometry.getKmlGeometryObject();
-        for (KmlGeometry kmlGeometry : geometry) {
-            geometries.add(addToMap(placemark, kmlGeometry, style, inlineStyle, isVisible));
+        ArrayList<Object> mapObjects = new ArrayList<Object>();
+        ArrayList<KmlGeometry> kmlObjects = multiGeometry.getKmlGeometryObject();
+        for (KmlGeometry kmlGeometry : kmlObjects) {
+            mapObjects.add(addToMap(placemark, kmlGeometry, style, inlineStyle, isVisible));
         }
-        return geometries;
+        return mapObjects;
     }
 
     /**
@@ -714,7 +716,7 @@ import java.util.Set;
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
                 if (mImagesCache.get(groundOverlayUrl) != null) {
-                    addGroundOverlayToMap(groundOverlayUrl, mGroundOverlays);
+                    addGroundOverlayToMap(groundOverlayUrl, mGroundOverlays, true);
                 } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
                     mGroundOverlayUrls.add(groundOverlayUrl);
                 }
@@ -741,14 +743,18 @@ import java.util.Set;
      * @param groundOverlays   hashmap of ground overlays to add to the map
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
-            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
         BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
                 .fromBitmap(mImagesCache.get(groundOverlayUrl));
-        for (KmlGroundOverlay groundOverlay : groundOverlays.keySet()) {
-            if (groundOverlay.getImageUrl().equals(groundOverlayUrl)) {
-                GroundOverlayOptions groundOverlayOptions = groundOverlay.getGroundOverlayOptions()
+        for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
+            if (kmlGroundOverlay.getImageUrl().equals(groundOverlayUrl)) {
+                GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
                         .image(groundOverlayBitmap);
-                groundOverlays.put(groundOverlay, mMap.addGroundOverlay(groundOverlayOptions));
+                GroundOverlay mapGroundOverlay = mMap.addGroundOverlay(groundOverlayOptions);
+                if (containerVisibility == false) {
+                    mapGroundOverlay.setVisible(false);
+                }
+                groundOverlays.put(kmlGroundOverlay, mapGroundOverlay);
             }
         }
     }
@@ -760,12 +766,13 @@ import java.util.Set;
      * @param kmlContainers    containers containing ground overlays to add to the map
      */
     private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
-            Iterable<KmlContainer> kmlContainers) {
+            Iterable<KmlContainer> kmlContainers, boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
-            addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap());
+            Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
+            addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap(), isContainerVisible);
             if (container.hasNestedKmlContainers()) {
                 addGroundOverlayInContainerGroups(groundOverlayUrl,
-                        container.getNestedKmlContainers());
+                        container.getNestedKmlContainers(), isContainerVisible);
             }
         }
     }
@@ -865,8 +872,8 @@ import java.util.Set;
             }
             mImagesCache.put(mGroundOverlayUrl, bitmap);
             if (mLayerVisible) {
-                addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays);
-                addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers);
+                addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays, true);
+                addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
             }
         }
     }
