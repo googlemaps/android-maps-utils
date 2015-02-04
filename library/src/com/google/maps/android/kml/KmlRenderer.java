@@ -129,16 +129,16 @@ import java.util.Set;
      * defined
      * in the style
      *
-     * @param unscaledIconBitmap Original bitmap image to convert to size
+     * @param unscaledBitmap Original bitmap image to convert to size
      * @param scale              The scale we wish to apply to the original bitmap image
      * @return A BitMapDescriptor of the icon image
      */
-    private static BitmapDescriptor scaleIcon(Bitmap unscaledIconBitmap, Double scale) {
-        Integer width = (int) (unscaledIconBitmap.getWidth() * scale);
-        Integer height = (int) (unscaledIconBitmap.getHeight() * scale);
-        Bitmap scaledIconBitmap = Bitmap.createScaledBitmap(unscaledIconBitmap,
+    private static BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, Double scale) {
+        Integer width = (int) (unscaledBitmap.getWidth() * scale);
+        Integer height = (int) (unscaledBitmap.getHeight() * scale);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(unscaledBitmap,
                 width, height, false);
-        return BitmapDescriptorFactory.fromBitmap(scaledIconBitmap);
+        return BitmapDescriptorFactory.fromBitmap(scaledBitmap);
     }
 
     /**
@@ -186,9 +186,7 @@ import java.util.Set;
      */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            if (groundOverlay != null) {
-                groundOverlay.remove();
-            }
+            groundOverlay.remove();
         }
     }
 
