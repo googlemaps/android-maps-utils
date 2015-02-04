@@ -6,7 +6,7 @@ package com.google.maps.android.geojson;
 public interface GeoJsonGeometry {
 
     /**
-     * Gets the type of geometry
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type' specification.
      *
      * @return type of geometry
      */

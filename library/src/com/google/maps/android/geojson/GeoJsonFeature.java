@@ -96,7 +96,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Gets the GeoJsonPointStyle of the feature
+     * Returns the style used when rendering Points
      *
      * @return GeoJsonPointStyle object
      */
@@ -105,7 +105,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Sets the GeoJsonPointStyle of the feature
+     * Sets the style used when rendering Points
      *
      * @param geoJsonPointStyle GeoJsonPointStyle object
      */
@@ -117,7 +117,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Gets the GeoJsonLineStringStyle of the feature
+     * Returns the style used when rendering LineStrings
      *
      * @return GeoJsonLineStringStyle object
      */
@@ -126,7 +126,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Sets the GeoJsonLineStringStyle of the feature
+     * Sets the style used when rendering LineStrings
      *
      * @param geoJsonLineStringStyle GeoJsonLineStringStyle object
      */
@@ -138,7 +138,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Gets the GeoJsonPolygonStyle of the feature
+     * Returns the style used when rendering Polygons
      *
      * @return GeoJsonPolygonStyle object
      */
@@ -147,7 +147,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Sets the GeoJsonPolygonStyle of the feature
+     * Sets the style used when rendering Polygons
      *
      * @param geoJsonPolygonStyle GeoJsonPolygonStyle object
      */
