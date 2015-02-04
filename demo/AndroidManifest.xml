@@ -59,7 +59,6 @@
         <activity android:name=".HeatmapsPlacesDemoActivity"/>
         <activity android:name=".KmlDemoActivity"/>
         <activity android:name=".KmlDemoActivity2"/>
-        <activity android:name=".KmlDemoActivity3"/>
         <activity android:name=".GeoJsonDemoActivity"/>
 
     </application>

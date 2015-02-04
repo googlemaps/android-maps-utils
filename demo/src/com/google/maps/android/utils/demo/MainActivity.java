@@ -28,9 +28,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Heatmaps", HeatmapsDemoActivity.class);
         addDemo("Heatmaps with Places API", HeatmapsPlacesDemoActivity.class);
-        addDemo("KML Layer Overlay 1", KmlDemoActivity.class);
-        addDemo("KML Layer Overlay 2", KmlDemoActivity2.class);
-        addDemo("KML Layer Overlay 3", KmlDemoActivity3.class);
+        addDemo("KML Layer Overlay", KmlDemoActivity.class);
+        addDemo("KML Layer Overlay", KmlDemoActivity2.class);
         addDemo("GeoJSON Layer Overlay", GeoJsonDemoActivity.class);
     }
 
