@@ -36,6 +36,8 @@ import java.util.Set;
  */
 /* package */ class KmlRenderer {
 
+    private static final String LOG_TAG = "KmlRenderer";
+
     private static final int LRU_CACHE_SIZE = 50;
 
     private final LruCache<String, Bitmap> mImagesCache;
@@ -819,7 +821,7 @@ import java.util.Set;
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
-                throw new NullPointerException("Image not found!");
+                Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             }
             mImagesCache.put(mIconUrl, bitmap);
             if (mLayerVisible) {
@@ -838,7 +840,6 @@ import java.util.Set;
 
         public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
-            Log.i("IMG", "HERE");
         }
 
         /**
@@ -868,7 +869,7 @@ import java.util.Set;
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
-                throw new NullPointerException("Image not found!");
+                Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
             }
             mImagesCache.put(mGroundOverlayUrl, bitmap);
             if (mLayerVisible) {
