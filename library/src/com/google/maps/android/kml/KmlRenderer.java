@@ -378,7 +378,8 @@ import java.util.Set;
             }
             addContainerObjectToMap(container, isContainerVisible);
             if (container.hasNestedKmlContainers()) {
-                addContainerGroupToMap(container.getNestedKmlContainers(), isContainerVisible);
+                //TODO: Set container visibility
+                addContainerGroupToMap(container.getNestedKmlContainers(), true);
             }
         }
     }
