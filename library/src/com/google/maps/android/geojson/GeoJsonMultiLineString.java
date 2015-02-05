@@ -23,11 +23,7 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
         mGeoJsonLineStrings = geoJsonLineStrings;
     }
 
-    /**
-     * Get the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;

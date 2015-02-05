@@ -25,11 +25,7 @@ public class GeoJsonLineString implements GeoJsonGeometry {
         mCoordinates = coordinates;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;

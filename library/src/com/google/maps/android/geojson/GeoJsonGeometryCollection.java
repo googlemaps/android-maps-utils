@@ -24,11 +24,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
         mGeometries = geometries;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
