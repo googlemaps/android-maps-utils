@@ -334,11 +334,11 @@ import java.util.Set;
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
      */
     private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
-        for (KmlPlacemark placemark : placemarks.keySet()) {
-            Boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
-            Object mapObject = addPlacemarkToMap(placemark, isPlacemarkVisible);
+        for (KmlPlacemark kmlPlacemark : placemarks.keySet()) {
+            Boolean isPlacemarkVisible = getPlacemarkVisibility(kmlPlacemark);
+            Object mapObject = addPlacemarkToMap(kmlPlacemark, isPlacemarkVisible);
             // Placemark stores a KmlPlacemark as a key, and GoogleMap Object as its value
-            placemarks.put(placemark, mapObject);
+            placemarks.put(kmlPlacemark, mapObject);
         }
     }
 
@@ -448,26 +448,32 @@ import java.util.Set;
      */
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> mPlacemarks) {
         for (KmlPlacemark placemark : mPlacemarks.keySet()) {
-            KmlStyle placemarkStyle = mStylesRenderer.get(placemark.getStyleID());
+            KmlStyle urlStyle = mStylesRenderer.get(placemark.getStyleID());
+            KmlStyle inlineStyle = placemark.getInlineStyle();
             if ("Point".equals(placemark.getGeometry().getKmlGeometryType())) {
-                boolean isInlineStyleIcon = placemark.getInlineStyle() != null && iconUrl
-                        .equals(placemark.getInlineStyle().getIconUrl());
-                boolean isPlacemarkStyleIcon = placemarkStyle != null && iconUrl
-                        .equals(placemarkStyle.getIconUrl());
+                boolean isInlineStyleIcon = inlineStyle != null && iconUrl
+                        .equals(inlineStyle.getIconUrl());
+                boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
+                        .equals(urlStyle.getIconUrl());
                 if (isInlineStyleIcon) {
-                    double scale = placemark.getInlineStyle().getIconScale();
-                    scaleMarkerIcon(scale, iconUrl, placemark);
+                    scaleBitmap(inlineStyle, placemark);
                 } else if (isPlacemarkStyleIcon) {
-                    double scale = placemarkStyle.getIconScale();
-                    scaleMarkerIcon(scale, iconUrl, placemark);
+                    scaleBitmap(urlStyle, placemark);
                 }
             }
         }
     }
 
-    private void scaleMarkerIcon(double scale, String iconUrl, KmlPlacemark placemark) {
-        Bitmap iconBitmap = mImagesCache.get(iconUrl);
-        BitmapDescriptor scaledBitmap = scaleIcon(iconBitmap, scale);
+    /**
+     * Enlarges or shrinks a bitmap image based on the scale provided
+     * @param style     Style to retrieve iconUrl and scale from
+     * @param placemark Placemark object to set the image to
+     */
+    private void scaleBitmap(KmlStyle style, KmlPlacemark placemark) {
+        double bitmapScale = style.getIconScale();
+        String bitmapUrl = style.getIconUrl();
+        Bitmap bitmapImage = mImagesCache.get(bitmapUrl);
+        BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
         ((Marker) mPlacemarks.get(placemark)).setIcon(scaledBitmap);
      }
 
@@ -553,6 +559,8 @@ import java.util.Set;
         Boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
+        } else if (hasBalloonOptions && hasName) {
+            marker.setTitle(placemark.getProperty("name"));
         } else if (hasName && hasDescription) {
             marker.setTitle(placemark.getProperty("name"));
             marker.setSnippet(placemark.getProperty("description"));
@@ -677,16 +685,17 @@ import java.util.Set;
      * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
      *
      * @param multiGeometry contains array of geometries for the MultiGeometry
-     * @param style         contains relevant styling properties for the MultiGeometry
+     * @param urlStyle         contains relevant styling properties for the MultiGeometry
      * @return array of Marker, Polyline and Polygon objects
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
-            KmlMultiGeometry multiGeometry, KmlStyle style, KmlStyle inlineStyle,
-            Boolean isVisible) {
+            KmlMultiGeometry multiGeometry, KmlStyle urlStyle, KmlStyle inlineStyle,
+            Boolean isContainerVisible) {
         ArrayList<Object> mapObjects = new ArrayList<Object>();
         ArrayList<KmlGeometry> kmlObjects = multiGeometry.getKmlGeometryObject();
         for (KmlGeometry kmlGeometry : kmlObjects) {
-            mapObjects.add(addToMap(placemark, kmlGeometry, style, inlineStyle, isVisible));
+            mapObjects.add(addToMap(placemark, kmlGeometry, urlStyle, inlineStyle,
+                    isContainerVisible));
         }
         return mapObjects;
     }
