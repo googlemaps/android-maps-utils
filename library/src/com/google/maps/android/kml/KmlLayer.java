@@ -70,14 +70,14 @@ public class KmlLayer {
      * @throws XmlPullParserException if KML file cannot be parsed
      * @throws IOException            if KML file cannot be opened
      */
-    public void addKmlData() throws IOException, XmlPullParserException {
+    public void addDataToLayer() throws IOException, XmlPullParserException {
         mRenderer.addKmlData();
     }
 
     /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
-    public void removeKmlData() {
+    public void clearLayer() {
         mRenderer.removeKmlData();
     }
 

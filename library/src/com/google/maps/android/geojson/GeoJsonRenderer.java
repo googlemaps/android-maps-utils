@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -277,7 +278,7 @@ import java.util.Set;
      * @return array of Marker, Polyline, Polygons that have been added to the map
      */
     private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature geoJsonFeature,
-            ArrayList<GeoJsonGeometry> geoJsonGeometries) {
+            List<GeoJsonGeometry> geoJsonGeometries) {
         ArrayList<Object> geometries = new ArrayList<Object>();
         for (GeoJsonGeometry geometry : geoJsonGeometries) {
             geometries.add(addFeatureToMap(geoJsonFeature, geometry));

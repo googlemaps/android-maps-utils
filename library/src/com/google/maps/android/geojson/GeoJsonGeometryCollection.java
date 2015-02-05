@@ -1,6 +1,6 @@
 package com.google.maps.android.geojson;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A GeoJsonGeometryCollection geometry contains a number of GeoJsonGeometry objects.
@@ -9,7 +9,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "GeometryCollection";
 
-    private final ArrayList<GeoJsonGeometry> mGeometries;
+    private final List<GeoJsonGeometry> mGeometries;
 
     /**
      * Creates a new GeoJsonGeometryCollection object
@@ -17,18 +17,14 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
      * @param geometries array of GeoJsonGeometry objects to add to the GeoJsonGeometryCollection
      */
     public GeoJsonGeometryCollection(
-            ArrayList<GeoJsonGeometry> geometries) {
+            List<GeoJsonGeometry> geometries) {
         if (geometries == null) {
             throw new IllegalArgumentException("Geometries cannot be null");
         }
         mGeometries = geometries;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
@@ -39,7 +35,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
      *
      * @return stored GeoJsonGeometry objects
      */
-    public ArrayList<GeoJsonGeometry> getGeometries() {
+    public List<GeoJsonGeometry> getGeometries() {
         return mGeometries;
     }
 

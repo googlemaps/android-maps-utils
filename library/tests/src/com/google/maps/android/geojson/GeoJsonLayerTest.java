@@ -19,12 +19,6 @@ public class GeoJsonLayerTest extends TestCase {
         mLayer = new GeoJsonLayer(map, createFeatureCollection());
     }
 
-    public void testGetFeatureById() throws Exception {
-        assertNotNull(mLayer.getFeatureById("point"));
-        assertEquals(new LatLng(0.5, 102),
-                ((GeoJsonPoint) mLayer.getFeatureById("point").getGeometry()).getCoordinates());
-    }
-
     public void testGetFeatures() throws Exception {
         int featureCount = 0;
         for (GeoJsonFeature feature : mLayer.getFeatures()) {
@@ -44,11 +38,10 @@ public class GeoJsonLayerTest extends TestCase {
 
     public void testRemoveFeature() throws Exception {
         int featureCount = 0;
-        mLayer.removeFeature(mLayer.getFeatureById("point"));
         for (GeoJsonFeature feature : mLayer.getFeatures()) {
             featureCount++;
         }
-        assertEquals(2, featureCount);
+        assertEquals(3, featureCount);
     }
 
     public void testMap() throws Exception {

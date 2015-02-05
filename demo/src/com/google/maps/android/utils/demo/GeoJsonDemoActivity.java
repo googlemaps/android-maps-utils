@@ -64,7 +64,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
             polygonStyle.setFillColor(Color.BLUE);
             layer.setDefaultPolygonStyle(polygonStyle);
-            layer.removeLayer();
+            layer.clearLayer();
             layer.addDataToLayer();
 
             for (GeoJsonFeature feature : layer.getFeatures()) {

@@ -399,7 +399,7 @@ public class KmlStyle {
     }
 
     /**
-     * 
+     *
      * @param originalPolygonOption
      * @param isFill
      * @param isOutline

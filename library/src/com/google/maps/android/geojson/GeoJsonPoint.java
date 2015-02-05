@@ -23,11 +23,8 @@ public class GeoJsonPoint implements GeoJsonGeometry {
         mCoordinates = coordinate;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
+    @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }

@@ -13,10 +13,9 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.basicc, getApplicationContext());
-            kmlLayer.addKmlData();
+            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.visibility_ground_overlay, getApplicationContext());
+            kmlLayer.addDataToLayer();
             Log.i("Demo", "End");
-
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }

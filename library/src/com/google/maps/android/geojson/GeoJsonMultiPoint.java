@@ -1,6 +1,6 @@
 package com.google.maps.android.geojson;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A GeoJsonMultiPoint geometry contains a number of {@link GeoJsonPoint}s.
@@ -9,36 +9,32 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "MultiPoint";
 
-    private final ArrayList<GeoJsonPoint> mGeoJsonPoints;
+    private final List<GeoJsonPoint> mGeoJsonPoints;
 
     /**
      * Creates a GeoJsonMultiPoint object
      *
-     * @param geoJsonPoints array of GeoJsonPoints to add to the GeoJsonMultiPoint
+     * @param geoJsonPoints list of GeoJsonPoints to store
      */
-    public GeoJsonMultiPoint(ArrayList<GeoJsonPoint> geoJsonPoints) {
+    public GeoJsonMultiPoint(List<GeoJsonPoint> geoJsonPoints) {
         if (geoJsonPoints == null) {
             throw new IllegalArgumentException("GeoJsonPoints cannot be null");
         }
         mGeoJsonPoints = geoJsonPoints;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
     /**
-     * Gets the array of GeoJsonPoint
+     * Gets a list of GeoJsonPoints
      *
-     * @return array of GeoJsonPoint
+     * @return list of GeoJsonPoints
      */
-    public ArrayList<GeoJsonPoint> getPoints() {
+    public List<GeoJsonPoint> getPoints() {
         return mGeoJsonPoints;
     }
 
