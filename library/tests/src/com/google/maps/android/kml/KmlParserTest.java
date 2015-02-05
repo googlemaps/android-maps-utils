@@ -52,11 +52,17 @@ public class KmlParserTest extends ActivityTestCase {
 
     }
 
+    public void testPlacemarkParsing() throws Exception {
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.unsupported);
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertTrue(mParser.getPlacemarks().size() == 1);
+    }
+
     public void testStyleMaps() throws Exception {
 
-
-
     }
+
 
 
 

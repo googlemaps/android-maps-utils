@@ -5,7 +5,7 @@
     </IconStyle>
     </Style>
     <Placemark>
-         <styleUrl>#markerStyle</styleUrl>
+        <styleUrl>#markerStyle</styleUrl>
         <name>Google Sydney</name>  
         <Point> 
             <coordinates> 

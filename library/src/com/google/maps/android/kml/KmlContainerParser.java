@@ -17,7 +17,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
  */
 /* package */ class KmlContainerParser {
 
-    private final static String PROPERTY_REGEX = "name|description|visibility|open";
+    private final static String PROPERTY_REGEX = "name|description|visibility|open|address|phoneNumber";
 
     private final static String CONTAINER_REGEX = "Folder|Document";
 
@@ -30,6 +30,15 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     private final static String EXTENDED_DATA = "ExtendedData";
 
     private final static String GROUND_OVERLAY = "GroundOverlay";
+
+    private final static String UNSUPPORTED_REGEX = "altitude|altitudeModeGroup|altitudeMode|" +
+            "begin|bottomFov|cookie|displayName|displayMode|displayMode|end|expires|extrude|flyToView|" +
+            "gridOrigin|httpQuery|leftFov|linkDescription|linkName|linkSnippet|listItemType|maxSnippetLines|" +
+            "maxSessionLength|message|minAltitude|minFadeExtent|minLodPixels|minRefreshPeriod|maxAltitude|" +
+            "maxFadeExtent|maxLodPixels|maxHeight|maxWidth|near|overlayXY|range|" +
+            "refreshMode|refreshInterval|refreshVisibility|rightFov|roll|rotationXY|screenXY|shape|" +
+            "sourceHref|state|targetHref|tessellate|tileSize|topFov|viewBoundScale|viewFormat|" +
+            "viewRefreshMode|viewRefreshTime|when";
 
     /**
      * Obtains a Container object (created if a Document or Folder start tag is read by the
@@ -69,7 +78,9 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals(startTag))) {
             if (eventType == START_TAG) {
-                if (parser.getName().matches(CONTAINER_REGEX)) {
+                if (parser.getName().matches(UNSUPPORTED_REGEX)) {
+                    KmlParser.skip(parser);
+                } else if (parser.getName().matches(CONTAINER_REGEX)) {
                     nestedContainers.add(assignPropertiesToContainer(parser));
                 } else if (parser.getName().matches(PROPERTY_REGEX)) {
                     containerProperties.put(parser.getName(), parser.nextText());

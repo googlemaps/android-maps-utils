@@ -13,7 +13,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.visibility_ground_overlay, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.basicc, getApplicationContext());
             kmlLayer.addKmlData();
             Log.i("Demo", "End");
 

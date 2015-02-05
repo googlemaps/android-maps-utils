@@ -82,31 +82,7 @@ import java.util.Set;
         mGroundOverlayImagesDownloaded = false;
     }
 
-    /**
-     * Computes a random color given an integer. Algorithm to compute the random color can be
-     * found in https://developers.google.com/kml/documentation/kmlreference#colormode
-     *
-     * @param color Integer value representing a color
-     * @return Integer representing a random color
-     */
-    /* package */
-    static int computeRandomColor(int color) {
-        Random random = new Random();
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-        //Random number can only be computed in range [0, n)
-        if (red != 0) {
-            red = random.nextInt(red);
-        }
-        if (blue != 0) {
-            blue = random.nextInt(blue);
-        }
-        if (green != 0) {
-            green = random.nextInt(green);
-        }
-        return Color.rgb(red, green, blue);
-    }
+
 
     /**
      * Obtains the visibility of the placemark if it is specified, otherwise it returns true as a
@@ -136,10 +112,9 @@ import java.util.Set;
      * @return A BitMapDescriptor of the icon image
      */
     private static BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, Double scale) {
-        Integer width = (int) (unscaledBitmap.getWidth() * scale);
-        Integer height = (int) (unscaledBitmap.getHeight() * scale);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(unscaledBitmap,
-                width, height, false);
+        int width = (int) (unscaledBitmap.getWidth() * scale);
+        int height = (int) (unscaledBitmap.getHeight() * scale);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(unscaledBitmap, width, height, false);
         return BitmapDescriptorFactory.fromBitmap(scaledBitmap);
     }
 
@@ -378,7 +353,6 @@ import java.util.Set;
             }
             addContainerObjectToMap(container, isContainerVisible);
             if (container.hasNestedKmlContainers()) {
-                //TODO: Set container visibility
                 addContainerGroupToMap(container.getNestedKmlContainers(), isContainerVisible);
             }
         }
@@ -553,9 +527,9 @@ import java.util.Set;
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker,
             KmlPlacemark placemark) {
-        Boolean hasName = placemark.getProperty("name") != null;
-        Boolean hasDescription = placemark.getProperty("description") != null;
-        Boolean hasBalloonOptions = style.getBalloonOptions() != null;
+        Boolean hasName = placemark.hasProperty("name");
+        Boolean hasDescription = placemark.hasProperty("description");
+        Boolean hasBalloonOptions = style.hasBalloonStyle();
         Boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
@@ -611,7 +585,7 @@ import java.util.Set;
         if (inlineStyle != null) {
             setInlineLineStringStyle(polylineOptions, inlineStyle);
         } else if (style.isLineRandomColorMode()) {
-            polylineOptions.color(computeRandomColor(polylineOptions.getColor()));
+            polylineOptions.color(KmlStyle.computeRandomColor(polylineOptions.getColor()));
         }
         return mMap.addPolyline(polylineOptions);
     }
@@ -631,7 +605,7 @@ import java.util.Set;
             polylineOptions.width(inlinePolylineOptions.getWidth());
         }
         if (inlineStyle.isLineRandomColorMode()) {
-            polylineOptions.color(computeRandomColor(inlinePolylineOptions.getColor()));
+            polylineOptions.color(KmlStyle.computeRandomColor(inlinePolylineOptions.getColor()));
         }
     }
 
@@ -651,7 +625,7 @@ import java.util.Set;
         if (inlineStyle != null) {
             setInlinePolygonStyle(polygonOptions, inlineStyle);
         } else if (style.isPolyRandomColorMode()) {
-            polygonOptions.fillColor(computeRandomColor(polygonOptions.getFillColor()));
+            polygonOptions.fillColor(KmlStyle.computeRandomColor(polygonOptions.getFillColor()));
         }
         return mMap.addPolygon(polygonOptions);
     }
@@ -676,7 +650,7 @@ import java.util.Set;
             }
         }
         if (inlineStyle.isPolyRandomColorMode()) {
-            polygonOptions.fillColor(computeRandomColor(inlinePolygonOptions.getFillColor()));
+            polygonOptions.fillColor(KmlStyle.computeRandomColor(inlinePolygonOptions.getFillColor()));
         }
     }
 

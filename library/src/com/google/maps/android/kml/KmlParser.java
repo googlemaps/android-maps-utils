@@ -36,6 +36,15 @@ import java.util.HashMap;
 
     private final HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
+    private final static String UNSUPPORTED_REGEX = "altitude|altitudeModeGroup|altitudeMode|" +
+            "begin|bottomFov|cookie|displayName|displayMode|displayMode|end|expires|extrude|" +
+            "flyToView|gridOrigin|httpQuery|leftFov|linkDescription|linkName|linkSnippet|" +
+            "listItemType|maxSnippetLines|maxSessionLength|message|minAltitude|minFadeExtent|" +
+            "minLodPixels|minRefreshPeriod|maxAltitude|maxFadeExtent|maxLodPixels|maxHeight|" +
+            "maxWidth|near|overlayXY|range|refreshMode|refreshInterval|refreshVisibility|" +
+            "rightFov|roll|rotationXY|screenXY|shape|sourceHref|state|targetHref|tessellate" +
+            "|tileSize|topFov|viewBoundScale|viewFormat|viewRefreshMode|viewRefreshTime|when";
+
     /**
      * Creates a new KmlParser object
      *
@@ -57,6 +66,9 @@ import java.util.HashMap;
         int eventType = mParser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
+                if (mParser.getName().matches(UNSUPPORTED_REGEX)) {
+                   skip(mParser);
+                }
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
                     mContainers.add(KmlContainerParser.createContainer(mParser));
                 }
@@ -113,5 +125,27 @@ import java.util.HashMap;
      */
     /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlays() {
         return mGroundOverlays;
+    }
+
+    /**
+     * Skips tags from START TAG to END TAG
+     * @param parser    XmlPullParser
+     */
+    /*package*/ static void skip(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
+        if (parser.getEventType() != XmlPullParser.START_TAG) {
+            throw new IllegalStateException();
+        }
+        int depth = 1;
+        while (depth != 0) {
+            switch (parser.next()) {
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+                case XmlPullParser.START_TAG:
+                    depth++;
+                    break;
+            }
+        }
     }
 }
