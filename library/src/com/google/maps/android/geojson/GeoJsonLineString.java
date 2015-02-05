@@ -2,7 +2,7 @@ package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A GeoJsonLineString geometry contains a number of {@link com.google.android.gms.maps.model.LatLng}s.
@@ -11,14 +11,14 @@ public class GeoJsonLineString implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "LineString";
 
-    private final ArrayList<LatLng> mCoordinates;
+    private final List<LatLng> mCoordinates;
 
     /**
      * Creates a new GeoJsonLineString object
      *
      * @param coordinates array of coordinates of GeoJsonLineString to store
      */
-    public GeoJsonLineString(ArrayList<LatLng> coordinates) {
+    public GeoJsonLineString(List<LatLng> coordinates) {
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null");
         }
@@ -40,7 +40,7 @@ public class GeoJsonLineString implements GeoJsonGeometry {
      *
      * @return coordinates of the GeoJsonLineString
      */
-    public ArrayList<LatLng> getCoordinates() {
+    public List<LatLng> getCoordinates() {
         return mCoordinates;
     }
 
