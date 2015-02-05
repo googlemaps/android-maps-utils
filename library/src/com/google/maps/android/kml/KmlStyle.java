@@ -51,7 +51,6 @@ public class KmlStyle {
 
     private float mMarkerColor;
 
-
     /**
      * Creates a new Style object
      */
@@ -399,11 +398,11 @@ public class KmlStyle {
     }
 
     /**
-     *
-     * @param originalPolygonOption
-     * @param isFill
-     * @param isOutline
-     * @return
+     *Creates a new PolygonOption from given properties of an existing PolygonOption
+     * @param originalPolygonOption An existing PolygonOption instance
+     * @param isFill Whether the fill for a polygon is set
+     * @param isOutline Whether the outline for a polygon is set
+     * @return  A new PolygonOption
      */
     private static PolygonOptions createPolygonOptions (PolygonOptions originalPolygonOption,
             boolean isFill, boolean isOutline) {
@@ -449,7 +448,7 @@ public class KmlStyle {
      * Computes a random color given an integer. Algorithm to compute the random color can be
      * found in https://developers.google.com/kml/documentation/kmlreference#colormode
      *
-     * @param color Integer value representing a color
+     * @param color Color represented as an integer
      * @return Integer representing a random color
      */
     /* package */
