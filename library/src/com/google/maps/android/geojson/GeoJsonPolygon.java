@@ -2,7 +2,7 @@ package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A GeoJsonPolygon geometry contains an array of arrays of {@link com.google.android.gms.maps.model.LatLng}s.
@@ -13,37 +13,34 @@ public class GeoJsonPolygon implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "Polygon";
 
-    private final ArrayList<ArrayList<LatLng>> mCoordinates;
+    // TODO: see if we can get this to List<List<LatLng>> later
+    private final List<? extends List<LatLng>> mCoordinates;
 
     /**
      * Creates a new GeoJsonPolygon object
      *
-     * @param coordinates array of arrays of coordinates of GeoJsonPolygon to store
+     * @param coordinates list of list of coordinates of GeoJsonPolygon to store
      */
     public GeoJsonPolygon(
-            ArrayList<ArrayList<LatLng>> coordinates) {
+            List<? extends List<LatLng>> coordinates) {
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null");
         }
         mCoordinates = coordinates;
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
+    /** {@inheritDoc} */
     @Override
     public String getType() {
         return GEOMETRY_TYPE;
     }
 
     /**
-     * Gets the coordinates of the GeoJsonPolygon
+     * Gets a list of a list of coordinates of the GeoJsonPolygons
      *
-     * @return coordinates of the GeoJsonPolygon
+     * @return list of a list of coordinates of the GeoJsonPolygon
      */
-    public ArrayList<ArrayList<LatLng>> getCoordinates() {
+    public List<? extends List<LatLng>> getCoordinates() {
         return mCoordinates;
     }
 
