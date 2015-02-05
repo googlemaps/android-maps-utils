@@ -14,7 +14,7 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
     /**
      * Creates a GeoJsonMultiPoint object
      *
-     * @param geoJsonPoints array of GeoJsonPoints to add to the GeoJsonMultiPoint
+     * @param geoJsonPoints list of GeoJsonPoints to store
      */
     public GeoJsonMultiPoint(List<GeoJsonPoint> geoJsonPoints) {
         if (geoJsonPoints == null) {
@@ -30,9 +30,9 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the array of GeoJsonPoint
+     * Gets a list of GeoJsonPoints
      *
-     * @return array of GeoJsonPoint
+     * @return list of GeoJsonPoints
      */
     public List<GeoJsonPoint> getPoints() {
         return mGeoJsonPoints;

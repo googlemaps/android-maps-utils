@@ -34,8 +34,8 @@ public class GeoJsonLayer {
     /**
      * Creates a new GeoJsonLayer object
      *
-     * @param map         GoogleMap object
-     * @param geoJsonFile JSONObject to parse GeoJSON data from
+     * @param map         map where the layer is to be rendered
+     * @param geoJsonFile GeoJSON data to add to the layer
      */
     public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile) {
         mDefaultPointStyle = new GeoJsonPointStyle();
@@ -55,8 +55,8 @@ public class GeoJsonLayer {
     /**
      * Creates a new GeoJsonLayer object
      *
-     * @param map        GoogleMap object
-     * @param resourceId Raw resource GeoJSON file
+     * @param map        map where the layer is to be rendered
+     * @param resourceId GeoJSON file to add to the layer
      * @param context    Context object
      * @throws IOException   if the file cannot be open for read
      * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
@@ -69,8 +69,8 @@ public class GeoJsonLayer {
     /**
      * Takes a character input stream and converts it into a JSONObject
      *
-     * @param stream Character input stream representing the GeoJSON file
-     * @return JSONObject representing the GeoJSON file
+     * @param stream character input stream representing the GeoJSON file
+     * @return JSONObject with the GeoJSON data
      * @throws IOException   if the file cannot be opened for read
      * @throws JSONException if the JSON file has poor structure
      */

@@ -14,7 +14,7 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
     /**
      * Creates a new GeoJsonMultiLineString object
      *
-     * @param geoJsonLineStrings array of GeoJsonLineStrings to add to the GeoJsonMultiLineString
+     * @param geoJsonLineStrings list of GeoJsonLineStrings to store
      */
     public GeoJsonMultiLineString(List<GeoJsonLineString> geoJsonLineStrings) {
         if (geoJsonLineStrings == null) {
@@ -30,9 +30,9 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the array of GeoJsonLineString
+     * Gets a list of GeoJsonLineStrings
      *
-     * @return array of GeoJsonLineString
+     * @return list of GeoJsonLineStrings
      */
     public List<GeoJsonLineString> getLineStrings() {
         return mGeoJsonLineStrings;

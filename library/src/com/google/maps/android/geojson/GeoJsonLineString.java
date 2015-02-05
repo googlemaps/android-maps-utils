@@ -16,7 +16,7 @@ public class GeoJsonLineString implements GeoJsonGeometry {
     /**
      * Creates a new GeoJsonLineString object
      *
-     * @param coordinates array of coordinates of GeoJsonLineString to store
+     * @param coordinates list of coordinates of GeoJsonLineString to store
      */
     public GeoJsonLineString(List<LatLng> coordinates) {
         if (coordinates == null) {
@@ -34,7 +34,7 @@ public class GeoJsonLineString implements GeoJsonGeometry {
     /**
      * Gets the coordinates of the GeoJsonLineString
      *
-     * @return coordinates of the GeoJsonLineString
+     * @return list of coordinates of the GeoJsonLineString
      */
     public List<LatLng> getCoordinates() {
         return mCoordinates;

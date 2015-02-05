@@ -14,7 +14,7 @@ public class GeoJsonMultiPolygon implements GeoJsonGeometry {
     /**
      * Creates a new GeoJsonMultiPolygon
      *
-     * @param geoJsonPolygons array of GeoJsonPolygons to add to the GeoJsonMultiPolygon
+     * @param geoJsonPolygons list of GeoJsonPolygons to store
      */
     public GeoJsonMultiPolygon(List<GeoJsonPolygon> geoJsonPolygons) {
         if (geoJsonPolygons == null) {
@@ -30,9 +30,9 @@ public class GeoJsonMultiPolygon implements GeoJsonGeometry {
     }
 
     /**
-     * Gets the array of GeoJsonPolygons
+     * Gets a list of GeoJsonPolygons
      *
-     * @return array of GeoJsonPolygons
+     * @return list of GeoJsonPolygons
      */
     public List<GeoJsonPolygon> getPolygons() {
         return mGeoJsonPolygons;
