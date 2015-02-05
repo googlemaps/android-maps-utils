@@ -57,7 +57,7 @@ public class GeoJsonLayer {
      *
      * @param map        map where the layer is to be rendered
      * @param resourceId GeoJSON file to add to the layer
-     * @param context    Context object
+     * @param context    context of the application, required to open the GeoJSON file
      * @throws IOException   if the file cannot be open for read
      * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
      */
@@ -93,7 +93,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Gets an iterable of all GeoJsonFeature elements that appear on the map
+     * Gets an iterable of all GeoJsonFeature elements that have been added to the layer
      *
      * @return iterable of GeoJsonFeature elements
      */
@@ -102,22 +102,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Gets the GeoJsonFeature with the given ID if it exists
-     *
-     * @param id of GeoJsonFeature object to find
-     * @return GeoJsonFeature object with matching ID or otherwise null
-     */
-    public GeoJsonFeature getFeatureById(String id) {
-        for (GeoJsonFeature feature : getFeatures()) {
-            if (feature.getId() != null && feature.getId().equals(id)) {
-                return feature;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Adds all the GeoJsonFeature objects parsed from the GeoJSON document onto the map. Default
+     * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map. Default
      * styles are applied to all features each time this method is called.
      */
     public void addDataToLayer() {
@@ -127,7 +112,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Adds a GeoJsonFeature to the GeoJsonLayer
+     * Adds a GeoJsonFeature to the layer
      *
      * @param feature GeoJsonFeature to add
      */
@@ -140,7 +125,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Removes a GeoJsonFeature from the GeoJsonLayer
+     * Removes a GeoJsonFeature from the layer
      *
      * @param feature GeoJsonFeature to remove
      */
@@ -149,93 +134,92 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Gets the GoogleMap on which the GeoJsonFeature are displayed
+     * Gets the map on which the layer is rendered
      *
-     * @return map on which the GeoJsonFeature are displayed
+     * @return map on which the layer is rendered
      */
     public GoogleMap getMap() {
         return mRenderer.getMap();
     }
 
     /**
-     * Renders all stored GeoJsonFeature on the specified GoogleMap
+     * Renders the layer on the given map. The layer on the current map is removed and
+     * added to the given map.
      *
-     * @param map to render GeoJsonFeature on, if null all GeoJsonFeature objects are cleared from
-     *            the map
+     * @param map to render the layer on, if null the layer is cleared from the current map
      */
     public void setMap(GoogleMap map) {
         mRenderer.setMap(map);
     }
 
     /**
-     * Removes all of the stored GeoJsonFeature objects from the map and clears the mFeatures
-     * hashmap
+     * Clears all of the GeoJsonFeatures from the layer
      */
-    public void removeLayer() {
+    public void clearLayer() {
         mRenderer.removeLayerFromMap();
     }
 
     /**
-     * Gets the default style for the GeoJsonPoint objects
+     * Gets the default style used to render GeoJsonPoints
      *
-     * @return GeoJsonPointStyle containing default styles for GeoJsonPoint
+     * @return default style used to render GeoJsonPoints
      */
     public GeoJsonPointStyle getDefaultPointStyle() {
         return mDefaultPointStyle;
     }
 
     /**
-     * Sets the default style for the GeoJsonPoint objects. This style is only applied to
-     * GeoJsonFeature objects that are added after this method is called.
+     * Sets the default style to use when rendering GeoJsonPoints. This style is only applied to
+     * GeoJsonPoints that are added after this method is called.
      *
-     * @param geoJsonPointStyle to set as default style
+     * @param geoJsonPointStyle to set as the default style for GeoJsonPoints
      */
     public void setDefaultPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
         mDefaultPointStyle = geoJsonPointStyle;
     }
 
     /**
-     * Gets the default style for the GeoJsonLineString objects
+     * Gets the default style used to render GeoJsonLineStrings
      *
-     * @return GeoJsonLineStringStyle containing default styles for GeoJsonLineString
+     * @return default style used to render GeoJsonLineStrings
      */
     public GeoJsonLineStringStyle getDefaultLineStringStyle() {
         return mDefaultLineStringStyle;
     }
 
     /**
-     * Sets the default style for the GeoJsonLineString objects. This style is only applied to
-     * GeoJsonFeature objects that are added after this method is called.
+     * Sets the default style to use when rendering GeoJsonLineStrings. This style is only applied
+     * to GeoJsonLineStrings that are added after this method is called.
      *
-     * @param geoJsonLineStringStyle to set as default style
+     * @param geoJsonLineStringStyle to set as the default style for GeoJsonLineStrings
      */
     public void setDefaultLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mDefaultLineStringStyle = geoJsonLineStringStyle;
     }
 
     /**
-     * Gets the default style for the GeoJsonPolygon objects
+     * Gets the default style used to render GeoJsonPolygons
      *
-     * @return GeoJsonPolygonStyle containing default styles for GeoJsonPolygon
+     * @return default style used to render GeoJsonPolygons
      */
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mDefaultPolygonStyle;
     }
 
     /**
-     * Sets the default style for the GeoJsonPolygon objects. This style is only applied to
-     * GeoJsonFeature objects that are added after this method is called.
+     * Sets the default style to use when rendering GeoJsonPolygons. This style is only applied to
+     * GeoJsonPolygons that are added after this method is called.
      *
-     * @param geoJsonPolygonStyle to set as default style
+     * @param geoJsonPolygonStyle to set as the default style for GeoJsonPolygons
      */
     public void setDefaultPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
         mDefaultPolygonStyle = geoJsonPolygonStyle;
     }
 
     /**
-     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
-     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
-     * FeatureCollection then null will be returned.
+     * Gets the LatLngBounds containing the coordinates of the bounding box for the
+     * FeatureCollection. If the FeatureCollection did not have a bounding box or if the GeoJSON
+     * file did not contain a FeatureCollection then null will be returned.
      *
      * @return LatLngBounds containing bounding box of FeatureCollection, null if no bounding box
      */
