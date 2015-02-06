@@ -3,11 +3,12 @@ package com.google.maps.android.kml;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a KML LineString. Contains a single array of coordinates.
  */
-public class KmlLineString implements KmlGeometry<ArrayList<LatLng>> {
+public class KmlLineString implements KmlGeometry<List<LatLng>> {
 
     public static final String GEOMETRY_TYPE = "LineString";
 

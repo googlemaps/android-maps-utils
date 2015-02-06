@@ -38,7 +38,7 @@ public class KmlContainer {
     }
 
     /**
-     * @return HashMap of styles, with key values representing style name (ie, color) and
+     * @return Map of Kml Styles, with key values representing style name (ie, color) and
      * value representing style value (ie #FFFFFF)
      */
     /* package */ HashMap<String, KmlStyle> getStyles() {

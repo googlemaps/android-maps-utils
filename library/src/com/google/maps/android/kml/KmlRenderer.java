@@ -66,11 +66,6 @@ import java.util.Set;
 
     private boolean mGroundOverlayImagesDownloaded;
 
-    /**
-     * Creates a new KmlRenderer object
-     *
-     * @param map map to place placemark, container, style and ground overlays on
-     */
     /* package */ KmlRenderer(GoogleMap map) {
         mMap = map;
         mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
@@ -82,17 +77,16 @@ import java.util.Set;
         mGroundOverlayImagesDownloaded = false;
     }
 
-
-
     /**
-     * Obtains the visibility of the placemark if it is specified, otherwise it returns true as a
-     * default
+     * Gets the visibility of the placemark if it is specified. A visibility value of "1"
+     * corresponds as "true", a visibility value of "0" corresponds as false. If the
+     * visibility is not set, the method returns "true".
      *
-     * @param placemark Placemark to obtain visibility from
-     * @return true if placemark visibility is set to the true or unspecified, false otherwise
+     * @param placemark Placemark to obtain visibility from.
+     * @return False if a Placemark has a visibility value of "1", true otherwise.
      */
     private static boolean getPlacemarkVisibility(KmlPlacemark placemark) {
-        Boolean isPlacemarkVisible = true;
+        boolean isPlacemarkVisible = true;
         if (placemark.hasProperty("visibility")) {
             String placemarkVisibility = placemark.getProperty("visibility");
             if (Integer.parseInt(placemarkVisibility) == 0) {
@@ -103,13 +97,11 @@ import java.util.Set;
     }
 
     /**
-     * Create a new bitmap which takes the size of the original bitmap and applies a scale as
-     * defined
-     * in the style
+     * Scales a Bitmap to a specified float.
      *
-     * @param unscaledBitmap Original bitmap image to convert to size
-     * @param scale              The scale we wish to apply to the original bitmap image
-     * @return A BitMapDescriptor of the icon image
+     * @param unscaledBitmap Unscaled bitmap image to scale.
+     * @param scale Scale value. A "1.0" scale value corresponds to the original size of the Bitmap
+     * @return A scaled bitmap image
      */
     private static BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, Double scale) {
         int width = (int) (unscaledBitmap.getWidth() * scale);
@@ -144,9 +136,9 @@ import java.util.Set;
      * @return true if this container is visible, false otherwise
      */
     /*package*/
-    static Boolean getContainerVisibility(KmlContainer kmlContainer, Boolean
+    static boolean getContainerVisibility(KmlContainer kmlContainer, boolean
             isParentContainerVisible) {
-        Boolean isChildContainerVisible = true;
+        boolean isChildContainerVisible = true;
         if (kmlContainer.hasKmlProperty("visibility")) {
             String placemarkVisibility = kmlContainer.getKmlProperty("visibility");
             if (Integer.parseInt(placemarkVisibility) == 0) {
@@ -252,7 +244,7 @@ import java.util.Set;
      *
      * @return true if there are placemarks, false otherwise
      */
-    /* package */ Boolean hasKmlPlacemarks() {
+    /* package */ boolean hasKmlPlacemarks() {
         return mPlacemarks.size() > 0;
     }
 
@@ -310,7 +302,7 @@ import java.util.Set;
      */
     private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
         for (KmlPlacemark kmlPlacemark : placemarks.keySet()) {
-            Boolean isPlacemarkVisible = getPlacemarkVisibility(kmlPlacemark);
+            boolean isPlacemarkVisible = getPlacemarkVisibility(kmlPlacemark);
             Object mapObject = addPlacemarkToMap(kmlPlacemark, isPlacemarkVisible);
             // Placemark stores a KmlPlacemark as a key, and GoogleMap Object as its value
             placemarks.put(kmlPlacemark, mapObject);
@@ -321,12 +313,12 @@ import java.util.Set;
      * Combines style and visibility to apply to a placemark geometry object and adds it to the map
      *
      * @param placemark           Placemark to obtain geometry object to add to the map
-     * @param placemarkVisibility Boolean value, where true indicates the placemark geometry is
+     * @param placemarkVisibility boolean value, where true indicates the placemark geometry is
      *                            shown initially on the map, false for not shown initially on the
      *                            map.
      * @return Google Map Object of the placemark geometry after it has been added to the map.
      */
-    private Object addPlacemarkToMap(KmlPlacemark placemark, Boolean placemarkVisibility) {
+    private Object addPlacemarkToMap(KmlPlacemark placemark, boolean placemarkVisibility) {
         String placemarkId = placemark.getStyleID();
         KmlGeometry geometry = placemark.getGeometry();
         KmlStyle style = getPlacemarkStyle(placemarkId);
@@ -342,7 +334,7 @@ import java.util.Set;
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
             boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
-            Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
+            boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
                 // Stores all found styles from the container
                 mStylesRenderer.putAll(container.getStyles());
@@ -366,8 +358,8 @@ import java.util.Set;
     private void addContainerObjectToMap(KmlContainer kmlContainer, boolean isContainerVisible) {
         Set<KmlPlacemark> containerPlacemarks = kmlContainer.getPlacemarks().keySet();
         for (KmlPlacemark placemark : containerPlacemarks) {
-            Boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
-            Boolean isObjectVisible = isContainerVisible && isPlacemarkVisible;
+            boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
+            boolean isObjectVisible = isContainerVisible && isPlacemarkVisible;
             Object mapObject = addPlacemarkToMap(placemark, isObjectVisible);
             kmlContainer.setPlacemark(placemark, mapObject);
         }
@@ -476,7 +468,7 @@ import java.util.Set;
      * of either objects
      */
     private Object addToMap(KmlPlacemark placemark, KmlGeometry geometry, KmlStyle style,
-            KmlStyle inlineStyle, Boolean isVisible) {
+            KmlStyle inlineStyle, boolean isVisible) {
         String geometryType = geometry.getKmlGeometryType();
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
@@ -527,10 +519,10 @@ import java.util.Set;
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker,
             KmlPlacemark placemark) {
-        Boolean hasName = placemark.hasProperty("name");
-        Boolean hasDescription = placemark.hasProperty("description");
-        Boolean hasBalloonOptions = style.hasBalloonStyle();
-        Boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
+        boolean hasName = placemark.hasProperty("name");
+        boolean hasDescription = placemark.hasProperty("description");
+        boolean hasBalloonOptions = style.hasBalloonStyle();
+        boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
         } else if (hasBalloonOptions && hasName) {
@@ -664,7 +656,7 @@ import java.util.Set;
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
             KmlMultiGeometry multiGeometry, KmlStyle urlStyle, KmlStyle inlineStyle,
-            Boolean isContainerVisible) {
+            boolean isContainerVisible) {
         ArrayList<Object> mapObjects = new ArrayList<Object>();
         ArrayList<KmlGeometry> kmlObjects = multiGeometry.getKmlGeometryObject();
         for (KmlGeometry kmlGeometry : kmlObjects) {
@@ -753,7 +745,7 @@ import java.util.Set;
     private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
             Iterable<KmlContainer> kmlContainers, boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
-            Boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
+            boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap(), isContainerVisible);
             if (container.hasNestedKmlContainers()) {
                 addGroundOverlayInContainerGroups(groundOverlayUrl,

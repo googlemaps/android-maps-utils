@@ -41,9 +41,10 @@ import java.util.HashMap;
             "flyToView|gridOrigin|httpQuery|leftFov|linkDescription|linkName|linkSnippet|" +
             "listItemType|maxSnippetLines|maxSessionLength|message|minAltitude|minFadeExtent|" +
             "minLodPixels|minRefreshPeriod|maxAltitude|maxFadeExtent|maxLodPixels|maxHeight|" +
-            "maxWidth|near|overlayXY|range|refreshMode|refreshInterval|refreshVisibility|" +
-            "rightFov|roll|rotationXY|screenXY|shape|sourceHref|state|targetHref|tessellate" +
-            "|tileSize|topFov|viewBoundScale|viewFormat|viewRefreshMode|viewRefreshTime|when";
+            "maxWidth|near|NetworkLink|NetworkLinkControl|overlayXY|range|refreshMode|" +
+            "refreshInterval|refreshVisibility|rightFov|roll|rotationXY|screenXY|shape|sourceHref|" +
+            "state|targetHref|tessellate|tileSize|topFov|viewBoundScale|viewFormat|viewRefreshMode|" +
+            "viewRefreshTime|when";
 
     /**
      * Creates a new KmlParser object
@@ -88,40 +89,40 @@ import java.util.HashMap;
             }
             eventType = mParser.next();
         }
+        //Need to put an empty new style
+        mStyles.put(null, new KmlStyle());
     }
 
     /**
      * @return List of styles created by the parser
      */
     /* package */ HashMap<String, KmlStyle> getStyles() {
-        //TODO: Need to put an empty new style, can probably be put somewhere better
-        mStyles.put(null, new KmlStyle());
         return mStyles;
     }
 
     /**
-     * @return List of basic_placemark object created by the parser
+     * @return A list of Kml Placemark objects
      */
     /* package */ HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;
     }
 
     /**
-     * @return A list of stylemaps created by the parser
+     * @return A list of Kml Style Maps
      */
     /* package */ HashMap<String, String> getStyleMaps() {
         return mStyleMaps;
     }
 
     /**
-     * @return List of folder objects created by the parser
+     * @return A list of Kml Folders
      */
     /* package */ ArrayList<KmlContainer> getContainers() {
         return mContainers;
     }
 
     /**
-     * @return hashmap of ground overlays created by the parser
+     * @return A list of Ground Overlays
      */
     /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlays() {
         return mGroundOverlays;

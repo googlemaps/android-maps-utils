@@ -129,12 +129,11 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     }
 
     /**
-     * Retrieves an image url from the "href" tag nested within a "GroundOverlay" tag, read by
+     * Retrieves a url from the "href" tag nested within an "Icon" tag, read by
      * the XmlPullParser.
      *
-     * @return Image Url for the GroundOverlay
+     * @return An image url
      */
-
     private static String getImageUrl(XmlPullParser parser)
             throws IOException, XmlPullParserException {
         int eventType = parser.getEventType();
@@ -149,7 +148,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     /**
      * Creates a new KmlGeometry object (Created if "Point", "LineString", "Polygon" or
-     * "MultiGeometry" tag is read by the XmlPullParser)
+     * "MultiGeometry" tag is detected by the XmlPullParser)
      *
      * @param geometryType Type of geometry object to create
      */
