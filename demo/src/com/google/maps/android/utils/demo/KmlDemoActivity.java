@@ -1,17 +1,21 @@
 package com.google.maps.android.utils.demo;
 
-import com.google.maps.android.kml.KmlContainer;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.kml.KmlLayer;
-import com.google.maps.android.kml.KmlPlacemark;
 
-import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
+import org.xmlpull.v1.XmlPullParserException;
+
+import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class KmlDemoActivity extends BaseDemoActivity {
+    GoogleMap mMap;
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
@@ -20,43 +24,52 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.egypt, getApplicationContext());
-            kmlLayer.addDataToLayer();
-
-            TextView text = (TextView)findViewById(R.id.textView);
-
-            text.append("Pictures in Egypt\n");
-            text.setMovementMethod(new ScrollingMovementMethod());
-
-            getPlacemarksInFolders(kmlLayer.getNestedContainers(), text, 1);
-
-
-
+            mMap = getMap();
+            new DownloadKmlFile("http://www.touroflimassol.com/TourOfLimassol.kml").execute();
             Log.i("Demo", "End");
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }
     }
 
-    public void getPlacemarksInFolders(Iterable<KmlContainer> containers, TextView text, int deep) {
+    private class DownloadKmlFile extends AsyncTask<String, Void, byte[]> {
+        private final String mUrl;
 
+        public DownloadKmlFile(String url) {
+            mUrl = url;
+        }
 
-        for (KmlContainer kmlContainer :containers) {
-            if (kmlContainer.hasKmlProperty("name")) {
-                text.append(Html.fromHtml("<b>" + kmlContainer.getKmlProperty("name") + "</b><br>"));
-            }
-            for (KmlPlacemark kmlPlacemark : kmlContainer.getKmlPlacemarks()) {
-                for( int i = 0; i < deep; ++i) {
-                    text.append(Html.fromHtml("├──"));
+        @Override
+        protected byte[] doInBackground(String... params) {
+
+            try {
+                InputStream is =  new URL(mUrl).openStream();
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                int nRead;
+                byte[] data = new byte[16384];
+                while ((nRead = is.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, nRead);
                 }
-                if (kmlPlacemark.hasProperty("name")) {
-                    text.append(Html.fromHtml(kmlPlacemark.getProperty("name") + "<br>"));
-                }
-            }
 
-            if (kmlContainer.hasNestedKmlContainers()) {
-                getPlacemarksInFolders(kmlContainer.getNestedKmlContainers(), text, deep++);
-                deep--;
+                buffer.flush();
+
+                return buffer.toByteArray();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(byte[] byteArr) {
+            try {
+                KmlLayer layer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr));
+                layer.addDataToLayer();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
