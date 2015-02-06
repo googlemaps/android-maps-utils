@@ -143,7 +143,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
      *
      * @return new PolylineOptions object
      */
-    public PolylineOptions getPolylineOptions() {
+    public PolylineOptions toPolylineOptions() {
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(mPolylineOptions.getColor());
         polylineOptions.geodesic(mPolylineOptions.isGeodesic());

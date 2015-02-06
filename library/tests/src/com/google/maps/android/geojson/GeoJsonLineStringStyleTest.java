@@ -24,39 +24,39 @@ public class GeoJsonLineStringStyleTest extends TestCase {
     public void testColor() throws Exception {
         lineStringStyle.setColor(Color.YELLOW);
         assertEquals(Color.YELLOW, lineStringStyle.getColor());
-        assertEquals(Color.YELLOW, lineStringStyle.getPolylineOptions().getColor());
+        assertEquals(Color.YELLOW, lineStringStyle.toPolylineOptions().getColor());
 
         lineStringStyle.setColor(0x76543210);
         assertEquals(0x76543210, lineStringStyle.getColor());
-        assertEquals(0x76543210, lineStringStyle.getPolylineOptions().getColor());
+        assertEquals(0x76543210, lineStringStyle.toPolylineOptions().getColor());
 
         lineStringStyle.setColor(Color.parseColor("#000000"));
         assertEquals(Color.parseColor("#000000"), lineStringStyle.getColor());
-        assertEquals(Color.parseColor("#000000"), lineStringStyle.getPolylineOptions().getColor());
+        assertEquals(Color.parseColor("#000000"), lineStringStyle.toPolylineOptions().getColor());
     }
 
     public void testGeodesic() throws Exception {
         lineStringStyle.setGeodesic(true);
         assertTrue(lineStringStyle.isGeodesic());
-        assertTrue(lineStringStyle.getPolylineOptions().isGeodesic());
+        assertTrue(lineStringStyle.toPolylineOptions().isGeodesic());
     }
 
     public void testVisible() throws Exception {
         lineStringStyle.setVisible(false);
         assertFalse(lineStringStyle.isVisible());
-        assertFalse(lineStringStyle.getPolylineOptions().isVisible());
+        assertFalse(lineStringStyle.toPolylineOptions().isVisible());
     }
 
     public void testWidth() throws Exception {
         lineStringStyle.setWidth(20.2f);
         assertEquals(20.2f, lineStringStyle.getWidth());
-        assertEquals(20.2f, lineStringStyle.getPolylineOptions().getWidth());
+        assertEquals(20.2f, lineStringStyle.toPolylineOptions().getWidth());
     }
 
     public void testZIndex() throws Exception {
         lineStringStyle.setZIndex(50.78f);
         assertEquals(50.78f, lineStringStyle.getZIndex());
-        assertEquals(50.78f, lineStringStyle.getPolylineOptions().getZIndex());
+        assertEquals(50.78f, lineStringStyle.toPolylineOptions().getZIndex());
     }
 
     public void testDefaultLineStringStyle() {
@@ -68,10 +68,10 @@ public class GeoJsonLineStringStyleTest extends TestCase {
     }
 
     public void testDefaultGetPolylineOptions() throws Exception {
-        assertEquals(Color.BLACK, lineStringStyle.getPolylineOptions().getColor());
-        assertFalse(lineStringStyle.getPolylineOptions().isGeodesic());
-        assertTrue(lineStringStyle.getPolylineOptions().isVisible());
-        assertEquals(10.0f, lineStringStyle.getPolylineOptions().getWidth());
-        assertEquals(0.0f, lineStringStyle.getPolylineOptions().getZIndex());
+        assertEquals(Color.BLACK, lineStringStyle.toPolylineOptions().getColor());
+        assertFalse(lineStringStyle.toPolylineOptions().isGeodesic());
+        assertTrue(lineStringStyle.toPolylineOptions().isVisible());
+        assertEquals(10.0f, lineStringStyle.toPolylineOptions().getWidth());
+        assertEquals(0.0f, lineStringStyle.toPolylineOptions().getZIndex());
     }
 }

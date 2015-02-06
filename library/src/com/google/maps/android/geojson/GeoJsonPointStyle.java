@@ -260,7 +260,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
      *
      * @return new MarkerOptions object
      */
-    public MarkerOptions getMarkerOptions() {
+    public MarkerOptions toMarkerOptions() {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.alpha(mMarkerOptions.getAlpha());
         markerOptions.anchor(mMarkerOptions.getAnchorU(), mMarkerOptions.getAnchorV());

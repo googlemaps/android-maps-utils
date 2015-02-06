@@ -161,7 +161,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
      *
      * @return new PolygonOptions object
      */
-    public PolygonOptions getPolygonOptions() {
+    public PolygonOptions toPolygonOptions() {
         PolygonOptions polygonOptions = new PolygonOptions();
         polygonOptions.fillColor(mPolygonOptions.getFillColor());
         polygonOptions.geodesic(mPolygonOptions.isGeodesic());

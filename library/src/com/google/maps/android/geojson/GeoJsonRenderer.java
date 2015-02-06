@@ -46,7 +46,7 @@ import java.util.Set;
     }
 
     /**
-     * Gets a Marker, Polyline, Polygon or an array of these and removes from the map
+     * Given a Marker, Polyline, Polygon or an array of these and removes it from the map
      *
      * @param mapObject map object or array of map objects to remove from the map
      */
@@ -120,6 +120,10 @@ import java.util.Set;
             if (mFeatures.containsKey(feature)) {
                 removeFromMap(mFeatures.get(feature));
                 feature.deleteObserver(this);
+                // Set styles to null
+                feature.setPointStyle(null);
+                feature.setLineStringStyle(null);
+                feature.setPolygonStyle(null);
             }
         }
     }
@@ -178,7 +182,7 @@ import java.util.Set;
      * @return Marker object created from the given GeoJsonPoint
      */
     private Marker addPointToMap(GeoJsonPointStyle geoJsonPointStyle, GeoJsonPoint geoJsonPoint) {
-        MarkerOptions markerOptions = geoJsonPointStyle.getMarkerOptions();
+        MarkerOptions markerOptions = geoJsonPointStyle.toMarkerOptions();
         markerOptions.position(geoJsonPoint.getCoordinates());
         return mMap.addMarker(markerOptions);
     }
@@ -208,7 +212,7 @@ import java.util.Set;
      */
     private Polyline addLineStringToMap(GeoJsonLineStringStyle geoJsonLineStringStyle,
             GeoJsonLineString geoJsonLineString) {
-        PolylineOptions polylineOptions = geoJsonLineStringStyle.getPolylineOptions();
+        PolylineOptions polylineOptions = geoJsonLineStringStyle.toPolylineOptions();
         // Add coordinates
         polylineOptions.addAll(geoJsonLineString.getCoordinates());
         return mMap.addPolyline(polylineOptions);
@@ -241,7 +245,7 @@ import java.util.Set;
      */
     private Polygon addPolygonToMap(GeoJsonPolygonStyle geoJsonPolygonStyle,
             GeoJsonPolygon geoJsonPolygon) {
-        PolygonOptions polygonOptions = geoJsonPolygonStyle.getPolygonOptions();
+        PolygonOptions polygonOptions = geoJsonPolygonStyle.toPolygonOptions();
         // First array of coordinates are the outline
         polygonOptions.addAll(geoJsonPolygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
         // Following arrays are holes

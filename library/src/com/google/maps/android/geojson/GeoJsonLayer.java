@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-
 /**
  * A class that allows the developer import GeoJSON data, style it and interact with the imported
  * data.
@@ -103,7 +102,9 @@ public class GeoJsonLayer {
 
     /**
      * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map. Default
-     * styles are applied to all features each time this method is called.
+     * styles are applied if the features haven't been previously added to the layer or if the
+     * layer
+     * has been cleared.
      */
     public void addDataToLayer() {
         for (GeoJsonFeature feature : mRenderer.getFeatures()) {
@@ -112,15 +113,23 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Adds a GeoJsonFeature to the layer
+     * Adds a GeoJsonFeature to the layer. If the point, linestring or poylgon style is set to
+     * null,
+     * the relevant default style are applied
      *
-     * @param feature GeoJsonFeature to add
+     * @param feature GeoJsonFeature to add to the layer
      */
     public void addFeature(GeoJsonFeature feature) {
-        // Set default styles
-        feature.setPointStyle(mDefaultPointStyle);
-        feature.setLineStringStyle(mDefaultLineStringStyle);
-        feature.setPolygonStyle(mDefaultPolygonStyle);
+        // Check if no style and apply default styles
+        if (feature.getPointStyle() == null) {
+            feature.setPointStyle(mDefaultPointStyle);
+        }
+        if (feature.getLineStringStyle() == null) {
+            feature.setLineStringStyle(mDefaultLineStringStyle);
+        }
+        if (feature.getPolygonStyle() == null) {
+            feature.setPolygonStyle(mDefaultPolygonStyle);
+        }
         mRenderer.addFeature(feature);
     }
 
@@ -153,7 +162,8 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Clears all of the GeoJsonFeatures from the layer
+     * Clears all of the GeoJsonFeatures from the layer. All styles are removed from the
+     * GeoJsonFeatures.
      */
     public void clearLayer() {
         mRenderer.removeLayerFromMap();

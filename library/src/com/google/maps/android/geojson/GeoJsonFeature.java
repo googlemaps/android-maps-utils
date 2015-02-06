@@ -30,9 +30,9 @@ public class GeoJsonFeature extends Observable implements Observer {
      * Creates a new GeoJsonFeature object
      *
      * @param GeoJsonGeometry type of geometry to assign to the feature
-     * @param id              id to refer to the feature by
-     * @param properties      hashmap of data containing properties related to the feature
-     * @param boundingBox     array defining the bounding box of the feature
+     * @param id              common identifier of the feature
+     * @param properties      hashmap of containing properties related to the feature
+     * @param boundingBox     bounding box of the feature
      */
     public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
             HashMap<String, String> properties, LatLngBounds boundingBox) {
@@ -55,7 +55,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Get the value for a stored property
+     * Gets the value for a stored property
      *
      * @param property key of the property
      * @return value of the property if its key exists, otherwise null
@@ -96,18 +96,18 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Returns the style used when rendering Points
+     * Returns the style used to render GeoJsonPoints
      *
-     * @return GeoJsonPointStyle object
+     * @return style used to render GeoJsonPoints
      */
     public GeoJsonPointStyle getPointStyle() {
         return mGeoJsonPointStyle;
     }
 
     /**
-     * Sets the style used when rendering Points
+     * Sets the style used to render GeoJsonPoints
      *
-     * @param geoJsonPointStyle GeoJsonPointStyle object
+     * @param geoJsonPointStyle style used to render GeoJsonPoints
      */
     public void setPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
         mGeoJsonPointStyle.deleteObserver(this);
@@ -117,18 +117,18 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Returns the style used when rendering LineStrings
+     * Returns the style used to render GeoJsonLineStrings
      *
-     * @return GeoJsonLineStringStyle object
+     * @return style used to render GeoJsonLineStrings
      */
     public GeoJsonLineStringStyle getLineStringStyle() {
         return mGeoJsonLineStringStyle;
     }
 
     /**
-     * Sets the style used when rendering LineStrings
+     * Sets the style used to render GeoJsonLineStrings
      *
-     * @param geoJsonLineStringStyle GeoJsonLineStringStyle object
+     * @param geoJsonLineStringStyle style used to render GeoJsonLineStrings
      */
     public void setLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
         mGeoJsonLineStringStyle.deleteObserver(this);
@@ -138,18 +138,18 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Returns the style used when rendering Polygons
+     * Returns the style used to render GeoJsonPolygons
      *
-     * @return GeoJsonPolygonStyle object
+     * @return style used to render GeoJsonPolygons
      */
     public GeoJsonPolygonStyle getPolygonStyle() {
         return mGeoJsonPolygonStyle;
     }
 
     /**
-     * Sets the style used when rendering Polygons
+     * Sets the style used to render GeoJsonPolygons
      *
-     * @param geoJsonPolygonStyle GeoJsonPolygonStyle object
+     * @param geoJsonPolygonStyle style used to render GeoJsonPolygons
      */
     public void setPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
         mGeoJsonPolygonStyle.deleteObserver(this);
@@ -175,19 +175,18 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
-     * Gets the stored GeoJsonGeometry object
+     * Gets the stored GeoJsonGeometry
      *
-     * @return GeoJsonGeometry object
+     * @return GeoJsonGeometry
      */
     public GeoJsonGeometry getGeometry() {
         return mGeoJsonGeometry;
     }
 
     /**
-     * Sets the stored GeoJsonGeometry object and redraws it to the map if it has been added to the
-     * layer
+     * Sets the stored GeoJsonGeometry and redraws it on the layer if it has already been added
      *
-     * @param geometry GeoJsonGeometry object to set
+     * @param geometry GeoJsonGeometry to set
      */
     public void setGeometry(GeoJsonGeometry geometry) {
         mGeoJsonGeometry = geometry;
@@ -198,7 +197,7 @@ public class GeoJsonFeature extends Observable implements Observer {
     /**
      * Gets the ID of the feature
      *
-     * @return ID of the feature
+     * @return ID of the feature, if there is no ID then null will be returned
      */
     public String getId() {
         return mId;
@@ -207,18 +206,17 @@ public class GeoJsonFeature extends Observable implements Observer {
     /**
      * Checks if the geometry is assigned
      *
-     * @return true if feature contains geometry object, false if geometry is currently null
+     * @return true if feature contains geometry object, otherwise null
      */
     public boolean hasGeometry() {
         return (mGeoJsonGeometry != null);
     }
 
     /**
-     * Gets the array containing the coordinates of the bounding box for the FeatureCollection. If
-     * the FeatureCollection did not have a bounding box or if the GeoJSON file did not contain a
-     * FeatureCollection then null will be returned.
+     * Gets the array containing the coordinates of the bounding box for the feature. If
+     * the feature did not have a bounding box then null will be returned.
      *
-     * @return LatLngBounds containing bounding box of FeatureCollection, null if no bounding box
+     * @return LatLngBounds containing bounding box of the feature, null if no bounding box
      */
     public LatLngBounds getBoundingBox() {
         return mBoundingBox;
