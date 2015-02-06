@@ -1639,7 +1639,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 				<name>Necropolis tombs, Asyut</name>
 				
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Necropolis tombs, Asyut</b></p><p align="left">These are excavated burial shafts in the necropolis of <a href="http://en.wikipedia.org/wiki/Asyut" target="_blank">Asyut</a>, a regional capital both in ancient Egyptian times and today.</p>]]></description>
+				
 				<Camera>
 					<longitude>31.172333</longitude>
 					<latitude>27.161753</latitude>
@@ -1709,7 +1709,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 				<name>Chapel of Horus, Temple of Seti I, Abydos</name>
 				
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Chapel of Horus, Temple of Seti I, Abydos</b></p><p align="left">A view of the chapel of Horus in the temple of Seti I at <a href="http://en.wikipedia.org/wiki/Abydos,_Egypt" target="_blank">Abydos</a>.</p>]]></description>
+				
 				<Camera>
 					<longitude>31.918838</longitude>
 					<latitude>26.184483</latitude>
@@ -1779,7 +1779,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 				<name>Chapel of Min, Temple of Seti I, Abydos</name>
 				
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Chapel of Min, Temple of Seti I, Abydos</b></p><p align="left">A view of the chapel of Min in the temple of Seti I at <a href="http://en.wikipedia.org/wiki/Abydos,_Egypt" target="_blank">Abydos</a>. Notice how several of the depicted figures were drawn with erect penises, though these were subsequently chiseled away, likely during the more prudish Christian era.</p>]]></description>
+				
 				<Camera>
 					<longitude>31.918782</longitude>
 					<latitude>26.184517</latitude>
@@ -1849,7 +1849,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 				<name>List of Kings, Temple of Seti I, Abydos</name>
 				
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>List of Kings, Temple of Seti I, Abydos</b></p><p align="left">The <a href="http://en.wikipedia.org/wiki/Abydos_King_List" target="_blank">Abydos King List</a> is considered by Egyptologists to be one of the most important "documents" in their field. On this wall (which slopes gently downwards towards the west) Seti I depicted in chronological order every pharaoh preceding him, with a couple of notable revisionist exceptions (such as Akhenaten and Hatshepsut). Modern-day scholars have found this list  invaluable for dating and naming tombs all over Egypt.</p>]]></description>
+				
 				<Camera>
 					<longitude>31.919228</longitude>
 					<latitude>26.184447</latitude>
@@ -1919,7 +1919,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 				<name>Inner Hypostyle Hall, Temple of Seti I, Abydos</name>
 				
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Inner Hypostyle Hall, Temple of Seti I, Abydos</b></p><p align="left">A view from the inner hypostyle hall of the temple of Seti I at <a href="http://en.wikipedia.org/wiki/Abydos,_Egypt" target="_blank">Abydos</a>. This temple is perhaps my favorite in Egypt. No tourists, just acres of colorful murals and an imposing closed hypostyle hall with intact ceiling.</p>]]></description>
+				
 				<Camera>
 					<longitude>31.919012</longitude>
 					<latitude>26.184603</latitude>
@@ -1989,7 +1989,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 				<name>Tihna el Gebel</name>
 				
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Tihna el Gebel</b></p><p align="left">A small Graeco-Roman temple high up in the cliff face of <a href="http://www.egyptsites.co.uk/middle/minya/tihna.html" target="_blank">Tihna el Gebel</a>. To the north, you can see the mud-brick ruins of a significant settlement that existed from the Old Kingdom onwards. Climbing up here proved to be more precarious than it looks:-)</p>]]></description>
+				
 				<Camera>
 					<longitude>30.775127</longitude>
 					<latitude>28.182432</latitude>
@@ -2062,7 +2062,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Beni Suef Archaeological Museum</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Beni Suef Archaeological Museum</b></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>31.10143960819049,29.08405071921461,0</coordinates>
@@ -2071,7 +2071,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Beni Hassan</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Beni Hassan</b></p><p><a href="http://en.wikipedia.org/wiki/Beni_Hasan">Wikipedia article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.87418008007515,27.93009094055533,0</coordinates>
@@ -2080,7 +2080,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Hermopolis - El Ashmunein</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Hermopolis - El Ashmunein</b></p><p><a href="http://en.wikipedia.org/wiki/Hermopolis">Wikipedia article</a><br /><a href="http://www.touregypt.net/featurestories/hermopolis.htm">Tour Egypt article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.80305221123447,27.78116050875705,0</coordinates>
@@ -2089,7 +2089,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Tuna el Gebel</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Tuna el Gebel</b></p><p><a href="http://en.wikipedia.org/wiki/Tuna_el-Gebel">Wikipedia article</a><br /><a href="http://www.egyptsites.co.uk/middle/mallawi/tuna.html">Egyptian Monuments article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.70444444439999,27.73833333329998,0</coordinates>
@@ -2098,7 +2098,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Boundary Stela A</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Boundary Stela A</b></p><p><a href="Boundary Stela A">Amarna Project article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.70177537764325,27.74699936218895,0</coordinates>
@@ -2107,7 +2107,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Boundary Stela U</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Boundary Stela U</b></p><p><a href="Boundary Stela A">Amarna Project article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.93837522623974,27.64636934674053,0</coordinates>
@@ -2116,7 +2116,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Stone Village, Amarna</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Stone Village, Amarna</b></p><p><a href="http://www.amarnaproject.com/pages/amarna_the_place/stone_village/index.shtml">Project Amarna article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.92299661285847,27.62795758709554,0</coordinates>
@@ -2125,7 +2125,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Tomb of Akhenaten</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Tomb of Akhenaten</b></p><p><a href="http://www.amarnaproject.com/pages/amarna_the_place/royal_tombs/index.shtml">Project Amarna article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.98499629240146,27.62635607493195,0</coordinates>
@@ -2134,7 +2134,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Northern Tombs, Amarna</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Northern Tombs, Amarna</b></p><p><a href="http://www.amarnaproject.com/pages/amarna_the_place/north_tombs/index.shtml">Amarna Project article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.92722054733517,27.66401979306102,0</coordinates>
@@ -2143,7 +2143,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>North Palace, Amarna</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>North Palace, Amarna</b></p><p><a href="http://www.amarnaproject.com/pages/amarna_the_place/north_palace/index.shtml">Project Amarna article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.90364945413782,27.66995525189215,0</coordinates>
@@ -2152,7 +2152,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Central city, Akethaten</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Central city, Akethaten</b></p><p><a href="http://www.amarnaproject.com/pages/amarna_the_place/central_city/index.shtml">Project Amarna article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.89704248759179,27.64683808959062,0</coordinates>
@@ -2161,7 +2161,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Meir</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Meir</b></p><p><a href="http://en.wikipedia.org/wiki/Meir,_Egypt">Wikipedia article</a><br /><a href="http://www.egyptsites.co.uk/middle/asyut/meir.html">Egyptian Monuments article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.71053094991749,27.40914260520733,0</coordinates>
@@ -2170,7 +2170,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Asyut</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Asyut</b></p><p><a href="http://en.wikipedia.org/wiki/Asyut#Ancient_Asyut">Wikipedia article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>31.17240865000831,27.16226049357702,0</coordinates>
@@ -2179,7 +2179,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>El Hawawish</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>El Hawawish</b></p><p><a href="http://en.wikipedia.org/wiki/El-Hawawish">Wikipedia artcile</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>31.81395226122422,26.59285687494833,0</coordinates>
@@ -2188,7 +2188,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Qaw el Kebir</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Qaw el Kebir</b></p><p><a href="http://en.wikipedia.org/wiki/Tjebu">Wikipedia article</a><br /><a href="http://www.egyptsites.co.uk/middle/sohag/qawelkebir.html">Egyptian Monuments article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>31.49881689570236,26.91778680709713,0</coordinates>
@@ -2197,7 +2197,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Umm El Qa&apos;ab, Abydos</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Umm El Qa&apos;ab, Abydos</b></p><p><a href="http://en.wikipedia.org/wiki/Umm_el-Qa%27ab">Wikipedia article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>31.90845714896327,26.17473039586001,0</coordinates>
@@ -2206,7 +2206,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Temple of Seti I, Abydos</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Temple of Seti I, Abydos</b></p><p><a href="http://en.wikipedia.org/wiki/Abydos,_Egypt">Wikipedia article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>31.91905993660939,26.18511754814978,0</coordinates>
@@ -2215,7 +2215,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 			<Placemark>
 				<name>Tihna el Gebel</name>
 				<Snippet maxLines="0"></Snippet>
-				<description><![CDATA[<p align="left"><b>Tihna el Gebel</b></p><p><a href="http://www.egyptsites.co.uk/middle/minya/tihna.html">Egyptian Monuments article</a></p>]]></description>
+				
 				<styleUrl>#pois</styleUrl>
 				<Point>
 					<coordinates>30.77511823933812,28.18341650624669,0</coordinates>
@@ -2228,7 +2228,7 @@ First row: Bianca, Nicky, Imke</p><p>Photo by <a href='http://www.flickr.com/peo
 	<Link>
 		<href>http://www.ogleearth.com/middleegyptfinal2.kmz</href>
 	</Link>
-	<visibility>0</visibility>
+	<visibility>1</visibility>
 	<open>1</open>
 </NetworkLink>
 </Document>

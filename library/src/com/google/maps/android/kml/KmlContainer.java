@@ -94,7 +94,7 @@ public class KmlContainer {
     /**
      * @return HashMap of containers
      */
-    public HashMap<KmlPlacemark, Object> getPlacemarks() {
+    /*package*/ HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;
     }
 

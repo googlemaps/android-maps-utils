@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.util.Log;
@@ -27,7 +26,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -412,8 +410,8 @@ import java.util.Set;
      *
      * @param iconUrl icon url of icon to add to markers
      */
-    private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> mPlacemarks) {
-        for (KmlPlacemark placemark : mPlacemarks.keySet()) {
+    private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
+        for (KmlPlacemark placemark : placemarks.keySet()) {
             KmlStyle urlStyle = mStylesRenderer.get(placemark.getStyleID());
             KmlStyle inlineStyle = placemark.getInlineStyle();
             if ("Point".equals(placemark.getGeometry().getKmlGeometryType())) {
@@ -422,9 +420,9 @@ import java.util.Set;
                 boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
                         .equals(urlStyle.getIconUrl());
                 if (isInlineStyleIcon) {
-                    scaleBitmap(inlineStyle, placemark);
+                    scaleBitmap(inlineStyle,placemarks, placemark);
                 } else if (isPlacemarkStyleIcon) {
-                    scaleBitmap(urlStyle, placemark);
+                    scaleBitmap(urlStyle, placemarks, placemark);
                 }
             }
         }
@@ -435,12 +433,13 @@ import java.util.Set;
      * @param style     Style to retrieve iconUrl and scale from
      * @param placemark Placemark object to set the image to
      */
-    private void scaleBitmap(KmlStyle style, KmlPlacemark placemark) {
+    private void scaleBitmap(KmlStyle style, HashMap<KmlPlacemark, Object> placemarks,
+                             KmlPlacemark placemark) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
         Bitmap bitmapImage = mImagesCache.get(bitmapUrl);
         BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
-        ((Marker) mPlacemarks.get(placemark)).setIcon(scaledBitmap);
+        ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
      }
 
     /**
