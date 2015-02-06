@@ -18,8 +18,17 @@ import java.util.HashMap;
  * A class that allows the developer import GeoJSON data, style it and interact with the imported
  * data.
  *
- * {@code To create a new}
+ * To create a new GeoJsonLayer from a resource stored locally
+ * {@code GeoJsonLayer layer =
+ * new GeoJsonLayer(getMap(), R.raw.resource, getApplicationContext());
+ * layer.addDataToLayer();
+ * layer.removeLayer();}
  *
+ * To render the imported GeoJSON data onto the layer
+ * {@code layer.addDataToLayer();}
+ *
+ * To remove the rendered data from the layer
+ * {@code layer.clearLayer();}
  */
 public class GeoJsonLayer {
 
