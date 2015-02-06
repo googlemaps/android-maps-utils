@@ -32,7 +32,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the fill color of the GeoJsonPolygon
+     * Gets the fill color of the GeoJsonPolygon as a 32-bit ARGB color
      *
      * @return fill color of the GeoJsonPolygon
      */
@@ -41,7 +41,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the fill color of the GeoJsonPolygon
+     * Sets the fill color of the GeoJsonPolygon as a 32-bit ARGB color
      *
      * @param fillColor fill color value of the GeoJsonPolygon
      */
@@ -70,7 +70,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the stroke color of the GeoJsonPolygon
+     * Gets the stroke color of the GeoJsonPolygon as a 32-bit ARGB color
      *
      * @return stroke color of the GeoJsonPolygon
      */
@@ -79,7 +79,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the stroke color of the GeoJsonPolygon
+     * Sets the stroke color of the GeoJsonPolygon as a 32-bit ARGB color
      *
      * @param strokeColor stroke color value of the GeoJsonPolygon
      */
@@ -89,7 +89,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the stroke width of the GeoJsonPolygon
+     * Gets the stroke width of the GeoJsonPolygon in screen pixels
      *
      * @return stroke width of the GeoJsonPolygon
      */
@@ -98,7 +98,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the stroke width of the GeoJsonPolygon
+     * Sets the stroke width of the GeoJsonPolygon in screen pixels
      *
      * @param strokeWidth stroke width value of the GeoJsonPolygon
      */

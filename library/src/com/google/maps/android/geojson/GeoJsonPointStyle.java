@@ -34,16 +34,18 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the alpha of the Point
+     * Gets the alpha of the GeoJsonPoint. This is a value from 0 to 1, where 0 means the marker is
+     * completely transparent and 1 means the marker is completely opaque.
      *
-     * @return alpha of the Point
+     * @return alpha of the GeoJsonPoint
      */
     public float getAlpha() {
         return mMarkerOptions.getAlpha();
     }
 
     /**
-     * Sets the alpha of the GeoJsonPoint
+     * Sets the alpha of the GeoJsonPoint. This is a value from 0 to 1, where 0 means the marker is
+     * completely transparent and 1 means the marker is completely opaque.
      *
      * @param alpha alpha value of the GeoJsonPoint
      */
@@ -53,7 +55,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the Anchor U coordinate of the GeoJsonPoint
+     * Gets the Anchor U coordinate of the GeoJsonPoint. Normalized to [0, 1], of the anchor from
+     * the left edge.
      *
      * @return Anchor U coordinate of the GeoJsonPoint
      */
@@ -62,7 +65,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the Anchor V coordinate of the GeoJsonPoint
+     * Gets the Anchor V coordinate of the GeoJsonPoint. Normalized to [0, 1], of the anchor from
+     * the top edge.
      *
      * @return Anchor V coordinate of the GeoJsonPoint
      */
@@ -71,7 +75,9 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the Anchor U and V coordinates of the GeoJsonPoint
+     * Sets the Anchor U and V coordinates of the GeoJsonPoint. The anchor point is specified in the
+     * continuous space [0.0, 1.0] x [0.0, 1.0], where (0, 0) is the top-left corner of the image,
+     * and (1, 1) is the bottom-right corner.
      *
      * @param anchorU Anchor U coordinate of the GeoJsonPoint
      * @param anchorV Anchor V coordinate of the GeoJsonPoint
@@ -139,7 +145,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the info window anchor U coordinate of the GeoJsonPoint
+     * Gets the info window anchor U coordinate of the GeoJsonPoint. Normalized to [0, 1], of the
+     * info window anchor from the left edge.
      *
      * @return info window anchor U coordinate of the GeoJsonPoint
      */
@@ -148,7 +155,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the info window anchor V coordinate of the GeoJsonPoint
+     * Gets the info window anchor V coordinate of the GeoJsonPoint. Normalized to [0, 1], of the
+     * info window anchor from the top edge
      *
      * @return info window anchor V coordinate of the GeoJsonPoint
      */
@@ -157,7 +165,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the info window anchor U and V coordinates of the GeoJsonPoint
+     * Sets the info window anchor U and V coordinates of the GeoJsonPoint. This is specified in the
+     * same coordinate system as the anchor.
      *
      * @param infoWindowAnchorU info window anchor U coordinate of the GeoJsonPoint
      * @param infoWindowAnchorV info window anchor V coordinate of the GeoJsonPoint
@@ -168,7 +177,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the rotation of the GeoJsonPoint
+     * Gets the rotation of the GeoJsonPoint in degrees clockwise about the marker's anchor point
      *
      * @return rotation of the GeoJsonPoint
      */
@@ -178,7 +187,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
 
     /**
-     * Sets the rotation of the GeoJsonPoint
+     * Sets the rotation of the GeoJsonPoint in degrees clockwise about the marker's anchor point
      *
      * @param rotation rotation value of the GeoJsonPoint
      */

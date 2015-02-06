@@ -33,7 +33,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the color of the GeoJsonLineString
+     * Gets the color of the GeoJsonLineString as a 32-bit ARGB color
      *
      * @return color of the GeoJsonLineString
      */
@@ -42,7 +42,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the color of the GeoJsonLineString
+     * Sets the color of the GeoJsonLineString as a 32-bit ARGB color
      *
      * @param color color value of the GeoJsonLineString
      */
@@ -71,7 +71,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Gets the width of the GeoJsonLineString
+     * Gets the width of the GeoJsonLineString in screen pixels
      *
      * @return width of the GeoJsonLineString
      */
@@ -80,7 +80,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the width of the GeoJsonLineString
+     * Sets the width of the GeoJsonLineString in screen pixels
      *
      * @param width width value of the GeoJsonLineString
      */
