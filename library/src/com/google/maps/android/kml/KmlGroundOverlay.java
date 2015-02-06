@@ -45,18 +45,18 @@ public class KmlGroundOverlay {
     }
 
     /**
-     * Gets the image url of the image used for the ground overlay
+     * Gets an image url
      *
-     * @return Image url of the ground overlay
+     * @return An image url
      */
     public String getImageUrl() {
         return mImageUrl;
     }
 
     /**
-     * Returns a latlngbounds representing the outer boundaries of the ground overlay
+     * Returns boundaries of the ground overlay
      *
-     * @return latlngbound representing the outer boundary of the ground overlay
+     * @return Boundaries of the ground overlay
      */
     public LatLngBounds getLatLngBox() {
         return mLatLngBox;
@@ -65,14 +65,14 @@ public class KmlGroundOverlay {
     /**
      * Gets an iterable of the properties
      *
-     * @return Iterable of the properties of the ground overlay
+     * @return Iterable of the properties
      */
     public Iterable getProperties() {
         return mProperties.entrySet();
     }
 
     /**
-     * Gets a property value based on key
+     * Gets a property value
      *
      * @param keyValue key value of the property
      * @return Value of property
