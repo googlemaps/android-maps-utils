@@ -17,6 +17,9 @@ import java.util.HashMap;
 /**
  * A class that allows the developer import GeoJSON data, style it and interact with the imported
  * data.
+ *
+ * {@code To create a new}
+ *
  */
 public class GeoJsonLayer {
 
@@ -103,8 +106,7 @@ public class GeoJsonLayer {
     /**
      * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map. Default
      * styles are applied if the features haven't been previously added to the layer or if the
-     * layer
-     * has been cleared.
+     * layer has been cleared.
      */
     public void addDataToLayer() {
         for (GeoJsonFeature feature : mRenderer.getFeatures()) {
@@ -114,8 +116,7 @@ public class GeoJsonLayer {
 
     /**
      * Adds a GeoJsonFeature to the layer. If the point, linestring or poylgon style is set to
-     * null,
-     * the relevant default style are applied
+     * null, the relevant default styles are applied.
      *
      * @param feature GeoJsonFeature to add to the layer
      */
@@ -134,9 +135,9 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Removes a GeoJsonFeature from the layer
+     * Removes the given GeoJsonFeature from the layer
      *
-     * @param feature GeoJsonFeature to remove
+     * @param feature feature to remove
      */
     public void removeFeature(GeoJsonFeature feature) {
         mRenderer.removeFeature(feature);
@@ -185,6 +186,9 @@ public class GeoJsonLayer {
      * @param geoJsonPointStyle to set as the default style for GeoJsonPoints
      */
     public void setDefaultPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
+        if (geoJsonPointStyle == null) {
+            throw new IllegalArgumentException("Default style cannot be null");
+        }
         mDefaultPointStyle = geoJsonPointStyle;
     }
 
@@ -204,6 +208,9 @@ public class GeoJsonLayer {
      * @param geoJsonLineStringStyle to set as the default style for GeoJsonLineStrings
      */
     public void setDefaultLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
+        if (geoJsonLineStringStyle == null) {
+            throw new IllegalArgumentException("Default style cannot be null");
+        }
         mDefaultLineStringStyle = geoJsonLineStringStyle;
     }
 
@@ -223,6 +230,9 @@ public class GeoJsonLayer {
      * @param geoJsonPolygonStyle to set as the default style for GeoJsonPolygons
      */
     public void setDefaultPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
+        if (geoJsonPolygonStyle == null) {
+            throw new IllegalArgumentException("Default style cannot be null");
+        }
         mDefaultPolygonStyle = geoJsonPolygonStyle;
     }
 

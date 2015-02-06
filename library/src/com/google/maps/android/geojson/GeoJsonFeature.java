@@ -39,7 +39,11 @@ public class GeoJsonFeature extends Observable implements Observer {
         mGeoJsonGeometry = GeoJsonGeometry;
         mId = id;
         mBoundingBox = boundingBox;
-        mProperties = properties;
+        if (properties == null) {
+            mProperties = new HashMap<String, String>();
+        } else {
+            mProperties = properties;
+        }
         mGeoJsonPointStyle = new GeoJsonPointStyle();
         mGeoJsonLineStringStyle = new GeoJsonLineStringStyle();
         mGeoJsonPolygonStyle = new GeoJsonPolygonStyle();
