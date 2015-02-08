@@ -21,11 +21,11 @@ import java.util.HashMap;
  * To create a new GeoJsonLayer from a resource stored locally
  * {@code GeoJsonLayer layer =
  * new GeoJsonLayer(getMap(), R.raw.resource, getApplicationContext());
- * layer.addDataToLayer();
+ * layer.addLayer();
  * layer.removeLayer();}
  *
  * To render the imported GeoJSON data onto the layer
- * {@code layer.addDataToLayer();}
+ * {@code layer.addLayer();}
  *
  * To remove the rendered data from the layer
  * {@code layer.clearLayer();}
@@ -49,6 +49,9 @@ public class GeoJsonLayer {
      * @param geoJsonFile GeoJSON data to add to the layer
      */
     public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile) {
+        if (geoJsonFile == null) {
+            throw new IllegalArgumentException("GeoJSON file cannot be null");
+        }
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
@@ -117,7 +120,7 @@ public class GeoJsonLayer {
      * styles are applied if the features haven't been previously added to the layer or if the
      * layer has been cleared.
      */
-    public void addDataToLayer() {
+    public void addLayer() {
         for (GeoJsonFeature feature : mRenderer.getFeatures()) {
             addFeature(feature);
         }
