@@ -5,7 +5,6 @@ import android.test.ActivityTestCase;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         XmlPullParser xmlPullParser = createParser(R.raw.basic_placemark);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
         assertNotNull(placemark);
-        assertEquals(placemark.getGeometry().getKmlGeometryType(), "Polygon");
+        assertEquals(placemark.getGeometry().getGeometryType(), "Polygon");
         KmlPolygon polygon = ((KmlPolygon) placemark.getGeometry());
         assertEquals(polygon.getInnerBoundaryCoordinates().size(), 2);
         assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
@@ -37,9 +36,9 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         XmlPullParser xmlPullParser = createParser(R.raw.multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
         assertNotNull( placemark );
-        assertEquals( placemark .getGeometry().getKmlGeometryType(), "MultiGeometry");
+        assertEquals( placemark .getGeometry().getGeometryType(), "MultiGeometry");
         KmlMultiGeometry multiGeometry = ((KmlMultiGeometry) placemark .getGeometry());
-        assertEquals(multiGeometry.getKmlGeometryObject().size(), 3);
+        assertEquals(multiGeometry.getGeometryObject().size(), 3);
     }
 
     public void testProperties() throws Exception {
@@ -75,14 +74,14 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
         assertEquals(feature.getProperty("name"), "multiPointLine");
         assertEquals(feature.getProperty("description"), "Nested MultiGeometry structure");
-        assertEquals(feature.getGeometry().getKmlGeometryType(), "MultiGeometry");
-        ArrayList<KmlGeometry> objects = (ArrayList<KmlGeometry>) feature.getGeometry().getKmlGeometryObject();
-        assertEquals(objects.get(0).getKmlGeometryType(), "Point");
-        assertEquals(objects.get(1).getKmlGeometryType(), "LineString");
-        assertEquals(objects.get(2).getKmlGeometryType(), "MultiGeometry");
-        ArrayList<KmlGeometry> subObjects = (ArrayList<KmlGeometry>) objects.get(2).getKmlGeometryObject();
-        assertEquals(subObjects.get(0).getKmlGeometryType(), "Point");
-        assertEquals(subObjects.get(1).getKmlGeometryType(), "LineString");
+        assertEquals(feature.getGeometry().getGeometryType(), "MultiGeometry");
+        ArrayList<KmlGeometry> objects = (ArrayList<KmlGeometry>) feature.getGeometry().getGeometryObject();
+        assertEquals(objects.get(0).getGeometryType(), "Point");
+        assertEquals(objects.get(1).getGeometryType(), "LineString");
+        assertEquals(objects.get(2).getGeometryType(), "MultiGeometry");
+        ArrayList<KmlGeometry> subObjects = (ArrayList<KmlGeometry>) objects.get(2).getGeometryObject();
+        assertEquals(subObjects.get(0).getGeometryType(), "Point");
+        assertEquals(subObjects.get(1).getGeometryType(), "LineString");
     }
 
 

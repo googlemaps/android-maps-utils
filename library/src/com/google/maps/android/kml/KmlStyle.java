@@ -3,7 +3,6 @@ package com.google.maps.android.kml;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.graphics.Color;
@@ -15,7 +14,7 @@ import java.util.Random;
 /**
  * Represents the defined styles in the KML document
  */
-public class KmlStyle {
+/* package */ class KmlStyle {
 
     private final static int HSV_VALUES = 3;
 
@@ -54,7 +53,7 @@ public class KmlStyle {
     /**
      * Creates a new Style object
      */
-    public KmlStyle() {
+    /* package */ KmlStyle() {
         mStyleId = null;
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
@@ -73,7 +72,7 @@ public class KmlStyle {
      *
      * @param text Text for an info window
      */
-    public void setInfoWindowText(String text) {
+    /* package */ void setInfoWindowText(String text) {
         mBalloonOptions.put("text", text);
     }
 
@@ -82,7 +81,7 @@ public class KmlStyle {
      *
      * @return Style Id, null otherwise
      */
-    public String getStyleId() {
+    /* package */ String getStyleId() {
         return mStyleId;
     }
 
@@ -91,7 +90,7 @@ public class KmlStyle {
      *
      * @param styleId  Id for the style
      */
-    public void setStyleId(String styleId) {
+    /* package */ void setStyleId(String styleId) {
         mStyleId = styleId;
     }
 
@@ -101,7 +100,7 @@ public class KmlStyle {
      * @param style style to check if set
      * @return True if style was set, false otherwise
      */
-    public boolean isStyleSet(String style) {
+    /* package */ boolean isStyleSet(String style) {
         return mStylesSet.contains(style);
     }
 
@@ -110,7 +109,7 @@ public class KmlStyle {
      *
      * @return True if there is a fill for the polygon, false otherwise
      */
-    public boolean hasFill() {
+    /* package */ boolean hasFill() {
         return mFill;
     }
 
@@ -119,7 +118,7 @@ public class KmlStyle {
      *
      * @param fill True if the polygon fill is set, false otherwise
      */
-    public void setFill(boolean fill) {
+    /* package */ void setFill(boolean fill) {
         mFill = fill;
     }
 
@@ -128,7 +127,7 @@ public class KmlStyle {
      *
      * @return scale value
      */
-    public double getIconScale() {
+    /* package */ double getIconScale() {
         return mScale;
     }
 
@@ -137,7 +136,7 @@ public class KmlStyle {
      *
      * @param scale scale value
      */
-    public void setIconScale(double scale) {
+    /* package */ void setIconScale(double scale) {
         mScale = scale;
         mStylesSet.add("iconScale");
     }
@@ -147,7 +146,7 @@ public class KmlStyle {
      *
      * @return True if the polygon outline is set, false otherwise
      */
-    public boolean hasOutline() {
+    /* package */ boolean hasOutline() {
         return mOutline;
     }
 
@@ -156,7 +155,7 @@ public class KmlStyle {
      *
      * @return True if a BalloonStyle has been set, false otherwise
      */
-    public boolean hasBalloonStyle() {
+    /* package */ boolean hasBalloonStyle() {
         return mBalloonOptions.size() > 0;
     }
 
@@ -165,7 +164,7 @@ public class KmlStyle {
      *
      * @param outline True if the polygon outline is set, false otherwise
      */
-    public void setOutline(boolean outline) {
+    /* package */ void setOutline(boolean outline) {
         mOutline = outline;
         mStylesSet.add("outline");
     }
@@ -175,7 +174,7 @@ public class KmlStyle {
      *
      * @return Url for the marker icon, null otherwise
      */
-    public String getIconUrl() {
+    /* package */ String getIconUrl() {
         return mIconUrl;
     }
 
@@ -184,7 +183,7 @@ public class KmlStyle {
      *
      * @param iconUrl Url for the marker icon
      */
-    public void setIconUrl(String iconUrl) {
+    /* package */ void setIconUrl(String iconUrl) {
         mIconUrl = iconUrl;
         if (!mIconUrl.startsWith("http://")) {
             // Icon stored locally
@@ -198,7 +197,7 @@ public class KmlStyle {
      *
      * @param color Fill color for a Polygon
      */
-    public void setFillColor(String color) {
+    /* package */ void setFillColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
         mPolygonOptions.fillColor(Color.parseColor("#" + color));
         mStylesSet.add("fillColor");
@@ -209,7 +208,7 @@ public class KmlStyle {
      *
      * @param color Color for a marker
      */
-    public void setMarkerColor(String color) {
+    /* package */ void setMarkerColor(String color) {
         int integerColor = Color.parseColor("#" + convertColor(color));
         mMarkerColor = getHueValue(integerColor);
         mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(mMarkerColor));
@@ -244,7 +243,7 @@ public class KmlStyle {
      *
      * @param heading Decimal representation of a rotation value
      */
-    public void setHeading(float heading) {
+    /* package */ void setHeading(float heading) {
         mMarkerOptions.rotation(heading);
         mStylesSet.add("heading");
     }
@@ -257,7 +256,7 @@ public class KmlStyle {
      * @param xUnits units in which the x value is specified
      * @param yUnits units in which the y value is specified
      */
-    public void setHotSpot(float x, float y, String xUnits, String yUnits) {
+    /* package */ void setHotSpot(float x, float y, String xUnits, String yUnits) {
         float xAnchor = 0.5f;
         float yAnchor = 1.0f;
         // Set x coordinate
@@ -278,7 +277,7 @@ public class KmlStyle {
      *
      * @param colorMode A "random" or "normal" color mode
      */
-    public void setIconColorMode(String colorMode) {
+    /* package */ void setIconColorMode(String colorMode) {
         mIconRandomColorMode = colorMode.equals("random");
         mStylesSet.add("iconColorMode");
     }
@@ -288,7 +287,7 @@ public class KmlStyle {
      *
      * @return True if the color mode is true, false otherwise
      */
-    public boolean isIconRandomColorMode() {
+    /* package */ boolean isIconRandomColorMode() {
         return mIconRandomColorMode;
     }
 
@@ -298,7 +297,7 @@ public class KmlStyle {
      *
      * @param colorMode A "random" or "normal" color mode
      */
-    public void setLineColorMode(String colorMode) {
+    /* package */ void setLineColorMode(String colorMode) {
         mLineRandomColorMode = colorMode.equals("random");
         mStylesSet.add("lineColorMode");
     }
@@ -308,7 +307,7 @@ public class KmlStyle {
      *
      * @return True if the color mode is true, false otherwise
      */
-    public boolean isLineRandomColorMode() {
+    /* package */ boolean isLineRandomColorMode() {
         return mLineRandomColorMode;
     }
 
@@ -318,7 +317,7 @@ public class KmlStyle {
      *
      * @param colorMode A "random" or "normal" color mode
      */
-    public void setPolyColorMode(String colorMode) {
+    /* package */ void setPolyColorMode(String colorMode) {
         mPolyRandomColorMode = colorMode.equals("random");
         mStylesSet.add("polyColorMode");
     }
@@ -328,7 +327,7 @@ public class KmlStyle {
      *
      * @return True if the color mode is true, false otherwise
      */
-    public boolean isPolyRandomColorMode() {
+    /* package */ boolean isPolyRandomColorMode() {
         return mPolyRandomColorMode;
     }
 
@@ -337,7 +336,7 @@ public class KmlStyle {
      *
      * @param color Outline color for a Polyline and a Polygon
      */
-    public void setOutlineColor(String color) {
+    /* package */ void setOutlineColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
         mPolylineOptions.color(Color.parseColor("#" + color));
         mPolygonOptions.strokeColor(Color.parseColor("#" + color));
@@ -349,7 +348,7 @@ public class KmlStyle {
      *
      * @param width Line width for a Polyline and a Polygon
      */
-    public void setWidth(Float width) {
+    /* package */ void setWidth(Float width) {
         mPolylineOptions.width(width);
         mPolygonOptions.strokeWidth(width);
         mStylesSet.add("width");
@@ -360,7 +359,7 @@ public class KmlStyle {
      *
      * @return Balloon Options
      */
-    public HashMap<String, String> getBalloonOptions() {
+    /* package */ HashMap<String, String> getBalloonOptions() {
         return mBalloonOptions;
     }
 
@@ -422,7 +421,7 @@ public class KmlStyle {
      *
      * @return  A new MarkerOption
      */
-    public MarkerOptions getMarkerOptions() {
+    /* package */ MarkerOptions getMarkerOptions() {
         return createMarkerOptions(mMarkerOptions, isIconRandomColorMode(), mMarkerColor);
     }
 
@@ -431,7 +430,7 @@ public class KmlStyle {
      *
      * @return new PolylineOptions
      */
-    public PolylineOptions getPolylineOptions() {
+    /* package */ PolylineOptions getPolylineOptions() {
         return createPolylineOptions(mPolylineOptions);
     }
 
@@ -440,7 +439,7 @@ public class KmlStyle {
      *
      * @return new PolygonOptions
      */
-    public PolygonOptions getPolygonOptions() {
+    /* package */ PolygonOptions getPolygonOptions() {
         return createPolygonOptions(mPolygonOptions, mFill, mOutline);
     }
 
@@ -451,8 +450,7 @@ public class KmlStyle {
      * @param color Color represented as an integer
      * @return Integer representing a random color
      */
-    /* package */
-    static int computeRandomColor(int color) {
+    /* package */ static int computeRandomColor(int color) {
         Random random = new Random();
         int red = Color.red(color);
         int green = Color.green(color);

@@ -94,7 +94,7 @@ public class KmlContainer {
     /**
      * @return HashMap of containers
      */
-    /*package*/ HashMap<KmlPlacemark, Object> getPlacemarks() {
+    /*package*/ HashMap<KmlPlacemark, Object> getPlacemarksHashMap() {
         return mPlacemarks;
     }
 
@@ -104,7 +104,7 @@ public class KmlContainer {
      * @param propertyName property key to find
      * @return value of property found, null if key doesn't exist
      */
-    public String getKmlProperty(String propertyName) {
+    public String getProperty(String propertyName) {
         return mProperties.get(propertyName);
     }
 
@@ -113,7 +113,7 @@ public class KmlContainer {
      *
      * @return true if there are properties, false otherwise
      */
-    public boolean hasKmlProperties() {
+    public boolean hasProperties() {
         return mProperties.size() > 0;
     }
 
@@ -123,7 +123,7 @@ public class KmlContainer {
      * @param keyValue property key to find
      * @return true if key was found, false otherwise
      */
-    public boolean hasKmlProperty(String keyValue) {
+    public boolean hasProperty(String keyValue) {
         return mProperties.containsKey(keyValue);
     }
 
@@ -132,7 +132,7 @@ public class KmlContainer {
      *
      * @return true if there are containers, false otherwise
      */
-    public boolean hasNestedKmlContainers() {
+    public boolean hasContainers() {
         return mContainers.size() > 0;
     }
 
@@ -141,7 +141,7 @@ public class KmlContainer {
      *
      * @return iterable of KmlContainers
      */
-    public Iterable<KmlContainer> getNestedKmlContainers() {
+    public Iterable<KmlContainer> getContainers() {
         return mContainers;
     }
 
@@ -150,7 +150,7 @@ public class KmlContainer {
      *
      * @return iterable of the properties hashmap entries
      */
-    public Iterable getKmlProperties() {
+    public Iterable getProperties() {
         return mProperties.entrySet();
     }
 
@@ -159,7 +159,7 @@ public class KmlContainer {
      *
      * @return iterable of KmlPlacemarks
      */
-    public Iterable<KmlPlacemark> getKmlPlacemarks() {
+    public Iterable<KmlPlacemark> getPlacemarks() {
         return mPlacemarks.keySet();
     }
 
@@ -168,7 +168,7 @@ public class KmlContainer {
      *
      * @return true if there are placemarks, false otherwise
      */
-    public boolean hasKmlPlacemarks() {
+    public boolean hasPlacemarks() {
         return mPlacemarks.size() > 0;
     }
 

@@ -12,13 +12,13 @@ public interface KmlGeometry<T> {
      *
      * @return type of geometry
      */
-    public String getKmlGeometryType();
+    public String getGeometryType();
 
     /**
      * Gets the stored KML Geometry object
      *
      * @return geometry object
      */
-    public T getKmlGeometryObject();
+    public T getGeometryObject();
 
 }

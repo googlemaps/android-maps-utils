@@ -45,8 +45,8 @@ public class KmlPolygonTest extends TestCase {
     public void testGetType() throws Exception {
         kmlPolygon = createRegularPolygon();
         assertNotNull(kmlPolygon);
-        assertNotNull(kmlPolygon.getKmlGeometryType());
-        assertEquals("Polygon", kmlPolygon.getKmlGeometryType());
+        assertNotNull(kmlPolygon.getGeometryType());
+        assertEquals("Polygon", kmlPolygon.getGeometryType());
     }
 
     public void testGetOuterBoundaryCoordinates() throws Exception {
@@ -70,11 +70,11 @@ public class KmlPolygonTest extends TestCase {
     public void testGetKmlGeometryObject() throws Exception {
         kmlPolygon = createRegularPolygon();
         assertNotNull(kmlPolygon);
-        assertNotNull(kmlPolygon.getKmlGeometryObject());
-        assertEquals(kmlPolygon.getKmlGeometryObject().size(), 2);
+        assertNotNull(kmlPolygon.getGeometryObject());
+        assertEquals(kmlPolygon.getGeometryObject().size(), 2);
         kmlPolygon = createOuterPolygon();
         assertNotNull(kmlPolygon);
-        assertNotNull(kmlPolygon.getKmlGeometryObject());
-        assertEquals(kmlPolygon.getKmlGeometryObject().size(), 1);
+        assertNotNull(kmlPolygon.getGeometryObject());
+        assertEquals(kmlPolygon.getGeometryObject().size(), 1);
     }
 }

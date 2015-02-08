@@ -29,7 +29,7 @@ public class KmlPoint implements KmlGeometry<LatLng> {
      * @return type of geometry
      */
     @Override
-    public String getKmlGeometryType() {
+    public String getGeometryType() {
         return GEOMETRY_TYPE;
     }
 
@@ -39,7 +39,7 @@ public class KmlPoint implements KmlGeometry<LatLng> {
      *
      * @return LatLng with the coordinate of the KmlPoint
      */
-    public LatLng getKmlGeometryObject() {
+    public LatLng getGeometryObject() {
         return mCoordinate;
     }
 
