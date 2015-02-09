@@ -44,6 +44,9 @@ public class KmlLayer {
      */
     public KmlLayer(GoogleMap map, InputStream stream)
             throws XmlPullParserException, IOException {
+        if (stream == null) {
+            throw new IllegalArgumentException("KML InputStream cannot be null");
+        }
         mRenderer = new KmlRenderer(map);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
@@ -69,11 +72,8 @@ public class KmlLayer {
 
     /**
      * Adds the KML data to the map
-     *
-     * @throws XmlPullParserException if KML file cannot be parsed
-     * @throws IOException            if KML file cannot be opened
      */
-    public void addDataToLayer() throws IOException, XmlPullParserException {
+    public void addLayer() throws IOException, XmlPullParserException {
         mRenderer.addKmlData();
     }
 
@@ -90,7 +90,7 @@ public class KmlLayer {
      * @return true if there are placemarks, false otherwise
      */
 
-    public boolean hasKmlPlacemarks() {
+    public boolean hasPlacemarks() {
         return mRenderer.hasKmlPlacemarks();
     }
 
@@ -99,7 +99,7 @@ public class KmlLayer {
      *
      * @return iterable of KmlPlacemark objects
      */
-    public Iterable<KmlPlacemark> getKmlPlacemarks() {
+    public Iterable<KmlPlacemark> getPlacemarks() {
         return mRenderer.getKmlPlacemarks();
     }
 
@@ -108,7 +108,7 @@ public class KmlLayer {
      *
      * @return true if there is at least 1 container within the KmlLayer, false otherwise
      */
-    public boolean hasNestedContainers() {
+    public boolean hasContainers() {
         return mRenderer.hasNestedContainers();
     }
 
@@ -117,7 +117,7 @@ public class KmlLayer {
      *
      * @return iterable of KmlContainerInterface objects
      */
-    public Iterable<KmlContainer> getNestedContainers() {
+    public Iterable<KmlContainer> getContainers() {
         return mRenderer.getNestedContainers();
     }
 

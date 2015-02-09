@@ -31,15 +31,15 @@ public class KmlMultiGeometryTest extends TestCase {
     public void testGetKmlGeometryType() throws Exception {
         kmlMultiGeometry = createMultiGeometry();
         assertNotNull(kmlMultiGeometry);
-        assertNotNull(kmlMultiGeometry.getKmlGeometryType());
-        assertEquals("MultiGeometry", kmlMultiGeometry.getKmlGeometryType());
+        assertNotNull(kmlMultiGeometry.getGeometryType());
+        assertEquals("MultiGeometry", kmlMultiGeometry.getGeometryType());
     }
 
     public void testGetGeometry() throws Exception {
         kmlMultiGeometry = createMultiGeometry();
         assertNotNull(kmlMultiGeometry);
-        assertEquals(kmlMultiGeometry.getKmlGeometryObject().size(), 1);
-        KmlLineString lineString = ((KmlLineString) kmlMultiGeometry.getKmlGeometryObject().get(0));
+        assertEquals(kmlMultiGeometry.getGeometryObject().size(), 1);
+        KmlLineString lineString = ((KmlLineString) kmlMultiGeometry.getGeometryObject().get(0));
         assertNotNull(lineString);
     }
 }

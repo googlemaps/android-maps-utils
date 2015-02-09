@@ -40,7 +40,7 @@ public class KmlPlacemark {
      *
      * @return style id
      */
-    public String getStyleID() {
+    public String getStyleId() {
         return mStyle;
     }
 

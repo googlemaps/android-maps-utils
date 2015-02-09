@@ -36,29 +36,29 @@ public class KmlLineStringTest extends TestCase {
     public void testGetType() throws Exception {
         kmlLineString = createSimpleLineString();
         assertNotNull(kmlLineString);
-        assertNotNull(kmlLineString.getKmlGeometryType());
-        assertEquals("LineString", kmlLineString.getKmlGeometryType());
+        assertNotNull(kmlLineString.getGeometryType());
+        assertEquals("LineString", kmlLineString.getGeometryType());
         kmlLineString = createLoopedLineString();
         assertNotNull(kmlLineString);
-        assertNotNull(kmlLineString.getKmlGeometryType());
-        assertEquals("LineString", kmlLineString.getKmlGeometryType());
+        assertNotNull(kmlLineString.getGeometryType());
+        assertEquals("LineString", kmlLineString.getGeometryType());
     }
 
     public void testGetKmlGeometryObject() throws Exception {
         kmlLineString = createSimpleLineString();
         assertNotNull(kmlLineString);
-        assertNotNull(kmlLineString.getKmlGeometryObject());
-        assertEquals(kmlLineString.getKmlGeometryObject().size(), 3);
-        assertEquals(kmlLineString.getKmlGeometryObject().get(0).latitude, 0.0);
-        assertEquals(kmlLineString.getKmlGeometryObject().get(1).latitude, 50.0);
-        assertEquals(kmlLineString.getKmlGeometryObject().get(2).latitude, 90.0);
+        assertNotNull(kmlLineString.getGeometryObject());
+        assertEquals(kmlLineString.getGeometryObject().size(), 3);
+        assertEquals(kmlLineString.getGeometryObject().get(0).latitude, 0.0);
+        assertEquals(kmlLineString.getGeometryObject().get(1).latitude, 50.0);
+        assertEquals(kmlLineString.getGeometryObject().get(2).latitude, 90.0);
         kmlLineString = createLoopedLineString();
         assertNotNull(kmlLineString);
-        assertNotNull(kmlLineString.getKmlGeometryObject());
-        assertEquals(kmlLineString.getKmlGeometryObject().size(), 3);
-        assertEquals(kmlLineString.getKmlGeometryObject().get(0).latitude, 0.0);
-        assertEquals(kmlLineString.getKmlGeometryObject().get(1).latitude, 50.0);
-        assertEquals(kmlLineString.getKmlGeometryObject().get(2).latitude, 0.0);
+        assertNotNull(kmlLineString.getGeometryObject());
+        assertEquals(kmlLineString.getGeometryObject().size(), 3);
+        assertEquals(kmlLineString.getGeometryObject().get(0).latitude, 0.0);
+        assertEquals(kmlLineString.getGeometryObject().get(1).latitude, 50.0);
+        assertEquals(kmlLineString.getGeometryObject().get(2).latitude, 0.0);
 
     }
 }

@@ -35,7 +35,7 @@ public class KmlParserTest extends ActivityTestCase {
                     Color.parseColor("#ffffff"));
             assertEquals(inlineStyle.getPolylineOptions().getColor(),
                     inlineStyle.getPolygonOptions().getStrokeColor());
-            assertEquals(placemark.getGeometry().getKmlGeometryType(), "MultiGeometry");
+            assertEquals(placemark.getGeometry().getGeometryType(), "MultiGeometry");
         }
     }
     
@@ -45,7 +45,7 @@ public class KmlParserTest extends ActivityTestCase {
         mParser.parseKml();
         assertEquals(mParser.getContainers().get(0).getContainerId(), "hasId");
         assertEquals(mParser.getContainers().size(), 1);
-        assertTrue(mParser.getContainers().get(0).hasNestedKmlContainers());
+        assertTrue(mParser.getContainers().get(0).hasContainers());
     }
 
     public void testContainerPlacemarks() throws Exception {
