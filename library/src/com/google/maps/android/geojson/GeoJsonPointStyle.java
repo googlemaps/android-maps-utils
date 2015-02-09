@@ -7,7 +7,9 @@ import java.util.Observable;
 
 /**
  * A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated
- * into a MarkerOptions object.
+ * into a MarkerOptions object. {@see
+ * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html">
+ * MarkerOptions docs</a> for more details about the options.}
  */
 public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 

@@ -6,7 +6,9 @@ import java.util.Observable;
 
 /**
  * A class that allows for GeoJsonLineString objects to be styled and for these styles to be
- * translated into a PolylineOptions object.
+ * translated into a PolylineOptions object. {@see
+ * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/PolylineOptions.html">
+ * PolylineOptions docs</a> for more details about the options.}
  */
 public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
 

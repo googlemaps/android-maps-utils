@@ -6,7 +6,9 @@ import java.util.Observable;
 
 /**
  * A class that allows for GeoJsonPolygon objects to be styled and for these styles to be
- * translated into a PolygonOptions object
+ * translated into a PolygonOptions object. {@see
+ * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/PolygonOptions.html">
+ * PolygonOptions docs</a> for more details about the options.}
  */
 public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
 
