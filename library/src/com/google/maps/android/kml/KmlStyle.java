@@ -199,7 +199,7 @@ import java.util.Random;
      */
     /* package */ void setFillColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
-        mPolygonOptions.fillColor(Color.parseColor("#" + color));
+        mPolygonOptions.fillColor(Color.parseColor("#" + convertColor(color)));
         mStylesSet.add("fillColor");
     }
 
@@ -235,7 +235,10 @@ import java.util.Random;
      */
     private static String convertColor(String color) {
         color = new StringBuilder(color).reverse().toString();
-        return color.substring(6, 8) + color.substring(0, 6);
+        if (color.length() > 6) {
+            color = color.substring(6, 8) + color.substring(0, 6);
+        }
+        return color;
     }
 
     /**
@@ -338,7 +341,7 @@ import java.util.Random;
      */
     /* package */ void setOutlineColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
-        mPolylineOptions.color(Color.parseColor("#" + color));
+        mPolylineOptions.color(Color.parseColor("#" + convertColor(color)));
         mPolygonOptions.strokeColor(Color.parseColor("#" + color));
         mStylesSet.add("outlineColor");
     }
