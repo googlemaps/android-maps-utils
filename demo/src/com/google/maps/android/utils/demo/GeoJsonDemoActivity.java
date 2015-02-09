@@ -1,12 +1,13 @@
 package com.google.maps.android.utils.demo;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geojson.GeoJsonFeature;
 import com.google.maps.android.geojson.GeoJsonLayer;
-import com.google.maps.android.geojson.GeoJsonPolygonStyle;
+import com.google.maps.android.geojson.GeoJsonPoint;
+import com.google.maps.android.geojson.GeoJsonPointStyle;
 
 import org.json.JSONObject;
-
-import android.graphics.Color;
 
 /**
  * Created by juliawong on 12/1/14.
@@ -59,19 +60,18 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             );
             GeoJsonLayer layer = new GeoJsonLayer(getMap(), geoJson);
             layer.addLayer();
-            layer.addLayer();
-            GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
-            polygonStyle.setFillColor(Color.BLUE);
-            layer.setDefaultPolygonStyle(polygonStyle);
+            GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
+            pointStyle.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+            layer.setDefaultPointStyle(pointStyle);
+            layer.addFeature(
+                    new GeoJsonFeature(new GeoJsonPoint(new LatLng(0, 0)), null, null, null));
+            layer.addFeature(
+                    new GeoJsonFeature(new GeoJsonPoint(new LatLng(10, 10)), null, null, null));
             layer.clearLayer();
+            pointStyle = new GeoJsonPointStyle();
+            pointStyle.setTitle("BANANANA!");
+            layer.setDefaultPointStyle(pointStyle);
             layer.addLayer();
-
-            for (GeoJsonFeature feature : layer.getFeatures()) {
-                feature.getGeometry().getType();
-
-            }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
