@@ -93,7 +93,7 @@ public class KMLDemoActivity extends FragmentActivity {
         Returns an XML Parser from a given KML or XML data set and returns as an input stream.
         To change the file destination, change R.raw.<Your file here>
         Raw data is currently being fetched from demo/res/raw folder.
-        To retrieve a file from a URL, uncomment and replace YOUR_URL_HERE with your own :)
+        To retrieve a file from a URL, uncomment and replace YOUR_URL_HERE with your own.
      **********************************/
 
     private XmlPullParser getKMLFile () {
