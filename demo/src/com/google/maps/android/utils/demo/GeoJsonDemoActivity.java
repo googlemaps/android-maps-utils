@@ -9,9 +9,6 @@ import com.google.maps.android.geojson.GeoJsonPointStyle;
 
 import org.json.JSONObject;
 
-/**
- * Created by juliawong on 12/1/14.
- */
 public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     protected int getLayoutId() {
@@ -20,6 +17,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo()  {
+        // TODO: make a demo
         try {
             JSONObject geoJson = new JSONObject(
                     "{ \"type\": \"FeatureCollection\",\n"
