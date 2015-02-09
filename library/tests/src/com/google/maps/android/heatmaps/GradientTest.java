@@ -16,9 +16,9 @@
 
 package com.google.maps.android.heatmaps;
 
-import junit.framework.TestCase;
-
 import android.graphics.Color;
+
+import junit.framework.TestCase;
 
 public class GradientTest extends TestCase {
 
