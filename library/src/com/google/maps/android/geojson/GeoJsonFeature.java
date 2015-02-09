@@ -18,25 +18,25 @@ public class GeoJsonFeature extends Observable implements Observer {
 
     private final HashMap<String, String> mProperties;
 
-    private GeoJsonGeometry mGeoJsonGeometry;
+    private GeoJsonGeometry mGeometry;
 
-    private GeoJsonPointStyle mGeoJsonPointStyle;
+    private GeoJsonPointStyle mPointStyle;
 
-    private GeoJsonLineStringStyle mGeoJsonLineStringStyle;
+    private GeoJsonLineStringStyle mLineStringStyle;
 
-    private GeoJsonPolygonStyle mGeoJsonPolygonStyle;
+    private GeoJsonPolygonStyle mPolygonStyle;
 
     /**
      * Creates a new GeoJsonFeature object
      *
-     * @param GeoJsonGeometry type of geometry to assign to the feature
-     * @param id              common identifier of the feature
-     * @param properties      hashmap of containing properties related to the feature
-     * @param boundingBox     bounding box of the feature
+     * @param geometry    type of geometry to assign to the feature
+     * @param id          common identifier of the feature
+     * @param properties  hashmap of containing properties related to the feature
+     * @param boundingBox bounding box of the feature
      */
-    public GeoJsonFeature(GeoJsonGeometry GeoJsonGeometry, String id,
+    public GeoJsonFeature(GeoJsonGeometry geometry, String id,
             HashMap<String, String> properties, LatLngBounds boundingBox) {
-        mGeoJsonGeometry = GeoJsonGeometry;
+        mGeometry = geometry;
         mId = id;
         mBoundingBox = boundingBox;
         if (properties == null) {
@@ -44,9 +44,6 @@ public class GeoJsonFeature extends Observable implements Observer {
         } else {
             mProperties = properties;
         }
-        mGeoJsonPointStyle = new GeoJsonPointStyle();
-        mGeoJsonLineStringStyle = new GeoJsonLineStringStyle();
-        mGeoJsonPolygonStyle = new GeoJsonPolygonStyle();
     }
 
     /**
@@ -105,19 +102,27 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return style used to render GeoJsonPoints
      */
     public GeoJsonPointStyle getPointStyle() {
-        return mGeoJsonPointStyle;
+        return mPointStyle;
     }
 
     /**
      * Sets the style used to render GeoJsonPoints
      *
-     * @param geoJsonPointStyle style used to render GeoJsonPoints
+     * @param pointStyle style used to render GeoJsonPoints
      */
-    public void setPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
-        mGeoJsonPointStyle.deleteObserver(this);
-        mGeoJsonPointStyle = geoJsonPointStyle;
-        mGeoJsonPointStyle.addObserver(this);
-        checkRedrawFeature(mGeoJsonPointStyle);
+    public void setPointStyle(GeoJsonPointStyle pointStyle) {
+        if (mPointStyle != null) {
+            // Remove observer for previous style
+            mPointStyle.deleteObserver(this);
+        }
+
+        mPointStyle = pointStyle;
+
+        if (mPointStyle != null) {
+            // Add observer for new style and redraw if needed
+            mPointStyle.addObserver(this);
+            checkRedrawFeature(mPointStyle);
+        }
     }
 
     /**
@@ -126,19 +131,27 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return style used to render GeoJsonLineStrings
      */
     public GeoJsonLineStringStyle getLineStringStyle() {
-        return mGeoJsonLineStringStyle;
+        return mLineStringStyle;
     }
 
     /**
      * Sets the style used to render GeoJsonLineStrings
      *
-     * @param geoJsonLineStringStyle style used to render GeoJsonLineStrings
+     * @param lineStringStyle style used to render GeoJsonLineStrings
      */
-    public void setLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
-        mGeoJsonLineStringStyle.deleteObserver(this);
-        mGeoJsonLineStringStyle = geoJsonLineStringStyle;
-        mGeoJsonLineStringStyle.addObserver(this);
-        checkRedrawFeature(mGeoJsonLineStringStyle);
+    public void setLineStringStyle(GeoJsonLineStringStyle lineStringStyle) {
+        if (mLineStringStyle != null) {
+            // Remove observer for previous style
+            mLineStringStyle.deleteObserver(this);
+        }
+
+        mLineStringStyle = lineStringStyle;
+
+        if (mLineStringStyle != null) {
+            // Add observer for new style and redraw if needed
+            mLineStringStyle.addObserver(this);
+            checkRedrawFeature(mLineStringStyle);
+        }
     }
 
     /**
@@ -147,19 +160,27 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return style used to render GeoJsonPolygons
      */
     public GeoJsonPolygonStyle getPolygonStyle() {
-        return mGeoJsonPolygonStyle;
+        return mPolygonStyle;
     }
 
     /**
      * Sets the style used to render GeoJsonPolygons
      *
-     * @param geoJsonPolygonStyle style used to render GeoJsonPolygons
+     * @param polygonStyle style used to render GeoJsonPolygons
      */
-    public void setPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
-        mGeoJsonPolygonStyle.deleteObserver(this);
-        mGeoJsonPolygonStyle = geoJsonPolygonStyle;
-        mGeoJsonPolygonStyle.addObserver(this);
-        checkRedrawFeature(mGeoJsonPolygonStyle);
+    public void setPolygonStyle(GeoJsonPolygonStyle polygonStyle) {
+        if (mPolygonStyle != null) {
+            // Remove observer for previous style
+            mPolygonStyle.deleteObserver(this);
+        }
+
+        mPolygonStyle = polygonStyle;
+
+        if (mPolygonStyle != null) {
+            // Add observer for new style and redraw if needed
+            mPolygonStyle.addObserver(this);
+            checkRedrawFeature(mPolygonStyle);
+        }
     }
 
     /**
@@ -170,7 +191,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param style style to check if a redraw is needed
      */
     private void checkRedrawFeature(GeoJsonStyle style) {
-        if (mGeoJsonGeometry != null && mGeoJsonGeometry.getType()
+        if (mGeometry != null && mGeometry.getType()
                 .matches(style.getGeometryType())) {
             // Don't redraw objects that aren't on the map
             setChanged();
@@ -184,7 +205,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return GeoJsonGeometry
      */
     public GeoJsonGeometry getGeometry() {
-        return mGeoJsonGeometry;
+        return mGeometry;
     }
 
     /**
@@ -193,7 +214,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param geometry GeoJsonGeometry to set
      */
     public void setGeometry(GeoJsonGeometry geometry) {
-        mGeoJsonGeometry = geometry;
+        mGeometry = geometry;
         setChanged();
         notifyObservers();
     }
@@ -213,7 +234,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return true if feature contains geometry object, otherwise null
      */
     public boolean hasGeometry() {
-        return (mGeoJsonGeometry != null);
+        return (mGeometry != null);
     }
 
     /**
@@ -230,10 +251,10 @@ public class GeoJsonFeature extends Observable implements Observer {
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");
         sb.append("\n bounding box=").append(mBoundingBox);
-        sb.append(",\n geometry=").append(mGeoJsonGeometry);
-        sb.append(",\n point style=").append(mGeoJsonPointStyle);
-        sb.append(",\n line string style=").append(mGeoJsonLineStringStyle);
-        sb.append(",\n polygon style=").append(mGeoJsonPolygonStyle);
+        sb.append(",\n geometry=").append(mGeometry);
+        sb.append(",\n point style=").append(mPointStyle);
+        sb.append(",\n line string style=").append(mLineStringStyle);
+        sb.append(",\n polygon style=").append(mPolygonStyle);
         sb.append(",\n id=").append(mId);
         sb.append(",\n properties=").append(mProperties);
         sb.append("\n}\n");
