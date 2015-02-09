@@ -25,7 +25,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         try {
             Log.i("Demo", "Start");
             mMap = getMap();
-            KmlLayer layer = new KmlLayer(getMap(), R.raw.german, getApplicationContext());
+            KmlLayer layer = new KmlLayer(getMap(), R.raw.sample, getApplicationContext());
             layer.addLayer();
             Log.i("Demo", "End");
         } catch (Exception e) {

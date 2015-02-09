@@ -534,16 +534,18 @@ import java.util.Iterator;
         boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
+            createInfoWindow();
         } else if (hasBalloonOptions && hasName) {
             marker.setTitle(placemark.getProperty("name"));
+            createInfoWindow();
         } else if (hasName && hasDescription) {
             marker.setTitle(placemark.getProperty("name"));
             marker.setSnippet(placemark.getProperty("description"));
+            createInfoWindow();
         } else if (hasDescription) {
             marker.setTitle(placemark.getProperty("description"));
+            createInfoWindow();
         }
-        createInfoWindow();
-
     }
 
     /**
