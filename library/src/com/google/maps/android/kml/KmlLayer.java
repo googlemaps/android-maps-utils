@@ -7,9 +7,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -51,7 +55,6 @@ public class KmlLayer {
         mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
                 parser.getContainers(), parser.getGroundOverlays());
     }
-
     /**
      * Creates a new XmlPullParser to allow for the KML file to be parsed
      *
@@ -144,4 +147,6 @@ public class KmlLayer {
     public void setMap(GoogleMap map) {
         mRenderer.setMap(map);
     }
+
+
 }
