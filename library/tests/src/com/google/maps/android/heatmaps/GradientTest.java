@@ -16,9 +16,9 @@
 
 package com.google.maps.android.heatmaps;
 
-import android.graphics.Color;
-
 import junit.framework.TestCase;
+
+import android.graphics.Color;
 
 public class GradientTest extends TestCase {
 
@@ -26,7 +26,6 @@ public class GradientTest extends TestCase {
         int red = Color.RED;
         int blue = Color.BLUE;
         int green = Color.GREEN;
-
 
         // Expect itself
         assertEquals(red, Gradient.interpolateColor(red, red, 0.5f));
