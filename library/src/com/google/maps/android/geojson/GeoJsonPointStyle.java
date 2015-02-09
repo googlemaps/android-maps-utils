@@ -7,7 +7,7 @@ import java.util.Observable;
 
 /**
  * A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated
- * into a MarkerOptions object
+ * into a MarkerOptions object.
  */
 public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
@@ -56,7 +56,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
     /**
      * Gets the Anchor U coordinate of the GeoJsonPoint. Normalized to [0, 1], of the anchor from
-     * the left edge.
+     * the left edge. This is equivalent to the same U value used in {@link
+     * com.google.android.gms.maps.model.MarkerOptions#getAnchorU()}.
      *
      * @return Anchor U coordinate of the GeoJsonPoint
      */
@@ -66,7 +67,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
     /**
      * Gets the Anchor V coordinate of the GeoJsonPoint. Normalized to [0, 1], of the anchor from
-     * the top edge.
+     * the top edge. This is equivalent to the same V value used in {@link
+     * com.google.android.gms.maps.model.MarkerOptions#getAnchorV()}.
      *
      * @return Anchor V coordinate of the GeoJsonPoint
      */
@@ -75,9 +77,11 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the Anchor U and V coordinates of the GeoJsonPoint. The anchor point is specified in the
+     * Sets the Anchor U and V coordinates of the GeoJsonPoint. The anchor point is specified in
+     * the
      * continuous space [0.0, 1.0] x [0.0, 1.0], where (0, 0) is the top-left corner of the image,
-     * and (1, 1) is the bottom-right corner.
+     * and (1, 1) is the bottom-right corner. The U & V values are the same U & V values used in
+     * {@link com.google.android.gms.maps.model.MarkerOptions#anchor(float, float)} ()}.
      *
      * @param anchorU Anchor U coordinate of the GeoJsonPoint
      * @param anchorV Anchor V coordinate of the GeoJsonPoint
@@ -146,7 +150,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
     /**
      * Gets the info window anchor U coordinate of the GeoJsonPoint. Normalized to [0, 1], of the
-     * info window anchor from the left edge.
+     * info window anchor from the left edge. This is equivalent to the same U value used in {@link
+     * com.google.android.gms.maps.model.MarkerOptions#getInfoWindowAnchorU()}.
      *
      * @return info window anchor U coordinate of the GeoJsonPoint
      */
@@ -156,7 +161,8 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
     /**
      * Gets the info window anchor V coordinate of the GeoJsonPoint. Normalized to [0, 1], of the
-     * info window anchor from the top edge
+     * info window anchor from the top edge. This is equivalent to the same V value used in {@link
+     * com.google.android.gms.maps.model.MarkerOptions#getInfoWindowAnchorV()}.
      *
      * @return info window anchor V coordinate of the GeoJsonPoint
      */
@@ -165,8 +171,10 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     }
 
     /**
-     * Sets the info window anchor U and V coordinates of the GeoJsonPoint. This is specified in the
-     * same coordinate system as the anchor.
+     * Sets the info window anchor U and V coordinates of the GeoJsonPoint. This is specified in
+     * the
+     * same coordinate system as the anchor. The U & V values are the same U & V values used in
+     * {@link com.google.android.gms.maps.model.MarkerOptions#infoWindowAnchor(float, float)}.
      *
      * @param infoWindowAnchorU info window anchor U coordinate of the GeoJsonPoint
      * @param infoWindowAnchorV info window anchor V coordinate of the GeoJsonPoint

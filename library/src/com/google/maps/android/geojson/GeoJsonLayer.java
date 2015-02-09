@@ -19,16 +19,15 @@ import java.util.HashMap;
  * data.
  *
  * To create a new GeoJsonLayer from a resource stored locally
- * {@code GeoJsonLayer layer =
- * new GeoJsonLayer(getMap(), R.raw.resource, getApplicationContext());
+ * {@code <pre>GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.resource, getApplicationContext());
  * layer.addLayer();
- * layer.removeLayer();}
+ * layer.removeLayer();</pre>}
  *
  * To render the imported GeoJSON data onto the layer
- * {@code layer.addLayer();}
+ * {@code <pre>layer.addLayer();}</pre>
  *
  * To remove the rendered data from the layer
- * {@code layer.clearLayer();}
+ * {@code <pre>layer.clearLayer();</pre>}
  */
 public class GeoJsonLayer {
 
