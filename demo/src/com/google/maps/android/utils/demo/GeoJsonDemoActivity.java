@@ -58,13 +58,13 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                             + "     }"
             );
             GeoJsonLayer layer = new GeoJsonLayer(getMap(), geoJson);
-            layer.addDataToLayer();
-            layer.addDataToLayer();
+            layer.addLayer();
+            layer.addLayer();
             GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
             polygonStyle.setFillColor(Color.BLUE);
             layer.setDefaultPolygonStyle(polygonStyle);
             layer.clearLayer();
-            layer.addDataToLayer();
+            layer.addLayer();
 
             for (GeoJsonFeature feature : layer.getFeatures()) {
                 feature.getGeometry().getType();

@@ -27,13 +27,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
         try {
             Log.i("Demo", "Start");
             mMap = getMap();
-            KmlLayer layer = new KmlLayer(getMap(), R.raw.egypt, getApplicationContext());
-                for (KmlContainer container : layer.getNestedContainers()) {
-                    for (Object property : ) {
-                        container.get
-
-                    }
-                }
+            KmlLayer layer = new KmlLayer(getMap(), R.raw.german, getApplicationContext());
+            layer.addLayer();
             Log.i("Demo", "End");
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());

@@ -32,7 +32,7 @@ public class KmlLayer {
      */
     public KmlLayer(GoogleMap map, int resourceId, Context context)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId));
+        this(map, context.getResources().openRawResource(resourceId), context);
     }
 
     /**
@@ -42,12 +42,12 @@ public class KmlLayer {
      * @param stream InputStream containing KML file
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, InputStream stream)
+    public KmlLayer(GoogleMap map, InputStream stream, Context context)
             throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        mRenderer = new KmlRenderer(map);
+        mRenderer = new KmlRenderer(map, context);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();

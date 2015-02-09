@@ -12,12 +12,21 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.R;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.LruCache;
+import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +40,7 @@ import java.util.Iterator;
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
-/* package */ class KmlRenderer {
+/* package */ class KmlRenderer extends FragmentActivity {
 
     private static final String LOG_TAG = "KmlRenderer";
 
@@ -63,7 +72,10 @@ import java.util.Iterator;
 
     private boolean mGroundOverlayImagesDownloaded;
 
-    /* package */ KmlRenderer(GoogleMap map) {
+    private Context mContext;
+
+    /* package */ KmlRenderer(GoogleMap map, Context context) {
+        mContext = context;
         mMap = map;
         mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<String>();
@@ -515,7 +527,7 @@ import java.util.Iterator;
      * @param style Style to apply
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker,
-            KmlPlacemark placemark) {
+            final KmlPlacemark placemark) {
         boolean hasName = placemark.hasProperty("name");
         boolean hasDescription = placemark.hasProperty("description");
         boolean hasBalloonOptions = style.hasBalloonStyle();
@@ -530,6 +542,32 @@ import java.util.Iterator;
         } else if (hasDescription) {
             marker.setTitle(placemark.getProperty("description"));
         }
+        createInfoWindow();
+
+    }
+
+    /**
+     * Creates a new InfoWindowAdapter and sets text if marker snippet or title is set. This allows
+     * the info window to have custom HTML.
+     */
+    private void createInfoWindow() {
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            public View getInfoContents(Marker arg0) {
+                View view =  LayoutInflater.from(mContext).inflate(R.layout.info_window, null);
+                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
+                if (arg0.getSnippet() != null) {
+                    infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
+                } else {
+                    infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
+                }
+                return view;
+            }
+        });
     }
 
     /**
