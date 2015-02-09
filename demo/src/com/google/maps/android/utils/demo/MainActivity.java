@@ -29,7 +29,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("Heatmaps", HeatmapsDemoActivity.class);
         addDemo("Heatmaps with Places API", HeatmapsPlacesDemoActivity.class);
         addDemo("KML Layer Overlay", KMLDemoActivity.class);
-        addDemo("Geo JSON Layer Overlay", GeoJSONDemoActivity.class);
+        addDemo("JSON Layer Overlay", JSONDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
