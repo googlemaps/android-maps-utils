@@ -116,16 +116,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     private static float getRotation(XmlPullParser parser)
             throws IOException, XmlPullParserException {
-        float rotation;
-        float parsedRotation = Float.parseFloat(parser.nextText());
-        if (parsedRotation > 0.0 && parsedRotation <= 180.0) {
-            rotation = parsedRotation + 180;
-        } else if (parsedRotation < 0.0 && parsedRotation >= -180.0) {
-            rotation = Math.abs(parsedRotation);
-        } else {
-            rotation = parsedRotation;
-        }
-        return rotation;
+        return -Float.parseFloat(parser.nextText());
     }
 
     /**
