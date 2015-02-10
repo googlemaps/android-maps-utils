@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+        <name>PolygonStyle.kml</name>
+        <open>1</open>
+        <Style id="examplePolyStyle">
+            <PolyStyle>
+                <color>ff0000cc</color>
+                <colorMode>random</colorMode>
+            </PolyStyle>
+        </Style>
+        <Placemark>
+            <name>hollow box</name>
+            <styleUrl>#examplePolyStyle</styleUrl>
+            <Polygon>
+                <extrude>1</extrude>
+                <altitudeMode>relativeToGround</altitudeMode>
+                <outerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>
+                            -122.3662784465226,37.81884427772081,30
+                            -122.3652480684771,37.81926777010555,30
+                            -122.365640222455,37.81986126286519,30
+                            -122.36666937925,37.81942987753481,30
+                            -122.3662784465226,37.81884427772081,30
+                        </coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+                <innerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>
+                            -122.366212593918,37.81897719083808,30
+                            -122.3654241733188,37.81929450992014,30
+                            -122.3657048517827,37.81973175302663,30
+                            -122.3664882465854,37.81940249291773,30
+                            -122.366212593918,37.81897719083808,30
+                        </coordinates>
+                    </LinearRing>
+                </innerBoundaryIs>
+            </Polygon>
+        </Placemark>
+    </Document>
+</kml>

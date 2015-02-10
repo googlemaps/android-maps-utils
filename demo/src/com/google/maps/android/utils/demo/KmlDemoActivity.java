@@ -25,7 +25,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
         try {
             Log.i("Demo", "Start");
             mMap = getMap();
-            new DownloadKmlFile("http://www.touroflimassol.com/TourOfLimassol.kml").execute();
+            KmlLayer layer = new KmlLayer(getMap(), R.raw.sample, getApplicationContext());
+            layer.addLayer();
             Log.i("Demo", "End");
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
@@ -64,7 +65,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
         @Override
         protected void onPostExecute(byte[] byteArr) {
             try {
-                KmlLayer layer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr));
+                KmlLayer layer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
+                        getApplicationContext());
                 layer.addLayer();
             } catch (XmlPullParserException e) {
                 e.printStackTrace();

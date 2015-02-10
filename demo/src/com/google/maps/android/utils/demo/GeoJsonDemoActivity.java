@@ -72,8 +72,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             pointStyle.setTitle("BANANANA!");
             layer.setDefaultPointStyle(pointStyle);
             layer.addLayer();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
