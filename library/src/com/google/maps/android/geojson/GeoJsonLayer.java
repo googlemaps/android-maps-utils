@@ -126,7 +126,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Adds a GeoJsonFeature to the layer. If the point, linestring or poylgon style is set to
+     * Adds a GeoJsonFeature to the layer. If the point, linestring or polygon style is set to
      * null, the relevant default styles are applied.
      *
      * @param feature GeoJsonFeature to add to the layer
