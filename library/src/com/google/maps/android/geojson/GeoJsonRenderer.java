@@ -117,14 +117,12 @@ import java.util.Set;
      */
     /* package */ void removeLayerFromMap() {
         for (GeoJsonFeature feature : mFeatures.keySet()) {
-            if (mFeatures.containsKey(feature)) {
-                removeFromMap(mFeatures.get(feature));
-                feature.deleteObserver(this);
-                // Set styles to null
-                feature.setPointStyle(null);
-                feature.setLineStringStyle(null);
-                feature.setPolygonStyle(null);
-            }
+            removeFromMap(mFeatures.get(feature));
+            feature.deleteObserver(this);
+            // Set styles to null
+            feature.setPointStyle(null);
+            feature.setLineStringStyle(null);
+            feature.setPolygonStyle(null);
         }
     }
 
