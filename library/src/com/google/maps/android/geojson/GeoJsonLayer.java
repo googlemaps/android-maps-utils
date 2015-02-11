@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 /**
- * A class that allows the developer import GeoJSON data, style it and interact with the imported
+ * A class that allows the developer import GeoJSON, style it and interact with the imported
  * data.
  *
  * To create a new GeoJsonLayer from a resource stored locally
