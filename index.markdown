@@ -16,6 +16,7 @@ The library is under heavy development, but ready for use. Check the [issue trac
 ## Features/Overview
 
 <img src="bubblemarker.png" style="float: right">
+  * **GeoJSON** &mdash; displays and styles GeoJSON data
 
   * **Marker clustering** &mdash; handles the display of a large number of points
 
