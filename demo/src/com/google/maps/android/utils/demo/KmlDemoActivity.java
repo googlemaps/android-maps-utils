@@ -3,6 +3,7 @@ package com.google.maps.android.utils.demo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.kml.KmlContainer;
+import com.google.maps.android.kml.KmlGroundOverlay;
 import com.google.maps.android.kml.KmlLayer;
 import com.google.maps.android.kml.KmlPlacemark;
 import com.google.maps.android.kml.KmlPolygon;
@@ -31,16 +32,14 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     public void startDemo () {
         try {
-            Log.i("Demo", "Start");
             KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.point, getApplicationContext());
             kmlLayer.addLayer();
             KmlContainer container = kmlLayer.getContainers().iterator().next();
             KmlPlacemark placemark = container.getPlacemarks().iterator().next();
-           KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+            KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
             polygon.getOuterBoundaryCoordinates().get(0);
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
             polygon.getOuterBoundaryCoordinates().get(0), 18));
-            Log.i("Demo", "End");
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }

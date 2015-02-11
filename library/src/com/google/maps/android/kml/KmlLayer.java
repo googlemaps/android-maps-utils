@@ -23,7 +23,7 @@ public class KmlLayer {
     private final KmlRenderer mRenderer;
 
     /**
-     * Creates a new KmlLayer object
+     * Creates a new KmlLayer object - addLayer() must be called to trigger rendering onto a map.
      *
      * @param map        GoogleMap object
      * @param resourceId Raw resource KML file

@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.GroundOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -147,8 +148,8 @@ public class KmlContainer {
      *
      * @return iterable of the properties hashmap entries
      */
-    public Iterable<Map.Entry<String, String>> getProperties() {
-        return mProperties.entrySet();
+    public Iterable<String> getProperties() {
+        return mProperties.keySet();
     }
 
     /**

@@ -4,7 +4,9 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a KML Ground Overlay
@@ -67,8 +69,8 @@ public class KmlGroundOverlay {
      *
      * @return Iterable of the properties
      */
-    public Iterable getProperties() {
-        return mProperties.entrySet();
+    public Iterable<String> getProperties() {
+        return mProperties.keySet();
     }
 
     /**
