@@ -20,14 +20,14 @@ import java.util.HashMap;
  *
  * To create a new GeoJsonLayer from a resource stored locally
  * {@code GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.resource, getApplicationContext());
- * layer.addLayer();
+ * layer.addLayerToMap();
  * layer.removeLayer();}
  *
  * To render the imported GeoJSON data onto the layer
- * {@code layer.addLayer();}
+ * {@code layer.addLayerToMap();}
  *
  * To remove the rendered data from the layer
- * {@code layer.clearLayer();}
+ * {@code layer.removeLayerFromMap();}
  */
 public class GeoJsonLayer {
 
@@ -40,6 +40,8 @@ public class GeoJsonLayer {
     private GeoJsonPolygonStyle mDefaultPolygonStyle;
 
     private LatLngBounds mBoundingBox;
+
+    private boolean mIsLayerOnMap;
 
     /**
      * Creates a new GeoJsonLayer object
@@ -55,6 +57,7 @@ public class GeoJsonLayer {
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mBoundingBox = null;
+        mIsLayerOnMap = false;
         GeoJsonParser parser = new GeoJsonParser(geoJsonFile);
         // Assign GeoJSON bounding box for FeatureCollection
         mBoundingBox = parser.getBoundingBox();
@@ -119,9 +122,12 @@ public class GeoJsonLayer {
      * styles are applied if the features haven't been previously added to the layer or if the
      * layer has been cleared.
      */
-    public void addLayer() {
-        for (GeoJsonFeature feature : mRenderer.getFeatures()) {
-            addFeature(feature);
+    public void addLayerToMap() {
+        if (!mIsLayerOnMap) {
+            for (GeoJsonFeature feature : mRenderer.getFeatures()) {
+                addFeature(feature);
+            }
+            mIsLayerOnMap = true;
         }
     }
 
@@ -177,8 +183,20 @@ public class GeoJsonLayer {
      * Clears all of the GeoJsonFeatures from the layer. All styles are removed from the
      * GeoJsonFeatures.
      */
-    public void clearLayer() {
-        mRenderer.removeLayerFromMap();
+    public void removeLayerFromMap() {
+        if (mIsLayerOnMap) {
+            mRenderer.removeLayerFromMap();
+            mIsLayerOnMap = false;
+        }
+    }
+
+    /**
+     * Get whether the layer is on the map
+     *
+     * @return true if the layer is on the map, false otherwise
+     */
+    public boolean isLayerOnMap() {
+        return mIsLayerOnMap;
     }
 
     /**

@@ -122,7 +122,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 mLayer = new GeoJsonLayer(getMap(), jsonObject);
                 // Add the layer onto the map
                 addColorsToMarkers();
-                mLayer.addLayer();
+                mLayer.addLayerToMap();
             }
         }
 
