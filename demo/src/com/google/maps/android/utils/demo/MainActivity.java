@@ -10,8 +10,6 @@ import android.widget.Button;
 public class MainActivity extends Activity implements View.OnClickListener {
     private ViewGroup mListView;
 
-    //Comment to see if I can push to the repository
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0-rc4'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 
@@ -16,13 +16,13 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:6.+'
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
 }
 
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "21.0.1"
+    buildToolsVersion "21.1.2"
 
     sourceSets {
         main {
