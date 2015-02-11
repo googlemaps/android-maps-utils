@@ -19,7 +19,7 @@ public class KmlLayer {
     private final KmlRenderer mRenderer;
 
     /**
-     * Creates a new KmlLayer object - addLayer() must be called to trigger rendering onto a map.
+     * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
      * @param map        GoogleMap object
      * @param resourceId Raw resource KML file
@@ -69,14 +69,14 @@ public class KmlLayer {
     /**
      * Adds the KML data to the map
      */
-    public void addLayer() throws IOException, XmlPullParserException {
+    public void addLayerToMap() throws IOException, XmlPullParserException {
         mRenderer.addLayerToMap();
     }
 
     /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
-    public void clearLayer() {
+    public void removeLayerFromMap() {
         mRenderer.removeLayerFromMap();
     }
 
