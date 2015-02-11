@@ -22,11 +22,11 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     private final static String mLogTag = "GeoJsonDemo";
 
-    private GeoJsonLayer mLayer;
-
     // GeoJSON file to download
     private final String mGeoJsonUrl
             = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+
+    private GeoJsonLayer mLayer;
 
     protected int getLayoutId() {
         return R.layout.geojson_demo;
@@ -40,17 +40,19 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     }
 
     /**
-     * Adds a point style to all features to change the color of the marker based on its magnitude property
+     * Adds a point style to all features to change the color of the marker based on its magnitude
+     * property
      */
     private void addColorsToMarkers() {
         // Iterate over all the features stored in the layer
         for (GeoJsonFeature feature : mLayer.getFeatures()) {
             // Check if the magnitude property exists
-            if (feature.hasProperty("mag")) {
+            if (feature.hasProperty("mag") && feature.hasProperty("place")) {
                 double magnitude = Double.parseDouble(feature.getProperty("mag"));
 
                 // Get the icon for the feature
-                BitmapDescriptor pointIcon = BitmapDescriptorFactory.defaultMarker(magnitudeToColor(magnitude));
+                BitmapDescriptor pointIcon = BitmapDescriptorFactory
+                        .defaultMarker(magnitudeToColor(magnitude));
 
                 // Create a new point style
                 GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
@@ -82,6 +84,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     }
 
     private class DownloadGeoJsonFile extends AsyncTask<String, Void, JSONObject> {
+
         @Override
         protected JSONObject doInBackground(String... params) {
             InputStream stream = null;
@@ -118,8 +121,8 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 // Create a new GeoJsonLayer, pass in downloaded GeoJSON file as JSONObject
                 mLayer = new GeoJsonLayer(getMap(), jsonObject);
                 // Add the layer onto the map
-                mLayer.addLayer();
                 addColorsToMarkers();
+                mLayer.addLayer();
             }
         }
 
