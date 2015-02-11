@@ -80,10 +80,6 @@ public class KmlContainer {
         return mContainerId;
     }
 
-    /*package*/ ArrayList<KmlContainer> getNestedContainers() {
-        return mContainers;
-    }
-
     /**
      * Gets a style based on an ID
      */

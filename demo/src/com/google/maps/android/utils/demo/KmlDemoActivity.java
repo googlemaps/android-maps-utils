@@ -1,12 +1,20 @@
 package com.google.maps.android.utils.demo;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.kml.KmlContainer;
 import com.google.maps.android.kml.KmlLayer;
+import com.google.maps.android.kml.KmlPlacemark;
+import com.google.maps.android.kml.KmlPolygon;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,9 +32,14 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             Log.i("Demo", "Start");
-            mMap = getMap();
-            KmlLayer layer = new KmlLayer(getMap(), R.raw.sample, getApplicationContext());
-            layer.addLayer();
+            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.point, getApplicationContext());
+            kmlLayer.addLayer();
+            KmlContainer container = kmlLayer.getContainers().iterator().next();
+            KmlPlacemark placemark = container.getPlacemarks().iterator().next();
+           KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+            polygon.getOuterBoundaryCoordinates().get(0);
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
+            polygon.getOuterBoundaryCoordinates().get(0), 18));
             Log.i("Demo", "End");
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());

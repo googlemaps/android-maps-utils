@@ -234,11 +234,15 @@ import java.util.Random;
      * @return Color of the form AARRGGBB
      */
     private static String convertColor(String color) {
-        color = new StringBuilder(color).reverse().toString();
+        String newColor;
         if (color.length() > 6) {
-            color = color.substring(6, 8) + color.substring(0, 6);
+            newColor = color.substring(0, 2) + color.substring(6, 8)
+                    + color.substring(4,6)+ color.substring(2, 4);
+        } else {
+            newColor = color.substring(4,6) + color.substring(2,4) +
+                    color.substring(0,2);
         }
-        return color;
+        return newColor;
     }
 
     /**
