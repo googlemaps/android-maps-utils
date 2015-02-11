@@ -27,6 +27,14 @@ import java.util.Set;
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
+    private boolean mLayerOnMap;
+
+    private GeoJsonPointStyle mDefaultPointStyle;
+
+    private GeoJsonLineStringStyle mDefaultLineStringStyle;
+
+    private GeoJsonPolygonStyle mDefaultPolygonStyle;
+
     /**
      * Value is a Marker, Polyline, Polygon or an array of these that have been created from the
      * corresponding key
@@ -43,6 +51,14 @@ import java.util.Set;
     /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
         mMap = map;
         mFeatures = features;
+        mLayerOnMap = false;
+        mDefaultPointStyle = new GeoJsonPointStyle();
+        mDefaultLineStringStyle = new GeoJsonLineStringStyle();
+        mDefaultPolygonStyle = new GeoJsonPolygonStyle();
+    }
+
+    /* package */ boolean isLayerOnMap() {
+        return mLayerOnMap;
     }
 
     /**
@@ -80,8 +96,17 @@ import java.util.Set;
      * @param map GoogleMap to place GeoJsonFeature objects on
      */
     /* package */ void setMap(GoogleMap map) {
-        for (GeoJsonFeature feature : mFeatures.keySet()) {
+        for (GeoJsonFeature feature : getFeatures()) {
             redrawFeatureToMap(feature, map);
+        }
+    }
+
+    /* package */ void addLayerToMap() {
+        if (!mLayerOnMap) {
+            mLayerOnMap = true;
+            for (GeoJsonFeature feature : getFeatures()) {
+                addFeature(feature);
+            }
         }
     }
 
@@ -100,14 +125,31 @@ import java.util.Set;
      * @param feature feature to add to the map
      */
     /* package */ void addFeature(GeoJsonFeature feature) {
-        feature.addObserver(this);
         Object mapObject = null;
-        if (mFeatures.containsKey(feature)) {
-            // Remove current map objects before adding new ones
-            removeFromMap(mFeatures.get(feature));
-        }
-        if (feature.hasGeometry()) {
-            mapObject = addFeatureToMap(feature, feature.getGeometry());
+
+        if (mLayerOnMap) {
+            // Apply default styles
+            if (feature.getPointStyle() == null) {
+                feature.setPointStyle(mDefaultPointStyle);
+            }
+            if (feature.getLineStringStyle() == null) {
+                feature.setLineStringStyle(mDefaultLineStringStyle);
+            }
+            if (feature.getPolygonStyle() == null) {
+                feature.setPolygonStyle(mDefaultPolygonStyle);
+            }
+
+            feature.addObserver(this);
+
+            if (mFeatures.containsKey(feature)) {
+                // Remove current map objects before adding new ones
+                removeFromMap(mFeatures.get(feature));
+            }
+
+            if (feature.hasGeometry()) {
+                // Create new map object
+                mapObject = addFeatureToMap(feature, feature.getGeometry());
+            }
         }
         mFeatures.put(feature, mapObject);
     }
@@ -116,13 +158,18 @@ import java.util.Set;
      * Removes all GeoJsonFeature objects stored in the mFeatures hashmap from the map
      */
     /* package */ void removeLayerFromMap() {
-        for (GeoJsonFeature feature : mFeatures.keySet()) {
-            removeFromMap(mFeatures.get(feature));
-            feature.deleteObserver(this);
-            // Set styles to null
-            feature.setPointStyle(null);
-            feature.setLineStringStyle(null);
-            feature.setPolygonStyle(null);
+        if (mLayerOnMap) {
+            for (GeoJsonFeature feature : mFeatures.keySet()) {
+                removeFromMap(mFeatures.get(feature));
+
+                feature.deleteObserver(this);
+
+                // Clear styles
+                feature.setPointStyle(null);
+                feature.setLineStringStyle(null);
+                feature.setPolygonStyle(null);
+            }
+            mLayerOnMap = false;
         }
     }
 
@@ -137,6 +184,63 @@ import java.util.Set;
             removeFromMap(mFeatures.remove(feature));
             feature.deleteObserver(this);
         }
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonPoints
+     *
+     * @return default style used to render GeoJsonPoints
+     */
+    /* package */ GeoJsonPointStyle getDefaultPointStyle() {
+        return mDefaultPointStyle;
+    }
+
+    /**
+     * Sets the default style to use when rendering GeoJsonPoints. This style is only applied to
+     * GeoJsonPoints that are added to the layer after this method is called.
+     *
+     * @param pointStyle to set as the default style for GeoJsonPoints
+     */
+    /* package */ void setDefaultPointStyle(GeoJsonPointStyle pointStyle) {
+        mDefaultPointStyle = pointStyle;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonLineStrings
+     *
+     * @return default style used to render GeoJsonLineStrings
+     */
+    /* package */ GeoJsonLineStringStyle getDefaultLineStringStyle() {
+        return mDefaultLineStringStyle;
+    }
+
+    /**
+     * Sets the default style to use when rendering GeoJsonLineStrings. This style is only applied
+     * to GeoJsonLineStrings that are added to the layer after this method is called.
+     *
+     * @param lineStringStyle to set as the default style for GeoJsonLineStrings
+     */
+    /* package */ void setDefaultLineStringStyle(GeoJsonLineStringStyle lineStringStyle) {
+        mDefaultLineStringStyle = lineStringStyle;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonPolygons
+     *
+     * @return default style used to render GeoJsonPolygons
+     */
+    /* package */ GeoJsonPolygonStyle getDefaultPolygonStyle() {
+        return mDefaultPolygonStyle;
+    }
+
+    /**
+     * Sets the default style to use when rendering GeoJsonPolygons. This style is only applied to
+     * GeoJsonPolygons that are added to the layer after this method is called.
+     *
+     * @param polygonStyle to set as the default style for GeoJsonPolygons
+     */
+    /* package */ void setDefaultPolygonStyle(GeoJsonPolygonStyle polygonStyle) {
+        mDefaultPolygonStyle = polygonStyle;
     }
 
     /**

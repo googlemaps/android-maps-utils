@@ -1,12 +1,12 @@
 package com.google.maps.android.geojson;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,15 +33,7 @@ public class GeoJsonLayer {
 
     private final GeoJsonRenderer mRenderer;
 
-    private GeoJsonPointStyle mDefaultPointStyle;
-
-    private GeoJsonLineStringStyle mDefaultLineStringStyle;
-
-    private GeoJsonPolygonStyle mDefaultPolygonStyle;
-
     private LatLngBounds mBoundingBox;
-
-    private boolean mIsLayerOnMap;
 
     /**
      * Creates a new GeoJsonLayer object
@@ -53,11 +45,8 @@ public class GeoJsonLayer {
         if (geoJsonFile == null) {
             throw new IllegalArgumentException("GeoJSON file cannot be null");
         }
-        mDefaultPointStyle = new GeoJsonPointStyle();
-        mDefaultLineStringStyle = new GeoJsonLineStringStyle();
-        mDefaultPolygonStyle = new GeoJsonPolygonStyle();
+
         mBoundingBox = null;
-        mIsLayerOnMap = false;
         GeoJsonParser parser = new GeoJsonParser(geoJsonFile);
         // Assign GeoJSON bounding box for FeatureCollection
         mBoundingBox = parser.getBoundingBox();
@@ -123,12 +112,7 @@ public class GeoJsonLayer {
      * layer has been cleared.
      */
     public void addLayerToMap() {
-        if (!mIsLayerOnMap) {
-            for (GeoJsonFeature feature : mRenderer.getFeatures()) {
-                addFeature(feature);
-            }
-            mIsLayerOnMap = true;
-        }
+        mRenderer.addLayerToMap();
     }
 
     /**
@@ -138,15 +122,8 @@ public class GeoJsonLayer {
      * @param feature GeoJsonFeature to add to the layer
      */
     public void addFeature(GeoJsonFeature feature) {
-        // Check if no style and apply default styles
-        if (feature.getPointStyle() == null) {
-            feature.setPointStyle(mDefaultPointStyle);
-        }
-        if (feature.getLineStringStyle() == null) {
-            feature.setLineStringStyle(mDefaultLineStringStyle);
-        }
-        if (feature.getPolygonStyle() == null) {
-            feature.setPolygonStyle(mDefaultPolygonStyle);
+        if (feature == null) {
+            throw new IllegalArgumentException("Feature cannot be null");
         }
         mRenderer.addFeature(feature);
     }
@@ -157,6 +134,9 @@ public class GeoJsonLayer {
      * @param feature feature to remove
      */
     public void removeFeature(GeoJsonFeature feature) {
+        if (feature == null) {
+            throw new IllegalArgumentException("Feature cannot be null");
+        }
         mRenderer.removeFeature(feature);
     }
 
@@ -184,10 +164,7 @@ public class GeoJsonLayer {
      * GeoJsonFeatures.
      */
     public void removeLayerFromMap() {
-        if (mIsLayerOnMap) {
-            mRenderer.removeLayerFromMap();
-            mIsLayerOnMap = false;
-        }
+        mRenderer.removeLayerFromMap();
     }
 
     /**
@@ -196,7 +173,7 @@ public class GeoJsonLayer {
      * @return true if the layer is on the map, false otherwise
      */
     public boolean isLayerOnMap() {
-        return mIsLayerOnMap;
+        return mRenderer.isLayerOnMap();
     }
 
     /**
@@ -205,20 +182,20 @@ public class GeoJsonLayer {
      * @return default style used to render GeoJsonPoints
      */
     public GeoJsonPointStyle getDefaultPointStyle() {
-        return mDefaultPointStyle;
+        return mRenderer.getDefaultPointStyle();
     }
 
     /**
      * Sets the default style to use when rendering GeoJsonPoints. This style is only applied to
-     * GeoJsonPoints that are added after this method is called.
+     * GeoJsonPoints that are added to the layer after this method is called.
      *
-     * @param geoJsonPointStyle to set as the default style for GeoJsonPoints
+     * @param pointStyle to set as the default style for GeoJsonPoints
      */
-    public void setDefaultPointStyle(GeoJsonPointStyle geoJsonPointStyle) {
-        if (geoJsonPointStyle == null) {
+    public void setDefaultPointStyle(GeoJsonPointStyle pointStyle) {
+        if (pointStyle == null) {
             throw new IllegalArgumentException("Default style cannot be null");
         }
-        mDefaultPointStyle = geoJsonPointStyle;
+        mRenderer.setDefaultPointStyle(pointStyle);
     }
 
     /**
@@ -227,20 +204,20 @@ public class GeoJsonLayer {
      * @return default style used to render GeoJsonLineStrings
      */
     public GeoJsonLineStringStyle getDefaultLineStringStyle() {
-        return mDefaultLineStringStyle;
+        return mRenderer.getDefaultLineStringStyle();
     }
 
     /**
      * Sets the default style to use when rendering GeoJsonLineStrings. This style is only applied
-     * to GeoJsonLineStrings that are added after this method is called.
+     * to GeoJsonLineStrings that are added to the layer after this method is called.
      *
-     * @param geoJsonLineStringStyle to set as the default style for GeoJsonLineStrings
+     * @param lineStringStyle to set as the default style for GeoJsonLineStrings
      */
-    public void setDefaultLineStringStyle(GeoJsonLineStringStyle geoJsonLineStringStyle) {
-        if (geoJsonLineStringStyle == null) {
+    public void setDefaultLineStringStyle(GeoJsonLineStringStyle lineStringStyle) {
+        if (lineStringStyle == null) {
             throw new IllegalArgumentException("Default style cannot be null");
         }
-        mDefaultLineStringStyle = geoJsonLineStringStyle;
+        mRenderer.setDefaultLineStringStyle(lineStringStyle);
     }
 
     /**
@@ -249,20 +226,20 @@ public class GeoJsonLayer {
      * @return default style used to render GeoJsonPolygons
      */
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
-        return mDefaultPolygonStyle;
+        return mRenderer.getDefaultPolygonStyle();
     }
 
     /**
      * Sets the default style to use when rendering GeoJsonPolygons. This style is only applied to
-     * GeoJsonPolygons that are added after this method is called.
+     * GeoJsonPolygons that are added to the layer after this method is called.
      *
-     * @param geoJsonPolygonStyle to set as the default style for GeoJsonPolygons
+     * @param polygonStyle to set as the default style for GeoJsonPolygons
      */
-    public void setDefaultPolygonStyle(GeoJsonPolygonStyle geoJsonPolygonStyle) {
-        if (geoJsonPolygonStyle == null) {
+    public void setDefaultPolygonStyle(GeoJsonPolygonStyle polygonStyle) {
+        if (polygonStyle == null) {
             throw new IllegalArgumentException("Default style cannot be null");
         }
-        mDefaultPolygonStyle = geoJsonPolygonStyle;
+        mRenderer.setDefaultPolygonStyle(polygonStyle);
     }
 
     /**
@@ -279,9 +256,7 @@ public class GeoJsonLayer {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Collection{");
-        sb.append(",\n Point style=").append(mDefaultPointStyle);
-        sb.append(",\n LineString style=").append(mDefaultLineStringStyle);
-        sb.append(",\n Polygon style=").append(mDefaultPolygonStyle);
+        sb.append("\n Bounding box=").append(mBoundingBox);
         sb.append("\n}\n");
         return sb.toString();
     }
