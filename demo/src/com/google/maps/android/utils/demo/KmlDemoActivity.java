@@ -32,6 +32,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     public void startDemo () {
         try {
+            //Create a new layer from a local resource file
             KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.point, getApplicationContext());
             kmlLayer.addLayer();
             KmlContainer container = kmlLayer.getContainers().iterator().next();
