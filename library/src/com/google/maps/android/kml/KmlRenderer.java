@@ -14,7 +14,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +24,6 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -213,7 +211,7 @@ import java.util.Iterator;
         mGroundOverlays = groundOverlays;
     }
 
-    /* package */ void addKmlData() {
+    /* package */ void addLayerToMap() {
         mStylesRenderer.putAll(mStyles);
         assignStyleMap(mStyleMaps, mStylesRenderer);
         addGroundOverlays(mGroundOverlays, mContainers);
@@ -243,9 +241,9 @@ import java.util.Iterator;
      * @param map map to place placemark, container, style and ground overlays on
      */
     /* package */ void setMap(GoogleMap map) {
-        removeKmlData();
+        removeLayerFromMap();
         mMap = map;
-        addKmlData();
+        addLayerToMap();
     }
 
     /**
@@ -296,7 +294,7 @@ import java.util.Iterator;
     /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
-    /* package */ void removeKmlData() {
+    /* package */ void removeLayerFromMap() {
         removePlacemarks(mPlacemarks);
         removeGroundOverlays(mGroundOverlays);
         if (hasNestedContainers()) {
