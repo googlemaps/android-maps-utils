@@ -71,7 +71,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     /**
      * Assigns a color based on the given magnitude
      */
-    private float magnitudeToColor(double magnitude) {
+    private static float magnitudeToColor(double magnitude) {
         if (magnitude < 1.0) {
             return BitmapDescriptorFactory.HUE_CYAN;
         } else if (magnitude < 2.5) {
