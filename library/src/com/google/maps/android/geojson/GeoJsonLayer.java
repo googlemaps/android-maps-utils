@@ -1,12 +1,12 @@
 package com.google.maps.android.geojson;
 
-import android.content.Context;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,9 +19,8 @@ import java.util.HashMap;
  * imported data.
  *
  * To create a new GeoJsonLayer from a resource stored locally
- * {@code GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.resource, getApplicationContext());
- * layer.addLayerToMap();
- * layer.removeLayerFromMap();}
+ * {@code GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.resource,
+ * getApplicationContext());}
  *
  * To render the imported GeoJSON data onto the layer
  * {@code layer.addLayerToMap();}
