@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.GroundOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a KML Document or Folder.
@@ -24,7 +25,7 @@ public class KmlContainer {
 
     private String mContainerId;
 
-    public KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
+    /*package*/ KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
             HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
             ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
             groundOverlay, String Id) {
@@ -146,7 +147,7 @@ public class KmlContainer {
      *
      * @return iterable of the properties hashmap entries
      */
-    public Iterable getProperties() {
+    public Iterable<Map.Entry<String, String>> getProperties() {
         return mProperties.entrySet();
     }
 
