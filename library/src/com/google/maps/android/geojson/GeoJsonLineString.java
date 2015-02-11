@@ -5,7 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 /**
- * A GeoJsonLineString geometry represents a number of connected {@link com.google.android.gms.maps.model.LatLng}s.
+ * A GeoJsonLineString geometry represents a number of connected {@link
+ * com.google.android.gms.maps.model.LatLng}s.
  */
 public class GeoJsonLineString implements GeoJsonGeometry {
 
