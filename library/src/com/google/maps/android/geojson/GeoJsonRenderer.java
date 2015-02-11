@@ -27,6 +27,12 @@ import java.util.Set;
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
+    /**
+     * Value is a Marker, Polyline, Polygon or an array of these that have been created from the
+     * corresponding key
+     */
+    private final HashMap<GeoJsonFeature, Object> mFeatures;
+
     private boolean mLayerOnMap;
 
     private GeoJsonPointStyle mDefaultPointStyle;
@@ -34,12 +40,6 @@ import java.util.Set;
     private GeoJsonLineStringStyle mDefaultLineStringStyle;
 
     private GeoJsonPolygonStyle mDefaultPolygonStyle;
-
-    /**
-     * Value is a Marker, Polyline, Polygon or an array of these that have been created from the
-     * corresponding key
-     */
-    private final HashMap<GeoJsonFeature, Object> mFeatures;
 
     private GoogleMap mMap;
 
@@ -55,10 +55,6 @@ import java.util.Set;
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
-    }
-
-    /* package */ boolean isLayerOnMap() {
-        return mLayerOnMap;
     }
 
     /**
@@ -78,6 +74,10 @@ import java.util.Set;
                 removeFromMap(mapObjectElement);
             }
         }
+    }
+
+    /* package */ boolean isLayerOnMap() {
+        return mLayerOnMap;
     }
 
     /**
@@ -101,6 +101,10 @@ import java.util.Set;
         }
     }
 
+    /**
+     * Adds all of the stored features in the layer onto the map if the layer is not already on the
+     * map.
+     */
     /* package */ void addLayerToMap() {
         if (!mLayerOnMap) {
             mLayerOnMap = true;
@@ -125,7 +129,7 @@ import java.util.Set;
      * @param feature feature to add to the map
      */
     /* package */ void addFeature(GeoJsonFeature feature) {
-        Object mapObject = null;
+        Object mapObject = FEATURE_NOT_ON_MAP;
 
         if (mLayerOnMap) {
             // Apply default styles
