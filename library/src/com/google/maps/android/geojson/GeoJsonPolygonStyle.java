@@ -12,7 +12,7 @@ import java.util.Observable;
  */
 public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "Polygon|MultiPolygon|GeometryCollection";
+    private final static String[] GEOMETRY_TYPE = {"Polygon", "MultiPolygon", "GeometryCollection"};
 
     private final PolygonOptions mPolygonOptions;
 
@@ -23,14 +23,10 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
         mPolygonOptions = new PolygonOptions();
     }
 
-    /**
-     * Gets the type of geometries this style can be applied to
-     *
-     * @return type of geometries this style can be applied to
-     */
+    /** {@inheritDoc} */
     @Override
-    public String getGeometryType() {
-        return GEOMETRY_TYPE_REGEX;
+    public String[] getGeometryType() {
+        return GEOMETRY_TYPE;
     }
 
     /**
@@ -177,7 +173,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PolygonStyle{");
-        sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
+        sb.append("\n geometry type=").append(GEOMETRY_TYPE);
         sb.append(",\n fill color=").append(getFillColor());
         sb.append(",\n geodesic=").append(isGeodesic());
         sb.append(",\n stroke color=").append(getStrokeColor());

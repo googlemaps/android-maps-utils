@@ -5,7 +5,12 @@ package com.google.maps.android.geojson;
  */
 interface GeoJsonStyle {
 
-    public String getGeometryType();
+    /**
+     * Gets the type of geometries this style can be applied to
+     *
+     * @return type of geometries this style can be applied to
+     */
+    public String[] getGeometryType();
 
     public boolean isVisible();
 

@@ -13,7 +13,7 @@ import java.util.Observable;
  */
 public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX = "Point|MultiPoint|GeometryCollection";
+    private final static String[] GEOMETRY_TYPE = {"Point", "MultiPoint", "GeometryCollection"};
 
     private final MarkerOptions mMarkerOptions;
 
@@ -25,14 +25,10 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
         mMarkerOptions = new MarkerOptions();
     }
 
-    /**
-     * Gets the type of geometries this style can be applied to
-     *
-     * @return type of geometries this style can be applied to
-     */
+    /** {@inheritDoc} */
     @Override
-    public String getGeometryType() {
-        return GEOMETRY_TYPE_REGEX;
+    public String[] getGeometryType() {
+        return GEOMETRY_TYPE;
     }
 
     /**
@@ -299,7 +295,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PointStyle{");
-        sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
+        sb.append("\n geometry type=").append(GEOMETRY_TYPE);
         sb.append(",\n alpha=").append(getAlpha());
         sb.append(",\n anchor U=").append(getAnchorU());
         sb.append(",\n anchor V=").append(getAnchorV());

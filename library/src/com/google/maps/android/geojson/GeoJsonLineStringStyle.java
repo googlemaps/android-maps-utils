@@ -12,8 +12,8 @@ import java.util.Observable;
  */
 public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
 
-    private final static String GEOMETRY_TYPE_REGEX
-            = "LineString|MultiLineString|GeometryCollection";
+    private final static String[] GEOMETRY_TYPE = {"LineString", "MultiLineString",
+            "GeometryCollection"};
 
     private final PolylineOptions mPolylineOptions;
 
@@ -24,14 +24,10 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
         mPolylineOptions = new PolylineOptions();
     }
 
-    /**
-     * Gets the type of geometries this style can be applied to
-     *
-     * @return type of geometries this style can be applied to
-     */
+    /** {@inheritDoc} */
     @Override
-    public String getGeometryType() {
-        return GEOMETRY_TYPE_REGEX;
+    public String[] getGeometryType() {
+        return GEOMETRY_TYPE;
     }
 
     /**
@@ -158,7 +154,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("LineStringStyle{");
-        sb.append("\n geometry type=").append(GEOMETRY_TYPE_REGEX);
+        sb.append("\n geometry type=").append(GEOMETRY_TYPE);
         sb.append(",\n color=").append(getColor());
         sb.append(",\n geodesic=").append(isGeodesic());
         sb.append(",\n visible=").append(isVisible());

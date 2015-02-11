@@ -2,6 +2,7 @@ package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -191,8 +192,8 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param style style to check if a redraw is needed
      */
     private void checkRedrawFeature(GeoJsonStyle style) {
-        if (mGeometry != null && mGeometry.getType()
-                .matches(style.getGeometryType())) {
+        if (mGeometry != null && Arrays.asList(style.getGeometryType())
+                .contains(mGeometry.getType())) {
             // Don't redraw objects that aren't on the map
             setChanged();
             notifyObservers();

@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import android.test.AndroidTestCase;
 
+import java.util.Arrays;
+
 public class GeoJsonPointStyleTest extends AndroidTestCase {
 
     GeoJsonPointStyle pointStyle;
@@ -17,10 +19,10 @@ public class GeoJsonPointStyleTest extends AndroidTestCase {
     }
 
     public void testGetGeometryType() throws Exception {
-        assertTrue("Point".matches(pointStyle.getGeometryType()));
-        assertTrue("MultiPoint".matches(pointStyle.getGeometryType()));
-        assertTrue("GeometryCollection".matches(pointStyle.getGeometryType()));
-        assertEquals("Point|MultiPoint|GeometryCollection", pointStyle.getGeometryType());
+        assertTrue(Arrays.asList(pointStyle.getGeometryType()).contains("Point"));
+        assertTrue(Arrays.asList(pointStyle.getGeometryType()).contains("MultiPoint"));
+        assertTrue(Arrays.asList(pointStyle.getGeometryType()).contains("GeometryCollection"));
+        assertEquals(3, pointStyle.getGeometryType().length);
     }
 
     public void testAlpha() throws Exception {

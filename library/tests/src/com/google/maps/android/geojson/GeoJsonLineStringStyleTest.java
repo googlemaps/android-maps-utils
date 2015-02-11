@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import android.graphics.Color;
 
+import java.util.Arrays;
+
 public class GeoJsonLineStringStyleTest extends TestCase {
 
     GeoJsonLineStringStyle lineStringStyle;
@@ -14,11 +16,10 @@ public class GeoJsonLineStringStyleTest extends TestCase {
     }
 
     public void testGetGeometryType() throws Exception {
-        assertTrue("LineString".matches(lineStringStyle.getGeometryType()));
-        assertTrue("MultiLineString".matches(lineStringStyle.getGeometryType()));
-        assertTrue("GeometryCollection".matches(lineStringStyle.getGeometryType()));
-        assertEquals("LineString|MultiLineString|GeometryCollection",
-                lineStringStyle.getGeometryType());
+        assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("LineString"));
+        assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("MultiLineString"));
+        assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("GeometryCollection"));
+        assertEquals(3, lineStringStyle.getGeometryType().length);
     }
 
     public void testColor() throws Exception {

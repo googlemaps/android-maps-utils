@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import android.graphics.Color;
 
+import java.util.Arrays;
+
 public class GeoJsonPolygonStyleTest extends TestCase {
 
     GeoJsonPolygonStyle polygonStyle;
@@ -14,10 +16,10 @@ public class GeoJsonPolygonStyleTest extends TestCase {
     }
 
     public void testGetGeometryType() throws Exception {
-        assertTrue("Polygon".matches(polygonStyle.getGeometryType()));
-        assertTrue("MultiPolygon".matches(polygonStyle.getGeometryType()));
-        assertTrue("GeometryCollection".matches(polygonStyle.getGeometryType()));
-        assertEquals("Polygon|MultiPolygon|GeometryCollection", polygonStyle.getGeometryType());
+        assertTrue(Arrays.asList(polygonStyle.getGeometryType()).contains("Polygon"));
+        assertTrue(Arrays.asList(polygonStyle.getGeometryType()).contains("MultiPolygon"));
+        assertTrue(Arrays.asList(polygonStyle.getGeometryType()).contains("GeometryCollection"));
+        assertEquals(3, polygonStyle.getGeometryType().length);
     }
 
     public void testFillColor() throws Exception {
