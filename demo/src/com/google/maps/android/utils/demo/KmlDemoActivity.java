@@ -32,8 +32,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             mMap = getMap();
-            retrieveFileFromResource();
-            //retrieveFileFromUrl();
+            //retrieveFileFromResource();
+            retrieveFileFromUrl();
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }
@@ -41,7 +41,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.park, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.postcode, getApplicationContext());
             kmlLayer.addLayerToMap();
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,7 +51,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
     }
 
     private void retrieveFileFromUrl() {
-        String url = "http://data.gov.au/storage/f/2013-05-12T182652/tmp8tD1bH044239.kml";
+        String url = "https://kml-samples.googlecode.com/svn/trunk/" +
+                "morekml/Polygons/Polygons.Google_Campus.kml";
         new DownloadKmlFile(url).execute();
     }
 
@@ -101,7 +102,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
                 kmlLayer.addLayerToMap();
-                //moveCameraToKml(kmlLayer);
+                moveCameraToKml(kmlLayer);
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
             } catch (IOException e) {
