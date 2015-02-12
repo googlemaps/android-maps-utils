@@ -33,13 +33,13 @@ import java.util.Set;
      */
     private final HashMap<GeoJsonFeature, Object> mFeatures;
 
-    private boolean mLayerOnMap;
-
     private final GeoJsonPointStyle mDefaultPointStyle;
 
     private final GeoJsonLineStringStyle mDefaultLineStringStyle;
 
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
+
+    private boolean mLayerOnMap;
 
     private GoogleMap mMap;
 
