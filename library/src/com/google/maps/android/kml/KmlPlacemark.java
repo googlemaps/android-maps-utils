@@ -3,11 +3,11 @@ package com.google.maps.android.kml;
 import java.util.HashMap;
 
 /**
- * Represents a basic_placemark which is either a {@link com.google.maps.android.kml.KmlPoint},
+ * Represents a placemark which is either a {@link com.google.maps.android.kml.KmlPoint},
  * {@link
  * com.google.maps.android.kml.KmlLineString}, {@link com.google.maps.android.kml.KmlPolygon} or a
  * {@link com.google.maps.android.kml.KmlMultiGeometry}. Stores the properties and styles of the
- * basic_placemark.
+ * place.
  */
 public class KmlPlacemark {
 

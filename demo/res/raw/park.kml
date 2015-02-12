@@ -1,0 +1,23 @@
+<kml>
+<Placemark>
+<Point>  <coordinates>151.196002, -33.865921</coordinates></Point>
+</Placemark>
+
+
+<Placemark>
+<Point> <coordinates>151.196906, -33.863996</coordinates></Point>
+</Placemark>
+
+<Placemark>
+<Point>  <coordinates>151.193188, -33.863225,</coordinates></Point>
+</Placemark>
+
+<Placemark>
+<Point> <coordinates>151.192834, -33.863938</coordinates></Point>
+</Placemark>
+
+<Placemark>
+<Point><coordinates>151.188961, -33.867350</coordinates></Point>
+</Placemark>
+
+</kml>

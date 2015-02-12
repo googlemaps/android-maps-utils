@@ -4,8 +4,6 @@ import com.google.android.gms.maps.model.GroundOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Represents a KML Document or Folder.
