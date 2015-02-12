@@ -32,33 +32,44 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
             //new DownloadKmlFile("http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml").execute();
             //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/placemark.kml").execute();
-
-            //new DownloadKmlFile("https://www.google.com.au/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0CCQQFjAB&url=https%3A%2F%2Fdevelopers.google.com%2Fkml%2Fdocumentation%2FKML_Samples.kml").execute();
-
-
             //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/kmz/balloon/balloon-image-rel.kml").execute();
             //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Document/doc-with-id.kml").execute();
             //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Document/doc-without-id.kml").execute();
             //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/BalloonStyle/displayMode.kml").execute();
             //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/BalloonStyle/simpleBalloonStyles.kml").execute();
-            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/ExtendedData/data-golf.kml").execute();
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/ExtendedData/data-golf.kml").execute();
+            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/GroundOverlay/etna.kml").execute();
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/MultiGeometry/multi-linestrings.kml").execute();
+
+
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/MultiGeometry/multi-rollover.kml").execute();
+
+
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/MultiGeometry/polygon-point.kml").execute();
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/LineString/straight.kml").execute();
+
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/LineString/styled.kml").execute();
+
+
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/placemark.kml").execute();
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/simple_placemark.kml").execute();
+            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Polygon/polyInnerBoundaries.kml").execute();
 
 
 
-           //KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.postcode, getApplicationContext());
-            //kmlLayer.addLayerToMap();
-
-            //Create a new layer from a local resource file
             /*
-            KmlLayer kmlLayer = new KmlLayer(getMap(), R.raw.point, getApplicationContext());
-            kmlLayer.addLayerToMap();
-            KmlContainer container = kmlLayer.getContainers().iterator().next();
-            KmlPlacemark placemark = container.getPlacemarks().iterator().next();
-            KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
-            polygon.getOuterBoundaryCoordinates().get(0);
-            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
-            polygon.getOuterBoundaryCoordinates().get(0), 18));
-            */
+
+            No images:
+            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/styled_placemark2.kml").execute();
+            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/styled_placemark.kml").execute();
+
+            Didn't read the reference:
+            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/LinearRing/linear-ring.kml").execute();
+
+
+
+             */
+
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }

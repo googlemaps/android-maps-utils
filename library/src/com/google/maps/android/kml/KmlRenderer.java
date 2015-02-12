@@ -839,11 +839,12 @@ import java.util.Iterator;
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
-            }
-            mImagesCache.put(mIconUrl, bitmap);
-            if (mLayerVisible) {
-                addIconToMarkers(mIconUrl, mPlacemarks);
-                addContainerGroupIconsToMarkers(mIconUrl, mContainers);
+            } else {
+                mImagesCache.put(mIconUrl, bitmap);
+                if (mLayerVisible) {
+                    addIconToMarkers(mIconUrl, mPlacemarks);
+                    addContainerGroupIconsToMarkers(mIconUrl, mContainers);
+                }
             }
         }
     }
@@ -887,11 +888,12 @@ import java.util.Iterator;
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
-            }
-            mImagesCache.put(mGroundOverlayUrl, bitmap);
-            if (mLayerVisible) {
-                addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays, true);
-                addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
+            } else {
+                mImagesCache.put(mGroundOverlayUrl, bitmap);
+                if (mLayerVisible) {
+                    addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays, true);
+                    addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
+                }
             }
         }
     }
