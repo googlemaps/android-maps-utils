@@ -42,6 +42,13 @@ public class GeoJsonFeatureTest extends TestCase {
         GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
         feature.setPointStyle(pointStyle);
         assertEquals(pointStyle, feature.getPointStyle());
+
+        try {
+            feature.setPointStyle(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("Point style cannot be null", e.getMessage());
+        }
     }
 
     public void testLineStringStyle() {
@@ -49,6 +56,13 @@ public class GeoJsonFeatureTest extends TestCase {
         GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
         feature.setLineStringStyle(lineStringStyle);
         assertEquals(lineStringStyle, feature.getLineStringStyle());
+
+        try {
+            feature.setLineStringStyle(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("Line string style cannot be null", e.getMessage());
+        }
     }
 
     public void testPolygonStyle() {
@@ -56,6 +70,13 @@ public class GeoJsonFeatureTest extends TestCase {
         GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
         feature.setPolygonStyle(polygonStyle);
         assertEquals(polygonStyle, feature.getPolygonStyle());
+
+        try {
+            feature.setPolygonStyle(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("Polygon style cannot be null", e.getMessage());
+        }
     }
 
     public void testGeometry() {

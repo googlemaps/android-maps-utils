@@ -53,26 +53,17 @@ public class GeoJsonLayerTest extends TestCase {
     }
 
     public void testDefaultPointStyle() throws Exception {
-        GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
-        pointStyle.setTitle("Dolphin");
-        mLayer.setDefaultPointStyle(pointStyle);
-        assertEquals(pointStyle, mLayer.getDefaultPointStyle());
+        mLayer.getDefaultPointStyle().setTitle("Dolphin");
         assertEquals("Dolphin", mLayer.getDefaultPointStyle().getTitle());
     }
 
     public void testDefaultLineStringStyle() throws Exception {
-        GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-        lineStringStyle.setColor(Color.BLUE);
-        mLayer.setDefaultLineStringStyle(lineStringStyle);
-        assertEquals(lineStringStyle, mLayer.getDefaultLineStringStyle());
+        mLayer.getDefaultLineStringStyle().setColor(Color.BLUE);
         assertEquals(Color.BLUE, mLayer.getDefaultLineStringStyle().getColor());
     }
 
     public void testDefaultPolygonStyle() throws Exception {
-        GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
-        polygonStyle.setGeodesic(true);
-        mLayer.setDefaultPolygonStyle(polygonStyle);
-        assertEquals(polygonStyle, mLayer.getDefaultPolygonStyle());
+        mLayer.getDefaultPolygonStyle().setGeodesic(true);
         assertEquals(true, mLayer.getDefaultPolygonStyle().isGeodesic());
     }
 

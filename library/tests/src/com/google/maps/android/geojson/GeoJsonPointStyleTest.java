@@ -91,6 +91,7 @@ public class GeoJsonPointStyleTest extends AndroidTestCase {
         pointStyle.setVisible(false);
         assertFalse(pointStyle.isVisible());
         assertFalse(pointStyle.toMarkerOptions().isVisible());
+
     }
 
     public void testDefaultPointStyle() throws Exception {

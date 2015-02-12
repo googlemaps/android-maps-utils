@@ -3,6 +3,7 @@ package com.google.maps.android.geojson;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Arrays;
 import java.util.Observable;
 
 /**
@@ -295,7 +296,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PointStyle{");
-        sb.append("\n geometry type=").append(GEOMETRY_TYPE);
+        sb.append("\n geometry type=").append(Arrays.toString(GEOMETRY_TYPE));
         sb.append(",\n alpha=").append(getAlpha());
         sb.append(",\n anchor U=").append(getAnchorU());
         sb.append(",\n anchor V=").append(getAnchorV());

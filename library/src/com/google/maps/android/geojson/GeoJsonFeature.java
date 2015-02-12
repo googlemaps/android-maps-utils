@@ -112,18 +112,17 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param pointStyle style used to render GeoJsonPoints
      */
     public void setPointStyle(GeoJsonPointStyle pointStyle) {
+        if (pointStyle == null) {
+            throw new IllegalArgumentException("Point style cannot be null");
+        }
+
         if (mPointStyle != null) {
             // Remove observer for previous style
             mPointStyle.deleteObserver(this);
         }
-
         mPointStyle = pointStyle;
-
-        if (mPointStyle != null) {
-            // Add observer for new style and redraw if needed
-            mPointStyle.addObserver(this);
-            checkRedrawFeature(mPointStyle);
-        }
+        mPointStyle.addObserver(this);
+        checkRedrawFeature(mPointStyle);
     }
 
     /**
@@ -141,18 +140,18 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param lineStringStyle style used to render GeoJsonLineStrings
      */
     public void setLineStringStyle(GeoJsonLineStringStyle lineStringStyle) {
+        if (lineStringStyle == null) {
+            throw new IllegalArgumentException("Line string style cannot be null");
+        }
+
         if (mLineStringStyle != null) {
             // Remove observer for previous style
             mLineStringStyle.deleteObserver(this);
         }
-
         mLineStringStyle = lineStringStyle;
+        mLineStringStyle.addObserver(this);
+        checkRedrawFeature(mLineStringStyle);
 
-        if (mLineStringStyle != null) {
-            // Add observer for new style and redraw if needed
-            mLineStringStyle.addObserver(this);
-            checkRedrawFeature(mLineStringStyle);
-        }
     }
 
     /**
@@ -170,18 +169,18 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @param polygonStyle style used to render GeoJsonPolygons
      */
     public void setPolygonStyle(GeoJsonPolygonStyle polygonStyle) {
+        if (polygonStyle == null) {
+            throw new IllegalArgumentException("Polygon style cannot be null");
+        }
+
         if (mPolygonStyle != null) {
             // Remove observer for previous style
             mPolygonStyle.deleteObserver(this);
         }
-
         mPolygonStyle = polygonStyle;
+        mPolygonStyle.addObserver(this);
+        checkRedrawFeature(mPolygonStyle);
 
-        if (mPolygonStyle != null) {
-            // Add observer for new style and redraw if needed
-            mPolygonStyle.addObserver(this);
-            checkRedrawFeature(mPolygonStyle);
-        }
     }
 
     /**

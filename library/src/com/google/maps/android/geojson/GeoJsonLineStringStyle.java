@@ -2,6 +2,7 @@ package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.Arrays;
 import java.util.Observable;
 
 /**
@@ -154,7 +155,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("LineStringStyle{");
-        sb.append("\n geometry type=").append(GEOMETRY_TYPE);
+        sb.append("\n geometry type=").append(Arrays.toString(GEOMETRY_TYPE));
         sb.append(",\n color=").append(getColor());
         sb.append(",\n geodesic=").append(isGeodesic());
         sb.append(",\n visible=").append(isVisible());

@@ -2,6 +2,7 @@ package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.util.Arrays;
 import java.util.Observable;
 
 /**
@@ -173,7 +174,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PolygonStyle{");
-        sb.append("\n geometry type=").append(GEOMETRY_TYPE);
+        sb.append("\n geometry type=").append(Arrays.toString(GEOMETRY_TYPE));
         sb.append(",\n fill color=").append(getFillColor());
         sb.append(",\n geodesic=").append(isGeodesic());
         sb.append(",\n stroke color=").append(getStrokeColor());

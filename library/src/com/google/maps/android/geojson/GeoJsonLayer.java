@@ -35,7 +35,7 @@ public class GeoJsonLayer {
     private LatLngBounds mBoundingBox;
 
     /**
-     * Creates a new GeoJsonLayer object
+     * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
      *
      * @param map         map where the layer is to be rendered
      * @param geoJsonFile GeoJSON data to add to the layer
@@ -57,7 +57,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Creates a new GeoJsonLayer object
+     * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
      *
      * @param map        map where the layer is to be rendered
      * @param resourceId GeoJSON file to add to the layer
@@ -106,9 +106,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map. Default
-     * styles are applied if the features haven't been previously added to the layer or if the
-     * layer has been cleared.
+     * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
      */
     public void addLayerToMap() {
         mRenderer.addLayerToMap();
@@ -159,8 +157,7 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Clears all of the GeoJsonFeatures from the layer. All styles are removed from the
-     * GeoJsonFeatures.
+     * Removes all GeoJsonFeatures on the layer from the map
      */
     public void removeLayerFromMap() {
         mRenderer.removeLayerFromMap();
@@ -176,7 +173,8 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Gets the default style used to render GeoJsonPoints
+     * Gets the default style used to render GeoJsonPoints. Any changes to this style will be
+     * reflected in the features that use it.
      *
      * @return default style used to render GeoJsonPoints
      */
@@ -185,20 +183,8 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Sets the default style to use when rendering GeoJsonPoints. This style is only applied to
-     * GeoJsonPoints that are added to the layer after this method is called.
-     *
-     * @param pointStyle to set as the default style for GeoJsonPoints
-     */
-    public void setDefaultPointStyle(GeoJsonPointStyle pointStyle) {
-        if (pointStyle == null) {
-            throw new IllegalArgumentException("Default style cannot be null");
-        }
-        mRenderer.setDefaultPointStyle(pointStyle);
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonLineStrings
+     * Gets the default style used to render GeoJsonLineStrings. Any changes to this style will be
+     * reflected in the features that use it.
      *
      * @return default style used to render GeoJsonLineStrings
      */
@@ -207,38 +193,13 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Sets the default style to use when rendering GeoJsonLineStrings. This style is only applied
-     * to GeoJsonLineStrings that are added to the layer after this method is called.
-     *
-     * @param lineStringStyle to set as the default style for GeoJsonLineStrings
-     */
-    public void setDefaultLineStringStyle(GeoJsonLineStringStyle lineStringStyle) {
-        if (lineStringStyle == null) {
-            throw new IllegalArgumentException("Default style cannot be null");
-        }
-        mRenderer.setDefaultLineStringStyle(lineStringStyle);
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonPolygons
+     * Gets the default style used to render GeoJsonPolygons. Any changes to this style will be
+     * reflected in the features that use it.
      *
      * @return default style used to render GeoJsonPolygons
      */
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mRenderer.getDefaultPolygonStyle();
-    }
-
-    /**
-     * Sets the default style to use when rendering GeoJsonPolygons. This style is only applied to
-     * GeoJsonPolygons that are added to the layer after this method is called.
-     *
-     * @param polygonStyle to set as the default style for GeoJsonPolygons
-     */
-    public void setDefaultPolygonStyle(GeoJsonPolygonStyle polygonStyle) {
-        if (polygonStyle == null) {
-            throw new IllegalArgumentException("Default style cannot be null");
-        }
-        mRenderer.setDefaultPolygonStyle(polygonStyle);
     }
 
     /**
