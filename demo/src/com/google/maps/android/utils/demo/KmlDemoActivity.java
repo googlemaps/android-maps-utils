@@ -41,7 +41,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.postcode, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
             kmlLayer.addLayerToMap();
         } catch (IOException e) {
             e.printStackTrace();
