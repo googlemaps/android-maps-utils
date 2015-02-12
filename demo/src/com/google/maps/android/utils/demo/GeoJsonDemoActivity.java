@@ -28,6 +28,21 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     private GeoJsonLayer mLayer;
 
+    /**
+     * Assigns a color based on the given magnitude
+     */
+    private static float magnitudeToColor(double magnitude) {
+        if (magnitude < 1.0) {
+            return BitmapDescriptorFactory.HUE_CYAN;
+        } else if (magnitude < 2.5) {
+            return BitmapDescriptorFactory.HUE_GREEN;
+        } else if (magnitude < 4.5) {
+            return BitmapDescriptorFactory.HUE_YELLOW;
+        } else {
+            return BitmapDescriptorFactory.HUE_RED;
+        }
+    }
+
     protected int getLayoutId() {
         return R.layout.geojson_demo;
     }
@@ -65,21 +80,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 // Assign the point style to the feature
                 feature.setPointStyle(pointStyle);
             }
-        }
-    }
-
-    /**
-     * Assigns a color based on the given magnitude
-     */
-    private static float magnitudeToColor(double magnitude) {
-        if (magnitude < 1.0) {
-            return BitmapDescriptorFactory.HUE_CYAN;
-        } else if (magnitude < 2.5) {
-            return BitmapDescriptorFactory.HUE_GREEN;
-        } else if (magnitude < 4.5) {
-            return BitmapDescriptorFactory.HUE_YELLOW;
-        } else {
-            return BitmapDescriptorFactory.HUE_RED;
         }
     }
 
