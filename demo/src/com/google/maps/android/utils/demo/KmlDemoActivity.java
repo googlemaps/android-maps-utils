@@ -19,7 +19,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class KmlDemoActivity extends BaseDemoActivity {
-    GoogleMap mMap;
+
+    private GoogleMap mMap;
+    private KmlLayer kmlLayer;
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
@@ -28,51 +30,44 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             mMap = getMap();
-            //postcode.kml working
-
-            //new DownloadKmlFile("http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/placemark.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/kmz/balloon/balloon-image-rel.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Document/doc-with-id.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Document/doc-without-id.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/BalloonStyle/displayMode.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/BalloonStyle/simpleBalloonStyles.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/ExtendedData/data-golf.kml").execute();
-            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/GroundOverlay/etna.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/MultiGeometry/multi-linestrings.kml").execute();
-
-
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/MultiGeometry/multi-rollover.kml").execute();
-
-
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/MultiGeometry/polygon-point.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/LineString/straight.kml").execute();
-
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/LineString/styled.kml").execute();
-
-
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/placemark.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/simple_placemark.kml").execute();
-            //new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Polygon/polyInnerBoundaries.kml").execute();
-
-
-
-            /*
-
-            No images:
-            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/styled_placemark2.kml").execute();
-            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/styled_placemark.kml").execute();
-
-            Didn't read the reference:
-            new DownloadKmlFile("http://kml-samples.googlecode.com/svn/trunk/kml/Placemark/LinearRing/linear-ring.kml").execute();
-
-
-
-             */
-
+            //retrieveFileFromResource();
+            retrieveFileFromUrl();
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }
+    }
+
+    private void retrieveFileFromResource() {
+        try {
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
+            kmlLayer.addLayerToMap();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveFileFromUrl() {
+        String url = "https://kml-samples.googlecode.com/svn/trunk/" +
+                "morekml/Polygons/Polygons.Google_Campus.kml";
+        new DownloadKmlFile(url).execute();
+    }
+
+    private void moveCameraToKml(KmlLayer kmlLayer) {
+        //Retrieve the first container in the KML layer
+        KmlContainer container = kmlLayer.getContainers().iterator().next();
+        //Retrieve a nested container within the first container
+        container = container.getContainers().iterator().next();
+        //Retrieve the first placemark in the KML layer
+        KmlPlacemark placemark = container.getPlacemarks().iterator().next();
+        //Retrieve a polygon object in a placemark
+        KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+        //Get the outer boundary coordinates of the polygon
+        polygon.getOuterBoundaryCoordinates().get(0);
+        //Move the camera to the polygon
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(
+                polygon.getOuterBoundaryCoordinates().get(0), 16));
     }
 
     private class DownloadKmlFile extends AsyncTask<String, Void, byte[]> {
@@ -82,9 +77,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
             mUrl = url;
         }
 
-        @Override
         protected byte[] doInBackground(String... params) {
-
             try {
                 InputStream is =  new URL(mUrl).openStream();
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -93,29 +86,25 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 while ((nRead = is.read(data, 0, data.length)) != -1) {
                     buffer.write(data, 0, nRead);
                 }
-
                 buffer.flush();
-
                 return buffer.toByteArray();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
 
-        @Override
         protected void onPostExecute(byte[] byteArr) {
             try {
-                KmlLayer layer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
+                kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
-                layer.addLayerToMap();
+                kmlLayer.addLayerToMap();
+                moveCameraToKml(kmlLayer);
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }
