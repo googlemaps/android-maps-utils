@@ -87,10 +87,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
         @Override
         protected JSONObject doInBackground(String... params) {
-            InputStream stream = null;
             try {
                 // Open a stream from the URL
-                stream = new URL(params[0]).openStream();
+                InputStream stream = new URL(params[0]).openStream();
 
                 String line;
                 StringBuilder result = new StringBuilder();
