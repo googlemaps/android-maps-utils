@@ -65,11 +65,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             }
             eventType = parser.next();
         }
-        // If there is no geometry associated with the Placemark then we do not add it
-        if (geometry != null) {
-            return new KmlPlacemark(geometry, styleId, inlineStyle, properties);
-        }
-        return null;
+        return new KmlPlacemark(geometry, styleId, inlineStyle, properties);
     }
 
     /**

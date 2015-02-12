@@ -326,11 +326,16 @@ import java.util.Iterator;
      * @return Google Map Object of the placemark geometry after it has been added to the map.
      */
     private Object addPlacemarkToMap(KmlPlacemark placemark, boolean placemarkVisibility) {
-        String placemarkId = placemark.getStyleId();
-        KmlGeometry geometry = placemark.getGeometry();
-        KmlStyle style = getPlacemarkStyle(placemarkId);
-        KmlStyle inlineStyle = placemark.getInlineStyle();
-        return addToMap(placemark, geometry, style, inlineStyle, placemarkVisibility);
+        //If the placemark contains a geometry, then we add it to the map
+        //If it doesnt contain a geometry, we do not add anything to the map and just store values
+        if (placemark.getGeometry() != null) {
+            String placemarkId = placemark.getStyleId();
+            KmlGeometry geometry = placemark.getGeometry();
+            KmlStyle style = getPlacemarkStyle(placemarkId);
+            KmlStyle inlineStyle = placemark.getInlineStyle();
+            return addToMap(placemark, geometry, style, inlineStyle, placemarkVisibility);
+        }
+        return null;
     }
 
     /**
@@ -476,6 +481,7 @@ import java.util.Iterator;
      */
     private Object addToMap(KmlPlacemark placemark, KmlGeometry geometry, KmlStyle style,
             KmlStyle inlineStyle, boolean isVisible) {
+
         String geometryType = geometry.getGeometryType();
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
@@ -493,6 +499,7 @@ import java.util.Iterator;
             return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
                     isVisible);
         }
+
         return null;
     }
 
