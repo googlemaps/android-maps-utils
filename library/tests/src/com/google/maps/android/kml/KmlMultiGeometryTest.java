@@ -24,10 +24,6 @@ public class KmlMultiGeometryTest extends TestCase {
         return new KmlMultiGeometry(kmlGeometries);
     }
 
-    public void tearDown() throws Exception {
-
-    }
-
     public void testGetKmlGeometryType() throws Exception {
         kmlMultiGeometry = createMultiGeometry();
         assertNotNull(kmlMultiGeometry);

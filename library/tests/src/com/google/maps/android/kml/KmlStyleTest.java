@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 public class KmlStyleTest extends TestCase {
 
-    //TODO: Marker Color
-
     public void testStyleId() throws Exception {
         KmlStyle kmlStyle = new KmlStyle();
         kmlStyle.setStyleId("BlueLine");

@@ -8,14 +8,6 @@ import java.util.ArrayList;
 
 public class KmlLineStringTest extends TestCase {
     KmlLineString kmlLineString;
-    public void setUp() throws Exception {
-        super.setUp();
-
-    }
-
-    public void tearDown() throws Exception {
-
-    }
 
     public KmlLineString createSimpleLineString() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();

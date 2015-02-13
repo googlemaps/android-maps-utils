@@ -7,14 +7,11 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 
 public class KmlPolygonTest extends TestCase {
+
     KmlPolygon kmlPolygon;
 
     public void setUp() throws Exception {
         super.setUp();
-
-    }
-
-    public void tearDown() throws Exception {
 
     }
 

@@ -10,10 +10,6 @@ import java.util.HashMap;
 
 public class KmlRendererTest extends ActivityTestCase {
 
-    public void testGetContainerVisibility() {
-
-    }
-
     public void testAssignStyleMap() {
         HashMap<String, String> styleMap = new HashMap<String, String>();
         styleMap.put("BlueKey", "BlueValue");
@@ -34,9 +30,4 @@ public class KmlRendererTest extends ActivityTestCase {
         assertNotNull(styleMap.get("BlueKey"));
         assertEquals(styles.get("BlueKey"), redStyle);
     }
-
-
-
-
-
 }
