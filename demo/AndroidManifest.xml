@@ -5,7 +5,7 @@
           android:versionName="1.0">
 
     <uses-sdk
-            android:minSdkVersion="9"
+            android:minSdkVersion="17"
             android:targetSdkVersion="19"/>
 
     <permission
@@ -57,6 +57,7 @@
         <activity android:name=".TileProviderAndProjectionDemo"/>
         <activity android:name=".HeatmapsDemoActivity"/>
         <activity android:name=".HeatmapsPlacesDemoActivity"/>
+        <activity android:name=".KmlDemoActivity"/>
 
     </application>
 
