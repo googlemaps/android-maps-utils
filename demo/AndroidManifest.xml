@@ -57,6 +57,7 @@
         <activity android:name=".TileProviderAndProjectionDemo"/>
         <activity android:name=".HeatmapsDemoActivity"/>
         <activity android:name=".HeatmapsPlacesDemoActivity"/>
+        <activity android:name=".GeoJsonDemoActivity"/>
 
     </application>
 
