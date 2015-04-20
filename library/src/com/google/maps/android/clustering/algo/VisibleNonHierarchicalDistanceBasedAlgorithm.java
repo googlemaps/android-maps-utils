@@ -89,10 +89,13 @@ public class VisibleNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem>
         final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
         synchronized (mQuadTree) {
-            Point topLeft = PROJECTION.toPoint(mVisibleRegion.farLeft);
-            Point bottomRight = PROJECTION.toPoint(mVisibleRegion.nearRight);
 
-            Bounds visibleBounds = new  Bounds(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y);
+            final Point left = PROJECTION.toPoint(mVisibleRegion.farLeft);
+            final Point right = PROJECTION.toPoint(mVisibleRegion.nearRight);
+
+            // reverse coordinates, in case map was rotated around it's axis
+            Bounds visibleBounds = new  Bounds(Math.min(left.x, right.x), Math.max(left.x, right.x),
+                    Math.min(left.y, right.y), Math.max(left.y, right.y));
 
             Collection<QuadItem<T>> items = mQuadTree.search(visibleBounds);
 
