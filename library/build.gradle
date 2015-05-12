@@ -21,10 +21,6 @@ android {
     defaultPublishConfig "release"
     publishNonDefault true
 
-    packagingOptions {
-        exclude 'libs/maps_m4b.jar'
-    }
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
