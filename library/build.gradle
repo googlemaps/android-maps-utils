@@ -21,12 +21,16 @@ android {
     defaultPublishConfig "release"
     publishNonDefault true
 
+    packagingOptions {
+        exclude 'libs/maps_m4b.jar'
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
         }
 
-        gms{
+        gms {
             java.srcDirs = ['src']
             res.srcDirs = ['res']
         }
@@ -43,27 +47,22 @@ android {
 
     productFlavors {
         gms {
-            dependencies {
-                compile 'com.google.android.gms:play-services-maps:6.5.87'
-            }
         }
 
         m4b {
-            dependencies {
-                compile files('../maps_m4b.jar')
-            }
         }
     }
 }
 
-task buildM4b (dependsOn: build)
+dependencies {
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    m4bCompile files ('../maps_m4b.jar')
 
-gradle.taskGraph.whenReady { TaskExecutionGraph graph ->
-    def isM4bEnabled = graph.hasTask(buildM4b)
-    for (task in graph.allTasks) {
-        if (task.name.indexOf("M4b") > 0) {
-            task.enabled = isM4bEnabled
-        }
+}
+
+android.libraryVariants.all { variant ->
+    variant.outputs.each { output ->
+        output.packageLibrary.exclude('libs/maps_m4b.jar')
     }
 }
 
@@ -145,6 +144,10 @@ uploadArchives {
 
             modifyPom(addFilter('apklib') { artifact, file ->
                 artifact.name == 'android-maps-utils-apklib'
+            })
+
+            modifyPom(addFilter('m4b') { artifact, file ->
+                artifact.name == 'android-maps-utils-m4b'
             })
 
             // There's no official apklib for Google Play services, so we
