@@ -183,5 +183,19 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         public int getSize() {
             return 1;
         }
+
+        @Override
+        public int hashCode() {
+            return mClusterItem.hashCode();
+        };
+
+        @Override
+        public boolean equals(Object other) {
+            if (!(other instanceof QuadItem<?>)) {
+                return false;
+            }
+
+            return ((QuadItem<?>) other).mClusterItem.equals(mClusterItem);
+        }
     }
 }
