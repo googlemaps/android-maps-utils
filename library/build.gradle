@@ -15,32 +15,87 @@ apply plugin: 'signing'
 archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
-dependencies {
-    compile 'com.google.android.gms:play-services-maps:6.5.87'
-}
-
-
 android {
     compileSdkVersion 19
     buildToolsVersion "21.1.2"
+    defaultPublishConfig "release"
+    publishNonDefault true
 
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
+        }
+
+        gms {
             java.srcDirs = ['src']
             res.srcDirs = ['res']
+        }
+
+        m4b {
+            java.srcDirs = ['m4b/src']
+            res.srcDirs = ['m4b/res']
         }
 
         androidTest {
             java.srcDirs = ['tests/src']
         }
     }
+
+    productFlavors {
+        gms {
+        }
+
+        m4b {
+        }
+    }
 }
+
+dependencies {
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    m4bCompile files ('../maps_m4b.jar')
+
+}
+
+android.libraryVariants.all { variant ->
+    variant.outputs.each { output ->
+        output.packageLibrary.exclude('libs/maps_m4b.jar')
+    }
+}
+
+task genM4bSrc(type: Copy) {
+    from('src'){
+        include '**/*.java'
+        filter({
+            line -> line.replaceAll("com.google.android.gms.maps",
+                    "com.google.android.m4b.maps")
+        })
+    }
+    from('src'){
+        exclude '**/*.java'
+    }
+    into 'm4b/src'
+}
+
+task genM4bRes(type: Copy) {
+    from('res'){
+        include '**/*.xml'
+        filter({
+            line -> line.replaceAll("com.google.android.gms.maps",
+                    "com.google.android.m4b.maps")
+        })
+    }
+    from('res'){
+        exclude '**/*.xml'
+    }
+    into 'm4b/res'
+}
+
+preBuild.dependsOn genM4bSrc, genM4bRes
 
 task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
-    dependsOn 'packageReleaseJar'
+    dependsOn 'packageGmsReleaseJar'
     appendix = extension = 'apklib'
 
     from 'AndroidManifest.xml'
@@ -85,6 +140,10 @@ uploadArchives {
 
             modifyPom(addFilter('apklib') { artifact, file ->
                 artifact.name == 'android-maps-utils-apklib'
+            })
+
+            modifyPom(addFilter('m4b') { artifact, file ->
+                artifact.name == 'android-maps-utils-m4b'
             })
 
             // There's no official apklib for Google Play services, so we

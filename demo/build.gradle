@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'android'
 
 dependencies {
-    compile project(':library')
+    compile project(path: ':library', configuration: 'gmsRelease')
     // Or, fetch from Maven:
     // compile 'com.google.maps.android:android-maps-utils:0.3+'
     compile 'com.google.android.gms:play-services-maps:6.+'
