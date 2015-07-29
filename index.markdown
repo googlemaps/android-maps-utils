@@ -16,10 +16,6 @@ The library is under heavy development, but ready for use. Check the [issue trac
 ## Features/Overview
 
 <img src="bubblemarker.png" style="float: right">
-  * **KML** &mdash; displays KML data
-
-  * **GeoJSON** &mdash; displays and styles GeoJSON data
-
   * **Marker clustering** &mdash; handles the display of a large number of points
 
   * **Heat maps** &mdash; display a large number of points as a heat map
@@ -29,6 +25,10 @@ The library is under heavy development, but ready for use. Check the [issue trac
   * **Poly decoding and encoding** &mdash; compact encoding for paths, [interoperability](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) with Maps API web services
 
   * **Spherical geometry** &mdash; for example: computeDistance, computeHeading, computeArea
+
+  * **KML** &mdash; displays KML data (Caution: Beta!)
+
+  * **GeoJSON** &mdash; displays and styles GeoJSON data
 
 <br style="clear:both">
 An introductory video:
