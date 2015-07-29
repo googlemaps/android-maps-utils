@@ -35,14 +35,14 @@ An introductory video:
 <p id="start"></p>
 ## Getting Started
 
-The current version of the library is `0.3.4`.
+The current version of the library is `0.4`.
 
 ### Android Studio/Gradle
 
 Add the following dependency to your Gradle build file:
 
     dependencies {
-        compile 'com.google.maps.android:android-maps-utils:0.3+'
+        compile 'com.google.maps.android:android-maps-utils:0.4+'
     }
 
 ### Maven
@@ -52,7 +52,7 @@ Add the following to your `pom.xml`:
     <dependency>
         <groupId>com.google.maps.android</groupId>
         <artifactId>android-maps-utils-apklib</artifactId>
-        <version>0.3+</version>
+        <version>0.4+</version>
         <type>apklib</type>
     </dependency>
 
