@@ -16,6 +16,7 @@ The library is under heavy development, but ready for use. Check the [issue trac
 ## Features/Overview
 
 <img src="bubblemarker.png" style="float: right">
+
   * **Marker clustering** &mdash; handles the display of a large number of points
 
   * **Heat maps** &mdash; display a large number of points as a heat map
