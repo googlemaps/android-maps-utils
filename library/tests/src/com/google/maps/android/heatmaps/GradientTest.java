@@ -27,6 +27,7 @@ public class GradientTest extends TestCase {
         int blue = Color.BLUE;
         int green = Color.GREEN;
 
+
         // Expect itself
         assertEquals(red, Gradient.interpolateColor(red, red, 0.5f));
         assertEquals(blue, Gradient.interpolateColor(blue, blue, 0.5f));

@@ -42,6 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Heatmaps", HeatmapsDemoActivity.class);
         addDemo("Heatmaps with Places API", HeatmapsPlacesDemoActivity.class);
+        addDemo("KML Layer Overlay", KmlDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
