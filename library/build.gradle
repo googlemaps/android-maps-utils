@@ -16,7 +16,7 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    compile 'com.google.android.gms:play-services:6.+'
 }
 
 

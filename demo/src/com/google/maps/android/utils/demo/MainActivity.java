@@ -26,6 +26,8 @@ import android.widget.Button;
 public class MainActivity extends Activity implements View.OnClickListener {
     private ViewGroup mListView;
 
+    //Comment to see if I can push to the repository
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
         addDemo("Heatmaps", HeatmapsDemoActivity.class);
         addDemo("Heatmaps with Places API", HeatmapsPlacesDemoActivity.class);
+        addDemo("GeoJSON Layer", GeoJsonDemoActivity.class);
         addDemo("KML Layer Overlay", KmlDemoActivity.class);
     }
 
