@@ -198,7 +198,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return squareTextView;
     }
 
-    private int getColor(int clusterSize) {
+    protected int getColor(int clusterSize) {
         final float hueRange = 220;
         final float sizeRange = 300;
         final float size = Math.min(clusterSize, sizeRange);
