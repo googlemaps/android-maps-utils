@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-      classpath 'com.android.tools.build:gradle:1.3.0'
+        classpath 'com.android.tools.build:gradle:1.3.0'
     }
 }
 
@@ -16,13 +16,13 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-  compile 'com.google.android.gms:play-services:7.8.0'
+    compile 'com.google.android.gms:play-services:7.8.0'
 }
 
 
 android {
-  compileSdkVersion 23
-  buildToolsVersion "23.0.0"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     sourceSets {
         main {
@@ -60,10 +60,10 @@ signing {
     sign configurations.archives
 }
 
-if(!hasProperty("sonatypeUsername")){
+if (!hasProperty("sonatypeUsername")) {
     sonatypeUsername = ""
 }
-if(!hasProperty("sonatypePassword")){
+if (!hasProperty("sonatypePassword")) {
     sonatypePassword = ""
 }
 
