@@ -49,6 +49,7 @@
         </activity>
 
         <activity android:name=".PolyDecodeDemoActivity"/>
+        <activity android:name=".PolySimplifyDemoActivity"/>
         <activity android:name=".IconGeneratorDemoActivity"/>
         <activity android:name=".DistanceDemoActivity"/>
         <activity android:name=".ClusteringDemoActivity"/>
