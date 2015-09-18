@@ -136,16 +136,16 @@ public class PointQuadTreeTest extends TestCase {
         assertEquals(25000, mTree.search(new Bounds(.75, 1, .75, 1)).size());
 
         // searching bounds that do not line up with main quadTree
-        assertEquals(399600, mTree.search(new Bounds(0, 0.999, 0, 0.999)).size());
-        assertEquals(4000, mTree.search(new Bounds(0.8, 0.9, 0.8, 0.9)).size());
-        assertEquals(4000, mTree.search(new Bounds(0, 1, 0, 0.01)).size());
-        assertEquals(16000, mTree.search(new Bounds(0.4, 0.6, 0.4, 0.6)).size());
+        assertEquals(399800, mTree.search(new Bounds(0, 0.999, 0, 0.999)).size());
+        assertEquals(4221, mTree.search(new Bounds(0.8, 0.9, 0.8, 0.9)).size());
+        assertEquals(4200, mTree.search(new Bounds(0, 1, 0, 0.01)).size());
+        assertEquals(16441, mTree.search(new Bounds(0.4, 0.6, 0.4, 0.6)).size());
 
         // searching bounds that are small / have very exact end points
         assertEquals(1, mTree.search(new Bounds(0, .001, 0, .0001)).size());
-        assertEquals(26574, mTree.search(new Bounds(0.356, 0.574, 0.678, 0.987)).size());
-        assertEquals(44622, mTree.search(new Bounds(0.123, 0.456, 0.456, 0.789)).size());
-        assertEquals(4884, mTree.search(new Bounds(0.111, 0.222, 0.333, 0.444)).size());
+        assertEquals(26617, mTree.search(new Bounds(0.356, 0.574, 0.678, 0.987)).size());
+        assertEquals(44689, mTree.search(new Bounds(0.123, 0.456, 0.456, 0.789)).size());
+        assertEquals(4906, mTree.search(new Bounds(0.111, 0.222, 0.333, 0.444)).size());
 
         mTree.clear();
         assertEquals(0, searchAll().size());
