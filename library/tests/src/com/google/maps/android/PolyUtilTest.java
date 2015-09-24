@@ -368,7 +368,13 @@ public class PolyUtilTest extends TestCase {
      * @param beforeInput a copy of the list before it is passed into PolyUtil.simplify()
      */
     private void assertInputUnchanged(List<LatLng> afterInput, List<LatLng> beforeInput) {
+        // Check values
         assertEquals(beforeInput, afterInput);
+
+        // Check references
+        for (int i = 0; i < beforeInput.size(); i++) {
+            assertTrue(afterInput.get(i) == beforeInput.get(i));
+        }
     }
 
     public void testIsClosedPolygon() {

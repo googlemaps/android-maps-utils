@@ -313,12 +313,13 @@ public class PolyUtil {
         }
 
         boolean closedPolygon = isClosedPolygon(poly);
+        LatLng lastPoint = null;
 
         // Check if the provided poly is a closed polygon
         if (closedPolygon) {
             // Add a small offset to the last point for Douglas-Peucker on polygons (see #201)
             final double OFFSET = 0.00000000001;
-            LatLng lastPoint = poly.get(poly.size() - 1);
+            lastPoint = poly.get(poly.size() - 1);
             // LatLng.latitude and .longitude are immutable, so replace the last point
             poly.remove(poly.size() - 1);
             poly.add(new LatLng(lastPoint.latitude + OFFSET, lastPoint.longitude + OFFSET));
@@ -359,9 +360,9 @@ public class PolyUtil {
         }
 
         if (closedPolygon) {
-            // Replace last point of input (w/ offset) with a copy of first to re-close the polygon
+            // Replace last point w/ offset with the original last point to re-close the polygon
             poly.remove(poly.size() - 1);
-            poly.add(new LatLng(poly.get(0).latitude, poly.get(0).longitude));
+            poly.add(lastPoint);
         }
 
         // Generate the simplified line
