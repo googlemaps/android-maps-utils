@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Represents a KML Point. Contains a single coordinate.
  */
-public class KmlPoint implements KmlGeometry<LatLng> {
+public class KmlPoint implements KmlGeometry<LatLng>, KmlContainsLocation {
 
     public static final String GEOMETRY_TYPE = "Point";
 
@@ -21,6 +21,17 @@ public class KmlPoint implements KmlGeometry<LatLng> {
             throw new IllegalArgumentException("Coordinates cannot be null");
         }
         mCoordinate = coordinate;
+    }
+
+    /**
+     *
+     * @param point
+     * @param geodesic
+     * @return true if the given LatLng point equals to this.
+     */
+    @Override
+    public boolean containsLocation(LatLng point, boolean geodesic) {
+        return mCoordinate.equals(point);
     }
 
     /**

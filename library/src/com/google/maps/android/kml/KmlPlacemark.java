@@ -1,5 +1,7 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.HashMap;
 
 /**
@@ -79,6 +81,14 @@ public class KmlPlacemark {
      */
     public KmlGeometry getGeometry() {
         return mGeometry;
+    }
+
+    public boolean containsLocation(LatLng point, boolean geodesic){
+        if (mGeometry == null) return false;
+        if (mGeometry instanceof KmlContainsLocation){
+            return ((KmlContainsLocation) mGeometry).containsLocation(point, geodesic);
+        }
+        return false;
     }
 
     /**
