@@ -63,6 +63,6 @@ public class KmlLineString implements KmlGeometry<List<LatLng>>, KmlContainsLoca
      */
     @Override
     public boolean containsLocation(LatLng point, boolean geodesic) {
-        return PolyUtil.isLocationOnPath(point, mCoordinates, geodesic, 0);
+        return PolyUtil.isLocationOnPath(point, mCoordinates, geodesic);
     }
 }
