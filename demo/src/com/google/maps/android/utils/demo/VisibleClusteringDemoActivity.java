@@ -1,5 +1,6 @@
 package com.google.maps.android.utils.demo;
 
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,13 +19,17 @@ public class VisibleClusteringDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
         mClusterManager.setClusterOnlyVisibleArea(true);
-        mClusterManager.setAlgorithm(new VisibleNonHierarchicalDistanceBasedAlgorithm<MyItem>());
+        mClusterManager.setAlgorithm(new VisibleNonHierarchicalDistanceBasedAlgorithm<MyItem>(metrics.widthPixels, metrics.heightPixels));
 
         getMap().setOnCameraChangeListener(mClusterManager);
+
         try {
             readItems();
         } catch (JSONException e) {

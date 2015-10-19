@@ -11,7 +11,6 @@ import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
-import com.google.maps.android.clustering.algo.VisibleAlgorithm;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
@@ -95,17 +94,15 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
                 algorithm.addItems(mAlgorithm.getItems());
             }
 
-            if (algorithm instanceof VisibleAlgorithm) {
-                ((VisibleAlgorithm) algorithm).setVisibleRegion(mMap.getProjection().getVisibleRegion());
-                mAlgorithm = algorithm;
-            } else {
-                algorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
-            }
-
             mAlgorithm = algorithm;
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
+
+        if (mAlgorithm instanceof GoogleMap.OnCameraChangeListener) {
+            ((GoogleMap.OnCameraChangeListener) mAlgorithm).onCameraChange(mMap.getCameraPosition());
+        }
+
         cluster();
     }
 
@@ -180,19 +177,18 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
             ((GoogleMap.OnCameraChangeListener) mRenderer).onCameraChange(cameraPosition);
         }
 
-        if (mShowOnlyVisibleArea && mAlgorithm instanceof VisibleAlgorithm) {
-            // compute every move to show side elements
-            ((VisibleAlgorithm) mAlgorithm).setVisibleRegion(mMap.getProjection().getVisibleRegion());
-        } else {
-            // Don't re-compute clusters if the map has just been panned/tilted/rotated.
-            CameraPosition position = mMap.getCameraPosition();
-            if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
-                return;
-            }
-            mPreviousCameraPosition = mMap.getCameraPosition();
+        if (mAlgorithm instanceof GoogleMap.OnCameraChangeListener) {
+            ((GoogleMap.OnCameraChangeListener) mAlgorithm).onCameraChange(cameraPosition);
         }
 
-        cluster();
+        // Don't re-compute clusters if the map has just been panned/tilted/rotated.
+        if (mShowOnlyVisibleArea) {
+            // algorithm will decide if it is need to recompute clusters
+            cluster();
+        } else if (mPreviousCameraPosition == null || mPreviousCameraPosition.zoom != cameraPosition.zoom) {
+            mPreviousCameraPosition = mMap.getCameraPosition();
+            cluster();
+        }
     }
 
     @Override

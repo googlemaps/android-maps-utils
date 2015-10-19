@@ -1,7 +1,8 @@
 package com.google.maps.android.clustering.algo;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Bounds;
@@ -31,7 +32,9 @@ import java.util.Set;
  * <p/>
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-public class VisibleNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implements VisibleAlgorithm<T> {
+public class VisibleNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem>
+        implements Algorithm<T>, GoogleMap.OnCameraChangeListener {
+
     public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
     /**
@@ -45,7 +48,14 @@ public class VisibleNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem>
     private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
 
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
-    private VisibleRegion mVisibleRegion;
+    private final int mScreenWidth;
+    private final int mScreenHeight;
+    private LatLng mMapCenter;
+
+    public VisibleNonHierarchicalDistanceBasedAlgorithm(int screenWidth, int screenHeight) {
+        mScreenWidth = screenWidth;
+        mScreenHeight = screenHeight;
+    }
 
     @Override
     public void addItem(T item) {
@@ -89,10 +99,8 @@ public class VisibleNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem>
         final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
         synchronized (mQuadTree) {
-            Point topLeft = PROJECTION.toPoint(mVisibleRegion.farLeft);
-            Point bottomRight = PROJECTION.toPoint(mVisibleRegion.nearRight);
 
-            Bounds visibleBounds = new  Bounds(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y);
+            Bounds visibleBounds = getVisibleBounds(discreteZoom);
 
             Collection<QuadItem<T>> items = mQuadTree.search(visibleBounds);
 
@@ -160,12 +168,27 @@ public class VisibleNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem>
                 p.y - halfSpan, p.y + halfSpan);
     }
 
-	@Override
-	public void setVisibleRegion(VisibleRegion visibleRegion) {
-		mVisibleRegion = visibleRegion;
-	}
+    private Bounds getVisibleBounds(int zoom) {
+        if (mMapCenter == null) {
+            return new Bounds(0, 0, 0, 0);
+        }
 
-	private static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
+        Point p = PROJECTION.toPoint(mMapCenter);
+
+        final double halfWidthSpan = mScreenWidth / Math.pow(2, zoom) / 256 / 2;
+        final double halfHeightSpan = mScreenHeight / Math.pow(2, zoom) / 256 / 2;
+
+        return new Bounds(
+                p.x - halfWidthSpan, p.x + halfWidthSpan,
+                p.y - halfHeightSpan, p.y + halfHeightSpan);
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        mMapCenter = cameraPosition.target;
+    }
+
+    private static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
         private final T mClusterItem;
         private final Point mPoint;
         private final LatLng mPosition;
