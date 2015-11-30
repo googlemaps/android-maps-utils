@@ -35,12 +35,13 @@ android {
             java.srcDirs = ['tests/src']
         }
     }
+
 }
 
 task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
-    dependsOn 'packageReleaseJar'
+    //dependsOn 'packageReleaseJar'
     appendix = extension = 'apklib'
 
     from 'AndroidManifest.xml'
@@ -61,10 +62,10 @@ signing {
 }
 
 if (!hasProperty("sonatypeUsername")) {
-    sonatypeUsername = ""
+    ext.sonatypeUsername = ""
 }
 if (!hasProperty("sonatypePassword")) {
-    sonatypePassword = ""
+    ext.sonatypePassword = ""
 }
 
 uploadArchives {
