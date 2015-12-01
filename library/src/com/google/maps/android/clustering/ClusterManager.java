@@ -38,10 +38,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Groups many items on a map based on zoom level.
  *
- * <p>ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraChangeListener}</li>
- * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul></p>
+ * <p>ClusterManager should be added to the map as an: <ul> <li>{@link GoogleMap.OnCameraChangeListener}</li> </ul> </ p>
  */
-public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener {
 
     private static final String TAG = "ClusterManager";
 
@@ -57,10 +56,28 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private CameraPosition mPreviousCameraPosition;
     private ClusterTask mClusterTask;
 
-    private OnClusterItemClickListener<T> mOnClusterItemClickListener;
-    private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
-    private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
+    private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
+
+    private final GoogleMap.OnMarkerClickListener mClusterMarkerClickListener = new GoogleMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            if (mOnClusterClickListener != null && mRenderer != null) {
+                return mOnClusterClickListener.onClusterClick(mRenderer.getCluster(marker));
+            }
+
+            return false;
+        }
+    };
+
+    private final GoogleMap.OnInfoWindowClickListener mClusterInfoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+            if (mOnClusterInfoWindowClickListener != null && mRenderer != null) {
+                mOnClusterInfoWindowClickListener.onClusterInfoWindowClick(mRenderer.getCluster(marker));
+            }
+        }
+    };
 
     private final MarkerManager.MarkerItemCollectionObserver<T> mItemCollectionObserver = new MarkerManager.MarkerItemCollectionObserver<T>() {
 
@@ -91,6 +108,10 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     public ClusterManager(Context context, GoogleMap map) {
         this(context, map, new MarkerManager(map));
+
+        map.setOnMarkerClickListener(mMarkerManager);
+        map.setOnInfoWindowClickListener(mMarkerManager);
+        map.setOnMarkerDragListener(mMarkerManager);
     }
 
     public ClusterManager(Context context, GoogleMap map, MarkerManager markerManager) {
@@ -103,6 +124,9 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerItemCollection;
         mAlgorithm = new PreCachingAlgorithmDecorator<>(new NonHierarchicalDistanceBasedAlgorithm<T>());
+
+        mClusterMarkers.setOnMarkerClickListener(mClusterMarkerClickListener);
+        mClusterMarkers.setOnInfoWindowClickListener(mClusterInfoWindowClickListener);
 
         setRenderer(new DefaultClusterRenderer<>(context, map, this));
     }
@@ -121,8 +145,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     public void setRenderer(ClusterRenderer<T> view) {
         if (mRenderer != null) {
-            mRenderer.setOnClusterClickListener(null);
-            mRenderer.setOnClusterItemClickListener(null);
             mMarkers.unregisterObserver(mItemCollectionObserver);
             mClusterMarkers.clear();
             mMarkers.clear();
@@ -137,10 +159,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
         mRenderer.onAdd();
         mMarkers.registerObserver(mItemCollectionObserver);
-        mRenderer.setOnClusterClickListener(mOnClusterClickListener);
-        mRenderer.setOnClusterInfoWindowClickListener(mOnClusterInfoWindowClickListener);
-        mRenderer.setOnClusterItemClickListener(mOnClusterItemClickListener);
-        mRenderer.setOnClusterItemInfoWindowClickListener(mOnClusterItemInfoWindowClickListener);
         cluster();
     }
 
@@ -235,16 +253,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         cluster();
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return getMarkerManager().onMarkerClick(marker);
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-        getMarkerManager().onInfoWindowClick(marker);
-    }
-
     /**
      * Runs the clustering algorithm in a background thread, then re-paints when results come back.
      */
@@ -271,7 +279,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     public void setOnClusterClickListener(OnClusterClickListener<T> listener) {
         mOnClusterClickListener = listener;
-        mRenderer.setOnClusterClickListener(listener);
     }
 
     /**
@@ -280,25 +287,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     public void setOnClusterInfoWindowClickListener(OnClusterInfoWindowClickListener<T> listener) {
         mOnClusterInfoWindowClickListener = listener;
-        mRenderer.setOnClusterInfoWindowClickListener(listener);
-    }
-
-    /**
-     * Sets a callback that's invoked when an individual ClusterItem is tapped. Note: For this listener to function, the ClusterManager must
-     * be added as a click listener to the map.
-     */
-    public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener) {
-        mOnClusterItemClickListener = listener;
-        mRenderer.setOnClusterItemClickListener(listener);
-    }
-
-    /**
-     * Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped. Note: For this listener to function, the
-     * ClusterManager must be added as a info window click listener to the map.
-     */
-    public void setOnClusterItemInfoWindowClickListener(OnClusterItemInfoWindowClickListener<T> listener) {
-        mOnClusterItemInfoWindowClickListener = listener;
-        mRenderer.setOnClusterItemInfoWindowClickListener(listener);
     }
 
     /**
@@ -313,19 +301,5 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
      */
     public interface OnClusterInfoWindowClickListener<T extends ClusterItem> {
         public void onClusterInfoWindowClick(Cluster<T> cluster);
-    }
-
-    /**
-     * Called when an individual ClusterItem is clicked.
-     */
-    public interface OnClusterItemClickListener<T extends ClusterItem> {
-        public boolean onClusterItemClick(T item);
-    }
-
-    /**
-     * Called when an individual ClusterItem's Info Window is clicked.
-     */
-    public interface OnClusterItemInfoWindowClickListener<T extends ClusterItem> {
-        public void onClusterItemInfoWindowClick(T item);
     }
 }

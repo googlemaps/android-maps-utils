@@ -38,7 +38,8 @@ import java.util.Set;
  * <p/> All marker operations (adds and removes) should occur via its collection class. That is, don't add a marker via a collection, then
  * remove it via Marker.remove()
  */
-public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.InfoWindowAdapter {
+public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener,
+        GoogleMap.InfoWindowAdapter {
 
     private final GoogleMap mMap;
     private final Map<String, MarkerCollection> mNamedCollections;
@@ -100,59 +101,50 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
     @Override
     public View getInfoWindow(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mInfoWindowAdapter != null) {
-            return collection.mInfoWindowAdapter.getInfoWindow(marker);
-        }
-        return null;
+        return (collection != null) ? collection.getInfoWindow(marker) : null;
     }
 
     @Override
     public View getInfoContents(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mInfoWindowAdapter != null) {
-            return collection.mInfoWindowAdapter.getInfoContents(marker);
-        }
-        return null;
+        return (collection != null) ? collection.getInfoContents(marker) : null;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mInfoWindowClickListener != null) {
-            collection.mInfoWindowClickListener.onInfoWindowClick(marker);
+        if (collection != null) {
+            collection.onInfoWindowClick(marker);
         }
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerClickListener != null) {
-            return collection.mMarkerClickListener.onMarkerClick(marker);
-        }
-        return false;
+        return collection != null && collection.onMarkerClick(marker);
     }
 
     @Override
     public void onMarkerDragStart(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener.onMarkerDragStart(marker);
+        if (collection != null) {
+            collection.onMarkerDragStart(marker);
         }
     }
 
     @Override
     public void onMarkerDrag(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener.onMarkerDrag(marker);
+        if (collection != null) {
+            collection.onMarkerDrag(marker);
         }
     }
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
         MarkerCollection collection = mAllMarkers.get(marker);
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener.onMarkerDragEnd(marker);
+        if (collection != null) {
+            collection.onMarkerDragEnd(marker);
         }
     }
 
@@ -256,6 +248,50 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             return Collections.unmodifiableCollection(mMarkers);
         }
 
+        protected View getInfoWindow(Marker marker) {
+            if (mInfoWindowAdapter != null) {
+                return mInfoWindowAdapter.getInfoWindow(marker);
+            }
+
+            return null;
+        }
+
+        protected View getInfoContents(Marker marker) {
+            if (mInfoWindowAdapter != null) {
+                return mInfoWindowAdapter.getInfoContents(marker);
+            }
+
+            return null;
+        }
+
+        protected void onInfoWindowClick(Marker marker) {
+            if (mInfoWindowClickListener != null) {
+                mInfoWindowClickListener.onInfoWindowClick(marker);
+            }
+        }
+
+        protected boolean onMarkerClick(Marker marker) {
+            return mMarkerClickListener != null && mMarkerClickListener.onMarkerClick(marker);
+        }
+
+        protected void onMarkerDragStart(Marker marker) {
+            if (mMarkerDragListener != null) {
+                mMarkerDragListener.onMarkerDragStart(marker);
+            }
+        }
+
+        protected void onMarkerDrag(Marker marker) {
+            if (mMarkerDragListener != null) {
+                mMarkerDragListener.onMarkerDrag(marker);
+            }
+        }
+
+        protected void onMarkerDragEnd(Marker marker) {
+            if (mMarkerDragListener != null) {
+                mMarkerDragListener.onMarkerDragEnd(marker);
+            }
+        }
+
         public void setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener infoWindowClickListener) {
             mInfoWindowClickListener = infoWindowClickListener;
         }
@@ -280,6 +316,9 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         private final Map<T, Marker> mItemToMarker;
 
         private List<T> mItems;
+        private OnItemClickListener<T> mItemMarkerClickListener;
+        private OnItemDragListener<T> mItemMarkerDragListener;
+        private OnItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
 
         public MarkerItemCollection(MarkerManager markerManager) {
             super(markerManager);
@@ -416,6 +455,63 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         public List<T> getItems() {
             return mItems != null ? Collections.unmodifiableList(mItems) : null;
         }
+
+        @Override
+        protected boolean onMarkerClick(Marker marker) {
+            if (mItemMarkerClickListener != null) {
+                return mItemMarkerClickListener.onItemMarkerClick(getItem(marker)) || super.onMarkerClick(marker);
+            } else {
+                return super.onMarkerClick(marker);
+            }
+        }
+
+        @Override
+        protected void onMarkerDragStart(Marker marker) {
+            if (mItemMarkerDragListener != null) {
+                mItemMarkerDragListener.onMarkerDragStart(getItem(marker));
+            }
+
+            super.onMarkerDragStart(marker);
+        }
+
+        @Override
+        protected void onMarkerDrag(Marker marker) {
+            if (mItemMarkerDragListener != null) {
+                mItemMarkerDragListener.onMarkerDrag(getItem(marker));
+            }
+
+            super.onMarkerDrag(marker);
+        }
+
+        @Override
+        protected void onMarkerDragEnd(Marker marker) {
+            if (mItemMarkerDragListener != null) {
+                mItemMarkerDragListener.onMarkerDragEnd(getItem(marker));
+            }
+
+            super.onMarkerDragEnd(marker);
+        }
+
+        @Override
+        protected void onInfoWindowClick(Marker marker) {
+            if (mItemInfoWindowClickListener != null) {
+                mItemInfoWindowClickListener.onInfoWindowClick(getItem(marker));
+            }
+
+            super.onInfoWindowClick(marker);
+        }
+
+        public void setOnItemClickListener(OnItemClickListener<T> listener) {
+            mItemMarkerClickListener = listener;
+        }
+
+        public void setOnItemDragListener(OnItemDragListener<T> listener) {
+            mItemMarkerDragListener = listener;
+        }
+
+        public void setOnItemInfoWindowClickListener(OnItemInfoWindowClickListener<T> listener) {
+            mItemInfoWindowClickListener = listener;
+        }
     }
 
     /**
@@ -483,6 +579,24 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         }
     }
 
+    public interface OnItemClickListener<T> {
+
+        boolean onItemMarkerClick(T item);
+    }
+
+    public interface OnItemDragListener<T> {
+
+        void onMarkerDragStart(T item);
+
+        void onMarkerDrag(T item);
+
+        void onMarkerDragEnd(T item);
+    }
+
+    public interface OnItemInfoWindowClickListener<T> {
+        void onInfoWindowClick(T item);
+    }
+
     public static abstract class MarkerItemCollectionObserver<T> {
 
         public void onCollectionChanged(MarkerItemCollection<T> collection) {
@@ -494,7 +608,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         public void onItemAdded(MarkerItemCollection<T> collection, T item) {
         }
 
-        public void onItemRemoved(MarkerItemCollection<T> collection, T item){
+        public void onItemRemoved(MarkerItemCollection<T> collection, T item) {
         }
 
         public void onItemChanged(MarkerItemCollection<T> collection, T item) {

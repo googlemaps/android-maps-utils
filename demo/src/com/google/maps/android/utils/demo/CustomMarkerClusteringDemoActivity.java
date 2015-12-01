@@ -27,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -40,13 +41,16 @@ import java.util.Random;
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
  */
-public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
+public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>,
+        ClusterManager.OnClusterInfoWindowClickListener<Person>, MarkerManager.OnItemClickListener<Person>,
+        MarkerManager.OnItemInfoWindowClickListener<Person> {
+
     private ClusterManager<Person> mClusterManager;
     private Random mRandom = new Random(1984);
 
     /**
-     * Draws profile photos inside markers (using IconGenerator).
-     * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
+     * Draws profile photos inside markers (using IconGenerator). When there are multiple people in the cluster, draw multiple photos (using
+     * MultiDrawable).
      */
     private class PersonRenderer extends DefaultClusterRenderer<Person> {
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
@@ -113,24 +117,28 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
     public boolean onClusterClick(Cluster<Person> cluster) {
         // Show a toast with some info when the cluster is clicked.
         String firstName = cluster.getItems().iterator().next().name;
-        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "cluster #" + cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
         return true;
     }
 
     @Override
     public void onClusterInfoWindowClick(Cluster<Person> cluster) {
         // Does nothing, but you could go to a list of the users.
+        String firstName = cluster.getItems().iterator().next().name;
+        Toast.makeText(this, "info window cluster #" + cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public boolean onClusterItemClick(Person item) {
+    public boolean onItemMarkerClick(Person item) {
         // Does nothing, but you could go into the user's profile page, for example.
+        Toast.makeText(this, "person: " + item.name, Toast.LENGTH_SHORT).show();
         return false;
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(Person item) {
+    public void onInfoWindowClick(Person item) {
         // Does nothing, but you could go into the user's profile page, for example.
+        Toast.makeText(this, "info window person: " + item.name, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -139,13 +147,12 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
         mClusterManager = new ClusterManager<Person>(this, getMap());
         mClusterManager.setRenderer(new PersonRenderer());
+
         getMap().setOnCameraChangeListener(mClusterManager);
-        getMap().setOnMarkerClickListener(mClusterManager);
-        getMap().setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterInfoWindowClickListener(this);
-        mClusterManager.setOnClusterItemClickListener(this);
-        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        mClusterManager.getMarkerCollection().setOnItemClickListener(this);
+        mClusterManager.getMarkerCollection().setOnItemInfoWindowClickListener(this);
 
         addItems();
     }

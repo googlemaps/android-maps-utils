@@ -16,9 +16,11 @@
 
 package com.google.maps.android.clustering.view;
 
+import android.support.annotation.Nullable;
+
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.Set;
 
@@ -29,17 +31,19 @@ public interface ClusterRenderer<T extends ClusterItem> {
 
     /**
      * Called when the view needs to be updated because new clusters need to be displayed.
+     *
      * @param clusters the clusters to be displayed.
      */
     void onClustersChanged(Set<? extends Cluster<T>> clusters);
 
-    void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener);
-
-    void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<T> listener);
-
-    void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
-
-    void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener);
+    /**
+     * Get the Cluster from a marker
+     *
+     * @param marker which you will obtain its Cluster
+     * @return a Cluster from a marker or null if it does not exists
+     */
+    @Nullable
+    Cluster<T> getCluster(Marker marker);
 
     /**
      * Called when the view is added.

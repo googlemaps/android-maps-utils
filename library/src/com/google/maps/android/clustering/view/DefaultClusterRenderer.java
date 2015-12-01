@@ -34,6 +34,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.os.Process;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
@@ -128,11 +129,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      */
     private float mZoom;
 
-    private ClusterManager.OnClusterClickListener<T> mClickListener;
-    private ClusterManager.OnClusterInfoWindowClickListener<T> mInfoWindowClickListener;
-    private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
-    private ClusterManager.OnClusterItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
-
     private final MarkerManager.MarkerItemCollectionObserver<T> mItemCollectionObserver = new MarkerManager.MarkerItemCollectionObserver<T>() {
 
         @Override
@@ -174,46 +170,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         final MarkerManager.MarkerItemCollection<T> markerCollection = mClusterManager.getMarkerCollection();
 
         markerCollection.registerObserver(mItemCollectionObserver);
-
-        markerCollection.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                return mItemClickListener != null && mItemClickListener.onClusterItemClick(markerCollection.getItem(marker));
-            }
-        });
-
-        markerCollection.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                if (mItemInfoWindowClickListener != null) {
-                    mItemInfoWindowClickListener.onClusterItemInfoWindowClick(markerCollection.getItem(marker));
-                }
-            }
-        });
-
-        mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                return mClickListener != null && mClickListener.onClusterClick(mMarkerToCluster.get(marker));
-            }
-        });
-
-        mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                if (mInfoWindowClickListener != null) {
-                    mInfoWindowClickListener.onClusterInfoWindowClick(mMarkerToCluster.get(marker));
-                }
-            }
-        });
     }
 
     @Override
     public void onRemove() {
         MarkerManager.MarkerItemCollection<T> markerCollection = mClusterManager.getMarkerCollection();
         markerCollection.unregisterObserver(mItemCollectionObserver);
-        markerCollection.setOnMarkerClickListener(null);
-        mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(null);
     }
 
     private LayerDrawable makeClusterBackground() {
@@ -505,26 +467,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         mViewModifier.queue(clusters);
     }
 
-    @Override
-    public void setOnClusterClickListener(ClusterManager.OnClusterClickListener<T> listener) {
-        mClickListener = listener;
-    }
-
-    @Override
-    public void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<T> listener) {
-        mInfoWindowClickListener = listener;
-    }
-
-    @Override
-    public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
-        mItemClickListener = listener;
-    }
-
-    @Override
-    public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener) {
-        mItemInfoWindowClickListener = listener;
-    }
-
     private static double distanceSquared(Point a, Point b) {
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
@@ -810,12 +752,8 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return mClusterToMarker.get(cluster);
     }
 
-    /**
-     * Get the Cluster from a marker
-     *
-     * @param marker which you will obtain its Cluster
-     * @return a Cluster from a marker or null if it does not exists
-     */
+    @Override
+    @Nullable
     public Cluster<T> getCluster(Marker marker) {
         return mMarkerToCluster.get(marker);
     }
