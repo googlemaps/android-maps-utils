@@ -63,6 +63,19 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     private OnClusterClickListener<T> mOnClusterClickListener;
 
     private final MarkerManager.MarkerItemCollectionObserver<T> mItemCollectionObserver = new MarkerManager.MarkerItemCollectionObserver<T>() {
+
+        @Override
+        public void onItemAdded(MarkerManager.MarkerItemCollection<T> collection, T item) {
+            addItem(item);
+            cluster();
+        }
+
+        @Override
+        public void onItemRemoved(MarkerManager.MarkerItemCollection<T> collection, T item) {
+            removeItem(item);
+            cluster();
+        }
+
         @Override
         public void onCollectionChanged(MarkerManager.MarkerItemCollection<T> collection) {
             setItems(collection.getItems());
@@ -144,6 +157,26 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         cluster();
     }
 
+    private void addItem(T item) {
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.addItem(item);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
+
+    }
+
+    private void removeItem(T item) {
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.removeItem(item);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
+
+    }
+
     private void setItems(Collection<T> items) {
         mAlgorithmLock.writeLock().lock();
         try {
@@ -159,7 +192,7 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
     }
 
     /**
-     * Force a re-cluster. You may want to call this after adding new item(s).
+     * Force a re-cluster.
      */
     public void cluster() {
         mClusterTaskLock.writeLock().lock();

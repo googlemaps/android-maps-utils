@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -362,7 +363,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             mItemToMarker.clear();
         }
 
-        public void setItemCollection(List<T> items) {
+        public void setItems(List<T> items) {
             if (mItems != items) {
                 mItems = items;
 
@@ -376,6 +377,21 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
         public int getItemSize() {
             return mItems != null ? mItems.size() : 0;
+        }
+
+        public void addItem(T item) {
+            if (mItems == null) {
+                mItems = new ArrayList<>();
+            }
+
+            mItems.add(item);
+            mObservable.notifyCollectionItemAdded(item);
+        }
+
+        public void removeItem(T item) {
+            if (mItems != null && mItems.remove(item)) {
+                mObservable.notifyCollectionItemRemoved(item);
+            }
         }
 
         public T getItem(int index) {
@@ -475,6 +491,12 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         public void onCollectionInvalidated(MarkerItemCollection<T> collection) {
         }
 
+        public void onItemAdded(MarkerItemCollection<T> collection, T item) {
+        }
+
+        public void onItemRemoved(MarkerItemCollection<T> collection, T item){
+        }
+
         public void onItemChanged(MarkerItemCollection<T> collection, T item) {
         }
 
@@ -503,6 +525,22 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             synchronized (mObservers) {
                 for (int i = mObservers.size() - 1; i >= 0; i--) {
                     mObservers.get(i).onCollectionInvalidated(mCollection);
+                }
+            }
+        }
+
+        public void notifyCollectionItemAdded(T item) {
+            synchronized (mObservers) {
+                for (int i = mObservers.size() - 1; i >= 0; i--) {
+                    mObservers.get(i).onItemAdded(mCollection, item);
+                }
+            }
+        }
+
+        public void notifyCollectionItemRemoved(T item) {
+            synchronized (mObservers) {
+                for (int i = mObservers.size() - 1; i >= 0; i--) {
+                    mObservers.get(i).onItemRemoved(mCollection, item);
                 }
             }
         }

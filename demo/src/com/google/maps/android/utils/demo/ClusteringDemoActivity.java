@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 
@@ -52,6 +51,6 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
-        mClusterManager.addItems(items);
+        mClusterManager.getMarkerCollection().setItems(items);
     }
 }

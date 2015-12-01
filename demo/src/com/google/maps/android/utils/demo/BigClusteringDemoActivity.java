@@ -17,6 +17,7 @@
 package com.google.maps.android.utils.demo;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -48,6 +49,7 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
         List<MyItem> items = new MyItemReader().read(inputStream);
+        List<MyItem> offsetItems = new ArrayList<>(items.size() * 10);
         for (int i = 0; i < 10; i++) {
             double offset = i / 60d;
             for (MyItem item : items) {
@@ -55,8 +57,10 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
                 double lat = position.latitude + offset;
                 double lng = position.longitude + offset;
                 MyItem offsetItem = new MyItem(lat, lng);
-                mClusterManager.addItem(offsetItem);
+                offsetItems.add(offsetItem);
             }
         }
+
+        mClusterManager.getMarkerCollection().setItems(offsetItems);
     }
 }
