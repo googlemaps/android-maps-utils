@@ -7,6 +7,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class KmlParserTest extends ActivityTestCase {
 
@@ -38,7 +39,39 @@ public class KmlParserTest extends ActivityTestCase {
             assertEquals(placemark.getGeometry().getGeometryType(), "MultiGeometry");
         }
     }
-    
+
+    public void testPolyStyleBooleanNumeric() throws Exception {
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.poly_style_boolean_numeric);
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(1, mParser.getContainers().size());
+        KmlContainer kmlContainer = mParser.getContainers().get(0);
+        assertEquals(true, kmlContainer.hasPlacemarks());
+
+        HashMap<String, KmlStyle> styles = kmlContainer.getStyles();
+        KmlStyle kmlStyle = styles.get("#fireadvisory");
+        assertNotNull(kmlStyle);
+        assertEquals(true, kmlStyle.hasFill());
+        assertEquals(false, kmlStyle.hasOutline());
+    }
+
+    public void testPolyStyleBooleanAlpha() throws Exception {
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.poly_style_boolean_alpha);
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(1, mParser.getContainers().size());
+        KmlContainer kmlContainer = mParser.getContainers().get(0);
+        assertEquals(true, kmlContainer.hasPlacemarks());
+
+        HashMap<String, KmlStyle> styles = kmlContainer.getStyles();
+        KmlStyle kmlStyle = styles.get("#fireadvisory");
+        assertNotNull(kmlStyle);
+        assertEquals(true, kmlStyle.hasFill());
+        assertEquals(false, kmlStyle.hasOutline());
+    }
+
     public void testContainerHeirarchy() throws Exception {
         XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.document_nest);
         KmlParser mParser = new KmlParser(parser);
