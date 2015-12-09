@@ -264,6 +264,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 // Nothing to do.
                 return;
             }
+            Projection projection = mMap.getProjection();
+            if (projection == null) {
+                // Without a map projection we can't render clusters.
+                return;
+            }
 
             RenderTask renderTask;
             synchronized (this) {
@@ -278,7 +283,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     sendEmptyMessage(TASK_FINISHED);
                 }
             });
-            renderTask.setProjection(mMap.getProjection());
+            renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
             new Thread(renderTask).start();
         }
