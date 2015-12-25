@@ -56,9 +56,9 @@ artifacts {
     archives apklib
 }
 
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
 
 if (!hasProperty("sonatypeUsername")) {
     sonatypeUsername = ""
