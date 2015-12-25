@@ -25,13 +25,11 @@ public class BigHeatmapTileProvider extends HeatmapTileProvider {
      */
     public static final int DEFAULT_MAX_VALUE = 10;
 
-    private static int mPointsThreshold;
-    private static int mMaxValue;
+    private static int sPointsThreshold = DEFAULT_POINTS_THRESHOLD;
+    private static int sMaxValue = DEFAULT_MAX_VALUE;
 
     private BigHeatmapTileProvider(Builder builder) {
         super(builder);
-        mPointsThreshold = builder.pointsThreshold;
-        mMaxValue = builder.maxValue;
     }
 
     @Override
@@ -40,16 +38,12 @@ public class BigHeatmapTileProvider extends HeatmapTileProvider {
      * {@link HeatmapTileProvider#getMaxValue(Collection, Bounds, int, int)}
      */
     double getMaxValue(Collection<WeightedLatLng> points, Bounds bounds, int radius, int screenDim) {
-        return points.size() > mPointsThreshold ?
-                mMaxValue :
+        return points.size() > sPointsThreshold ?
+                sMaxValue :
                 super.getMaxValue(points, bounds, radius, screenDim);
     }
 
     public static class Builder extends HeatmapTileProvider.Builder {
-
-        // Optional, initialised to default values
-        private int pointsThreshold = DEFAULT_POINTS_THRESHOLD;
-        private int maxValue = DEFAULT_MAX_VALUE;
 
         public Builder() {
         }
@@ -63,7 +57,7 @@ public class BigHeatmapTileProvider extends HeatmapTileProvider {
          * @see #DEFAULT_POINTS_THRESHOLD
          */
         public Builder pointsThreshold(int val) {
-            pointsThreshold = val;
+            sPointsThreshold = val;
             return this;
         }
 
@@ -77,7 +71,7 @@ public class BigHeatmapTileProvider extends HeatmapTileProvider {
          * @see #DEFAULT_MAX_VALUE
          */
         public Builder maxValue(int val) {
-            maxValue = val;
+            sMaxValue = val;
             return this;
         }
 
