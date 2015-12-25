@@ -163,7 +163,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
 
             // Check if need to instantiate (avoid setData etc twice)
             if (mProvider == null) {
-                mProvider = new HeatmapTileProvider.Builder().data(
+                mProvider = (HeatmapTileProvider) new HeatmapTileProvider.Builder().data(
                         mLists.get(getString(R.string.police_stations)).getData()).build();
                 mOverlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
                 // Render links
