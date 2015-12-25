@@ -113,6 +113,11 @@ public class HeatmapTileProvider implements TileProvider {
     private static final int MAX_RADIUS = 50;
 
     /**
+     * Default points threshold
+     */
+    public static final int DEFAULT_POINTS_THRESHOLD = 1000;
+
+    /**
      * Default max value
      */
     public static final int DEFAULT_MAX_VALUE = 10;
