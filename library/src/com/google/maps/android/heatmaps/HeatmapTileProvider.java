@@ -252,7 +252,7 @@ public class HeatmapTileProvider implements TileProvider {
          *
          * @return HeatmapTileProvider created with desired options.
          */
-        public HeatmapTileProvider build() {
+        public TileProvider build() {
             // Check if data or weightedData has been called
             if (data == null) {
                 throw new IllegalStateException("No input data: you must use either .data or " +
@@ -263,7 +263,7 @@ public class HeatmapTileProvider implements TileProvider {
         }
     }
 
-    private HeatmapTileProvider(Builder builder) {
+    HeatmapTileProvider(Builder builder) {
         // Get parameters from builder
         mData = builder.data;
 
@@ -720,7 +720,7 @@ public class HeatmapTileProvider implements TileProvider {
      * @param screenDim larger dimension of screen in pixels (for scale)
      * @return Approximate max value
      */
-    static double getMaxValue(Collection<WeightedLatLng> points, Bounds bounds, int radius,
+    double getMaxValue(Collection<WeightedLatLng> points, Bounds bounds, int radius,
                               int screenDim) {
         // Approximate scale as if entire heatmap is on the screen
         // ie scale dimensions to larger of width or height (screenDim)
