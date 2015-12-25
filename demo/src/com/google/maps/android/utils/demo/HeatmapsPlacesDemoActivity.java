@@ -329,7 +329,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             if (!points.isEmpty()) {
                 if (mOverlays.size() < MAX_CHECKBOXES) {
                     makeCheckBox(keyword);
-                    HeatmapTileProvider provider = (HeatmapTileProvider) new HeatmapTileProvider.Builder()
+                    HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                             .data(new ArrayList<LatLng>(points))
                             .gradient(makeGradient(HEATMAP_COLORS[mOverlaysRendered]))
                             .build();
