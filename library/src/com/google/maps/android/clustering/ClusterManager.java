@@ -38,7 +38,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Groups many items on a map based on zoom level.
  *
- * <p>ClusterManager should be added to the map as an: <ul> <li>{@link GoogleMap.OnCameraChangeListener}</li> </ul> </ p>
+ * <p>ClusterManager should be added to the map as an: <ul> <li>{@link GoogleMap.OnCameraChangeListener}</li> </ul> </p>
  */
 public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener {
 
@@ -182,7 +182,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
-
     }
 
     private void removeItem(T item) {
@@ -192,7 +191,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
-
     }
 
     private void setItems(Collection<T> items) {
@@ -206,7 +204,6 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
-
     }
 
     /**
