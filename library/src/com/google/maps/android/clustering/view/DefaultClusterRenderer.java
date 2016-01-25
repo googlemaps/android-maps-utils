@@ -29,7 +29,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
@@ -132,8 +131,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final MarkerManager.MarkerItemCollectionObserver<T> mItemCollectionObserver = new MarkerManager.MarkerItemCollectionObserver<T>() {
 
         @Override
-        public boolean onCanAddMarker(T item) {
-            Log.d(TAG, "collection add marker: " + item);
+        public boolean onCanAddMarker(MarkerManager.MarkerItemCollection<T> collection, T item) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "collection add marker: " + item);
+            }
+
             return !isItemClusteredVisually(item);
         }
     };
@@ -155,13 +157,19 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             final Set<? extends Cluster<T>> currentClusters = mCurrentClusters;
             for (Cluster<T> cluster : currentClusters) {
                 if (shouldRenderAsCluster(cluster) && cluster.getItems().contains(item)) {
-                    Log.d(TAG, "item in cluster: " + item);
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "item in cluster: " + item);
+                    }
+
                     return true;
                 }
             }
         }
 
-        Log.d(TAG, "item not in cluster: " + item);
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "item not in cluster: " + item);
+        }
+
         return false;
     }
 
@@ -241,18 +249,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         private static final int TASK_FINISHED = 1;
 
         private final WeakReference<DefaultClusterRenderer> mParent;
-        private final HandlerThread mHandlerThread;
-        private final Handler mBackgroundHandler;
 
         private boolean mViewModificationInProgress = false;
         private DefaultClusterRenderer.RenderTask mNextClusters = null;
 
         public ViewModifier(DefaultClusterRenderer parent) {
             mParent = new WeakReference<>(parent);
-
-            mHandlerThread = new HandlerThread("ViewModifier-Background", Process.THREAD_PRIORITY_BACKGROUND);
-            mHandlerThread.start();
-            mBackgroundHandler = new Handler(mHandlerThread.getLooper());
         }
 
         @Override
@@ -264,7 +266,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         // Run the task that was queued up.
                         sendEmptyMessage(RUN_TASK);
                     } else {
-                        Log.d(TAG, "rendering finished");
+                        if (Log.isLoggable(TAG, Log.DEBUG)) {
+                            Log.d(TAG, "rendering finished");
+                        }
+
                         final DefaultClusterRenderer parent = mParent.get();
                         if (parent != null) {
                             parent.mRenderInProgress.set(false);
@@ -278,7 +283,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     final DefaultClusterRenderer parent = mParent.get();
                     if (parent != null) {
                         if (!mViewModificationInProgress && mNextClusters != null) {
-                            Log.d(TAG, "rendering in progress");
+                            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                Log.d(TAG, "rendering in progress");
+                            }
+
                             parent.mRenderInProgress.set(true);
 
                             DefaultClusterRenderer.RenderTask renderTask;
@@ -325,10 +333,15 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Transforms the current view (represented by DefaultClusterRenderer.mDisplayedClusters and DefaultClusterRenderer.mZoom) to a new zoom
-     * level and set of clusters. <p/> This must be run off the UI thread. Work is coordinated in the RenderTask, then queued up to be
-     * executed by a MarkerModifier. <p/> There are three stages for the render: <p/> 1. Markers are added to the map <p/> 2. Markers are
-     * animated to their final position <p/> 3. Any old markers are removed from the map <p/> When zooming in, markers are animated out from
-     * the nearest existing cluster. When zooming out, existing clusters are animated to the nearest new cluster.
+     * level and set of clusters.
+     *
+     * <p>This must be run off the UI thread. Work is coordinated in the RenderTask, then queued up to be executed by a MarkerModifier.<p/>
+     *
+     * <p>There are three stages for the render: <ol> <li>Markers are added to the map</li> <li>Markers are animated to their final
+     * position</li> <li>Any old markers are removed from the map</li> </ol> </p>
+     *
+     * <p>When zooming in, markers are animated out from the nearest existing cluster. When zooming out, existing clusters are animated to
+     * the nearest new cluster.</p>
      */
     private class RenderTask implements Runnable {
 
@@ -462,7 +475,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     @Override
     public void onClustersChanged(Set<? extends Cluster<T>> clusters) {
-        Log.d(TAG, "clusters changed");
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "clusters changed");
+        }
+
         mCurrentClusters = clusters;
         mViewModifier.queue(clusters);
     }
