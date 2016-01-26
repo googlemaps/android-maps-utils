@@ -21,6 +21,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -471,7 +473,12 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
                     mMarkerToItem.put(marker, item);
                     mItemToMarker.put(item, marker);
                 } else {
-                    marker.setIcon(opts.getIcon());
+                    BitmapDescriptor bitmapDescriptor = opts.getIcon();
+                    if (bitmapDescriptor == null) {
+                        bitmapDescriptor = BitmapDescriptorFactory.defaultMarker();
+                    }
+
+                    marker.setIcon(bitmapDescriptor);
                     marker.setAlpha(opts.getAlpha());
                     marker.setAnchor(opts.getAnchorU(), opts.getAnchorV());
                     marker.setDraggable(opts.isDraggable());
