@@ -1,4 +1,4 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils) [![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils) [![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils) ![Analytics](https://maps-ga-beacon.appspot.com/UA-12846745-20/android-maps-utils/readme?pixel)
 
 # Google Maps Android API utility library
 
