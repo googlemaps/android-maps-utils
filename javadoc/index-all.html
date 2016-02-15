@@ -253,6 +253,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html#DefaultClusterRenderer-Context-GoogleMap-com.google.maps.android.clustering.ClusterManager-">DefaultClusterRenderer(Context, GoogleMap, ClusterManager&lt;T&gt;)</a></span> - Constructor for class com.google.maps.android.clustering.view.<a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/PolyUtil.html#distanceToLine-LatLng-LatLng-LatLng-">distanceToLine(LatLng, LatLng, LatLng)</a></span> - Static method in class com.google.maps.android.<a href="com/google/maps/android/PolyUtil.html" title="class in com.google.maps.android">PolyUtil</a></dt>
+<dd>
+<div class="block">Computes the distance on the sphere between the point p and the line segment start to end.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/ui/SquareTextView.html#draw-Canvas-">draw(Canvas)</a></span> - Method in class com.google.maps.android.ui.<a href="com/google/maps/android/ui/SquareTextView.html" title="class in com.google.maps.android.ui">SquareTextView</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -438,6 +442,8 @@
 <dd>
 <div class="block">Gets a named collection that was created by <a href="com/google/maps/android/MarkerManager.html#newCollection-java.lang.String-"><code>MarkerManager.newCollection(String)</code></a></div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html#getColor-int-">getColor(int)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/geojson/GeoJsonLineStringStyle.html#getColor--">getColor()</a></span> - Method in class com.google.maps.android.geojson.<a href="com/google/maps/android/geojson/GeoJsonLineStringStyle.html" title="class in com.google.maps.android.geojson">GeoJsonLineStringStyle</a></dt>
 <dd>
 <div class="block">Gets the color of the GeoJsonLineString as a 32-bit ARGB color</div>
@@ -895,6 +901,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/geometry/Bounds.html#intersects-com.google.maps.android.geometry.Bounds-">intersects(Bounds)</a></span> - Method in class com.google.maps.android.geometry.<a href="com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/PolyUtil.html#isClosedPolygon-java.util.List-">isClosedPolygon(List&lt;LatLng&gt;)</a></span> - Static method in class com.google.maps.android.<a href="com/google/maps/android/PolyUtil.html" title="class in com.google.maps.android">PolyUtil</a></dt>
+<dd>
+<div class="block">Returns true if the provided list of points is a closed polygon (i.e., the first and last
+ points are the same), and false if it is not</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/geojson/GeoJsonPointStyle.html#isDraggable--">isDraggable()</a></span> - Method in class com.google.maps.android.geojson.<a href="com/google/maps/android/geojson/GeoJsonPointStyle.html" title="class in com.google.maps.android.geojson">GeoJsonPointStyle</a></dt>
 <dd>
 <div class="block">Gets whether the GeoJsonPoint is draggable</div>
@@ -1464,6 +1475,11 @@
 <dt><span class="memberNameLink"><a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html#shouldRenderAsCluster-com.google.maps.android.clustering.Cluster-">shouldRenderAsCluster(Cluster&lt;T&gt;)</a></span> - Method in class com.google.maps.android.clustering.view.<a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></dt>
 <dd>
 <div class="block">Determine whether the cluster should be rendered as individual markers or a cluster.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/PolyUtil.html#simplify-java.util.List-double-">simplify(List&lt;LatLng&gt;, double)</a></span> - Static method in class com.google.maps.android.<a href="com/google/maps/android/PolyUtil.html" title="class in com.google.maps.android">PolyUtil</a></dt>
+<dd>
+<div class="block">Simplifies the given poly (polyline or polygon) using the Douglas-Peucker decimation
+ algorithm.</div>
 </dd>
 <dt><a href="com/google/maps/android/projection/SphericalMercatorProjection.html" title="class in com.google.maps.android.projection"><span class="typeNameLink">SphericalMercatorProjection</span></a> - Class in <a href="com/google/maps/android/projection/package-summary.html">com.google.maps.android.projection</a></dt>
 <dd>&nbsp;</dd>

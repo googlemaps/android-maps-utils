@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -82,12 +82,27 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#distanceToLine-LatLng-LatLng-LatLng-">distanceToLine</a></span>(LatLng&nbsp;p,
+              LatLng&nbsp;start,
+              LatLng&nbsp;end)</code>
+<div class="block">Computes the distance on the sphere between the point p and the line segment start to end.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#encode-java.util.List-">encode</a></span>(java.util.List&lt;LatLng&gt;&nbsp;path)</code>
 <div class="block">Encodes a sequence of LatLngs into an encoded path string.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#isClosedPolygon-java.util.List-">isClosedPolygon</a></span>(java.util.List&lt;LatLng&gt;&nbsp;poly)</code>
+<div class="block">Returns true if the provided list of points is a closed polygon (i.e., the first and last
+ points are the same), and false if it is not</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnEdge-LatLng-java.util.List-boolean-">isLocationOnEdge</a></span>(LatLng&nbsp;point,
                 java.util.List&lt;LatLng&gt;&nbsp;polygon,
@@ -96,7 +111,7 @@ extends java.lang.Object</pre>
  with a default tolerance of 0.1 meters.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnEdge-LatLng-java.util.List-boolean-double-">isLocationOnEdge</a></span>(LatLng&nbsp;point,
                 java.util.List&lt;LatLng&gt;&nbsp;polygon,
@@ -106,7 +121,7 @@ extends java.lang.Object</pre>
  tolerance in meters.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnPath-LatLng-java.util.List-boolean-">isLocationOnPath</a></span>(LatLng&nbsp;point,
                 java.util.List&lt;LatLng&gt;&nbsp;polyline,
@@ -116,7 +131,7 @@ extends java.lang.Object</pre>
  with a default tolerance of 0.1 meters.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#isLocationOnPath-LatLng-java.util.List-boolean-double-">isLocationOnPath</a></span>(LatLng&nbsp;point,
                 java.util.List&lt;LatLng&gt;&nbsp;polyline,
@@ -124,6 +139,14 @@ extends java.lang.Object</pre>
                 double&nbsp;tolerance)</code>
 <div class="block">Computes whether the given point lies on or near a polyline, within a specified
  tolerance in meters.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>static java.util.List&lt;LatLng&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/maps/android/PolyUtil.html#simplify-java.util.List-double-">simplify</a></span>(java.util.List&lt;LatLng&gt;&nbsp;poly,
+        double&nbsp;tolerance)</code>
+<div class="block">Simplifies the given poly (polyline or polygon) using the Douglas-Peucker decimation
+ algorithm.</div>
 </td>
 </tr>
 </table>
@@ -175,6 +198,26 @@ extends java.lang.Object</pre>
 <div class="block">Decodes an encoded path string into a sequence of LatLngs.</div>
 </li>
 </ul>
+<a name="distanceToLine-LatLng-LatLng-LatLng-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>distanceToLine</h4>
+<pre>public static&nbsp;double&nbsp;distanceToLine(LatLng&nbsp;p,
+                                    LatLng&nbsp;start,
+                                    LatLng&nbsp;end)</pre>
+<div class="block">Computes the distance on the sphere between the point p and the line segment start to end.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>p</code> - the point to be measured</dd>
+<dd><code>start</code> - the beginning of the line segment</dd>
+<dd><code>end</code> - the end of the line segment</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the distance in meters (assuming spherical earth)</dd>
+</dl>
+</li>
+</ul>
 <a name="encode-java.util.List-">
 <!--   -->
 </a>
@@ -183,6 +226,24 @@ extends java.lang.Object</pre>
 <h4>encode</h4>
 <pre>public static&nbsp;java.lang.String&nbsp;encode(java.util.List&lt;LatLng&gt;&nbsp;path)</pre>
 <div class="block">Encodes a sequence of LatLngs into an encoded path string.</div>
+</li>
+</ul>
+<a name="isClosedPolygon-java.util.List-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isClosedPolygon</h4>
+<pre>public static&nbsp;boolean&nbsp;isClosedPolygon(java.util.List&lt;LatLng&gt;&nbsp;poly)</pre>
+<div class="block">Returns true if the provided list of points is a closed polygon (i.e., the first and last
+ points are the same), and false if it is not</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>poly</code> - polyline or polygon</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the provided list of points is a closed polygon (i.e., the first and last
+ points are the same), and false if it is not</dd>
+</dl>
 </li>
 </ul>
 <a name="isLocationOnEdge-LatLng-java.util.List-boolean-">
@@ -231,7 +292,7 @@ extends java.lang.Object</pre>
 <a name="isLocationOnPath-LatLng-java.util.List-boolean-double-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>isLocationOnPath</h4>
 <pre>public static&nbsp;boolean&nbsp;isLocationOnPath(LatLng&nbsp;point,
@@ -242,6 +303,35 @@ extends java.lang.Object</pre>
  tolerance in meters. The polyline is composed of great circle segments if geodesic
  is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
  segment between the first point and the last point is not included.</div>
+</li>
+</ul>
+<a name="simplify-java.util.List-double-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>simplify</h4>
+<pre>public static&nbsp;java.util.List&lt;LatLng&gt;&nbsp;simplify(java.util.List&lt;LatLng&gt;&nbsp;poly,
+                                              double&nbsp;tolerance)</pre>
+<div class="block">Simplifies the given poly (polyline or polygon) using the Douglas-Peucker decimation
+ algorithm.  Increasing the tolerance will result in fewer points in the simplified polyline
+ or polygon.
+
+ When the providing a polygon as input, the first and last point of the list MUST have the
+ same latitude and longitude (i.e., the polygon must be closed).  If the input polygon is not
+ closed, the resulting polygon may not be fully simplified.
+
+ The time complexity of Douglas-Peucker is O(n^2), so take care that you do not call this
+ algorithm too frequently in your code.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>poly</code> - polyline or polygon to be simplified.  Polygon should be closed (i.e.,
+              first and last points should have the same latitude and longitude).</dd>
+<dd><code>tolerance</code> - in meters.  Increasing the tolerance will result in fewer points in the
+                  simplified poly.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a simplified poly produced by the Douglas-Peucker algorithm</dd>
+</dl>
 </li>
 </ul>
 </li>
