@@ -37,6 +37,7 @@ An introductory video:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nb2X9IjjZpM" frameborder="0" allowfullscreen></iframe>
 
 <p id="start"></p>
+
 ## Getting Started
 
 The current version of the library is `0.4`.
@@ -75,11 +76,13 @@ _(zip download is coming soon)_
 <!--a class="button" href="android-maps-utils-0.2.1.zip">Download libproject zip</a-->
 
 <p id="feedback"></p>
+
 ## Feedback
 
 Feedback and feature requests can be filed on the GitHub [issue tracker][issues].
 
 <p id="source"></p>
+
 ## Source code
 
 The project is hosted on [GitHub][github].
@@ -104,6 +107,7 @@ You will also need to download the "Google Repository" in the SDK Manager. (You 
 
 
 <p id="contribute"></p>
+
 ## Contributions
 
 Contributions are welcomed. You can submit a pull request via
@@ -115,6 +119,7 @@ For your first contribution, you will need to fill out one of the contributor li
   * If your organization is the copyright holder, the organization will need to agree to the <a href="http://code.google.com/legal/corporate-cla-v1.0.html">corporate contributor license agreement</a>. (If the copyright holder for your code has already completed the agreement in connection with another Google open source project, it does not need to be completed again.)
 
 <p id="license"></p>
+
 ## License
 
     Copyright 2013 Google Inc.
