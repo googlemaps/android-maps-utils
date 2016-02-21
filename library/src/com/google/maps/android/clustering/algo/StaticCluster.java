@@ -65,4 +65,19 @@ public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
                 ", mItems.size=" + mItems.size() +
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        return mCenter.hashCode() + mItems.hashCode();
+    };
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof StaticCluster<?>)) {
+            return false;
+        }
+
+        return ((StaticCluster<?>) other).mCenter.equals(mCenter)
+                && ((StaticCluster<?>) other).mItems.equals(mItems);
+    }
 }

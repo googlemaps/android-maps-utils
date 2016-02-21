@@ -87,8 +87,13 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
 
     @Override
     public void removeItem(T item) {
-        // TODO: delegate QuadItem#hashCode and QuadItem#equals to its item.
-        throw new UnsupportedOperationException("NonHierarchicalDistanceBasedAlgorithm.remove not implemented");
+        // QuadItem delegates hashcode() and equals() to its item so,
+        //   removing any QuadItem to that item will remove the item
+        final QuadItem<T> quadItem = new QuadItem<T>(item);
+        synchronized (mQuadTree) {
+            mItems.remove(quadItem);
+            mQuadTree.remove(quadItem);
+        }
     }
 
     @Override
@@ -198,6 +203,20 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         @Override
         public int getSize() {
             return 1;
+        }
+
+        @Override
+        public int hashCode() {
+            return mClusterItem.hashCode();
+        };
+
+        @Override
+        public boolean equals(Object other) {
+            if (!(other instanceof QuadItem<?>)) {
+                return false;
+            }
+
+            return ((QuadItem<?>) other).mClusterItem.equals(mClusterItem);
         }
     }
 }
