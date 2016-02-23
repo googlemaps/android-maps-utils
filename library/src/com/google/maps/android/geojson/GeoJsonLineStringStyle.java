@@ -51,10 +51,20 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
     }
     
     /**
-     * Sets the GeoJsonLineString clickable
-     *
+     * Gets the clickability setting for this Options object
+     * 
+     * @return true if the GeoJsonLineString is clickable; false if it is not
      */
-    public void setClickable(boolean clickable){
+    public boolean isClickable() {
+        return mPolylineOptions.isClickable();
+    }
+    
+    /**
+     * Specifies whether this GeoJsonLineString is clickable
+     * 
+     * @param clickable  - new clickability setting for the GeoJsonLineString
+     */
+    public void setClickable(boolean clickable) {
         mPolylineOptions.clickable(clickable);
         styleChanged();
     }
