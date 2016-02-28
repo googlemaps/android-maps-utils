@@ -64,6 +64,11 @@ artifacts {
     archives apklib
 }
 
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
 signing {
     sign configurations.archives
 }
