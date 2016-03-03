@@ -151,7 +151,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>Bitmap</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/ui/IconGenerator.html#makeIcon-java.lang.String-">makeIcon</a></span>(java.lang.String&nbsp;text)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/ui/IconGenerator.html#makeIcon-java.lang.CharSequence-">makeIcon</a></span>(java.lang.CharSequence&nbsp;text)</code>
 <div class="block">Sets the text content, then creates an icon with the current style.</div>
 </td>
 </tr>
@@ -393,13 +393,13 @@ extends java.lang.Object</pre>
  applicable.</div>
 </li>
 </ul>
-<a name="makeIcon-java.lang.String-">
+<a name="makeIcon-java.lang.CharSequence-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>makeIcon</h4>
-<pre>public&nbsp;Bitmap&nbsp;makeIcon(java.lang.String&nbsp;text)</pre>
+<pre>public&nbsp;Bitmap&nbsp;makeIcon(java.lang.CharSequence&nbsp;text)</pre>
 <div class="block">Sets the text content, then creates an icon with the current style.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -479,7 +479,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;void&nbsp;setContentView(View&nbsp;contentView)</pre>
 <div class="block">Sets the child view for the icon.
  <p/>
- If the view contains a <code>TextView</code> with the id "text", operations such as <a href="../../../../../com/google/maps/android/ui/IconGenerator.html#setTextAppearance-Context-int-"><code>setTextAppearance(Context, int)</code></a> and <a href="../../../../../com/google/maps/android/ui/IconGenerator.html#makeIcon-java.lang.String-"><code>makeIcon(String)</code></a> will operate upon that <code>TextView</code>.</div>
+ If the view contains a <code>TextView</code> with the id "text", operations such as <a href="../../../../../com/google/maps/android/ui/IconGenerator.html#setTextAppearance-Context-int-"><code>setTextAppearance(Context, int)</code></a> and <code>#makeIcon(String)</code> will operate upon that <code>TextView</code>.</div>
 </li>
 </ul>
 <a name="setRotation-int-">

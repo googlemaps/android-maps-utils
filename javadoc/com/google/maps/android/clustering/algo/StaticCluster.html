@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -95,22 +95,30 @@ implements <a href="../../../../../../com/google/maps/android/clustering/Cluster
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#add-T-">add</a></span>(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#equals-java.lang.Object-">equals</a></span>(java.lang.Object&nbsp;other)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Collection&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#getItems--">getItems</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>LatLng</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#getPosition--">getPosition</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#getSize--">getSize</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#hashCode--">hashCode</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#remove-T-">remove</a></span>(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
@@ -120,7 +128,7 @@ implements <a href="../../../../../../com/google/maps/android/clustering/Cluster
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, wait, wait, wait</code></li>
+<code>clone, finalize, getClass, notify, notifyAll, wait, wait, wait</code></li>
 </ul>
 </li>
 </ul>
@@ -164,6 +172,19 @@ implements <a href="../../../../../../com/google/maps/android/clustering/Cluster
 <pre>public&nbsp;boolean&nbsp;add(<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a>&nbsp;t)</pre>
 </li>
 </ul>
+<a name="equals-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>equals</h4>
+<pre>public&nbsp;boolean&nbsp;equals(java.lang.Object&nbsp;other)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>equals</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+</dl>
+</li>
+</ul>
 <a name="getItems--">
 <!--   -->
 </a>
@@ -200,6 +221,19 @@ implements <a href="../../../../../../com/google/maps/android/clustering/Cluster
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html#getSize--">getSize</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering">Cluster</a>&lt;<a href="../../../../../../com/google/maps/android/clustering/algo/StaticCluster.html" title="type parameter in StaticCluster">T</a> extends <a href="../../../../../../com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering">ClusterItem</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a name="hashCode--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hashCode</h4>
+<pre>public&nbsp;int&nbsp;hashCode()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>hashCode</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
 </dl>
 </li>
 </ul>

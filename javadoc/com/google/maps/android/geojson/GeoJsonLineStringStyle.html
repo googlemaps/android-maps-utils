@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -120,53 +120,65 @@ extends java.util.Observable</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#isClickable--">isClickable</a></span>()</code>
+<div class="block">Gets the clickability setting for this Options object</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#isGeodesic--">isGeodesic</a></span>()</code>
 <div class="block">Gets whether the GeoJsonLineString is geodesic</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#isVisible--">isVisible</a></span>()</code>
 <div class="block">Gets whether the GeoJsonLineString is visible</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#setClickable-boolean-">setClickable</a></span>(boolean&nbsp;clickable)</code>
+<div class="block">Specifies whether this GeoJsonLineString is clickable</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#setColor-int-">setColor</a></span>(int&nbsp;color)</code>
 <div class="block">Sets the color of the GeoJsonLineString as a 32-bit ARGB color</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#setGeodesic-boolean-">setGeodesic</a></span>(boolean&nbsp;geodesic)</code>
 <div class="block">Sets whether the GeoJsonLineString is geodesic</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#setVisible-boolean-">setVisible</a></span>(boolean&nbsp;visible)</code>
 <div class="block">Sets whether the GeoJsonLineString is visible</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#setWidth-float-">setWidth</a></span>(float&nbsp;width)</code>
 <div class="block">Sets the width of the GeoJsonLineString in screen pixels</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#setZIndex-float-">setZIndex</a></span>(float&nbsp;zIndex)</code>
 <div class="block">Sets the z index of the GeoJsonLineString</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>PolylineOptions</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#toPolylineOptions--">toPolylineOptions</a></span>()</code>
 <div class="block">Gets a new PolylineOptions object containing styles for the GeoJsonLineString</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/geojson/GeoJsonLineStringStyle.html#toString--">toString</a></span>()</code>&nbsp;</td>
 </tr>
@@ -273,6 +285,20 @@ extends java.util.Observable</pre>
 </dl>
 </li>
 </ul>
+<a name="isClickable--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isClickable</h4>
+<pre>public&nbsp;boolean&nbsp;isClickable()</pre>
+<div class="block">Gets the clickability setting for this Options object</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the GeoJsonLineString is clickable; false if it is not</dd>
+</dl>
+</li>
+</ul>
 <a name="isGeodesic--">
 <!--   -->
 </a>
@@ -298,6 +324,20 @@ extends java.util.Observable</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the GeoJsonLineString visible, false if not visible</dd>
+</dl>
+</li>
+</ul>
+<a name="setClickable-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setClickable</h4>
+<pre>public&nbsp;void&nbsp;setClickable(boolean&nbsp;clickable)</pre>
+<div class="block">Specifies whether this GeoJsonLineString is clickable</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clickable</code> - - new clickability setting for the GeoJsonLineString</dd>
 </dl>
 </li>
 </ul>
