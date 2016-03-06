@@ -1,25 +1,26 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        // TODO: move this to a stable release as soon as one becomes available
+        classpath 'com.android.tools.build:gradle:2.0.0-beta5'
     }
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile project(':library')
     // Or, fetch from Maven:
     // compile 'com.google.maps.android:android-maps-utils:0.3+'
-    compile 'com.google.android.gms:play-services-maps:6.+'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     sourceSets {
         main {

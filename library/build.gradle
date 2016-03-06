@@ -1,14 +1,15 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        // TODO: move this to a stable release as soon as one becomes available
+        classpath 'com.android.tools.build:gradle:2.0.0-beta5'
     }
 }
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -16,13 +17,13 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services-maps:6.5.87'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
 }
 
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
 
     sourceSets {
         main {
@@ -35,6 +36,13 @@ android {
             java.srcDirs = ['tests/src']
         }
     }
+
+    // This enables long timeouts required on slow environments, e.g. Travis
+    adbOptions {
+        timeOutInMs 10 * 60 * 1000  // 10 minutes
+        installOptions "-d","-t"
+    }
+
 }
 
 task instrumentTest(dependsOn: connectedCheck)
@@ -56,14 +64,19 @@ artifacts {
     archives apklib
 }
 
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
 signing {
     sign configurations.archives
 }
 
-if(!hasProperty("sonatypeUsername")){
+if (!hasProperty("sonatypeUsername")) {
     sonatypeUsername = ""
 }
-if(!hasProperty("sonatypePassword")){
+if (!hasProperty("sonatypePassword")) {
     sonatypePassword = ""
 }
 

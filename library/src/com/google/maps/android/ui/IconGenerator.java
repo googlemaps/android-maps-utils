@@ -69,7 +69,7 @@ public class IconGenerator {
      *
      * @param text the text content to display inside the icon.
      */
-    public Bitmap makeIcon(String text) {
+    public Bitmap makeIcon(CharSequence text) {
         if (mTextView != null) {
             mTextView.setText(text);
         }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.maps.android.clustering.view;
 
 import android.animation.Animator;
@@ -182,7 +198,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return squareTextView;
     }
 
-    private int getColor(int clusterSize) {
+    protected int getColor(int clusterSize) {
         final float hueRange = 220;
         final float sizeRange = 300;
         final float size = Math.min(clusterSize, sizeRange);
@@ -248,6 +264,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 // Nothing to do.
                 return;
             }
+            Projection projection = mMap.getProjection();
+            if (projection == null) {
+                // Without a map projection we can't render clusters.
+                return;
+            }
 
             RenderTask renderTask;
             synchronized (this) {
@@ -262,7 +283,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     sendEmptyMessage(TASK_FINISHED);
                 }
             });
-            renderTask.setProjection(mMap.getProjection());
+            renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
             new Thread(renderTask).start();
         }
