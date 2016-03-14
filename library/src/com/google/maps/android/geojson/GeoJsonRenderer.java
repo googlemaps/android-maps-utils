@@ -1,6 +1,7 @@
 package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -331,7 +332,13 @@ import java.util.Set;
         // Following arrays are holes
         for (int i = POLYGON_INNER_COORDINATE_INDEX; i < polygon.getCoordinates().size();
                 i++) {
-            polygonOptions.addHole(polygon.getCoordinates().get(i));
+            List<LatLng> hole = polygon.getCoordinates().get(i);
+            List<LatLng> pseudoHole = new ArrayList<>();
+            for (LatLng latLng : hole) {
+                LatLng pseudoLatLng = new LatLng(latLng.latitude - 0.00001, latLng.longitude - 0.00001);
+                pseudoHole.add(pseudoLatLng);
+            }
+            polygonOptions.addHole(pseudoHole);
         }
         return mMap.addPolygon(polygonOptions);
     }
