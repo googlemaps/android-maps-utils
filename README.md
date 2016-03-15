@@ -1,37 +1,11 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils) [![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils) ![Analytics](https://maps-ga-beacon.appspot.com/UA-12846745-20/android-maps-utils/readme?pixel)
-
 # Google Maps Android API utility library
 
 ## Introduction
 
-This open-source library contains classes that are useful for a wide
-range of applications using the [Google Maps Android
-API](http://developer.android.com/google/play-services/maps.html).
+This is customized repository for my use.
 
-The library is under heavy development, but ready for use. Check the
-[issue tracker][issues] to see what's happening.
+The original repository is [here](https://github.com/googlemaps/android-maps-utils).
 
+## What's changed
 
-## Usage
-
-When you use Gradle add the following dependency with the latest version
-to your `build.gradle` file to use the library:
-
-```groovy
-dependencies {
-    compile 'com.google.maps.android:android-maps-utils:x.y.z'
-}
-```
-
-
-## Read more and get started
-
-Read more on the [website][website].
-
-[issues]: https://github.com/googlemaps/android-maps-utils/issues
-[website]: http://googlemaps.github.io/android-maps-utils/
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/googlemaps/android-maps-utils/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
+I solved [this problem](https://github.com/googlemaps/android-maps-utils/issues/257) using [clipper-java](https://github.com/lightbringer/clipper-java) removed lambda.
