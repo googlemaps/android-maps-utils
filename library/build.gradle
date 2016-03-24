@@ -25,6 +25,8 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    resourcePrefix 'amu_'
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
