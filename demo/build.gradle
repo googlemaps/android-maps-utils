@@ -5,7 +5,7 @@ buildscript {
 
     dependencies {
         // TODO: move this to a stable release as soon as one becomes available
-        classpath 'com.android.tools.build:gradle:2.0.0-beta5'
+        classpath 'com.android.tools.build:gradle:2.1.0-alpha3'
     }
 }
 
