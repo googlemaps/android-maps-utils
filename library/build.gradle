@@ -48,7 +48,7 @@ android {
 task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
-    dependsOn 'packageReleaseJar'
+    dependsOn 'check'
     appendix = extension = 'apklib'
 
     from 'AndroidManifest.xml'
