@@ -1,14 +1,3 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        // TODO: move this to a stable release as soon as one becomes available
-        classpath 'com.android.tools.build:gradle:2.1.0-alpha3'
-    }
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'signing'

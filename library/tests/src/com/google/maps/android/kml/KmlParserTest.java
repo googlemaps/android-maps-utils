@@ -22,7 +22,7 @@ public class KmlParserTest extends ActivityTestCase {
     }
 
     public void testInlineStyle() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.inline_style);
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_inline_style);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -41,7 +41,7 @@ public class KmlParserTest extends ActivityTestCase {
     }
 
     public void testPolyStyleBooleanNumeric() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.poly_style_boolean_numeric);
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_poly_style_boolean_numeric);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -57,7 +57,7 @@ public class KmlParserTest extends ActivityTestCase {
     }
 
     public void testPolyStyleBooleanAlpha() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.poly_style_boolean_alpha);
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_poly_style_boolean_alpha);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -73,7 +73,7 @@ public class KmlParserTest extends ActivityTestCase {
     }
 
     public void testContainerHeirarchy() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.document_nest);
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_document_nest);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertEquals(mParser.getContainers().get(0).getContainerId(), "hasId");
@@ -82,7 +82,7 @@ public class KmlParserTest extends ActivityTestCase {
     }
 
     public void testPlacemarkParsing() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.unsupported);
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_unsupported);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertTrue(mParser.getPlacemarks().size() == 1);

@@ -132,7 +132,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         mDensity = context.getResources().getDisplayMetrics().density;
         mIconGenerator = new IconGenerator(context);
         mIconGenerator.setContentView(makeSquareTextView(context));
-        mIconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
+        mIconGenerator.setTextAppearance(R.style.amu_ClusterIcon_TextAppearance);
         mIconGenerator.setBackground(makeClusterBackground());
         mClusterManager = clusterManager;
     }
@@ -192,7 +192,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         SquareTextView squareTextView = new SquareTextView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         squareTextView.setLayoutParams(layoutParams);
-        squareTextView.setId(R.id.text);
+        squareTextView.setId(R.id.amu_text);
         int twelveDpi = (int) (12 * mDensity);
         squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
@@ -575,6 +575,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
@@ -620,6 +621,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         /**
          * Perform the next task. Prioritise any on-screen work.
          */
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void performNextTask() {
             if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
                 removeMarker(mOnScreenRemoveMarkerTasks.poll());

@@ -26,7 +26,7 @@ import android.widget.FrameLayout;
  * <p/>
  * May not work with padding.
  */
-class RotationLayout extends FrameLayout {
+public class RotationLayout extends FrameLayout {
     private int mRotation;
 
     public RotationLayout(Context context) {

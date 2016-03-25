@@ -1,5 +1,17 @@
 package com.google.maps.android.kml;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.LruCache;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -13,18 +25,6 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.LruCache;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -565,7 +565,7 @@ import java.util.Iterator;
             }
 
             public View getInfoContents(Marker arg0) {
-                View view =  LayoutInflater.from(mContext).inflate(R.layout.info_window, null);
+                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
