@@ -348,7 +348,9 @@ import de.lighti.clipper.Point;
                     newHole.add(latLng);
                 }
             }
-            polygonOptions.addHole(newHole);
+            if (newHole.size() != 0) {
+                polygonOptions.addHole(newHole);
+            }
         }
         return mMap.addPolygon(polygonOptions);
     }
