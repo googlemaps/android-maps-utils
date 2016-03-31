@@ -1,14 +1,3 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        // TODO: move this to a stable release as soon as one becomes available
-        classpath 'com.android.tools.build:gradle:2.0.0-beta5'
-    }
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'signing'
@@ -23,7 +12,9 @@ dependencies {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.2"
+
+    resourcePrefix 'amu_'
 
     sourceSets {
         main {
@@ -48,7 +39,7 @@ android {
 task instrumentTest(dependsOn: connectedCheck)
 
 task apklib(type: Zip) {
-    dependsOn 'packageReleaseJar'
+    dependsOn 'check'
     appendix = extension = 'apklib'
 
     from 'AndroidManifest.xml'

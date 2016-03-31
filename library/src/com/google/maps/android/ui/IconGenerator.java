@@ -58,9 +58,9 @@ public class IconGenerator {
     public IconGenerator(Context context) {
         mContext = context;
         mBackground = new BubbleDrawable(mContext.getResources());
-        mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
+        mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.amu_text_bubble, null);
         mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
-        mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
+        mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.amu_text);
         setStyle(STYLE_DEFAULT);
     }
 
@@ -127,7 +127,7 @@ public class IconGenerator {
         mRotationLayout.removeAllViews();
         mRotationLayout.addView(contentView);
         mContentView = contentView;
-        final View view = mRotationLayout.findViewById(R.id.text);
+        final View view = mRotationLayout.findViewById(R.id.amu_text);
         mTextView = view instanceof TextView ? (TextView) view : null;
     }
 
@@ -287,13 +287,13 @@ public class IconGenerator {
             default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
-                return R.style.Bubble_TextAppearance_Dark;
+                return R.style.amu_Bubble_TextAppearance_Dark;
             case STYLE_RED:
             case STYLE_BLUE:
             case STYLE_GREEN:
             case STYLE_PURPLE:
             case STYLE_ORANGE:
-                return R.style.Bubble_TextAppearance_Light;
+                return R.style.amu_Bubble_TextAppearance_Light;
         }
     }
 }

@@ -32,8 +32,8 @@ class BubbleDrawable extends Drawable {
     private int mColor = Color.WHITE;
 
     public BubbleDrawable(Resources res) {
-        mMask = res.getDrawable(R.drawable.bubble_mask);
-        mShadow = res.getDrawable(R.drawable.bubble_shadow);
+        mMask = res.getDrawable(R.drawable.amu_bubble_mask);
+        mShadow = res.getDrawable(R.drawable.amu_bubble_shadow);
     }
 
     public void setColor(int color) {
