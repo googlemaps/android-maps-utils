@@ -1,11 +1,11 @@
 package com.google.maps.android.kml;
 
+import android.graphics.Color;
+
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import android.graphics.Color;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -185,10 +185,6 @@ import java.util.Random;
      */
     /* package */ void setIconUrl(String iconUrl) {
         mIconUrl = iconUrl;
-        if (!mIconUrl.startsWith("http://")) {
-            // Icon stored locally
-            mMarkerOptions.icon(BitmapDescriptorFactory.fromPath(iconUrl));
-        }
         mStylesSet.add("iconUrl");
     }
 
