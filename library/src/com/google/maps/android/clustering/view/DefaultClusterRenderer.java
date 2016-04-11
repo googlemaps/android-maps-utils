@@ -75,6 +75,7 @@ import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBas
  */
 public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRenderer<T> {
     private static final boolean SHOULD_ANIMATE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    private final Context mContext;
     private final GoogleMap mMap;
     private final IconGenerator mIconGenerator;
     private final ClusterManager<T> mClusterManager;
@@ -129,6 +130,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
+        mContext = context;
         mDensity = context.getResources().getDisplayMetrics().density;
         mIconGenerator = new IconGenerator(context);
         mIconGenerator.setContentView(makeSquareTextView(context));
@@ -178,7 +180,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(null);
     }
 
-    private LayerDrawable makeClusterBackground() {
+    /**
+     * Overriding this method allows to define the UI of the cluster bubble
+     */
+    protected LayerDrawable makeClusterBackground()
+    {
         mColoredCircleBackground = new ShapeDrawable(new OvalShape());
         ShapeDrawable outline = new ShapeDrawable(new OvalShape());
         outline.getPaint().setColor(0x80ffffff); // Transparent white.
@@ -188,7 +194,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return background;
     }
 
-    private SquareTextView makeSquareTextView(Context context) {
+    /**
+     * Overriding this method allows to define the UI of the bubble content view
+     */
+    protected SquareTextView makeSquareTextView(Context context)
+    {
         SquareTextView squareTextView = new SquareTextView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         squareTextView.setLayoutParams(layoutParams);
@@ -196,6 +206,14 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         int twelveDpi = (int) (12 * mDensity);
         squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
+    }
+
+    /**
+     * @return the provided context
+     */
+    public Context getContext()
+    {
+        return mContext;
     }
 
     protected int getColor(int clusterSize) {
