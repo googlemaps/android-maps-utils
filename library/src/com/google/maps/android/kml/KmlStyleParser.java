@@ -219,9 +219,9 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 if (parser.getName().equals(COLOR_STYLE_COLOR)) {
                     style.setFillColor(parser.nextText());
                 } else if (parser.getName().equals(POLY_STYLE_OUTLINE)) {
-                    style.setOutline(Boolean.parseBoolean(parser.nextText()));
+                    style.setOutline(KmlBoolean.parseBoolean(parser.nextText()));
                 } else if (parser.getName().equals(POLY_STYLE_FILL)) {
-                    style.setFill(Boolean.parseBoolean(parser.nextText()));
+                    style.setFill(KmlBoolean.parseBoolean(parser.nextText()));
                 } else if (parser.getName().equals(COLOR_STYLE_MODE)) {
                     style.setPolyColorMode(parser.nextText());
                 }

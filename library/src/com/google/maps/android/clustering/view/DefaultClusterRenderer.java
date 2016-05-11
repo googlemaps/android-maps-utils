@@ -175,7 +175,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected IconGenerator createIconGenerator(Context context) {
         IconGenerator iconGenerator = new IconGenerator(context);
         iconGenerator.setContentView(makeSquareTextView(context));
-        iconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
+        iconGenerator.setTextAppearance(R.style.amu_ClusterIcon_TextAppearance);
         iconGenerator.setBackground(makeClusterBackground());
         return iconGenerator;
     }
@@ -230,7 +230,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         SquareTextView squareTextView = new SquareTextView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         squareTextView.setLayoutParams(layoutParams);
-        squareTextView.setId(R.id.text);
+        squareTextView.setId(R.id.amu_text);
         int twelveDpi = (int) (12 * mDensity);
         squareTextView.setPadding(twelveDpi, twelveDpi, twelveDpi, twelveDpi);
         return squareTextView;
@@ -315,6 +315,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     removeMessages(MSG_RUN);
 
                     if (!mViewModificationInProgress && mNextClusters != null) {
+                        Projection projection = mParent.mMap.getProjection();
+                        if (projection == null) {
+                            // Without a map projection we can't render clusters.
+                            return;
+                        }
+
                         if (Log.isLoggable(TAG, Log.DEBUG)) {
                             Log.d(TAG, "rendering in progress");
                         }
@@ -327,7 +333,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         }
 
                         renderTask.setCallback(mFinishedRunnable);
-                        renderTask.setProjection(mParent.mMap.getProjection());
+                        renderTask.setProjection(projection);
                         renderTask.setMapZoom(mParent.mMap.getCameraPosition().zoom);
                         mExecutorService.execute(renderTask);
                     }
@@ -678,6 +684,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             DefaultClusterRenderer.AnimationTask animationTask = mParent.new AnimationTask(marker, from, to);
@@ -768,6 +775,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         /**
          * Perform the next task. Prioritise any on-screen work.
          */
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void performNextTask() {
 
             // Consider only performing 10 remove tasks, not adds and animations.

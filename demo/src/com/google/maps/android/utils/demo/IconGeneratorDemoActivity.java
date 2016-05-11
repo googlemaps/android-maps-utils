@@ -17,11 +17,18 @@
 package com.google.maps.android.utils.demo;
 
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
+
+import static android.graphics.Typeface.BOLD;
+import static android.graphics.Typeface.ITALIC;
+import static android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 public class IconGeneratorDemoActivity extends BaseDemoActivity {
 
@@ -47,14 +54,29 @@ public class IconGeneratorDemoActivity extends BaseDemoActivity {
         iconFactory.setContentRotation(90);
         iconFactory.setStyle(IconGenerator.STYLE_GREEN);
         addIcon(iconFactory, "ContentRotate=90", new LatLng(-33.7677, 151.244));
+
+        iconFactory.setRotation(0);
+        iconFactory.setContentRotation(0);
+        iconFactory.setStyle(IconGenerator.STYLE_ORANGE);
+        addIcon(iconFactory, makeCharSequence(), new LatLng(-33.77720, 151.12412));
     }
 
-    private void addIcon(IconGenerator iconFactory, String text, LatLng position) {
+    private void addIcon(IconGenerator iconFactory, CharSequence text, LatLng position) {
         MarkerOptions markerOptions = new MarkerOptions().
                 icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
                 position(position).
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
         getMap().addMarker(markerOptions);
+    }
+
+    private CharSequence makeCharSequence() {
+        String prefix = "Mixing ";
+        String suffix = "different fonts";
+        String sequence = prefix + suffix;
+        SpannableStringBuilder ssb = new SpannableStringBuilder(sequence);
+        ssb.setSpan(new StyleSpan(ITALIC), 0, prefix.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new StyleSpan(BOLD), prefix.length(), sequence.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ssb;
     }
 }
