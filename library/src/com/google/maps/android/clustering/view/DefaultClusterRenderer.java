@@ -894,7 +894,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected void onBeforeClusterRendered(Cluster<T> cluster, MarkerOptions markerOptions) {
         int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
-        if (descriptor == null || BuildConfig.DEBUG) {
+        if (descriptor == null) {
             mColoredCircleBackground.getPaint().setColor(getColor(bucket));
             descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
