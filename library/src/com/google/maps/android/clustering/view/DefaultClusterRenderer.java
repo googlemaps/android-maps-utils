@@ -33,6 +33,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Pair;
@@ -70,10 +71,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
@@ -162,12 +160,26 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         mDensity = context.getResources().getDisplayMetrics().density;
         mViewModifier = new ViewModifier<>(this);
 
-        mIconGenerator = new IconGenerator(context);
-        mIconGenerator.setContentView(makeSquareTextView(context));
-        mIconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
-        mIconGenerator.setBackground(makeClusterBackground());
+        mIconGenerator = createIconGenerator(context);
         mClusterManager = clusterManager;
     }
+
+    /**
+     * Create a {@link IconGenerator} for this ClusterRenderer. Subclasses may want to provide a custom
+     * implementation here.
+     *
+     * @param context current context
+     * @return an implementation of {@link IconGenerator}
+     */
+    @NonNull
+    protected IconGenerator createIconGenerator(Context context) {
+        IconGenerator iconGenerator = new IconGenerator(context);
+        iconGenerator.setContentView(makeSquareTextView(context));
+        iconGenerator.setTextAppearance(R.style.ClusterIcon_TextAppearance);
+        iconGenerator.setBackground(makeClusterBackground());
+        return iconGenerator;
+    }
+
 
     /**
      * @param item
@@ -894,7 +906,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Called after the marker for a ClusterItem has been added to the map.
-     * 
+     *
      * <p>This method will be called on the main thread</p>
      */
     protected void onClusterItemRendered(T clusterItem, Marker marker) {
