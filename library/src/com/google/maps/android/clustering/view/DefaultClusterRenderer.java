@@ -408,8 +408,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         public void run() {
             Thread.currentThread().setPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
+            Set<? extends Cluster<T>> currentClusters = mParent.mDisplayedClusters.get();
+            if (currentClusters == null) {
+                currentClusters = Collections.emptySet();
+            }
+
             // if the map zoomed but clusters didn't change, there is nothing to do
-            if (mMapZoomed && mClusters.equals(mParent.mDisplayedClusters)) {
+            if (mMapZoomed && mClusters.equals(currentClusters)) {
                 mCallback.run();
                 return;
             }
@@ -429,9 +434,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
             // Find all of the existing clusters that are on-screen. These are candidates for markers to animate from.
             List<Point> existingClustersOnScreen = null;
-            if (mParent.mDisplayedClusters.get() != null && SHOULD_ANIMATE) {
+            if (SHOULD_ANIMATE) {
                 existingClustersOnScreen = new ArrayList<>();
-                for (Cluster<T> c : mParent.mDisplayedClusters.get()) {
+                for (Cluster<T> c : currentClusters) {
                     if (mParent.shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
                         Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                         existingClustersOnScreen.add(point);
@@ -442,7 +447,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Add new clusters ...
             for (Cluster<T> c : mClusters) {
                 boolean onScreen = visibleBounds.contains(c.getPosition());
-                if (onScreen) { // ... but only the visible ones
+                if (onScreen && !mParent.hasMarker(c)) { // ... but only the visible ones and clusters without a marker
                     if (SHOULD_ANIMATE) {
                         Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                         Point closest = findClosestCluster(existingClustersOnScreen, point);
@@ -453,7 +458,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                             markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, null));
                         }
                     } else {
-                        markerModifier.add(onScreen, new CreateMarkerRunnable<>(markerModifier, mParent, c, null));
+                        markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, null));
                     }
                 }
             }
@@ -869,11 +874,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected void onBeforeClusterRendered(Cluster<T> cluster, MarkerOptions markerOptions) {
         int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
-        if (descriptor == null) {
+        if (descriptor == null || BuildConfig.DEBUG) {
             mColoredCircleBackground.getPaint().setColor(getColor(bucket));
             descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
+
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.icon(descriptor);
     }
@@ -888,7 +894,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Called after the marker for a ClusterItem has been added to the map.
-     *
+     * 
      * <p>This method will be called on the main thread</p>
      */
     protected void onClusterItemRendered(T clusterItem, Marker marker) {
@@ -922,6 +928,16 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      */
     public Marker getMarker(Cluster<T> cluster) {
         return mClusterToMarker.get(cluster);
+    }
+
+    /**
+     * Check whether there is a marker for a cluster.
+     *
+     * @param cluster the cluster to check for
+     * @return <code>true</code> if there is a marker on the map for the supplied cluster, <code>false</code> otherwise
+     */
+    public boolean hasMarker(Cluster<T> cluster) {
+        return mClusterToMarker.containsKey(cluster);
     }
 
     @Override
