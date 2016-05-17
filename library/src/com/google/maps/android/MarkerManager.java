@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -566,6 +567,15 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             mItemCollectionObservable.notifyCollectionItemAdded(item);
         }
 
+        public void addAllItems(@NonNull Collection<T> collection) {
+            if (mItems == null) {
+                mItems = new ArrayList<>();
+            }
+
+            mItems.addAll(collection);
+            mItemCollectionObservable.notifyCollectionItemsAdded(collection);
+        }
+
         /**
          * @param item the item to be removed
          */
@@ -844,6 +854,15 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         }
 
         /**
+         * A collection of items was added to the collection.
+         *
+         * @param collection the collection that changed
+         * @param items      the new items
+         */
+        public void onItemsAdded(MarkerItemCollection<T> collection, Collection<T> items) {
+        }
+
+        /**
          * An item was removed from the collection.
          *
          * @param collection the collection that changed
@@ -901,6 +920,14 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             synchronized (mObservers) {
                 for (int i = mObservers.size() - 1; i >= 0; i--) {
                     mObservers.get(i).onItemAdded(mCollection, item);
+                }
+            }
+        }
+
+        public void notifyCollectionItemsAdded(Collection<T> items) {
+            synchronized (mObservers) {
+                for (int i = mObservers.size() - 1; i >= 0; i--) {
+                    mObservers.get(i).onItemsAdded(mCollection, items);
                 }
             }
         }

@@ -88,6 +88,12 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         }
 
         @Override
+        public void onItemsAdded(MarkerManager.MarkerItemCollection<T> collection, Collection<T> items) {
+            addAllItems(items);
+            cluster();
+        }
+
+        @Override
         public void onItemRemoved(MarkerManager.MarkerItemCollection<T> collection, T item) {
             removeItem(item);
             cluster();
@@ -179,6 +185,15 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         mAlgorithmLock.writeLock().lock();
         try {
             mAlgorithm.addItem(item);
+        } finally {
+            mAlgorithmLock.writeLock().unlock();
+        }
+    }
+
+    private void addAllItems(Collection<T> items) {
+        mAlgorithmLock.writeLock().lock();
+        try {
+            mAlgorithm.addItems(items);
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
