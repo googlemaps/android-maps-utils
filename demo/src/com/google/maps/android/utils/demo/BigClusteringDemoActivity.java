@@ -19,18 +19,61 @@ package com.google.maps.android.utils.demo;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONException;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 
 public class BigClusteringDemoActivity extends BaseDemoActivity {
+
     private ClusterManager<MyItem> mClusterManager;
+
+    private final MenuItem.OnMenuItemClickListener menuAddMoreItemClickListener = new MenuItem.OnMenuItemClickListener() {
+
+        final Random random = new Random();
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            // get a random item within the visible region
+            final VisibleRegion visibleRegion = getMap().getProjection().getVisibleRegion();
+
+            MyItem item;
+            do {
+                int randidx = random.nextInt(mClusterManager.getMarkerCollection().getItemSize());
+                item = mClusterManager.getMarkerCollection().getItem(randidx);
+            } while (!visibleRegion.latLngBounds.contains(item.getPosition()));
+
+            List<MyItem> newItems = new ArrayList<>(10);
+
+            for (int i = 1; i <= 10; i++) {
+                double offset = i / 600d;
+
+                LatLng position = item.getPosition();
+                double lat = position.latitude + (offset * ((i % (random.nextInt(9) + 1) == 0) ? -1 : 1));
+                double lng = position.longitude + (offset * ((i % (random.nextInt(9) + 1) == 0) ? -1 : 1));
+                MyItem offsetItem = new MyItem(lat, lng);
+                newItems.add(offsetItem);
+            }
+
+            mClusterManager.getMarkerCollection().addAllItems(newItems);
+            return true;
+        }
+    };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("Add more").setOnMenuItemClickListener(menuAddMoreItemClickListener);
+        return true;
+    }
 
     @Override
     protected void startDemo() {
