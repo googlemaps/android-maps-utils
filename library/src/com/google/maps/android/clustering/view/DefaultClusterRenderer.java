@@ -279,9 +279,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         private static final int MSG_FINISHED = 1;
 
         private final DefaultClusterRenderer<T> mParent;
+        private final ExecutorService mExecutorService;
 
-        private boolean mViewModificationInProgress = false;
         private RenderTask<T> mNextClusters = null;
+        private boolean mViewModificationInProgress = false;
 
         private final Runnable mFinishedRunnable = new Runnable() {
             @Override
@@ -289,7 +290,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 sendEmptyMessage(MSG_FINISHED);
             }
         };
-        private final ExecutorService mExecutorService;
 
         public ViewModifier(DefaultClusterRenderer<T> parent) {
             mParent = parent;
@@ -465,19 +465,20 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Add new clusters ...
             for (Cluster<T> c : mClusters) {
                 boolean onScreen = visibleBounds.contains(c.getPosition());
-                if (onScreen && !mParent.hasMarker(c)) { // ... but only the visible ones and clusters without a marker
-                    if (SHOULD_ANIMATE) {
-                        Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
-                        Point closest = findClosestCluster(existingClustersOnScreen, point);
-                        if (closest != null) {
-                            LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
-                            markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, animateTo));
+                if (onScreen) { // ... but only the visible ones
+                        if (SHOULD_ANIMATE) {
+                            Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
+                            Point closest = findClosestCluster(existingClustersOnScreen, point);
+                            if (closest != null) {
+                                LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
+                                markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, animateTo));
+                            } else {
+                                markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, null));
+                            }
                         } else {
                             markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, null));
                         }
-                    } else {
-                        markerModifier.add(true, new CreateMarkerRunnable<>(markerModifier, mParent, c, null));
-                    }
+
                 }
             }
 
@@ -592,9 +593,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         private static final int MSG_WORK = 0;
         private static final int MSG_ADD_ITEM_MARKER = 1;
-        private static final int MSG_ADD_MARKERPOSITION = 2;
+        private static final int MSG_ADD_ITEM_MARKERPOSITION = 2;
         private static final int MSG_ADD_CLUSTER_MARKER = 3;
-        private static final int MSG_DECREMENT_BUSY = 4;
+        private static final int MSG_ADD_CLUSTER_MARKERPOSITION = 4;
+        private static final int MSG_DECREMENT_BUSY = 5;
 
         private static final String DATA_ANIMATE_FROM = "animateFrom";
 
@@ -731,16 +733,21 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         animate(markerWithPosition, animateFrom, cluster.getPosition());
                     }
 
-                    mParent.onClusterRendered(cluster, marker);
-                    mNewMarkers.add(markerWithPosition);
-
+                    handleAfterMarkerAdded(cluster, markerWithPosition);
                 }
                 break;
 
-                case MSG_ADD_MARKERPOSITION:
+                case MSG_ADD_ITEM_MARKERPOSITION: {
                     final Pair<T, Marker> item = (Pair<T, Marker>) msg.obj;
                     handleAfterMarkerAdded(item.first, new MarkerWithPosition(item.second));
-                    break;
+                }
+                break;
+
+                case MSG_ADD_CLUSTER_MARKERPOSITION: {
+                    final Pair<Cluster<T>, Marker> item = (Pair<Cluster<T>, Marker>) msg.obj;
+                    handleAfterMarkerAdded(item.first, new MarkerWithPosition(item.second));
+                }
+                break;
 
                 case MSG_DECREMENT_BUSY:
                     lock.lock();
@@ -769,6 +776,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         private void handleAfterMarkerAdded(T item, MarkerWithPosition markerWithPosition) {
             mParent.onClusterItemRendered(item, markerWithPosition.marker);
+            mNewMarkers.add(markerWithPosition);
+        }
+
+        private void handleAfterMarkerAdded(Cluster<T> cluster, MarkerWithPosition markerWithPosition) {
+            mParent.onClusterRendered(cluster, markerWithPosition.marker);
             mNewMarkers.add(markerWithPosition);
         }
 
@@ -821,7 +833,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         }
 
         public void addMarkerPosition(ClusterItem item, Marker marker) {
-            obtainMessage(MSG_ADD_MARKERPOSITION, new Pair<>(item, marker)).sendToTarget();
+            obtainMessage(MSG_ADD_ITEM_MARKERPOSITION, new Pair<>(item, marker)).sendToTarget();
+        }
+
+        public void addMarkerPosition(Cluster item, Marker marker) {
+            obtainMessage(MSG_ADD_CLUSTER_MARKERPOSITION, new Pair<>(item, marker)).sendToTarget();
         }
 
         public void addMarker(Cluster cluster, MarkerOptions markerOptions, LatLng animateFrom) {
@@ -1019,12 +1035,17 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         }
                     }
                 } else {
-                    MarkerOptions markerOptions = new MarkerOptions().
-                            position(animateFrom == null ? cluster.getPosition() : animateFrom);
+                    Marker marker = mParent.getMarker(cluster);
+                    if (marker == null) {
+                        MarkerOptions markerOptions = new MarkerOptions().
+                                position(animateFrom == null ? cluster.getPosition() : animateFrom);
 
-                    mParent.onBeforeClusterRendered(cluster, markerOptions);
+                        mParent.onBeforeClusterRendered(cluster, markerOptions);
 
-                    mMarkerModifier.addMarker(cluster, markerOptions, animateFrom);
+                        mMarkerModifier.addMarker(cluster, markerOptions, animateFrom);
+                    } else {
+                        mMarkerModifier.addMarkerPosition(cluster, marker);
+                    }
                 }
             } finally {
                 mMarkerModifier.signalRunnerFinished();
