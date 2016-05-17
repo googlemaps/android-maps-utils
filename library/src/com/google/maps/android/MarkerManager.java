@@ -47,7 +47,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
     private final GoogleMap mMap;
     private final Map<String, MarkerCollection> mNamedCollections;
     private final Map<String, MarkerItemCollection> mNamedItemCollections;
-    private final Map<Marker, MarkerCollection> mAllMarkers;
+    private final Map<Marker, AbsMarkerCollection> mAllMarkers;
 
     public MarkerManager(GoogleMap map) {
         mMap = map;
@@ -136,20 +136,20 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
     @Override
     @Nullable
     public View getInfoWindow(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         return (collection != null) ? collection.getInfoWindow(marker) : null;
     }
 
     @Override
     @Nullable
     public View getInfoContents(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         return (collection != null) ? collection.getInfoContents(marker) : null;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         if (collection != null) {
             collection.onInfoWindowClick(marker);
         }
@@ -157,13 +157,13 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         return collection != null && collection.onMarkerClick(marker);
     }
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         if (collection != null) {
             collection.onMarkerDragStart(marker);
         }
@@ -171,7 +171,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public void onMarkerDrag(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         if (collection != null) {
             collection.onMarkerDrag(marker);
         }
@@ -179,7 +179,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         if (collection != null) {
             collection.onMarkerDragEnd(marker);
         }
@@ -192,27 +192,24 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
      * @return true if the marker was removed.
      */
     public boolean remove(Marker marker) {
-        MarkerCollection collection = mAllMarkers.get(marker);
+        AbsMarkerCollection collection = mAllMarkers.get(marker);
         return collection != null && collection.remove(marker);
     }
 
-    /**
-     * A pure collection of map markers.
-     */
-    public static class MarkerCollection {
+    public static class AbsMarkerCollection {
 
-        private final MarkerManager mMarkerManager;
-        private final MarkerCollectionObservable mObservable;
-        private final Set<Marker> mMarkers;
+        protected final MarkerManager mMarkerManager;
+        protected final MarkerCollectionObservable mMarkerCollectionObservable;
+        protected final Set<Marker> mMarkers;
 
         private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
         private GoogleMap.OnMarkerClickListener mMarkerClickListener;
         private GoogleMap.OnMarkerDragListener mMarkerDragListener;
         private GoogleMap.InfoWindowAdapter mInfoWindowAdapter;
 
-        protected MarkerCollection(MarkerManager markerManager) {
+        private AbsMarkerCollection(MarkerManager markerManager) {
             mMarkerManager = markerManager;
-            mObservable = new MarkerCollectionObservable(this);
+            mMarkerCollectionObservable = new MarkerCollectionObservable(this);
             mMarkers = new HashSet<>();
         }
 
@@ -222,7 +219,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          * @param observer the observer to register; must not be <code>null</code> nor already registered
          */
         public void registerObserver(@NonNull MarkerCollectionObserver observer) {
-            mObservable.registerObserver(observer);
+            mMarkerCollectionObservable.registerObserver(observer);
         }
 
         /**
@@ -231,25 +228,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          * @param observer the observer to unregister; must not be <code>null</code> and already registered
          */
         public void unregisterObserver(@NonNull MarkerCollectionObserver observer) {
-            mObservable.unregisterObserver(observer);
-        }
-
-        /**
-         * Add a new marker.
-         *
-         * @param opts
-         * @return the newly created and added marker, or <code>null</code> if no marker was added.
-         */
-        @Nullable
-        public Marker addMarker(MarkerOptions opts) {
-            Marker marker = mMarkerManager.mMap.addMarker(opts);
-            mMarkers.add(marker);
-            mMarkerManager.mAllMarkers.put(marker, this);
-
-            onAddedMarker(marker);
-
-            mObservable.notifyMarkerAdded(marker);
-            return marker;
+            mMarkerCollectionObservable.unregisterObserver(observer);
         }
 
         /**
@@ -262,7 +241,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         }
 
         /**
-         * Remove a marker. The marker must be added using {@link #addMarker(MarkerOptions)}.
+         * Remove a marker.
          *
          * @param marker the marker to be removed from the map
          * @return {@code true} if the marker has been removed, {@code false} otherwise
@@ -275,7 +254,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
                 onRemoveMarker(marker);
                 marker.remove();
 
-                mObservable.notifyMarkerRemoved(marker);
+                mMarkerCollectionObservable.notifyMarkerRemoved(marker);
                 return true;
             }
 
@@ -304,7 +283,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
                 onClear();
 
-                mObservable.notifyMarkerCollectionCleared();
+                mMarkerCollectionObservable.notifyMarkerCollectionCleared();
             }
         }
 
@@ -398,13 +377,42 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
     }
 
     /**
+     * A pure collection of map markers.
+     */
+    public static class MarkerCollection extends AbsMarkerCollection {
+
+        protected MarkerCollection(MarkerManager markerManager) {
+            super(markerManager);
+        }
+
+        /**
+         * Add a new marker.
+         *
+         * @param opts
+         * @return the newly created and added marker, or <code>null</code> if no marker was added.
+         */
+        @Nullable
+        public Marker addMarker(MarkerOptions opts) {
+            Marker marker = mMarkerManager.mMap.addMarker(opts);
+            mMarkers.add(marker);
+            mMarkerManager.mAllMarkers.put(marker, this);
+
+            onAddedMarker(marker);
+
+            mMarkerCollectionObservable.notifyMarkerAdded(marker);
+            return marker;
+        }
+
+    }
+
+    /**
      * A {@link MarkerCollection} which also takes care of mapping items to related markers.
      *
      * @param <T> the item type
      */
-    public static class MarkerItemCollection<T> extends MarkerCollection {
+    public static class MarkerItemCollection<T> extends AbsMarkerCollection {
 
-        private final ItemCollectionObservable<T> mObservable;
+        private final ItemCollectionObservable<T> mItemCollectionObservable;
         private final Map<Marker, T> mMarkerToItem;
         private final Map<T, Marker> mItemToMarker;
 
@@ -416,7 +424,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
         public MarkerItemCollection(MarkerManager markerManager) {
             super(markerManager);
 
-            mObservable = new ItemCollectionObservable<>(this);
+            mItemCollectionObservable = new ItemCollectionObservable<>(this);
             mMarkerToItem = new HashMap<>();
             mItemToMarker = new HashMap<>();
         }
@@ -427,7 +435,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          * @param observer the observer to register; must not be <code>null</code> nor already registered
          */
         public void registerObserver(MarkerItemCollectionObserver<T> observer) {
-            mObservable.registerObserver(observer);
+            mItemCollectionObservable.registerObserver(observer);
         }
 
         /**
@@ -436,23 +444,11 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          * @param observer the observer to unregister; must not be <code>null</code> and already registered
          */
         public void unregisterObserver(MarkerItemCollectionObserver<T> observer) {
-            mObservable.unregisterObserver(observer);
-        }
-
-        /**
-         * Use {@link #addMarker(MarkerOptions, Object)} instead! Markers without a relation to an item cannot be added.
-         *
-         * @param opts
-         * @return always <code>null</code>
-         */
-        @Nullable
-        @Override
-        public final Marker addMarker(MarkerOptions opts) {
-            return null;
+            mItemCollectionObservable.unregisterObserver(observer);
         }
 
         public boolean canAddMarker(T item) {
-            return mObservable.canAddMarker(item);
+            return mItemCollectionObservable.canAddMarker(item);
         }
 
         /**
@@ -468,7 +464,12 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
                 Marker marker = getMarker(item);
 
                 if (marker == null) {
-                    marker = super.addMarker(opts);
+                    marker = mMarkerManager.mMap.addMarker(opts);
+                    mMarkers.add(marker);
+                    mMarkerManager.mAllMarkers.put(marker, this);
+
+                    onAddedMarker(marker);
+                    mMarkerCollectionObservable.notifyMarkerAdded(marker);
 
                     mMarkerToItem.put(marker, item);
                     mItemToMarker.put(item, marker);
@@ -521,7 +522,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             if (mItems != null) {
                 mItems.clear();
 
-                mObservable.notifyCollectionChanged();
+                mItemCollectionObservable.notifyCollectionChanged();
             }
         }
 
@@ -539,9 +540,9 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
                 mItems = items;
 
                 if (mItems != null) {
-                    mObservable.notifyCollectionChanged();
+                    mItemCollectionObservable.notifyCollectionChanged();
                 } else {
-                    mObservable.notifyCollectionInvalidated();
+                    mItemCollectionObservable.notifyCollectionInvalidated();
                 }
             }
         }
@@ -562,7 +563,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             }
 
             mItems.add(item);
-            mObservable.notifyCollectionItemAdded(item);
+            mItemCollectionObservable.notifyCollectionItemAdded(item);
         }
 
         /**
@@ -570,7 +571,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          */
         public void removeItem(@NonNull T item) {
             if (mItems != null && mItems.remove(item)) {
-                mObservable.notifyCollectionItemRemoved(item);
+                mItemCollectionObservable.notifyCollectionItemRemoved(item);
             }
         }
 
@@ -615,7 +616,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          */
         public void notifyItemChanged(T item) {
             if (mItems != null && mItems.contains(item)) {
-                mObservable.notifyCollectionItemChanged(item);
+                mItemCollectionObservable.notifyCollectionItemChanged(item);
             }
         }
 
@@ -694,20 +695,18 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
         /**
          * A marker was added to the collection (and also to the map).
-         *
-         * @param collection the collection that changed
+         *  @param collection the collection that changed
          * @param marker     the newly added marker
          */
-        public void onMarkerAdded(MarkerCollection collection, Marker marker) {
+        public void onMarkerAdded(AbsMarkerCollection collection, Marker marker) {
         }
 
         /**
          * A marker was removed from the collection (and also from the map).
-         *
-         * @param collection the collection that changed
+         *  @param collection the collection that changed
          * @param marker     the marker that got removed
          */
-        public void onMarkerRemoved(MarkerCollection collection, Marker marker) {
+        public void onMarkerRemoved(AbsMarkerCollection collection, Marker marker) {
         }
 
         /**
@@ -715,15 +714,15 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
          *
          * @param collection the collection that changed
          */
-        public void onMarkerCollectionCleared(MarkerCollection collection) {
+        public void onMarkerCollectionCleared(AbsMarkerCollection collection) {
         }
     }
 
     private static class MarkerCollectionObservable extends android.database.Observable<MarkerCollectionObserver> {
 
-        private final MarkerCollection mCollection;
+        private final AbsMarkerCollection mCollection;
 
-        public MarkerCollectionObservable(MarkerCollection collection) {
+        public MarkerCollectionObservable(AbsMarkerCollection collection) {
             mCollection = collection;
         }
 
@@ -813,7 +812,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
     }
 
     /**
-     * An observer that will be notified for changes to a {@link MarkerCollection}.
+     * An observer that will be notified for changes to a {@link MarkerItemCollection}.
      *
      * @param <T>
      */
