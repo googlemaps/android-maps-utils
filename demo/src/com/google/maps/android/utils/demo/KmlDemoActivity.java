@@ -51,9 +51,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     }
 
     private void retrieveFileFromUrl() {
-        String url = "https://kml-samples.googlecode.com/svn/trunk/" +
-                "morekml/Polygons/Polygons.Google_Campus.kml";
-        new DownloadKmlFile(url).execute();
+        new DownloadKmlFile(getString(R.string.kml_url)).execute();
     }
 
     private void moveCameraToKml(KmlLayer kmlLayer) {
