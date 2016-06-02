@@ -1,6 +1,9 @@
 package com.google.maps.android.geojson;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -14,6 +17,12 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+
+import de.lighti.clipper.Clipper;
+import de.lighti.clipper.ClipperOffset;
+import de.lighti.clipper.Path;
+import de.lighti.clipper.Paths;
+import de.lighti.clipper.Point;
 
 /**
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
@@ -329,11 +338,36 @@ import java.util.Set;
         // First array of coordinates are the outline
         polygonOptions.addAll(polygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
         // Following arrays are holes
-        for (int i = POLYGON_INNER_COORDINATE_INDEX; i < polygon.getCoordinates().size();
-                i++) {
-            polygonOptions.addHole(polygon.getCoordinates().get(i));
+        for (int i = POLYGON_INNER_COORDINATE_INDEX; i < polygon.getCoordinates().size(); i++) {
+            List<LatLng> hole = polygon.getCoordinates().get(i);
+            Paths solution = getClipperOffsetSolution(hole);
+            List<LatLng> newHole = new ArrayList<>();
+            for (Path path : solution) {
+                for (Point.LongPoint point : path) {
+                    LatLng latLng = new LatLng(point.getX() / 1E6, point.getY() / 1E6);
+                    newHole.add(latLng);
+                }
+            }
+            if (newHole.size() != 0) {
+                polygonOptions.addHole(newHole);
+            }
         }
         return mMap.addPolygon(polygonOptions);
+    }
+
+    private Paths getClipperOffsetSolution(List<LatLng> hole) {
+        ClipperOffset clo = new ClipperOffset();
+        Paths solution = new Paths();
+        Paths clips = new Paths();
+        Path path = new Path(hole.size());
+        for (LatLng latLng : hole) {
+            Point.LongPoint point = new Point.LongPoint((long)(latLng.latitude * 1E6), (long)(latLng.longitude * 1E6));
+            path.add(point);
+        }
+        clips.add(path);
+        clo.addPaths(clips, Clipper.JoinType.ROUND, Clipper.EndType.CLOSED_POLYGON);
+        clo.execute(solution, -2.0);
+        return solution;
     }
 
     /**

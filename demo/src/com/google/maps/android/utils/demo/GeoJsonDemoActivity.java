@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.geojson.GeoJsonFeature;
 import com.google.maps.android.geojson.GeoJsonLayer;
 import com.google.maps.android.geojson.GeoJsonPointStyle;
+import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,9 +50,18 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     @Override
     protected void startDemo() {
-        DownloadGeoJsonFile downloadGeoJsonFile = new DownloadGeoJsonFile();
-        // Download the GeoJSON file
-        downloadGeoJsonFile.execute(mGeoJsonUrl);
+        try {
+            GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.test, getApplicationContext());
+            for (GeoJsonFeature feature : layer.getFeatures()) {
+                GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
+                style.setFillColor(0x80ff7fff);
+                style.setStrokeColor(0x80ff7fff);
+                feature.setPolygonStyle(style);
+            }
+            layer.addLayerToMap();
+        } catch (Exception e) {
+            Log.e("TEST", "Exception occured.", e);
+        }
     }
 
     /**
