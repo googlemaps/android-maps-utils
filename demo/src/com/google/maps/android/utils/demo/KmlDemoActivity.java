@@ -43,6 +43,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         try {
             KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
             kmlLayer.addLayerToMap();
+            moveCameraToKml(kmlLayer);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
