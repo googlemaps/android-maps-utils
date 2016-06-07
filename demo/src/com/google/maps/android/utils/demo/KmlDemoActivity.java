@@ -23,7 +23,6 @@ import java.net.URL;
 public class KmlDemoActivity extends BaseDemoActivity {
 
     private GoogleMap mMap;
-    private KmlLayer kmlLayer;
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
@@ -98,7 +97,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
         protected void onPostExecute(byte[] byteArr) {
             try {
-                kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
+                KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
                 kmlLayer.addLayerToMap();
                 moveCameraToKml(kmlLayer);
