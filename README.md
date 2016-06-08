@@ -5,13 +5,15 @@
 This open-source library contains utilities that are useful for a wide
 range of applications using the [Google Maps Android API][android-site].
 
-* Marker clustering
-* Heat maps
-* Marker tooltips
-* Poly decoding and encoding
-* Spherical geometry
-* KML
-* GeoJSON
+- **Marker clustering** — handles the display of a large number of points
+- **Heat maps** — display a large number of points as a heat map
+- **IconGenerator** — display text on your Markers
+- **Poly decoding and encoding** — compact encoding for paths,
+  interoperability with Maps API web services
+- **Spherical geometry** — for example: computeDistance, computeHeading,
+  computeArea
+- **KML** — displays KML data
+- **GeoJSON** — displays and styles GeoJSON data
 
 For more information, check out the detailed guide on the
 [Google Developers site][devsite-guide]. You can also view the generated
