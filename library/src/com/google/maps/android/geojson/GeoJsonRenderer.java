@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.BiMultiMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,11 +28,7 @@ import java.util.Set;
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
-    /**
-     * Value is a Marker, Polyline, Polygon or an array of these that have been created from the
-     * corresponding key
-     */
-    private final HashMap<GeoJsonFeature, Object> mFeatures;
+    private final BiMultiMap<GeoJsonFeature> mFeatures = new BiMultiMap<>();
 
     private final GeoJsonPointStyle mDefaultPointStyle;
 
@@ -50,7 +47,7 @@ import java.util.Set;
      */
     /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
         mMap = map;
-        mFeatures = features;
+        mFeatures.putAll(features);
         mLayerOnMap = false;
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
@@ -126,6 +123,16 @@ import java.util.Set;
      */
     /* package */ Set<GeoJsonFeature> getFeatures() {
         return mFeatures.keySet();
+    }
+
+    /**
+     * Gets a GeoJsonFeature for the given mapObject, which is a Marker, Polyline or Polygon.
+     *
+     * @param mapObject Object a Marker, Polyline or Polygon
+     * @return GeoJsonFeature for the given mapObject
+     */
+    public GeoJsonFeature getFeature(Object mapObject) {
+        return mFeatures.getKey(mapObject);
     }
 
     /**
@@ -333,7 +340,9 @@ import java.util.Set;
                 i++) {
             polygonOptions.addHole(polygon.getCoordinates().get(i));
         }
-        return mMap.addPolygon(polygonOptions);
+        Polygon addedPolygon = mMap.addPolygon(polygonOptions);
+        addedPolygon.setClickable(true);
+        return addedPolygon;
     }
 
     /**

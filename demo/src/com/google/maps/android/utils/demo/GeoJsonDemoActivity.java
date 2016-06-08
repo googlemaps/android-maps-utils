@@ -122,6 +122,13 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 // Add the layer onto the map
                 addColorsToMarkers();
                 mLayer.addLayerToMap();
+
+                mLayer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
+                    @Override
+                    public void onFeatureClick(GeoJsonFeature feature) {
+                        Log.i(mLogTag, "Feature clicked: " + feature.getProperty("title"));
+                    }
+                });
             }
         }
 
