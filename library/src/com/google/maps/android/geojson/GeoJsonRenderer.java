@@ -131,7 +131,7 @@ import java.util.Set;
      * @param mapObject Object a Marker, Polyline or Polygon
      * @return GeoJsonFeature for the given mapObject
      */
-    public GeoJsonFeature getFeature(Object mapObject) {
+    /* package */ GeoJsonFeature getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
     }
 

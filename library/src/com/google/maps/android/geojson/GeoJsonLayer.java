@@ -124,16 +124,39 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Retrieves a corresponding GeoJsonFeature instance for the given map object
-     * (Polygon, Marker, Polyline). Made available so that maps with multiple layers
-     * can implement their own click listeners and determine which layer the
-     * corresponding feature belongs to.
+     * Retrieves a corresponding GeoJsonFeature instance for the given Polygon
+     * Allows maps with multiple layers to determine which layer the Polygon
+     * belongs to.
      *
-     * @param mapObject Object map object, presumably clicked on
-     * @return GeoJsonFeature for the given map object clicked on
+     * @param polygon Polygon map object
+     * @return GeoJsonFeature for the given polygon
      */
-    public GeoJsonFeature getFeature(Object mapObject) {
-        return mRenderer.getFeature(mapObject);
+    public GeoJsonFeature getFeature(Polygon polygon) {
+        return mRenderer.getFeature(polygon);
+    }
+
+    /**
+     * Retrieves a corresponding GeoJsonFeature instance for the given Polyline
+     * Allows maps with multiple layers to determine which layer the Polyline
+     * belongs to.
+     *
+     * @param polyline Polyline map object
+     * @return GeoJsonFeature for the given polyline
+     */
+    public GeoJsonFeature getFeature(Polyline polyline) {
+        return mRenderer.getFeature(polyline);
+    }
+
+    /**
+     * Retrieves a corresponding GeoJsonFeature instance for the given Marker
+     * Allows maps with multiple layers to determine which layer the Marker
+     * belongs to.
+     *
+     * @param marker Marker map object
+     * @return GeoJsonFeature for the given marker
+     */
+    public GeoJsonFeature getFeature(Marker marker) {
+        return mRenderer.getFeature(marker);
     }
 
     /**
