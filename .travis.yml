@@ -34,12 +34,12 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
     # Specify at least one system image
-    - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
-    - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
+    - sys-img-armeabi-v7a-google_apis-$ANDROID_API_LEVEL
+    - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
 
 before_script:
   # Create and start emulator
-  - echo no | android create avd --force -n test -t "Google Inc.:Google APIs:"$EMULATOR_API_LEVEL --abi $ANDROID_ABI
+  - echo no | android create avd --force -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
 
