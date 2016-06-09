@@ -2,6 +2,7 @@ package com.google.maps.android;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Extension of HashMap that provides two main features. Firstly it allows reverse lookup
@@ -16,40 +17,64 @@ import java.util.HashMap;
  */
 public class BiMultiMap<K> extends HashMap<K, Object> {
 
-    private final HashMap<Object, K> mValuesToKeys = new HashMap<>();
+    private final Map<Object, K> mValuesToKeys = new HashMap<>();
 
-    public void putAll(HashMap<K, Object> map) {
+    @Override
+    public void putAll(Map<? extends K, ?> map) {
         // put() manages the reverse map, so call it on each entry.
-        for (Entry<K, Object> entry : map.entrySet()) {
+        for (Entry<? extends K, ?> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }
 
     @Override
     public Object put(K key, Object value) {
-        // Store value/key in the reverse map, and store each item in the value
-        // if the value is a collection.
-        if (value instanceof Collection) {
-            for (Object valueItem: (Collection) value) {
-                mValuesToKeys.put(valueItem, key);
-            }
-        } else {
-            mValuesToKeys.put(value, key);
-        }
+        // Store value/key in the reverse map.
+        mValuesToKeys.put(value, key);
         return super.put(key, value);
     }
 
+    public Object put(K key, Collection values) {
+        // Store values/key in the reverse map.
+        for (Object value : values) {
+            mValuesToKeys.put(value, key);
+        }
+        return super.put(key, values);
+    }
+
+    @Override
     public Object remove(Object key) {
-        // Also remove the value/key from the reverse map.
-        mValuesToKeys.remove(get(key));
-        return super.remove(key);
+        Object value = super.remove(key);
+        // Also remove the value(s) and key from the reverse map.
+        if (value instanceof Collection) {
+            for (Object valueItem : (Collection) value) {
+                mValuesToKeys.remove(valueItem);
+            }
+        } else {
+            mValuesToKeys.remove(value);
+        }
+        return value;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        mValuesToKeys.clear();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public BiMultiMap<K> clone() {
+        BiMultiMap<K> cloned = new BiMultiMap<>();
+        cloned.putAll((Map<K, Object>) super.clone());
+        return cloned;
     }
 
     /**
      * Reverse lookup of key by value.
      *
-     * @param value Object value to lookup
-     * @return K the key for the given value
+     * @param value Value to lookup
+     * @return Key for the given value
      */
     public K getKey(Object value) {
         return mValuesToKeys.get(value);
