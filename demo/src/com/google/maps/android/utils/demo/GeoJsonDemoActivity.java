@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,6 +84,10 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
         }
     }
 
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     private class DownloadGeoJsonFile extends AsyncTask<String, Void, JSONObject> {
 
         @Override
@@ -126,7 +131,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 mLayer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
                     @Override
                     public void onFeatureClick(GeoJsonFeature feature) {
-                        Log.i(mLogTag, "Feature clicked: " + feature.getProperty("title"));
+                        showToast("Feature clicked: " + feature.getProperty("title"));
                     }
                 });
             }
