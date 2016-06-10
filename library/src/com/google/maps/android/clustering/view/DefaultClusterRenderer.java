@@ -102,7 +102,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     /**
      * If cluster size is less than this size, display individual markers.
      */
-    private static final int MIN_CLUSTER_SIZE = 4;
+    private int mMinClusterSize = 4;
 
     /**
      * The currently displayed set of clusters.
@@ -232,7 +232,15 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return BUCKETS[BUCKETS.length - 1];
     }
 
-    /**
+    public int getMinClusterSize() {
+        return mMinClusterSize;
+    }
+
+    public void setMinClusterSize(int minClusterSize) {
+        mMinClusterSize = minClusterSize;
+    }
+
+	/**
      * ViewModifier ensures only one re-rendering of the view occurs at a time, and schedules
      * re-rendering, which is performed by the RenderTask.
      */
@@ -301,7 +309,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Determine whether the cluster should be rendered as individual markers or a cluster.
      */
     protected boolean shouldRenderAsCluster(Cluster<T> cluster) {
-        return cluster.getSize() > MIN_CLUSTER_SIZE;
+        return cluster.getSize() > mMinClusterSize;
     }
 
     /**
