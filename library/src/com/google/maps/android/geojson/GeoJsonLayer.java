@@ -85,8 +85,7 @@ public class GeoJsonLayer {
      * use the GeoJsonLayer.getFeature(mapObject) method on each GeoJsonLayer instance to
      * determine if the given mapObject belongs to the layer.
      *
-     * @param listener GeoJsonOnFeatureClickListener object providing the onFeatureClick
-     *                 method to call.
+     * @param listener Listener providing the onFeatureClick method to call.
      */
     public void setOnFeatureClickListener(final GeoJsonOnFeatureClickListener listener) {
 
@@ -128,7 +127,7 @@ public class GeoJsonLayer {
      * Allows maps with multiple layers to determine which layer the Polygon
      * belongs to.
      *
-     * @param polygon Polygon map object
+     * @param polygon Polygon
      * @return GeoJsonFeature for the given polygon
      */
     public GeoJsonFeature getFeature(Polygon polygon) {
@@ -140,7 +139,7 @@ public class GeoJsonLayer {
      * Allows maps with multiple layers to determine which layer the Polyline
      * belongs to.
      *
-     * @param polyline Polyline map object
+     * @param polyline Polyline
      * @return GeoJsonFeature for the given polyline
      */
     public GeoJsonFeature getFeature(Polyline polyline) {
@@ -152,7 +151,7 @@ public class GeoJsonLayer {
      * Allows maps with multiple layers to determine which layer the Marker
      * belongs to.
      *
-     * @param marker Marker map object
+     * @param marker Marker
      * @return GeoJsonFeature for the given marker
      */
     public GeoJsonFeature getFeature(Marker marker) {
