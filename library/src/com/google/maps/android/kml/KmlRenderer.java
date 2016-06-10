@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.util.Log;
@@ -38,7 +37,7 @@ import java.util.Iterator;
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
-/* package */ class KmlRenderer extends FragmentActivity {
+/* package */ class KmlRenderer {
 
     private static final String LOG_TAG = "KmlRenderer";
 
