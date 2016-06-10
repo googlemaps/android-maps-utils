@@ -7,37 +7,37 @@ import java.util.List;
 
 public class BiMultiMapTest extends TestCase {
 
-    private BiMultiMap<String> mMap = new BiMultiMap<>();
-
     public void testSingle() {
+        BiMultiMap<String> mMap = new BiMultiMap<>();
         String key = "foo";
         String value = "bar";
         mMap.clear();
         mMap.put(key, value);
-        assertEquals(mMap.size(), 1);
-        assertEquals(mMap.get(key), value);
-        assertEquals(mMap.getKey(value), key);
+        assertEquals(1, mMap.size());
+        assertEquals(value, mMap.get(key));
+        assertEquals(key, mMap.getKey(value));
         mMap.remove(key);
-        assertEquals(mMap.size(), 0);
+        assertEquals(0, mMap.size());
         assertNull(mMap.get(key));
         assertNull(mMap.getKey(value));
     }
 
     public void testMulti() {
+        BiMultiMap<String> mMap = new BiMultiMap<>();
         String key = "foo";
         List<String> values = Arrays.asList("bar", "baz");
         mMap.clear();
         mMap.put(key, values);
-        assertEquals(mMap.size(), 1);
-        assertEquals(mMap.get(key), values);
+        assertEquals(1, mMap.size());
+        assertEquals(values, mMap.get(key));
         for (String value : values) {
-            assertEquals(mMap.getKey(value), key);
+            assertEquals(key, mMap.getKey(value));
         }
         mMap.remove(key);
-        assertEquals(mMap.size(), 0);
+        assertEquals(0, mMap.size());
         assertNull(mMap.get(key));
         for (String value : values) {
-            assertEquals(mMap.getKey(value), key);
+            assertEquals(null, mMap.getKey(value));
         }
     }
 
