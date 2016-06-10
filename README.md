@@ -15,6 +15,8 @@ range of applications using the [Google Maps Android API][android-site].
 - **KML** — displays KML data
 - **GeoJSON** — displays and styles GeoJSON data
 
+<p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
+
 For more information, check out the detailed guide on the
 [Google Developers site][devsite-guide]. You can also view the generated
 [reference docs][javadoc] for a full list of classes and their methods.
