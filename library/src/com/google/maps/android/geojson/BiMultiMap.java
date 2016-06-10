@@ -1,4 +1,4 @@
-package com.google.maps.android;
+package com.google.maps.android.geojson;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
  * Polyline, and Polygon map objects. We want to look these up in reverse to provide access
  * to GeoJsonFeature instances when map objects are clicked.
  */
-public class BiMultiMap<K> extends HashMap<K, Object> {
+/* package */ class BiMultiMap<K> extends HashMap<K, Object> {
 
     private final Map<Object, K> mValuesToKeys = new HashMap<>();
 
