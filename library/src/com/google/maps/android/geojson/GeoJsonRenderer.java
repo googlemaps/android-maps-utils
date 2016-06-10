@@ -304,7 +304,9 @@ import java.util.Set;
         PolylineOptions polylineOptions = lineStringStyle.toPolylineOptions();
         // Add coordinates
         polylineOptions.addAll(lineString.getCoordinates());
-        return mMap.addPolyline(polylineOptions);
+        Polyline addedPolyline = mMap.addPolyline(polylineOptions);
+        addedPolyline.setClickable(true);
+        return addedPolyline;
     }
 
     /**
