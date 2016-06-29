@@ -63,7 +63,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
         // Iterate over all the features stored in the layer
         for (GeoJsonFeature feature : mLayer.getFeatures()) {
             // Check if the magnitude property exists
-            if (feature.hasProperty("mag") && feature.hasProperty("place")) {
+            if (feature.getProperty("mag") != null && feature.hasProperty("place")) {
                 double magnitude = Double.parseDouble(feature.getProperty("mag"));
 
                 // Get the icon for the feature
