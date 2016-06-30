@@ -5,6 +5,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import junit.framework.TestCase;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,6 +37,15 @@ public class GeoJsonFeatureTest extends TestCase {
         assertEquals("5", feature.removeProperty("Width"));
         assertNull(feature.setProperty("Width", "10"));
         assertEquals("10", feature.setProperty("Width", "500"));
+    }
+
+    public void testNullProperty() throws Exception {
+        GeoJsonLayer layer = new GeoJsonLayer(null, createFeatureCollection());
+        GeoJsonFeature feature = layer.getFeatures().iterator().next();
+        assertTrue(feature.hasProperty("prop0"));
+        assertNull(feature.getProperty("prop0"));
+        assertFalse(feature.hasProperty("prop1"));
+        assertNull(feature.getProperty("prop1"));
     }
 
     public void testPointStyle() {
@@ -108,5 +119,19 @@ public class GeoJsonFeatureTest extends TestCase {
         assertEquals(boundingBox, feature.getBoundingBox());
     }
 
+    private JSONObject createFeatureCollection() throws Exception {
+        return new JSONObject(
+                "{ \"type\": \"FeatureCollection\",\n"
+                        + "\"bbox\": [-150.0, -80.0, 150.0, 80.0],"
+                        + "    \"features\": [\n"
+                        + "      { \"type\": \"Feature\",\n"
+                        + "        \"id\": \"point\", \n"
+                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},\n"
+                        + "        \"properties\": {\"prop0\": null}\n"
+                        + "        }\n"
+                        + "       ]\n"
+                        + "     }"
+        );
+    }
 
 }
