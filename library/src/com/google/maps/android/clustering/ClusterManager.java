@@ -115,6 +115,14 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
         cluster();
     }
 
+    public ClusterRenderer<T> getRenderer() {
+        return mRenderer;
+    }
+
+    public Algorithm<T> getAlgorithm() {
+        return mAlgorithm;
+    }
+
     public void clearItems() {
         mAlgorithmLock.writeLock().lock();
         try {

@@ -89,7 +89,7 @@ public class PolyUtil {
 
     /**
      * Computes whether the given point lies inside the specified polygon.
-     * The polygon is always cosidered closed, regardless of whether the last point equals
+     * The polygon is always considered closed, regardless of whether the last point equals
      * the first or not.
      * Inside is defined as not containing the South Pole -- the South Pole is always outside.
      * The polygon is formed of great circle segments if geodesic is true, and of rhumb
