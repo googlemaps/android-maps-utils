@@ -24,6 +24,3 @@ For more information, check out the detailed guide on the
 [android-site]: https://developer.android.com/training/maps/index.html
 [devsite-guide]: https://developers.google.com/maps/documentation/android-api/utility/
 [javadoc]: http://googlemaps.github.io/android-maps-utils/javadoc/
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/googlemaps/android-maps-utils/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
