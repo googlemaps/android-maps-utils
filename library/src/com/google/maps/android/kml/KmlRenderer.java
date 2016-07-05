@@ -822,7 +822,7 @@ import java.util.Iterator;
             try {
                 return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                return BitmapFactory.decodeFile(mIconUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -871,9 +871,9 @@ import java.util.Iterator;
                 return BitmapFactory
                         .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                return BitmapFactory.decodeFile(mGroundOverlayUrl);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
             return null;
         }
