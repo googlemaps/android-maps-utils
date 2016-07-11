@@ -482,27 +482,36 @@ import java.util.Iterator;
             KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
-        String drawOrder = placemark.getProperty("drawOrder");
+        boolean hasDrawOrder = placemark.hasProperty("drawOrder");
+        float drawOrder = 0;
+
+        if (hasDrawOrder) {
+            try {
+                drawOrder = Float.parseFloat(placemark.getProperty("drawOrder"));
+            } catch (NumberFormatException e) {
+                hasDrawOrder = false;
+            }
+        }
 
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
             marker.setVisible(isVisible);
-            if (drawOrder != null) {
-                marker.setZIndex(Float.parseFloat(drawOrder));
+            if (hasDrawOrder) {
+                marker.setZIndex(drawOrder);
             }
             return marker;
         } else if (geometryType.equals("LineString")) {
             Polyline polyline = addLineStringToMap((KmlLineString) geometry, style, inlineStyle);
             polyline.setVisible(isVisible);
-            if (drawOrder != null) {
-                polyline.setZIndex(Float.parseFloat(drawOrder));
+            if (hasDrawOrder) {
+                polyline.setZIndex(drawOrder);
             }
             return polyline;
         } else if (geometryType.equals("Polygon")) {
             Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style, inlineStyle);
             polygon.setVisible(isVisible);
-            if (drawOrder != null) {
-                polygon.setZIndex(Float.parseFloat(drawOrder));
+            if (hasDrawOrder) {
+                polygon.setZIndex(drawOrder);
             }
             return polygon;
         } else if (geometryType.equals("MultiGeometry")) {
