@@ -325,8 +325,8 @@ import java.util.Iterator;
      * @return Google Map Object of the placemark geometry after it has been added to the map.
      */
     private Object addPlacemarkToMap(KmlPlacemark placemark, boolean placemarkVisibility) {
-        //If the placemark contains a geometry, then we add it to the map
-        //If it doesnt contain a geometry, we do not add anything to the map and just store values
+        // If the placemark contains a geometry, then we add it to the map. If it doesn't
+        // contain a geometry, we do not add anything to the map, and just store values.
         if (placemark.getGeometry() != null) {
             String placemarkId = placemark.getStyleId();
             KmlGeometry geometry = placemark.getGeometry();
@@ -482,17 +482,37 @@ import java.util.Iterator;
             KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
+        boolean hasDrawOrder = placemark.hasProperty("drawOrder");
+        float drawOrder = 0;
+
+        if (hasDrawOrder) {
+            try {
+                drawOrder = Float.parseFloat(placemark.getProperty("drawOrder"));
+            } catch (NumberFormatException e) {
+                hasDrawOrder = false;
+            }
+        }
+
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
             marker.setVisible(isVisible);
+            if (hasDrawOrder) {
+                marker.setZIndex(drawOrder);
+            }
             return marker;
         } else if (geometryType.equals("LineString")) {
             Polyline polyline = addLineStringToMap((KmlLineString) geometry, style, inlineStyle);
             polyline.setVisible(isVisible);
+            if (hasDrawOrder) {
+                polyline.setZIndex(drawOrder);
+            }
             return polyline;
         } else if (geometryType.equals("Polygon")) {
             Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style, inlineStyle);
             polygon.setVisible(isVisible);
+            if (hasDrawOrder) {
+                polygon.setZIndex(drawOrder);
+            }
             return polygon;
         } else if (geometryType.equals("MultiGeometry")) {
             return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
