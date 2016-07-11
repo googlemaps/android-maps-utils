@@ -24,7 +24,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
     private final static int LATITUDE_INDEX = 1;
 
-    private final static String PROPERTY_REGEX = "name|description|visibility|open|address|phoneNumber";
+    private final static String PROPERTY_REGEX = "name|description|drawOrder|visibility|open|address|phoneNumber";
 
     private final static String BOUNDARY_REGEX = "outerBoundaryIs|innerBoundaryIs";
 
