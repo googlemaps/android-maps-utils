@@ -6,9 +6,8 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services-maps:9.2.0'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
 }
-
 
 android {
     compileSdkVersion 23
