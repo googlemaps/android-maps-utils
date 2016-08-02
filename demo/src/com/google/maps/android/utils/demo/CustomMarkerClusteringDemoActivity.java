@@ -161,7 +161,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
         mClusterManager = new ClusterManager<Person>(this, getMap());
         mClusterManager.setRenderer(new PersonRenderer());
-        getMap().setOnCameraChangeListener(mClusterManager);
+        getMap().setOnCameraIdleListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);
         getMap().setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);

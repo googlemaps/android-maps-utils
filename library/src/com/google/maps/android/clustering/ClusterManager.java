@@ -38,10 +38,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Groups many items on a map based on zoom level.
  * <p/>
- * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraChangeListener}</li>
+ * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraIdleListener}</li>
  * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
-public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+public class ClusterManager<T extends ClusterItem> implements
+        GoogleMap.OnCameraIdleListener,
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnInfoWindowClickListener {
+
     private final MarkerManager mMarkerManager;
     private final MarkerManager.Collection mMarkers;
     private final MarkerManager.Collection mClusterMarkers;
@@ -181,13 +185,11 @@ public class ClusterManager<T extends ClusterItem> implements GoogleMap.OnCamera
 
     /**
      * Might re-cluster.
-     *
-     * @param cameraPosition
      */
     @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        if (mRenderer instanceof GoogleMap.OnCameraChangeListener) {
-            ((GoogleMap.OnCameraChangeListener) mRenderer).onCameraChange(cameraPosition);
+    public void onCameraIdle() {
+        if (mRenderer instanceof GoogleMap.OnCameraIdleListener) {
+            ((GoogleMap.OnCameraIdleListener) mRenderer).onCameraIdle();
         }
 
         // Don't re-compute clusters if the map has just been panned/tilted/rotated.
