@@ -10,3 +10,4 @@
 * Iris Uy, https://github.com/irisu
 * Emma Yeap, https://github.com/microcat
 * Stefanos Togoulidis, https://github.com/hypest
+* Sean Barbeau, https://github.com/barbeau
