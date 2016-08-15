@@ -44,7 +44,7 @@ public class VisibleClusteringDemoActivity extends BaseDemoActivity {
         mClusterManager.setAlgorithm(new NonHierarchicalViewBasedAlgorithm<MyItem>(
                 metrics.widthPixels, metrics.heightPixels));
 
-        getMap().setOnCameraChangeListener(mClusterManager);
+        getMap().setOnCameraIdleListener(mClusterManager);
 
         try {
             readItems();

@@ -1,5 +1,16 @@
 package com.google.maps.android.kml;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -14,18 +25,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.LruCache;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -38,7 +37,7 @@ import java.util.Iterator;
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
-/* package */ class KmlRenderer extends FragmentActivity {
+/* package */ class KmlRenderer {
 
     private static final String LOG_TAG = "KmlRenderer";
 
@@ -326,8 +325,8 @@ import java.util.Iterator;
      * @return Google Map Object of the placemark geometry after it has been added to the map.
      */
     private Object addPlacemarkToMap(KmlPlacemark placemark, boolean placemarkVisibility) {
-        //If the placemark contains a geometry, then we add it to the map
-        //If it doesnt contain a geometry, we do not add anything to the map and just store values
+        // If the placemark contains a geometry, then we add it to the map. If it doesn't
+        // contain a geometry, we do not add anything to the map, and just store values.
         if (placemark.getGeometry() != null) {
             String placemarkId = placemark.getStyleId();
             KmlGeometry geometry = placemark.getGeometry();
@@ -483,17 +482,37 @@ import java.util.Iterator;
             KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
+        boolean hasDrawOrder = placemark.hasProperty("drawOrder");
+        float drawOrder = 0;
+
+        if (hasDrawOrder) {
+            try {
+                drawOrder = Float.parseFloat(placemark.getProperty("drawOrder"));
+            } catch (NumberFormatException e) {
+                hasDrawOrder = false;
+            }
+        }
+
         if (geometryType.equals("Point")) {
             Marker marker = addPointToMap(placemark, (KmlPoint) geometry, style, inlineStyle);
             marker.setVisible(isVisible);
+            if (hasDrawOrder) {
+                marker.setZIndex(drawOrder);
+            }
             return marker;
         } else if (geometryType.equals("LineString")) {
             Polyline polyline = addLineStringToMap((KmlLineString) geometry, style, inlineStyle);
             polyline.setVisible(isVisible);
+            if (hasDrawOrder) {
+                polyline.setZIndex(drawOrder);
+            }
             return polyline;
         } else if (geometryType.equals("Polygon")) {
             Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style, inlineStyle);
             polygon.setVisible(isVisible);
+            if (hasDrawOrder) {
+                polygon.setZIndex(drawOrder);
+            }
             return polygon;
         } else if (geometryType.equals("MultiGeometry")) {
             return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
@@ -565,7 +584,7 @@ import java.util.Iterator;
             }
 
             public View getInfoContents(Marker arg0) {
-                View view =  LayoutInflater.from(mContext).inflate(R.layout.info_window, null);
+                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
@@ -823,7 +842,7 @@ import java.util.Iterator;
             try {
                 return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                return BitmapFactory.decodeFile(mIconUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -872,9 +891,9 @@ import java.util.Iterator;
                 return BitmapFactory
                         .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                return BitmapFactory.decodeFile(mGroundOverlayUrl);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
             return null;
         }

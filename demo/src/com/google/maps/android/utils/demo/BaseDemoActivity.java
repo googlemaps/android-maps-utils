@@ -19,9 +19,10 @@ package com.google.maps.android.utils.demo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public abstract class BaseDemoActivity extends FragmentActivity {
+public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     protected int getLayoutId() {
@@ -32,23 +33,26 @@ public abstract class BaseDemoActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        setUpMapIfNeeded();
+        setUpMap();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        setUpMap();
     }
 
-    private void setUpMapIfNeeded() {
+    @Override
+    public void onMapReady(GoogleMap map) {
         if (mMap != null) {
             return;
         }
-        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        if (mMap != null) {
-            startDemo();
-        }
+        mMap = map;
+        startDemo();
+    }
+
+    private void setUpMap() {
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
     /**
@@ -57,7 +61,6 @@ public abstract class BaseDemoActivity extends FragmentActivity {
     protected abstract void startDemo();
 
     protected GoogleMap getMap() {
-        setUpMapIfNeeded();
         return mMap;
     }
 }

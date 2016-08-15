@@ -2,6 +2,9 @@ package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.Polyline;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +71,91 @@ public class GeoJsonLayer {
     public GeoJsonLayer(GoogleMap map, int resourceId, Context context)
             throws IOException, JSONException {
         this(map, createJsonFileObject(context.getResources().openRawResource(resourceId)));
+    }
+
+    /**
+     * Sets a single click listener for the entire GoogleMap object, that will be called
+     * with the corresponding GeoJsonFeature object when an object on the map (Polygon,
+     * Marker, Polyline) is clicked.
+     *
+     * Note that if multiple GeoJsonLayer objects are bound to a GoogleMap object, calling
+     * setOnFeatureClickListener on one will override the listener defined on the other. In
+     * that case, you must define each of the GoogleMap click listeners manually
+     * (OnPolygonClickListener, OnMarkerClickListener, OnPolylineClickListener), and then
+     * use the GeoJsonLayer.getFeature(mapObject) method on each GeoJsonLayer instance to
+     * determine if the given mapObject belongs to the layer.
+     *
+     * @param listener Listener providing the onFeatureClick method to call.
+     */
+    public void setOnFeatureClickListener(final GeoJsonOnFeatureClickListener listener) {
+
+        GoogleMap map = getMap();
+
+        map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(Polygon polygon) {
+                listener.onFeatureClick(getFeature(polygon));
+            }
+        });
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                listener.onFeatureClick(getFeature(marker));
+                return false;
+            }
+        });
+
+        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+                listener.onFeatureClick(getFeature(polyline));
+            }
+        });
+
+    }
+
+    /**
+     * Callback interface for when a GeoJsonLayer's map object is clicked.
+     */
+    public interface GeoJsonOnFeatureClickListener {
+        void onFeatureClick(GeoJsonFeature feature);
+    }
+
+    /**
+     * Retrieves a corresponding GeoJsonFeature instance for the given Polygon
+     * Allows maps with multiple layers to determine which layer the Polygon
+     * belongs to.
+     *
+     * @param polygon Polygon
+     * @return GeoJsonFeature for the given polygon
+     */
+    public GeoJsonFeature getFeature(Polygon polygon) {
+        return mRenderer.getFeature(polygon);
+    }
+
+    /**
+     * Retrieves a corresponding GeoJsonFeature instance for the given Polyline
+     * Allows maps with multiple layers to determine which layer the Polyline
+     * belongs to.
+     *
+     * @param polyline Polyline
+     * @return GeoJsonFeature for the given polyline
+     */
+    public GeoJsonFeature getFeature(Polyline polyline) {
+        return mRenderer.getFeature(polyline);
+    }
+
+    /**
+     * Retrieves a corresponding GeoJsonFeature instance for the given Marker
+     * Allows maps with multiple layers to determine which layer the Marker
+     * belongs to.
+     *
+     * @param marker Marker
+     * @return GeoJsonFeature for the given marker
+     */
+    public GeoJsonFeature getFeature(Marker marker) {
+        return mRenderer.getFeature(marker);
     }
 
     /**

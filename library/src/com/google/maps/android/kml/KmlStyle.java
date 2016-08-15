@@ -1,11 +1,11 @@
 package com.google.maps.android.kml;
 
+import android.graphics.Color;
+
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import android.graphics.Color;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -185,10 +185,6 @@ import java.util.Random;
      */
     /* package */ void setIconUrl(String iconUrl) {
         mIconUrl = iconUrl;
-        if (!mIconUrl.startsWith("http://")) {
-            // Icon stored locally
-            mMarkerOptions.icon(BitmapDescriptorFactory.fromPath(iconUrl));
-        }
         mStylesSet.add("iconUrl");
     }
 
@@ -237,10 +233,14 @@ import java.util.Random;
         String newColor;
         if (color.length() > 6) {
             newColor = color.substring(0, 2) + color.substring(6, 8)
-                    + color.substring(4,6)+ color.substring(2, 4);
+                    + color.substring(4, 6)+ color.substring(2, 4);
         } else {
-            newColor = color.substring(4,6) + color.substring(2,4) +
-                    color.substring(0,2);
+            newColor = color.substring(4, 6) + color.substring(2, 4) +
+                    color.substring(0, 2);
+        }
+        // Maps exports KML colors with a leading 0 as a space.
+        if (newColor.substring(0, 1).equals(" ")) {
+            newColor = "0" + newColor.substring(1, newColor.length());
         }
         return newColor;
     }

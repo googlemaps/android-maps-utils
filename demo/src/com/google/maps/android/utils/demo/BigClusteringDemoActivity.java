@@ -37,7 +37,7 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
 
-        getMap().setOnCameraChangeListener(mClusterManager);
+        getMap().setOnCameraIdleListener(mClusterManager);
         try {
             readItems();
         } catch (JSONException e) {

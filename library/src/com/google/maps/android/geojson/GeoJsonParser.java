@@ -196,7 +196,7 @@ import java.util.Iterator;
         Iterator propertyKeys = properties.keys();
         while (propertyKeys.hasNext()) {
             String key = (String) propertyKeys.next();
-            propertiesMap.put(key, properties.getString(key));
+            propertiesMap.put(key, properties.isNull(key) ? null : properties.getString(key));
         }
         return propertiesMap;
     }

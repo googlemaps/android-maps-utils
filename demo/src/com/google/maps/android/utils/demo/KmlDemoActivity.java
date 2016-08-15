@@ -23,7 +23,6 @@ import java.net.URL;
 public class KmlDemoActivity extends BaseDemoActivity {
 
     private GoogleMap mMap;
-    private KmlLayer kmlLayer;
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
@@ -43,6 +42,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         try {
             KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
             kmlLayer.addLayerToMap();
+            moveCameraToKml(kmlLayer);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
@@ -51,9 +51,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     }
 
     private void retrieveFileFromUrl() {
-        String url = "https://kml-samples.googlecode.com/svn/trunk/" +
-                "morekml/Polygons/Polygons.Google_Campus.kml";
-        new DownloadKmlFile(url).execute();
+        new DownloadKmlFile(getString(R.string.kml_url)).execute();
     }
 
     private void moveCameraToKml(KmlLayer kmlLayer) {
@@ -99,7 +97,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
         protected void onPostExecute(byte[] byteArr) {
             try {
-                kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
+                KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
                 kmlLayer.addLayerToMap();
                 moveCameraToKml(kmlLayer);

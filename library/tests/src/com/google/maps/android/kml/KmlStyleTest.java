@@ -29,6 +29,16 @@ public class KmlStyleTest extends TestCase {
         assertEquals(fillColor, kmlStyle.getPolygonOptions().getFillColor());
     }
 
+    public void testColorFormatting() throws Exception {
+        KmlStyle kmlStyle = new KmlStyle();
+        // AABBGGRR -> AARRGGBB.
+        kmlStyle.setFillColor("ff579D00");
+        assertEquals(Color.parseColor("#009D57"), kmlStyle.getPolygonOptions().getFillColor());
+        // Alpha w/ missing 0.
+        kmlStyle.setFillColor(" D579D00");
+        assertEquals(Color.parseColor("#0D009D57"), kmlStyle.getPolygonOptions().getFillColor());
+    }
+
     public void testHeading() throws Exception {
         KmlStyle kmlStyle = new KmlStyle();
         assertNotNull(kmlStyle);
@@ -67,12 +77,5 @@ public class KmlStyleTest extends TestCase {
         assertNotNull(kmlStyle);
         assertNotNull(kmlStyle.getMarkerOptions());
     }
-
-
-
-
-
-
-
 
 }
