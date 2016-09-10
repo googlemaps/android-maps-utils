@@ -45,7 +45,13 @@ public class PointQuadTreeTest extends TestCase {
     }
 
     public void testMultiplePoints() {
+        boolean response;
         Item item1 = new Item(0, 0);
+
+        // Remove item that isn't yet in the QuadTree
+        response = mTree.remove(item1);
+        assertFalse(response);
+
         mTree.add(item1);
         Item item2 = new Item(.1, .1);
         mTree.add(item2);
@@ -59,11 +65,18 @@ public class PointQuadTreeTest extends TestCase {
         assertTrue(items.contains(item2));
         assertTrue(items.contains(item3));
 
-        mTree.remove(item1);
-        mTree.remove(item2);
-        mTree.remove(item3);
+        response = mTree.remove(item1);
+        assertTrue(response);
+        response = mTree.remove(item2);
+        assertTrue(response);
+        response = mTree.remove(item3);
+        assertTrue(response);
 
         assertEquals(0, searchAll().size());
+
+        // Remove item that is no longer in the QuadTree
+        response = mTree.remove(item1);
+        assertFalse(response);
     }
 
     public void testSameLocationDifferentPoint() {

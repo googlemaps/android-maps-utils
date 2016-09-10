@@ -173,7 +173,11 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
             }
         }
         else {
-            return mItems.remove(item);
+            if (mItems == null) {
+                return false;
+            } else {
+                return mItems.remove(item);
+            }
         }
     }
 
