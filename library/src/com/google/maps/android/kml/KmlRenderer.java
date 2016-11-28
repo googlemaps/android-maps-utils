@@ -569,6 +569,9 @@ import java.util.Iterator;
         } else if (hasDescription) {
             marker.setTitle(placemark.getProperty("description"));
             createInfoWindow();
+        } else if (hasName) {
+            marker.setTitle(placemark.getProperty("name"));
+            createInfoWindow();
         }
     }
 
