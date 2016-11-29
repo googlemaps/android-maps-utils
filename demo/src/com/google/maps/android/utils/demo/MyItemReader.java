@@ -46,7 +46,6 @@ public class MyItemReader {
             JSONObject object = array.getJSONObject(i);
             double lat = object.getDouble("lat");
             double lng = object.getDouble("lng");
-            //need to check that title and snippet exist
             if (!object.isNull("title")) {
                 title = object.getString("title");
             }
