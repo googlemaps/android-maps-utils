@@ -41,11 +41,21 @@ public class MyItemReader {
         String json = new Scanner(inputStream).useDelimiter(REGEX_INPUT_BOUNDARY_BEGINNING).next();
         JSONArray array = new JSONArray(json);
         for (int i = 0; i < array.length(); i++) {
+            String title = null;
+            String snippet = null;
             JSONObject object = array.getJSONObject(i);
             double lat = object.getDouble("lat");
             double lng = object.getDouble("lng");
-            items.add(new MyItem(lat, lng));
+            //need to check that title and snippet exist
+            if (!object.isNull("title")) {
+                title = object.getString("title");
+            }
+            if (!object.isNull("snippet")) {
+                snippet = object.getString("snippet");
+            }
+            items.add(new MyItem(lat, lng, title, snippet));
         }
         return items;
     }
+
 }

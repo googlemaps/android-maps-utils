@@ -34,4 +34,14 @@ public class Person implements ClusterItem {
     public LatLng getPosition() {
         return mPosition;
     }
+
+    @Override
+    public String getTitle() {
+        return null;
+    }
+
+    @Override
+    public String getSnippet() {
+        return null;
+    }
 }

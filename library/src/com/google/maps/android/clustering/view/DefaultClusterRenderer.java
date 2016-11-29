@@ -825,6 +825,14 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         } else {
                             markerOptions.position(item.getPosition());
                         }
+                        if (!(item.getTitle()== null) && !(item.getSnippet() == null)) {
+                            markerOptions.title(item.getTitle());
+                            markerOptions.snippet(item.getSnippet());
+                        } else if (!(item.getSnippet() == null)) {
+                            markerOptions.title(item.getSnippet());
+                        } else if (!(item.getTitle() == null)) {
+                            markerOptions.title(item.getTitle());
+                        }
                         onBeforeClusterItemRendered(item, markerOptions);
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
                         markerWithPosition = new MarkerWithPosition(marker);
