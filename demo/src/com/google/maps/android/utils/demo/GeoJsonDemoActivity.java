@@ -45,9 +45,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         // Download the GeoJSON file.
-        retrieveFileFromUrl();
+        //TODO retrieveFileFromUrl();
         // Alternate approach of loading a local GeoJSON file.
-        //retrieveFileFromResource();
+        retrieveFileFromResource(); //TODO
     }
 
     private void retrieveFileFromUrl() {
