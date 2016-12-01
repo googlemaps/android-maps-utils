@@ -87,6 +87,10 @@ public class PolyUtil {
             mercator(lat3) >= mercatorLatRhumb(lat1, lat2, lng2, lng3);
     }
 
+    public static boolean containsLocation(LatLng point, List<LatLng> polygon, boolean geodesic) {
+        return containsLocation(point.latitude, point.longitude, polygon, geodesic);
+    }
+
     /**
      * Computes whether the given point lies inside the specified polygon.
      * The polygon is always considered closed, regardless of whether the last point equals
@@ -95,13 +99,13 @@ public class PolyUtil {
      * The polygon is formed of great circle segments if geodesic is true, and of rhumb
      * (loxodromic) segments otherwise.
      */
-    public static boolean containsLocation(LatLng point, List<LatLng> polygon, boolean geodesic) {
+    public static boolean containsLocation(double latitude, double longitude, List<LatLng> polygon, boolean geodesic) {
         final int size = polygon.size();
         if (size == 0) {
             return false;
         }
-        double lat3 = toRadians(point.latitude);
-        double lng3 = toRadians(point.longitude);
+        double lat3 = toRadians(latitude);
+        double lng3 = toRadians(longitude);
         LatLng prev = polygon.get(size - 1);
         double lat1 = toRadians(prev.latitude);
         double lng1 = toRadians(prev.longitude);
