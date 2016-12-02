@@ -41,7 +41,7 @@ public class GeoJsonLayer {
 
     private LatLngBounds mBoundingBox;
 
-    private GoogleMap mMap; //TODO
+    private GoogleMap mMap;
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
@@ -92,6 +92,9 @@ public class GeoJsonLayer {
      * use the GeoJsonLayer.getFeature(mapObject) method on each GeoJsonLayer instance to
      * determine if the given mapObject belongs to the layer.
      *
+     * If getFeature() returns null this means that the object is a MultiPolygon, MultiLineString
+     * or MultiPoint and must be handled differently.
+     *
      * @param listener Listener providing the onFeatureClick method to call.
      */
     public void setOnFeatureClickListener(final GeoJsonOnFeatureClickListener listener) {
@@ -134,6 +137,14 @@ public class GeoJsonLayer {
 
     }
 
+    /**
+     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
+     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
+     * respectively
+     *
+     * @param mapObject Object
+     * @return an ArrayList of the individual
+     */
     private ArrayList<?> multiObjectHandler(Object mapObject) {
         for (Object value : mRenderer.getValues()) {
             Class c = value.getClass();
