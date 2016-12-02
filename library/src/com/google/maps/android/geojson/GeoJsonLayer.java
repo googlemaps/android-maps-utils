@@ -140,7 +140,9 @@ public class GeoJsonLayer {
     /**
      * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
      * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
-     * respectively
+     * respectively.
+     *
+     * Test in GeoJsonDemoActivity using earthquakes_with_usa.
      *
      * @param mapObject Object
      * @return an ArrayList of the individual

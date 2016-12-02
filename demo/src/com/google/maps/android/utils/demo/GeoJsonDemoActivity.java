@@ -45,9 +45,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         // Download the GeoJSON file.
-        //TODO retrieveFileFromUrl();
+        retrieveFileFromUrl();
         // Alternate approach of loading a local GeoJSON file.
-        retrieveFileFromResource(); //TODO
+        //retrieveFileFromResource();
     }
 
     private void retrieveFileFromUrl() {
@@ -56,7 +56,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.earthquakes, this);
+            GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.earthquakes_with_usa, this);
             addGeoJsonLayerToMap(layer);
         } catch (IOException e) {
             Log.e(mLogTag, "GeoJSON file could not be read");
