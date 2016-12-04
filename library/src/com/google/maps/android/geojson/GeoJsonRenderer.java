@@ -7,8 +7,10 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.MarkerManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -132,6 +134,16 @@ import java.util.Set;
      */
     /* package */ GeoJsonFeature getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
+    }
+
+    /**
+     * getValues is called by GeoJsonLayer to retrieve the values stored in the mFeatures
+     * hashmap.
+     *
+     * @return mFeatures.values()   collection of values stored in mFeatures
+     */
+    public Collection<Object> getValues() {
+        return mFeatures.values();
     }
 
     /**
