@@ -79,6 +79,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final IconGenerator mIconGenerator;
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
+    private boolean mAnimate;
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -129,6 +130,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
+        mAnimate = true;
         mDensity = context.getResources().getDisplayMetrics().density;
         mIconGenerator = new IconGenerator(context);
         mIconGenerator.setContentView(makeSquareTextView(context));
@@ -395,7 +397,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 if (zoomingIn && onScreen && SHOULD_ANIMATE) {
                     Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                     Point closest = findClosestCluster(existingClustersOnScreen, point);
-                    if (closest != null) {
+                    if (closest != null && mAnimate) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateTo));
                     } else {
@@ -431,10 +433,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 boolean onScreen = visibleBounds.contains(marker.position);
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
+                // TODO
+                // TODO
+                // TODO
                 if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE) {
                     final Point point = mSphericalMercatorProjection.toPoint(marker.position);
                     final Point closest = findClosestCluster(newClustersOnScreen, point);
-                    if (closest != null) {
+                    if (closest != null && mAnimate) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
                         markerModifier.animateThenRemove(marker, marker.position, animateTo);
                     } else {
@@ -478,6 +483,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     @Override
     public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener) {
         mItemInfoWindowClickListener = listener;
+    }
+
+    @Override
+    public void setAnimation(boolean animate) {
+        mAnimate = animate;
     }
 
     private static double distanceSquared(Point a, Point b) {
