@@ -433,9 +433,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 boolean onScreen = visibleBounds.contains(marker.position);
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
-                // TODO
-                // TODO
-                // TODO
                 if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE) {
                     final Point point = mSphericalMercatorProjection.toPoint(marker.position);
                     final Point closest = findClosestCluster(newClustersOnScreen, point);
