@@ -1,11 +1,13 @@
 package com.google.maps.android.kml;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 /**
  * Represents a KML MultiGeometry. Contains an array of KmlGeometry objects.
  */
-public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
+public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>>, KmlContainsLocation {
 
     private static final String GEOMETRY_TYPE = "MultiGeometry";
 
@@ -41,6 +43,27 @@ public class KmlMultiGeometry implements KmlGeometry<ArrayList<KmlGeometry>> {
 
     public ArrayList<KmlGeometry> getGeometryObject() {
         return mGeometries;
+    }
+
+    /**
+     * Checks if the given point lies inside any of the geometries.
+     * A polygon is formed of great circle segments if geodesic is true, and of rhumb
+     * (loxodromic) segments otherwise.
+     * @param point
+     * @param geodesic
+     * @return
+     */
+    @Override
+    public boolean containsLocation(LatLng point, boolean geodesic) {
+        if (point == null) return false;
+
+        for (KmlGeometry geometry : mGeometries){
+            if (geometry instanceof KmlContainsLocation){
+                KmlContainsLocation kmlContainsLocation = (KmlContainsLocation)geometry;
+                if (kmlContainsLocation.containsLocation(point, geodesic)) return true;
+            }
+        }
+        return false;
     }
 
     @Override

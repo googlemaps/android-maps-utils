@@ -51,6 +51,14 @@ public class KmlLineStringTest extends TestCase {
         assertEquals(kmlLineString.getGeometryObject().get(0).latitude, 0.0);
         assertEquals(kmlLineString.getGeometryObject().get(1).latitude, 50.0);
         assertEquals(kmlLineString.getGeometryObject().get(2).latitude, 0.0);
+    }
 
+    public void testContainsLocation() throws Exception {
+        LatLng pointIn, pointOut;
+        kmlLineString = createSimpleLineString();
+        pointIn = new LatLng(45, 40);
+        pointOut = new LatLng(21, 23);
+        assertEquals(true, kmlLineString.containsLocation(pointIn, true));
+        assertEquals(false, kmlLineString.containsLocation(pointOut, true));
     }
 }

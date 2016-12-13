@@ -21,7 +21,7 @@ public class KmlPolygonTest extends TestCase {
         outerCoordinates.add(new LatLng(20, 20));
         outerCoordinates.add(new LatLng(30, 30));
         outerCoordinates.add(new LatLng(10, 10));
-        ArrayList<ArrayList<LatLng>> innerCoordinates = new  ArrayList<ArrayList<LatLng>>();
+        ArrayList<ArrayList<LatLng>> innerCoordinates = new ArrayList<ArrayList<LatLng>>();
         ArrayList<LatLng> innerHole = new ArrayList<LatLng>();
         innerHole.add(new LatLng(20, 20));
         innerHole.add(new LatLng(10, 10));
@@ -37,6 +37,36 @@ public class KmlPolygonTest extends TestCase {
         outerCoordinates.add(new LatLng(30, 30));
         outerCoordinates.add(new LatLng(10, 10));
         return new KmlPolygon(outerCoordinates, null);
+    }
+
+    public KmlPolygon createSquarePolygon(){
+        ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
+        outerCoordinates.add(new LatLng(10, 10));
+        outerCoordinates.add(new LatLng(10, 20));
+        outerCoordinates.add(new LatLng(20, 20));
+        outerCoordinates.add(new LatLng(20, 10));
+        outerCoordinates.add(new LatLng(10, 10));
+        return new KmlPolygon(outerCoordinates, null);
+    }
+
+    public KmlPolygon createSquareWithHolePolygon(){
+        ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
+        outerCoordinates.add(new LatLng(10, 10));
+        outerCoordinates.add(new LatLng(10, 30));
+        outerCoordinates.add(new LatLng(30, 30));
+        outerCoordinates.add(new LatLng(30, 10));
+        outerCoordinates.add(new LatLng(10, 10));
+
+        ArrayList<ArrayList<LatLng>> innerCoordinates = new ArrayList<ArrayList<LatLng>>();
+        ArrayList<LatLng> innerHole = new ArrayList<LatLng>();
+        innerHole.add(new LatLng(15, 15));
+        innerHole.add(new LatLng(15, 25));
+        innerHole.add(new LatLng(25, 25));
+        innerHole.add(new LatLng(25, 15));
+        innerHole.add(new LatLng(15, 15));
+        innerCoordinates.add(innerHole);
+
+        return new KmlPolygon(outerCoordinates, innerCoordinates);
     }
 
     public void testGetType() throws Exception {
@@ -73,5 +103,21 @@ public class KmlPolygonTest extends TestCase {
         assertNotNull(kmlPolygon);
         assertNotNull(kmlPolygon.getGeometryObject());
         assertEquals(kmlPolygon.getGeometryObject().size(), 1);
+    }
+
+    public void testContainsLocation() throws Exception {
+        LatLng pointIn, pointOut;
+        kmlPolygon = createSquarePolygon();
+        pointIn = new LatLng(15, 15);
+        pointOut = new LatLng(21, 17);
+        assertEquals(true, kmlPolygon.containsLocation(pointIn, true));
+        assertEquals(false, kmlPolygon.containsLocation(pointOut, true));
+
+        // Polygon with holes
+        kmlPolygon = createSquareWithHolePolygon();
+        pointIn = new LatLng(13, 27);
+        pointOut = new LatLng(17, 23);
+        assertEquals(true, kmlPolygon.containsLocation(pointIn, true));
+        assertEquals(false, kmlPolygon.containsLocation(pointOut, true));
     }
 }
