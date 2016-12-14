@@ -34,6 +34,16 @@ public class QuadItemTest extends TestCase {
         public LatLng getPosition() {
             return mPosition;
         }
+
+        @Override
+        public String getTitle() {
+            return null;
+        }
+
+        @Override
+        public String getSnippet() {
+            return null;
+        }
     }
 
     public void setUp() {

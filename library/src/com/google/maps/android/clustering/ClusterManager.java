@@ -119,6 +119,10 @@ public class ClusterManager<T extends ClusterItem> implements
         cluster();
     }
 
+    public void setAnimation(boolean animate) {
+        mRenderer.setAnimation(animate);
+    }
+
     public ClusterRenderer<T> getRenderer() {
         return mRenderer;
     }

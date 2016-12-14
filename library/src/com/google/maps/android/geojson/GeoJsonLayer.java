@@ -1,6 +1,7 @@
 package com.google.maps.android.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
@@ -10,11 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -37,6 +41,8 @@ public class GeoJsonLayer {
 
     private LatLngBounds mBoundingBox;
 
+    private GoogleMap mMap;
+
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
      *
@@ -57,6 +63,7 @@ public class GeoJsonLayer {
             geoJsonFeatures.put(feature, null);
         }
         mRenderer = new GeoJsonRenderer(map, geoJsonFeatures);
+
     }
 
     /**
@@ -85,6 +92,9 @@ public class GeoJsonLayer {
      * use the GeoJsonLayer.getFeature(mapObject) method on each GeoJsonLayer instance to
      * determine if the given mapObject belongs to the layer.
      *
+     * If getFeature() returns null this means that the object is a MultiPolygon, MultiLineString
+     * or MultiPoint and must be handled differently.
+     *
      * @param listener Listener providing the onFeatureClick method to call.
      */
     public void setOnFeatureClickListener(final GeoJsonOnFeatureClickListener listener) {
@@ -94,14 +104,22 @@ public class GeoJsonLayer {
         map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             @Override
             public void onPolygonClick(Polygon polygon) {
-                listener.onFeatureClick(getFeature(polygon));
+                if (getFeature(polygon) != null) {
+                    listener.onFeatureClick(getFeature(polygon));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
+                }
             }
         });
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                listener.onFeatureClick(getFeature(marker));
+                if(getFeature(marker) != null) {
+                    listener.onFeatureClick(getFeature(marker));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
+                }
                 return false;
             }
         });
@@ -109,10 +127,37 @@ public class GeoJsonLayer {
         map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
             @Override
             public void onPolylineClick(Polyline polyline) {
-                listener.onFeatureClick(getFeature(polyline));
+                if (getFeature(polyline) != null) {
+                    listener.onFeatureClick(getFeature(polyline));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
+                }
             }
         });
 
+    }
+
+    /**
+     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
+     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
+     * respectively.
+     *
+     * Test in GeoJsonDemoActivity using earthquakes_with_usa.
+     *
+     * @param mapObject Object
+     * @return an ArrayList of the individual
+     */
+    private ArrayList<?> multiObjectHandler(Object mapObject) {
+        for (Object value : mRenderer.getValues()) {
+            Class c = value.getClass();
+            if (c.getSimpleName().equals("ArrayList")) {
+                ArrayList<?> mapObjects = (ArrayList<?>) value;
+                if (mapObjects.contains(mapObject)) {
+                    return mapObjects;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -123,40 +168,14 @@ public class GeoJsonLayer {
     }
 
     /**
-     * Retrieves a corresponding GeoJsonFeature instance for the given Polygon
-     * Allows maps with multiple layers to determine which layer the Polygon
+     * Retrieves a corresponding GeoJsonFeature instance for the given Object
+     * Allows maps with multiple layers to determine which layer the Object
      * belongs to.
      *
-     * @param polygon Polygon
-     * @return GeoJsonFeature for the given polygon
+     * @param mapObject Object
+     * @return GeoJsonFeature for the given object
      */
-    public GeoJsonFeature getFeature(Polygon polygon) {
-        return mRenderer.getFeature(polygon);
-    }
-
-    /**
-     * Retrieves a corresponding GeoJsonFeature instance for the given Polyline
-     * Allows maps with multiple layers to determine which layer the Polyline
-     * belongs to.
-     *
-     * @param polyline Polyline
-     * @return GeoJsonFeature for the given polyline
-     */
-    public GeoJsonFeature getFeature(Polyline polyline) {
-        return mRenderer.getFeature(polyline);
-    }
-
-    /**
-     * Retrieves a corresponding GeoJsonFeature instance for the given Marker
-     * Allows maps with multiple layers to determine which layer the Marker
-     * belongs to.
-     *
-     * @param marker Marker
-     * @return GeoJsonFeature for the given marker
-     */
-    public GeoJsonFeature getFeature(Marker marker) {
-        return mRenderer.getFeature(marker);
-    }
+    public GeoJsonFeature getFeature(Object mapObject) { return mRenderer.getFeature(mapObject); }
 
     /**
      * Takes a character input stream and converts it into a JSONObject
