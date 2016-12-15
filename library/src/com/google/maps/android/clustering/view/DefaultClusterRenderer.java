@@ -68,8 +68,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
-
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
@@ -491,11 +489,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
 
-    private static Point findClosestCluster(List<Point> markers, Point point) {
+    private Point findClosestCluster(List<Point> markers, Point point) {
         if (markers == null || markers.isEmpty()) return null;
 
-        // TODO: make this configurable.
-        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM;
+        int maxDistance = mClusterManager.getAlgorithm().getMaxDistanceBetweenClusteredItems();
+        double minDistSquared = maxDistance * maxDistance;
         Point closest = null;
         for (Point candidate : markers) {
             double dist = distanceSquared(candidate, point);
