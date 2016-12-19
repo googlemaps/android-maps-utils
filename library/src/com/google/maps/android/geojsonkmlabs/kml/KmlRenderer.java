@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
+import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Renderer;
 
 import java.io.IOException;
@@ -120,9 +121,9 @@ import java.util.Iterator;
      *
      * @param placemarks placemarks to remove
      */
-    private static void removePlacemarks(HashMap<KmlPlacemark, Object> placemarks) {
+    private void removePlacemarks(HashMap<Feature, Object> placemarks) {
         // Remove map object from the map
-        super.remove
+        super.removeFeatures(placemarks);
     }
 
     /**
@@ -181,25 +182,7 @@ import java.util.Iterator;
         }
     }
 
-    /**
-     * Stores all given data and adds it onto the map
-     *
-     * @param styles         hashmap of styles
-     * @param styleMaps      hashmap of style maps
-     * @param placemarks     hashmap of placemarks
-     * @param folders        array of containers
-     * @param groundOverlays hashmap of ground overlays
-     */
-    /* package */ void storeKmlData(HashMap<String, KmlStyle> styles,
-            HashMap<String, String> styleMaps,
-            HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
-            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
-        mStyles = styles;
-        mStyleMaps = styleMaps;
-        mPlacemarks = placemarks;
-        mContainers = folders;
-        mGroundOverlays = groundOverlays;
-    }
+
 
     /* package */ void addLayerToMap() {
         mStylesRenderer.putAll(mStyles);

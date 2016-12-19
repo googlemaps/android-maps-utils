@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * Represents the defined styles in the KML document
  */
-/* package */ class KmlStyle {
+public class KmlStyle {
 
     private final static int HSV_VALUES = 3;
 

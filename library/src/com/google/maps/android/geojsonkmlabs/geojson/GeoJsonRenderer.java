@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.maps.android.geojsonkmlabs.Renderer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +22,7 @@ import java.util.Set;
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
  * removes GeoJsonFeature objects and redraws features when updated.
  */
-/* package */ class GeoJsonRenderer implements Observer {
+/* package */ class GeoJsonRenderer extends Renderer implements Observer {
 
     private final static int POLYGON_OUTER_COORDINATE_INDEX = 0;
 
@@ -28,34 +30,28 @@ import java.util.Set;
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
-    private final BiMultiMap<GeoJsonFeature> mFeatures = new BiMultiMap<>();
-
     private final GeoJsonPointStyle mDefaultPointStyle;
 
     private final GeoJsonLineStringStyle mDefaultLineStringStyle;
 
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
 
-    private boolean mLayerOnMap;
-
-    private GoogleMap mMap;
 
     /**
      * Creates a new GeoJsonRender object
      *
      * @param map map to place GeoJsonFeature objects on
+     * @param features
      */
-    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
-        mMap = map;
-        mFeatures.putAll(features);
-        mLayerOnMap = false;
+    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<Feature, Object> features) {
+        super(map, features);
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
 
         // Add default styles to features
-        for (GeoJsonFeature feature : getFeatures()) {
-            setFeatureDefaultStyles(feature);
+        for (Feature feature : super.getFeatures()) {
+            setFeatureDefaultStyles((GeoJsonFeature)feature);
         }
     }
 
@@ -86,7 +82,7 @@ import java.util.Set;
      * @param map GoogleMap to place GeoJsonFeature objects on
      */
     /* package */ void setMap(GoogleMap map) {
-        for (GeoJsonFeature feature : getFeatures()) {
+        for (Feature feature : super.getFeatures()) {
             redrawFeatureToMap(feature, map);
         }
     }
@@ -98,20 +94,13 @@ import java.util.Set;
     /* package */ void addLayerToMap() {
         if (!mLayerOnMap) {
             mLayerOnMap = true;
-            for (GeoJsonFeature feature : getFeatures()) {
+            for (Feature feature : super.getFeatures()) {
                 addFeature(feature);
             }
         }
     }
 
-    /**
-     * Gets a set containing GeoJsonFeatures
-     *
-     * @return set containing GeoJsonFeatures
-     */
-    /* package */ Set<GeoJsonFeature> getFeatures() {
-        return mFeatures.keySet();
-    }
+
 
     /**
      * Gets a GeoJsonFeature for the given map object, which is a Marker, Polyline or Polygon.
@@ -156,22 +145,11 @@ import java.util.Set;
      * @param feature feature to add to the map
      */
     /* package */ void addFeature(GeoJsonFeature feature) {
-        Object mapObject = FEATURE_NOT_ON_MAP;
+        super.addFeature(feature);
         setFeatureDefaultStyles(feature);
         if (mLayerOnMap) {
             feature.addObserver(this);
-
-            if (mFeatures.containsKey(feature)) {
-                // Remove current map objects before adding new ones
-                removeFromMap(mFeatures.get(feature));
-            }
-
-            if (feature.hasGeometry()) {
-                // Create new map object
-                mapObject = addFeatureToMap(feature, feature.getGeometry());
-            }
         }
-        mFeatures.put(feature, mapObject);
     }
 
     /**
