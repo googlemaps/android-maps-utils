@@ -28,7 +28,7 @@ public class GeoJsonPoint extends Point {
      * @return coordinates of the GeoJsonPoint
      */
     public LatLng getCoordinates() {
-        return super.mCoordinates;
+        return getGeometryObject();
     }
 
 }
