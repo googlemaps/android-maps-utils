@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlLayer;
-import com.google.maps.android.geojsonkmlabs.kml.KmlLineString;
 import com.google.maps.android.geojsonkmlabs.kml.KmlPlacemark;
 import com.google.maps.android.geojsonkmlabs.kml.KmlPolygon;
 
@@ -41,7 +40,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.kmlpointtest, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.kmlgeometrytest, getApplicationContext());
             //TODO change back to campus.kml
             kmlLayer.addLayerToMap();
             //moveCameraToKml(kmlLayer); TODO uncomment

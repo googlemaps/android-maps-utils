@@ -10,7 +10,7 @@ public class Point implements Geometry {
     public final LatLng mCoordinates;
 
     /**
-     * Creates a new Point
+     * Creates a new Point object
      *
      * @param coordinates coordinates of Point to store
      */

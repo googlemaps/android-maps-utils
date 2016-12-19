@@ -218,8 +218,10 @@ import java.util.Iterator;
         /* TODO
         } else if (geometryType.equals(MULTIPOINT)) {
             return createMultiPoint(geometryArray);
+            */
         } else if (geometryType.equals(LINESTRING)) {
             return createLineString(geometryArray);
+            /*
         } else if (geometryType.equals(MULTILINESTRING)) {
             return createMultiLineString(geometryArray);
         } else if (geometryType.equals(POLYGON)) {
