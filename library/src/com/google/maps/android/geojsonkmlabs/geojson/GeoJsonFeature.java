@@ -1,6 +1,9 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Geometry;
 
@@ -210,6 +213,19 @@ public class GeoJsonFeature extends Feature implements Observer {
         checkRedrawFeature(mPolygonStyle);
 
     }
+
+    public PolygonOptions getPolygonOptions() {
+        return mPolygonStyle.toPolygonOptions();
+    }
+
+    public MarkerOptions getPointOptions(){
+        return mPointStyle.toMarkerOptions();
+    }
+
+    public PolylineOptions getLineStringOptions(){
+        return mLineStringStyle.toPolylineOptions();
+    }
+
 
     /**
      * Checks whether the new style that was set requires the feature to be redrawn. If the

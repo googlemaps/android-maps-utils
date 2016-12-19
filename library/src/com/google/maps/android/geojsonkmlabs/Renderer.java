@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.geojsonkmlabs.Feature;
@@ -17,6 +18,7 @@ import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiLineString;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPoint;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPolygon;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPoint;
+import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygon;
 import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlGroundOverlay;
@@ -187,6 +189,19 @@ public class Renderer {
                     ((GeoJsonGeometryCollection) geometry).getGeometries());
         }
         return null;
+    }
+
+    /**
+     * Adds a GeoJsonPoint to the map as a Marker
+     *
+     * @param pointStyle contains relevant styling properties for the Marker
+     * @param point      contains coordinates for the Marker
+     * @return Marker object created from the given GeoJsonPoint
+     */
+    private Marker addPointToMap(MarkerOptions markerOptions, Point point) {
+        MarkerOptions markerOptions = pointStyle.toMarkerOptions();
+        markerOptions.position(point.getCoordinates());
+        return mMap.addMarker(markerOptions);
     }
 
 
