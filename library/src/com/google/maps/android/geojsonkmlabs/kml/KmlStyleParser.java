@@ -1,4 +1,4 @@
-package com.google.maps.android.kml;
+package com.google.maps.android.geojsonkmlabs.kml;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

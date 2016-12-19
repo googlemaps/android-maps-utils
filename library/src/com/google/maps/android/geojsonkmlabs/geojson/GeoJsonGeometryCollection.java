@@ -1,5 +1,5 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
-
+import com.google.maps.android.geojsonkmlabs.Geometry;
 import java.util.List;
 
 /**
@@ -9,7 +9,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
 
     private final static String GEOMETRY_TYPE = "GeometryCollection";
 
-    private final List<GeoJsonGeometry> mGeometries;
+    private final List<Geometry> mGeometries;
 
     /**
      * Creates a new GeoJsonGeometryCollection object
@@ -17,7 +17,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
      * @param geometries array of GeoJsonGeometry objects to add to the GeoJsonGeometryCollection
      */
     public GeoJsonGeometryCollection(
-            List<GeoJsonGeometry> geometries) {
+            List<Geometry> geometries) {
         if (geometries == null) {
             throw new IllegalArgumentException("Geometries cannot be null");
         }
@@ -35,7 +35,7 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
      *
      * @return stored GeoJsonGeometry objects
      */
-    public List<GeoJsonGeometry> getGeometries() {
+    public List<Geometry> getGeometries() {
         return mGeometries;
     }
 

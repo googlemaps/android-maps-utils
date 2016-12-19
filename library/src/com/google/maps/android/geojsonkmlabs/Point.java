@@ -3,30 +3,26 @@ package com.google.maps.android.geojsonkmlabs;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geojsonkmlabs.Geometry;
 
-/**
- * Created by suvercha on 12/14/16.
- */
 
 public class Point implements Geometry {
 
-    private final static String GEOMETRY_TYPE = "Point";
+    public final static String GEOMETRY_TYPE = "Point";
 
-    private final LatLng mCoordinates;
+    public final LatLng mCoordinates;
 
     /**
-     * Creates a new GeoJsonPoint
+     * Creates a new Point
      *
-     * @param coordinate coordinate of GeoJsonPoint to store
+     * @param coordinates coordinates of Point to store
      */
-    public Point(LatLng coordinate) {
-        if (coordinate == null) {
-            throw new IllegalArgumentException("Coordinate cannot be null");
+    public Point(LatLng coordinates) {
+        if (coordinates == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null");
         }
-        mCoordinates = coordinate;
+        mCoordinates = coordinates;
     }
 
     /** {@inheritDoc} */
-    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE;
     }
@@ -47,4 +43,6 @@ public class Point implements Geometry {
         sb.append("\n}\n");
         return sb.toString();
     }
+
 }
+

@@ -1,32 +1,25 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.geojsonkmlabs.Point;
 
 /**
  * A GeoJsonPoint geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
  */
-public class GeoJsonPoint implements GeoJsonGeometry {
-
-    private final static String GEOMETRY_TYPE = "Point";
-
-    private final LatLng mCoordinates;
+public class GeoJsonPoint extends Point {
 
     /**
      * Creates a new GeoJsonPoint
      *
-     * @param coordinate coordinate of GeoJsonPoint to store
+     * @param coordinates coordinates of GeoJsonPoint to store
      */
-    public GeoJsonPoint(LatLng coordinate) {
-        if (coordinate == null) {
-            throw new IllegalArgumentException("Coordinate cannot be null");
-        }
-        mCoordinates = coordinate;
+    public GeoJsonPoint(LatLng coordinates) {
+        super(coordinates);
     }
 
     /** {@inheritDoc} */
-    @Override
     public String getType() {
-        return GEOMETRY_TYPE;
+        return getGeometryType();
     }
 
     /**
@@ -35,7 +28,7 @@ public class GeoJsonPoint implements GeoJsonGeometry {
      * @return coordinates of the GeoJsonPoint
      */
     public LatLng getCoordinates() {
-        return mCoordinates;
+        return super.mCoordinates;
     }
 
     @Override

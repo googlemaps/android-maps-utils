@@ -1,8 +1,5 @@
 package com.google.maps.android.geojsonkmlabs;
 
-/**
- * Created by suvercha on 12/14/16.
- */
 
 public interface Geometry<T> {
 

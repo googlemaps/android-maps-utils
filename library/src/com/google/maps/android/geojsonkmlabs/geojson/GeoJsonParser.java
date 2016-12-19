@@ -3,6 +3,7 @@ package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,7 +99,7 @@ import java.util.Iterator;
     private static GeoJsonFeature parseFeature(JSONObject geoJsonFeature) {
         String id = null;
         LatLngBounds boundingBox = null;
-        GeoJsonGeometry geometry = null;
+        Geometry geometry = null;
         HashMap<String, String> properties = new HashMap<String, String>();
 
         try {
@@ -145,7 +146,7 @@ import java.util.Iterator;
      * @param geoJsonGeometry geometry object to parse
      * @return GeoJsonGeometry object
      */
-    private static GeoJsonGeometry parseGeometry(JSONObject geoJsonGeometry) {
+    private static Geometry parseGeometry(JSONObject geoJsonGeometry) {
         try {
 
             String geometryType = geoJsonGeometry.getString("type");
@@ -167,14 +168,14 @@ import java.util.Iterator;
     }
 
     /**
-     * Converts a GeoJsonGeometry object into a GeoJsonFeature object. A geometry object has no ID,
+     * Converts a Geometry object into a GeoJsonFeature object. A geometry object has no ID,
      * properties or bounding box so it is set to null.
      *
      * @param geoJsonGeometry Geometry object to convert into a Feature object
      * @return new Feature object
      */
     private static GeoJsonFeature parseGeometryToFeature(JSONObject geoJsonGeometry) {
-        GeoJsonGeometry geometry = parseGeometry(geoJsonGeometry);
+        Geometry geometry = parseGeometry(geoJsonGeometry);
         if (geometry != null) {
             return new GeoJsonFeature(geometry, null, new HashMap<String, String>(), null);
         }
@@ -210,10 +211,11 @@ import java.util.Iterator;
      * @return GeoJsonGeometry object
      * @throws JSONException if the coordinates or geometries could be parsed
      */
-    private static GeoJsonGeometry createGeometry(String geometryType, JSONArray geometryArray)
+    private static Geometry createGeometry(String geometryType, JSONArray geometryArray)
             throws JSONException {
         if (geometryType.equals(POINT)) {
             return createPoint(geometryArray);
+        /* TODO
         } else if (geometryType.equals(MULTIPOINT)) {
             return createMultiPoint(geometryArray);
         } else if (geometryType.equals(LINESTRING)) {
@@ -226,6 +228,7 @@ import java.util.Iterator;
             return createMultiPolygon(geometryArray);
         } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             return createGeometryCollection(geometryArray);
+        */
         }
         return null;
     }
@@ -320,12 +323,12 @@ import java.util.Iterator;
      */
     private static GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries)
             throws JSONException {
-        ArrayList<GeoJsonGeometry> geometryCollectionElements
-                = new ArrayList<GeoJsonGeometry>();
+        ArrayList<Geometry> geometryCollectionElements
+                = new ArrayList<Geometry>();
 
         for (int i = 0; i < geometries.length(); i++) {
             JSONObject geometryElement = geometries.getJSONObject(i);
-            GeoJsonGeometry geometry = parseGeometry(geometryElement);
+            Geometry geometry = parseGeometry(geometryElement);
             if (geometry != null) {
                 // Do not add geometries that could not be parsed
                 geometryCollectionElements.add(geometry);
