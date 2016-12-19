@@ -2,6 +2,7 @@ package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -47,7 +48,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         String styleId = null;
         KmlStyle inlineStyle = null;
         HashMap<String, String> properties = new HashMap<String, String>();
-        KmlGeometry geometry = null;
+        Geometry geometry = null;
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("Placemark"))) {
             if (eventType == START_TAG) {
@@ -139,19 +140,20 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param geometryType Type of geometry object to create
      */
-    private static KmlGeometry createGeometry(XmlPullParser parser, String geometryType)
+    private static Geometry createGeometry(XmlPullParser parser, String geometryType)
             throws IOException, XmlPullParserException {
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals(geometryType))) {
             if (eventType == START_TAG) {
                 if (parser.getName().equals("Point")) {
                     return createPoint(parser);
-                } else if (parser.getName().equals("LineString")) {
+                /* TODO } else if (parser.getName().equals("LineString")) {
                     return createLineString(parser);
                 } else if (parser.getName().equals("Polygon")) {
                     return createPolygon(parser);
                 } else if (parser.getName().equals("MultiGeometry")) {
                     return createMultiGeometry(parser);
+                */
                 }
             }
             eventType = parser.next();
@@ -254,7 +256,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      */
     private static KmlMultiGeometry createMultiGeometry(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        ArrayList<KmlGeometry> geometries = new ArrayList<KmlGeometry>();
+        ArrayList<Geometry> geometries = new ArrayList<Geometry>();
         // Get next otherwise have an infinite loop
         int eventType = parser.next();
         while (!(eventType == END_TAG && parser.getName().equals("MultiGeometry"))) {

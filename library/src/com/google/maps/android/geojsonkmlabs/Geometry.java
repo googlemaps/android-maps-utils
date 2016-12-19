@@ -8,6 +8,7 @@ public interface Geometry<T> {
      * @return type of geometry
      */
     public String getGeometryType();
+    //TODO getType()?
 
     /**
      * Gets the stored geometry object

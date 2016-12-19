@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
+import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -329,7 +330,7 @@ import java.util.Iterator;
         // contain a geometry, we do not add anything to the map, and just store values.
         if (placemark.getGeometry() != null) {
             String placemarkId = placemark.getStyleId();
-            KmlGeometry geometry = placemark.getGeometry();
+            Geometry geometry = placemark.getGeometry();
             KmlStyle style = getPlacemarkStyle(placemarkId);
             KmlStyle inlineStyle = placemark.getInlineStyle();
             return addToMap(placemark, geometry, style, inlineStyle, placemarkVisibility);
@@ -478,7 +479,7 @@ import java.util.Iterator;
      * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
      * of either objects
      */
-    private Object addToMap(KmlPlacemark placemark, KmlGeometry geometry, KmlStyle style,
+    private Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
             KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
@@ -722,8 +723,8 @@ import java.util.Iterator;
             KmlMultiGeometry multiGeometry, KmlStyle urlStyle, KmlStyle inlineStyle,
             boolean isContainerVisible) {
         ArrayList<Object> mapObjects = new ArrayList<Object>();
-        ArrayList<KmlGeometry> kmlObjects = multiGeometry.getGeometryObject();
-        for (KmlGeometry kmlGeometry : kmlObjects) {
+        ArrayList<Geometry> kmlObjects = multiGeometry.getGeometryObject();
+        for (Geometry kmlGeometry : kmlObjects) {
             mapObjects.add(addToMap(placemark, kmlGeometry, urlStyle, inlineStyle,
                     isContainerVisible));
         }

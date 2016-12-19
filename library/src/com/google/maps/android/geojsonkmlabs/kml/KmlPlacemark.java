@@ -1,5 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
+import com.google.maps.android.geojsonkmlabs.Geometry;
+
 import java.util.HashMap;
 
 /**
@@ -11,7 +13,7 @@ import java.util.HashMap;
  */
 public class KmlPlacemark {
 
-    private final KmlGeometry mGeometry;
+    private final Geometry mGeometry;
 
     private final String mStyle;
 
@@ -26,8 +28,8 @@ public class KmlPlacemark {
      * @param style      style id to store
      * @param properties properties hashmap to store
      */
-    public KmlPlacemark(KmlGeometry geometry, String style, KmlStyle inlineStyle,
-            HashMap<String, String> properties) {
+    public KmlPlacemark(Geometry geometry, String style, KmlStyle inlineStyle,
+                        HashMap<String, String> properties) {
         mProperties = new HashMap<String, String>();
         mGeometry = geometry;
         mStyle = style;
@@ -77,7 +79,7 @@ public class KmlPlacemark {
      *
      * @return geometry object
      */
-    public KmlGeometry getGeometry() {
+    public Geometry getGeometry() {
         return mGeometry;
     }
 

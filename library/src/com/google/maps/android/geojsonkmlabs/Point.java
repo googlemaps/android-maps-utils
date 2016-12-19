@@ -27,9 +27,9 @@ public class Point implements Geometry {
     }
 
     /**
-     * Gets the coordinates of the GeoJsonPoint
+     * Gets the coordinates of the Point
      *
-     * @return coordinates of the GeoJsonPoint
+     * @return coordinates of the Point
      */
     public LatLng getGeometryObject() {
         return mCoordinates;
