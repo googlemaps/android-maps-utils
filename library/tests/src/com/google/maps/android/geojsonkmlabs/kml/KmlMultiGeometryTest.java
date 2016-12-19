@@ -1,6 +1,7 @@
-package com.google.maps.android.kml;
+package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import junit.framework.TestCase;
 
@@ -14,12 +15,12 @@ public class KmlMultiGeometryTest extends TestCase {
     }
 
     public KmlMultiGeometry createMultiGeometry() {
-        ArrayList<KmlGeometry> kmlGeometries = new ArrayList<KmlGeometry>();
+        ArrayList<Geometry> kmlGeometries = new ArrayList<Geometry>();
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(0, 0));
         coordinates.add(new LatLng(50, 50));
         coordinates.add(new LatLng(100, 100));
-        KmlGeometry kmlGeometry = new KmlLineString(coordinates);
+        Geometry kmlGeometry = new KmlLineString(coordinates);
         kmlGeometries.add(kmlGeometry);
         return new KmlMultiGeometry(kmlGeometries);
     }

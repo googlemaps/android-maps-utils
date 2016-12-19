@@ -6,7 +6,7 @@ import java.util.List;
 
 public class LineString implements Geometry<List<LatLng>> {
 
-    public static final String GEOMETRY_TYPE = "LineString";
+    private static final String GEOMETRY_TYPE = "LineString";
 
     private final List<LatLng> mCoordinates;
 
