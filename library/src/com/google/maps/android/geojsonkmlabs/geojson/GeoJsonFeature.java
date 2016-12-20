@@ -218,11 +218,11 @@ public class GeoJsonFeature extends Feature implements Observer {
         return mPolygonStyle.toPolygonOptions();
     }
 
-    public MarkerOptions getPointOptions(){
+    public MarkerOptions getMarkerOptions(){
         return mPointStyle.toMarkerOptions();
     }
 
-    public PolylineOptions getLineStringOptions(){
+    public PolylineOptions getPolylineOptions(){
         return mLineStringStyle.toPolylineOptions();
     }
 
@@ -244,8 +244,6 @@ public class GeoJsonFeature extends Feature implements Observer {
         }
     }
 
-<<<<<<< HEAD:library/src/com/google/maps/android/geojsonkmlabs/geojson/GeoJsonFeature.java
-=======
     /**
      * Gets the stored Geometry
      *
@@ -254,9 +252,7 @@ public class GeoJsonFeature extends Feature implements Observer {
     public Geometry getGeometry() {
         return mGeometry;
     }
->>>>>>> libby/GeometriesAbs:library/src/com/google/maps/android/geojsonkmlabs/geojson/GeoJsonFeature.java
-
-    /**
+   /**
      * Sets the stored GeoJsonGeometry and redraws it on the layer if it has already been added
      *
      * @param geometry GeoJsonGeometry to set

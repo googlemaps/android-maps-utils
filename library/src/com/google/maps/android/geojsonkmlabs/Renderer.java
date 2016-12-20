@@ -1,37 +1,49 @@
 package com.google.maps.android.geojsonkmlabs;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.R;
 import com.google.maps.android.geojsonkmlabs.geojson.BiMultiMap;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonFeature;
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonGeometry;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonGeometryCollection;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLineString;
+import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLineStringStyle;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiLineString;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPoint;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPolygon;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPoint;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygon;
+import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygonStyle;
 import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlGroundOverlay;
+import com.google.maps.android.geojsonkmlabs.kml.KmlLineString;
+import com.google.maps.android.geojsonkmlabs.kml.KmlMultiGeometry;
 import com.google.maps.android.geojsonkmlabs.kml.KmlPlacemark;
+import com.google.maps.android.geojsonkmlabs.kml.KmlPoint;
+import com.google.maps.android.geojsonkmlabs.kml.KmlPolygon;
 import com.google.maps.android.geojsonkmlabs.kml.KmlStyle;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
-
-/**
- * Created by suvercha on 12/15/16.
- */
 
 public class Renderer {
     private GoogleMap mMap;
@@ -40,11 +52,19 @@ public class Renderer {
 
     private HashMap<String, KmlStyle> mStyles;
 
+    private HashMap<String, KmlStyle> mStylesRenderer;
+
     private HashMap<String, String> mStyleMaps;
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
+
+    private final ArrayList<String> mMarkerIconUrls;
+
+    private static final int LRU_CACHE_SIZE = 50;
+
+    private final LruCache<String, Bitmap> mImagesCache;
 
     private boolean mLayerOnMap;
 
@@ -52,15 +72,36 @@ public class Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
-    public Renderer(GoogleMap map) {
+    private final GeoJsonPointStyle mDefaultPointStyle;
+
+    private final GeoJsonLineStringStyle mDefaultLineStringStyle;
+
+    private final GeoJsonPolygonStyle mDefaultPolygonStyle;
+
+    public Renderer(GoogleMap map, Context context) {
         mMap = map;
         mLayerOnMap = false;
+        mImagesCache = new LruCache<>(LRU_CACHE_SIZE);
+        mMarkerIconUrls = new ArrayList<>();
+        mStylesRenderer = new HashMap<>();
+        mDefaultPointStyle = null;
+        mDefaultLineStringStyle = null;
+        mDefaultPolygonStyle = null;
+
     }
 
     public Renderer(GoogleMap map, HashMap<Feature, Object> features ) {
         mMap = map;
         mFeatures.putAll(features);
         mLayerOnMap = false;
+        mMarkerIconUrls = null;
+        mDefaultPointStyle = new GeoJsonPointStyle();
+        mDefaultLineStringStyle = new GeoJsonLineStringStyle();
+        mDefaultPolygonStyle = new GeoJsonPolygonStyle();
+        for (Feature feature : getFeatures()) {
+            setFeatureDefaultStyles((GeoJsonFeature)feature);
+        }
+        mImagesCache = null;
     }
 
     /* package */ boolean isLayerOnMap() {
@@ -72,9 +113,19 @@ public class Renderer {
      *
      * @return GoogleMap
      */
-    /* package */ GoogleMap getMap() {
+    /* package */
+    public GoogleMap getMap() {
         return mMap;
     }
+
+    public void setMap(GoogleMap map) {
+        mMap = map;
+    }
+
+    public HashMap<String, KmlStyle> getStylesRenderer() { return mStylesRenderer; }
+
+    public HashMap<String, String> getStyleMaps() { return mStyleMaps; }
+
 
     /**
      * Removes all given Features/Placemarks from the map and clears all stored features and placemarks.
@@ -94,6 +145,13 @@ public class Renderer {
         }
     }
 
+    public boolean getLayerVisibility() { return mLayerOnMap; }
+
+    public void setLayerVisibility(boolean layerOnMap) {
+        mLayerOnMap = layerOnMap;
+    }
+
+
     /**
      * Stores all given data and adds it onto the map
      *
@@ -109,23 +167,62 @@ public class Renderer {
                                     HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;
-        mFeatures = features;
+        mFeatures.putAll(features);
         mContainers = folders;
         mGroundOverlays = groundOverlays;
     }
 
 
     /**
-     * Adds all of the stored features in the layer onto the map if the layer is not already on the
-     * map.
+     * Checks for each style in the feature and adds a default style if none is applied
+     *
+     * @param feature feature to apply default styles to
      */
-    /* package */ void addLayerToMap() {
-        if (!mLayerOnMap) {
-            mLayerOnMap = true;
-            for (Feature feature : getFeatures()) {
-                addFeature(feature);
-            }
+    private void setFeatureDefaultStyles(GeoJsonFeature feature) {
+        if (feature.getPointStyle() == null) {
+            feature.setPointStyle(mDefaultPointStyle);
         }
+        if (feature.getLineStringStyle() == null) {
+            feature.setLineStringStyle(mDefaultLineStringStyle);
+        }
+        if (feature.getPolygonStyle() == null) {
+            feature.setPolygonStyle(mDefaultPolygonStyle);
+        }
+    }
+
+
+
+    /**
+     * Removes a GeoJsonFeature from the map if its geometry property is not null
+     *
+     * @param feature feature to remove from map
+     */
+    public void removeFeature(Feature feature) {
+        // Check if given feature is stored
+        if (mFeatures.containsKey(feature)) {
+            removeFromMap(mFeatures.remove(feature));
+        }
+    }
+
+
+    /**
+     * Gets a Feature for the given map object, which is a Marker, Polyline or Polygon.
+     *
+     * @param mapObject Marker, Polyline or Polygon
+     * @return GeoJsonFeature for the given map object
+     */
+    /* package */ Feature getFeature(Object mapObject) {
+        return mFeatures.getKey(mapObject);
+    }
+
+    /**
+     * getValues is called by Layer to retrieve the values stored in the mFeatures
+     * hashmap.
+     *
+     * @return mFeatures.values()   collection of values stored in mFeatures
+     */
+    public Collection<Object> getValues() {
+        return mFeatures.values();
     }
 
     /**
@@ -135,6 +232,36 @@ public class Renderer {
      */
      public Set<Feature> getFeatures() {
         return mFeatures.keySet();
+    }
+
+    /**
+     * Gets a set containing GeoJsonFeatures
+     *
+     * @return set containing GeoJsonFeatures
+     */
+    public HashMap<Feature, Object> getAllFeatures() {
+        return mFeatures;
+    }
+
+    public ArrayList<String> getMarkerIconUrls()  { return mMarkerIconUrls; }
+
+    /**
+     * Given a Marker, Polyline, Polygon or an array of these and removes it from the map
+     *
+     * @param mapObject map object or array of map objects to remove from the map
+     */
+    public static void removeFromMap(Object mapObject) {
+        if (mapObject instanceof Marker) {
+            ((Marker) mapObject).remove();
+        } else if (mapObject instanceof Polyline) {
+            ((Polyline) mapObject).remove();
+        } else if (mapObject instanceof Polygon) {
+            ((Polygon) mapObject).remove();
+        } else if (mapObject instanceof ArrayList) {
+            for (Object mapObjectElement : (ArrayList) mapObject) {
+                removeFromMap(mapObjectElement);
+            }
+        }
     }
 
     /**
@@ -152,7 +279,16 @@ public class Renderer {
 
             if (feature.hasGeometry()) {
                 // Create new map object
-                mapObject = addFeatureToMap(feature, feature.getGeometry());
+                if (feature instanceof KmlPlacemark) {
+                    boolean isPlacemarkVisible = getPlacemarkVisibility(feature);
+                    String placemarkId = feature.getId();
+                    Geometry geometry = feature.getGeometry();
+                    KmlStyle style = getPlacemarkStyle(placemarkId);
+                    KmlStyle inlineStyle = ((KmlPlacemark)feature).getInlineStyle();
+                    mapObject = addToMap((KmlPlacemark)feature, geometry, style, inlineStyle, isPlacemarkVisible);
+                } else {
+                    mapObject = addFeatureToMap(feature, feature.getGeometry());
+                }
             }
         }
         mFeatures.put(feature, mapObject);
@@ -167,26 +303,38 @@ public class Renderer {
      */
     private Object addFeatureToMap(Feature feature, Geometry geometry) {
         String geometryType = geometry.getGeometryType();
-        if (geometryType.equals("Point")) {
-            return addPointToMap(feature.getPointStyle(), (GeoJsonPoint) geometry);
-        } else if (geometryType.equals("LineString")) {
-            return addLineStringToMap(feature.getLineStringStyle(),
-                    (GeoJsonLineString) geometry);
-        } else if (geometryType.equals("Polygon")) {
-            return addPolygonToMap(feature.getPolygonStyle(),
-                    (GeoJsonPolygon) geometry);
-        } else if (geometryType.equals("MultiPoint")) {
-            return addMultiPointToMap(feature.getPointStyle(),
-                    (GeoJsonMultiPoint) geometry);
-        } else if (geometryType.equals("MultiLineString")) {
-            return addMultiLineStringToMap(feature.getLineStringStyle(),
-                    ((GeoJsonMultiLineString) geometry));
-        } else if (geometryType.equals("MultiPolygon")) {
-            return addMultiPolygonToMap(feature.getPolygonStyle(),
-                    ((GeoJsonMultiPolygon) geometry));
-        } else if (geometryType.equals("GeometryCollection")) {
-            return addGeometryCollectionToMap(feature,
-                    ((GeoJsonGeometryCollection) geometry).getGeometries());
+        switch (geometryType) {
+            case "Point":
+                MarkerOptions markerOptions = null;
+                if (feature instanceof GeoJsonFeature) {
+                    markerOptions = ((GeoJsonFeature) feature).getMarkerOptions();
+                } else if (feature instanceof KmlPlacemark) {
+                    markerOptions = ((KmlPlacemark) feature).getMarkerOptions();
+                }
+                return addPointToMap(markerOptions, (GeoJsonPoint) geometry);
+            case "LineString":
+                PolylineOptions polylineOptions = null;
+                if (feature instanceof GeoJsonFeature) {
+                    polylineOptions = ((GeoJsonFeature) feature).getPolylineOptions();
+                } else if (feature instanceof KmlPlacemark) {
+                    polylineOptions = ((KmlPlacemark) feature).getPolylineOptions();
+                }
+                return addLineStringToMap(polylineOptions, (GeoJsonLineString) geometry);
+            case "Polygon":
+                return addPolygonToMap(feature.getPolygonStyle(),
+                        (GeoJsonPolygon) geometry);
+            case "MultiPoint":
+                return addMultiPointToMap(feature.getPointStyle(),
+                        (GeoJsonMultiPoint) geometry);
+            case "MultiLineString":
+                return addMultiLineStringToMap(feature.getLineStringStyle(),
+                        ((GeoJsonMultiLineString) geometry));
+            case "MultiPolygon":
+                return addMultiPolygonToMap(feature.getPolygonStyle(),
+                        ((GeoJsonMultiPolygon) geometry));
+            case "GeometryCollection":
+                return addGeometryCollectionToMap(feature,
+                        ((GeoJsonGeometryCollection) geometry).getGeometries());
         }
         return null;
     }
@@ -194,18 +342,320 @@ public class Renderer {
     /**
      * Adds a GeoJsonPoint to the map as a Marker
      *
-     * @param pointStyle contains relevant styling properties for the Marker
+     * @param markerOptions contains relevant styling properties for the Marker
      * @param point      contains coordinates for the Marker
      * @return Marker object created from the given GeoJsonPoint
      */
     private Marker addPointToMap(MarkerOptions markerOptions, Point point) {
-        MarkerOptions markerOptions = pointStyle.toMarkerOptions();
-        markerOptions.position(point.getCoordinates());
+        markerOptions.position(point.getGeometryObject());
         return mMap.addMarker(markerOptions);
     }
 
+    /**
+     * Sets the inline point style by copying over the styles that have been set
+     *
+     * @param markerOptions    marker options object to add inline styles to
+     * @param inlineStyle      inline styles to apply
+     * @param markerUrlIconUrl default marker icon URL from shared style
+     */
+    private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
+                                     String markerUrlIconUrl) {
+        MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
+        if (inlineStyle.isStyleSet("heading")) {
+            markerOptions.rotation(inlineMarkerOptions.getRotation());
+        }
+        if (inlineStyle.isStyleSet("hotSpot")) {
+            markerOptions
+                    .anchor(inlineMarkerOptions.getAnchorU(), inlineMarkerOptions.getAnchorV());
+        }
+        if (inlineStyle.isStyleSet("markerColor")) {
+            markerOptions.icon(inlineMarkerOptions.getIcon());
+        }
+        if (inlineStyle.isStyleSet("iconUrl")) {
+            addMarkerIcons(inlineStyle.getIconUrl(), markerOptions);
+        } else if (markerUrlIconUrl != null) {
+            // Inline style with no icon defined
+            addMarkerIcons(markerUrlIconUrl, markerOptions);
+        }
+    }
+
+    /**
+     * Adds a GeoJsonLineString to the map as a Polyline
+     *
+     * @param polylineOptions contains relevant styling properties for the Polyline
+     * @param lineString      contains coordinates for the Polyline
+     * @return Polyline object created from given GeoJsonLineString
+     */
+    private Polyline addLineStringToMap(PolylineOptions polylineOptions,
+                                        GeoJsonLineString lineString) {
+        // Add coordinates
+        polylineOptions.addAll(lineString.getCoordinates());
+        Polyline addedPolyline = mMap.addPolyline(polylineOptions);
+        addedPolyline.setClickable(true);
+        return addedPolyline;
+    }
+
+    /**
+     * Sets the inline linestring style by copying over the styles that have been set
+     *
+     * @param polylineOptions polygon options object to add inline styles to
+     * @param inlineStyle     inline styles to apply
+     */
+    private void setInlineLineStringStyle(PolylineOptions polylineOptions, KmlStyle inlineStyle) {
+        PolylineOptions inlinePolylineOptions = inlineStyle.getPolylineOptions();
+        if (inlineStyle.isStyleSet("outlineColor")) {
+            polylineOptions.color(inlinePolylineOptions.getColor());
+        }
+        if (inlineStyle.isStyleSet("width")) {
+            polylineOptions.width(inlinePolylineOptions.getWidth());
+        }
+        if (inlineStyle.isLineRandomColorMode()) {
+            polylineOptions.color(KmlStyle.computeRandomColor(inlinePolylineOptions.getColor()));
+        }
+    }
+
+    /**
+     * Adds a GeoJsonPolygon to the map as a Polygon
+     *
+     * @param polygonStyle contains relevant styling properties for the Polygon
+     * @param polygon      contains coordinates for the Polygon
+     * @return Polygon object created from given GeoJsonPolygon
+     */
+    private Polygon addPolygonToMap(GeoJsonPolygonStyle polygonStyle, GeoJsonPolygon polygon) {
+        PolygonOptions polygonOptions = polygonStyle.toPolygonOptions();
+        // First array of coordinates are the outline
+        polygonOptions.addAll(polygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
+        // Following arrays are holes
+        for (int i = POLYGON_INNER_COORDINATE_INDEX; i < polygon.getCoordinates().size();
+             i++) {
+            polygonOptions.addHole(polygon.getCoordinates().get(i));
+        }
+        Polygon addedPolygon = mMap.addPolygon(polygonOptions);
+        addedPolygon.setClickable(true);
+        return addedPolygon;
+    }
+
+    /**
+     * Adds all GeoJsonGeometry objects stored in the GeoJsonGeometryCollection onto the map.
+     * Supports recursive GeometryCollections.
+     *
+     * @param feature           contains relevant styling properties for the GeoJsonGeometry inside
+     *                          the GeoJsonGeometryCollection
+     * @param geoJsonGeometries contains an array of GeoJsonGeometry objects
+     * @return array of Marker, Polyline, Polygons that have been added to the map
+     */
+    private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature feature,
+                                                         List<Geometry> geoJsonGeometries) {
+        ArrayList<Object> geometries = new ArrayList<>();
+        for (Geometry geometry : geoJsonGeometries) {
+            geometries.add(addFeatureToMap(feature, geometry));
+        }
+        return geometries;
+    }
 
 
+    /**
+     * Gets the visibility of the placemark if it is specified. A visibility value of "1"
+     * corresponds as "true", a visibility value of "0" corresponds as false. If the
+     * visibility is not set, the method returns "true".
+     *
+     * @param feature Feature to obtain visibility from.
+     * @return False if a Feature has a visibility value of "1", true otherwise.
+     */
+    private static boolean getPlacemarkVisibility(Feature feature) {
+        boolean isFeatureVisible = true;
+        if (feature.hasProperty("visibility")) {
+            String placemarkVisibility = feature.getProperty("visibility");
+            if (Integer.parseInt(placemarkVisibility) == 0) {
+                isFeatureVisible = false;
+            }
+        }
+        return isFeatureVisible;
+    }
+
+    /**
+     * Iterates a list of styles and assigns a style
+     */
+    /*package*/
+    protected void assignStyleMap(HashMap<String, String> styleMap,
+                                  HashMap<String, KmlStyle> styles) {
+        for (String styleMapKey : styleMap.keySet()) {
+            String styleMapValue = styleMap.get(styleMapKey);
+            if (styles.containsKey(styleMapValue)) {
+                styles.put(styleMapKey, styles.get(styleMapValue));
+            }
+        }
+    }
+
+
+    /**
+     * Obtains the styleUrl from a placemark and finds the corresponding style in a list
+     *
+     * @param styleId StyleUrl from a placemark
+     * @return Style which corresponds to an ID
+     */
+    private KmlStyle getPlacemarkStyle(String styleId) {
+        KmlStyle style = mStylesRenderer.get(null);
+        if (mStylesRenderer.get(styleId) != null) {
+            style = mStylesRenderer.get(styleId);
+        }
+        return style;
+    }
+
+    /**
+     * Adds a single geometry object to the map with its specified style
+     *
+     * @param geometry defines the type of object to add to the map
+     * @param style    defines styling properties to add to the object when added to the map
+     * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
+     * of either objects
+     */
+    private Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
+                            KmlStyle inlineStyle, boolean isVisible) {
+
+        String geometryType = geometry.getGeometryType();
+        boolean hasDrawOrder = placemark.hasProperty("drawOrder");
+        float drawOrder = 0;
+
+        if (hasDrawOrder) {
+            try {
+                drawOrder = Float.parseFloat(placemark.getProperty("drawOrder"));
+            } catch (NumberFormatException e) {
+                hasDrawOrder = false;
+            }
+        }
+        switch (geometryType) {
+            case "Point":
+                MarkerOptions markerOptions = style.getMarkerOptions();
+                if (inlineStyle != null) {
+                    setInlinePointStyle(markerOptions, inlineStyle, style.getIconUrl());
+                } else if (style.getIconUrl() != null) {
+                    // Use shared style
+                    addMarkerIcons(style.getIconUrl(), markerOptions);
+                }
+                Marker marker = addPointToMap(markerOptions, (KmlPoint) geometry);
+                marker.setVisible(isVisible);
+                setMarkerInfoWindow(style, marker, placemark);
+                if (hasDrawOrder) {
+                    marker.setZIndex(drawOrder);
+                }
+                return marker;
+            case "LineString":
+                PolylineOptions polylineOptions = style.getPolylineOptions();
+                if (inlineStyle != null) {
+                    setInlineLineStringStyle(polylineOptions, inlineStyle);
+                } else if (style.isLineRandomColorMode()) {
+                    polylineOptions.color(KmlStyle.computeRandomColor(polylineOptions.getColor()));
+                }
+                Polyline polyline = addLineStringToMap(style.getPolylineOptions(), (KmlLineString) geometry);
+                polyline.setVisible(isVisible);
+                if (hasDrawOrder) {
+                    polyline.setZIndex(drawOrder);
+                }
+                return polyline;
+            case "Polygon":
+                Polygon polygon = addPolygonToMap((KmlPolygon) geometry, style, inlineStyle);
+                polygon.setVisible(isVisible);
+                if (hasDrawOrder) {
+                    polygon.setZIndex(drawOrder);
+                }
+                return polygon;
+            case "MultiGeometry":
+                return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
+                        isVisible);
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the marker icon if there was a url that was found
+     *
+     * @param styleUrl      The style which we retrieve the icon url from
+     * @param markerOptions The marker which is displaying the icon
+     */
+    private void addMarkerIcons(String styleUrl, MarkerOptions markerOptions) {
+        if (mImagesCache.get(styleUrl) != null) {
+            // Bitmap stored in cache
+            Bitmap bitmap = mImagesCache.get(styleUrl);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+        } else if (!mMarkerIconUrls.contains(styleUrl)) {
+            mMarkerIconUrls.add(styleUrl);
+        }
+    }
+
+    /**
+     * Sets a marker info window if no <text> tag was found in the KML document. This method sets
+     * the marker title as the text found in the <name> start tag and the snippet as <description>
+     *
+     * @param style Style to apply
+     */
+    private void setMarkerInfoWindow(KmlStyle style, Marker marker,
+                                     final KmlPlacemark placemark) {
+        boolean hasName = placemark.hasProperty("name");
+        boolean hasDescription = placemark.hasProperty("description");
+        boolean hasBalloonOptions = style.hasBalloonStyle();
+        boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
+        if (hasBalloonOptions && hasBalloonText) {
+            marker.setTitle(style.getBalloonOptions().get("text"));
+            createInfoWindow();
+        } else if (hasBalloonOptions && hasName) {
+            marker.setTitle(placemark.getProperty("name"));
+            createInfoWindow();
+        } else if (hasName && hasDescription) {
+            marker.setTitle(placemark.getProperty("name"));
+            marker.setSnippet(placemark.getProperty("description"));
+            createInfoWindow();
+        } else if (hasDescription) {
+            marker.setTitle(placemark.getProperty("description"));
+            createInfoWindow();
+        } else if (hasName) {
+            marker.setTitle(placemark.getProperty("name"));
+            createInfoWindow();
+        }
+    }
+
+    public void putFeatures(Feature feature, Object object) {
+        mFeatures.put(feature, object);
+    }
+
+    public void putStyles() {
+        mStylesRenderer.putAll(mStyles);
+    }
+
+
+    /**
+     * Creates a new InfoWindowAdapter and sets text if marker snippet or title is set. This allows
+     * the info window to have custom HTML.
+     */
+    private void createInfoWindow() {
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            public View getInfoContents(Marker arg0) {
+                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
+                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
+                if (arg0.getSnippet() != null) {
+                    infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
+                } else {
+                    infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
+                }
+                return view;
+            }
+        });
+    }
+
+    /**
+     * Checks if the layer contains placemarks
+     *
+     * @return true if there are placemarks, false otherwise
+     */
+    public boolean hasFeatures() {
+        return mFeatures.size() > 0;
+    }
 
 
 

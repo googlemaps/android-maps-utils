@@ -1,6 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.maps.android.geojsonkmlabs.Feature;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class KmlContainer {
 
     private final HashMap<String, String> mProperties;
 
-    private final HashMap<KmlPlacemark, Object> mPlacemarks;
+    private final HashMap<Feature, Object> mPlacemarks;
 
     private final ArrayList<KmlContainer> mContainers;
 
@@ -25,7 +26,7 @@ public class KmlContainer {
     private String mContainerId;
 
     /*package*/ KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
-            HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
+            HashMap<Feature, Object> placemarks, HashMap<String, String> styleMaps,
             ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
             groundOverlay, String Id) {
         mProperties = properties;
@@ -90,7 +91,7 @@ public class KmlContainer {
     /**
      * @return HashMap of containers
      */
-    /*package*/ HashMap<KmlPlacemark, Object> getPlacemarksHashMap() {
+    /*package*/ HashMap<Feature, Object> getPlacemarksHashMap() {
         return mPlacemarks;
     }
 
@@ -155,7 +156,7 @@ public class KmlContainer {
      *
      * @return iterable of KmlPlacemarks
      */
-    public Iterable<KmlPlacemark> getPlacemarks() {
+    public Iterable<Feature> getPlacemarks() {
         return mPlacemarks.keySet();
     }
 

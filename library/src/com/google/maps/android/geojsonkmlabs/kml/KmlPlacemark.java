@@ -1,5 +1,9 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import java.util.HashMap;
@@ -11,9 +15,7 @@ import java.util.HashMap;
  * {@link com.google.maps.android.geojsonkmlabs.kml.KmlMultiGeometry}. Stores the properties and styles of the
  * place.
  */
-public class KmlPlacemark {
-
-    private final Geometry mGeometry;
+public class KmlPlacemark extends Feature{
 
     private final String mStyle;
 
@@ -30,21 +32,11 @@ public class KmlPlacemark {
      */
     public KmlPlacemark(Geometry geometry, String style, KmlStyle inlineStyle,
                         HashMap<String, String> properties) {
-        mProperties = new HashMap<String, String>();
-        mGeometry = geometry;
+        super(geometry, style, properties);
         mStyle = style;
         mInlineStyle = inlineStyle;
-        mProperties = properties;
     }
 
-    /**
-     * Gets the style id associated with the basic_placemark
-     *
-     * @return style id
-     */
-    public String getStyleId() {
-        return mStyle;
-    }
 
     /**
      * Gets the inline style that was found
@@ -55,52 +47,18 @@ public class KmlPlacemark {
         return mInlineStyle;
     }
 
-    /**
-     * Gets the property entry set
-     *
-     * @return property entry set
-     */
-    public Iterable getProperties() {
-        return mProperties.entrySet();
+    public PolygonOptions getPolygonOptions() {
+        return mInlineStyle.getPolygonOptions();
     }
 
-    /**
-     * Gets the property based on property name
-     *
-     * @param keyValue Property name to retrieve value
-     * @return property value, null if not found
-     */
-    public String getProperty(String keyValue) {
-        return mProperties.get(keyValue);
+    public MarkerOptions getMarkerOptions(){
+        return mInlineStyle.getMarkerOptions();
     }
 
-    /**
-     * Gets the geometry object
-     *
-     * @return geometry object
-     */
-    public Geometry getGeometry() {
-        return mGeometry;
+    public PolylineOptions getPolylineOptions(){
+        return mInlineStyle.getPolylineOptions();
     }
 
-    /**
-     * Gets whether the basic has a given property
-     *
-     * @param keyValue key value to check
-     * @return true if the key is stored in the properties, false otherwise
-     */
-    public boolean hasProperty(String keyValue) {
-        return mProperties.containsKey(keyValue);
-    }
-
-    /**
-     * Gets whether the placemark has a properties
-     *
-     * @return true if there are properties in the properties hashmap, false otherwise
-     */
-    public boolean hasProperties() {
-        return mProperties.size() > 0;
-    }
 
     @Override
     public String toString() {
@@ -108,7 +66,6 @@ public class KmlPlacemark {
         sb.append("\n style id=").append(mStyle);
         sb.append(",\n inline style=").append(mInlineStyle);
         sb.append(",\n properties=").append(mProperties);
-        sb.append(",\n geometry=").append(mGeometry);
         sb.append("\n}\n");
         return sb.toString();
     }

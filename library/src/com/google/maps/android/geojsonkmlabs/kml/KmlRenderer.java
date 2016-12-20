@@ -4,12 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.util.LruCache;
-import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -18,12 +13,9 @@ import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.R;
 import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Renderer;
 import com.google.maps.android.geojsonkmlabs.Geometry;
@@ -44,63 +36,18 @@ import java.util.Iterator;
 
     private static final String LOG_TAG = "KmlRenderer";
 
-    private static final int LRU_CACHE_SIZE = 50;
-
-    private final LruCache<String, Bitmap> mImagesCache;
-
-    private final ArrayList<String> mMarkerIconUrls;
-
     private final ArrayList<String> mGroundOverlayUrls;
-
-    private HashMap<KmlPlacemark, Object> mPlacemarks;
-
-    private HashMap<String, String> mStyleMaps;
-
-    private ArrayList<KmlContainer> mContainers;
-
-    private HashMap<String, KmlStyle> mStyles;
-
-    private HashMap<String, KmlStyle> mStylesRenderer;
-
-    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
-
-    private boolean mLayerVisible;
 
     private boolean mMarkerIconsDownloaded;
 
     private boolean mGroundOverlayImagesDownloaded;
 
-    private Context mContext;
 
     /* package */ KmlRenderer(GoogleMap map, Context context) {
-        super(map);
-        mContext = context;
-        mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
-        mMarkerIconUrls = new ArrayList<String>();
-        mGroundOverlayUrls = new ArrayList<String>();
-        mStylesRenderer = new HashMap<String, KmlStyle>();
-        mLayerVisible = false;
+        super(map, context);
+        mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
-    }
-
-    /**
-     * Gets the visibility of the placemark if it is specified. A visibility value of "1"
-     * corresponds as "true", a visibility value of "0" corresponds as false. If the
-     * visibility is not set, the method returns "true".
-     *
-     * @param placemark Placemark to obtain visibility from.
-     * @return False if a Placemark has a visibility value of "1", true otherwise.
-     */
-    private static boolean getPlacemarkVisibility(KmlPlacemark placemark) {
-        boolean isPlacemarkVisible = true;
-        if (placemark.hasProperty("visibility")) {
-            String placemarkVisibility = placemark.getProperty("visibility");
-            if (Integer.parseInt(placemarkVisibility) == 0) {
-                isPlacemarkVisible = false;
-            }
-        }
-        return isPlacemarkVisible;
     }
 
     /**
@@ -170,27 +117,13 @@ import java.util.Iterator;
         }
     }
 
-    /**
-     * Iterates a list of styles and assigns a style
-     */
-    /*package*/ void assignStyleMap(HashMap<String, String> styleMap,
-            HashMap<String, KmlStyle> styles) {
-        for (String styleMapKey : styleMap.keySet()) {
-            String styleMapValue = styleMap.get(styleMapKey);
-            if (styles.containsKey(styleMapValue)) {
-                styles.put(styleMapKey, styles.get(styleMapValue));
-            }
-        }
-    }
-
-
 
     /* package */ void addLayerToMap() {
-        mStylesRenderer.putAll(mStyles);
-        assignStyleMap(mStyleMaps, mStylesRenderer);
+        putStyles();
+        assignStyleMap(getStyleMaps(), getStylesRenderer());
         addGroundOverlays(mGroundOverlays, mContainers);
         addContainerGroupToMap(mContainers, true);
-        addPlacemarksToMap(mPlacemarks);
+        addPlacemarksToMap(getAllFeatures());
         if (!mGroundOverlayImagesDownloaded) {
             downloadGroundOverlays();
         }
@@ -200,23 +133,15 @@ import java.util.Iterator;
         mLayerVisible = true;
     }
 
-    /**
-     * Gets the map that objects are being placed on
-     *
-     * @return map
-     */
-    /* package */ GoogleMap getMap() {
-        return mMap;
-    }
 
     /**
      * Sets the map that objects are being placed on
      *
      * @param map map to place placemark, container, style and ground overlays on
      */
-    /* package */ void setMap(GoogleMap map) {
+    public void setMap(GoogleMap map) {
         removeLayerFromMap();
-        mMap = map;
+        super.setMap(map);
         addLayerToMap();
     }
 
@@ -226,7 +151,7 @@ import java.util.Iterator;
      * @return true if there are placemarks, false otherwise
      */
     /* package */ boolean hasKmlPlacemarks() {
-        return mPlacemarks.size() > 0;
+        return hasFeatures();
     }
 
     /**
@@ -234,8 +159,8 @@ import java.util.Iterator;
      *
      * @return iterable of KmlPlacemark objects
      */
-    /* package */ Iterable<KmlPlacemark> getKmlPlacemarks() {
-        return mPlacemarks.keySet();
+    /* package */ Iterable<Feature> getKmlPlacemarks() {
+        return ((Iterable<Feature>)getFeatures()) ;
     }
 
     /**
@@ -269,48 +194,24 @@ import java.util.Iterator;
      * Removes all the KML data from the map and clears all the stored placemarks
      */
     /* package */ void removeLayerFromMap() {
-        removePlacemarks(mPlacemarks);
+        removePlacemarks(getAllFeatures());
         removeGroundOverlays(mGroundOverlays);
         if (hasNestedContainers()) {
             removeContainers(getNestedContainers());
         }
-        mLayerVisible = false;
+        setLayerVisibility(false);
         mStylesRenderer.clear();
     }
 
     /**
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
      */
-    private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
-        for (KmlPlacemark kmlPlacemark : placemarks.keySet()) {
-            boolean isPlacemarkVisible = getPlacemarkVisibility(kmlPlacemark);
-            Object mapObject = addPlacemarkToMap(kmlPlacemark, isPlacemarkVisible);
-            // Placemark stores a KmlPlacemark as a key, and GoogleMap Object as its value
-            placemarks.put(kmlPlacemark, mapObject);
+    private void addPlacemarksToMap(HashMap<Feature, Object> placemarks) {
+        for (Feature kmlPlacemark : placemarks.keySet()) {
+            addFeature(kmlPlacemark);
         }
     }
 
-    /**
-     * Combines style and visibility to apply to a placemark geometry object and adds it to the map
-     *
-     * @param placemark           Placemark to obtain geometry object to add to the map
-     * @param placemarkVisibility boolean value, where true indicates the placemark geometry is
-     *                            shown initially on the map, false for not shown initially on the
-     *                            map.
-     * @return Google Map Object of the placemark geometry after it has been added to the map.
-     */
-    private Object addPlacemarkToMap(KmlPlacemark placemark, boolean placemarkVisibility) {
-        // If the placemark contains a geometry, then we add it to the map. If it doesn't
-        // contain a geometry, we do not add anything to the map, and just store values.
-        if (placemark.getGeometry() != null) {
-            String placemarkId = placemark.getStyleId();
-            Geometry geometry = placemark.getGeometry();
-            KmlStyle style = getPlacemarkStyle(placemarkId);
-            KmlStyle inlineStyle = placemark.getInlineStyle();
-            return addToMap(placemark, geometry, style, inlineStyle, placemarkVisibility);
-        }
-        return null;
-    }
 
     /**
      * Adds placemarks with their corresponding styles onto the map
@@ -327,7 +228,7 @@ import java.util.Iterator;
             }
             if (container.getStyleMap() != null) {
                 // Stores all found style maps from the container
-                assignStyleMap(container.getStyleMap(), mStylesRenderer);
+                super.assignStyleMap(container.getStyleMap(), mStylesRenderer);
             }
             addContainerObjectToMap(container, isContainerVisible);
             if (container.hasContainers()) {
@@ -350,42 +251,13 @@ import java.util.Iterator;
         }
     }
 
-    /**
-     * Obtains the styleUrl from a placemark and finds the corresponding style in a list
-     *
-     * @param styleId StyleUrl from a placemark
-     * @return Style which corresponds to an ID
-     */
-    private KmlStyle getPlacemarkStyle(String styleId) {
-        KmlStyle style = mStylesRenderer.get(null);
-        if (mStylesRenderer.get(styleId) != null) {
-            style = mStylesRenderer.get(styleId);
-        }
-        return style;
-    }
-
-    /**
-     * Sets the marker icon if there was a url that was found
-     *
-     * @param styleUrl      The style which we retrieve the icon url from
-     * @param markerOptions The marker which is displaying the icon
-     */
-    private void addMarkerIcons(String styleUrl, MarkerOptions markerOptions) {
-        if (mImagesCache.get(styleUrl) != null) {
-            // Bitmap stored in cache
-            Bitmap bitmap = mImagesCache.get(styleUrl);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-        } else if (!mMarkerIconUrls.contains(styleUrl)) {
-            mMarkerIconUrls.add(styleUrl);
-        }
-    }
 
     /**
      * Determines if there are any icons to add to markers
      */
     private void downloadMarkerIcons() {
         mMarkerIconsDownloaded = true;
-        for (Iterator<String> iterator = mMarkerIconUrls.iterator(); iterator.hasNext(); ) {
+        for (Iterator<String> iterator = getMarkerIconUrls().iterator(); iterator.hasNext(); ) {
             String markerIconUrl = iterator.next();
             new MarkerIconImageDownload(markerIconUrl).execute();
             iterator.remove();
@@ -397,7 +269,7 @@ import java.util.Iterator;
      *
      * @param iconUrl icon url of icon to add to markers
      */
-    private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
+    private void addIconToMarkers(String iconUrl, HashMap<Feature, Object> placemarks) {
         for (KmlPlacemark placemark : placemarks.keySet()) {
             KmlStyle urlStyle = mStylesRenderer.get(placemark.getStyleId());
             KmlStyle inlineStyle = placemark.getInlineStyle();
@@ -497,148 +369,8 @@ import java.util.Iterator;
         return null;
     }
 
-    /**
-     * Adds a KML Point to the map as a Marker by combining the styling and coordinates
-     *
-     * @param point contains coordinates for the Marker
-     * @param style contains relevant styling properties for the Marker
-     * @return Marker object
-     */
-    private Marker addPointToMap(KmlPlacemark placemark, KmlPoint point, KmlStyle style,
-            KmlStyle markerInlineStyle) {
-        MarkerOptions markerUrlStyle = style.getMarkerOptions();
-        markerUrlStyle.position(point.getGeometryObject());
-        if (markerInlineStyle != null) {
-            setInlinePointStyle(markerUrlStyle, markerInlineStyle, style.getIconUrl());
-        } else if (style.getIconUrl() != null) {
-            // Use shared style
-            addMarkerIcons(style.getIconUrl(), markerUrlStyle);
-        }
-        Marker marker = mMap.addMarker(markerUrlStyle);
-        setMarkerInfoWindow(style, marker, placemark);
-        return marker;
-    }
 
-    /**
-     * Sets a marker info window if no <text> tag was found in the KML document. This method sets
-     * the marker title as the text found in the <name> start tag and the snippet as <description>
-     *
-     * @param style Style to apply
-     */
-    private void setMarkerInfoWindow(KmlStyle style, Marker marker,
-            final KmlPlacemark placemark) {
-        boolean hasName = placemark.hasProperty("name");
-        boolean hasDescription = placemark.hasProperty("description");
-        boolean hasBalloonOptions = style.hasBalloonStyle();
-        boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
-        if (hasBalloonOptions && hasBalloonText) {
-            marker.setTitle(style.getBalloonOptions().get("text"));
-            createInfoWindow();
-        } else if (hasBalloonOptions && hasName) {
-            marker.setTitle(placemark.getProperty("name"));
-            createInfoWindow();
-        } else if (hasName && hasDescription) {
-            marker.setTitle(placemark.getProperty("name"));
-            marker.setSnippet(placemark.getProperty("description"));
-            createInfoWindow();
-        } else if (hasDescription) {
-            marker.setTitle(placemark.getProperty("description"));
-            createInfoWindow();
-        } else if (hasName) {
-            marker.setTitle(placemark.getProperty("name"));
-            createInfoWindow();
-        }
-    }
 
-    /**
-     * Creates a new InfoWindowAdapter and sets text if marker snippet or title is set. This allows
-     * the info window to have custom HTML.
-     */
-    private void createInfoWindow() {
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            public View getInfoContents(Marker arg0) {
-                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
-                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
-                if (arg0.getSnippet() != null) {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
-                }
-                return view;
-            }
-        });
-    }
-
-    /**
-     * Sets the inline point style by copying over the styles that have been set
-     *
-     * @param markerOptions    marker options object to add inline styles to
-     * @param inlineStyle      inline styles to apply
-     * @param markerUrlIconUrl default marker icon URL from shared style
-     */
-    private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
-            String markerUrlIconUrl) {
-        MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
-        if (inlineStyle.isStyleSet("heading")) {
-            markerOptions.rotation(inlineMarkerOptions.getRotation());
-        }
-        if (inlineStyle.isStyleSet("hotSpot")) {
-            markerOptions
-                    .anchor(inlineMarkerOptions.getAnchorU(), inlineMarkerOptions.getAnchorV());
-        }
-        if (inlineStyle.isStyleSet("markerColor")) {
-            markerOptions.icon(inlineMarkerOptions.getIcon());
-        }
-        if (inlineStyle.isStyleSet("iconUrl")) {
-            addMarkerIcons(inlineStyle.getIconUrl(), markerOptions);
-        } else if (markerUrlIconUrl != null) {
-            // Inline style with no icon defined
-            addMarkerIcons(markerUrlIconUrl, markerOptions);
-        }
-    }
-
-    /**
-     * Adds a KML LineString to the map as a Polyline by combining the styling and coordinates
-     *
-     * @param lineString contains coordinates for the Polyline
-     * @param style      contains relevant styling properties for the Polyline
-     * @return Polyline object
-     */
-    private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style,
-            KmlStyle inlineStyle) {
-        PolylineOptions polylineOptions = style.getPolylineOptions();
-        polylineOptions.addAll(lineString.getGeometryObject());
-        if (inlineStyle != null) {
-            setInlineLineStringStyle(polylineOptions, inlineStyle);
-        } else if (style.isLineRandomColorMode()) {
-            polylineOptions.color(KmlStyle.computeRandomColor(polylineOptions.getColor()));
-        }
-        return mMap.addPolyline(polylineOptions);
-    }
-
-    /**
-     * Sets the inline linestring style by copying over the styles that have been set
-     *
-     * @param polylineOptions polygon options object to add inline styles to
-     * @param inlineStyle     inline styles to apply
-     */
-    private void setInlineLineStringStyle(PolylineOptions polylineOptions, KmlStyle inlineStyle) {
-        PolylineOptions inlinePolylineOptions = inlineStyle.getPolylineOptions();
-        if (inlineStyle.isStyleSet("outlineColor")) {
-            polylineOptions.color(inlinePolylineOptions.getColor());
-        }
-        if (inlineStyle.isStyleSet("width")) {
-            polylineOptions.width(inlinePolylineOptions.getWidth());
-        }
-        if (inlineStyle.isLineRandomColorMode()) {
-            polylineOptions.color(KmlStyle.computeRandomColor(inlinePolylineOptions.getColor()));
-        }
-    }
 
     /**
      * Adds a KML Polygon to the map as a Polygon by combining the styling and coordinates
@@ -839,7 +571,7 @@ import java.util.Iterator;
             } else {
                 mImagesCache.put(mIconUrl, bitmap);
                 if (mLayerVisible) {
-                    addIconToMarkers(mIconUrl, mPlacemarks);
+                    addIconToMarkers(mIconUrl, getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
             }
