@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -126,7 +127,15 @@ public class Renderer {
 
     public HashMap<String, String> getStyleMaps() { return mStyleMaps; }
 
+    public LruCache<String, Bitmap> getImagesCache() { return mImagesCache; }
 
+    public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() { return mGroundOverlays; }
+
+    public ArrayList<KmlContainer> getContainerList() { return mContainers; }
+
+    public void clearStylesRenderer() {
+        mStylesRenderer.clear();
+    }
     /**
      * Removes all given Features/Placemarks from the map and clears all stored features and placemarks.
      *
@@ -462,7 +471,7 @@ public class Renderer {
      * @param feature Feature to obtain visibility from.
      * @return False if a Feature has a visibility value of "1", true otherwise.
      */
-    private static boolean getPlacemarkVisibility(Feature feature) {
+    public static boolean getPlacemarkVisibility(Feature feature) {
         boolean isFeatureVisible = true;
         if (feature.hasProperty("visibility")) {
             String placemarkVisibility = feature.getProperty("visibility");
@@ -494,7 +503,7 @@ public class Renderer {
      * @param styleId StyleUrl from a placemark
      * @return Style which corresponds to an ID
      */
-    private KmlStyle getPlacemarkStyle(String styleId) {
+    public KmlStyle getPlacemarkStyle(String styleId) {
         KmlStyle style = mStylesRenderer.get(null);
         if (mStylesRenderer.get(styleId) != null) {
             style = mStylesRenderer.get(styleId);
@@ -584,6 +593,10 @@ public class Renderer {
         }
     }
 
+    public GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
+        return mMap.addGroundOverlay(groundOverlayOptions);
+    }
+
     /**
      * Sets a marker info window if no <text> tag was found in the KML document. This method sets
      * the marker title as the text found in the <name> start tag and the snippet as <description>
@@ -621,6 +634,14 @@ public class Renderer {
 
     public void putStyles() {
         mStylesRenderer.putAll(mStyles);
+    }
+
+    public void putStyles(HashMap<String, KmlStyle> styles) {
+        mStylesRenderer.putAll(styles);
+    }
+
+    public void putImagesCache(String groundOverlayUrl, Bitmap bitmap) {
+        mImagesCache.put(groundOverlayUrl, bitmap);
     }
 
 

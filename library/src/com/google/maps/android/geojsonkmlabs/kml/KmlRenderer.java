@@ -42,6 +42,9 @@ import java.util.Iterator;
 
     private boolean mGroundOverlayImagesDownloaded;
 
+    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
+    private ArrayList<KmlContainer> mContainers;
+
 
     /* package */ KmlRenderer(GoogleMap map, Context context) {
         super(map, context);
@@ -119,6 +122,8 @@ import java.util.Iterator;
 
 
     /* package */ void addLayerToMap() {
+        mGroundOverlays = getGroundOverlayMap();
+        mContainers = getContainerList();
         putStyles();
         assignStyleMap(getStyleMaps(), getStylesRenderer());
         addGroundOverlays(mGroundOverlays, mContainers);
@@ -130,7 +135,7 @@ import java.util.Iterator;
         if (!mMarkerIconsDownloaded) {
             downloadMarkerIcons();
         }
-        mLayerVisible = true;
+        setLayerVisibility(true);
     }
 
 
@@ -200,7 +205,7 @@ import java.util.Iterator;
             removeContainers(getNestedContainers());
         }
         setLayerVisibility(false);
-        mStylesRenderer.clear();
+        clearStylesRenderer();
     }
 
     /**
@@ -224,11 +229,11 @@ import java.util.Iterator;
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
                 // Stores all found styles from the container
-                mStylesRenderer.putAll(container.getStyles());
+                putStyles(container.getStyles());
             }
             if (container.getStyleMap() != null) {
                 // Stores all found style maps from the container
-                super.assignStyleMap(container.getStyleMap(), mStylesRenderer);
+                super.assignStyleMap(container.getStyleMap(), getStylesRenderer());
             }
             addContainerObjectToMap(container, isContainerVisible);
             if (container.hasContainers()) {
@@ -243,11 +248,17 @@ import java.util.Iterator;
      * @param kmlContainer Folder to obtain placemark and styles from
      */
     private void addContainerObjectToMap(KmlContainer kmlContainer, boolean isContainerVisible) {
-        for (KmlPlacemark placemark : kmlContainer.getPlacemarks()) {
+        for (Feature placemark : kmlContainer.getPlacemarks()) {
             boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
             boolean isObjectVisible = isContainerVisible && isPlacemarkVisible;
-            Object mapObject = addPlacemarkToMap(placemark, isObjectVisible);
-            kmlContainer.setPlacemark(placemark, mapObject);
+            if (placemark.getGeometry() != null) {
+                String placemarkId = placemark.getId();
+                Geometry geometry = placemark.getGeometry();
+                KmlStyle style = getPlacemarkStyle(placemarkId);
+                KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
+                Object mapObject = addToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
+                kmlContainer.setPlacemark((KmlPlacemark)placemark, mapObject);
+            }
         }
     }
 
@@ -270,18 +281,18 @@ import java.util.Iterator;
      * @param iconUrl icon url of icon to add to markers
      */
     private void addIconToMarkers(String iconUrl, HashMap<Feature, Object> placemarks) {
-        for (KmlPlacemark placemark : placemarks.keySet()) {
-            KmlStyle urlStyle = mStylesRenderer.get(placemark.getStyleId());
-            KmlStyle inlineStyle = placemark.getInlineStyle();
+        for (Feature placemark : placemarks.keySet()) {
+            KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
+            KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
             if ("Point".equals(placemark.getGeometry().getGeometryType())) {
                 boolean isInlineStyleIcon = inlineStyle != null && iconUrl
                         .equals(inlineStyle.getIconUrl());
                 boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
                         .equals(urlStyle.getIconUrl());
                 if (isInlineStyleIcon) {
-                    scaleBitmap(inlineStyle, placemarks, placemark);
+                    scaleBitmap(inlineStyle, placemarks, (KmlPlacemark)placemark);
                 } else if (isPlacemarkStyleIcon) {
-                    scaleBitmap(urlStyle, placemarks, placemark);
+                    scaleBitmap(urlStyle, placemarks, (KmlPlacemark)placemark);
                 }
             }
         }
@@ -292,11 +303,11 @@ import java.util.Iterator;
      * @param style     Style to retrieve iconUrl and scale from
      * @param placemark Placemark object to set the image to
      */
-    private void scaleBitmap(KmlStyle style, HashMap<KmlPlacemark, Object> placemarks,
+    private void scaleBitmap(KmlStyle style, HashMap<Feature, Object> placemarks,
                              KmlPlacemark placemark) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
-        Bitmap bitmapImage = mImagesCache.get(bitmapUrl);
+        Bitmap bitmapImage = getImagesCache().get(bitmapUrl);
         BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
         ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
      }
@@ -368,8 +379,6 @@ import java.util.Iterator;
 
         return null;
     }
-
-
 
 
     /**
@@ -463,7 +472,7 @@ import java.util.Iterator;
             String groundOverlayUrl = groundOverlay.getImageUrl();
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
-                if (mImagesCache.get(groundOverlayUrl) != null) {
+                if (getImagesCache().get(groundOverlayUrl) != null) {
                     addGroundOverlayToMap(groundOverlayUrl, mGroundOverlays, true);
                 } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
                     mGroundOverlayUrls.add(groundOverlayUrl);
@@ -493,12 +502,12 @@ import java.util.Iterator;
     private void addGroundOverlayToMap(String groundOverlayUrl,
             HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
         BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
-                .fromBitmap(mImagesCache.get(groundOverlayUrl));
+                .fromBitmap(getImagesCache().get(groundOverlayUrl));
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
             if (kmlGroundOverlay.getImageUrl().equals(groundOverlayUrl)) {
                 GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
                         .image(groundOverlayBitmap);
-                GroundOverlay mapGroundOverlay = mMap.addGroundOverlay(groundOverlayOptions);
+                GroundOverlay mapGroundOverlay = attachGroundOverlay(groundOverlayOptions);
                 if (containerVisibility == false) {
                     mapGroundOverlay.setVisible(false);
                 }
@@ -569,8 +578,8 @@ import java.util.Iterator;
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             } else {
-                mImagesCache.put(mIconUrl, bitmap);
-                if (mLayerVisible) {
+                putImagesCache(mIconUrl, bitmap);
+                if (getLayerVisibility()) {
                     addIconToMarkers(mIconUrl, getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
@@ -618,8 +627,8 @@ import java.util.Iterator;
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
             } else {
-                mImagesCache.put(mGroundOverlayUrl, bitmap);
-                if (mLayerVisible) {
+                putImagesCache(mGroundOverlayUrl, bitmap);
+                if (getLayerVisibility()) {
                     addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays, true);
                     addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
                 }
