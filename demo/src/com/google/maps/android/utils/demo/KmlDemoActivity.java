@@ -41,11 +41,11 @@ public class KmlDemoActivity extends BaseDemoActivity {
     private void retrieveFileFromResource() {
         try {
             KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.kmlgeometrytest, getApplicationContext());
-            //TODO change back to campus.kml
+            //TODO was using kmlgeometrytest - ensure change back to campus.kml
             kmlLayer.addLayerToMap();
-            //moveCameraToKml(kmlLayer); TODO uncomment
+            // moveCameraToKml(kmlLayer); TODO uncomment
             //TODO remove the following two lines
-            LatLng point = new LatLng(-122.0822035425683, 37.42228990140251);
+            LatLng point = new LatLng(38.87253259892824,-77.05788457660967);
             getMap().moveCamera(CameraUpdateFactory.newLatLng(point));
 
         } catch (IOException e) {
@@ -70,7 +70,6 @@ public class KmlDemoActivity extends BaseDemoActivity {
         KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
         //Create LatLngBounds of the outer coordinates of the polygon
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        Log.d("LOB", placemark.toString());
         for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
             builder.include(latLng);
         }

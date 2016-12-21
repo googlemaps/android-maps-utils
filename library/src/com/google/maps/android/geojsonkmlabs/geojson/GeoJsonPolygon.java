@@ -1,6 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 
-public class GeoJsonPolygon implements GeoJsonGeometry {
+public class GeoJsonPolygon implements Geometry {
 
     private final static String GEOMETRY_TYPE = "Polygon";
 
@@ -28,8 +29,7 @@ public class GeoJsonPolygon implements GeoJsonGeometry {
         mCoordinates = coordinates;
     }
 
-    /** {@inheritDoc} */
-    @Override
+
     public String getType() {
         return GEOMETRY_TYPE;
     }
@@ -42,6 +42,11 @@ public class GeoJsonPolygon implements GeoJsonGeometry {
     public List<? extends List<LatLng>> getCoordinates() {
         return mCoordinates;
     }
+
+
+    public List<? extends List<LatLng>> getGeometryObject() { return getCoordinates(); }
+
+    public String getGeometryType() { return getType(); }
 
     @Override
     public String toString() {
