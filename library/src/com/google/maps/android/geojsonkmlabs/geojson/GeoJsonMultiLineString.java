@@ -1,11 +1,13 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
+import com.google.maps.android.geojsonkmlabs.Geometry;
+
 import java.util.List;
 
 /**
  * A GeoJsonMultiLineString geometry contains a number of {@link GeoJsonLineString}s.
  */
-public class GeoJsonMultiLineString implements GeoJsonGeometry {
+public class GeoJsonMultiLineString implements Geometry { //TODO
 
     private final static String GEOMETRY_TYPE = "MultiLineString";
 
@@ -23,8 +25,17 @@ public class GeoJsonMultiLineString implements GeoJsonGeometry {
         mGeoJsonLineStrings = geoJsonLineStrings;
     }
 
+    public String getGeometryType() { //TODO
+        return getType();
+    }
+
+    public List<GeoJsonLineString> getGeometryObject() { //TODO
+        return getLineStrings();
+    }
+
+
     /** {@inheritDoc} */
-    @Override
+    //@Override
     public String getType() {
         return GEOMETRY_TYPE;
     }

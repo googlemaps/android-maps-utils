@@ -20,7 +20,7 @@ public class GeoJsonPointTest extends TestCase {
             p = new GeoJsonPoint(null);
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Coordinate cannot be null", e.getMessage());
+            assertEquals("Coordinates cannot be null", e.getMessage());
         }
     }
 }

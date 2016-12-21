@@ -1,18 +1,17 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.LineString;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Represents a KML LineString. Contains a single array of coordinates.
  */
-public class KmlLineString implements KmlGeometry<List<LatLng>> {
-
-    public static final String GEOMETRY_TYPE = "LineString";
-
-    final ArrayList<LatLng> mCoordinates;
+public class KmlLineString extends LineString {
 
     /**
      * Creates a new KmlLineString object
@@ -20,36 +19,13 @@ public class KmlLineString implements KmlGeometry<List<LatLng>> {
      * @param coordinates array of coordinates
      */
     public KmlLineString(ArrayList<LatLng> coordinates) {
-        if (coordinates == null) {
-            throw new IllegalArgumentException("Coordinates cannot be null");
-        }
-        mCoordinates = coordinates;
+        super(coordinates);
     }
 
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
-    @Override
-    public String getGeometryType() {
-        return GEOMETRY_TYPE;
-    }
-
-    /**
-     * Gets the coordinates
-     *
-     * @return ArrayList of LatLng
-     */
     public ArrayList<LatLng> getGeometryObject() {
-        return mCoordinates;
+        List<LatLng> coordinatesList = super.getGeometryObject();
+        ArrayList<LatLng> coordinatesAList = new ArrayList<LatLng>(coordinatesList);
+        return coordinatesAList;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n coordinates=").append(mCoordinates);
-        sb.append("\n}\n");
-        return sb.toString();
-    }
 }

@@ -147,10 +147,12 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             if (eventType == START_TAG) {
                 if (parser.getName().equals("Point")) {
                     return createPoint(parser);
-                /* TODO } else if (parser.getName().equals("LineString")) {
+                } else if (parser.getName().equals("LineString")) {
                     return createLineString(parser);
+
                 } else if (parser.getName().equals("Polygon")) {
                     return createPolygon(parser);
+                    /* TODO
                 } else if (parser.getName().equals("MultiGeometry")) {
                     return createMultiGeometry(parser);
                 */

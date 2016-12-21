@@ -1,6 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import junit.framework.TestCase;
 
@@ -42,7 +43,7 @@ public class GeoJsonParserTest extends TestCase {
         GeoJsonParser parser = new GeoJsonParser(validGeometryCollection());
         assertEquals(1, parser.getFeatures().size());
         for (GeoJsonFeature feature : parser.getFeatures()) {
-            assertEquals("GeometryCollection", feature.getGeometry().getType());
+            assertEquals("GeometryCollection", feature.getGeometry().getGeometryType()); //TODO getType()
             int size = 0;
             for (String property : feature.getPropertyKeys()) {
                 size++;
@@ -52,8 +53,8 @@ public class GeoJsonParserTest extends TestCase {
             GeoJsonGeometryCollection geometry = ((GeoJsonGeometryCollection) feature
                     .getGeometry());
             assertEquals(1, geometry.getGeometries().size());
-            for (GeoJsonGeometry geoJsonGeometry : geometry.getGeometries()) {
-                assertEquals("GeometryCollection", geoJsonGeometry.getType());
+            for (Geometry geoJsonGeometry : geometry.getGeometries()) {
+                assertEquals("GeometryCollection", geoJsonGeometry.getGeometryType()); //TODO getType()
             }
         }
     }
@@ -251,8 +252,8 @@ public class GeoJsonParserTest extends TestCase {
         parser = new GeoJsonParser(invalidFeatureCollectionNoGeometryTypeInFeature());
         assertNull(parser.getBoundingBox());
         assertEquals(2, parser.getFeatures().size());
-        assertTrue(!parser.getFeatures().get(0).getGeometry().getType().equals("Polygon") && !parser
-                .getFeatures().get(1).getGeometry().getType().equals("Polygon"));
+        assertTrue(!parser.getFeatures().get(0).getGeometry().getGeometryType().equals("Polygon") && !parser
+                .getFeatures().get(1).getGeometry().getGeometryType().equals("Polygon")); //TODO getType() x 2
 
         // Contains 1 feature element with no geometry as it was missing a coordinates member
         parser = new GeoJsonParser(invalidFeatureNoCoordinatesInGeometry());

@@ -1,4 +1,4 @@
-package com.google.maps.android.kml;
+package com.google.maps.android.geojsonkmlabs.kml;
 
 import android.graphics.Color;
 

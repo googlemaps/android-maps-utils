@@ -6,12 +6,12 @@ import com.google.maps.android.geojsonkmlabs.Geometry;
 
 public class Point implements Geometry {
 
-    public final static String GEOMETRY_TYPE = "Point";
+    private final static String GEOMETRY_TYPE = "Point";
 
-    public final LatLng mCoordinates;
+    private final LatLng mCoordinates;
 
     /**
-     * Creates a new Point
+     * Creates a new Point object
      *
      * @param coordinates coordinates of Point to store
      */
