@@ -5,6 +5,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.maps.android.geojsonkmlabs.Layer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +34,7 @@ import java.util.HashMap;
  * To remove the rendered data from the layer
  * {@code layer.removeLayerFromMap();}
  */
-public class GeoJsonLayer {
+public class GeoJsonLayer implements Layer {
 
     private final GeoJsonRenderer mRenderer;
 
@@ -55,7 +57,7 @@ public class GeoJsonLayer {
         GeoJsonParser parser = new GeoJsonParser(geoJsonFile);
         // Assign GeoJSON bounding box for FeatureCollection
         mBoundingBox = parser.getBoundingBox();
-        HashMap<GeoJsonFeature, Object> geoJsonFeatures = new HashMap<GeoJsonFeature, Object>();
+        HashMap<Feature, Object> geoJsonFeatures = new HashMap<>();
         for (GeoJsonFeature feature : parser.getFeatures()) {
             geoJsonFeatures.put(feature, null);
         }
@@ -172,7 +174,7 @@ public class GeoJsonLayer {
      * @param mapObject Object
      * @return GeoJsonFeature for the given object
      */
-    public GeoJsonFeature getFeature(Object mapObject) { return mRenderer.getFeature(mapObject); }
+    public Feature getFeature(Object mapObject) { return mRenderer.getFeature(mapObject); }
 
     /**
      * Takes a character input stream and converts it into a JSONObject
@@ -205,8 +207,8 @@ public class GeoJsonLayer {
      *
      * @return iterable of GeoJsonFeature elements
      */
-    public Iterable<GeoJsonFeature> getFeatures() {
-        return mRenderer.getFeatures();
+    public Iterable<Feature> getFeatures() {
+        return (mRenderer.getFeatures());
     }
 
     /**

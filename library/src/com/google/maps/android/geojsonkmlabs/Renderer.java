@@ -105,7 +105,8 @@ public class Renderer {
         mImagesCache = null;
     }
 
-    /* package */ boolean isLayerOnMap() {
+    /* package */
+    public boolean isLayerOnMap() {
         return mLayerOnMap;
     }
 
@@ -220,7 +221,8 @@ public class Renderer {
      * @param mapObject Marker, Polyline or Polygon
      * @return GeoJsonFeature for the given map object
      */
-    /* package */ Feature getFeature(Object mapObject) {
+    /* package */
+    public Feature getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
     }
 
@@ -627,6 +629,37 @@ public class Renderer {
             createInfoWindow();
         }
     }
+
+    /**
+     * Gets the default style used to render GeoJsonPoints
+     *
+     * @return default style used to render GeoJsonPoints
+     */
+    /* package */
+    public GeoJsonPointStyle getDefaultPointStyle() {
+        return mDefaultPointStyle;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonLineStrings
+     *
+     * @return default style used to render GeoJsonLineStrings
+     */
+/* package */
+    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
+        return mDefaultLineStringStyle;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonPolygons
+     *
+     * @return default style used to render GeoJsonPolygons
+     */
+/* package */
+    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
+        return mDefaultPolygonStyle;
+    }
+
 
     public void putFeatures(Feature feature, Object object) {
         mFeatures.put(feature, object);

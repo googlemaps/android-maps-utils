@@ -1,6 +1,8 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.maps.android.geojsonkmlabs.Layer;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -14,7 +16,7 @@ import java.io.InputStream;
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
-public class KmlLayer {
+public class KmlLayer implements Layer {
 
     private final KmlRenderer mRenderer;
 
@@ -95,10 +97,11 @@ public class KmlLayer {
      *
      * @return iterable of KmlPlacemark objects
      */
-    public Iterable<KmlPlacemark> getPlacemarks() {
+    public Iterable<Feature> getPlacemarks() {
         return mRenderer.getKmlPlacemarks();
     }
 
+    public Iterable<Feature> getFeatures() { return getPlacemarks(); }
     /**
      * Checks if the layer contains any KmlContainers
      *
