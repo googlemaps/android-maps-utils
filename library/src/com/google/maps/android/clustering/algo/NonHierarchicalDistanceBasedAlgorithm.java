@@ -110,7 +110,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
         synchronized (mQuadTree) {
-            for (QuadItem<T> candidate : mItems) {
+            for (QuadItem<T> candidate : getClusteringItems(mQuadTree, discreteZoom)) {
                 if (visitedCandidates.contains(candidate)) {
                     // Candidate is already part of another cluster.
                     continue;
@@ -150,6 +150,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         return results;
     }
 
+    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, int discreteZoom) {
+        return mItems;
+    }
+
     @Override
     public Collection<T> getItems() {
         final List<T> items = new ArrayList<T>();
@@ -184,7 +188,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
                 p.y - halfSpan, p.y + halfSpan);
     }
 
-    private static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
+    static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
         private final T mClusterItem;
         private final Point mPoint;
         private final LatLng mPosition;
