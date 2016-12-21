@@ -45,7 +45,8 @@ import java.util.Observer;
      *
      * @param map GoogleMap to place GeoJsonFeature objects on
      */
-    /* package */ void setMap(GoogleMap map) {
+    /* package */
+    public void setMap(GoogleMap map) {
         super.setMap(map);
         for (Feature feature : super.getFeatures()) {
             redrawFeatureToMap((GeoJsonFeature)feature, map);

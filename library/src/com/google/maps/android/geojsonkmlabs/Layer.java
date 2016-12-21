@@ -12,7 +12,7 @@ public interface Layer {
     Iterable<Feature> getFeatures();
 
     /**
-     * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
+     * Adds all the Feature objects parsed from the given GeoJSON data onto the map
      */
     void addLayerToMap();
 
@@ -21,7 +21,5 @@ public interface Layer {
     void setMap(GoogleMap map);
 
     void removeLayerFromMap();
-
-
 
 }
