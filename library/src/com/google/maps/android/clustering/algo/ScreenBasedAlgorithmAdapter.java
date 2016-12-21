@@ -67,6 +67,16 @@ public class ScreenBasedAlgorithmAdapter<T extends ClusterItem> implements Scree
     }
 
     @Override
+    public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
+        mAlgorithm.setMaxDistanceBetweenClusteredItems(maxDistance);
+    }
+
+    @Override
+    public int getMaxDistanceBetweenClusteredItems() {
+        return mAlgorithm.getMaxDistanceBetweenClusteredItems();
+    }
+
+    @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         // stub
     }
