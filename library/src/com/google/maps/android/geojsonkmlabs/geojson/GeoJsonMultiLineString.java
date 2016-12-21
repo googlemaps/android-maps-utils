@@ -25,15 +25,6 @@ public class GeoJsonMultiLineString implements Geometry { //TODO
         mGeoJsonLineStrings = geoJsonLineStrings;
     }
 
-    public String getGeometryType() { //TODO
-        return getType();
-    }
-
-    public List<GeoJsonLineString> getGeometryObject() { //TODO
-        return getLineStrings();
-    }
-
-
     /** {@inheritDoc} */
     //@Override
     public String getType() {
@@ -47,6 +38,14 @@ public class GeoJsonMultiLineString implements Geometry { //TODO
      */
     public List<GeoJsonLineString> getLineStrings() {
         return mGeoJsonLineStrings;
+    }
+
+    public String getGeometryType() { //TODO
+        return getType();
+    }
+
+    public List<GeoJsonLineString> getGeometryObject() { //TODO
+        return getLineStrings();
     }
 
     @Override

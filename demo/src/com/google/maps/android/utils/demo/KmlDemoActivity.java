@@ -41,11 +41,11 @@ public class KmlDemoActivity extends BaseDemoActivity {
     private void retrieveFileFromResource() {
         try {
             KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.kmlgeometrytest, getApplicationContext());
-            //TODO was using kmlgeometrytest - ensure change back to campus.kml
+            //TODO using kmlgeometrytest - ensure change back to campus.kml
             kmlLayer.addLayerToMap();
             // moveCameraToKml(kmlLayer); TODO uncomment
             //TODO remove the following two lines
-            LatLng point = new LatLng(38.87253259892824,-77.05788457660967);
+            LatLng point = new LatLng(54.66484515395317,-5.670104418698614);
             getMap().moveCamera(CameraUpdateFactory.newLatLng(point));
 
         } catch (IOException e) {

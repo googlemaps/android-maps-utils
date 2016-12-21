@@ -1,54 +1,39 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.MultiGeometry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Represents a KML MultiGeometry. Contains an array of KmlGeometry objects.
+ * Represents a KML MultiGeometry. Contains an array of Geometry objects.
  */
-public class KmlMultiGeometry implements Geometry<ArrayList<Geometry>> {
-
-    private static final String GEOMETRY_TYPE = "MultiGeometry";
-
-    private ArrayList<Geometry> mGeometries = new ArrayList<Geometry>();
-
+public class KmlMultiGeometry extends MultiGeometry {
     /**
-     * Creates a new KmlMultiGeometry object
+     * Creates a new MultiGeometry object
      *
-     * @param geometries array of KmlGeometry objects contained in the MultiGeometry
+     * @param geometries array of Geometry objects contained in the MultiGeometry
      */
     public KmlMultiGeometry(ArrayList<Geometry> geometries) {
-        if (geometries == null) {
-            throw new IllegalArgumentException("Geometries cannot be null");
-        }
-        mGeometries = geometries;
+        super(geometries);
     }
 
     /**
-     * Gets the type of geometry
+     * Gets an ArrayList of Geometry objects
      *
-     * @return type of geometry
+     * @return ArrayList of Geometry objects
      */
-    @Override
-    public String getGeometryType() {
-        return GEOMETRY_TYPE;
-    }
-
-    /**
-     * Gets an ArrayList of KmlGeometry objects
-     *
-     * @return ArrayList of KmlGeometry objects
-     */
-
     public ArrayList<Geometry> getGeometryObject() {
-        return mGeometries;
+        List<Geometry> geometriesList = super.getGeometryObject();
+        ArrayList<Geometry> geometriesAList = new ArrayList<Geometry>(geometriesList);
+        return geometriesAList;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n geometries=").append(mGeometries);
+        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
+        sb.append("\n geometries=").append(getGeometryObject());
         sb.append("\n}\n");
         return sb.toString();
     }

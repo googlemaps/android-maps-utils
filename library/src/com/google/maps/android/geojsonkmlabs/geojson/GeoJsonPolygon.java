@@ -29,7 +29,12 @@ public class GeoJsonPolygon implements Geometry {
         mCoordinates = coordinates;
     }
 
-
+    /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
     public String getType() {
         return GEOMETRY_TYPE;
     }
@@ -43,7 +48,7 @@ public class GeoJsonPolygon implements Geometry {
         return mCoordinates;
     }
 
-
+    //todo this is not v good
     public List<? extends List<LatLng>> getGeometryObject() { return getCoordinates(); }
 
     public String getGeometryType() { return getType(); }

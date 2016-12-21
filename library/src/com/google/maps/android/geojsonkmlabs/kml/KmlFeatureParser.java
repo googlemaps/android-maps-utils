@@ -152,10 +152,8 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
                 } else if (parser.getName().equals("Polygon")) {
                     return createPolygon(parser);
-                    /* TODO
                 } else if (parser.getName().equals("MultiGeometry")) {
                     return createMultiGeometry(parser);
-                */
                 }
             }
             eventType = parser.next();

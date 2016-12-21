@@ -20,7 +20,12 @@ public class GeoJsonLineString extends LineString {
         super(coordinates);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
     public String getType() {
         return getGeometryType();
     }
