@@ -215,10 +215,8 @@ import java.util.Iterator;
             throws JSONException {
         if (geometryType.equals(POINT)) {
             return createPoint(geometryArray);
-        /* TODO
         } else if (geometryType.equals(MULTIPOINT)) {
             return createMultiPoint(geometryArray);
-            */
         } else if (geometryType.equals(LINESTRING)) {
             return createLineString(geometryArray);
         } else if (geometryType.equals(MULTILINESTRING)) {

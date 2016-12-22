@@ -36,6 +36,7 @@ public class GeoJsonMultiLineString extends MultiGeometry {
      * @return list of GeoJsonLineStrings
      */
     public List<GeoJsonLineString> getLineStrings() {
+        //convert list of Geometry types to list of GeoJsonLineString types
         List<Geometry> geometryList = getGeometryObject();
         ArrayList<GeoJsonLineString> geoJsonLineStrings = new ArrayList<GeoJsonLineString>();
         for (Geometry geometry : geometryList) {
