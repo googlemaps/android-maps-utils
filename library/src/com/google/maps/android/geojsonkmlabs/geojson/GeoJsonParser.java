@@ -221,10 +221,8 @@ import java.util.Iterator;
             */
         } else if (geometryType.equals(LINESTRING)) {
             return createLineString(geometryArray);
-            /*
         } else if (geometryType.equals(MULTILINESTRING)) {
             return createMultiLineString(geometryArray);
-            */
         } else if (geometryType.equals(POLYGON)) {
             return createPolygon(geometryArray);
             /*
