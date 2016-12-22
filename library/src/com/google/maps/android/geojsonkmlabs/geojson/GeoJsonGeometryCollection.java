@@ -1,33 +1,30 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.MultiGeometry;
 import java.util.List;
 
 /**
  * A GeoJsonGeometryCollection geometry contains a number of GeoJsonGeometry objects.
  */
-public class GeoJsonGeometryCollection implements GeoJsonGeometry {
-
-    private final static String GEOMETRY_TYPE = "GeometryCollection";
-
-    private final List<Geometry> mGeometries;
-
+public class GeoJsonGeometryCollection extends MultiGeometry {
     /**
      * Creates a new GeoJsonGeometryCollection object
      *
      * @param geometries array of GeoJsonGeometry objects to add to the GeoJsonGeometryCollection
      */
-    public GeoJsonGeometryCollection(
-            List<Geometry> geometries) {
-        if (geometries == null) {
-            throw new IllegalArgumentException("Geometries cannot be null");
-        }
-        mGeometries = geometries;
+    public GeoJsonGeometryCollection(List<Geometry> geometries) {
+        super(geometries);
+        setGeometryType("GeometryCollection");
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
     public String getType() {
-        return GEOMETRY_TYPE;
+        return getGeometryType();
     }
 
     /**
@@ -35,14 +32,12 @@ public class GeoJsonGeometryCollection implements GeoJsonGeometry {
      *
      * @return stored GeoJsonGeometry objects
      */
-    public List<Geometry> getGeometries() {
-        return mGeometries;
-    }
+    public List<Geometry> getGeometries() { return getGeometryObject(); }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n Geometries=").append(mGeometries);
+        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
+        sb.append("\n Geometries=").append(getGeometryObject());
         sb.append("\n}\n");
         return sb.toString();
     }

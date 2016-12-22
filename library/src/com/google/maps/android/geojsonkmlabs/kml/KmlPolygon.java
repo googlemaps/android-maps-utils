@@ -62,7 +62,7 @@ public class KmlPolygon implements GKPolygon<ArrayList<ArrayList<LatLng>>> {
     }
 
     /**
-     * Gets the coordinates
+     * Gets the coordinates of the Polygon
      *
      * @return ArrayList of an ArrayList of LatLng points
      */

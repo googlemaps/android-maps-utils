@@ -1,32 +1,33 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
+import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.MultiGeometry;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A GeoJsonMultiPoint geometry contains a number of {@link GeoJsonPoint}s.
  */
-public class GeoJsonMultiPoint implements GeoJsonGeometry {
-
-    private final static String GEOMETRY_TYPE = "MultiPoint";
-
-    private final List<GeoJsonPoint> mGeoJsonPoints;
-
+public class GeoJsonMultiPoint extends MultiGeometry {
     /**
      * Creates a GeoJsonMultiPoint object
      *
      * @param geoJsonPoints list of GeoJsonPoints to store
      */
     public GeoJsonMultiPoint(List<GeoJsonPoint> geoJsonPoints) {
-        if (geoJsonPoints == null) {
-            throw new IllegalArgumentException("GeoJsonPoints cannot be null");
-        }
-        mGeoJsonPoints = geoJsonPoints;
+        super(geoJsonPoints);
+        setGeometryType("MultiPoint");
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
     public String getType() {
-        return GEOMETRY_TYPE;
+        return getGeometryType();
     }
 
     /**
@@ -35,13 +36,21 @@ public class GeoJsonMultiPoint implements GeoJsonGeometry {
      * @return list of GeoJsonPoints
      */
     public List<GeoJsonPoint> getPoints() {
-        return mGeoJsonPoints;
+        //convert list of Geometry types to list of GeoJsonPoint types
+        List<Geometry> geometryList = getGeometryObject();
+        ArrayList<GeoJsonPoint> geoJsonPoints = new ArrayList<GeoJsonPoint>();
+        for (Geometry geometry : geometryList) {
+            GeoJsonPoint point = (GeoJsonPoint) geometry;
+            geoJsonPoints.add(point);
+        }
+
+        return geoJsonPoints;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n points=").append(mGeoJsonPoints);
+        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
+        sb.append("\n points=").append(getGeometryObject());
         sb.append("\n}\n");
         return sb.toString();
     }

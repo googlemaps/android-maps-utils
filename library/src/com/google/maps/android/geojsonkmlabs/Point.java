@@ -22,7 +22,11 @@ public class Point implements Geometry {
         mCoordinates = coordinates;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     public String getGeometryType() {
         return GEOMETRY_TYPE;
     }

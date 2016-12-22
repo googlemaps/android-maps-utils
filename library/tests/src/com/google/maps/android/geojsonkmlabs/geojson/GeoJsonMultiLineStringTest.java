@@ -38,7 +38,7 @@ public class GeoJsonMultiLineStringTest extends TestCase {
             mls = new GeoJsonMultiLineString(null);
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("GeoJsonLineStrings cannot be null", e.getMessage());
+            assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }

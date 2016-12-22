@@ -39,4 +39,13 @@ public class KmlMultiGeometryTest extends TestCase {
         KmlLineString lineString = ((KmlLineString) kmlMultiGeometry.getGeometryObject().get(0));
         assertNotNull(lineString);
     }
+
+    public void testNullGeometry() {
+        try {
+            kmlMultiGeometry = new KmlMultiGeometry(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            assertEquals("Geometries cannot be null", e.getMessage());
+        }
+    }
 }
