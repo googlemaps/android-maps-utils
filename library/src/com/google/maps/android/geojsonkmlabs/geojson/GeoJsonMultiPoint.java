@@ -38,13 +38,13 @@ public class GeoJsonMultiPoint extends MultiGeometry {
     public List<GeoJsonPoint> getPoints() {
         //convert list of Geometry types to list of GeoJsonPoint types
         List<Geometry> geometryList = getGeometryObject();
-        ArrayList<GeoJsonPoint> geoJsonLineStrings = new ArrayList<GeoJsonPoint>();
+        ArrayList<GeoJsonPoint> geoJsonPoints = new ArrayList<GeoJsonPoint>();
         for (Geometry geometry : geometryList) {
             GeoJsonPoint point = (GeoJsonPoint) geometry;
-            geoJsonLineStrings.add(point);
+            geoJsonPoints.add(point);
         }
 
-        return geoJsonLineStrings;
+        return geoJsonPoints;
     }
 
     @Override

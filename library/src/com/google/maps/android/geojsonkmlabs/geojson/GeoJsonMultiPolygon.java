@@ -1,32 +1,33 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
+import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.MultiGeometry;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A GeoJsonMultiPolygon geometry contains a number of {@link GeoJsonPolygon}s.
  */
-public class GeoJsonMultiPolygon implements GeoJsonGeometry {
-
-    private final static String GEOMETRY_TYPE = "MultiPolygon";
-
-    private final List<GeoJsonPolygon> mGeoJsonPolygons;
-
+public class GeoJsonMultiPolygon extends MultiGeometry {
     /**
      * Creates a new GeoJsonMultiPolygon
      *
      * @param geoJsonPolygons list of GeoJsonPolygons to store
      */
     public GeoJsonMultiPolygon(List<GeoJsonPolygon> geoJsonPolygons) {
-        if (geoJsonPolygons == null) {
-            throw new IllegalArgumentException("GeoJsonPolygons cannot be null");
-        }
-        mGeoJsonPolygons = geoJsonPolygons;
+        super(geoJsonPolygons);
+        setGeometryType("MultiPolygon");
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
     public String getType() {
-        return GEOMETRY_TYPE;
+        return getGeometryType();
     }
 
     /**
@@ -35,13 +36,21 @@ public class GeoJsonMultiPolygon implements GeoJsonGeometry {
      * @return list of GeoJsonPolygons
      */
     public List<GeoJsonPolygon> getPolygons() {
-        return mGeoJsonPolygons;
+        //convert list of Geometry types to list of GeoJsonPolygon types
+        List<Geometry> geometryList = getGeometryObject();
+        ArrayList<GeoJsonPolygon> geoJsonPolygon = new ArrayList<GeoJsonPolygon>();
+        for (Geometry geometry : geometryList) {
+            GeoJsonPolygon polygon = (GeoJsonPolygon) geometry;
+            geoJsonPolygon.add(polygon);
+        }
+
+        return geoJsonPolygon;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n Polygons=").append(mGeoJsonPolygons);
+        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
+        sb.append("\n Polygons=").append(getGeometryObject());
         sb.append("\n}\n");
         return sb.toString();
     }

@@ -223,9 +223,9 @@ import java.util.Iterator;
             return createMultiLineString(geometryArray);
         } else if (geometryType.equals(POLYGON)) {
             return createPolygon(geometryArray);
-            /*
         } else if (geometryType.equals(MULTIPOLYGON)) {
             return createMultiPolygon(geometryArray);
+            /*
         } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
             return createGeometryCollection(geometryArray);
         */
