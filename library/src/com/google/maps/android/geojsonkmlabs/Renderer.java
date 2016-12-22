@@ -30,6 +30,7 @@ import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPoint;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPolygon;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPoint;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
+import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygon;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygonStyle;
 import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlGroundOverlay;
@@ -302,7 +303,7 @@ public class Renderer {
      * @param feature  feature to get geometry style
      * @param geometry geometry to add to the map
      */
-    private Object addFeatureToMap(Feature feature, Geometry geometry) {
+    protected Object addFeatureToMap(Feature feature, Geometry geometry) {
         String geometryType = geometry.getGeometryType();
         switch (geometryType) {
             case "Point":
@@ -330,16 +331,16 @@ public class Renderer {
                 }
                 return addPolygonToMap(polygonOptions, (GKPolygon) geometry);
             case "MultiPoint":
-                return addMultiPointToMap(feature.getPointStyle(),
+                return addMultiPointToMap(((GeoJsonFeature) feature).getPointStyle(),
                         (GeoJsonMultiPoint) geometry);
             case "MultiLineString":
-                return addMultiLineStringToMap(feature.getLineStringStyle(),
+                return addMultiLineStringToMap(((GeoJsonFeature) feature).getLineStringStyle(),
                         ((GeoJsonMultiLineString) geometry));
             case "MultiPolygon":
-                return addMultiPolygonToMap(feature.getPolygonStyle(),
+                return addMultiPolygonToMap(((GeoJsonFeature) feature).getPolygonStyle(),
                         ((GeoJsonMultiPolygon) geometry));
             case "GeometryCollection":
-                return addGeometryCollectionToMap(feature,
+                return addGeometryCollectionToMap(((GeoJsonFeature) feature),
                         ((GeoJsonGeometryCollection) geometry).getGeometries());
         }
         return null;
@@ -563,8 +564,8 @@ public class Renderer {
      * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
      * of either objects
      */
-    private Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
-                            KmlStyle inlineStyle, boolean isVisible) {
+    protected Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
+                              KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
         boolean hasDrawOrder = placemark.hasProperty("drawOrder");
@@ -650,6 +651,80 @@ public class Renderer {
             polygonOptions.fillColor(KmlStyle.computeRandomColor(inlinePolygonOptions.getFillColor()));
         }
     }
+
+    /**
+     * Adds all the geometries within a KML MultiGeometry to the map. Supports recursive
+     * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
+     *
+     * @param multiGeometry contains array of geometries for the MultiGeometry
+     * @param urlStyle         contains relevant styling properties for the MultiGeometry
+     * @return array of Marker, Polyline and Polygon objects
+     */
+    private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
+                                                    KmlMultiGeometry multiGeometry, KmlStyle urlStyle, KmlStyle inlineStyle,
+                                                    boolean isContainerVisible) {
+        ArrayList<Object> mapObjects = new ArrayList<>();
+        ArrayList<Geometry> kmlObjects = multiGeometry.getGeometryObject();
+        for (Geometry kmlGeometry : kmlObjects) {
+            mapObjects.add(addToMap(placemark, kmlGeometry, urlStyle, inlineStyle,
+                    isContainerVisible));
+        }
+        return mapObjects;
+    }
+
+    /**
+     * Adds all GeoJsonPoint objects in GeoJsonMultiPoint to the map as multiple Markers
+     *
+     * @param pointStyle contains relevant styling properties for the Markers
+     * @param multiPoint contains an array of GeoJsonPoints
+     * @return array of Markers that have been added to the map
+     */
+    private ArrayList<Marker> addMultiPointToMap(GeoJsonPointStyle pointStyle,
+                                                 GeoJsonMultiPoint multiPoint) {
+        ArrayList<Marker> markers = new ArrayList<>();
+        for (GeoJsonPoint geoJsonPoint : multiPoint.getPoints()) {
+            markers.add(addPointToMap(pointStyle.toMarkerOptions(), geoJsonPoint));
+        }
+        return markers;
+    }
+
+
+
+    /**
+     * Adds all GeoJsonLineString objects in the GeoJsonMultiLineString to the map as multiple
+     * Polylines
+     *
+     * @param lineStringStyle contains relevant styling properties for the Polylines
+     * @param multiLineString contains an array of GeoJsonLineStrings
+     * @return array of Polylines that have been added to the map
+     */
+    private ArrayList<Polyline> addMultiLineStringToMap(GeoJsonLineStringStyle lineStringStyle,
+                                                        GeoJsonMultiLineString multiLineString) {
+        ArrayList<Polyline> polylines = new ArrayList<Polyline>();
+        for (GeoJsonLineString geoJsonLineString : multiLineString.getLineStrings()) {
+            polylines.add(addLineStringToMap(lineStringStyle.toPolylineOptions(), geoJsonLineString));
+        }
+        return polylines;
+    }
+
+
+    /**
+     * Adds all GeoJsonPolygon in the GeoJsonMultiPolygon to the map as multiple Polygons
+     *
+     * @param polygonStyle contains relevant styling properties for the Polygons
+     * @param multiPolygon contains an array of GeoJsonPolygons
+     * @return array of Polygons that have been added to the map
+     */
+    private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle polygonStyle,
+                                                    GeoJsonMultiPolygon multiPolygon) {
+        ArrayList<Polygon> polygons = new ArrayList<>();
+        for (GeoJsonPolygon geoJsonPolygon : multiPolygon.getPolygons()) {
+            polygons.add(addPolygonToMap(polygonStyle.toPolygonOptions(), geoJsonPolygon));
+        }
+        return polygons;
+    }
+
+
 
     /**
      * Sets the marker icon if there was a url that was found
