@@ -56,7 +56,7 @@ public class GeoJsonMultiPolygonTest extends TestCase {
             mp = new GeoJsonMultiPolygon(null);
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("MultiGeometries cannot be null", e.getMessage());
+            assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }

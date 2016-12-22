@@ -35,7 +35,7 @@ public class GeoJsonMultiPointTest extends TestCase {
             mp = new GeoJsonMultiPoint(null);
             fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("MultiGeometries cannot be null", e.getMessage());
+            assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }

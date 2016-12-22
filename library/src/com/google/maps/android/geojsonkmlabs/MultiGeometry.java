@@ -12,7 +12,7 @@ public class MultiGeometry implements Geometry {
 
     public MultiGeometry(List<?> geometries) {
         if (geometries == null) {
-            throw new IllegalArgumentException("MultiGeometries cannot be null");
+            throw new IllegalArgumentException("Geometries cannot be null");
         }
 
         //convert unknown geometry type (due to GeoJSON types) to Geometry type
