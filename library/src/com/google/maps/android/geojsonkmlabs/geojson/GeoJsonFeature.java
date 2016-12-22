@@ -103,7 +103,7 @@ public class GeoJsonFeature extends Feature implements Observer {
      */
     @Override
     public Geometry getGeometry() {
-        return (Geometry) mGeometry;
+        return mGeometry;
     }
 
     /**
@@ -244,14 +244,7 @@ public class GeoJsonFeature extends Feature implements Observer {
         }
     }
 
-    /**
-     * Gets the stored Geometry
-     *
-     * @return Geometry
-     */
-    public Geometry getGeometry() {
-        return mGeometry;
-    }
+
    /**
      * Sets the stored GeoJsonGeometry and redraws it on the layer if it has already been added
      *

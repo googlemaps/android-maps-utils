@@ -1,8 +1,9 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.GKPolygon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,11 +11,15 @@ import java.util.List;
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 
-public class GeoJsonPolygon implements Geometry {
+public class GeoJsonPolygon implements GKPolygon {
 
     private final static String GEOMETRY_TYPE = "Polygon";
 
     private final List<? extends List<LatLng>> mCoordinates;
+
+    private final static int POLYGON_OUTER_COORDINATE_INDEX = 0;
+
+    private final static int POLYGON_INNER_COORDINATE_INDEX = 1;
 
     /**
      * Creates a new GeoJsonPolygon object
@@ -47,6 +52,24 @@ public class GeoJsonPolygon implements Geometry {
     public List<? extends List<LatLng>> getGeometryObject() { return getCoordinates(); }
 
     public String getGeometryType() { return getType(); }
+
+
+    @Override
+    public ArrayList<LatLng> getOuterBoundaryCoordinates() {
+        // First array of coordinates are the outline
+        return (ArrayList<LatLng>) getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX);
+    }
+
+    @Override
+    public ArrayList<ArrayList<LatLng>> getInnerBoundaryCoordinates() {
+        // Following arrays are holes
+        ArrayList<ArrayList<LatLng>> innerBoundary = new ArrayList<>();
+        for (int i = POLYGON_INNER_COORDINATE_INDEX; i < getCoordinates().size();
+             i++) {
+            innerBoundary.add((ArrayList<LatLng>) getCoordinates().get(i));
+        }
+        return innerBoundary;
+    }
 
     @Override
     public String toString() {

@@ -110,7 +110,8 @@ public class KmlStyle {
      *
      * @return True if there is a fill for the polygon, false otherwise
      */
-    /* package */ boolean hasFill() {
+    /* package */
+    public boolean hasFill() {
         return mFill;
     }
 
@@ -147,7 +148,8 @@ public class KmlStyle {
      *
      * @return True if the polygon outline is set, false otherwise
      */
-    /* package */ boolean hasOutline() {
+    /* package */
+    public boolean hasOutline() {
         return mOutline;
     }
 
@@ -338,7 +340,8 @@ public class KmlStyle {
      *
      * @return True if the color mode is true, false otherwise
      */
-    /* package */ boolean isPolyRandomColorMode() {
+    /* package */
+    public boolean isPolyRandomColorMode() {
         return mPolyRandomColorMode;
     }
 
@@ -453,7 +456,8 @@ public class KmlStyle {
      *
      * @return new PolygonOptions
      */
-    /* package */ PolygonOptions getPolygonOptions() {
+    /* package */
+    public PolygonOptions getPolygonOptions() {
         return createPolygonOptions(mPolygonOptions, mFill, mOutline);
     }
 

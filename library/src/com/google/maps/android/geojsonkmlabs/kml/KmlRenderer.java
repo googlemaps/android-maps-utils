@@ -72,9 +72,9 @@ import java.util.Iterator;
      *
      * @param placemarks placemarks to remove
      */
-    private void removePlacemarks(HashMap<Feature, Object> placemarks) {
+    private void removePlacemarks(HashMap<? extends Feature, Object> placemarks) {
         // Remove map object from the map
-        super.removeFeatures(placemarks);
+        super.removeFeatures((HashMap<Feature, Object>) placemarks);
     }
 
     /**
@@ -164,8 +164,8 @@ import java.util.Iterator;
      *
      * @return iterable of KmlPlacemark objects
      */
-    /* package */ Iterable<Feature> getKmlPlacemarks() {
-        return ((Iterable<Feature>)getFeatures()) ;
+    /* package */ Iterable<? extends Feature> getKmlPlacemarks() {
+        return (getFeatures()) ;
     }
 
     /**
@@ -380,52 +380,6 @@ import java.util.Iterator;
         return null;
     }
 
-
-    /**
-     * Adds a KML Polygon to the map as a Polygon by combining the styling and coordinates
-     *
-     * @param polygon contains coordinates for the Polygon
-     * @param style   contains relevant styling properties for the Polygon
-     * @return Polygon object
-     */
-    private Polygon addPolygonToMap(KmlPolygon polygon, KmlStyle style, KmlStyle inlineStyle) {
-        PolygonOptions polygonOptions = style.getPolygonOptions();
-        polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
-        for (ArrayList<LatLng> innerBoundary : polygon.getInnerBoundaryCoordinates()) {
-            polygonOptions.addHole(innerBoundary);
-        }
-        if (inlineStyle != null) {
-            setInlinePolygonStyle(polygonOptions, inlineStyle);
-        } else if (style.isPolyRandomColorMode()) {
-            polygonOptions.fillColor(KmlStyle.computeRandomColor(polygonOptions.getFillColor()));
-        }
-        return mMap.addPolygon(polygonOptions);
-    }
-
-    /**
-     * Sets the inline polygon style by copying over the styles that have been set
-     *
-     * @param polygonOptions polygon options object to add inline styles to
-     * @param inlineStyle    inline styles to apply
-     */
-    private void setInlinePolygonStyle(PolygonOptions polygonOptions, KmlStyle inlineStyle) {
-        PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
-        if (inlineStyle.hasFill() && inlineStyle.isStyleSet("fillColor")) {
-            polygonOptions.fillColor(inlinePolygonOptions.getFillColor());
-        }
-        if (inlineStyle.hasOutline()) {
-            if (inlineStyle.isStyleSet("outlineColor")) {
-                polygonOptions.strokeColor(inlinePolygonOptions.getStrokeColor());
-            }
-            if (inlineStyle.isStyleSet("width")) {
-                polygonOptions.strokeWidth(inlinePolygonOptions.getStrokeWidth());
-            }
-        }
-        if (inlineStyle.isPolyRandomColorMode()) {
-            polygonOptions.fillColor(KmlStyle.computeRandomColor(inlinePolygonOptions.getFillColor()));
-        }
-    }
-
     /**
      * Adds all the geometries within a KML MultiGeometry to the map. Supports recursive
      * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
@@ -579,7 +533,7 @@ import java.util.Iterator;
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             } else {
                 putImagesCache(mIconUrl, bitmap);
-                if (getLayerVisibility()) {
+                if (isLayerOnMap()) {
                     addIconToMarkers(mIconUrl, getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
@@ -628,7 +582,7 @@ import java.util.Iterator;
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
             } else {
                 putImagesCache(mGroundOverlayUrl, bitmap);
-                if (getLayerVisibility()) {
+                if (isLayerOnMap()) {
                     addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays, true);
                     addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
                 }

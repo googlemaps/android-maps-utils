@@ -33,7 +33,7 @@ import java.util.Observer;
      * @param map map to place GeoJsonFeature objects on
      * @param features
      */
-    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<Feature, Object> features) {
+    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<? extends Feature, Object> features) {
         super(map, features);
 
     }
@@ -58,10 +58,10 @@ import java.util.Observer;
      * map.
      */
     /* package */ void addLayerToMap() {
-        if (!getLayerVisibility()) {
+        if (!isLayerOnMap()) {
             setLayerVisibility(true);
             for (Feature feature : super.getFeatures()) {
-                addFeature(feature);
+                addFeature((GeoJsonFeature)feature);
             }
         }
     }
@@ -74,7 +74,7 @@ import java.util.Observer;
      */
     /* package */ void addFeature(GeoJsonFeature feature) {
         super.addFeature(feature);
-        if (getLayerVisibility()) {
+        if (isLayerOnMap()) {
             feature.addObserver(this);
         }
     }
@@ -83,7 +83,7 @@ import java.util.Observer;
      * Removes all GeoJsonFeature objects stored in the mFeatures hashmap from the map
      */
     /* package */ void removeLayerFromMap() {
-        if (getLayerVisibility()) {
+        if (isLayerOnMap()) {
             for (Feature feature : super.getFeatures()) {
                 removeFromMap(super.getAllFeatures().get(feature));
                 feature.deleteObserver(this);
@@ -149,7 +149,7 @@ import java.util.Observer;
      */
     private ArrayList<Marker> addMultiPointToMap(GeoJsonPointStyle pointStyle,
             GeoJsonMultiPoint multiPoint) {
-        ArrayList<Marker> markers = new ArrayList<Marker>();
+        ArrayList<Marker> markers = new ArrayList<>();
         for (GeoJsonPoint geoJsonPoint : multiPoint.getPoints()) {
             markers.add(addPointToMap(pointStyle.toMarkerOptions(), geoJsonPoint));
         }
@@ -170,31 +170,11 @@ import java.util.Observer;
             GeoJsonMultiLineString multiLineString) {
         ArrayList<Polyline> polylines = new ArrayList<Polyline>();
         for (GeoJsonLineString geoJsonLineString : multiLineString.getLineStrings()) {
-            polylines.add(addLineStringToMap(lineStringStyle, geoJsonLineString));
+            polylines.add(addLineStringToMap(lineStringStyle.toPolylineOptions(), geoJsonLineString));
         }
         return polylines;
     }
 
-    /**
-     * Adds a GeoJsonPolygon to the map as a Polygon
-     *
-     * @param polygonStyle contains relevant styling properties for the Polygon
-     * @param polygon      contains coordinates for the Polygon
-     * @return Polygon object created from given GeoJsonPolygon
-     */
-    private Polygon addPolygonToMap(GeoJsonPolygonStyle polygonStyle, GeoJsonPolygon polygon) {
-        PolygonOptions polygonOptions = polygonStyle.toPolygonOptions();
-        // First array of coordinates are the outline
-        polygonOptions.addAll(polygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
-        // Following arrays are holes
-        for (int i = POLYGON_INNER_COORDINATE_INDEX; i < polygon.getCoordinates().size();
-                i++) {
-            polygonOptions.addHole(polygon.getCoordinates().get(i));
-        }
-        Polygon addedPolygon = mMap.addPolygon(polygonOptions);
-        addedPolygon.setClickable(true);
-        return addedPolygon;
-    }
 
     /**
      * Adds all GeoJsonPolygon in the GeoJsonMultiPolygon to the map as multiple Polygons
@@ -205,9 +185,9 @@ import java.util.Observer;
      */
     private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle polygonStyle,
             GeoJsonMultiPolygon multiPolygon) {
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        ArrayList<Polygon> polygons = new ArrayList<>();
         for (GeoJsonPolygon geoJsonPolygon : multiPolygon.getPolygons()) {
-            polygons.add(addPolygonToMap(polygonStyle, geoJsonPolygon));
+            polygons.add(addPolygonToMap(polygonStyle.toPolygonOptions(), geoJsonPolygon));
         }
         return polygons;
     }

@@ -98,7 +98,7 @@ public class KmlLayer implements Layer {
      * @return iterable of KmlPlacemark objects
      */
     public Iterable<Feature> getPlacemarks() {
-        return mRenderer.getKmlPlacemarks();
+        return (Iterable<Feature>) mRenderer.getKmlPlacemarks();
     }
 
     public Iterable<Feature> getFeatures() { return getPlacemarks(); }

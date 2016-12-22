@@ -104,9 +104,9 @@ public class GeoJsonLayer implements Layer {
             @Override
             public void onPolygonClick(Polygon polygon) {
                 if (getFeature(polygon) != null) {
-                    listener.onFeatureClick(getFeature(polygon));
+                    listener.onFeatureClick((GeoJsonFeature) getFeature(polygon));
                 } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
+                    listener.onFeatureClick((GeoJsonFeature) getFeature(multiObjectHandler(polygon)));
                 }
             }
         });
@@ -115,9 +115,9 @@ public class GeoJsonLayer implements Layer {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if(getFeature(marker) != null) {
-                    listener.onFeatureClick(getFeature(marker));
+                    listener.onFeatureClick((GeoJsonFeature) getFeature(marker));
                 } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
+                    listener.onFeatureClick((GeoJsonFeature) getFeature(multiObjectHandler(marker)));
                 }
                 return false;
             }
@@ -127,9 +127,9 @@ public class GeoJsonLayer implements Layer {
             @Override
             public void onPolylineClick(Polyline polyline) {
                 if (getFeature(polyline) != null) {
-                    listener.onFeatureClick(getFeature(polyline));
+                    listener.onFeatureClick((GeoJsonFeature) getFeature(polyline));
                 } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
+                    listener.onFeatureClick((GeoJsonFeature) getFeature(multiObjectHandler(polyline)));
                 }
             }
         });
