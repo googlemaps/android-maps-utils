@@ -2,6 +2,7 @@ package com.google.maps.android.utils.demo;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonFeature;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLayer;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
@@ -45,9 +46,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         // Download the GeoJSON file.
-        retrieveFileFromUrl();
+        //retrieveFileFromUrl();
         // Alternate approach of loading a local GeoJSON file.
-        //retrieveFileFromResource();
+        retrieveFileFromResource();
     }
 
     private void retrieveFileFromUrl() {
@@ -71,7 +72,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
      */
     private void addColorsToMarkers(GeoJsonLayer layer) {
         // Iterate over all the features stored in the layer
-        for (GeoJsonFeature feature : layer.getFeatures()) {
+        for (Feature feature : layer.getFeatures()) {
             // Check if the magnitude property exists
             if (feature.getProperty("mag") != null && feature.hasProperty("place")) {
                 double magnitude = Double.parseDouble(feature.getProperty("mag"));
@@ -89,7 +90,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 pointStyle.setSnippet("Earthquake occured " + feature.getProperty("place"));
 
                 // Assign the point style to the feature
-                feature.setPointStyle(pointStyle);
+                ((GeoJsonFeature)feature).setPointStyle(pointStyle);
             }
         }
     }

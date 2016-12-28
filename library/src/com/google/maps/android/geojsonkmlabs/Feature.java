@@ -7,10 +7,6 @@ import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygonStyle;
 import java.util.HashMap;
 import java.util.Observable;
 
-/**
- * Created by suvercha on 12/15/16.
- */
-
 public class Feature extends Observable {
     private final String mId;
 

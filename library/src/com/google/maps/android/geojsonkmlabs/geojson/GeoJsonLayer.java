@@ -57,7 +57,7 @@ public class GeoJsonLayer implements Layer {
         GeoJsonParser parser = new GeoJsonParser(geoJsonFile);
         // Assign GeoJSON bounding box for FeatureCollection
         mBoundingBox = parser.getBoundingBox();
-        HashMap<Feature, Object> geoJsonFeatures = new HashMap<>();
+        HashMap<GeoJsonFeature, Object> geoJsonFeatures = new HashMap<>();
         for (GeoJsonFeature feature : parser.getFeatures()) {
             geoJsonFeatures.put(feature, null);
         }

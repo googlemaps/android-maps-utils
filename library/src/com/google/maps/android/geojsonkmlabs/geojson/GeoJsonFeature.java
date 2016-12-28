@@ -34,14 +34,13 @@ public class GeoJsonFeature extends Feature implements Observer {
 
     /**
      * Creates a new GeoJsonFeature object
-     *
-     * @param geometry    type of geometry to assign to the feature
+     *  @param geometry    type of geometry to assign to the feature
      * @param id          common identifier of the feature
      * @param properties  hashmap of containing properties related to the feature
      * @param boundingBox bounding box of the feature
      */
-   public GeoJsonFeature(GeoJsonGeometry geometry, String id,
-            HashMap<String, String> properties, LatLngBounds boundingBox) {
+   public GeoJsonFeature(Geometry geometry, String id,
+                         HashMap<String, String> properties, LatLngBounds boundingBox) {
         super((Geometry) geometry, id, properties);
         mId = id;
         mBoundingBox = boundingBox;

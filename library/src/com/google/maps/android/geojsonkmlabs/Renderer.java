@@ -155,7 +155,7 @@ public class Renderer {
         return mFeatures.values();
     }
 
-    public HashMap<Feature, Object> getAllFeatures() {
+    public HashMap<? extends Feature, Object> getAllFeatures() {
         return mFeatures;
     }
 
@@ -237,7 +237,7 @@ public class Renderer {
     /* package */
     public void storeKmlData(HashMap<String, KmlStyle> styles,
                              HashMap<String, String> styleMaps,
-                             HashMap<? extends Feature, Object> features, ArrayList<KmlContainer> folders,
+                             HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;

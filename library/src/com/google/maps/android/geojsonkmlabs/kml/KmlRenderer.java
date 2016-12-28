@@ -11,11 +11,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Renderer;
 import com.google.maps.android.geojsonkmlabs.Geometry;
@@ -84,7 +80,6 @@ import java.util.Iterator;
      * @param isParentContainerVisible true if the parent container is visible, false otherwise
      * @return true if this container is visible, false otherwise
      */
-    /*package*/
     static boolean getContainerVisibility(KmlContainer kmlContainer, boolean
             isParentContainerVisible) {
         boolean isChildContainerVisible = true;
@@ -210,8 +205,9 @@ import java.util.Iterator;
 
     /**
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
+     * @param placemarks
      */
-    private void addPlacemarksToMap(HashMap<Feature, Object> placemarks) {
+    private void addPlacemarksToMap(HashMap<? extends Feature, Object> placemarks) {
         for (Feature kmlPlacemark : placemarks.keySet()) {
             addFeature(kmlPlacemark);
         }
@@ -279,8 +275,9 @@ import java.util.Iterator;
      * Adds the marker icon stored in mMarkerIconCache, to the {@link com.google.android.gms.maps.model.Marker}
      *
      * @param iconUrl icon url of icon to add to markers
+     * @param placemarks
      */
-    private void addIconToMarkers(String iconUrl, HashMap<Feature, Object> placemarks) {
+    private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
         for (Feature placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
             KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
@@ -301,9 +298,10 @@ import java.util.Iterator;
     /**
      * Enlarges or shrinks a bitmap image based on the scale provided
      * @param style     Style to retrieve iconUrl and scale from
+     * @param placemarks
      * @param placemark Placemark object to set the image to
      */
-    private void scaleBitmap(KmlStyle style, HashMap<Feature, Object> placemarks,
+    private void scaleBitmap(KmlStyle style, HashMap<KmlPlacemark, Object> placemarks,
                              KmlPlacemark placemark) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
@@ -463,7 +461,7 @@ import java.util.Iterator;
             } else {
                 putImagesCache(mIconUrl, bitmap);
                 if (isLayerOnMap()) {
-                    addIconToMarkers(mIconUrl, getAllFeatures());
+                    addIconToMarkers(mIconUrl, (HashMap<KmlPlacemark, Object>) getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
             }

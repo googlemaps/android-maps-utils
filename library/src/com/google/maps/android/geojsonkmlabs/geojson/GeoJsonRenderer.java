@@ -29,7 +29,7 @@ import java.util.Observer;
      * @param map map to place GeoJsonFeature objects on
      * @param features
      */
-    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<? extends Feature, Object> features) {
+    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
         super(map, features);
 
     }
