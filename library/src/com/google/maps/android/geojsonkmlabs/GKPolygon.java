@@ -4,10 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-/**
- * Created by suvercha on 12/22/16.
- */
-
 public interface GKPolygon<T> extends Geometry{
 
     /**

@@ -39,6 +39,7 @@ import java.util.Iterator;
     private boolean mGroundOverlayImagesDownloaded;
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
+
     private ArrayList<KmlContainer> mContainers;
 
 
@@ -117,12 +118,14 @@ import java.util.Iterator;
 
 
     /* package */ void addLayerToMap() {
+        System.out.println("add layer has been called");
         mGroundOverlays = getGroundOverlayMap();
         mContainers = getContainerList();
         putStyles();
         assignStyleMap(getStyleMaps(), getStylesRenderer());
         addGroundOverlays(mGroundOverlays, mContainers);
         addContainerGroupToMap(mContainers, true);
+        System.out.println(getAllFeatures());
         addPlacemarksToMap(getAllFeatures());
         if (!mGroundOverlayImagesDownloaded) {
             downloadGroundOverlays();
@@ -209,6 +212,7 @@ import java.util.Iterator;
      */
     private void addPlacemarksToMap(HashMap<? extends Feature, Object> placemarks) {
         for (Feature kmlPlacemark : placemarks.keySet()) {
+            System.out.println("this happs");
             addFeature(kmlPlacemark);
         }
     }
@@ -221,6 +225,7 @@ import java.util.Iterator;
      */
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
             boolean containerVisibility) {
+        System.out.println("we here");
         for (KmlContainer container : kmlContainers) {
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
@@ -244,6 +249,7 @@ import java.util.Iterator;
      * @param kmlContainer Folder to obtain placemark and styles from
      */
     private void addContainerObjectToMap(KmlContainer kmlContainer, boolean isContainerVisible) {
+
         for (Feature placemark : kmlContainer.getPlacemarks()) {
             boolean isPlacemarkVisible = getPlacemarkVisibility(placemark);
             boolean isObjectVisible = isContainerVisible && isPlacemarkVisible;
@@ -253,6 +259,7 @@ import java.util.Iterator;
                 KmlStyle style = getPlacemarkStyle(placemarkId);
                 KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
                 Object mapObject = addToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
+                System.out.println(mapObject);
                 kmlContainer.setPlacemark((KmlPlacemark)placemark, mapObject);
             }
         }

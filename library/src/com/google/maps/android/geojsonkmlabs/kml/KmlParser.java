@@ -53,11 +53,11 @@ import java.util.HashMap;
      */
     /* package */ KmlParser(XmlPullParser parser) {
         mParser = parser;
-        mPlacemarks = new HashMap<KmlPlacemark, Object>();
-        mContainers = new ArrayList<KmlContainer>();
-        mStyles = new HashMap<String, KmlStyle>();
-        mStyleMaps = new HashMap<String, String>();
-        mGroundOverlays = new HashMap<KmlGroundOverlay, GroundOverlay>();
+        mPlacemarks = new HashMap<>();
+        mContainers = new ArrayList<>();
+        mStyles = new HashMap<>();
+        mStyleMaps = new HashMap<>();
+        mGroundOverlays = new HashMap<>();
     }
 
     /**
@@ -65,6 +65,7 @@ import java.util.HashMap;
      */
     /* package */ void parseKml() throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
+        System.out.println("parsing kml");
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(UNSUPPORTED_REGEX)) {
@@ -88,6 +89,7 @@ import java.util.HashMap;
                 }
             }
             eventType = mParser.next();
+
         }
         //Need to put an empty new style
         mStyles.put(null, new KmlStyle());

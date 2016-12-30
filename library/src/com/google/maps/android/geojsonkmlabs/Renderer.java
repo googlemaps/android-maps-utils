@@ -104,11 +104,21 @@ public class Renderer {
         mImagesCache = null;
     }
 
+    /**
+     * Checks if layer has been added to map
+     *
+     * @return true if layer is on map, false otherwise
+     */
     public boolean isLayerOnMap() {
         return mLayerOnMap;
     }
 
-    public void setLayerVisibility(boolean layerOnMap) {
+    /**
+     * Sets the visibility of the layer
+     *
+     * @param layerOnMap contains true if the layer should be set to visible and false otherwise
+     */
+    protected void setLayerVisibility(boolean layerOnMap) {
         mLayerOnMap = layerOnMap;
     }
 
@@ -117,7 +127,6 @@ public class Renderer {
      *
      * @return GoogleMap
      */
-    /* package */
     public GoogleMap getMap() {
         return mMap;
     }
@@ -155,20 +164,51 @@ public class Renderer {
         return mFeatures.values();
     }
 
-    public HashMap<? extends Feature, Object> getAllFeatures() {
+    /**
+     * Gets a hashmap of all the features and objects that are on this layer
+     *
+     * @return mFeatures hashmap
+     */
+    protected HashMap<? extends Feature, Object> getAllFeatures() {
         return mFeatures;
     }
 
+    /**
+     * Gets the URLs stored for the Marker icons
+     *
+     * @return mMarkerIconUrls ArrayList of URLs
+     */
     public ArrayList<String> getMarkerIconUrls()  { return mMarkerIconUrls; }
 
+    /**
+     *
+     *
+     * @return
+     */
     public HashMap<String, KmlStyle> getStylesRenderer() { return mStylesRenderer; }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<String, String> getStyleMaps() { return mStyleMaps; }
 
+    /**
+     *
+     * @return
+     */
     public LruCache<String, Bitmap> getImagesCache() { return mImagesCache; }
 
+    /**
+     *
+     * @return
+     */
     public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() { return mGroundOverlays; }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<KmlContainer> getContainerList() { return mContainers; }
 
 
@@ -241,9 +281,11 @@ public class Renderer {
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;
+        System.out.println(features);
         mFeatures.putAll(features);
         mContainers = folders;
         mGroundOverlays = groundOverlays;
+
     }
 
 
@@ -253,6 +295,7 @@ public class Renderer {
      * @param feature feature to add to the map
      */
      public void addFeature(Feature feature) {
+
         Object mapObject = FEATURE_NOT_ON_MAP;
         if (mLayerOnMap) {
             if (mFeatures.containsKey(feature)) {
@@ -261,8 +304,10 @@ public class Renderer {
             }
 
             if (feature.hasGeometry()) {
+                System.out.println("nana");
                 // Create new map object
                 if (feature instanceof KmlPlacemark) {
+                    System.out.println("yes is kml placemark");
                     boolean isPlacemarkVisible = getPlacemarkVisibility(feature);
                     String placemarkId = feature.getId();
                     Geometry geometry = feature.getGeometry();
@@ -305,6 +350,7 @@ public class Renderer {
      */
     protected Object addFeatureToMap(Feature feature, Geometry geometry) {
         String geometryType = geometry.getGeometryType();
+        System.out.println("aaa");
         switch (geometryType) {
             case "Point":
                 MarkerOptions markerOptions = null;
@@ -431,6 +477,7 @@ public class Renderer {
      */
     protected Polygon addPolygonToMap(PolygonOptions polygonOptions, GKPolygon polygon) {
         // First array of coordinates are the outline
+        System.out.println("adding polygon");
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         // Following arrays are holes
         ArrayList<ArrayList<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
@@ -438,7 +485,7 @@ public class Renderer {
             polygonOptions.addHole(innerBoundary);
         }
         Polygon addedPolygon = mMap.addPolygon(polygonOptions);
-        addedPolygon.setClickable(true);
+      //  addedPolygon.setClickable(true);
         return addedPolygon;
     }
 

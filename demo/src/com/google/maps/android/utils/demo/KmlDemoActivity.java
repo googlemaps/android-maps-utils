@@ -31,8 +31,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
     public void startDemo () {
         try {
             mMap = getMap();
-            retrieveFileFromResource();
-            //retrieveFileFromUrl(); TODO swap back
+       //     retrieveFileFromResource();
+            retrieveFileFromUrl(); //TODO swap back
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }
@@ -40,13 +40,13 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.kmlgeometrytest, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
             //TODO using kmlgeometrytest - ensure change back to campus.kml
             kmlLayer.addLayerToMap();
-            // moveCameraToKml(kmlLayer); TODO uncomment
+            moveCameraToKml(kmlLayer); //TODO uncomment
             //TODO remove the following two lines
-            LatLng point = new LatLng(54.66484515395317,-5.670104418698614);
-            getMap().moveCamera(CameraUpdateFactory.newLatLng(point));
+           // LatLng point = new LatLng(54.66484515395317,-5.670104418698614);
+            //getMap().moveCamera(CameraUpdateFactory.newLatLng(point));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,6 +73,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
             builder.include(latLng);
         }
+        System.out.println(builder.build());
         getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 1));
     }
 

@@ -50,8 +50,10 @@ public class KmlLayer implements Layer {
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();
         stream.close();
+        System.out.println(parser.getPlacemarks().isEmpty() +"haek");
         mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
                 parser.getContainers(), parser.getGroundOverlays());
+        System.out.println("done this");
     }
     /**
      * Creates a new XmlPullParser to allow for the KML file to be parsed

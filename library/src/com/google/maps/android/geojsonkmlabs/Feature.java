@@ -1,9 +1,5 @@
 package com.google.maps.android.geojsonkmlabs;
 
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLineStringStyle;
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygonStyle;
-
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -14,23 +10,21 @@ public class Feature extends Observable {
 
     private Geometry mGeometry;
 
-    private GeoJsonPointStyle mPointStyle;
-
-    private GeoJsonLineStringStyle mLineStringStyle;
-
-    private GeoJsonPolygonStyle mPolygonStyle;
-
-
+    /**
+     * Creates a new Feature object
+     * @param featureGeometry type of geometry to assign to the feature
+     * @param id common identifier of the feature
+     * @param properties hashmap containing properties related to the feature
+     */
     public Feature(Geometry featureGeometry, String id,
                           HashMap<String, String> properties){
         mGeometry = featureGeometry;
         mId = id;
         if (properties == null) {
-            mProperties = new HashMap<String, String>();
+            mProperties = new HashMap<>();
         } else {
             mProperties = properties;
         }
-        //leaving bounding box out for now
     }
 
     /**
@@ -61,7 +55,11 @@ public class Feature extends Observable {
         return mProperties.get(property);
     }
 
-
+    /**
+     * Gets the id of the feature
+     *
+     * @return id
+     */
     public String getId() {
         return mId;
     }
@@ -86,7 +84,7 @@ public class Feature extends Observable {
     }
 
     /**
-     * Gets whether the placemark has a properties
+     * Gets whether the placemark has properties
      *
      * @return true if there are properties in the properties hashmap, false otherwise
      */
@@ -103,5 +101,31 @@ public class Feature extends Observable {
         return (mGeometry != null);
     }
 
+    /**
+     *  Store a new property key and value
+     *
+     * @param property      key of the property to store
+     * @param propertyValue value of the property to store
+     * @return previous value with the same key, otherwise null if the key didn't exist
+     */
+    protected String setProperty(String property, String propertyValue) {
+       return mProperties.put(property, propertyValue);
+    }
 
+    /**
+     * Removes a given property
+     *
+     * @param property key of the property to remove
+     * @return value of the removed property or null if there was no corresponding key
+     */
+    protected String removeProperty(String property) {
+        return mProperties.remove(property);
+    }
+
+    /**
+     * Sets the stored Geometry and redraws it on the layer if it has already been added
+     *
+     * @param geometry Geometry to set
+     */
+    protected void setGeometry(Geometry geometry) { mGeometry = geometry; }
 }
