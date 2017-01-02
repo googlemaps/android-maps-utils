@@ -136,6 +136,13 @@ import java.util.Iterator;
         setLayerVisibility(true);
     }
 
+    /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,
+                             HashMap<String, String> styleMaps,
+                             HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                             HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+        storeData(styles, styleMaps, features, folders, groundOverlays);
+    }
+
 
     /**
      * Sets the map that objects are being placed on

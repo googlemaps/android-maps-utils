@@ -274,18 +274,15 @@ public class Renderer {
      * @param folders        array of containers
      * @param groundOverlays hashmap of ground overlays
      */
-    /* package */
-    public void storeKmlData(HashMap<String, KmlStyle> styles,
+    protected void storeData(HashMap<String, KmlStyle> styles,
                              HashMap<String, String> styleMaps,
                              HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;
-        System.out.println(features);
         mFeatures.putAll(features);
         mContainers = folders;
         mGroundOverlays = groundOverlays;
-
     }
 
 
@@ -531,8 +528,8 @@ public class Renderer {
      * Iterates a list of styles and assigns a style
      */
     /*package*/
-    protected void assignStyleMap(HashMap<String, String> styleMap,
-                                  HashMap<String, KmlStyle> styles) {
+    public void assignStyleMap(HashMap<String, String> styleMap,
+                               HashMap<String, KmlStyle> styles) {
         for (String styleMapKey : styleMap.keySet()) {
             String styleMapValue = styleMap.get(styleMapKey);
             if (styles.containsKey(styleMapValue)) {
