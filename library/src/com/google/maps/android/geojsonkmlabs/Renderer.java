@@ -56,6 +56,8 @@ public class Renderer {
 
     private HashMap<String, String> mStyleMaps;
 
+    private BiMultiMap<Feature> mContainerFeatures;
+
     private final static Object FEATURE_NOT_ON_MAP = null;
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
@@ -80,6 +82,7 @@ public class Renderer {
 
     public Renderer(GoogleMap map, Context context) {
         mMap = map;
+        mContext = context;
         mLayerOnMap = false;
         mImagesCache = new LruCache<>(LRU_CACHE_SIZE);
         mMarkerIconUrls = new ArrayList<>();
@@ -87,6 +90,7 @@ public class Renderer {
         mDefaultPointStyle = null;
         mDefaultLineStringStyle = null;
         mDefaultPolygonStyle = null;
+        mContainerFeatures = new BiMultiMap<>();
 
     }
 
@@ -104,8 +108,20 @@ public class Renderer {
             }
         }
         mImagesCache = null;
+        mContainerFeatures = null;
     }
 
+    /**
+     * Sets a single click listener for the entire GoogleMap object, that will be called
+     * with the corresponding GeoJsonFeature object when an object on the map (Polygon,
+     * Marker, Polyline) is clicked.
+     *
+     * If getFeature() returns null this means that either the object is inside a KMLContainer,
+     * or the object is a MultiPolygon, MultiLineString or MultiPoint and must
+     * be handled differently.
+     *
+     * @param listener Listener providing the onFeatureClick method to call.
+     */
     public void setOnFeatureClickListener(final OnFeatureClickListener listener) {
 
         GoogleMap map = getMap();
@@ -115,8 +131,9 @@ public class Renderer {
             public void onPolygonClick(Polygon polygon) {
                 if (getFeature(polygon) != null) {
                     listener.onFeatureClick(getFeature(polygon));
+                } else if (mContainerFeatures.getKey(polygon) != null) {
+                    listener.onFeatureClick(mContainerFeatures.getKey(polygon));
                 } else {
-                    System.out.println("this happs");
                     listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
                 }
             }
@@ -127,6 +144,8 @@ public class Renderer {
             public boolean onMarkerClick(Marker marker) {
                 if (getFeature(marker) != null) {
                     listener.onFeatureClick(getFeature(marker));
+                }  else if (mContainerFeatures.getKey(marker) != null) {
+                    listener.onFeatureClick(mContainerFeatures.getKey(marker));
                 } else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
                 }
@@ -139,7 +158,9 @@ public class Renderer {
             public void onPolylineClick(Polyline polyline) {
                 if (getFeature(polyline) != null) {
                     listener.onFeatureClick(getFeature(polyline));
-                } else {
+                } else if (mContainerFeatures.getKey(polyline) != null) {
+                    listener.onFeatureClick(mContainerFeatures.getKey(polyline));
+                }  else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
                 }
             }
@@ -208,6 +229,10 @@ public class Renderer {
 
     public void setMap(GoogleMap map) {
         mMap = map;
+    }
+
+    protected void putContainerFeature(Object mapObject, Feature placemark) {
+        mContainerFeatures.put(placemark, mapObject);
     }
 
     /**

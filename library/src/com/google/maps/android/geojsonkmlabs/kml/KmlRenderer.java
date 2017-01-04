@@ -263,6 +263,7 @@ import java.util.Iterator;
                 KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
                 Object mapObject = addToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
                 kmlContainer.setPlacemark((KmlPlacemark)placemark, mapObject);
+                putContainerFeature(mapObject, placemark);
             }
         }
     }

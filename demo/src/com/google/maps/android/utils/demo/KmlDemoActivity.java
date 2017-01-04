@@ -37,7 +37,8 @@ public class KmlDemoActivity extends BaseDemoActivity {
             //retrieveFileFromResource();
             retrieveFileFromUrl();
         } catch (Exception e) {
-            Log.e("Exception caught", e.toString());
+            Log.e("Exception caught frj", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -106,8 +107,9 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 kmlLayer.setOnFeatureClickListener(new Renderer.OnFeatureClickListener() {
                     @Override
                     public void onFeatureClick(Feature feature) {
+
                         Toast.makeText(KmlDemoActivity.this,
-                                "Feature clicked: ",
+                                "Feature clicked: " + feature.getId(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
