@@ -1,8 +1,6 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
-
 import com.google.maps.android.geojsonkmlabs.Geometry;
 import com.google.maps.android.geojsonkmlabs.MultiGeometry;
-
 import java.util.List;
 
 /**

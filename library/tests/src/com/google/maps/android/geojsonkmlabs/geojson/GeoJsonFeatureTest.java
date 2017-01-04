@@ -24,7 +24,7 @@ public class GeoJsonFeatureTest extends TestCase {
     }
 
     public void testProperty() throws Exception {
-        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, String> properties = new HashMap<>();
         properties.put("Color", "Yellow");
         properties.put("Width", "5");
         feature = new GeoJsonFeature(null, null, properties, null);
@@ -41,7 +41,7 @@ public class GeoJsonFeatureTest extends TestCase {
 
     public void testNullProperty() throws Exception {
         GeoJsonLayer layer = new GeoJsonLayer(null, createFeatureCollection());
-        GeoJsonFeature feature = layer.getFeatures().iterator().next();
+        GeoJsonFeature feature = (GeoJsonFeature) layer.getFeatures().iterator().next();
         assertTrue(feature.hasProperty("prop0"));
         assertNull(feature.getProperty("prop0"));
         assertFalse(feature.hasProperty("prop1"));

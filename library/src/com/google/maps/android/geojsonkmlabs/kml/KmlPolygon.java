@@ -1,7 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.geojsonkmlabs.Geometry;
+import com.google.maps.android.geojsonkmlabs.GKPolygon;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Represents a KML Polygon. Contains a single array of outer boundary coordinates and an array of
  * arrays for the inner boundary coordinates.
  */
-public class KmlPolygon implements Geometry<ArrayList<ArrayList<LatLng>>> {
+public class KmlPolygon implements GKPolygon<ArrayList<ArrayList<LatLng>>> {
 
     public static final String GEOMETRY_TYPE = "Polygon";
 

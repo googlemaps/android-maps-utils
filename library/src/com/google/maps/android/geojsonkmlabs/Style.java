@@ -46,7 +46,6 @@ public class Style {
     private final static String[] GEOMETRY_TYPE = {"Polygon", "MultiPolygon", "GeometryCollection"};
 
 
-
     Style() {
         mStyleId = null;
         mMarkerOptions = new MarkerOptions();
@@ -64,9 +63,6 @@ public class Style {
     public String[] getGeometryType() {
         return GEOMETRY_TYPE;
     }
-
-
-
 
 
 }

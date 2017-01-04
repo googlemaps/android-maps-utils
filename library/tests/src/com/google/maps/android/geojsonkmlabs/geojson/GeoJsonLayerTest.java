@@ -3,6 +3,7 @@ package com.google.maps.android.geojsonkmlabs.geojson;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.geojsonkmlabs.Feature;
 
 import junit.framework.TestCase;
 
@@ -21,7 +22,7 @@ public class GeoJsonLayerTest extends TestCase {
 
     public void testGetFeatures() throws Exception {
         int featureCount = 0;
-        for (GeoJsonFeature feature : mLayer.getFeatures()) {
+        for (Feature ignored : mLayer.getFeatures()) {
             featureCount++;
         }
         assertEquals(3, featureCount);
@@ -30,7 +31,7 @@ public class GeoJsonLayerTest extends TestCase {
     public void testAddFeature() throws Exception {
         int featureCount = 0;
         mLayer.addFeature(new GeoJsonFeature(null, null, null, null));
-        for (GeoJsonFeature feature : mLayer.getFeatures()) {
+        for (Feature ignored : mLayer.getFeatures()) {
             featureCount++;
         }
         assertEquals(4, featureCount);
@@ -38,7 +39,7 @@ public class GeoJsonLayerTest extends TestCase {
 
     public void testRemoveFeature() throws Exception {
         int featureCount = 0;
-        for (GeoJsonFeature feature : mLayer.getFeatures()) {
+        for (Feature ignored : mLayer.getFeatures()) {
             featureCount++;
         }
         assertEquals(3, featureCount);

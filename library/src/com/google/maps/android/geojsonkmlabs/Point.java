@@ -3,6 +3,7 @@ package com.google.maps.android.geojsonkmlabs;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geojsonkmlabs.Geometry;
 
+
 public class Point implements Geometry {
 
     private final static String GEOMETRY_TYPE = "Point";
@@ -46,4 +47,6 @@ public class Point implements Geometry {
         sb.append("\n}\n");
         return sb.toString();
     }
+
 }
+

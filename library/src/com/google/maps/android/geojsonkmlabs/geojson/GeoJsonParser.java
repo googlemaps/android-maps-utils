@@ -390,6 +390,7 @@ import java.util.Iterator;
         try {
             GeoJsonFeature feature;
             String type = mGeoJsonFile.getString("type");
+            System.out.println("here");
 
             if (type.equals(FEATURE)) {
                 feature = parseFeature(mGeoJsonFile);
@@ -397,6 +398,7 @@ import java.util.Iterator;
                     mGeoJsonFeatures.add(feature);
                 }
             } else if (type.equals(FEATURE_COLLECTION)) {
+                System.out.println("nanaaa");
                 mGeoJsonFeatures.addAll(parseFeatureCollection(mGeoJsonFile));
             } else if (isGeometry(type)) {
                 feature = parseGeometryToFeature(mGeoJsonFile);

@@ -1,9 +1,12 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.maps.android.geojsonkmlabs.Feature;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Represents a KML Document or Folder.

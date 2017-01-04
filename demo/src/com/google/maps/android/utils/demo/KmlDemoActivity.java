@@ -4,6 +4,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.maps.android.geojsonkmlabs.Renderer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlLayer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlPlacemark;
@@ -13,6 +15,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -100,6 +103,14 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
                 kmlLayer.addLayerToMap();
+                kmlLayer.setOnFeatureClickListener(new Renderer.OnFeatureClickListener() {
+                    @Override
+                    public void onFeatureClick(Feature feature) {
+                        Toast.makeText(KmlDemoActivity.this,
+                                "Feature clicked: ",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 moveCameraToKml(kmlLayer);
             } catch (XmlPullParserException e) {
                 e.printStackTrace();

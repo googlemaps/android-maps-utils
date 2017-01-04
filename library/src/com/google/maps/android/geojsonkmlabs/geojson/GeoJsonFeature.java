@@ -1,6 +1,10 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Geometry;
 
 import java.util.Arrays;
@@ -12,15 +16,11 @@ import java.util.Observer;
  * A GeoJsonFeature has a geometry, bounding box, id and set of properties. Styles are also stored
  * in this class.
  */
-public class GeoJsonFeature extends Observable implements Observer {
+public class GeoJsonFeature extends Feature implements Observer {
 
     private final String mId;
 
     private final LatLngBounds mBoundingBox;
-
-    private final HashMap<String, String> mProperties;
-
-    private Geometry mGeometry;
 
     private GeoJsonPointStyle mPointStyle;
 
@@ -30,41 +30,16 @@ public class GeoJsonFeature extends Observable implements Observer {
 
     /**
      * Creates a new GeoJsonFeature object
-     *
      * @param geometry    type of geometry to assign to the feature
      * @param id          common identifier of the feature
      * @param properties  hashmap of containing properties related to the feature
      * @param boundingBox bounding box of the feature
      */
-    public GeoJsonFeature(Geometry geometry, String id,
-                          HashMap<String, String> properties, LatLngBounds boundingBox) {
-        mGeometry = geometry;
+   public GeoJsonFeature(Geometry geometry, String id,
+                         HashMap<String, String> properties, LatLngBounds boundingBox) {
+        super(geometry, id, properties);
         mId = id;
         mBoundingBox = boundingBox;
-        if (properties == null) {
-            mProperties = new HashMap<String, String>();
-        } else {
-            mProperties = properties;
-        }
-    }
-
-    /**
-     * Returns all the stored property keys
-     *
-     * @return iterable of property keys
-     */
-    public Iterable<String> getPropertyKeys() {
-        return mProperties.keySet();
-    }
-
-    /**
-     * Gets the value for a stored property
-     *
-     * @param property key of the property
-     * @return value of the property if its key exists, otherwise null
-     */
-    public String getProperty(String property) {
-        return mProperties.get(property);
     }
 
     /**
@@ -75,18 +50,9 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return previous value with the same key, otherwise null if the key didn't exist
      */
     public String setProperty(String property, String propertyValue) {
-        return mProperties.put(property, propertyValue);
+        return super.setProperty(property, propertyValue);
     }
 
-    /**
-     * Checks whether the given property key exists
-     *
-     * @param property key of the property to check
-     * @return true if property key exists, false otherwise
-     */
-    public boolean hasProperty(String property) {
-        return mProperties.containsKey(property);
-    }
 
     /**
      * Removes a given property
@@ -95,7 +61,7 @@ public class GeoJsonFeature extends Observable implements Observer {
      * @return value of the removed property or null if there was no corresponding key
      */
     public String removeProperty(String property) {
-        return mProperties.remove(property);
+        return super.removeProperty(property);
     }
 
     /**
@@ -185,15 +151,42 @@ public class GeoJsonFeature extends Observable implements Observer {
     }
 
     /**
+     * Gets a PolygonOptions object from mPolygonStyle containing styles for the GeoJsonPolygon
+     *
+     * @return PolygonOptions object
+     */
+    public PolygonOptions getPolygonOptions() {
+        return mPolygonStyle.toPolygonOptions();
+    }
+
+    /**
+     * Gets a MarkerOptions object from mPointStyle containing styles for the GeoJsonPoint
+     *
+     * @return MarkerOptions object
+     */
+    public MarkerOptions getMarkerOptions(){
+        return mPointStyle.toMarkerOptions();
+    }
+
+    /**
+     * Gets a Polyline object from mLineStringStyle containing styles for the GeoJsonLineString
+     *
+     * @return Polyline object
+     */
+    public PolylineOptions getPolylineOptions(){
+        return mLineStringStyle.toPolylineOptions();
+    }
+
+
+    /**
      * Checks whether the new style that was set requires the feature to be redrawn. If the
-     * geometry
-     * and the style that was set match, then the feature is redrawn.
+     * geometry and the style that was set match, then the feature is redrawn.
      *
      * @param style style to check if a redraw is needed
      */
     private void checkRedrawFeature(GeoJsonStyle style) {
-        if (mGeometry != null && Arrays.asList(style.getGeometryType())
-                .contains(mGeometry.getGeometryType())) { //TODO how to incorporate into interface
+        if (hasGeometry() && Arrays.asList(style.getGeometryType())
+                .contains(getGeometry().getGeometryType())) { //TODO how to incorporate into interface
             //TODO used to be .contains(mGeometry.getType())
             // Don't redraw objects that aren't on the map
             setChanged();
@@ -201,42 +194,16 @@ public class GeoJsonFeature extends Observable implements Observer {
         }
     }
 
-    /**
-     * Gets the stored Geometry
-     *
-     * @return Geometry
-     */
-    public Geometry getGeometry() {
-        return mGeometry;
-    }
 
-    /**
-     * Sets the stored GeoJsonGeometry and redraws it on the layer if it has already been added
+   /**
+     * Sets the stored Geometry and redraws it on the layer if it has already been added
      *
-     * @param geometry GeoJsonGeometry to set
+     * @param geometry Geometry to set
      */
     public void setGeometry(Geometry geometry) {
-        mGeometry = geometry;
+        super.setGeometry(geometry);
         setChanged();
         notifyObservers();
-    }
-
-    /**
-     * Gets the ID of the feature
-     *
-     * @return ID of the feature, if there is no ID then null will be returned
-     */
-    public String getId() {
-        return mId;
-    }
-
-    /**
-     * Checks if the geometry is assigned
-     *
-     * @return true if feature contains geometry object, otherwise null
-     */
-    public boolean hasGeometry() {
-        return (mGeometry != null);
     }
 
     /**
@@ -253,12 +220,10 @@ public class GeoJsonFeature extends Observable implements Observer {
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");
         sb.append("\n bounding box=").append(mBoundingBox);
-        sb.append(",\n geometry=").append(mGeometry);
         sb.append(",\n point style=").append(mPointStyle);
         sb.append(",\n line string style=").append(mLineStringStyle);
         sb.append(",\n polygon style=").append(mPolygonStyle);
         sb.append(",\n id=").append(mId);
-        sb.append(",\n properties=").append(mProperties);
         sb.append("\n}\n");
         return sb.toString();
     }

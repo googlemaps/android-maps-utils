@@ -1,6 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.maps.android.geojsonkmlabs.Feature;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -64,7 +65,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         String containerId = null;
         HashMap<String, String> containerProperties = new HashMap<String, String>();
         HashMap<String, KmlStyle> containerStyles = new HashMap<String, KmlStyle>();
-        HashMap<KmlPlacemark, Object> containerPlacemarks = new HashMap<KmlPlacemark, Object>();
+        HashMap<? extends Feature, Object> containerPlacemarks = new HashMap<>();
         ArrayList<KmlContainer> nestedContainers = new ArrayList<KmlContainer>();
         HashMap<String, String> containerStyleMaps = new HashMap<String, String>();
         HashMap<KmlGroundOverlay, GroundOverlay> containerGroundOverlays
@@ -89,7 +90,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 } else if (parser.getName().equals(STYLE)) {
                     setContainerStyle(parser, containerStyles);
                 } else if (parser.getName().equals(PLACEMARK)) {
-                    setContainerPlacemark(parser, containerPlacemarks);
+                    setContainerPlacemark(parser, (HashMap<KmlPlacemark, Object>) containerPlacemarks);
                 } else if (parser.getName().equals(EXTENDED_DATA)) {
                     setExtendedDataProperties(parser, containerProperties);
                 } else if (parser.getName().equals(GROUND_OVERLAY)) {
@@ -100,7 +101,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             eventType = parser.next();
         }
 
-        return new KmlContainer(containerProperties, containerStyles, containerPlacemarks,
+        return new KmlContainer(containerProperties, containerStyles, (HashMap<KmlPlacemark, Object>) containerPlacemarks,
                 containerStyleMaps, nestedContainers, containerGroundOverlays, containerId);
     }
 

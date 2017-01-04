@@ -1,5 +1,6 @@
 package com.google.maps.android.geojsonkmlabs;
 
+
 public interface Geometry<T> {
 
     /**
@@ -10,7 +11,7 @@ public interface Geometry<T> {
     public String getGeometryType();
 
     /**
-     * Gets the stored geometry object
+     * Gets the stored KML Geometry object
      *
      * @return geometry object
      */

@@ -1,6 +1,9 @@
 package com.google.maps.android.geojsonkmlabs.kml;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.maps.android.geojsonkmlabs.Layer;
+import com.google.maps.android.geojsonkmlabs.Renderer;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -14,7 +17,7 @@ import java.io.InputStream;
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
-public class KmlLayer {
+public class KmlLayer extends Layer {
 
     private final KmlRenderer mRenderer;
 
@@ -50,6 +53,7 @@ public class KmlLayer {
         stream.close();
         mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
                 parser.getContainers(), parser.getGroundOverlays());
+        storeRenderer(mRenderer);
     }
     /**
      * Creates a new XmlPullParser to allow for the KML file to be parsed
@@ -64,6 +68,10 @@ public class KmlLayer {
         XmlPullParser parser = factory.newPullParser();
         parser.setInput(stream, null);
         return parser;
+    }
+
+    public void setOnFeatureClickListener(final Renderer.OnFeatureClickListener listener) {
+        mRenderer.setOnFeatureClickListener(listener);
     }
 
     /**
@@ -87,7 +95,7 @@ public class KmlLayer {
      */
 
     public boolean hasPlacemarks() {
-        return mRenderer.hasKmlPlacemarks();
+        return hasFeatures();
     }
 
     /**
@@ -95,8 +103,8 @@ public class KmlLayer {
      *
      * @return iterable of KmlPlacemark objects
      */
-    public Iterable<KmlPlacemark> getPlacemarks() {
-        return mRenderer.getKmlPlacemarks();
+    public Iterable<Feature> getPlacemarks() {
+        return getFeatures();
     }
 
     /**
@@ -124,24 +132,6 @@ public class KmlLayer {
      */
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return mRenderer.getGroundOverlays();
-    }
-
-    /**
-     * Gets the map that objects are being placed on
-     *
-     * @return map
-     */
-    public GoogleMap getMap() {
-        return mRenderer.getMap();
-    }
-
-    /**
-     * Sets the map that objects are being placed on
-     *
-     * @param map map to place placemark, container, style and ground overlays on
-     */
-    public void setMap(GoogleMap map) {
-        mRenderer.setMap(map);
     }
 
 
