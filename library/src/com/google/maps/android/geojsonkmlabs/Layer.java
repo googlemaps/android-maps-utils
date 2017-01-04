@@ -3,29 +3,39 @@ package com.google.maps.android.geojsonkmlabs;
 
 import com.google.android.gms.maps.GoogleMap;
 
-import org.xmlpull.v1.XmlPullParserException;
+public class Layer {
 
-import java.io.IOException;
+    private Renderer mRenderer;
 
-public interface Layer {
+    public Layer() {
+        mRenderer = null;
+    }
+
+    protected void storeRenderer(Renderer renderer) {
+        mRenderer = renderer;
+    }
     /**
      * Gets an iterable of all Feature elements that have been added to the layer
      *
      * @return iterable of Feature elements
      */
-    Iterable<Feature> getFeatures();
+    public Iterable<Feature> getFeatures(){
+        return mRenderer.getFeatures();
+    }
 
-    /**
-     * Adds all the Feature objects parsed from the given GeoJSON or KML data onto the map
-     */
-    void addLayerToMap() throws IOException, XmlPullParserException;
+    protected boolean hasFeatures() {
+        return mRenderer.hasFeatures();
+    }
+
 
     /**
      * Gets the map on which the layer is rendered
      *
      * @return map on which the layer is rendered
      */
-    GoogleMap getMap();
+    public GoogleMap getMap(){
+        return mRenderer.getMap();
+    }
 
     /**
      * Renders the layer on the given map. The layer on the current map is removed and
@@ -33,11 +43,13 @@ public interface Layer {
      *
      * @param map to render the layer on, if null the layer is cleared from the current map
      */
-    void setMap(GoogleMap map);
+    public void setMap(GoogleMap map){
+        mRenderer.setMap(map);
+    }
 
-    /**
-     * Removes all Features on the layer from the map
-     */
-    void removeLayerFromMap();
+    public boolean isLayerOnMap() {
+        return mRenderer.isLayerOnMap();
+    }
+
 
 }

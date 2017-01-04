@@ -24,7 +24,7 @@ public class GeoJsonFeatureTest extends TestCase {
     }
 
     public void testProperty() throws Exception {
-        HashMap<String, String> properties = new HashMap<String, String>();
+        HashMap<String, String> properties = new HashMap<>();
         properties.put("Color", "Yellow");
         properties.put("Width", "5");
         feature = new GeoJsonFeature(null, null, properties, null);

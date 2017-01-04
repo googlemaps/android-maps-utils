@@ -3,6 +3,7 @@ package com.google.maps.android.utils.demo;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.geojsonkmlabs.Feature;
+import com.google.maps.android.geojsonkmlabs.Renderer;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonFeature;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLayer;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
@@ -140,9 +141,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
         layer.addLayerToMap();
 
         // Demonstrate receiving features via GeoJsonLayer clicks.
-        layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
+        layer.setOnFeatureClickListener(new Renderer.OnFeatureClickListener() {
             @Override
-            public void onFeatureClick(GeoJsonFeature feature) {
+            public void onFeatureClick(Feature feature) {
                 Toast.makeText(GeoJsonDemoActivity.this,
                         "Feature clicked: " + feature.getProperty("title"),
                         Toast.LENGTH_SHORT).show();

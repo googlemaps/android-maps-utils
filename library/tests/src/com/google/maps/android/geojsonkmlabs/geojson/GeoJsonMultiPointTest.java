@@ -27,7 +27,7 @@ public class GeoJsonMultiPointTest extends TestCase {
         mp = new GeoJsonMultiPoint(points);
         assertEquals(points, mp.getPoints());
 
-        points = new ArrayList<GeoJsonPoint>();
+        points = new ArrayList<>();
         mp = new GeoJsonMultiPoint(points);
         assertEquals(new ArrayList<GeoJsonPoint>(), mp.getPoints());
 

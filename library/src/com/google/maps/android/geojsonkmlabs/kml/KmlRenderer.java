@@ -118,14 +118,12 @@ import java.util.Iterator;
 
 
     /* package */ void addLayerToMap() {
-        System.out.println("add layer has been called");
         mGroundOverlays = getGroundOverlayMap();
         mContainers = getContainerList();
         putStyles();
         assignStyleMap(getStyleMaps(), getStylesRenderer());
         addGroundOverlays(mGroundOverlays, mContainers);
         addContainerGroupToMap(mContainers, true);
-        System.out.println(getAllFeatures());
         addPlacemarksToMap(getAllFeatures());
         if (!mGroundOverlayImagesDownloaded) {
             downloadGroundOverlays();
@@ -219,7 +217,6 @@ import java.util.Iterator;
      */
     private void addPlacemarksToMap(HashMap<? extends Feature, Object> placemarks) {
         for (Feature kmlPlacemark : placemarks.keySet()) {
-            System.out.println("this happs");
             addFeature(kmlPlacemark);
         }
     }
@@ -232,7 +229,6 @@ import java.util.Iterator;
      */
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
             boolean containerVisibility) {
-        System.out.println("we here");
         for (KmlContainer container : kmlContainers) {
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
@@ -266,7 +262,6 @@ import java.util.Iterator;
                 KmlStyle style = getPlacemarkStyle(placemarkId);
                 KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
                 Object mapObject = addToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
-                System.out.println(mapObject);
                 kmlContainer.setPlacemark((KmlPlacemark)placemark, mapObject);
             }
         }

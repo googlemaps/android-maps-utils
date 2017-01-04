@@ -33,7 +33,7 @@ public class GeoJsonRendererTest extends TestCase {
         mRenderer = new GeoJsonRenderer(mMap1, geoJsonFeatures);
         mLayer = new GeoJsonLayer(mMap1, createFeatureCollection());
         GeoJsonLineString geoJsonLineString = new GeoJsonLineString(
-                new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 100), new LatLng(1, 101))));
+                new ArrayList<>(Arrays.asList(new LatLng(0, 100), new LatLng(1, 101))));
         mGeoJsonFeature = new GeoJsonFeature(geoJsonLineString, null, null, null);
         mValues = geoJsonFeatures.values();
     }

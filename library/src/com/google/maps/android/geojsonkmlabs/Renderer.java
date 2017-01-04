@@ -99,10 +99,85 @@ public class Renderer {
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         for (Feature feature : getFeatures()) {
-            setFeatureDefaultStyles((GeoJsonFeature)feature);
+            if (feature instanceof GeoJsonFeature) {
+                setFeatureDefaultStyles((GeoJsonFeature) feature);
+            }
         }
         mImagesCache = null;
     }
+
+    public void setOnFeatureClickListener(final OnFeatureClickListener listener) {
+
+        GoogleMap map = getMap();
+
+        map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(Polygon polygon) {
+                if (getFeature(polygon) != null) {
+                    listener.onFeatureClick(getFeature(polygon));
+                } else {
+                    System.out.println("this happs");
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
+                }
+            }
+        });
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (getFeature(marker) != null) {
+                    listener.onFeatureClick(getFeature(marker));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
+                }
+                return false;
+            }
+        });
+
+        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+                if (getFeature(polyline) != null) {
+                    listener.onFeatureClick(getFeature(polyline));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
+     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
+     * respectively.
+     *
+     * Test in GeoJsonDemoActivity using earthquakes_with_usa.
+     *
+     * @param mapObject Object
+     * @return an ArrayList of the individual
+     */
+    private ArrayList<?> multiObjectHandler(Object mapObject) {
+        for (Object value : getValues()) {
+            Class c = value.getClass();
+            if (c.getSimpleName().equals("ArrayList")) {
+                ArrayList<?> mapObjects = (ArrayList<?>) value;
+                if (mapObjects.contains(mapObject)) {
+                    return mapObjects;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Callback interface for when a GeoJsonLayer's map object is clicked.
+     */
+    public interface OnFeatureClickListener {
+        void onFeatureClick(Feature feature);
+    }
+
 
     /**
      * Checks if layer has been added to map
@@ -213,7 +288,7 @@ public class Renderer {
 
 
     /**
-     * Removes all given Features/Placemarks from the map and clears all stored features and placemarks.
+     * Removes all given Features from the map and clears all stored features.
      *
      * @param features features to remove
      */
@@ -231,7 +306,7 @@ public class Renderer {
     }
 
     /**
-     * Removes a GeoJsonFeature from the map if its geometry property is not null
+     * Removes a Feature from the map if its geometry property is not null
      *
      * @param feature feature to remove from map
      */
@@ -301,10 +376,8 @@ public class Renderer {
             }
 
             if (feature.hasGeometry()) {
-                System.out.println("nana");
                 // Create new map object
                 if (feature instanceof KmlPlacemark) {
-                    System.out.println("yes is kml placemark");
                     boolean isPlacemarkVisible = getPlacemarkVisibility(feature);
                     String placemarkId = feature.getId();
                     Geometry geometry = feature.getGeometry();
@@ -347,7 +420,6 @@ public class Renderer {
      */
     protected Object addFeatureToMap(Feature feature, Geometry geometry) {
         String geometryType = geometry.getGeometryType();
-        System.out.println("aaa");
         switch (geometryType) {
             case "Point":
                 MarkerOptions markerOptions = null;
@@ -474,7 +546,6 @@ public class Renderer {
      */
     protected Polygon addPolygonToMap(PolygonOptions polygonOptions, GKPolygon polygon) {
         // First array of coordinates are the outline
-        System.out.println("adding polygon");
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         // Following arrays are holes
         ArrayList<ArrayList<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
@@ -482,7 +553,7 @@ public class Renderer {
             polygonOptions.addHole(innerBoundary);
         }
         Polygon addedPolygon = mMap.addPolygon(polygonOptions);
-      //  addedPolygon.setClickable(true);
+        addedPolygon.setClickable(true);
         return addedPolygon;
     }
 
@@ -527,7 +598,6 @@ public class Renderer {
     /**
      * Iterates a list of styles and assigns a style
      */
-    /*package*/
     public void assignStyleMap(HashMap<String, String> styleMap,
                                HashMap<String, KmlStyle> styles) {
         for (String styleMapKey : styleMap.keySet()) {

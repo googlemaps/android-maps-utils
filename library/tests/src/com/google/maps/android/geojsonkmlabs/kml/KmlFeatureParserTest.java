@@ -2,6 +2,7 @@ package com.google.maps.android.geojsonkmlabs.kml;
 
 import android.test.ActivityTestCase;
 
+import com.google.maps.android.geojsonkmlabs.Geometry;
 import com.google.maps.android.test.R;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -75,11 +76,11 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         assertEquals(feature.getProperty("name"), "multiPointLine");
         assertEquals(feature.getProperty("description"), "Nested MultiGeometry structure");
         assertEquals(feature.getGeometry().getGeometryType(), "MultiGeometry");
-        ArrayList<KmlGeometry> objects = (ArrayList<KmlGeometry>) feature.getGeometry().getGeometryObject();
+        ArrayList<Geometry> objects = (ArrayList<Geometry>) feature.getGeometry().getGeometryObject();
         assertEquals(objects.get(0).getGeometryType(), "Point");
         assertEquals(objects.get(1).getGeometryType(), "LineString");
         assertEquals(objects.get(2).getGeometryType(), "MultiGeometry");
-        ArrayList<KmlGeometry> subObjects = (ArrayList<KmlGeometry>) objects.get(2).getGeometryObject();
+        ArrayList<Geometry> subObjects = (ArrayList<Geometry>) objects.get(2).getGeometryObject();
         assertEquals(subObjects.get(0).getGeometryType(), "Point");
         assertEquals(subObjects.get(1).getGeometryType(), "LineString");
     }

@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Layer;
+import com.google.maps.android.geojsonkmlabs.Renderer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ import java.util.HashMap;
  * To remove the rendered data from the layer
  * {@code layer.removeLayerFromMap();}
  */
-public class GeoJsonLayer implements Layer {
+public class GeoJsonLayer extends Layer {
 
     private final GeoJsonRenderer mRenderer;
 
@@ -62,7 +63,7 @@ public class GeoJsonLayer implements Layer {
             geoJsonFeatures.put(feature, null);
         }
         mRenderer = new GeoJsonRenderer(map, geoJsonFeatures);
-
+        storeRenderer(mRenderer);
     }
 
     /**
@@ -96,74 +97,8 @@ public class GeoJsonLayer implements Layer {
      *
      * @param listener Listener providing the onFeatureClick method to call.
      */
-    public void setOnFeatureClickListener(final GeoJsonOnFeatureClickListener listener) {
-
-        GoogleMap map = getMap();
-
-        map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
-            @Override
-            public void onPolygonClick(Polygon polygon) {
-                if (getFeature(polygon) != null) {
-                    listener.onFeatureClick((GeoJsonFeature) getFeature(polygon));
-                } else {
-                    listener.onFeatureClick((GeoJsonFeature) getFeature(multiObjectHandler(polygon)));
-                }
-            }
-        });
-
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if(getFeature(marker) != null) {
-                    listener.onFeatureClick((GeoJsonFeature) getFeature(marker));
-                } else {
-                    listener.onFeatureClick((GeoJsonFeature) getFeature(multiObjectHandler(marker)));
-                }
-                return false;
-            }
-        });
-
-        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-            @Override
-            public void onPolylineClick(Polyline polyline) {
-                if (getFeature(polyline) != null) {
-                    listener.onFeatureClick((GeoJsonFeature) getFeature(polyline));
-                } else {
-                    listener.onFeatureClick((GeoJsonFeature) getFeature(multiObjectHandler(polyline)));
-                }
-            }
-        });
-
-    }
-
-    /**
-     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
-     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
-     * respectively.
-     *
-     * Test in GeoJsonDemoActivity using earthquakes_with_usa.
-     *
-     * @param mapObject Object
-     * @return an ArrayList of the individual
-     */
-    private ArrayList<?> multiObjectHandler(Object mapObject) {
-        for (Object value : mRenderer.getValues()) {
-            Class c = value.getClass();
-            if (c.getSimpleName().equals("ArrayList")) {
-                ArrayList<?> mapObjects = (ArrayList<?>) value;
-                if (mapObjects.contains(mapObject)) {
-                    return mapObjects;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Callback interface for when a GeoJsonLayer's map object is clicked.
-     */
-    public interface GeoJsonOnFeatureClickListener {
-        void onFeatureClick(GeoJsonFeature feature);
+    public void setOnFeatureClickListener(final Renderer.OnFeatureClickListener listener) {
+        mRenderer.setOnFeatureClickListener(listener);
     }
 
     /**
@@ -203,15 +138,6 @@ public class GeoJsonLayer implements Layer {
     }
 
     /**
-     * Gets an iterable of all GeoJsonFeature elements that have been added to the layer
-     *
-     * @return iterable of GeoJsonFeature elements
-     */
-    public Iterable<Feature> getFeatures() {
-        return (mRenderer.getFeatures());
-    }
-
-    /**
      * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
      */
     public void addLayerToMap() {
@@ -243,24 +169,6 @@ public class GeoJsonLayer implements Layer {
         mRenderer.removeFeature(feature);
     }
 
-    /**
-     * Gets the map on which the layer is rendered
-     *
-     * @return map on which the layer is rendered
-     */
-    public GoogleMap getMap() {
-        return mRenderer.getMap();
-    }
-
-    /**
-     * Renders the layer on the given map. The layer on the current map is removed and
-     * added to the given map.
-     *
-     * @param map to render the layer on, if null the layer is cleared from the current map
-     */
-    public void setMap(GoogleMap map) {
-        mRenderer.setMap(map);
-    }
 
     /**
      * Removes all GeoJsonFeatures on the layer from the map
@@ -269,14 +177,6 @@ public class GeoJsonLayer implements Layer {
         mRenderer.removeLayerFromMap();
     }
 
-    /**
-     * Get whether the layer is on the map
-     *
-     * @return true if the layer is on the map, false otherwise
-     */
-    public boolean isLayerOnMap() {
-        return mRenderer.isLayerOnMap();
-    }
 
     /**
      * Gets the default style used to render GeoJsonPoints. Any changes to this style will be

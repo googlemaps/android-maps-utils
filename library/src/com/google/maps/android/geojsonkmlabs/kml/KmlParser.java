@@ -65,7 +65,6 @@ import java.util.HashMap;
      */
     /* package */ void parseKml() throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
-        System.out.println("parsing kml");
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(UNSUPPORTED_REGEX)) {

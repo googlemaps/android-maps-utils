@@ -56,8 +56,8 @@ public class Style {
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
-        mBalloonOptions = new HashMap<String, String>();
-        mStylesSet = new HashSet<String>();
+        mBalloonOptions = new HashMap<>();
+        mStylesSet = new HashSet<>();
         mScale = INITIAL_SCALE;
         mMarkerColor = 0;
         mIconRandomColorMode = false;
