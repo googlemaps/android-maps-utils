@@ -17,9 +17,6 @@ public class GeoJsonPointStyle extends Style implements GeoJsonStyle {
 
     private final static String[] GEOMETRY_TYPE = {"Point", "MultiPoint", "GeometryCollection"};
 
-    private final MarkerOptions mMarkerOptions;
-
-
     /**
      * Creates a new PointStyle object
      */

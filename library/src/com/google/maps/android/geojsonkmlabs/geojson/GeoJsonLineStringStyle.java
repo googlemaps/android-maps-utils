@@ -17,8 +17,6 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
     private final static String[] GEOMETRY_TYPE = {"LineString", "MultiLineString",
             "GeometryCollection"};
 
-    private final PolylineOptions mPolylineOptions;
-
     /**
      * Creates a new LineStringStyle object
      */

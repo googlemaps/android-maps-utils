@@ -16,8 +16,6 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
 
     private final static String[] GEOMETRY_TYPE = {"Polygon", "MultiPolygon", "GeometryCollection"};
 
-    private final PolygonOptions mPolygonOptions;
-
     /**
      * Creates a new PolygonStyle object
      */
