@@ -1,6 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.geojsonkmlabs.Style;
 
 import java.util.Arrays;
 import java.util.Observable;
@@ -11,7 +12,7 @@ import java.util.Observable;
  * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/PolylineOptions.html">
  * PolylineOptions docs</a> for more details about the options.}
  */
-public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
+public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
 
     private final static String[] GEOMETRY_TYPE = {"LineString", "MultiLineString",
             "GeometryCollection"};
@@ -103,7 +104,7 @@ public class GeoJsonLineStringStyle extends Observable implements GeoJsonStyle {
      * @param width width value of the GeoJsonLineString
      */
     public void setWidth(float width) {
-        mPolylineOptions.width(width);
+        setLineStringWidth(width);
         styleChanged();
     }
 

@@ -2,6 +2,7 @@ package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.geojsonkmlabs.Style;
 
 import java.util.Arrays;
 import java.util.Observable;
@@ -12,7 +13,7 @@ import java.util.Observable;
  * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html">
  * MarkerOptions docs</a> for more details about the options.}
  */
-public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
+public class GeoJsonPointStyle extends Style implements GeoJsonStyle {
 
     private final static String[] GEOMETRY_TYPE = {"Point", "MultiPoint", "GeometryCollection"};
 
@@ -87,7 +88,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
      * @param anchorV Anchor V coordinate of the GeoJsonPoint
      */
     public void setAnchor(float anchorU, float anchorV) {
-        mMarkerOptions.anchor(anchorU, anchorV);
+        setMarkerHotSpot(anchorU, anchorV, "fraction", "fraction");
         styleChanged();
     }
 
@@ -200,7 +201,7 @@ public class GeoJsonPointStyle extends Observable implements GeoJsonStyle {
      * @param rotation rotation value of the GeoJsonPoint
      */
     public void setRotation(float rotation) {
-        mMarkerOptions.rotation(rotation);
+        setMarkerRotation(rotation);
         styleChanged();
     }
 

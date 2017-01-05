@@ -1,6 +1,7 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.geojsonkmlabs.Style;
 
 import java.util.Arrays;
 import java.util.Observable;
@@ -11,7 +12,7 @@ import java.util.Observable;
  * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/PolygonOptions.html">
  * PolygonOptions docs</a> for more details about the options.}
  */
-public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
+public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
 
     private final static String[] GEOMETRY_TYPE = {"Polygon", "MultiPolygon", "GeometryCollection"};
 
@@ -45,7 +46,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
      * @param fillColor fill color value of the GeoJsonPolygon
      */
     public void setFillColor(int fillColor) {
-        mPolygonOptions.fillColor(fillColor);
+        setPolygonFillColor(fillColor);
         styleChanged();
     }
 
@@ -102,7 +103,7 @@ public class GeoJsonPolygonStyle extends Observable implements GeoJsonStyle {
      * @param strokeWidth stroke width value of the GeoJsonPolygon
      */
     public void setStrokeWidth(float strokeWidth) {
-        mPolygonOptions.strokeWidth(strokeWidth);
+        setPolygonStrokeWidth(strokeWidth);
         styleChanged();
     }
 

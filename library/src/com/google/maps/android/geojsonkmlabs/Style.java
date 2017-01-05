@@ -4,73 +4,87 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Observable;
 
-/**
- * Created by suvercha on 12/15/16.
- */
+public abstract class Style extends Observable {
 
-public class Style {
+    protected final MarkerOptions mMarkerOptions;
 
-    private final static int HSV_VALUES = 3;
+    protected final PolylineOptions mPolylineOptions;
 
-    private final static int HUE_VALUE = 0;
+    protected final PolygonOptions mPolygonOptions;
 
-    private final static int INITIAL_SCALE = 1;
-
-    private final MarkerOptions mMarkerOptions;
-
-    private final PolylineOptions mPolylineOptions;
-
-    private final PolygonOptions mPolygonOptions;
-
-    private final HashMap<String, String> mBalloonOptions;
-
-    private final HashSet<String> mStylesSet;
-
-    private boolean mFill = true;
-
-    private boolean mOutline = true;
-
-    private String mIconUrl;
-
-    private double mScale;
-
-    private String mStyleId;
-
-    private boolean mIconRandomColorMode;
-
-    private boolean mLineRandomColorMode;
-
-    private boolean mPolyRandomColorMode;
-
-    private float mMarkerColor;
-
-    private final static String[] GEOMETRY_TYPE = {"Polygon", "MultiPolygon", "GeometryCollection"};
-
-
-
-    Style() {
-        mStyleId = null;
+    public Style() {
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
         mPolygonOptions = new PolygonOptions();
-        mBalloonOptions = new HashMap<>();
-        mStylesSet = new HashSet<>();
-        mScale = INITIAL_SCALE;
-        mMarkerColor = 0;
-        mIconRandomColorMode = false;
-        mLineRandomColorMode = false;
-        mPolyRandomColorMode = false;
     }
 
-    public String[] getGeometryType() {
-        return GEOMETRY_TYPE;
+    /**
+     * Gets the rotation of a marker in degrees clockwise about the marker's anchor
+     *
+     * @return rotation of the Point
+     */
+    public float getRotation() {
+        return mMarkerOptions.getRotation();
     }
 
+    /**
+     * Sets the rotation / heading of the Point in degrees clockwise about the marker's anchor
+     *
+     * @param rotation Decimal representation of the rotation value of the Point
+     */
+    public void setMarkerRotation(float rotation) {
+        mMarkerOptions.rotation(rotation);
+    }
 
+    /**
+     * Sets the hotspot / anchor point of a marker
+     *
+     * @param x      x point of a marker position
+     * @param y      y point of a marker position
+     * @param xUnits units in which the x value is specified
+     * @param yUnits units in which the y value is specified
+     */
+    public void setMarkerHotSpot(float x, float y, String xUnits, String yUnits) {
+        float xAnchor = 0.5f;
+        float yAnchor = 1.0f;
 
+        // Set x coordinate
+        if (xUnits.equals("fraction")) {
+            xAnchor = x;
+        }
+        if (yUnits.equals("fraction")) {
+            yAnchor = y;
+        }
 
+        mMarkerOptions.anchor(xAnchor, yAnchor);
+    }
 
+    /**
+     * Sets the width of the LineString in screen pixels
+     *
+     * @param width width value of the LineString
+     */
+    public void setLineStringWidth(float width) {
+        mPolylineOptions.width(width);
+    }
+
+    /**
+     * Sets the stroke width of the Polygon in screen pixels
+     *
+     * @param strokeWidth stroke width value of the Polygon
+     */
+    public void setPolygonStrokeWidth(float strokeWidth) {
+        mPolygonOptions.strokeWidth(strokeWidth);
+    }
+
+    /**
+     * Sets the fill color of the Polygon as a 32-bit ARGB color
+     *
+     * @param fillColor fill color value of the Polygon
+     */
+    public void setPolygonFillColor(int fillColor) {
+        mPolygonOptions.fillColor(fillColor);
+    }
 }
