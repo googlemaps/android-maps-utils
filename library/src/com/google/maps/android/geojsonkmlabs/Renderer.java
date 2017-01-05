@@ -99,6 +99,7 @@ public class Renderer {
         mContainerFeatures = new BiMultiMap<>();
 
     }
+
     /**
      * Creates a new Renderer object
      *
@@ -174,7 +175,6 @@ public class Renderer {
 
     }
 
-
     /**
      * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
      * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
@@ -202,7 +202,6 @@ public class Renderer {
     public interface OnFeatureClickListener {
         void onFeatureClick(Feature feature);
     }
-
 
     /**
      * Checks if layer has been added to map
@@ -297,30 +296,39 @@ public class Renderer {
     public ArrayList<String> getMarkerIconUrls()  { return mMarkerIconUrls; }
 
     /**
-     * @return mStylesRenderer containing styles for KML placemarks
+     * Gets the styles for KML placemarks
+     *
+     * @return mStylesRenderer hashmap containing styles for KML placemarks (String, KmlStyle)
      */
     public HashMap<String, KmlStyle> getStylesRenderer() { return mStylesRenderer; }
 
     /**
-     * @return mStyleMaps contains styles for KML placemarks
+     * Gets the styles for KML placemarks
+     *
+     * @return mStyleMaps hashmap containing styles for KML placemarks (String, String)
      */
     public HashMap<String, String> getStyleMaps() { return mStyleMaps; }
 
     /**
-     * @return mImagesCache is needed to download GroundOverlays and Marker Icon images
+     * Gets the images cache which is needed to download GroundOverlays and Marker Icon images
+     *
+     * @return mImagesCache
      */
     public LruCache<String, Bitmap> getImagesCache() { return mImagesCache; }
 
     /**
-     * @return mGroundOverlays contains the ground overlays on this layer
+     * Gets the ground overlays on the current layer
+     *
+     * @return mGroundOverlays hashmap contains the ground overlays
      */
     public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() { return mGroundOverlays; }
 
     /**
-     * @return mContainers has a list of KmlContainers on the layer
+     * Gets the list of KmlContainers that are on the current layer
+     *
+     * @return mContainers list of KmlContainers
      */
     public ArrayList<KmlContainer> getContainerList() { return mContainers; }
-
 
     /**
      * Removes all given Features from the map and clears all stored features.
@@ -376,7 +384,6 @@ public class Renderer {
         mStylesRenderer.clear();
     }
 
-
     /**
      * Stores all given data and adds it onto the map
      *
@@ -396,7 +403,6 @@ public class Renderer {
         mContainers = folders;
         mGroundOverlays = groundOverlays;
     }
-
 
     /**
      * Adds a new Feature to the map if its geometry property is not null.
@@ -574,7 +580,6 @@ public class Renderer {
         }
     }
 
-
     /**
      * Adds a GKPolygon to the map as a Polygon
      *
@@ -613,7 +618,6 @@ public class Renderer {
         return geometries;
     }
 
-
     /**
      * Gets the visibility of the placemark if it is specified. A visibility value of "1"
      * corresponds as "true", a visibility value of "0" corresponds as false. If the
@@ -634,7 +638,7 @@ public class Renderer {
     }
 
     /**
-     * Iterates a list of styles and assigns a style
+     * Iterates through a list of styles and assigns a style todo
      */
     public void assignStyleMap(HashMap<String, String> styleMap,
                                HashMap<String, KmlStyle> styles) {
@@ -645,7 +649,6 @@ public class Renderer {
             }
         }
     }
-
 
     /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
@@ -849,8 +852,6 @@ public class Renderer {
         return markers;
     }
 
-
-
     /**
      * Adds all GeoJsonLineString objects in the GeoJsonMultiLineString to the map as multiple
      * Polylines
@@ -885,8 +886,6 @@ public class Renderer {
         return polygons;
     }
 
-
-
     /**
      * Sets the marker icon if there was a url that was found
      *
@@ -905,6 +904,7 @@ public class Renderer {
 
     /**
      * Adds a ground overlay to the map
+     *
      * @param groundOverlayOptions GroundOverlay style options to be added to the map
      * @return new GroundOverlay object created from the given GroundOverlayOptions
      */
@@ -943,7 +943,6 @@ public class Renderer {
         }
     }
 
-
     /**
      * Creates a new InfoWindowAdapter and sets text if marker snippet or title is set. This allows
      * the info window to have custom HTML.
@@ -976,8 +975,4 @@ public class Renderer {
     public boolean hasFeatures() {
         return mFeatures.size() > 0;
     }
-
-
-
-
 }
