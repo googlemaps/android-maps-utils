@@ -138,7 +138,7 @@ public class Renderer {
                 if (getFeature(polygon) != null) {
                     listener.onFeatureClick(getFeature(polygon));
                 } else if (getContainerFeature(polygon) != null) {
-                    listener.onFeatureClick(mContainerFeatures.getKey(polygon));
+                    listener.onFeatureClick(getContainerFeature(polygon));
                 } else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
                 }
@@ -150,8 +150,8 @@ public class Renderer {
             public boolean onMarkerClick(Marker marker) {
                 if (getFeature(marker) != null) {
                     listener.onFeatureClick(getFeature(marker));
-                }  else if (mContainerFeatures.getKey(marker) != null) {
-                    listener.onFeatureClick(mContainerFeatures.getKey(marker));
+                }  else if (getContainerFeature(marker) != null) {
+                    listener.onFeatureClick(getContainerFeature(marker));
                 } else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
                 }
@@ -164,8 +164,8 @@ public class Renderer {
             public void onPolylineClick(Polyline polyline) {
                 if (getFeature(polyline) != null) {
                     listener.onFeatureClick(getFeature(polyline));
-                } else if (mContainerFeatures.getKey(polyline) != null) {
-                    listener.onFeatureClick(mContainerFeatures.getKey(polyline));
+                } else if (getContainerFeature(polyline) != null) {
+                    listener.onFeatureClick(getContainerFeature(polyline));
                 }  else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
                 }

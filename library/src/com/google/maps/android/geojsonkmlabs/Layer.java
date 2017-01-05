@@ -14,13 +14,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class Layer {
+public abstract class Layer {
 
     private Renderer mRenderer;
-
-    public Layer() {
-        mRenderer = null;
-    }
 
     /**
      * Adds the KML data to the map
@@ -143,6 +139,7 @@ public class Layer {
 
     protected void addFeature(Feature feature){
         mRenderer.addFeature(feature);
+
     }
 
     protected void removeFeature(Feature feature) {

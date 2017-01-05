@@ -41,7 +41,6 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param map GoogleMap to place GeoJsonFeature objects on
      */
-    /* package */
     public void setMap(GoogleMap map) {
         super.setMap(map);
         for (Feature feature : super.getFeatures()) {
@@ -53,7 +52,6 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      * Adds all of the stored features in the layer onto the map if the layer is not already on the
      * map.
      */
-    /* package */
     public void addLayerToMap() {
         if (!isLayerOnMap()) {
             setLayerVisibility(true);
@@ -69,7 +67,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param feature feature to add to the map
      */
-    /* package */ void addFeature(GeoJsonFeature feature) {
+   public void addFeature(GeoJsonFeature feature) {
         super.addFeature(feature);
         if (isLayerOnMap()) {
             feature.addObserver(this);
@@ -79,7 +77,6 @@ public class GeoJsonRenderer extends Renderer implements Observer {
     /**
      * Removes all GeoJsonFeature objects stored in the mFeatures hashmap from the map
      */
-    /* package */
     public void removeLayerFromMap() {
         if (isLayerOnMap()) {
             for (Feature feature : super.getFeatures()) {
@@ -95,7 +92,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param feature feature to remove from map
      */
-    /* package */ void removeFeature(GeoJsonFeature feature) {
+   public void removeFeature(GeoJsonFeature feature) {
         // Check if given feature is stored
         super.removeFeature(feature);
         if (super.getFeatures().contains(feature)) {
