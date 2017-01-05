@@ -50,6 +50,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         HashMap<String, String> properties = new HashMap<String, String>();
         Geometry geometry = null;
         int eventType = parser.getEventType();
+
         while (!(eventType == END_TAG && parser.getName().equals("Placemark"))) {
             if (eventType == START_TAG) {
                 if (parser.getName().equals(STYLE_URL_TAG)) {

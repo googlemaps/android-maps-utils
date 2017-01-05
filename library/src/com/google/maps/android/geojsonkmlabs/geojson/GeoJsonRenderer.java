@@ -18,7 +18,7 @@ import java.util.Observer;
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
  * removes GeoJsonFeature objects and redraws features when updated.
  */
-/* package */ class GeoJsonRenderer extends Renderer implements Observer {
+public class GeoJsonRenderer extends Renderer implements Observer {
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
@@ -53,7 +53,8 @@ import java.util.Observer;
      * Adds all of the stored features in the layer onto the map if the layer is not already on the
      * map.
      */
-    /* package */ void addLayerToMap() {
+    /* package */
+    public void addLayerToMap() {
         if (!isLayerOnMap()) {
             setLayerVisibility(true);
             for (Feature feature : super.getFeatures()) {
@@ -78,7 +79,8 @@ import java.util.Observer;
     /**
      * Removes all GeoJsonFeature objects stored in the mFeatures hashmap from the map
      */
-    /* package */ void removeLayerFromMap() {
+    /* package */
+    public void removeLayerFromMap() {
         if (isLayerOnMap()) {
             for (Feature feature : super.getFeatures()) {
                 removeFromMap(super.getAllFeatures().get(feature));

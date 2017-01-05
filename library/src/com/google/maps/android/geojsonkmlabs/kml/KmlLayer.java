@@ -70,23 +70,10 @@ public class KmlLayer extends Layer {
         return parser;
     }
 
-    public void setOnFeatureClickListener(final Renderer.OnFeatureClickListener listener) {
-        mRenderer.setOnFeatureClickListener(listener);
-    }
-
-    /**
-     * Adds the KML data to the map
-     */
     public void addLayerToMap() throws IOException, XmlPullParserException {
-        mRenderer.addLayerToMap();
+        super.addKMLToMap();
     }
 
-    /**
-     * Removes all the KML data from the map and clears all the stored placemarks
-     */
-    public void removeLayerFromMap() {
-        mRenderer.removeLayerFromMap();
-    }
 
     /**
      * Checks if the layer contains placemarks
@@ -113,7 +100,7 @@ public class KmlLayer extends Layer {
      * @return true if there is at least 1 container within the KmlLayer, false otherwise
      */
     public boolean hasContainers() {
-        return mRenderer.hasNestedContainers();
+        return super.hasContainers();
     }
 
     /**
@@ -122,7 +109,7 @@ public class KmlLayer extends Layer {
      * @return iterable of KmlContainerInterface objects
      */
     public Iterable<KmlContainer> getContainers() {
-        return mRenderer.getNestedContainers();
+        return super.getContainers();
     }
 
     /**
@@ -131,7 +118,7 @@ public class KmlLayer extends Layer {
      * @return iterable of KmlGroundOverlay objects
      */
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
-        return mRenderer.getGroundOverlays();
+        return super.getGroundOverlays();
     }
 
 

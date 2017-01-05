@@ -80,26 +80,6 @@ public class GeoJsonLayer extends Layer {
         this(map, createJsonFileObject(context.getResources().openRawResource(resourceId)));
     }
 
-    /**
-     * Sets a single click listener for the entire GoogleMap object, that will be called
-     * with the corresponding GeoJsonFeature object when an object on the map (Polygon,
-     * Marker, Polyline) is clicked.
-     *
-     * Note that if multiple GeoJsonLayer objects are bound to a GoogleMap object, calling
-     * setOnFeatureClickListener on one will override the listener defined on the other. In
-     * that case, you must define each of the GoogleMap click listeners manually
-     * (OnPolygonClickListener, OnMarkerClickListener, OnPolylineClickListener), and then
-     * use the GeoJsonLayer.getFeature(mapObject) method on each GeoJsonLayer instance to
-     * determine if the given mapObject belongs to the layer.
-     *
-     * If getFeature() returns null this means that the object is a MultiPolygon, MultiLineString
-     * or MultiPoint and must be handled differently.
-     *
-     * @param listener Listener providing the onFeatureClick method to call.
-     */
-    public void setOnFeatureClickListener(final Renderer.OnFeatureClickListener listener) {
-        mRenderer.setOnFeatureClickListener(listener);
-    }
 
     /**
      * Retrieves a corresponding GeoJsonFeature instance for the given Object
@@ -137,12 +117,10 @@ public class GeoJsonLayer extends Layer {
         return new JSONObject(result.toString());
     }
 
-    /**
-     * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
-     */
-    public void addLayerToMap() {
-        mRenderer.addLayerToMap();
+    public void addLayerToMap(){
+        super.addGeoJsonToMap();
     }
+
 
     /**
      * Adds a GeoJsonFeature to the layer. If the point, linestring or polygon style is set to
@@ -154,7 +132,7 @@ public class GeoJsonLayer extends Layer {
         if (feature == null) {
             throw new IllegalArgumentException("Feature cannot be null");
         }
-        mRenderer.addFeature(feature);
+        super.addFeature(feature);
     }
 
     /**
@@ -166,47 +144,9 @@ public class GeoJsonLayer extends Layer {
         if (feature == null) {
             throw new IllegalArgumentException("Feature cannot be null");
         }
-        mRenderer.removeFeature(feature);
+        super.removeFeature(feature);
     }
 
-
-    /**
-     * Removes all GeoJsonFeatures on the layer from the map
-     */
-    public void removeLayerFromMap() {
-        mRenderer.removeLayerFromMap();
-    }
-
-
-    /**
-     * Gets the default style used to render GeoJsonPoints. Any changes to this style will be
-     * reflected in the features that use it.
-     *
-     * @return default style used to render GeoJsonPoints
-     */
-    public GeoJsonPointStyle getDefaultPointStyle() {
-        return mRenderer.getDefaultPointStyle();
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonLineStrings. Any changes to this style will be
-     * reflected in the features that use it.
-     *
-     * @return default style used to render GeoJsonLineStrings
-     */
-    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
-        return mRenderer.getDefaultLineStringStyle();
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonPolygons. Any changes to this style will be
-     * reflected in the features that use it.
-     *
-     * @return default style used to render GeoJsonPolygons
-     */
-    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
-        return mRenderer.getDefaultPolygonStyle();
-    }
 
     /**
      * Gets the LatLngBounds containing the coordinates of the bounding box for the

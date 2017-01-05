@@ -80,6 +80,12 @@ public class Renderer {
 
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
 
+    /**
+     * Creates a new Renderer object
+     *
+     * @param map map to place objects on
+     * @param context context needed to add info windows
+     */
     public Renderer(GoogleMap map, Context context) {
         mMap = map;
         mContext = context;
@@ -93,7 +99,12 @@ public class Renderer {
         mContainerFeatures = new BiMultiMap<>();
 
     }
-
+    /**
+     * Creates a new Renderer object
+     *
+     * @param map map to place objects on
+     * @param features contains a hashmap of features and objects that will go on the map
+     */
     public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features ) {
         mMap = map;
         mFeatures.putAll(features);
@@ -102,18 +113,13 @@ public class Renderer {
         mDefaultPointStyle = new GeoJsonPointStyle();
         mDefaultLineStringStyle = new GeoJsonLineStringStyle();
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
-        for (Feature feature : getFeatures()) {
-            if (feature instanceof GeoJsonFeature) {
-                setFeatureDefaultStyles((GeoJsonFeature) feature);
-            }
-        }
         mImagesCache = null;
         mContainerFeatures = null;
     }
 
     /**
      * Sets a single click listener for the entire GoogleMap object, that will be called
-     * with the corresponding GeoJsonFeature object when an object on the map (Polygon,
+     * with the corresponding Feature object when an object on the map (Polygon,
      * Marker, Polyline) is clicked.
      *
      * If getFeature() returns null this means that either the object is inside a KMLContainer,
@@ -131,7 +137,7 @@ public class Renderer {
             public void onPolygonClick(Polygon polygon) {
                 if (getFeature(polygon) != null) {
                     listener.onFeatureClick(getFeature(polygon));
-                } else if (mContainerFeatures.getKey(polygon) != null) {
+                } else if (getContainerFeature(polygon) != null) {
                     listener.onFeatureClick(mContainerFeatures.getKey(polygon));
                 } else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
@@ -174,8 +180,6 @@ public class Renderer {
      * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
      * respectively.
      *
-     * Test in GeoJsonDemoActivity using earthquakes_with_usa.
-     *
      * @param mapObject Object
      * @return an ArrayList of the individual
      */
@@ -193,7 +197,7 @@ public class Renderer {
     }
 
     /**
-     * Callback interface for when a GeoJsonLayer's map object is clicked.
+     * Callback interface for when a map object is clicked.
      */
     public interface OnFeatureClickListener {
         void onFeatureClick(Feature feature);
@@ -227,6 +231,11 @@ public class Renderer {
         return mMap;
     }
 
+    /**
+     * Sets the map that objects are being placed on
+     *
+     * @param map map to place all objects on
+     */
     public void setMap(GoogleMap map) {
         mMap = map;
     }
@@ -252,6 +261,13 @@ public class Renderer {
      */
     public Feature getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
+    }
+
+    public Feature getContainerFeature(Object mapObject) {
+        if (mContainerFeatures != null) {
+            return mContainerFeatures.getKey(mapObject);
+        }
+        return null;
     }
 
     /**
@@ -281,33 +297,27 @@ public class Renderer {
     public ArrayList<String> getMarkerIconUrls()  { return mMarkerIconUrls; }
 
     /**
-     *
-     *
-     * @return
+     * @return mStylesRenderer containing styles for KML placemarks
      */
     public HashMap<String, KmlStyle> getStylesRenderer() { return mStylesRenderer; }
 
     /**
-     *
-     * @return
+     * @return mStyleMaps contains styles for KML placemarks
      */
     public HashMap<String, String> getStyleMaps() { return mStyleMaps; }
 
     /**
-     *
-     * @return
+     * @return mImagesCache is needed to download GroundOverlays and Marker Icon images
      */
     public LruCache<String, Bitmap> getImagesCache() { return mImagesCache; }
 
     /**
-     *
-     * @return
+     * @return mGroundOverlays contains the ground overlays on this layer
      */
     public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() { return mGroundOverlays; }
 
     /**
-     *
-     * @return
+     * @return mContainers has a list of KmlContainers on the layer
      */
     public ArrayList<KmlContainer> getContainerList() { return mContainers; }
 
@@ -359,7 +369,9 @@ public class Renderer {
         }
     }
 
-
+    /**
+     * Removes all the mappings from the mStylesRenderer hashmap
+     */
     public void clearStylesRenderer() {
         mStylesRenderer.clear();
     }
@@ -392,14 +404,15 @@ public class Renderer {
      * @param feature feature to add to the map
      */
      public void addFeature(Feature feature) {
-
         Object mapObject = FEATURE_NOT_ON_MAP;
+         if (feature instanceof GeoJsonFeature) {
+             setFeatureDefaultStyles((GeoJsonFeature) feature);
+         }
         if (mLayerOnMap) {
             if (mFeatures.containsKey(feature)) {
                 // Remove current map objects before adding new ones
                 removeFromMap(mFeatures.get(feature));
             }
-
             if (feature.hasGeometry()) {
                 // Create new map object
                 if (feature instanceof KmlPlacemark) {
@@ -437,8 +450,8 @@ public class Renderer {
     }
 
     /**
-     * Adds a new object onto the map using the GeoJsonGeometry for the coordinates and the
-     * GeoJsonFeature for the styles.
+     * Adds a new object onto the map using the Geometry for the coordinates and the
+     * Feature for the styles.
      *
      * @param feature  feature to get geometry style
      * @param geometry geometry to add to the map
@@ -487,11 +500,11 @@ public class Renderer {
     }
 
     /**
-     * Adds a GeoJsonPoint to the map as a Marker
+     * Adds a Point to the map as a Marker
      *
      * @param markerOptions contains relevant styling properties for the Marker
      * @param point      contains coordinates for the Marker
-     * @return Marker object created from the given GeoJsonPoint
+     * @return Marker object created from the given Point
      */
     protected Marker addPointToMap(MarkerOptions markerOptions, Point point) {
         markerOptions.position(point.getGeometryObject());
@@ -527,11 +540,11 @@ public class Renderer {
     }
 
     /**
-     * Adds a GeoJsonLineString to the map as a Polyline
+     * Adds a LineString to the map as a Polyline
      *
      * @param polylineOptions contains relevant styling properties for the Polyline
      * @param lineString      contains coordinates for the Polyline
-     * @return Polyline object created from given GeoJsonLineString
+     * @return Polyline object created from given LineString
      */
     protected Polyline addLineStringToMap(PolylineOptions polylineOptions,
                                        LineString lineString) {
@@ -563,11 +576,11 @@ public class Renderer {
 
 
     /**
-     * Adds a GeoJsonPolygon to the map as a Polygon
+     * Adds a GKPolygon to the map as a Polygon
      *
      * @param polygonOptions
      * @param polygon      contains coordinates for the Polygon
-     * @return Polygon object created from given GeoJsonPolygon
+     * @return Polygon object created from given GKPolygon
      */
     protected Polygon addPolygonToMap(PolygonOptions polygonOptions, GKPolygon polygon) {
         // First array of coordinates are the outline
@@ -653,7 +666,6 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonPoints
      */
-    /* package */
     public GeoJsonPointStyle getDefaultPointStyle() {
         return mDefaultPointStyle;
     }
@@ -663,7 +675,6 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonLineStrings
      */
-/* package */
     public GeoJsonLineStringStyle getDefaultLineStringStyle() {
         return mDefaultLineStringStyle;
     }
@@ -673,20 +684,31 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonPolygons
      */
-/* package */
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mDefaultPolygonStyle;
     }
 
-
+    /**
+     * Adds a new mapping to the mFeatures hashmap
+     * @param feature Feature to be added onto the map
+     * @param object Corresponding map object to this feature
+     */
     public void putFeatures(Feature feature, Object object) {
         mFeatures.put(feature, object);
     }
 
+
+    /**
+     * Adds mStyles to the mStylesRenderer
+     */
     public void putStyles() {
         mStylesRenderer.putAll(mStyles);
     }
 
+    /**
+     * Stores new mappings into the mStylesRenderer hashmap
+     * @param styles hashmap of strings and KmlStyles to be added to mStylesRenderer
+     */
     public void putStyles(HashMap<String, KmlStyle> styles) {
         mStylesRenderer.putAll(styles);
     }
@@ -881,6 +903,11 @@ public class Renderer {
         }
     }
 
+    /**
+     * Adds a ground overlay to the map
+     * @param groundOverlayOptions GroundOverlay style options to be added to the map
+     * @return new GroundOverlay object created from the given GroundOverlayOptions
+     */
     public GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
         return mMap.addGroundOverlay(groundOverlayOptions);
     }

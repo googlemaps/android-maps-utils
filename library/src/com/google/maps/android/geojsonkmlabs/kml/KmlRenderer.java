@@ -28,7 +28,7 @@ import java.util.Iterator;
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
-/* package */ class KmlRenderer  extends Renderer {
+public class KmlRenderer  extends Renderer {
 
     private static final String LOG_TAG = "KmlRenderer";
 
@@ -117,7 +117,9 @@ import java.util.Iterator;
     }
 
 
-    /* package */ void addLayerToMap() {
+    /* package */
+    public void addLayerToMap() {
+        setLayerVisibility(true);
         mGroundOverlays = getGroundOverlayMap();
         mContainers = getContainerList();
         putStyles();
@@ -131,7 +133,7 @@ import java.util.Iterator;
         if (!mMarkerIconsDownloaded) {
             downloadMarkerIcons();
         }
-        setLayerVisibility(true);
+
     }
 
     /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,
@@ -176,7 +178,8 @@ import java.util.Iterator;
      *
      * @return true if there is at least 1 container within the KmlLayer, false otherwise
      */
-    /* package */ boolean hasNestedContainers() {
+    /* package */
+    public boolean hasNestedContainers() {
         return mContainers.size() > 0;
     }
 
@@ -185,7 +188,8 @@ import java.util.Iterator;
      *
      * @return iterable of KmlContainerInterface objects
      */
-    /* package */ Iterable<KmlContainer> getNestedContainers() {
+    /* package */
+    public Iterable<KmlContainer> getNestedContainers() {
         return mContainers;
     }
 
@@ -194,14 +198,16 @@ import java.util.Iterator;
      *
      * @return iterable of KmlGroundOverlay objects
      */
-    /* package */ Iterable<KmlGroundOverlay> getGroundOverlays() {
+    /* package */
+    public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return mGroundOverlays.keySet();
     }
 
     /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
-    /* package */ void removeLayerFromMap() {
+    /* package */
+    public void removeLayerFromMap() {
         removePlacemarks(getAllFeatures());
         removeGroundOverlays(mGroundOverlays);
         if (hasNestedContainers()) {
