@@ -25,6 +25,9 @@ public abstract class Layer {
         ((KmlRenderer)mRenderer).addLayerToMap();
     }
 
+    /**
+     * Adds the GeoJson data to the map
+     */
     protected void addGeoJsonToMap() {
         ((GeoJsonRenderer)mRenderer).addLayerToMap();
     }
@@ -64,6 +67,7 @@ public abstract class Layer {
     protected void storeRenderer(Renderer renderer) {
         mRenderer = renderer;
     }
+
     /**
      * Gets an iterable of all Feature elements that have been added to the layer
      *
@@ -73,6 +77,10 @@ public abstract class Layer {
         return mRenderer.getFeatures();
     }
 
+    /**
+     * Checks if there are features stored
+     * @return true if features are stored, false otherwise
+     */
     protected boolean hasFeatures() {
         return mRenderer.hasFeatures();
     }
@@ -113,7 +121,6 @@ public abstract class Layer {
         return null;
     }
 
-
     /**
      * Gets the map on which the layer is rendered
      *
@@ -133,15 +140,30 @@ public abstract class Layer {
         mRenderer.setMap(map);
     }
 
+    /**
+     * Checks if the layer is on the map
+     *
+     * @return true if the layer is on the map, false otherwise
+     */
     public boolean isLayerOnMap() {
         return mRenderer.isLayerOnMap();
     }
 
+    /**
+     * Adds a provided feature to the map
+     *
+     * @param feature feature to add to map
+     */
     protected void addFeature(Feature feature){
         mRenderer.addFeature(feature);
 
     }
 
+    /**
+     * Remove a specified feature from the map
+     *
+     * @param feature feature to be removed
+     */
     protected void removeFeature(Feature feature) {
         mRenderer.removeFeature(feature);
     }
@@ -175,8 +197,4 @@ public abstract class Layer {
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mRenderer.getDefaultPolygonStyle();
     }
-
-
-
-
 }
