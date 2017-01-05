@@ -83,6 +83,7 @@ public abstract class Layer {
 
     /**
      * Checks if there are any features currently on the layer
+     *
      * @return true if there are features on the layer, false otherwise
      */
     protected boolean hasFeatures() {
@@ -164,7 +165,7 @@ public abstract class Layer {
     }
 
     /**
-     * Removes feature from layer
+     * Remove a specified feature from the map
      *
      * @param feature feature to be removed
      */
@@ -201,6 +202,4 @@ public abstract class Layer {
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mRenderer.getDefaultPolygonStyle();
     }
-
-
 }
