@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.geojsonkmlabs.Style;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,19 +15,13 @@ import java.util.Random;
 /**
  * Represents the defined styles in the KML document
  */
-public class KmlStyle {
+public class KmlStyle extends Style {
 
     private final static int HSV_VALUES = 3;
 
     private final static int HUE_VALUE = 0;
 
     private final static int INITIAL_SCALE = 1;
-
-    private final MarkerOptions mMarkerOptions;
-
-    private final PolylineOptions mPolylineOptions;
-
-    private final PolygonOptions mPolygonOptions;
 
     private final HashMap<String, String> mBalloonOptions;
 
@@ -54,10 +49,8 @@ public class KmlStyle {
      * Creates a new Style object
      */
     /* package */ KmlStyle() {
+        super();
         mStyleId = null;
-        mMarkerOptions = new MarkerOptions();
-        mPolylineOptions = new PolylineOptions();
-        mPolygonOptions = new PolygonOptions();
         mBalloonOptions = new HashMap<String, String>();
         mStylesSet = new HashSet<String>();
         mScale = INITIAL_SCALE;
@@ -120,7 +113,7 @@ public class KmlStyle {
      *
      * @param fill True if the polygon fill is set, false otherwise
      */
-    /* package */ void setFill(boolean fill) {
+    public void setFill(boolean fill) {
         mFill = fill;
     }
 
@@ -194,13 +187,14 @@ public class KmlStyle {
     }
 
     /**
-     * Sets the fill color for a Polygon
+     * Sets the fill color for a KML Polygon using a String
      *
-     * @param color Fill color for a Polygon
+     * @param color Fill color for a KML Polygon as a String
      */
     /* package */ void setFillColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
-        mPolygonOptions.fillColor(Color.parseColor("#" + convertColor(color)));
+        int polygonColorNum = (Color.parseColor("#" + convertColor(color)));
+        setPolygonFillColor(polygonColorNum);
         mStylesSet.add("fillColor");
     }
 
@@ -256,7 +250,7 @@ public class KmlStyle {
      * @param heading Decimal representation of a rotation value
      */
     /* package */ void setHeading(float heading) {
-        mMarkerOptions.rotation(heading);
+        setMarkerRotation(heading);
         mStylesSet.add("heading");
     }
 
@@ -269,17 +263,7 @@ public class KmlStyle {
      * @param yUnits units in which the y value is specified
      */
     /* package */ void setHotSpot(float x, float y, String xUnits, String yUnits) {
-        float xAnchor = 0.5f;
-        float yAnchor = 1.0f;
-        // Set x coordinate
-        if (xUnits.equals("fraction")) {
-            xAnchor = x;
-        }
-        if (yUnits.equals("fraction")) {
-            yAnchor = y;
-        }
-
-        mMarkerOptions.anchor(xAnchor, yAnchor);
+        setMarkerHotSpot(x,y, xUnits, yUnits);
         mStylesSet.add("hotSpot");
     }
 
@@ -346,9 +330,9 @@ public class KmlStyle {
     }
 
     /**
-     * Sets the outline color for a Polyline and a Polygon
+     * Sets the outline color for a Polyline and a Polygon using a String
      *
-     * @param color Outline color for a Polyline and a Polygon
+     * @param color Outline color for a Polyline and a Polygon represented as a String
      */
     /* package */ void setOutlineColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
@@ -363,8 +347,8 @@ public class KmlStyle {
      * @param width Line width for a Polyline and a Polygon
      */
     /* package */ void setWidth(Float width) {
-        mPolylineOptions.width(width);
-        mPolygonOptions.strokeWidth(width);
+        setLineStringWidth(width);
+        setPolygonStrokeWidth(width);
         mStylesSet.add("width");
     }
 
