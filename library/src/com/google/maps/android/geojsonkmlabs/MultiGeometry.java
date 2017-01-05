@@ -1,12 +1,14 @@
 package com.google.maps.android.geojsonkmlabs;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class MultiGeometry implements Geometry {
 
-    private static String GEOMETRY_TYPE = "MultiGeometry";
+    private String geometryType = "MultiGeometry";
 
     private List<Geometry> mGeometries;
 
@@ -32,7 +34,7 @@ public class MultiGeometry implements Geometry {
      * @return type of geometry
      */
     public String getGeometryType() {
-        return GEOMETRY_TYPE;
+        return geometryType;
     }
 
     /**
@@ -50,7 +52,7 @@ public class MultiGeometry implements Geometry {
      * @param type String describing type of geometry
      */
     public void setGeometryType(String type) {
-        GEOMETRY_TYPE = type;
+        geometryType = type;
     }
 
 }
