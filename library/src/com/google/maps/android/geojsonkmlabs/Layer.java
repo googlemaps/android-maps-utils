@@ -25,6 +25,9 @@ public abstract class Layer {
         ((KmlRenderer)mRenderer).addLayerToMap();
     }
 
+    /**
+     * Adds GeoJson data to the map
+     */
     protected void addGeoJsonToMap() {
         ((GeoJsonRenderer)mRenderer).addLayerToMap();
     }
@@ -61,9 +64,14 @@ public abstract class Layer {
         mRenderer.setOnFeatureClickListener(listener);
     }
 
+    /**
+     * Stores a new Renderer object into mRenderer
+     * @param renderer the new Renderer object that belongs to this Layer
+     */
     protected void storeRenderer(Renderer renderer) {
         mRenderer = renderer;
     }
+
     /**
      * Gets an iterable of all Feature elements that have been added to the layer
      *
@@ -73,6 +81,10 @@ public abstract class Layer {
         return mRenderer.getFeatures();
     }
 
+    /**
+     * Checks if there are any features currently on the layer
+     * @return true if there are features on the layer, false otherwise
+     */
     protected boolean hasFeatures() {
         return mRenderer.hasFeatures();
     }
@@ -113,7 +125,6 @@ public abstract class Layer {
         return null;
     }
 
-
     /**
      * Gets the map on which the layer is rendered
      *
@@ -133,15 +144,30 @@ public abstract class Layer {
         mRenderer.setMap(map);
     }
 
+    /**
+     * Checks if the current layer has been added to the map
+     *
+     * @return true if the layer is on the map, false otherwise
+     */
     public boolean isLayerOnMap() {
         return mRenderer.isLayerOnMap();
     }
 
+    /**
+     * Adds a feature to the layer
+     *
+     * @param feature contains feature to be added
+     */
     protected void addFeature(Feature feature){
         mRenderer.addFeature(feature);
 
     }
 
+    /**
+     * Removes feature from layer
+     *
+     * @param feature feature to be removed
+     */
     protected void removeFeature(Feature feature) {
         mRenderer.removeFeature(feature);
     }
@@ -175,8 +201,6 @@ public abstract class Layer {
     public GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mRenderer.getDefaultPolygonStyle();
     }
-
-
 
 
 }

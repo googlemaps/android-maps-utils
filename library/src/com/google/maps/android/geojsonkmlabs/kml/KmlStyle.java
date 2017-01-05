@@ -46,7 +46,7 @@ public class KmlStyle extends Style {
     private float mMarkerColor;
 
     /**
-     * Creates a new Style object
+     * Creates a new KmlStyle object
      */
     /* package */ KmlStyle() {
         super();

@@ -16,6 +16,9 @@ public abstract class Style extends Observable {
 
     protected PolygonOptions mPolygonOptions;
 
+    /**
+     * Creates a new Style object
+     */
     public Style() {
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();

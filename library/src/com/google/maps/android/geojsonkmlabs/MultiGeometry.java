@@ -12,6 +12,10 @@ public class MultiGeometry implements Geometry {
 
     private List<Geometry> mGeometries;
 
+    /**
+     * Creates a new MultiGeometry object
+     * @param geometries contains list of Polygons, Linestrings or Points
+     */
     public MultiGeometry(List<?> geometries) {
         if (geometries == null) {
             throw new IllegalArgumentException("Geometries cannot be null");
