@@ -638,7 +638,10 @@ public class Renderer {
     }
 
     /**
-     * Iterates through a list of styles and assigns a style todo
+     * Iterates through a list of styles and assigns a style
+     *
+     * @param styleMap
+     * @param styles
      */
     public void assignStyleMap(HashMap<String, String> styleMap,
                                HashMap<String, KmlStyle> styles) {
