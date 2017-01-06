@@ -38,9 +38,23 @@ public class KmlPolygon implements GKPolygon<ArrayList<ArrayList<LatLng>>> {
      *
      * @return type of geometry
      */
-    @Override
     public String getGeometryType() {
         return GEOMETRY_TYPE;
+    }
+
+    /**
+     * Gets the coordinates of the Polygon
+     *
+     * @return ArrayList of an ArrayList of LatLng points
+     */
+    public ArrayList<ArrayList<LatLng>> getGeometryObject() {
+        ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
+        coordinates.add(mOuterBoundaryCoordinates);
+        //Polygon objects do not have to have inner holes
+        if (mInnerBoundaryCoordinates != null) {
+            coordinates.addAll(mInnerBoundaryCoordinates);
+        }
+        return coordinates;
     }
 
     /**
@@ -59,21 +73,6 @@ public class KmlPolygon implements GKPolygon<ArrayList<ArrayList<LatLng>>> {
      */
     public ArrayList<ArrayList<LatLng>> getInnerBoundaryCoordinates() {
         return mInnerBoundaryCoordinates;
-    }
-
-    /**
-     * Gets the coordinates of the Polygon
-     *
-     * @return ArrayList of an ArrayList of LatLng points
-     */
-    public ArrayList<ArrayList<LatLng>> getGeometryObject() {
-        ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
-        coordinates.add(mOuterBoundaryCoordinates);
-        //Polygon objects do not have to have inner holes
-        if (mInnerBoundaryCoordinates != null) {
-            coordinates.addAll(mInnerBoundaryCoordinates);
-        }
-        return coordinates;
     }
 
     @Override
