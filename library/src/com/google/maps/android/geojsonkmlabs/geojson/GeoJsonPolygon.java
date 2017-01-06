@@ -53,9 +53,18 @@ public class GeoJsonPolygon implements GKPolygon {
         return mCoordinates;
     }
 
-    //todo this is not v good
+    /**
+     * Gets the stored geometry object
+     *
+     * @return geometry object
+     */
     public List<? extends List<LatLng>> getGeometryObject() { return getCoordinates(); }
 
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
     public String getGeometryType() { return getType(); }
 
 

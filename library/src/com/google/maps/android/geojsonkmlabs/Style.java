@@ -1,7 +1,5 @@
 package com.google.maps.android.geojsonkmlabs;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
