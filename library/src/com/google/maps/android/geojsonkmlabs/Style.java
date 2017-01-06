@@ -55,18 +55,13 @@ public abstract class Style extends Observable {
         float xAnchor = 0.5f;
         float yAnchor = 1.0f;
 
-        Log.d("LOB", "Before: " + String.valueOf(xAnchor));
-
         // Set x coordinate
         if (xUnits.equals("fraction")) {
             xAnchor = x;
-            Log.d("LOB", "\nIn loop: " + String.valueOf(xAnchor));
         }
         if (yUnits.equals("fraction")) {
             yAnchor = y;
         }
-
-        Log.d("LOB", "\nAfter: " + String.valueOf(xAnchor));
 
         mMarkerOptions.anchor(xAnchor, yAnchor);
     }
