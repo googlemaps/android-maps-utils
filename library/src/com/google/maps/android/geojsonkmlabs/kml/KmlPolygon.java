@@ -84,14 +84,4 @@ public class KmlPolygon implements GKPolygon<ArrayList<ArrayList<LatLng>>> {
         sb.append("\n}\n");
         return sb.toString();
     }
-
-    /**
-     * TODO getGeometryObject() convert back to arraylist
-     * public ArrayList<LatLng> getGeometryObject() {
-            List<LatLng> coordinatesList = super.getGeometryObject();
-            ArrayList<LatLng> coordinatesAList = new ArrayList<LatLng>(coordinatesList);
-            return coordinatesAList;
-     }
-
-     */
 }
