@@ -21,7 +21,6 @@ public class KmlPlacemark extends Feature{
 
     private final KmlStyle mInlineStyle;
 
-    private HashMap<String, String> mProperties;
 
     /**
      * Creates a new KmlPlacemark object
@@ -65,7 +64,6 @@ public class KmlPlacemark extends Feature{
         StringBuilder sb = new StringBuilder("Placemark").append("{");
         sb.append("\n style id=").append(mStyle);
         sb.append(",\n inline style=").append(mInlineStyle);
-        sb.append(",\n properties=").append(mProperties);
         sb.append("\n}\n");
         return sb.toString();
     }
