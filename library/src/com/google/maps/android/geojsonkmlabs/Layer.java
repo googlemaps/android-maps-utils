@@ -155,9 +155,9 @@ public abstract class Layer {
     }
 
     /**
-     * Adds a feature to the layer
+     * Adds a provided feature to the map
      *
-     * @param feature contains feature to be added
+     * @param feature feature to add to map
      */
     protected void addFeature(Feature feature){
         mRenderer.addFeature(feature);
