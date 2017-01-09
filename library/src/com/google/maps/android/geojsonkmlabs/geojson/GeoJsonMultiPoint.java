@@ -46,12 +46,4 @@ public class GeoJsonMultiPoint extends MultiGeometry {
 
         return geoJsonPoints;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
-        sb.append("\n points=").append(getGeometryObject());
-        sb.append("\n}\n");
-        return sb.toString();
-    }
 }

@@ -46,13 +46,4 @@ public class GeoJsonMultiLineString extends MultiGeometry {
 
         return geoJsonLineStrings;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
-        sb.append("\n LineStrings=").append(getGeometryObject());
-        sb.append("\n}\n");
-        return sb.toString();
-    }
-
 }

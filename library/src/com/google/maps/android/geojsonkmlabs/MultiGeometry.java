@@ -59,4 +59,22 @@ public class MultiGeometry implements Geometry {
         geometryType = type;
     }
 
+    @Override
+    public String toString() {
+        String typeString = "Geometry Coordinates";
+        if (geometryType.equals("MultiPoint")) {
+            typeString = "LineStrings=";
+        }
+        if (geometryType.equals("MultiLineString")) {
+            typeString = "points=";
+        }
+        if (geometryType.equals("MultiPolygon")) {
+            typeString = "Polygons=";
+        }
+
+        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
+        sb.append("\n=" + typeString).append(getGeometryObject());
+        sb.append("\n}\n");
+        return sb.toString();
+    }
 }
