@@ -46,12 +46,4 @@ public class GeoJsonMultiPolygon extends MultiGeometry {
 
         return geoJsonPolygon;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
-        sb.append("\n Polygons=").append(getGeometryObject());
-        sb.append("\n}\n");
-        return sb.toString();
-    }
 }
