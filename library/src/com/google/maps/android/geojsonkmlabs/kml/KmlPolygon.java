@@ -58,6 +58,16 @@ public class KmlPolygon implements GKPolygon<ArrayList<ArrayList<LatLng>>> {
     }
 
     /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
+    public String getType() {
+        return getGeometryType();
+    }
+
+    /**
      * Gets an array of outer boundary coordinates
      *
      * @return array of outer boundary coordinates

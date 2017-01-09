@@ -2,6 +2,8 @@ package com.google.maps.android.geojsonkmlabs;
 
 import android.util.Log;
 
+import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonGeometry;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +59,16 @@ public class MultiGeometry implements Geometry {
      */
     public void setGeometryType(String type) {
         geometryType = type;
+    }
+
+    /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
+    public String getType() {
+        return getGeometryType();
     }
 
     @Override

@@ -208,7 +208,7 @@ import java.util.Iterator;
      *
      * @param geometryType  type of geometry
      * @param geometryArray coordinates or geometries of the geometry
-     * @return GeoJsonGeometry object
+     * @return Geometry object
      * @throws JSONException if the coordinates or geometries could be parsed
      */
     private static Geometry createGeometry(String geometryType, JSONArray geometryArray)
