@@ -46,6 +46,11 @@ import java.util.List;
 import java.util.Set;
 
 public class Renderer {
+
+    private final static Object FEATURE_NOT_ON_MAP = null;
+
+    private static final int LRU_CACHE_SIZE = 50;
+
     private GoogleMap mMap;
 
     private final BiMultiMap<Feature> mFeatures = new BiMultiMap<>();
@@ -58,13 +63,9 @@ public class Renderer {
 
     private BiMultiMap<Feature> mContainerFeatures;
 
-    private final static Object FEATURE_NOT_ON_MAP = null;
-
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
     private final ArrayList<String> mMarkerIconUrls;
-
-    private static final int LRU_CACHE_SIZE = 50;
 
     private final LruCache<String, Bitmap> mImagesCache;
 
@@ -331,6 +332,85 @@ public class Renderer {
     public ArrayList<KmlContainer> getContainerList() { return mContainers; }
 
     /**
+     * Obtains the styleUrl from a placemark and finds the corresponding style in a list
+     *
+     * @param styleId StyleUrl from a placemark
+     * @return Style which corresponds to an ID
+     */
+    protected KmlStyle getPlacemarkStyle(String styleId) {
+        KmlStyle style = mStylesRenderer.get(null);
+        if (mStylesRenderer.get(styleId) != null) {
+            style = mStylesRenderer.get(styleId);
+        }
+        return style;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonPoints
+     *
+     * @return default style used to render GeoJsonPoints
+     */
+    public GeoJsonPointStyle getDefaultPointStyle() {
+        return mDefaultPointStyle;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonLineStrings
+     *
+     * @return default style used to render GeoJsonLineStrings
+     */
+    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
+        return mDefaultLineStringStyle;
+    }
+
+    /**
+     * Gets the default style used to render GeoJsonPolygons
+     *
+     * @return default style used to render GeoJsonPolygons
+     */
+    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
+        return mDefaultPolygonStyle;
+    }
+
+    /**
+     * Adds a new mapping to the mFeatures hashmap
+     * @param feature Feature to be added onto the map
+     * @param object Corresponding map object to this feature
+     */
+    public void putFeatures(Feature feature, Object object) {
+        mFeatures.put(feature, object);
+    }
+
+
+    /**
+     * Adds mStyles to the mStylesRenderer
+     */
+    public void putStyles() {
+        mStylesRenderer.putAll(mStyles);
+    }
+
+    /**
+     * Stores new mappings into the mStylesRenderer hashmap
+     * @param styles hashmap of strings and KmlStyles to be added to mStylesRenderer
+     */
+    public void putStyles(HashMap<String, KmlStyle> styles) {
+        mStylesRenderer.putAll(styles);
+    }
+
+    public void putImagesCache(String groundOverlayUrl, Bitmap bitmap) {
+        mImagesCache.put(groundOverlayUrl, bitmap);
+    }
+
+    /**
+     * Checks if the layer contains placemarks
+     *
+     * @return true if there are placemarks, false otherwise
+     */
+    public boolean hasFeatures() {
+        return mFeatures.size() > 0;
+    }
+
+    /**
      * Removes all given Features from the map and clears all stored features.
      *
      * @param features features to remove
@@ -506,6 +586,78 @@ public class Renderer {
     }
 
     /**
+     * Adds a single geometry object to the map with its specified style
+     *
+     * @param geometry defines the type of object to add to the map
+     * @param style    defines styling properties to add to the object when added to the map
+     * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
+     * of either objects
+     */
+    protected Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
+                              KmlStyle inlineStyle, boolean isVisible) {
+
+        String geometryType = geometry.getGeometryType();
+        boolean hasDrawOrder = placemark.hasProperty("drawOrder");
+        float drawOrder = 0;
+
+        if (hasDrawOrder) {
+            try {
+                drawOrder = Float.parseFloat(placemark.getProperty("drawOrder"));
+            } catch (NumberFormatException e) {
+                hasDrawOrder = false;
+            }
+        }
+        switch (geometryType) {
+            case "Point":
+                MarkerOptions markerOptions = style.getMarkerOptions();
+                if (inlineStyle != null) {
+                    setInlinePointStyle(markerOptions, inlineStyle, style.getIconUrl());
+                } else if (style.getIconUrl() != null) {
+                    // Use shared style
+                    addMarkerIcons(style.getIconUrl(), markerOptions);
+                }
+                Marker marker = addPointToMap(markerOptions, (KmlPoint) geometry);
+                marker.setVisible(isVisible);
+                setMarkerInfoWindow(style, marker, placemark);
+                if (hasDrawOrder) {
+                    marker.setZIndex(drawOrder);
+                }
+                return marker;
+            case "LineString":
+                PolylineOptions polylineOptions = style.getPolylineOptions();
+                if (inlineStyle != null) {
+                    setInlineLineStringStyle(polylineOptions, inlineStyle);
+                } else if (style.isLineRandomColorMode()) {
+                    polylineOptions.color(KmlStyle.computeRandomColor(polylineOptions.getColor()));
+                }
+                Polyline polyline = addLineStringToMap(polylineOptions, (LineString) geometry);
+                polyline.setVisible(isVisible);
+                if (hasDrawOrder) {
+                    polyline.setZIndex(drawOrder);
+                }
+                return polyline;
+            case "Polygon":
+                PolygonOptions polygonOptions = style.getPolygonOptions();
+                if (inlineStyle != null) {
+                    setInlinePolygonStyle(polygonOptions, inlineStyle);
+                } else if (style.isPolyRandomColorMode()) {
+                    polygonOptions.fillColor(KmlStyle.computeRandomColor(polygonOptions.getFillColor()));
+                }
+                Polygon polygon = addPolygonToMap(polygonOptions, (GKPolygon) geometry);
+                polygon.setVisible(isVisible);
+                if (hasDrawOrder) {
+                    polygon.setZIndex(drawOrder);
+                }
+                return polygon;
+            case "MultiGeometry":
+                return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
+                        isVisible);
+        }
+
+        return null;
+    }
+
+    /**
      * Adds a Point to the map as a Marker
      *
      * @param markerOptions contains relevant styling properties for the Marker
@@ -601,6 +753,31 @@ public class Renderer {
     }
 
     /**
+     * Sets the inline polygon style by copying over the styles that have been set
+     *
+     * @param polygonOptions polygon options object to add inline styles to
+     * @param inlineStyle    inline styles to apply
+     */
+    private void setInlinePolygonStyle(PolygonOptions polygonOptions, KmlStyle inlineStyle) {
+        PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
+        if (inlineStyle.hasFill() && inlineStyle.isStyleSet("fillColor")) {
+            polygonOptions.fillColor(inlinePolygonOptions.getFillColor());
+        }
+        if (inlineStyle.hasOutline()) {
+            if (inlineStyle.isStyleSet("outlineColor")) {
+                polygonOptions.strokeColor(inlinePolygonOptions.getStrokeColor());
+            }
+            if (inlineStyle.isStyleSet("width")) {
+                polygonOptions.strokeWidth(inlinePolygonOptions.getStrokeWidth());
+            }
+        }
+        if (inlineStyle.isPolyRandomColorMode()) {
+            polygonOptions.fillColor(KmlStyle.computeRandomColor(inlinePolygonOptions.getFillColor()));
+        }
+    }
+
+
+    /**
      * Adds all GeoJsonGeometry objects stored in the GeoJsonGeometryCollection onto the map.
      * Supports recursive GeometryCollections.
      *
@@ -650,172 +827,6 @@ public class Renderer {
             if (styles.containsKey(styleMapValue)) {
                 styles.put(styleMapKey, styles.get(styleMapValue));
             }
-        }
-    }
-
-    /**
-     * Obtains the styleUrl from a placemark and finds the corresponding style in a list
-     *
-     * @param styleId StyleUrl from a placemark
-     * @return Style which corresponds to an ID
-     */
-    protected KmlStyle getPlacemarkStyle(String styleId) {
-        KmlStyle style = mStylesRenderer.get(null);
-        if (mStylesRenderer.get(styleId) != null) {
-            style = mStylesRenderer.get(styleId);
-        }
-        return style;
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonPoints
-     *
-     * @return default style used to render GeoJsonPoints
-     */
-    public GeoJsonPointStyle getDefaultPointStyle() {
-        return mDefaultPointStyle;
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonLineStrings
-     *
-     * @return default style used to render GeoJsonLineStrings
-     */
-    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
-        return mDefaultLineStringStyle;
-    }
-
-    /**
-     * Gets the default style used to render GeoJsonPolygons
-     *
-     * @return default style used to render GeoJsonPolygons
-     */
-    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
-        return mDefaultPolygonStyle;
-    }
-
-    /**
-     * Adds a new mapping to the mFeatures hashmap
-     * @param feature Feature to be added onto the map
-     * @param object Corresponding map object to this feature
-     */
-    public void putFeatures(Feature feature, Object object) {
-        mFeatures.put(feature, object);
-    }
-
-
-    /**
-     * Adds mStyles to the mStylesRenderer
-     */
-    public void putStyles() {
-        mStylesRenderer.putAll(mStyles);
-    }
-
-    /**
-     * Stores new mappings into the mStylesRenderer hashmap
-     * @param styles hashmap of strings and KmlStyles to be added to mStylesRenderer
-     */
-    public void putStyles(HashMap<String, KmlStyle> styles) {
-        mStylesRenderer.putAll(styles);
-    }
-
-    public void putImagesCache(String groundOverlayUrl, Bitmap bitmap) {
-        mImagesCache.put(groundOverlayUrl, bitmap);
-    }
-
-    /**
-     * Adds a single geometry object to the map with its specified style
-     *
-     * @param geometry defines the type of object to add to the map
-     * @param style    defines styling properties to add to the object when added to the map
-     * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
-     * of either objects
-     */
-    protected Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
-                              KmlStyle inlineStyle, boolean isVisible) {
-
-        String geometryType = geometry.getGeometryType();
-        boolean hasDrawOrder = placemark.hasProperty("drawOrder");
-        float drawOrder = 0;
-
-        if (hasDrawOrder) {
-            try {
-                drawOrder = Float.parseFloat(placemark.getProperty("drawOrder"));
-            } catch (NumberFormatException e) {
-                hasDrawOrder = false;
-            }
-        }
-        switch (geometryType) {
-            case "Point":
-                MarkerOptions markerOptions = style.getMarkerOptions();
-                if (inlineStyle != null) {
-                    setInlinePointStyle(markerOptions, inlineStyle, style.getIconUrl());
-                } else if (style.getIconUrl() != null) {
-                    // Use shared style
-                    addMarkerIcons(style.getIconUrl(), markerOptions);
-                }
-                Marker marker = addPointToMap(markerOptions, (KmlPoint) geometry);
-                marker.setVisible(isVisible);
-                setMarkerInfoWindow(style, marker, placemark);
-                if (hasDrawOrder) {
-                    marker.setZIndex(drawOrder);
-                }
-                return marker;
-            case "LineString":
-                PolylineOptions polylineOptions = style.getPolylineOptions();
-                if (inlineStyle != null) {
-                    setInlineLineStringStyle(polylineOptions, inlineStyle);
-                } else if (style.isLineRandomColorMode()) {
-                    polylineOptions.color(KmlStyle.computeRandomColor(polylineOptions.getColor()));
-                }
-                Polyline polyline = addLineStringToMap(polylineOptions, (LineString) geometry);
-                polyline.setVisible(isVisible);
-                if (hasDrawOrder) {
-                    polyline.setZIndex(drawOrder);
-                }
-                return polyline;
-            case "Polygon":
-                PolygonOptions polygonOptions = style.getPolygonOptions();
-                if (inlineStyle != null) {
-                    setInlinePolygonStyle(polygonOptions, inlineStyle);
-                } else if (style.isPolyRandomColorMode()) {
-                    polygonOptions.fillColor(KmlStyle.computeRandomColor(polygonOptions.getFillColor()));
-                }
-                Polygon polygon = addPolygonToMap(polygonOptions, (GKPolygon) geometry);
-                polygon.setVisible(isVisible);
-                if (hasDrawOrder) {
-                    polygon.setZIndex(drawOrder);
-                }
-                return polygon;
-            case "MultiGeometry":
-                return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
-                        isVisible);
-        }
-
-        return null;
-    }
-
-    /**
-     * Sets the inline polygon style by copying over the styles that have been set
-     *
-     * @param polygonOptions polygon options object to add inline styles to
-     * @param inlineStyle    inline styles to apply
-     */
-    private void setInlinePolygonStyle(PolygonOptions polygonOptions, KmlStyle inlineStyle) {
-        PolygonOptions inlinePolygonOptions = inlineStyle.getPolygonOptions();
-        if (inlineStyle.hasFill() && inlineStyle.isStyleSet("fillColor")) {
-            polygonOptions.fillColor(inlinePolygonOptions.getFillColor());
-        }
-        if (inlineStyle.hasOutline()) {
-            if (inlineStyle.isStyleSet("outlineColor")) {
-                polygonOptions.strokeColor(inlinePolygonOptions.getStrokeColor());
-            }
-            if (inlineStyle.isStyleSet("width")) {
-                polygonOptions.strokeWidth(inlinePolygonOptions.getStrokeWidth());
-            }
-        }
-        if (inlineStyle.isPolyRandomColorMode()) {
-            polygonOptions.fillColor(KmlStyle.computeRandomColor(inlinePolygonOptions.getFillColor()));
         }
     }
 
@@ -970,12 +981,4 @@ public class Renderer {
         });
     }
 
-    /**
-     * Checks if the layer contains placemarks
-     *
-     * @return true if there are placemarks, false otherwise
-     */
-    public boolean hasFeatures() {
-        return mFeatures.size() > 0;
-    }
 }
