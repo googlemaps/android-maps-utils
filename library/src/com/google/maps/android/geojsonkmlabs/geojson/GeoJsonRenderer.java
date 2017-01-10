@@ -22,18 +22,16 @@ public class GeoJsonRenderer extends Renderer implements Observer {
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
-
     /**
      * Creates a new GeoJsonRender object
      *
      * @param map map to place GeoJsonFeature objects on
      * @param features
      */
-    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
+    public GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
         super(map, features);
 
     }
-
 
     /**
      * Changes the map that GeoJsonFeature objects are being drawn onto. Existing objects are
@@ -49,8 +47,8 @@ public class GeoJsonRenderer extends Renderer implements Observer {
     }
 
     /**
-     * Adds all of the stored features in the layer onto the map if the layer is not already on the
-     * map.
+     * Adds all of the stored features in the layer onto the map if the layer is
+     * not already on the map.
      */
     public void addLayerToMap() {
         if (!isLayerOnMap()) {
@@ -60,7 +58,6 @@ public class GeoJsonRenderer extends Renderer implements Observer {
             }
         }
     }
-
 
     /**
      * Adds a new GeoJsonFeature to the map if its geometry property is not null.

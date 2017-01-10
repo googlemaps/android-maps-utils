@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * Represents the defined styles in the KML document
  */
-public class KmlStyle extends Style {
+public class  KmlStyle extends Style {
 
     private final static int HSV_VALUES = 3;
 
@@ -93,7 +93,6 @@ public class KmlStyle extends Style {
      * @param style style to check if set
      * @return True if style was set, false otherwise
      */
-    /* package */
     public boolean isStyleSet(String style) {
         return mStylesSet.contains(style);
     }
@@ -103,7 +102,6 @@ public class KmlStyle extends Style {
      *
      * @return True if there is a fill for the polygon, false otherwise
      */
-    /* package */
     public boolean hasFill() {
         return mFill;
     }
@@ -141,7 +139,6 @@ public class KmlStyle extends Style {
      *
      * @return True if the polygon outline is set, false otherwise
      */
-    /* package */
     public boolean hasOutline() {
         return mOutline;
     }
@@ -151,7 +148,6 @@ public class KmlStyle extends Style {
      *
      * @return True if a BalloonStyle has been set, false otherwise
      */
-    /* package */
     public boolean hasBalloonStyle() {
         return mBalloonOptions.size() > 0;
     }
@@ -171,7 +167,6 @@ public class KmlStyle extends Style {
      *
      * @return Url for the marker icon, null otherwise
      */
-    /* package */
     public String getIconUrl() {
         return mIconUrl;
     }
@@ -303,7 +298,6 @@ public class KmlStyle extends Style {
      *
      * @return True if the color mode is true, false otherwise
      */
-    /* package */
     public boolean isLineRandomColorMode() {
         return mLineRandomColorMode;
     }
@@ -357,7 +351,6 @@ public class KmlStyle extends Style {
      *
      * @return Balloon Options
      */
-    /* package */
     public HashMap<String, String> getBalloonOptions() {
         return mBalloonOptions;
     }
@@ -420,7 +413,6 @@ public class KmlStyle extends Style {
      *
      * @return  A new MarkerOption
      */
-    /* package */
     public MarkerOptions getMarkerOptions() {
         return createMarkerOptions(mMarkerOptions, isIconRandomColorMode(), mMarkerColor);
     }
@@ -430,7 +422,6 @@ public class KmlStyle extends Style {
      *
      * @return new PolylineOptions
      */
-    /* package */
     public PolylineOptions getPolylineOptions() {
         return createPolylineOptions(mPolylineOptions);
     }
@@ -440,7 +431,6 @@ public class KmlStyle extends Style {
      *
      * @return new PolygonOptions
      */
-    /* package */
     public PolygonOptions getPolygonOptions() {
         return createPolygonOptions(mPolygonOptions, mFill, mOutline);
     }
@@ -452,7 +442,7 @@ public class KmlStyle extends Style {
      * @param color Color represented as an integer
      * @return Integer representing a random color
      */
-    /* package */ public static int computeRandomColor(int color) {
+     public static int computeRandomColor(int color) {
         Random random = new Random();
         int red = Color.red(color);
         int green = Color.green(color);

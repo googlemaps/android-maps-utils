@@ -1,6 +1,8 @@
 package com.google.maps.android.geojsonkmlabs;
 
-
+/*
+ * An abstraction that shares the common properties of GeoJsonGeometry and KmlGeometry
+ */
 public interface Geometry<T> {
 
     /**

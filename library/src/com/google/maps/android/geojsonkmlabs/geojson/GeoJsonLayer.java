@@ -2,12 +2,8 @@ package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Layer;
-import com.google.maps.android.geojsonkmlabs.Renderer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -117,10 +112,12 @@ public class GeoJsonLayer extends Layer {
         return new JSONObject(result.toString());
     }
 
+    /**
+     * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
+     */
     public void addLayerToMap(){
         super.addGeoJsonToMap();
     }
-
 
     /**
      * Adds a GeoJsonFeature to the layer. If the point, linestring or polygon style is set to
@@ -146,7 +143,6 @@ public class GeoJsonLayer extends Layer {
         }
         super.removeFeature(feature);
     }
-
 
     /**
      * Gets the LatLngBounds containing the coordinates of the bounding box for the

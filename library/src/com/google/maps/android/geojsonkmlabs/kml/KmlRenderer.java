@@ -116,8 +116,6 @@ public class KmlRenderer  extends Renderer {
         }
     }
 
-
-    /* package */
     public void addLayerToMap() {
         setLayerVisibility(true);
         mGroundOverlays = getGroundOverlayMap();
@@ -142,7 +140,6 @@ public class KmlRenderer  extends Renderer {
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         storeData(styles, styleMaps, features, folders, groundOverlays);
     }
-
 
     /**
      * Sets the map that objects are being placed on
@@ -178,7 +175,6 @@ public class KmlRenderer  extends Renderer {
      *
      * @return true if there is at least 1 container within the KmlLayer, false otherwise
      */
-    /* package */
     public boolean hasNestedContainers() {
         return mContainers.size() > 0;
     }
@@ -188,7 +184,6 @@ public class KmlRenderer  extends Renderer {
      *
      * @return iterable of KmlContainerInterface objects
      */
-    /* package */
     public Iterable<KmlContainer> getNestedContainers() {
         return mContainers;
     }
@@ -198,7 +193,6 @@ public class KmlRenderer  extends Renderer {
      *
      * @return iterable of KmlGroundOverlay objects
      */
-    /* package */
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return mGroundOverlays.keySet();
     }
@@ -206,7 +200,6 @@ public class KmlRenderer  extends Renderer {
     /**
      * Removes all the KML data from the map and clears all the stored placemarks
      */
-    /* package */
     public void removeLayerFromMap() {
         removePlacemarks(getAllFeatures());
         removeGroundOverlays(mGroundOverlays);
@@ -341,7 +334,6 @@ public class KmlRenderer  extends Renderer {
             }
         }
     }
-
 
     /**
      * Adds a ground overlay adds all the ground overlays onto the map and recursively adds all

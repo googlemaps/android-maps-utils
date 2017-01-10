@@ -4,6 +4,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
+/*
+ * An interface that allows the common properties of GeoJsonPolygons
+ * and KmlPolygons to be abstracted
+ */
 public interface GKPolygon<T> extends Geometry{
 
     /**

@@ -21,7 +21,6 @@ public class KmlPlacemark extends Feature{
 
     private final KmlStyle mInlineStyle;
 
-
     /**
      * Creates a new KmlPlacemark object
      *
@@ -36,6 +35,14 @@ public class KmlPlacemark extends Feature{
         mInlineStyle = inlineStyle;
     }
 
+    /**
+     * Gets the style id associated with the basic_placemark
+     *
+     * @return style id
+     */
+    public String getStyleId() {
+        return super.getId();
+    }
 
     /**
      * Gets the inline style that was found
@@ -46,18 +53,32 @@ public class KmlPlacemark extends Feature{
         return mInlineStyle;
     }
 
+    /**
+     * Gets a PolygonOption
+     *
+     * @return new PolygonOptions
+     */
     public PolygonOptions getPolygonOptions() {
         return mInlineStyle.getPolygonOptions();
     }
 
+    /**
+     * Gets a MarkerOption
+     *
+     * @return  A new MarkerOption
+     */
     public MarkerOptions getMarkerOptions(){
         return mInlineStyle.getMarkerOptions();
     }
 
+    /**
+     * Gets a PolylineOption
+     *
+     * @return new PolylineOptions
+     */
     public PolylineOptions getPolylineOptions(){
         return mInlineStyle.getPolylineOptions();
     }
-
 
     @Override
     public String toString() {
