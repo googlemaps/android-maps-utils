@@ -14,6 +14,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+/*
+An abstraction that shares the common properties of KmlLayer and GeoJsonLayer
+ */
 public abstract class Layer {
 
     private Renderer mRenderer;
@@ -33,7 +36,7 @@ public abstract class Layer {
     }
 
     /**
-     * Removes all the KML data from the map and clears all the stored placemarks
+     * Removes all the data from the map and clears all the stored placemarks
      */
     public void removeLayerFromMap() {
         if (mRenderer instanceof GeoJsonRenderer) {
@@ -45,18 +48,18 @@ public abstract class Layer {
 
     /**
      * Sets a single click listener for the entire GoogleMap object, that will be called
-     * with the corresponding GeoJsonFeature object when an object on the map (Polygon,
+     * with the corresponding Feature object when an object on the map (Polygon,
      * Marker, Polyline) is clicked.
      *
-     * Note that if multiple GeoJsonLayer objects are bound to a GoogleMap object, calling
+     * Note that if multiple Layer objects are bound to a GoogleMap object, calling
      * setOnFeatureClickListener on one will override the listener defined on the other. In
      * that case, you must define each of the GoogleMap click listeners manually
      * (OnPolygonClickListener, OnMarkerClickListener, OnPolylineClickListener), and then
-     * use the GeoJsonLayer.getFeature(mapObject) method on each GeoJsonLayer instance to
+     * use the Layer.getFeature(mapObject) method on each Layer instance to
      * determine if the given mapObject belongs to the layer.
      *
-     * If getFeature() returns null this means that the object is a MultiPolygon, MultiLineString
-     * or MultiPoint and must be handled differently.
+     * If getFeature() returns null this means that the object is a MultiPolygon, MultiLineString,
+     * MultiPoint or MultiGeometry and must be handled differently.
      *
      * @param listener Listener providing the onFeatureClick method to call.
      */
@@ -66,6 +69,7 @@ public abstract class Layer {
 
     /**
      * Stores a new Renderer object into mRenderer
+     *
      * @param renderer the new Renderer object that belongs to this Layer
      */
     protected void storeRenderer(Renderer renderer) {
@@ -77,7 +81,7 @@ public abstract class Layer {
      *
      * @return iterable of Feature elements
      */
-    public Iterable<Feature> getFeatures(){
+    public Iterable<? extends Feature> getFeatures(){
         return mRenderer.getFeatures();
     }
 

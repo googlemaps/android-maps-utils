@@ -45,6 +45,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+/*
+An abstraction that shares the common properties of KmlRenderer and GeoJsonRenderer
+ */
 public class Renderer {
 
     private final static Object FEATURE_NOT_ON_MAP = null;
@@ -537,7 +540,7 @@ public class Renderer {
 
     /**
      * Adds a new object onto the map using the Geometry for the coordinates and the
-     * Feature for the styles.
+     * Feature for the styles. (used for GeoJson)
      *
      * @param feature  feature to get geometry style
      * @param geometry geometry to add to the map
@@ -586,7 +589,7 @@ public class Renderer {
     }
 
     /**
-     * Adds a single geometry object to the map with its specified style
+     * Adds a single geometry object to the map with its specified style (used for KML)
      *
      * @param geometry defines the type of object to add to the map
      * @param style    defines styling properties to add to the object when added to the map

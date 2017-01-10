@@ -155,7 +155,6 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style to set the icon url to
      */
-
     private static void setIconUrl(XmlPullParser parser, KmlStyle style)
             throws XmlPullParserException, IOException {
         int eventType = parser.getEventType();

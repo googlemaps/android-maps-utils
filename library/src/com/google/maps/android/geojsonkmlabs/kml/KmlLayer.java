@@ -55,6 +55,7 @@ public class KmlLayer extends Layer {
                 parser.getContainers(), parser.getGroundOverlays());
         storeRenderer(mRenderer);
     }
+
     /**
      * Creates a new XmlPullParser to allow for the KML file to be parsed
      *
@@ -70,10 +71,12 @@ public class KmlLayer extends Layer {
         return parser;
     }
 
+    /**
+     * Adds the KML data to the map
+     */
     public void addLayerToMap() throws IOException, XmlPullParserException {
         super.addKMLToMap();
     }
-
 
     /**
      * Checks if the layer contains placemarks
@@ -90,8 +93,8 @@ public class KmlLayer extends Layer {
      *
      * @return iterable of KmlPlacemark objects
      */
-    public Iterable<Feature> getPlacemarks() {
-        return getFeatures();
+    public Iterable<KmlPlacemark> getPlacemarks() {
+        return (Iterable<KmlPlacemark>) getFeatures();
     }
 
     /**
@@ -120,6 +123,5 @@ public class KmlLayer extends Layer {
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return super.getGroundOverlays();
     }
-
 
 }

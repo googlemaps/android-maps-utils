@@ -15,7 +15,7 @@ import java.util.Map;
  * Polyline, and Polygon map objects. We want to look these up in reverse to provide access
  * to GeoJsonFeature instances when map objects are clicked.
  */
-/* package */ public class BiMultiMap<K> extends HashMap<K, Object> {
+public class BiMultiMap<K> extends HashMap<K, Object> {
 
     private final Map<Object, K> mValuesToKeys = new HashMap<>();
 

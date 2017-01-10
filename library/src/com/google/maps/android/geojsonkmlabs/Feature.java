@@ -3,7 +3,11 @@ package com.google.maps.android.geojsonkmlabs;
 import java.util.HashMap;
 import java.util.Observable;
 
+/**
+ * An abstraction that shares the common properties of KmlPlacemark and GeoJsonFeature
+ */
 public class Feature extends Observable {
+
     private final String mId;
 
     private final HashMap<String, String> mProperties;

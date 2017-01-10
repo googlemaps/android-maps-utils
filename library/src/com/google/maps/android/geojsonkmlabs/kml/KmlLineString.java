@@ -22,6 +22,11 @@ public class KmlLineString extends LineString {
         super(coordinates);
     }
 
+    /**
+     * Gets the coordinates
+     *
+     * @return ArrayList of LatLng
+     */
     public ArrayList<LatLng> getGeometryObject() {
         List<LatLng> coordinatesList = super.getGeometryObject();
         ArrayList<LatLng> coordinatesAList = new ArrayList<LatLng>(coordinatesList);

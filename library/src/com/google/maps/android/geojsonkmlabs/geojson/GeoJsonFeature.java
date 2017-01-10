@@ -118,7 +118,6 @@ public class GeoJsonFeature extends Feature implements Observer {
         mLineStringStyle = lineStringStyle;
         mLineStringStyle.addObserver(this);
         checkRedrawFeature(mLineStringStyle);
-
     }
 
     /**
@@ -186,14 +185,12 @@ public class GeoJsonFeature extends Feature implements Observer {
      */
     private void checkRedrawFeature(GeoJsonStyle style) {
         if (hasGeometry() && Arrays.asList(style.getGeometryType())
-                .contains(getGeometry().getGeometryType())) { //TODO how to incorporate into interface
-            //TODO used to be .contains(mGeometry.getType())
+                .contains(getGeometry().getGeometryType())) {
             // Don't redraw objects that aren't on the map
             setChanged();
             notifyObservers();
         }
     }
-
 
    /**
      * Sets the stored Geometry and redraws it on the layer if it has already been added
@@ -220,10 +217,12 @@ public class GeoJsonFeature extends Feature implements Observer {
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");
         sb.append("\n bounding box=").append(mBoundingBox);
+        sb.append(",\n geometry=").append(getGeometry());
         sb.append(",\n point style=").append(mPointStyle);
         sb.append(",\n line string style=").append(mLineStringStyle);
         sb.append(",\n polygon style=").append(mPolygonStyle);
         sb.append(",\n id=").append(mId);
+        sb.append(",\n properties=").append(getProperties());
         sb.append("\n}\n");
         return sb.toString();
     }

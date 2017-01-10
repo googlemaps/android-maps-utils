@@ -1,13 +1,13 @@
 package com.google.maps.android.geojsonkmlabs;
 
-import android.util.Log;
-
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonGeometry;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/*
+An abstraction that shares the common properties of KmlMultiGeometry
+ and GeoJsonMultiLineString, GeoJsonMultiPoint and GeoJsonMultiPolygon
+ */
 public class MultiGeometry implements Geometry {
 
     private String geometryType = "MultiGeometry";

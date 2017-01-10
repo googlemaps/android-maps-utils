@@ -68,13 +68,21 @@ public class GeoJsonPolygon implements GKPolygon {
     public String getGeometryType() { return getType(); }
 
 
-    @Override
+    /**
+     * Gets an array of outer boundary coordinates
+     *
+     * @return array of outer boundary coordinates
+     */
     public ArrayList<LatLng> getOuterBoundaryCoordinates() {
         // First array of coordinates are the outline
         return (ArrayList<LatLng>) getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX);
     }
 
-    @Override
+    /**
+     * Gets an array of arrays of inner boundary coordinates
+     *
+     * @return array of arrays of inner boundary coordinates
+     */
     public ArrayList<ArrayList<LatLng>> getInnerBoundaryCoordinates() {
         // Following arrays are holes
         ArrayList<ArrayList<LatLng>> innerBoundary = new ArrayList<>();
