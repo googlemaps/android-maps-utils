@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * An interface that allows the common properties of GeoJsonPolygons
  * and KmlPolygons to be abstracted
  */
-public interface GKPolygon<T> extends Geometry{
+public interface GKPolygon<T> extends Geometry {
 
     /**
      * Gets an array of outer boundary coordinates

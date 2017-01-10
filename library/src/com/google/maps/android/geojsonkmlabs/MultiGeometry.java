@@ -61,19 +61,9 @@ public class MultiGeometry implements Geometry {
         geometryType = type;
     }
 
-    /**
-     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
-     * specification.
-     *
-     * @return type of geometry
-     */
-    public String getType() {
-        return getGeometryType();
-    }
-
     @Override
     public String toString() {
-        String typeString = "Geometry Coordinates";
+        String typeString = "Geometries=";
         if (geometryType.equals("MultiPoint")) {
             typeString = "LineStrings=";
         }
@@ -85,7 +75,7 @@ public class MultiGeometry implements Geometry {
         }
 
         StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
-        sb.append("\n=" + typeString).append(getGeometryObject());
+        sb.append("\n " + typeString).append(getGeometryObject());
         sb.append("\n}\n");
         return sb.toString();
     }

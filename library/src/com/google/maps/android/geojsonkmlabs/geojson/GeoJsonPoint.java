@@ -18,6 +18,16 @@ public class GeoJsonPoint extends Point {
     }
 
     /**
+     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
+     * specification.
+     *
+     * @return type of geometry
+     */
+    public String getType() {
+        return getGeometryType();
+    }
+
+    /**
      * Gets the coordinates of the GeoJsonPoint
      *
      * @return coordinates of the GeoJsonPoint
