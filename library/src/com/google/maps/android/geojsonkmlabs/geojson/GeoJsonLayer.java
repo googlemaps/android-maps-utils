@@ -4,6 +4,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.geojsonkmlabs.Feature;
 import com.google.maps.android.geojsonkmlabs.Layer;
+import com.google.maps.android.geojsonkmlabs.Renderer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,16 +78,6 @@ public class GeoJsonLayer extends Layer {
 
 
     /**
-     * Retrieves a corresponding GeoJsonFeature instance for the given Object
-     * Allows maps with multiple layers to determine which layer the Object
-     * belongs to.
-     *
-     * @param mapObject Object
-     * @return GeoJsonFeature for the given object
-     */
-    public Feature getFeature(Object mapObject) { return mRenderer.getFeature(mapObject); }
-
-    /**
      * Takes a character input stream and converts it into a JSONObject
      *
      * @param stream character input stream representing the GeoJSON file
@@ -110,6 +101,9 @@ public class GeoJsonLayer extends Layer {
         }
         // Converts the result string into a JSONObject
         return new JSONObject(result.toString());
+    }
+
+    public interface GeoJsonOnFeatureClickListener extends OnFeatureClickListener{
     }
 
     /**

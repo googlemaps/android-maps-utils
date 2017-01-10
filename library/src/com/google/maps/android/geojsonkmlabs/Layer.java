@@ -2,6 +2,9 @@ package com.google.maps.android.geojsonkmlabs;
 
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLineStringStyle;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygonStyle;
@@ -13,6 +16,7 @@ import com.google.maps.android.geojsonkmlabs.kml.KmlRenderer;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /*
 An abstraction that shares the common properties of KmlLayer and GeoJsonLayer
@@ -51,20 +55,84 @@ public abstract class Layer {
      * with the corresponding Feature object when an object on the map (Polygon,
      * Marker, Polyline) is clicked.
      *
-     * Note that if multiple Layer objects are bound to a GoogleMap object, calling
-     * setOnFeatureClickListener on one will override the listener defined on the other. In
-     * that case, you must define each of the GoogleMap click listeners manually
-     * (OnPolygonClickListener, OnMarkerClickListener, OnPolylineClickListener), and then
-     * use the Layer.getFeature(mapObject) method on each Layer instance to
-     * determine if the given mapObject belongs to the layer.
-     *
-     * If getFeature() returns null this means that the object is a MultiPolygon, MultiLineString,
-     * MultiPoint or MultiGeometry and must be handled differently.
+     * If getFeature() returns null this means that either the object is inside a KMLContainer,
+     * or the object is a MultiPolygon, MultiLineString or MultiPoint and must
+     * be handled differently.
      *
      * @param listener Listener providing the onFeatureClick method to call.
      */
-    public void setOnFeatureClickListener(final Renderer.OnFeatureClickListener listener) {
-        mRenderer.setOnFeatureClickListener(listener);
+    public void setOnFeatureClickListener(final OnFeatureClickListener listener) {
+
+        GoogleMap map = getMap();
+
+        map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(Polygon polygon) {
+                if (getFeature(polygon) != null) {
+                    listener.onFeatureClick(getFeature(polygon));
+                } else if (getContainerFeature(polygon) != null) {
+                    listener.onFeatureClick(getContainerFeature(polygon));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
+                }
+            }
+        });
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (getFeature(marker) != null) {
+                    listener.onFeatureClick(getFeature(marker));
+                }  else if (getContainerFeature(marker) != null) {
+                    listener.onFeatureClick(getContainerFeature(marker));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
+                }
+                return false;
+            }
+        });
+
+        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+                if (getFeature(polyline) != null) {
+                    listener.onFeatureClick(getFeature(polyline));
+                } else if (getContainerFeature(polyline) != null) {
+                    listener.onFeatureClick(getContainerFeature(polyline));
+                }  else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
+     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
+     * respectively.
+     *
+     * @param mapObject Object
+     * @return an ArrayList of the individual
+     */
+    private ArrayList<?> multiObjectHandler(Object mapObject) {
+        for (Object value : mRenderer.getValues()) {
+            Class c = value.getClass();
+            if (c.getSimpleName().equals("ArrayList")) {
+                ArrayList<?> mapObjects = (ArrayList<?>) value;
+                if (mapObjects.contains(mapObject)) {
+                    return mapObjects;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Callback interface for when a map object is clicked.
+     */
+    public interface OnFeatureClickListener {
+        void onFeatureClick(Feature feature);
     }
 
     /**
@@ -83,6 +151,20 @@ public abstract class Layer {
      */
     public Iterable<? extends Feature> getFeatures(){
         return mRenderer.getFeatures();
+    }
+
+    /**
+     * Retrieves a corresponding Feature instance for the given Object
+     * Allows maps with multiple layers to determine which layer the Object
+     * belongs to.
+     *
+     * @param mapObject Object
+     * @return Feature for the given object
+     */
+    public Feature getFeature(Object mapObject) { return mRenderer.getFeature(mapObject); }
+
+    public Feature getContainerFeature(Object mapObject) {
+        return mRenderer.getContainerFeature(mapObject);
     }
 
     /**

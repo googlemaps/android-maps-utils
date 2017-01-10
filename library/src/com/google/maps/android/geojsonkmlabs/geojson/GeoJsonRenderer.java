@@ -33,6 +33,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
 
     }
 
+
     /**
      * Changes the map that GeoJsonFeature objects are being drawn onto. Existing objects are
      * removed from the previous map and drawn onto the new map.

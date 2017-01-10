@@ -112,7 +112,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
                 kmlLayer.addLayerToMap();
-                kmlLayer.setOnFeatureClickListener(new Renderer.OnFeatureClickListener() {
+                kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                     @Override
                     public void onFeatureClick(Feature feature) {
 

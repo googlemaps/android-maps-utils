@@ -145,13 +145,14 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
         layer.addLayerToMap();
 
         // Demonstrate receiving features via GeoJsonLayer clicks.
-        layer.setOnFeatureClickListener(new Renderer.OnFeatureClickListener() {
+        layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
             @Override
             public void onFeatureClick(Feature feature) {
                 Toast.makeText(GeoJsonDemoActivity.this,
                         "Feature clicked: " + feature.getProperty("title"),
                         Toast.LENGTH_SHORT).show();
             }
+
         });
 
     }
