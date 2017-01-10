@@ -136,7 +136,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     }
 
     /**
-     * Creates a new KmlGeometry object (Created if "Point", "LineString", "Polygon" or
+     * Creates a new Geometry object (Created if "Point", "LineString", "Polygon" or
      * "MultiGeometry" tag is detected by the XmlPullParser)
      *
      * @param geometryType Type of geometry object to create

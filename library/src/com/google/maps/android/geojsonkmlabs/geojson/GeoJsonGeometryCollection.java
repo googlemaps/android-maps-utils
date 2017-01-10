@@ -4,13 +4,13 @@ import com.google.maps.android.geojsonkmlabs.MultiGeometry;
 import java.util.List;
 
 /**
- * A GeoJsonGeometryCollection geometry contains a number of GeoJsonGeometry objects.
+ * A GeoJsonGeometryCollection geometry contains a number of GeoJson Geometry objects.
  */
 public class GeoJsonGeometryCollection extends MultiGeometry {
     /**
      * Creates a new GeoJsonGeometryCollection object
      *
-     * @param geometries array of GeoJsonGeometry objects to add to the GeoJsonGeometryCollection
+     * @param geometries array of Geometry objects to add to the GeoJsonGeometryCollection
      */
     public GeoJsonGeometryCollection(List<Geometry> geometries) {
         super(geometries);
@@ -28,9 +28,9 @@ public class GeoJsonGeometryCollection extends MultiGeometry {
     }
 
     /**
-     * Gets the stored GeoJsonGeometry objects
+     * Gets the stored Geometry objects
      *
-     * @return stored GeoJsonGeometry objects
+     * @return stored Geometry objects
      */
     public List<Geometry> getGeometries() { return getGeometryObject(); }
 }

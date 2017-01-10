@@ -696,12 +696,12 @@ public class Renderer {
 
 
     /**
-     * Adds all GeoJsonGeometry objects stored in the GeoJsonGeometryCollection onto the map.
+     * Adds all Geometry objects stored in the GeoJsonGeometryCollection onto the map.
      * Supports recursive GeometryCollections.
      *
-     * @param feature           contains relevant styling properties for the GeoJsonGeometry inside
+     * @param feature           contains relevant styling properties for the Geometry inside
      *                          the GeoJsonGeometryCollection
-     * @param geoJsonGeometries contains an array of GeoJsonGeometry objects
+     * @param geoJsonGeometries contains an array of Geometry objects
      * @return array of Marker, Polyline, Polygons that have been added to the map
      */
     private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature feature,
