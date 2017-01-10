@@ -1,10 +1,7 @@
 package com.google.maps.android.geojsonkmlabs;
 
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonGeometry;
-import com.google.maps.android.geojsonkmlabs.kml.KmlGeometry;
-
 /*
- * An abstraction that shares the common properties of GeoJsonGeometry and KmlGeometry
+ * An abstraction that represents a Geometry object
  */
 public interface Geometry<T> {
     /**

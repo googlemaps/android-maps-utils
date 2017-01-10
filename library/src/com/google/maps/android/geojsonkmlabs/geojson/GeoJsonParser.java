@@ -144,7 +144,7 @@ import java.util.Iterator;
      * if it has type GeometryCollection
      *
      * @param geoJsonGeometry geometry object to parse
-     * @return GeoJsonGeometry object
+     * @return Geometry object
      */
     private static Geometry parseGeometry(JSONObject geoJsonGeometry) {
         try {
@@ -203,7 +203,7 @@ import java.util.Iterator;
     }
 
     /**
-     * Creates a GeoJsonGeometry object from the given type of geometry and its coordinates or
+     * Creates a Geometry object from the given type of geometry and its coordinates or
      * geometries array
      *
      * @param geometryType  type of geometry
@@ -312,7 +312,7 @@ import java.util.Iterator;
     }
 
     /**
-     * Creates a new GeoJsonGeometryCollection object containing an array of GeoJsonGeometry
+     * Creates a new GeoJsonGeometryCollection object containing an array of Geometry
      * objects
      *
      * @param geometries array containing the geometries for the GeoJsonGeometryCollection
