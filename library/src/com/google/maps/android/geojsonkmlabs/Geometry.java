@@ -6,7 +6,7 @@ import com.google.maps.android.geojsonkmlabs.kml.KmlGeometry;
 /*
  * An abstraction that shares the common properties of GeoJsonGeometry and KmlGeometry
  */
-public interface Geometry<T> extends GeoJsonGeometry, KmlGeometry {
+public interface Geometry<T> {
     /**
      * Gets the type of geometry
      *
