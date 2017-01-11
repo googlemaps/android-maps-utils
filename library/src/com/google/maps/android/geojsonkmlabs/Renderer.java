@@ -425,9 +425,9 @@ public class Renderer {
                     Geometry geometry = feature.getGeometry();
                     KmlStyle style = getPlacemarkStyle(placemarkId);
                     KmlStyle inlineStyle = ((KmlPlacemark)feature).getInlineStyle();
-                    mapObject = addToMap((KmlPlacemark)feature, geometry, style, inlineStyle, isPlacemarkVisible);
+                    mapObject = addKmlPlacemarkToMap((KmlPlacemark)feature, geometry, style, inlineStyle, isPlacemarkVisible);
                 } else {
-                    mapObject = addFeatureToMap(feature, feature.getGeometry());
+                    mapObject = addGeoJsonFeatureToMap(feature, feature.getGeometry());
                 }
             }
         }
@@ -460,7 +460,7 @@ public class Renderer {
      * @param feature  feature to get geometry style
      * @param geometry geometry to add to the map
      */
-    protected Object addFeatureToMap(Feature feature, Geometry geometry) {
+    protected Object addGeoJsonFeatureToMap(Feature feature, Geometry geometry) {
         String geometryType = geometry.getGeometryType();
         switch (geometryType) {
             case "Point":
@@ -511,8 +511,8 @@ public class Renderer {
      * @return the object that was added to the map, this is a Marker, Polyline, Polygon or an array
      * of either objects
      */
-    protected Object addToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
-                              KmlStyle inlineStyle, boolean isVisible) {
+    protected Object addKmlPlacemarkToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
+                                          KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
         boolean hasDrawOrder = placemark.hasProperty("drawOrder");
@@ -708,7 +708,7 @@ public class Renderer {
                                                          List<Geometry> geoJsonGeometries) {
         ArrayList<Object> geometries = new ArrayList<>();
         for (Geometry geometry : geoJsonGeometries) {
-            geometries.add(addFeatureToMap(feature, geometry));
+            geometries.add(addGeoJsonFeatureToMap(feature, geometry));
         }
         return geometries;
     }
@@ -762,7 +762,7 @@ public class Renderer {
         ArrayList<Object> mapObjects = new ArrayList<>();
         ArrayList<Geometry> kmlObjects = multiGeometry.getGeometryObject();
         for (Geometry kmlGeometry : kmlObjects) {
-            mapObjects.add(addToMap(placemark, kmlGeometry, urlStyle, inlineStyle,
+            mapObjects.add(addKmlPlacemarkToMap(placemark, kmlGeometry, urlStyle, inlineStyle,
                     isContainerVisible));
         }
         return mapObjects;

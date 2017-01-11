@@ -1,15 +1,9 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.geojsonkmlabs.Feature;
-import com.google.maps.android.geojsonkmlabs.Geometry;
 import com.google.maps.android.geojsonkmlabs.Renderer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -113,7 +107,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
         removeFromMap(getAllFeatures().get(feature));
         putFeatures(feature, FEATURE_NOT_ON_MAP);
         if (map != null && feature.hasGeometry()) {
-            putFeatures(feature, addFeatureToMap(feature, feature.getGeometry()));
+            putFeatures(feature, addGeoJsonFeatureToMap(feature, feature.getGeometry()));
         }
     }
 

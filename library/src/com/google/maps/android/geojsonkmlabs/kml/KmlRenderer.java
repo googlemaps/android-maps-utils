@@ -260,7 +260,7 @@ public class KmlRenderer  extends Renderer {
                 Geometry geometry = placemark.getGeometry();
                 KmlStyle style = getPlacemarkStyle(placemarkId);
                 KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
-                Object mapObject = addToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
+                Object mapObject = addKmlPlacemarkToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
                 kmlContainer.setPlacemark((KmlPlacemark)placemark, mapObject);
                 putContainerFeature(mapObject, placemark);
             }
