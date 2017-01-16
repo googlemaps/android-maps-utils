@@ -21,8 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * An abstraction that shares the common properties of KmlMultiGeometry
- * and GeoJsonMultiLineString, GeoJsonMultiPoint and GeoJsonMultiPolygon
+ * An abstraction that shares the common properties of
+ * {@link com.google.maps.android.geojsonkmlabs.kml.KmlMultiGeometry KmlMultiGeometry}
+ * and {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiLineString GeoJsonMultiLineString},
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPoint GeoJsonMultiPoint} and
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonMultiPolygon GeoJsonMultiPolygon}
  */
 public class MultiGeometry implements Geometry {
 

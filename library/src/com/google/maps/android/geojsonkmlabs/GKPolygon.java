@@ -21,8 +21,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 /**
- * An interface that allows the common properties of GeoJsonPolygons
- * and KmlPolygons to be abstracted
+ * An interface containing the common properties of
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPolygon GeoJsonPolygon} and
+ * {@link com.google.maps.android.geojsonkmlabs.kml.KmlPolygon KmlPolygon}
  * @param <T> the type of Polygon - GeoJsonPolygon or KmlPolygon
  */
 public interface GKPolygon<T> extends Geometry {

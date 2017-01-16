@@ -20,7 +20,9 @@ import java.util.HashMap;
 import java.util.Observable;
 
 /**
- * An abstraction that shares the common properties of KmlPlacemark and GeoJsonFeature
+ * An abstraction that shares the common properties of
+ * {@link com.google.maps.android.geojsonkmlabs.kml.KmlPlacemark KmlPlacemark} and
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonFeature GeoJsonFeature}
  */
 public class Feature extends Observable {
 
