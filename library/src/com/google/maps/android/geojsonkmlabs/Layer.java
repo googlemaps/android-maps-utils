@@ -44,14 +44,18 @@ public abstract class Layer {
      * Adds the KML data to the map
      */
     protected void addKMLToMap() throws IOException, XmlPullParserException {
-        ((KmlRenderer)mRenderer).addLayerToMap();
+        if (mRenderer instanceof KmlRenderer){
+            ((KmlRenderer)mRenderer).addLayerToMap();
+        }
     }
 
     /**
      * Adds GeoJson data to the map
      */
     protected void addGeoJsonToMap() {
-        ((GeoJsonRenderer)mRenderer).addLayerToMap();
+        if (mRenderer instanceof GeoJsonRenderer) {
+            ((GeoJsonRenderer)mRenderer).addLayerToMap();
+        }
     }
 
     /**
