@@ -5,7 +5,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.geojsonkmlabs.Feature;
-import com.google.maps.android.geojsonkmlabs.Renderer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlLayer;
 import com.google.maps.android.geojsonkmlabs.kml.KmlPlacemark;
@@ -37,7 +36,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
             //retrieveFileFromResource();
             retrieveFileFromUrl();
         } catch (Exception e) {
-            Log.e("Exception caught frj", e.toString());
+            Log.e("Exception caught", e.toString());
             e.printStackTrace();
         }
     }

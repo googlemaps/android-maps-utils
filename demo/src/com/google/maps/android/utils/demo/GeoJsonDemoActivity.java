@@ -2,13 +2,9 @@ package com.google.maps.android.utils.demo;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geojsonkmlabs.Feature;
-import com.google.maps.android.geojsonkmlabs.Point;
-import com.google.maps.android.geojsonkmlabs.Renderer;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonFeature;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLayer;
-import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPoint;
 import com.google.maps.android.geojsonkmlabs.geojson.GeoJsonPointStyle;
 
 import org.json.JSONException;
