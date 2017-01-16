@@ -72,15 +72,10 @@ public class KmlDemoActivity extends BaseDemoActivity {
         for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
             builder.include(latLng);
         }
-        try {
-            getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 1));
-        } catch (IllegalStateException e) {
-            int width = getResources().getDisplayMetrics().widthPixels;
-            int height = getResources().getDisplayMetrics().heightPixels;
-            getMap().moveCamera(
-                    CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 1));
 
-        }
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 1));
     }
 
     private class DownloadKmlFile extends AsyncTask<String, Void, byte[]> {
