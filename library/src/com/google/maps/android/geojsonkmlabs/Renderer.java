@@ -62,7 +62,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * An abstraction that shares the common properties of KmlRenderer and GeoJsonRenderer
+ * An abstraction that shares the common properties of
+ * {@link com.google.maps.android.geojsonkmlabs.kml.KmlRenderer KmlRenderer} and
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonRenderer GeoJsonRenderer}
  */
 public class Renderer {
 
