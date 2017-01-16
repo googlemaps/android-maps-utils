@@ -6,9 +6,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.Observable;
 
-/*
-An abstraction that shares the common properties of KmlStyle and GeoJsonLoneStringStyle,
-GeoJsonPointStyle and GeoJsonPolygonStyle
+/**
+ * An abstraction that shares the common properties of KmlStyle and GeoJsonLoneStringStyle,
+ * GeoJsonPointStyle and GeoJsonPolygonStyle
  */
 public abstract class Style extends Observable {
 
