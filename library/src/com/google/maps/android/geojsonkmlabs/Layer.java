@@ -18,8 +18,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/*
-An abstraction that shares the common properties of KmlLayer and GeoJsonLayer
+/**
+ * An abstraction that shares the common properties of KmlLayer and GeoJsonLayer
  */
 public abstract class Layer {
 
