@@ -20,8 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-/*
-An abstraction that shares the common properties of KmlLineString and GeoJsonLineString
+/**
+ * An abstraction that shares the common properties of KmlLineString and GeoJsonLineString
  */
 public class LineString implements Geometry<List<LatLng>> {
 
