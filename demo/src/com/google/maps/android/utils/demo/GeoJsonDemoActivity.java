@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
 
 public class GeoJsonDemoActivity extends BaseDemoActivity {
 
@@ -91,7 +90,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 pointStyle.setSnippet("Earthquake occured " + feature.getProperty("place"));
 
                 // Assign the point style to the feature
-                ((GeoJsonFeature)feature).setPointStyle(pointStyle);
+                ((GeoJsonFeature) feature).setPointStyle(pointStyle);
             }
         }
     }
@@ -139,7 +138,6 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
         addColorsToMarkers(layer);
         layer.addLayerToMap();
-
         // Demonstrate receiving features via GeoJsonLayer clicks.
         layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
             @Override

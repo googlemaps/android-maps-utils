@@ -45,7 +45,7 @@ public abstract class Layer {
      */
     protected void addKMLToMap() throws IOException, XmlPullParserException {
         if (mRenderer instanceof KmlRenderer){
-            ((KmlRenderer)mRenderer).addLayerToMap();
+            ((KmlRenderer) mRenderer).addLayerToMap();
         }
     }
 
@@ -54,7 +54,7 @@ public abstract class Layer {
      */
     protected void addGeoJsonToMap() {
         if (mRenderer instanceof GeoJsonRenderer) {
-            ((GeoJsonRenderer)mRenderer).addLayerToMap();
+            ((GeoJsonRenderer) mRenderer).addLayerToMap();
         }
     }
 
@@ -63,9 +63,9 @@ public abstract class Layer {
      */
     public void removeLayerFromMap() {
         if (mRenderer instanceof GeoJsonRenderer) {
-            ((GeoJsonRenderer)mRenderer).removeLayerFromMap();
+            ((GeoJsonRenderer) mRenderer).removeLayerFromMap();
         } else if (mRenderer instanceof KmlRenderer){
-            ((KmlRenderer)mRenderer).removeLayerFromMap();
+            ((KmlRenderer) mRenderer).removeLayerFromMap();
         }
     }
 
@@ -123,7 +123,6 @@ public abstract class Layer {
                 }
             }
         });
-
     }
 
     /**
@@ -202,7 +201,7 @@ public abstract class Layer {
      */
     protected boolean hasContainers() {
         if (mRenderer instanceof KmlRenderer) {
-            return ((KmlRenderer)mRenderer).hasNestedContainers();
+            return ((KmlRenderer) mRenderer).hasNestedContainers();
         }
         return false;
     }
@@ -214,7 +213,7 @@ public abstract class Layer {
      */
     protected Iterable<KmlContainer> getContainers() {
         if (mRenderer instanceof KmlRenderer) {
-            return ((KmlRenderer)mRenderer).getNestedContainers();
+            return ((KmlRenderer) mRenderer).getNestedContainers();
         }
         return null;
     }
@@ -226,7 +225,7 @@ public abstract class Layer {
      */
     protected Iterable<KmlGroundOverlay> getGroundOverlays() {
         if (mRenderer instanceof KmlRenderer) {
-            return ((KmlRenderer)mRenderer).getGroundOverlays();
+            return ((KmlRenderer) mRenderer).getGroundOverlays();
         }
         return null;
     }
@@ -266,7 +265,6 @@ public abstract class Layer {
      */
     protected void addFeature(Feature feature){
         mRenderer.addFeature(feature);
-
     }
 
     /**

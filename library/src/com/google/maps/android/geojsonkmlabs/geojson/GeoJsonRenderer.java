@@ -27,7 +27,6 @@ public class GeoJsonRenderer extends Renderer implements Observer {
 
     }
 
-
     /**
      * Changes the map that GeoJsonFeature objects are being drawn onto. Existing objects are
      * removed from the previous map and drawn onto the new map.
@@ -37,7 +36,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
     public void setMap(GoogleMap map) {
         super.setMap(map);
         for (Feature feature : super.getFeatures()) {
-            redrawFeatureToMap((GeoJsonFeature)feature, map);
+            redrawFeatureToMap((GeoJsonFeature) feature, map);
         }
     }
 
@@ -49,7 +48,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
         if (!isLayerOnMap()) {
             setLayerVisibility(true);
             for (Feature feature : super.getFeatures()) {
-                addFeature((GeoJsonFeature)feature);
+                addFeature((GeoJsonFeature) feature);
             }
         }
     }
@@ -91,7 +90,6 @@ public class GeoJsonRenderer extends Renderer implements Observer {
             feature.deleteObserver(this);
         }
     }
-
 
     /**
      * Redraws a given GeoJsonFeature onto the map. The map object is obtained from the mFeatures

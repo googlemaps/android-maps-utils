@@ -10,6 +10,7 @@ import java.util.List;
  * A GeoJsonMultiPolygon geometry contains a number of {@link GeoJsonPolygon}s.
  */
 public class GeoJsonMultiPolygon extends MultiGeometry {
+
     /**
      * Creates a new GeoJsonMultiPolygon
      *
@@ -43,7 +44,6 @@ public class GeoJsonMultiPolygon extends MultiGeometry {
             GeoJsonPolygon polygon = (GeoJsonPolygon) geometry;
             geoJsonPolygon.add(polygon);
         }
-
         return geoJsonPolygon;
     }
 }

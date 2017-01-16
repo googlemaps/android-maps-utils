@@ -71,7 +71,6 @@ import java.util.Iterator;
 
     private LatLngBounds mBoundingBox;
 
-
     /**
      * Creates a new GeoJsonParser
      *
@@ -79,7 +78,7 @@ import java.util.Iterator;
      */
     /* package */ GeoJsonParser(JSONObject geoJsonFile) {
         mGeoJsonFile = geoJsonFile;
-        mGeoJsonFeatures = new ArrayList<GeoJsonFeature>();
+        mGeoJsonFeatures = new ArrayList<>();
         mBoundingBox = null;
         parseGeoJson();
     }
@@ -148,9 +147,7 @@ import java.util.Iterator;
      */
     private static Geometry parseGeometry(JSONObject geoJsonGeometry) {
         try {
-
             String geometryType = geoJsonGeometry.getString("type");
-
             JSONArray geometryArray;
             if (geometryType.equals(GEOMETRY_COLLECTION)) {
                 // GeometryCollection
@@ -181,7 +178,6 @@ import java.util.Iterator;
         }
         Log.w(LOG_TAG, "Geometry could not be parsed");
         return null;
-
     }
 
     /**
@@ -277,7 +273,7 @@ import java.util.Iterator;
      */
     private static GeoJsonMultiLineString createMultiLineString(JSONArray coordinates)
             throws JSONException {
-        ArrayList<GeoJsonLineString> geoJsonLineStrings = new ArrayList<GeoJsonLineString>();
+        ArrayList<GeoJsonLineString> geoJsonLineStrings = new ArrayList<>();
         for (int i = 0; i < coordinates.length(); i++) {
             geoJsonLineStrings.add(createLineString(coordinates.getJSONArray(i)));
         }
@@ -304,7 +300,7 @@ import java.util.Iterator;
      */
     private static GeoJsonMultiPolygon createMultiPolygon(JSONArray coordinates)
             throws JSONException {
-        ArrayList<GeoJsonPolygon> geoJsonPolygons = new ArrayList<GeoJsonPolygon>();
+        ArrayList<GeoJsonPolygon> geoJsonPolygons = new ArrayList<>();
         for (int i = 0; i < coordinates.length(); i++) {
             geoJsonPolygons.add(createPolygon(coordinates.getJSONArray(i)));
         }
@@ -322,8 +318,7 @@ import java.util.Iterator;
     private static GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries)
             throws JSONException {
         ArrayList<Geometry> geometryCollectionElements
-                = new ArrayList<Geometry>();
-
+                = new ArrayList<>();
         for (int i = 0; i < geometries.length(); i++) {
             JSONObject geometryElement = geometries.getJSONObject(i);
             Geometry geometry = parseGeometry(geometryElement);
@@ -356,8 +351,7 @@ import java.util.Iterator;
      */
     private static ArrayList<LatLng> parseCoordinatesArray(JSONArray coordinates)
             throws JSONException {
-        ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
-
+        ArrayList<LatLng> coordinatesArray = new ArrayList<>();
         for (int i = 0; i < coordinates.length(); i++) {
             coordinatesArray.add(parseCoordinate(coordinates.getJSONArray(i)));
         }
@@ -374,8 +368,7 @@ import java.util.Iterator;
      */
     private static ArrayList<ArrayList<LatLng>> parseCoordinatesArrays(JSONArray coordinates)
             throws JSONException {
-        ArrayList<ArrayList<LatLng>> coordinatesArray = new ArrayList<ArrayList<LatLng>>();
-
+        ArrayList<ArrayList<LatLng>> coordinatesArray = new ArrayList<>();
         for (int i = 0; i < coordinates.length(); i++) {
             coordinatesArray.add(parseCoordinatesArray(coordinates.getJSONArray(i)));
         }
@@ -390,7 +383,6 @@ import java.util.Iterator;
         try {
             GeoJsonFeature feature;
             String type = mGeoJsonFile.getString("type");
-
             if (type.equals(FEATURE)) {
                 feature = parseFeature(mGeoJsonFile);
                 if (feature != null) {

@@ -42,7 +42,6 @@ public class KmlRenderer  extends Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
-
     /* package */ KmlRenderer(GoogleMap map, Context context) {
         super(map, context);
         mGroundOverlayUrls = new ArrayList<>();
@@ -131,7 +130,6 @@ public class KmlRenderer  extends Renderer {
         if (!mMarkerIconsDownloaded) {
             downloadMarkerIcons();
         }
-
     }
 
     /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,
@@ -220,7 +218,6 @@ public class KmlRenderer  extends Renderer {
         }
     }
 
-
     /**
      * Adds placemarks with their corresponding styles onto the map
      *
@@ -259,14 +256,14 @@ public class KmlRenderer  extends Renderer {
                 String placemarkId = placemark.getId();
                 Geometry geometry = placemark.getGeometry();
                 KmlStyle style = getPlacemarkStyle(placemarkId);
-                KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
-                Object mapObject = addKmlPlacemarkToMap((KmlPlacemark)placemark, geometry, style, inlineStyle, isObjectVisible);
-                kmlContainer.setPlacemark((KmlPlacemark)placemark, mapObject);
+                KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
+                Object mapObject = addKmlPlacemarkToMap((KmlPlacemark) placemark, geometry,
+                        style, inlineStyle, isObjectVisible);
+                kmlContainer.setPlacemark((KmlPlacemark) placemark, mapObject);
                 putContainerFeature(mapObject, placemark);
             }
         }
     }
-
 
     /**
      * Determines if there are any icons to add to markers
@@ -289,16 +286,16 @@ public class KmlRenderer  extends Renderer {
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
         for (Feature placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
-            KmlStyle inlineStyle = ((KmlPlacemark)placemark).getInlineStyle();
+            KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
             if ("Point".equals(placemark.getGeometry().getGeometryType())) {
                 boolean isInlineStyleIcon = inlineStyle != null && iconUrl
                         .equals(inlineStyle.getIconUrl());
                 boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
                         .equals(urlStyle.getIconUrl());
                 if (isInlineStyleIcon) {
-                    scaleBitmap(inlineStyle, placemarks, (KmlPlacemark)placemark);
+                    scaleBitmap(inlineStyle, placemarks, (KmlPlacemark) placemark);
                 } else if (isPlacemarkStyleIcon) {
-                    scaleBitmap(urlStyle, placemarks, (KmlPlacemark)placemark);
+                    scaleBitmap(urlStyle, placemarks, (KmlPlacemark) placemark);
                 }
             }
         }

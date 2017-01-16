@@ -80,7 +80,6 @@ public class KmlLayer extends Layer {
      *
      * @return true if there are placemarks, false otherwise
      */
-
     public boolean hasPlacemarks() {
         return hasFeatures();
     }

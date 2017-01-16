@@ -117,7 +117,6 @@ public class Renderer {
         mDefaultLineStringStyle = null;
         mDefaultPolygonStyle = null;
         mContainerFeatures = new BiMultiMap<>();
-
     }
 
     /**
@@ -315,7 +314,6 @@ public class Renderer {
         mFeatures.put(feature, object);
     }
 
-
     /**
      * Adds mStyles to the mStylesRenderer
      */
@@ -440,8 +438,8 @@ public class Renderer {
                     String placemarkId = feature.getId();
                     Geometry geometry = feature.getGeometry();
                     KmlStyle style = getPlacemarkStyle(placemarkId);
-                    KmlStyle inlineStyle = ((KmlPlacemark)feature).getInlineStyle();
-                    mapObject = addKmlPlacemarkToMap((KmlPlacemark)feature, geometry, style, inlineStyle, isPlacemarkVisible);
+                    KmlStyle inlineStyle = ((KmlPlacemark) feature).getInlineStyle();
+                    mapObject = addKmlPlacemarkToMap((KmlPlacemark) feature, geometry, style, inlineStyle, isPlacemarkVisible);
                 } else {
                     mapObject = addGeoJsonFeatureToMap(feature, feature.getGeometry());
                 }
@@ -529,7 +527,6 @@ public class Renderer {
      */
     protected Object addKmlPlacemarkToMap(KmlPlacemark placemark, Geometry geometry, KmlStyle style,
                                           KmlStyle inlineStyle, boolean isVisible) {
-
         String geometryType = geometry.getGeometryType();
         boolean hasDrawOrder = placemark.hasProperty("drawOrder");
         float drawOrder = 0;
@@ -587,7 +584,6 @@ public class Renderer {
                 return addMultiGeometryToMap(placemark, (KmlMultiGeometry) geometry, style, inlineStyle,
                         isVisible);
         }
-
         return null;
     }
 
@@ -710,7 +706,6 @@ public class Renderer {
         }
     }
 
-
     /**
      * Adds all Geometry objects stored in the GeoJsonGeometryCollection onto the map.
      * Supports recursive GeometryCollections.
@@ -810,7 +805,7 @@ public class Renderer {
      */
     private ArrayList<Polyline> addMultiLineStringToMap(GeoJsonLineStringStyle lineStringStyle,
                                                         GeoJsonMultiLineString multiLineString) {
-        ArrayList<Polyline> polylines = new ArrayList<Polyline>();
+        ArrayList<Polyline> polylines = new ArrayList<>();
         for (GeoJsonLineString geoJsonLineString : multiLineString.getLineStrings()) {
             polylines.add(addLineStringToMap(lineStringStyle.toPolylineOptions(), geoJsonLineString));
         }

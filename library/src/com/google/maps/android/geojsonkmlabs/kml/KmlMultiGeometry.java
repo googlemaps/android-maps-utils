@@ -26,7 +26,7 @@ public class KmlMultiGeometry extends MultiGeometry {
      */
     public ArrayList<Geometry> getGeometryObject() {
         List<Geometry> geometriesList = super.getGeometryObject();
-        ArrayList<Geometry> geometriesAList = new ArrayList<Geometry>(geometriesList);
+        ArrayList<Geometry> geometriesAList = new ArrayList<>(geometriesList);
         return geometriesAList;
     }
 

@@ -61,7 +61,6 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             }
             eventType = parser.next();
         }
-
         return styleProperties;
     }
 

@@ -43,7 +43,6 @@ public class GeoJsonMultiPoint extends MultiGeometry {
             GeoJsonPoint point = (GeoJsonPoint) geometry;
             geoJsonPoints.add(point);
         }
-
         return geoJsonPoints;
     }
 }

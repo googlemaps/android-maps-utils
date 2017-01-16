@@ -49,7 +49,6 @@ public class GeoJsonLayer extends Layer {
         if (geoJsonFile == null) {
             throw new IllegalArgumentException("GeoJSON file cannot be null");
         }
-
         mBoundingBox = null;
         GeoJsonParser parser = new GeoJsonParser(geoJsonFile);
         // Assign GeoJSON bounding box for FeatureCollection
