@@ -61,8 +61,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-/*
-An abstraction that shares the common properties of KmlRenderer and GeoJsonRenderer
+/**
+ * An abstraction that shares the common properties of KmlRenderer and GeoJsonRenderer
  */
 public class Renderer {
 

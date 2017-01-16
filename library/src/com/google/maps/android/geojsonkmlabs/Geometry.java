@@ -16,8 +16,9 @@
 
 package com.google.maps.android.geojsonkmlabs;
 
-/*
+/**
  * An abstraction that represents a Geometry object
+ * @param <T> the type of Geometry object
  */
 public interface Geometry<T> {
     /**

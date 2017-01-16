@@ -17,8 +17,9 @@
 package com.google.maps.android.geojsonkmlabs;
 
 import com.google.android.gms.maps.model.LatLng;
-/*
-An abstraction that shares the common properties of KmlPoint and GeoJsonPoint
+
+/**
+ * An abstraction that shares the common properties of KmlPoint and GeoJsonPoint
  */
 public class Point implements Geometry {
 
