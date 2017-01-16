@@ -34,7 +34,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * An abstraction that shares the common properties of KmlLayer and GeoJsonLayer
+ * An abstraction that shares the common properties of
+ * {@link com.google.maps.android.geojsonkmlabs.kml.KmlLayer KmlLayer} and
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonLayer GeoJsonLayer}
  */
 public abstract class Layer {
 

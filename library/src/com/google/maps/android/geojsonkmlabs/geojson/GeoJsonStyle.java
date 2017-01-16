@@ -1,7 +1,8 @@
 package com.google.maps.android.geojsonkmlabs.geojson;
 
 /**
- * Class used to apply styles for the GeoJsonFeature objects
+ * Class used to apply styles for the
+ * {@link com.google.maps.android.geojsonkmlabs.geojson.GeoJsonFeature GeoJsonFeature} objects
  */
 interface GeoJsonStyle {
 
