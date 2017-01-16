@@ -43,7 +43,7 @@ public class GeoJsonParserTest extends TestCase {
         GeoJsonParser parser = new GeoJsonParser(validGeometryCollection());
         assertEquals(1, parser.getFeatures().size());
         for (GeoJsonFeature feature : parser.getFeatures()) {
-            assertEquals("GeometryCollection", feature.getGeometry().getGeometryType()); //TODO getType()
+            assertEquals("GeometryCollection", feature.getGeometry().getGeometryType());
             int size = 0;
             for (String property : feature.getPropertyKeys()) {
                 size++;
@@ -54,7 +54,7 @@ public class GeoJsonParserTest extends TestCase {
                     .getGeometry());
             assertEquals(1, geometry.getGeometries().size());
             for (Geometry geoJsonGeometry : geometry.getGeometries()) {
-                assertEquals("GeometryCollection", geoJsonGeometry.getGeometryType()); //TODO getType()
+                assertEquals("GeometryCollection", geoJsonGeometry.getGeometryType());
             }
         }
     }
@@ -253,7 +253,7 @@ public class GeoJsonParserTest extends TestCase {
         assertNull(parser.getBoundingBox());
         assertEquals(2, parser.getFeatures().size());
         assertTrue(!parser.getFeatures().get(0).getGeometry().getGeometryType().equals("Polygon") && !parser
-                .getFeatures().get(1).getGeometry().getGeometryType().equals("Polygon")); //TODO getType() x 2
+                .getFeatures().get(1).getGeometry().getGeometryType().equals("Polygon"));
 
         // Contains 1 feature element with no geometry as it was missing a coordinates member
         parser = new GeoJsonParser(invalidFeatureNoCoordinatesInGeometry());
