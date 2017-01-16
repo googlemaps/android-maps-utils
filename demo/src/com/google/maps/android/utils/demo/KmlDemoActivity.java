@@ -109,7 +109,6 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                     @Override
                     public void onFeatureClick(Feature feature) {
-
                         Toast.makeText(KmlDemoActivity.this,
                                 "Feature clicked: " + feature.getId(),
                                 Toast.LENGTH_SHORT).show();

@@ -266,7 +266,6 @@ public abstract class Layer {
      */
     protected void addFeature(Feature feature){
         mRenderer.addFeature(feature);
-
     }
 
     /**
