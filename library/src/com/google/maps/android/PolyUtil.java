@@ -409,7 +409,7 @@ public class PolyUtil {
      */
     public static double distanceToLine(final LatLng p, final LatLng start, final LatLng end) {
         if (start.equals(end)) {
-            computeDistanceBetween(end, p);
+            return computeDistanceBetween(end, p);
         }
 
         final double s0lat = toRadians(p.latitude);
