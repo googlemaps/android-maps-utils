@@ -48,6 +48,8 @@ public abstract class Layer {
     protected void addKMLToMap() throws IOException, XmlPullParserException {
         if (mRenderer instanceof KmlRenderer){
             ((KmlRenderer) mRenderer).addLayerToMap();
+        } else {
+            throw new UnsupportedOperationException("Stored renderer is not a KmlRenderer");
         }
     }
 
@@ -57,6 +59,8 @@ public abstract class Layer {
     protected void addGeoJsonToMap() {
         if (mRenderer instanceof GeoJsonRenderer) {
             ((GeoJsonRenderer) mRenderer).addLayerToMap();
+        } else {
+            throw new UnsupportedOperationException("Stored renderer is not a GeoJsonRenderer");
         }
     }
 
