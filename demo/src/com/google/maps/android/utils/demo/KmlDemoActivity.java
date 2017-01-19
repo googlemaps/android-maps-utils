@@ -37,7 +37,6 @@ public class KmlDemoActivity extends BaseDemoActivity {
             retrieveFileFromUrl();
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
-            e.printStackTrace();
         }
     }
 
