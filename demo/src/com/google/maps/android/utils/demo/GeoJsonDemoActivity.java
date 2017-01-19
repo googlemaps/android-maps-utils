@@ -72,7 +72,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
      */
     private void addColorsToMarkers(GeoJsonLayer layer) {
         // Iterate over all the features stored in the layer
-        for (Feature feature : layer.getFeatures()) {
+        for (GeoJsonFeature feature : layer.getFeatures()) {
             // Check if the magnitude property exists
             if (feature.getProperty("mag") != null && feature.hasProperty("place")) {
                 double magnitude = Double.parseDouble(feature.getProperty("mag"));
@@ -90,7 +90,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 pointStyle.setSnippet("Earthquake occured " + feature.getProperty("place"));
 
                 // Assign the point style to the feature
-                ((GeoJsonFeature) feature).setPointStyle(pointStyle);
+                feature.setPointStyle(pointStyle);
             }
         }
     }

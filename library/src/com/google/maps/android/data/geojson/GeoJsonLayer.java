@@ -73,7 +73,6 @@ public class GeoJsonLayer extends Layer {
         this(map, createJsonFileObject(context.getResources().openRawResource(resourceId)));
     }
 
-
     /**
      * Takes a character input stream and converts it into a JSONObject
      *
@@ -108,6 +107,15 @@ public class GeoJsonLayer extends Layer {
      */
     public void addLayerToMap(){
         super.addGeoJsonToMap();
+    }
+
+    /**
+     * Gets an iterable of all Feature elements that have been added to the layer
+     *
+     * @return iterable of Feature elements
+     */
+    public Iterable<GeoJsonFeature> getFeatures(){
+        return (Iterable<GeoJsonFeature>) super.getFeatures();
     }
 
     /**
