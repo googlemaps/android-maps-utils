@@ -1,7 +1,7 @@
 package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.data.GKPolygon;
+import com.google.maps.android.data.DataPolygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 
-public class GeoJsonPolygon implements GKPolygon {
+public class GeoJsonPolygon implements DataPolygon {
 
     private final static String GEOMETRY_TYPE = "Polygon";
 
