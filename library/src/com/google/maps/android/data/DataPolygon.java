@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * {@link com.google.maps.android.data.kml.KmlPolygon KmlPolygon}
  * @param <T> the type of Polygon - GeoJsonPolygon or KmlPolygon
  */
-public interface GKPolygon<T> extends Geometry {
+public interface DataPolygon<T> extends Geometry {
 
     /**
      * Gets an array of outer boundary coordinates

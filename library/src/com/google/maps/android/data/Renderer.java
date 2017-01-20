@@ -502,7 +502,7 @@ public class Renderer {
                 } else if (feature instanceof KmlPlacemark) {
                     polygonOptions = ((KmlPlacemark) feature).getPolygonOptions();
                 }
-                return addPolygonToMap(polygonOptions, (GKPolygon) geometry);
+                return addPolygonToMap(polygonOptions, (DataPolygon) geometry);
             case "MultiPoint":
                 return addMultiPointToMap(((GeoJsonFeature) feature).getPointStyle(),
                         (GeoJsonMultiPoint) geometry);
@@ -576,7 +576,7 @@ public class Renderer {
                 } else if (style.isPolyRandomColorMode()) {
                     polygonOptions.fillColor(KmlStyle.computeRandomColor(polygonOptions.getFillColor()));
                 }
-                Polygon polygon = addPolygonToMap(polygonOptions, (GKPolygon) geometry);
+                Polygon polygon = addPolygonToMap(polygonOptions, (DataPolygon) geometry);
                 polygon.setVisible(isVisible);
                 if (hasDrawOrder) {
                     polygon.setZIndex(drawOrder);
@@ -665,13 +665,13 @@ public class Renderer {
     }
 
     /**
-     * Adds a GKPolygon to the map as a Polygon
+     * Adds a DataPolygon to the map as a Polygon
      *
      * @param polygonOptions
      * @param polygon      contains coordinates for the Polygon
-     * @return Polygon object created from given GKPolygon
+     * @return Polygon object created from given DataPolygon
      */
-    protected Polygon addPolygonToMap(PolygonOptions polygonOptions, GKPolygon polygon) {
+    protected Polygon addPolygonToMap(PolygonOptions polygonOptions, DataPolygon polygon) {
         // First array of coordinates are the outline
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         // Following arrays are holes
