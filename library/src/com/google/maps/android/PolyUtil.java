@@ -429,9 +429,8 @@ public class PolyUtil {
         if (u >= 1) {
             return computeDistanceBetween(p, end);
         }
-        LatLng sa = new LatLng(p.latitude - start.latitude, p.longitude - start.longitude);
-        LatLng sb = new LatLng(u * (end.latitude - start.latitude), u * (end.longitude - start.longitude));
-        return computeDistanceBetween(sa, sb);
+        LatLng su = new LatLng(start.latitude + u * (end.latitude - start.latitude), start.longitude + u * (end.longitude - start.longitude));
+        return computeDistanceBetween(p, su);
     }
 
     /**

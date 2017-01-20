@@ -176,7 +176,7 @@ public class PolyUtilTest extends TestCase {
         double tolerance = 5; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(21, simplifiedLine.size());
+        assertEquals(20, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -398,7 +398,7 @@ public class PolyUtilTest extends TestCase {
         LatLng p = new LatLng(28.05342, -82.41594);
 
         double distance = PolyUtil.distanceToLine(p, startLine, endLine);
-        expectNearNumber(42.989894, distance, 1e-6);
+       expectNearNumber(37.947946, distance, 1e-6);
     }
 
     public void testDistanceToLineLessThanDistanceToExtrems() {
