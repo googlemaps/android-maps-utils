@@ -4,11 +4,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.geojsonkmlabs.Feature;
-import com.google.maps.android.geojsonkmlabs.kml.KmlContainer;
-import com.google.maps.android.geojsonkmlabs.kml.KmlLayer;
-import com.google.maps.android.geojsonkmlabs.kml.KmlPlacemark;
-import com.google.maps.android.geojsonkmlabs.kml.KmlPolygon;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.kml.KmlContainer;
+import com.google.maps.android.data.kml.KmlLayer;
+import com.google.maps.android.data.kml.KmlPlacemark;
+import com.google.maps.android.data.kml.KmlPolygon;
 
 import org.xmlpull.v1.XmlPullParserException;
 
