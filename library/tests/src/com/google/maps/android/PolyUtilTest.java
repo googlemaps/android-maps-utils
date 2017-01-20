@@ -400,6 +400,18 @@ public class PolyUtilTest extends TestCase {
         double distance = PolyUtil.distanceToLine(p, startLine, endLine);
         expectNearNumber(42.989894, distance, 1e-6);
     }
+
+    public void testDistanceToLineLessThanDistanceToExtrems() {
+        LatLng startLine = new LatLng(28.05359, -82.41632);
+        LatLng endLine = new LatLng(28.05310, -82.41634);
+        LatLng p = new LatLng(28.05342, -82.41594);
+
+        double distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        double distanceToStart = SphericalUtil.computeDistanceBetween(p, startLine);
+        double distanceToEnd = SphericalUtil.computeDistanceBetween(p, endLine);
+
+        Assert.assertTrue("Wrong distance.", distance <= distanceToStart && distance <= distanceToEnd);
+    }
     
     public void testDecodePath() {
         List<LatLng> latLngs = PolyUtil.decode(TEST_LINE);
