@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -51,7 +51,7 @@ var activeTableTab = "activeTableTab";
 extends java.lang.Object</pre>
 <div class="block">Groups many items on a map based on zoom level.
  <p/>
- ClusterManager should be added to the map as an: <ul> <li><code>com.google.android.gms.maps.GoogleMap.OnCameraChangeListener</code></li>
+ ClusterManager should be added to the map as an: <ul> <li><code>com.google.android.gms.maps.GoogleMap.OnCameraIdleListener</code></li>
  <li><code>com.google.android.gms.maps.GoogleMap.OnMarkerClickListener</code></li> </ul></div>
 </li>
 </ul>
@@ -152,64 +152,76 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getClusterMarkerCollection--">getClusterMarkerCollection</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getAlgorithm--">getAlgorithm</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getMarkerCollection--">getMarkerCollection</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getClusterMarkerCollection--">getClusterMarkerCollection</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/maps/android/MarkerManager.Collection.html" title="class in com.google.maps.android">MarkerManager.Collection</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getMarkerCollection--">getMarkerCollection</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/maps/android/MarkerManager.html" title="class in com.google.maps.android">MarkerManager</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getMarkerManager--">getMarkerManager</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#getRenderer--">getRenderer</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#onCameraChange-CameraPosition-">onCameraChange</a></span>(CameraPosition&nbsp;cameraPosition)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#onCameraIdle--">onCameraIdle</a></span>()</code>
 <div class="block">Might re-cluster.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#onInfoWindowClick-Marker-">onInfoWindowClick</a></span>(Marker&nbsp;marker)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#onMarkerClick-Marker-">onMarkerClick</a></span>(Marker&nbsp;marker)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#removeItem-T-">removeItem</a></span>(<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&nbsp;item)</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setAlgorithm-com.google.maps.android.clustering.algo.Algorithm-">setAlgorithm</a></span>(<a href="../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;algorithm)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setAnimation-boolean-">setAnimation</a></span>(boolean&nbsp;animate)</code>&nbsp;</td>
+</tr>
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setOnClusterClickListener-com.google.maps.android.clustering.ClusterManager.OnClusterClickListener-">setOnClusterClickListener</a></span>(<a href="../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterClickListener</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;listener)</code>
 <div class="block">Sets a callback that's invoked when a Cluster is tapped.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setOnClusterInfoWindowClickListener-com.google.maps.android.clustering.ClusterManager.OnClusterInfoWindowClickListener-">setOnClusterInfoWindowClickListener</a></span>(<a href="../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterInfoWindowClickListener</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;listener)</code>
 <div class="block">Sets a callback that's invoked when a Cluster is tapped.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setOnClusterItemClickListener-com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener-">setOnClusterItemClickListener</a></span>(<a href="../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterItemClickListener</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;listener)</code>
 <div class="block">Sets a callback that's invoked when an individual ClusterItem is tapped.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setOnClusterItemInfoWindowClickListener-com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener-">setOnClusterItemInfoWindowClickListener</a></span>(<a href="../../../../../com/google/maps/android/clustering/ClusterManager.OnClusterItemInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering">ClusterManager.OnClusterItemInfoWindowClickListener</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;listener)</code>
 <div class="block">Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/maps/android/clustering/ClusterManager.html#setRenderer-com.google.maps.android.clustering.view.ClusterRenderer-">setRenderer</a></span>(<a href="../../../../../com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;view)</code>&nbsp;</td>
 </tr>
@@ -303,6 +315,15 @@ extends java.lang.Object</pre>
 <div class="block">Force a re-cluster. You may want to call this after adding new item(s).</div>
 </li>
 </ul>
+<a name="getAlgorithm--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAlgorithm</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;getAlgorithm()</pre>
+</li>
+</ul>
 <a name="getClusterMarkerCollection--">
 <!--   -->
 </a>
@@ -330,18 +351,23 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;<a href="../../../../../com/google/maps/android/MarkerManager.html" title="class in com.google.maps.android">MarkerManager</a>&nbsp;getMarkerManager()</pre>
 </li>
 </ul>
-<a name="onCameraChange-CameraPosition-">
+<a name="getRenderer--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>onCameraChange</h4>
-<pre>public&nbsp;void&nbsp;onCameraChange(CameraPosition&nbsp;cameraPosition)</pre>
+<h4>getRenderer</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view">ClusterRenderer</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;getRenderer()</pre>
+</li>
+</ul>
+<a name="onCameraIdle--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onCameraIdle</h4>
+<pre>public&nbsp;void&nbsp;onCameraIdle()</pre>
 <div class="block">Might re-cluster.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>cameraPosition</code> - </dd>
-</dl>
 </li>
 </ul>
 <a name="onInfoWindowClick-Marker-">
@@ -380,6 +406,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>setAlgorithm</h4>
 <pre>public&nbsp;void&nbsp;setAlgorithm(<a href="../../../../../com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo">Algorithm</a>&lt;<a href="../../../../../com/google/maps/android/clustering/ClusterManager.html" title="type parameter in ClusterManager">T</a>&gt;&nbsp;algorithm)</pre>
+</li>
+</ul>
+<a name="setAnimation-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setAnimation</h4>
+<pre>public&nbsp;void&nbsp;setAnimation(boolean&nbsp;animate)</pre>
 </li>
 </ul>
 <a name="setOnClusterClickListener-com.google.maps.android.clustering.ClusterManager.OnClusterClickListener-">

@@ -12,6 +12,7 @@
 <div class="indexContainer">
 <ul>
 <li><a href="com/google/maps/android/clustering/algo/Algorithm.html" title="interface in com.google.maps.android.clustering.algo"><span class="interfaceName">Algorithm</span></a></li>
+<li><a href="com/google/maps/android/data/geojson/BiMultiMap.html" title="class in com.google.maps.android.data.geojson">BiMultiMap</a></li>
 <li><a href="com/google/maps/android/geometry/Bounds.html" title="class in com.google.maps.android.geometry">Bounds</a></li>
 <li><a href="com/google/maps/android/clustering/Cluster.html" title="interface in com.google.maps.android.clustering"><span class="interfaceName">Cluster</span></a></li>
 <li><a href="com/google/maps/android/clustering/ClusterItem.html" title="interface in com.google.maps.android.clustering"><span class="interfaceName">ClusterItem</span></a></li>
@@ -21,46 +22,59 @@
 <li><a href="com/google/maps/android/clustering/ClusterManager.OnClusterItemClickListener.html" title="interface in com.google.maps.android.clustering"><span class="interfaceName">ClusterManager.OnClusterItemClickListener</span></a></li>
 <li><a href="com/google/maps/android/clustering/ClusterManager.OnClusterItemInfoWindowClickListener.html" title="interface in com.google.maps.android.clustering"><span class="interfaceName">ClusterManager.OnClusterItemInfoWindowClickListener</span></a></li>
 <li><a href="com/google/maps/android/clustering/view/ClusterRenderer.html" title="interface in com.google.maps.android.clustering.view"><span class="interfaceName">ClusterRenderer</span></a></li>
+<li><a href="com/google/maps/android/data/DataPolygon.html" title="interface in com.google.maps.android.data"><span class="interfaceName">DataPolygon</span></a></li>
 <li><a href="com/google/maps/android/clustering/view/DefaultClusterRenderer.html" title="class in com.google.maps.android.clustering.view">DefaultClusterRenderer</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonFeature.html" title="class in com.google.maps.android.geojson">GeoJsonFeature</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonGeometry.html" title="interface in com.google.maps.android.geojson"><span class="interfaceName">GeoJsonGeometry</span></a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonGeometryCollection.html" title="class in com.google.maps.android.geojson">GeoJsonGeometryCollection</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonLayer.html" title="class in com.google.maps.android.geojson">GeoJsonLayer</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonLineString.html" title="class in com.google.maps.android.geojson">GeoJsonLineString</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonLineStringStyle.html" title="class in com.google.maps.android.geojson">GeoJsonLineStringStyle</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonMultiLineString.html" title="class in com.google.maps.android.geojson">GeoJsonMultiLineString</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonMultiPoint.html" title="class in com.google.maps.android.geojson">GeoJsonMultiPoint</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonMultiPolygon.html" title="class in com.google.maps.android.geojson">GeoJsonMultiPolygon</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonPoint.html" title="class in com.google.maps.android.geojson">GeoJsonPoint</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonPointStyle.html" title="class in com.google.maps.android.geojson">GeoJsonPointStyle</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonPolygon.html" title="class in com.google.maps.android.geojson">GeoJsonPolygon</a></li>
-<li><a href="com/google/maps/android/geojson/GeoJsonPolygonStyle.html" title="class in com.google.maps.android.geojson">GeoJsonPolygonStyle</a></li>
+<li><a href="com/google/maps/android/data/Feature.html" title="class in com.google.maps.android.data">Feature</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonFeature.html" title="class in com.google.maps.android.data.geojson">GeoJsonFeature</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonGeometryCollection.html" title="class in com.google.maps.android.data.geojson">GeoJsonGeometryCollection</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonLayer.html" title="class in com.google.maps.android.data.geojson">GeoJsonLayer</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonLayer.GeoJsonOnFeatureClickListener.html" title="interface in com.google.maps.android.data.geojson"><span class="interfaceName">GeoJsonLayer.GeoJsonOnFeatureClickListener</span></a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonLineString.html" title="class in com.google.maps.android.data.geojson">GeoJsonLineString</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonLineStringStyle.html" title="class in com.google.maps.android.data.geojson">GeoJsonLineStringStyle</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonMultiLineString.html" title="class in com.google.maps.android.data.geojson">GeoJsonMultiLineString</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonMultiPoint.html" title="class in com.google.maps.android.data.geojson">GeoJsonMultiPoint</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonMultiPolygon.html" title="class in com.google.maps.android.data.geojson">GeoJsonMultiPolygon</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonPoint.html" title="class in com.google.maps.android.data.geojson">GeoJsonPoint</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonPointStyle.html" title="class in com.google.maps.android.data.geojson">GeoJsonPointStyle</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonPolygon.html" title="class in com.google.maps.android.data.geojson">GeoJsonPolygon</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonPolygonStyle.html" title="class in com.google.maps.android.data.geojson">GeoJsonPolygonStyle</a></li>
+<li><a href="com/google/maps/android/data/geojson/GeoJsonRenderer.html" title="class in com.google.maps.android.data.geojson">GeoJsonRenderer</a></li>
+<li><a href="com/google/maps/android/data/Geometry.html" title="interface in com.google.maps.android.data"><span class="interfaceName">Geometry</span></a></li>
 <li><a href="com/google/maps/android/heatmaps/Gradient.html" title="class in com.google.maps.android.heatmaps">Gradient</a></li>
 <li><a href="com/google/maps/android/clustering/algo/GridBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo">GridBasedAlgorithm</a></li>
 <li><a href="com/google/maps/android/heatmaps/HeatmapTileProvider.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider</a></li>
 <li><a href="com/google/maps/android/heatmaps/HeatmapTileProvider.Builder.html" title="class in com.google.maps.android.heatmaps">HeatmapTileProvider.Builder</a></li>
 <li><a href="com/google/maps/android/ui/IconGenerator.html" title="class in com.google.maps.android.ui">IconGenerator</a></li>
-<li><a href="com/google/maps/android/kml/KmlBoolean.html" title="class in com.google.maps.android.kml">KmlBoolean</a></li>
-<li><a href="com/google/maps/android/kml/KmlContainer.html" title="class in com.google.maps.android.kml">KmlContainer</a></li>
-<li><a href="com/google/maps/android/kml/KmlGeometry.html" title="interface in com.google.maps.android.kml"><span class="interfaceName">KmlGeometry</span></a></li>
-<li><a href="com/google/maps/android/kml/KmlGroundOverlay.html" title="class in com.google.maps.android.kml">KmlGroundOverlay</a></li>
-<li><a href="com/google/maps/android/kml/KmlLayer.html" title="class in com.google.maps.android.kml">KmlLayer</a></li>
-<li><a href="com/google/maps/android/kml/KmlLineString.html" title="class in com.google.maps.android.kml">KmlLineString</a></li>
-<li><a href="com/google/maps/android/kml/KmlMultiGeometry.html" title="class in com.google.maps.android.kml">KmlMultiGeometry</a></li>
-<li><a href="com/google/maps/android/kml/KmlPlacemark.html" title="class in com.google.maps.android.kml">KmlPlacemark</a></li>
-<li><a href="com/google/maps/android/kml/KmlPoint.html" title="class in com.google.maps.android.kml">KmlPoint</a></li>
-<li><a href="com/google/maps/android/kml/KmlPolygon.html" title="class in com.google.maps.android.kml">KmlPolygon</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlBoolean.html" title="class in com.google.maps.android.data.kml">KmlBoolean</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlContainer.html" title="class in com.google.maps.android.data.kml">KmlContainer</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlGroundOverlay.html" title="class in com.google.maps.android.data.kml">KmlGroundOverlay</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlLayer.html" title="class in com.google.maps.android.data.kml">KmlLayer</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlLineString.html" title="class in com.google.maps.android.data.kml">KmlLineString</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlMultiGeometry.html" title="class in com.google.maps.android.data.kml">KmlMultiGeometry</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlPlacemark.html" title="class in com.google.maps.android.data.kml">KmlPlacemark</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlPoint.html" title="class in com.google.maps.android.data.kml">KmlPoint</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlPolygon.html" title="class in com.google.maps.android.data.kml">KmlPolygon</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlRenderer.html" title="class in com.google.maps.android.data.kml">KmlRenderer</a></li>
+<li><a href="com/google/maps/android/data/kml/KmlStyle.html" title="class in com.google.maps.android.data.kml">KmlStyle</a></li>
+<li><a href="com/google/maps/android/data/Layer.html" title="class in com.google.maps.android.data">Layer</a></li>
+<li><a href="com/google/maps/android/data/Layer.OnFeatureClickListener.html" title="interface in com.google.maps.android.data"><span class="interfaceName">Layer.OnFeatureClickListener</span></a></li>
+<li><a href="com/google/maps/android/data/LineString.html" title="class in com.google.maps.android.data">LineString</a></li>
 <li><a href="com/google/maps/android/MarkerManager.html" title="class in com.google.maps.android">MarkerManager</a></li>
+<li><a href="com/google/maps/android/data/MultiGeometry.html" title="class in com.google.maps.android.data">MultiGeometry</a></li>
 <li><a href="com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm.html" title="class in com.google.maps.android.clustering.algo">NonHierarchicalDistanceBasedAlgorithm</a></li>
+<li><a href="com/google/maps/android/data/Point.html" title="class in com.google.maps.android.data">Point</a></li>
 <li><a href="com/google/maps/android/geometry/Point.html" title="class in com.google.maps.android.geometry">Point</a></li>
 <li><a href="com/google/maps/android/quadtree/PointQuadTree.html" title="class in com.google.maps.android.quadtree">PointQuadTree</a></li>
 <li><a href="com/google/maps/android/quadtree/PointQuadTree.Item.html" title="interface in com.google.maps.android.quadtree"><span class="interfaceName">PointQuadTree.Item</span></a></li>
 <li><a href="com/google/maps/android/PolyUtil.html" title="class in com.google.maps.android">PolyUtil</a></li>
 <li><a href="com/google/maps/android/clustering/algo/PreCachingAlgorithmDecorator.html" title="class in com.google.maps.android.clustering.algo">PreCachingAlgorithmDecorator</a></li>
+<li><a href="com/google/maps/android/data/Renderer.html" title="class in com.google.maps.android.data">Renderer</a></li>
+<li><a href="com/google/maps/android/ui/RotationLayout.html" title="class in com.google.maps.android.ui">RotationLayout</a></li>
 <li><a href="com/google/maps/android/projection/SphericalMercatorProjection.html" title="class in com.google.maps.android.projection">SphericalMercatorProjection</a></li>
 <li><a href="com/google/maps/android/SphericalUtil.html" title="class in com.google.maps.android">SphericalUtil</a></li>
 <li><a href="com/google/maps/android/ui/SquareTextView.html" title="class in com.google.maps.android.ui">SquareTextView</a></li>
 <li><a href="com/google/maps/android/clustering/algo/StaticCluster.html" title="class in com.google.maps.android.clustering.algo">StaticCluster</a></li>
+<li><a href="com/google/maps/android/data/Style.html" title="class in com.google.maps.android.data">Style</a></li>
 <li><a href="com/google/maps/android/heatmaps/WeightedLatLng.html" title="class in com.google.maps.android.heatmaps">WeightedLatLng</a></li>
 </ul>
 </div>
