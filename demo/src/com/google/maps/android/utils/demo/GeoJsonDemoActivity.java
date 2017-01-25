@@ -2,9 +2,10 @@ package com.google.maps.android.utils.demo;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.maps.android.geojson.GeoJsonFeature;
-import com.google.maps.android.geojson.GeoJsonLayer;
-import com.google.maps.android.geojson.GeoJsonPointStyle;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.geojson.GeoJsonFeature;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPointStyle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,9 +46,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo() {
         // Download the GeoJSON file.
-        retrieveFileFromUrl();
+        //retrieveFileFromUrl();
         // Alternate approach of loading a local GeoJSON file.
-        //retrieveFileFromResource();
+        retrieveFileFromResource();
     }
 
     private void retrieveFileFromUrl() {
@@ -137,15 +138,15 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
         addColorsToMarkers(layer);
         layer.addLayerToMap();
-
         // Demonstrate receiving features via GeoJsonLayer clicks.
         layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
             @Override
-            public void onFeatureClick(GeoJsonFeature feature) {
+            public void onFeatureClick(Feature feature) {
                 Toast.makeText(GeoJsonDemoActivity.this,
                         "Feature clicked: " + feature.getProperty("title"),
                         Toast.LENGTH_SHORT).show();
             }
+
         });
 
     }
