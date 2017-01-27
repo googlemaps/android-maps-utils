@@ -16,8 +16,6 @@ import java.io.InputStream;
  */
 public class KmlLayer extends Layer {
 
-    private final KmlRenderer mRenderer;
-
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
@@ -43,7 +41,7 @@ public class KmlLayer extends Layer {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        mRenderer = new KmlRenderer(map, context);
+        KmlRenderer mRenderer = new KmlRenderer(map, context);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();

@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.DataPolygon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a KML Polygon. Contains a single array of outer boundary coordinates and an array of
@@ -13,9 +14,9 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
 
     public static final String GEOMETRY_TYPE = "Polygon";
 
-    private final ArrayList<LatLng> mOuterBoundaryCoordinates;
+    private final List<LatLng> mOuterBoundaryCoordinates;
 
-    private final ArrayList<ArrayList<LatLng>> mInnerBoundaryCoordinates;
+    private final List<List<LatLng>> mInnerBoundaryCoordinates;
 
     /**
      * Creates a new KmlPolygon object
@@ -23,8 +24,8 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
      * @param outerBoundaryCoordinates single array of outer boundary coordinates
      * @param innerBoundaryCoordinates multiple arrays of inner boundary coordinates
      */
-    public KmlPolygon(ArrayList<LatLng> outerBoundaryCoordinates,
-            ArrayList<ArrayList<LatLng>> innerBoundaryCoordinates) {
+    public KmlPolygon(List<LatLng> outerBoundaryCoordinates,
+            List<List<LatLng>> innerBoundaryCoordinates) {
         if (outerBoundaryCoordinates == null) {
             throw new IllegalArgumentException("Outer boundary coordinates cannot be null");
         } else {
@@ -47,8 +48,8 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
      *
      * @return ArrayList of an ArrayList of LatLng points
      */
-    public ArrayList<ArrayList<LatLng>> getGeometryObject() {
-        ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
+    public List<List<LatLng>> getGeometryObject() {
+        List<List<LatLng>> coordinates = new ArrayList<>();
         coordinates.add(mOuterBoundaryCoordinates);
         //Polygon objects do not have to have inner holes
         if (mInnerBoundaryCoordinates != null) {
@@ -62,7 +63,7 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
      *
      * @return array of outer boundary coordinates
      */
-    public ArrayList<LatLng> getOuterBoundaryCoordinates() {
+    public List<LatLng> getOuterBoundaryCoordinates() {
         return mOuterBoundaryCoordinates;
     }
 
@@ -71,7 +72,7 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
      *
      * @return array of arrays of inner boundary coordinates
      */
-    public ArrayList<ArrayList<LatLng>> getInnerBoundaryCoordinates() {
+    public List<List<LatLng>> getInnerBoundaryCoordinates() {
         return mInnerBoundaryCoordinates;
     }
 

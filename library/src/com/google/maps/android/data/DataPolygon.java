@@ -18,7 +18,7 @@ package com.google.maps.android.data;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An interface containing the common properties of
@@ -33,13 +33,13 @@ public interface DataPolygon<T> extends Geometry {
      *
      * @return array of outer boundary coordinates
      */
-    public ArrayList<LatLng> getOuterBoundaryCoordinates();
+    List<LatLng> getOuterBoundaryCoordinates();
 
     /**
      * Gets an array of arrays of inner boundary coordinates
      *
      * @return array of arrays of inner boundary coordinates
      */
-    public ArrayList<ArrayList<LatLng>> getInnerBoundaryCoordinates();
+    List<List<LatLng>> getInnerBoundaryCoordinates();
 
 }

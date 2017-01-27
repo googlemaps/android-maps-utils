@@ -37,16 +37,16 @@ public class MultiGeometry implements Geometry {
      * Creates a new MultiGeometry object
      * @param geometries contains list of Polygons, Linestrings or Points
      */
-    public MultiGeometry(List<?> geometries) {
+    public MultiGeometry(List<? extends Geometry> geometries) {
         if (geometries == null) {
             throw new IllegalArgumentException("Geometries cannot be null");
         }
 
         //convert unknown geometry type (due to GeoJSON types) to Geometry type
         ArrayList geometriesList = new ArrayList();
-        Iterator<?> geometriesIterator = geometries.iterator();
+        Iterator<? extends Geometry> geometriesIterator = geometries.iterator();
         while (geometriesIterator.hasNext()) {
-            Geometry geometry = (Geometry) geometriesIterator.next();
+            Geometry geometry = geometriesIterator.next();
             geometriesList.add(geometry);
         }
 

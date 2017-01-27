@@ -17,6 +17,7 @@
 package com.google.maps.android.data;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -28,7 +29,7 @@ public class Feature extends Observable {
 
     private final String mId;
 
-    private final HashMap<String, String> mProperties;
+    private final Map<String, String> mProperties;
 
     private Geometry mGeometry;
 
@@ -36,10 +37,10 @@ public class Feature extends Observable {
      * Creates a new Feature object
      * @param featureGeometry type of geometry to assign to the feature
      * @param id common identifier of the feature
-     * @param properties hashmap containing properties related to the feature
+     * @param properties map containing properties related to the feature
      */
     public Feature(Geometry featureGeometry, String id,
-                          HashMap<String, String> properties){
+                          Map<String, String> properties){
         mGeometry = featureGeometry;
         mId = id;
         if (properties == null) {
@@ -108,7 +109,7 @@ public class Feature extends Observable {
     /**
      * Gets whether the placemark has properties
      *
-     * @return true if there are properties in the properties hashmap, false otherwise
+     * @return true if there are properties in the properties map, false otherwise
      */
     public boolean hasProperties() {
         return mProperties.size() > 0;

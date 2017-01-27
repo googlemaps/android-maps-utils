@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
@@ -230,8 +231,8 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             throws XmlPullParserException, IOException {
         // Indicates if an outer boundary needs to be defined
         Boolean isOuterBoundary = false;
-        ArrayList<LatLng> outerBoundary = new ArrayList<LatLng>();
-        ArrayList<ArrayList<LatLng>> innerBoundaries = new ArrayList<ArrayList<LatLng>>();
+        List<LatLng> outerBoundary = new ArrayList<>();
+        List<List<LatLng>> innerBoundaries = new ArrayList<>();
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("Polygon"))) {
             if (eventType == START_TAG) {

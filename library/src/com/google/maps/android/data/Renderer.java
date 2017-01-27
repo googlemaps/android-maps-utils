@@ -675,8 +675,8 @@ public class Renderer {
         // First array of coordinates are the outline
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         // Following arrays are holes
-        ArrayList<ArrayList<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
-        for (ArrayList<LatLng> innerBoundary : innerBoundaries) {
+        List<List<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
+        for (List<LatLng> innerBoundary : innerBoundaries) {
             polygonOptions.addHole(innerBoundary);
         }
         Polygon addedPolygon = mMap.addPolygon(polygonOptions);

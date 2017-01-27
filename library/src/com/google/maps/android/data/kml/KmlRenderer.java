@@ -70,7 +70,7 @@ public class KmlRenderer  extends Renderer {
      */
     private void removePlacemarks(HashMap<? extends Feature, Object> placemarks) {
         // Remove map object from the map
-        super.removeFeatures((HashMap<Feature, Object>) placemarks);
+        removeFeatures((HashMap<Feature, Object>) placemarks);
     }
 
     /**

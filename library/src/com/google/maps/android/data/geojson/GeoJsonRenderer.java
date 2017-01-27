@@ -20,7 +20,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      * Creates a new GeoJsonRender object
      *
      * @param map map to place GeoJsonFeature objects on
-     * @param features
+     * @param features contains a hashmap of features and objects that will go on the map
      */
     public GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
         super(map, features);

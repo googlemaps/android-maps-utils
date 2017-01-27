@@ -31,11 +31,7 @@ import java.util.HashMap;
  */
 public class GeoJsonLayer extends Layer {
 
-    private final GeoJsonRenderer mRenderer;
-
     private LatLngBounds mBoundingBox;
-
-    private GoogleMap mMap;
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
@@ -55,7 +51,7 @@ public class GeoJsonLayer extends Layer {
         for (GeoJsonFeature feature : parser.getFeatures()) {
             geoJsonFeatures.put(feature, null);
         }
-        mRenderer = new GeoJsonRenderer(map, geoJsonFeatures);
+        GeoJsonRenderer mRenderer = new GeoJsonRenderer(map, geoJsonFeatures);
         storeRenderer(mRenderer);
     }
 
@@ -87,14 +83,12 @@ public class GeoJsonLayer extends Layer {
         StringBuilder result = new StringBuilder();
         // Reads from stream
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        try {
-            // Read each line of the GeoJSON file into a string
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-        } finally {
-            reader.close();
+        // Read each line of the GeoJSON file into a string
+        while ((line = reader.readLine()) != null) {
+            result.append(line);
         }
+        reader.close();
+
         // Converts the result string into a JSONObject
         return new JSONObject(result.toString());
     }
