@@ -38,5 +38,4 @@ public class GeoJsonLineString extends LineString {
     public List<LatLng> getCoordinates() {
         return getGeometryObject();
     }
-
 }

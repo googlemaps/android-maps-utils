@@ -394,7 +394,7 @@ public class KmlRenderer  extends Renderer {
                 GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
                         .image(groundOverlayBitmap);
                 GroundOverlay mapGroundOverlay = attachGroundOverlay(groundOverlayOptions);
-                if (containerVisibility == false) {
+                if (!containerVisibility) {
                     mapGroundOverlay.setVisible(false);
                 }
                 groundOverlays.put(kmlGroundOverlay, mapGroundOverlay);
