@@ -25,9 +25,12 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +74,12 @@ import java.util.Iterator;
 
     private Context mContext;
 
-    /* package */ KmlRenderer(GoogleMap map, Context context) {
+    /**
+     * The fully qualified directory name to look in (in the android file system) for any relative-path images.
+     */
+    private String mDirectoryName;
+
+    /* package */ KmlRenderer(GoogleMap map, Context context, String directoryName) {
         mContext = context;
         mMap = map;
         mImagesCache = new LruCache<String, Bitmap>(LRU_CACHE_SIZE);
@@ -81,6 +89,7 @@ import java.util.Iterator;
         mLayerVisible = false;
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
+        mDirectoryName = directoryName;
     }
 
     /**
@@ -161,7 +170,10 @@ import java.util.Iterator;
      */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            groundOverlay.remove();
+            //For some reason, it was getting null overlays. This fixed the problem. I guess it's from malformed KML files.
+            if (groundOverlay != null) {
+                groundOverlay.remove();
+            }
         }
     }
 
@@ -825,6 +837,8 @@ import java.util.Iterator;
 
         private final String mIconUrl;
 
+        private final String mModifiedUrl;
+
         /**
          * Creates a new IconImageDownload object
          *
@@ -832,6 +846,7 @@ import java.util.Iterator;
          */
         public MarkerIconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
+            mModifiedUrl = removePrependedSlash(iconUrl);
         }
 
         /**
@@ -845,7 +860,7 @@ import java.util.Iterator;
             try {
                 return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mIconUrl);
+                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -860,6 +875,10 @@ import java.util.Iterator;
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
+                //Try to get it from the file system:
+                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+            }
+            if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             } else {
                 mImagesCache.put(mIconUrl, bitmap);
@@ -871,6 +890,14 @@ import java.util.Iterator;
         }
     }
 
+    private String removePrependedSlash(String string) {
+        if (string.startsWith("/")) {
+            return string.substring(1);
+        } else {
+            return string;
+        }
+    }
+
     /**
      * Downloads images for use as ground overlays
      */
@@ -878,8 +905,11 @@ import java.util.Iterator;
 
         private final String mGroundOverlayUrl;
 
+        private final String mModifiedUrl;
+
         public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
+            mModifiedUrl = removePrependedSlash(groundOverlayUrl);
         }
 
         /**
@@ -890,11 +920,13 @@ import java.util.Iterator;
          */
         @Override
         protected Bitmap doInBackground(String... params) {
+            //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
+            //If it's not a relative URL, then try to load from the world wide web.
             try {
                 return BitmapFactory
                         .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mGroundOverlayUrl);
+                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
@@ -909,7 +941,12 @@ import java.util.Iterator;
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
+                //Try to get it from the file system:
+                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+            }
+            if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
+
             } else {
                 mImagesCache.put(mGroundOverlayUrl, bitmap);
                 if (mLayerVisible) {
