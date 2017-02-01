@@ -369,7 +369,7 @@
  <a href="com/google/maps/android/data/kml/KmlPlacemark.html" title="class in com.google.maps.android.data.kml"><code>KmlPlacemark</code></a> and
  <a href="com/google/maps/android/data/geojson/GeoJsonFeature.html" title="class in com.google.maps.android.data.geojson"><code>GeoJsonFeature</code></a></div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/maps/android/data/Feature.html#Feature-com.google.maps.android.data.Geometry-java.lang.String-java.util.HashMap-">Feature(Geometry, String, HashMap&lt;String, String&gt;)</a></span> - Constructor for class com.google.maps.android.data.<a href="com/google/maps/android/data/Feature.html" title="class in com.google.maps.android.data">Feature</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/data/Feature.html#Feature-com.google.maps.android.data.Geometry-java.lang.String-java.util.Map-">Feature(Geometry, String, Map&lt;String, String&gt;)</a></span> - Constructor for class com.google.maps.android.data.<a href="com/google/maps/android/data/Feature.html" title="class in com.google.maps.android.data">Feature</a></dt>
 <dd>
 <div class="block">Creates a new Feature object</div>
 </dd>
@@ -788,7 +788,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/data/DataPolygon.html#getInnerBoundaryCoordinates--">getInnerBoundaryCoordinates()</a></span> - Method in interface com.google.maps.android.data.<a href="com/google/maps/android/data/DataPolygon.html" title="interface in com.google.maps.android.data">DataPolygon</a></dt>
 <dd>
-<div class="block">Gets an array of arrays of inner boundary coordinates</div>
+<div class="block">Gets a list of lists of inner boundary coordinates</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/data/geojson/GeoJsonPolygon.html#getInnerBoundaryCoordinates--">getInnerBoundaryCoordinates()</a></span> - Method in class com.google.maps.android.data.geojson.<a href="com/google/maps/android/data/geojson/GeoJsonPolygon.html" title="class in com.google.maps.android.data.geojson">GeoJsonPolygon</a></dt>
 <dd>
@@ -874,7 +874,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/data/DataPolygon.html#getOuterBoundaryCoordinates--">getOuterBoundaryCoordinates()</a></span> - Method in interface com.google.maps.android.data.<a href="com/google/maps/android/data/DataPolygon.html" title="interface in com.google.maps.android.data">DataPolygon</a></dt>
 <dd>
-<div class="block">Gets an array of outer boundary coordinates</div>
+<div class="block">Gets a list of outer boundary coordinates</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/maps/android/data/geojson/GeoJsonPolygon.html#getOuterBoundaryCoordinates--">getOuterBoundaryCoordinates()</a></span> - Method in class com.google.maps.android.data.geojson.<a href="com/google/maps/android/data/geojson/GeoJsonPolygon.html" title="class in com.google.maps.android.data.geojson">GeoJsonPolygon</a></dt>
 <dd>
@@ -1362,7 +1362,7 @@
 <dd>
 <div class="block">Represents a KML Polygon.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/maps/android/data/kml/KmlPolygon.html#KmlPolygon-java.util.ArrayList-java.util.ArrayList-">KmlPolygon(ArrayList&lt;LatLng&gt;, ArrayList&lt;ArrayList&lt;LatLng&gt;&gt;)</a></span> - Constructor for class com.google.maps.android.data.kml.<a href="com/google/maps/android/data/kml/KmlPolygon.html" title="class in com.google.maps.android.data.kml">KmlPolygon</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/data/kml/KmlPolygon.html#KmlPolygon-java.util.List-java.util.List-">KmlPolygon(List&lt;LatLng&gt;, List&lt;List&lt;LatLng&gt;&gt;)</a></span> - Constructor for class com.google.maps.android.data.kml.<a href="com/google/maps/android/data/kml/KmlPolygon.html" title="class in com.google.maps.android.data.kml">KmlPolygon</a></dt>
 <dd>
 <div class="block">Creates a new KmlPolygon object</div>
 </dd>
@@ -1465,7 +1465,7 @@
  <a href="com/google/maps/android/data/geojson/GeoJsonMultiPoint.html" title="class in com.google.maps.android.data.geojson"><code>GeoJsonMultiPoint</code></a> and
  <a href="com/google/maps/android/data/geojson/GeoJsonMultiPolygon.html" title="class in com.google.maps.android.data.geojson"><code>GeoJsonMultiPolygon</code></a></div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/maps/android/data/MultiGeometry.html#MultiGeometry-java.util.List-">MultiGeometry(List&lt;?&gt;)</a></span> - Constructor for class com.google.maps.android.data.<a href="com/google/maps/android/data/MultiGeometry.html" title="class in com.google.maps.android.data">MultiGeometry</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/maps/android/data/MultiGeometry.html#MultiGeometry-java.util.List-">MultiGeometry(List&lt;? extends Geometry&gt;)</a></span> - Constructor for class com.google.maps.android.data.<a href="com/google/maps/android/data/MultiGeometry.html" title="class in com.google.maps.android.data">MultiGeometry</a></dt>
 <dd>
 <div class="block">Creates a new MultiGeometry object</div>
 </dd>

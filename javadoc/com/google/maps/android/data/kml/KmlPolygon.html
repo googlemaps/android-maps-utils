@@ -93,8 +93,8 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/data/kml/KmlPolygon.html#KmlPolygon-java.util.ArrayList-java.util.ArrayList-">KmlPolygon</a></span>(java.util.ArrayList&lt;LatLng&gt;&nbsp;outerBoundaryCoordinates,
-          java.util.ArrayList&lt;java.util.ArrayList&lt;LatLng&gt;&gt;&nbsp;innerBoundaryCoordinates)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/data/kml/KmlPolygon.html#KmlPolygon-java.util.List-java.util.List-">KmlPolygon</a></span>(java.util.List&lt;LatLng&gt;&nbsp;outerBoundaryCoordinates,
+          java.util.List&lt;java.util.List&lt;LatLng&gt;&gt;&nbsp;innerBoundaryCoordinates)</code>
 <div class="block">Creates a new KmlPolygon object</div>
 </td>
 </tr>
@@ -114,7 +114,7 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;java.util.ArrayList&lt;LatLng&gt;&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;java.util.List&lt;LatLng&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/data/kml/KmlPolygon.html#getGeometryObject--">getGeometryObject</a></span>()</code>
 <div class="block">Gets the coordinates of the Polygon</div>
 </td>
@@ -126,13 +126,13 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;java.util.ArrayList&lt;LatLng&gt;&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;java.util.List&lt;LatLng&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/data/kml/KmlPolygon.html#getInnerBoundaryCoordinates--">getInnerBoundaryCoordinates</a></span>()</code>
 <div class="block">Gets an array of arrays of inner boundary coordinates</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;LatLng&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;LatLng&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../com/google/maps/android/data/kml/KmlPolygon.html#getOuterBoundaryCoordinates--">getOuterBoundaryCoordinates</a></span>()</code>
 <div class="block">Gets an array of outer boundary coordinates</div>
 </td>
@@ -184,14 +184,14 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="KmlPolygon-java.util.ArrayList-java.util.ArrayList-">
+<a name="KmlPolygon-java.util.List-java.util.List-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>KmlPolygon</h4>
-<pre>public&nbsp;KmlPolygon(java.util.ArrayList&lt;LatLng&gt;&nbsp;outerBoundaryCoordinates,
-                  java.util.ArrayList&lt;java.util.ArrayList&lt;LatLng&gt;&gt;&nbsp;innerBoundaryCoordinates)</pre>
+<pre>public&nbsp;KmlPolygon(java.util.List&lt;LatLng&gt;&nbsp;outerBoundaryCoordinates,
+                  java.util.List&lt;java.util.List&lt;LatLng&gt;&gt;&nbsp;innerBoundaryCoordinates)</pre>
 <div class="block">Creates a new KmlPolygon object</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -214,7 +214,7 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getGeometryObject</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.util.ArrayList&lt;LatLng&gt;&gt;&nbsp;getGeometryObject()</pre>
+<pre>public&nbsp;java.util.List&lt;java.util.List&lt;LatLng&gt;&gt;&nbsp;getGeometryObject()</pre>
 <div class="block">Gets the coordinates of the Polygon</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -246,7 +246,7 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getInnerBoundaryCoordinates</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.util.ArrayList&lt;LatLng&gt;&gt;&nbsp;getInnerBoundaryCoordinates()</pre>
+<pre>public&nbsp;java.util.List&lt;java.util.List&lt;LatLng&gt;&gt;&nbsp;getInnerBoundaryCoordinates()</pre>
 <div class="block">Gets an array of arrays of inner boundary coordinates</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -262,7 +262,7 @@ implements <a href="../../../../../../com/google/maps/android/data/DataPolygon.h
 <ul class="blockList">
 <li class="blockList">
 <h4>getOuterBoundaryCoordinates</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;LatLng&gt;&nbsp;getOuterBoundaryCoordinates()</pre>
+<pre>public&nbsp;java.util.List&lt;LatLng&gt;&nbsp;getOuterBoundaryCoordinates()</pre>
 <div class="block">Gets an array of outer boundary coordinates</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
