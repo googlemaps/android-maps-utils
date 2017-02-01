@@ -4,16 +4,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.kml.KmlContainer;
-import com.google.maps.android.kml.KmlLayer;
-import com.google.maps.android.kml.KmlLineString;
-import com.google.maps.android.kml.KmlPlacemark;
-import com.google.maps.android.kml.KmlPolygon;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.kml.KmlContainer;
+import com.google.maps.android.data.kml.KmlLayer;
+import com.google.maps.android.data.kml.KmlPlacemark;
+import com.google.maps.android.data.kml.KmlPolygon;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,7 +70,10 @@ public class KmlDemoActivity extends BaseDemoActivity {
         for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
             builder.include(latLng);
         }
-        getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 1));
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 1));
     }
 
     private class DownloadKmlFile extends AsyncTask<String, Void, byte[]> {
@@ -101,6 +105,14 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
                         getApplicationContext());
                 kmlLayer.addLayerToMap();
+                kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
+                    @Override
+                    public void onFeatureClick(Feature feature) {
+                        Toast.makeText(KmlDemoActivity.this,
+                                "Feature clicked: " + feature.getId(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
                 moveCameraToKml(kmlLayer);
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
