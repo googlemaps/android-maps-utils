@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.util.LruCache;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +77,11 @@ import java.util.Iterator;
     private Context mContext;
 
     /**
+     * To auto-scale the bitmap images according to screen density.
+     */
+    private BitmapFactory.Options mBitmapOptions;
+
+    /**
      * The fully qualified directory name to look in (in the android file system) for any relative-path images.
      */
     private String mDirectoryName;
@@ -90,6 +97,14 @@ import java.util.Iterator;
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
         mDirectoryName = directoryName;
+
+        //Set up bitmap options
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        options.inScreenDensity = metrics.densityDpi;
+        options.inTargetDensity =  metrics.densityDpi;
+        options.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+        mBitmapOptions = options;
     }
 
     /**
@@ -858,9 +873,9 @@ import java.util.Iterator;
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
+                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent(), null, mBitmapOptions);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -876,7 +891,7 @@ import java.util.Iterator;
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 //Try to get it from the file system:
-                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
             }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
@@ -924,9 +939,9 @@ import java.util.Iterator;
             //If it's not a relative URL, then try to load from the world wide web.
             try {
                 return BitmapFactory
-                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
+                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent(), null, mBitmapOptions);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
@@ -942,11 +957,10 @@ import java.util.Iterator;
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 //Try to get it from the file system:
-                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
             }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
-
             } else {
                 mImagesCache.put(mGroundOverlayUrl, bitmap);
                 if (mLayerVisible) {
