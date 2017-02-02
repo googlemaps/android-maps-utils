@@ -922,12 +922,13 @@ import java.util.Iterator;
 
     /**
      * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
-     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName, scaled according to screen density;
-     * or null if {@link KmlRenderer#mDirectoryName} is null.
+     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName;
+     * or the bitmap found at fileName (treated as an absolute path) if {@link KmlRenderer#mDirectoryName} is null.
+     * In both cases, the bitmap is scaled according to screen density.
      */
     private Bitmap getBitmapFromFile(String fileName) {
         if (mDirectoryName == null) {
-            return null;
+            return BitmapFactory.decodeFile(fileName, mBitmapOptions);
         }
         return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath(), mBitmapOptions);
     }
