@@ -82,10 +82,18 @@ import java.util.Iterator;
     private BitmapFactory.Options mBitmapOptions;
 
     /**
-     * The fully qualified directory name to look in (in the android file system) for any relative-path images.
+     * The fully qualified directory name to look in (in the android file system) for any relative-path images,
+     * or null if we should only look online (for library compatibility).
      */
     private String mDirectoryName;
 
+    KmlRenderer(GoogleMap map, Context context) {
+        this(map, context, null);
+    }
+
+    /**
+     * @param directoryName See {@link KmlRenderer#mDirectoryName}, or null to only look online.
+     */
     /* package */ KmlRenderer(GoogleMap map, Context context, String directoryName) {
         mContext = context;
         mMap = map;
@@ -208,7 +216,7 @@ import java.util.Iterator;
      * Iterates a list of styles and assigns a style
      */
     /*package*/ void assignStyleMap(HashMap<String, String> styleMap,
-            HashMap<String, KmlStyle> styles) {
+                                    HashMap<String, KmlStyle> styles) {
         for (String styleMapKey : styleMap.keySet()) {
             String styleMapValue = styleMap.get(styleMapKey);
             if (styles.containsKey(styleMapValue)) {
@@ -227,9 +235,9 @@ import java.util.Iterator;
      * @param groundOverlays hashmap of ground overlays
      */
     /* package */ void storeKmlData(HashMap<String, KmlStyle> styles,
-            HashMap<String, String> styleMaps,
-            HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
-            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+                                    HashMap<String, String> styleMaps,
+                                    HashMap<KmlPlacemark, Object> placemarks, ArrayList<KmlContainer> folders,
+                                    HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;
         mPlacemarks = placemarks;
@@ -370,7 +378,7 @@ import java.util.Iterator;
      * @param kmlContainers An arraylist of folders
      */
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
-            boolean containerVisibility) {
+                                        boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
@@ -479,7 +487,7 @@ import java.util.Iterator;
         Bitmap bitmapImage = mImagesCache.get(bitmapUrl);
         BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
         ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
-     }
+    }
 
     /**
      * Assigns icons to markers with a url if put in a placemark tag that is nested in a folder.
@@ -488,7 +496,7 @@ import java.util.Iterator;
      * @param kmlContainers kml container which contains the marker
      */
     private void addContainerGroupIconsToMarkers(String iconUrl,
-            Iterable<KmlContainer> kmlContainers) {
+                                                 Iterable<KmlContainer> kmlContainers) {
         for (KmlContainer container : kmlContainers) {
             addIconToMarkers(iconUrl, container.getPlacemarksHashMap());
             if (container.hasContainers()) {
@@ -506,7 +514,7 @@ import java.util.Iterator;
      * of either objects
      */
     private Object addToMap(KmlPlacemark placemark, KmlGeometry geometry, KmlStyle style,
-            KmlStyle inlineStyle, boolean isVisible) {
+                            KmlStyle inlineStyle, boolean isVisible) {
 
         String geometryType = geometry.getGeometryType();
         boolean hasDrawOrder = placemark.hasProperty("drawOrder");
@@ -557,7 +565,7 @@ import java.util.Iterator;
      * @return Marker object
      */
     private Marker addPointToMap(KmlPlacemark placemark, KmlPoint point, KmlStyle style,
-            KmlStyle markerInlineStyle) {
+                                 KmlStyle markerInlineStyle) {
         MarkerOptions markerUrlStyle = style.getMarkerOptions();
         markerUrlStyle.position(point.getGeometryObject());
         if (markerInlineStyle != null) {
@@ -578,7 +586,7 @@ import java.util.Iterator;
      * @param style Style to apply
      */
     private void setMarkerInfoWindow(KmlStyle style, Marker marker,
-            final KmlPlacemark placemark) {
+                                     final KmlPlacemark placemark) {
         boolean hasName = placemark.hasProperty("name");
         boolean hasDescription = placemark.hasProperty("description");
         boolean hasBalloonOptions = style.hasBalloonStyle();
@@ -634,7 +642,7 @@ import java.util.Iterator;
      * @param markerUrlIconUrl default marker icon URL from shared style
      */
     private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
-            String markerUrlIconUrl) {
+                                     String markerUrlIconUrl) {
         MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
         if (inlineStyle.isStyleSet("heading")) {
             markerOptions.rotation(inlineMarkerOptions.getRotation());
@@ -662,7 +670,7 @@ import java.util.Iterator;
      * @return Polyline object
      */
     private Polyline addLineStringToMap(KmlLineString lineString, KmlStyle style,
-            KmlStyle inlineStyle) {
+                                        KmlStyle inlineStyle) {
         PolylineOptions polylineOptions = style.getPolylineOptions();
         polylineOptions.addAll(lineString.getGeometryObject());
         if (inlineStyle != null) {
@@ -746,8 +754,8 @@ import java.util.Iterator;
      * @return array of Marker, Polyline and Polygon objects
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
-            KmlMultiGeometry multiGeometry, KmlStyle urlStyle, KmlStyle inlineStyle,
-            boolean isContainerVisible) {
+                                                    KmlMultiGeometry multiGeometry, KmlStyle urlStyle, KmlStyle inlineStyle,
+                                                    boolean isContainerVisible) {
         ArrayList<Object> mapObjects = new ArrayList<Object>();
         ArrayList<KmlGeometry> kmlObjects = multiGeometry.getGeometryObject();
         for (KmlGeometry kmlGeometry : kmlObjects) {
@@ -765,7 +773,7 @@ import java.util.Iterator;
      * @param kmlContainers  containers to check for ground overlays
      */
     private void addGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
-            Iterable<KmlContainer> kmlContainers) {
+                                   Iterable<KmlContainer> kmlContainers) {
         addGroundOverlays(groundOverlays);
         for (KmlContainer container : kmlContainers) {
             addGroundOverlays(container.getGroundOverlayHashMap(),
@@ -811,7 +819,7 @@ import java.util.Iterator;
      * @param groundOverlays   hashmap of ground overlays to add to the map
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
-            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
+                                       HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
         BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
                 .fromBitmap(mImagesCache.get(groundOverlayUrl));
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
@@ -834,7 +842,7 @@ import java.util.Iterator;
      * @param kmlContainers    containers containing ground overlays to add to the map
      */
     private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
-            Iterable<KmlContainer> kmlContainers, boolean containerVisibility) {
+                                                   Iterable<KmlContainer> kmlContainers, boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap(), isContainerVisible);
@@ -869,6 +877,8 @@ import java.util.Iterator;
          */
         @Override
         protected Bitmap doInBackground(String... params) {
+            //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
+            //Should always check online first, then check in the filesystem.
             try {
                 return getBitmapFromUrl(mIconUrl);
             } catch (MalformedURLException e) {
@@ -912,14 +922,18 @@ import java.util.Iterator;
 
     /**
      * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
-     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName, scaled according to screen density.
+     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName, scaled according to screen density;
+     * or null if {@link KmlRenderer#mDirectoryName} is null.
      */
     private Bitmap getBitmapFromFile(String fileName) {
+        if (mDirectoryName == null) {
+            return null;
+        }
         return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath(), mBitmapOptions);
     }
 
     /**
-     * Downloads images for use as ground overlays
+     * Downloads images for use as ground overlays.
      */
     private class GroundOverlayImageDownload extends AsyncTask<String, Void, Bitmap> {
 
@@ -938,7 +952,7 @@ import java.util.Iterator;
         @Override
         protected Bitmap doInBackground(String... params) {
             //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
-            //If it's not a relative URL, then try to load from the world wide web.
+            //Should always check online first, then check in the filesystem.
             try {
                 return getBitmapFromUrl(mGroundOverlayUrl);
             } catch (MalformedURLException e) {
