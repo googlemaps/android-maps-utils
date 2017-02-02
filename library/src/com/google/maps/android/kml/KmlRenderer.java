@@ -852,8 +852,6 @@ import java.util.Iterator;
 
         private final String mIconUrl;
 
-        private final String mModifiedUrl;
-
         /**
          * Creates a new IconImageDownload object
          *
@@ -861,7 +859,6 @@ import java.util.Iterator;
          */
         public MarkerIconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
-            mModifiedUrl = removePrependedSlash(iconUrl);
         }
 
         /**
@@ -873,9 +870,9 @@ import java.util.Iterator;
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent(), null, mBitmapOptions);
+                return getBitmapFromUrl(mIconUrl);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
+                return getBitmapFromFile(mIconUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -891,7 +888,7 @@ import java.util.Iterator;
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 //Try to get it from the file system:
-                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
+                bitmap = getBitmapFromFile(mIconUrl);
             }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
@@ -905,12 +902,20 @@ import java.util.Iterator;
         }
     }
 
-    private String removePrependedSlash(String string) {
-        if (string.startsWith("/")) {
-            return string.substring(1);
-        } else {
-            return string;
-        }
+    /**
+     * @param url internet address of the image.
+     * @return the bitmap of that image, scaled according to screen density.
+     */
+    private Bitmap getBitmapFromUrl(String url) throws MalformedURLException, IOException {
+        return BitmapFactory.decodeStream((InputStream) new URL(url).getContent(), null, mBitmapOptions);
+    }
+
+    /**
+     * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
+     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName, scaled according to screen density.
+     */
+    private Bitmap getBitmapFromFile(String fileName) {
+        return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath(), mBitmapOptions);
     }
 
     /**
@@ -920,11 +925,8 @@ import java.util.Iterator;
 
         private final String mGroundOverlayUrl;
 
-        private final String mModifiedUrl;
-
         public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
-            mModifiedUrl = removePrependedSlash(groundOverlayUrl);
         }
 
         /**
@@ -938,10 +940,9 @@ import java.util.Iterator;
             //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
             //If it's not a relative URL, then try to load from the world wide web.
             try {
-                return BitmapFactory
-                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent(), null, mBitmapOptions);
+                return getBitmapFromUrl(mGroundOverlayUrl);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
+                return getBitmapFromFile(mGroundOverlayUrl);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
@@ -957,7 +958,7 @@ import java.util.Iterator;
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 //Try to get it from the file system:
-                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl, mBitmapOptions);
+                bitmap = getBitmapFromFile(mGroundOverlayUrl);
             }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
