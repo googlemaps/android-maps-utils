@@ -111,7 +111,11 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     public void setAlgorithm(Algorithm<T> algorithm) {
-        setAlgorithm(new ScreenBasedAlgorithmAdapter<T>(algorithm));
+        if (algorithm instanceof ScreenBasedAlgorithm) {
+            setAlgorithm((ScreenBasedAlgorithm) algorithm);
+        } else {
+            setAlgorithm(new ScreenBasedAlgorithmAdapter<T>(algorithm));
+        }
     }
 
     public void setAlgorithm(ScreenBasedAlgorithm<T> algorithm) {
