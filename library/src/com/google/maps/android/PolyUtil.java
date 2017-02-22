@@ -182,8 +182,12 @@ public class PolyUtil {
      * tolerance in meters. The polyline is composed of great circle segments if geodesic
      * is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
      * segment between the first point and the last point is not included.
-     * Returns 0 if point is between poly[0] and poly[1], 1 if between poly[1] and poly[2], etc.
-     * Returns a negative value if point does not lie on or near the polyline.
+     * Return values:
+     * 0 if point is between poly[0] and poly[1] (inclusive),
+     * 1 if between poly[1] and poly[2],
+     * ...,
+     * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     * -1 if point does not lie on or near the polyline.
      */
     public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
                                            boolean geodesic, double tolerance) {
@@ -200,6 +204,18 @@ public class PolyUtil {
         return locationIndexOnPath(point, polyline, geodesic, DEFAULT_TOLERANCE);
     }
 
+    /**
+     * Computes whether (and where) the given point lies on or near a polyline, within a specified
+     * tolerance in meters. The polyline is composed of great circle segments if geodesic
+     * is true, and of Rhumb segments otherwise.
+     * If closed, the closing segment between the last and first points of the polyline is not considered.
+     * Return values:
+     * -1 if point does not lie on or near the polyline.
+     * 0 if point is between poly[0] and poly[1] (inclusive),
+     * 1 if between poly[1] and poly[2],
+     * ...,
+     * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     */
     private static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
                                           boolean geodesic, double toleranceEarth) {
         int size = poly.size();
@@ -219,7 +235,7 @@ public class PolyUtil {
                 double lat2 = toRadians(point2.latitude);
                 double lng2 = toRadians(point2.longitude);
                 if (isOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance)) {
-                    return idx;
+                    return Math.max(0, idx - 1);
                 }
                 lat1 = lat2;
                 lng1 = lng2;
@@ -257,7 +273,7 @@ public class PolyUtil {
                         double latClosest = inverseMercator(yClosest);
                         double havDist = havDistance(lat3, latClosest, x3 - xClosest);
                         if (havDist < havTolerance) {
-                            return idx;
+                            return Math.max(0, idx - 1);
                         }
                     }
                 }

@@ -136,7 +136,7 @@ public class PolyUtilTest extends TestCase {
     }
 
     public void testLocationIndex() {
-        final double small = 5e-7;  // About 5cm on equator, half the default tolerance.
+        final double small = 5e-7;  // About 5m on equator, half the default tolerance.
         final double big   = 2e-6;  // About 10cm on equator, double the default tolerance.
 
         // Empty.
@@ -148,13 +148,17 @@ public class PolyUtilTest extends TestCase {
 
         // Two points.
         locationIndexCase(makeList(1, 2, 3, 5), new LatLng(1, 2), 0);
-        locationIndexCase(makeList(1, 2, 3, 5), new LatLng(3, 5), 1);
+        locationIndexCase(makeList(1, 2, 3, 5), new LatLng(3, 5), 0);
         locationIndexCase(makeList(1, 2, 3, 5), new LatLng(4, 6), -1);
 
         // Three points on equator.
         locationIndexCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90), 0);
-        locationIndexCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90), 1);
-        locationIndexCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+big), -1);
+        locationIndexCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+small), 0);
+        locationIndexCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+2*small), 1);
+        locationIndexCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+3*small), -1);
+        locationIndexCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90), 0);
+        locationIndexCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+big), 1);
+        locationIndexCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+2*big), -1);
     }
 
     public void testContainsLocation() {
