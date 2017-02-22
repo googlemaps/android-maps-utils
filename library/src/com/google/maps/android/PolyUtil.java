@@ -178,10 +178,12 @@ public class PolyUtil {
     }
 
     /**
-     * Computes whether (add where) the given point lies on or near a polyline, within a specified
+     * Computes whether (and where) the given point lies on or near a polyline, within a specified
      * tolerance in meters. The polyline is composed of great circle segments if geodesic
      * is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
      * segment between the first point and the last point is not included.
+     * Returns 0 if point is between poly[0] and poly[1], 1 if between poly[1] and poly[2], etc.
+     * Returns a negative value if point does not lie on or near the polyline.
      */
     public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
                                            boolean geodesic, double tolerance) {
