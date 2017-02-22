@@ -178,20 +178,22 @@ public class PolyUtil {
     }
 
     /**
-     * Computes whether (and where) the given point lies on or near a polyline, within a specified
-     * tolerance in meters. The polyline is composed of great circle segments if geodesic
-     * is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
-     * segment between the first point and the last point is not included.
-     * Return values:
-     * 0 if point is between poly[0] and poly[1] (inclusive),
-     * 1 if between poly[1] and poly[2],
-     * ...,
-     * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
-     * -1 if point does not lie on or near the polyline.
+     * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
+     * The polyline is not closed -- the closing segment between the first point and the last point is not included.
+     * @param point our needle
+     * @param poly our haystack
+     * @param geodesic the polyline is composed of great circle segments if geodesic
+     *                 is true, and of Rhumb segments otherwise
+     * @param tolerance tolerance (in meters)
+     * @return -1 if point does not lie on or near the polyline.
+     *          0 if point is between poly[0] and poly[1] (inclusive),
+     *          1 if between poly[1] and poly[2],
+     *          ...,
+     *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
      */
-    public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
+    public static int locationIndexOnPath(LatLng point, List<LatLng> poly,
                                            boolean geodesic, double tolerance) {
-        return locationIndexOnEdgeOrPath(point, polyline, false, geodesic, tolerance);
+        return locationIndexOnEdgeOrPath(point, poly, false, geodesic, tolerance);
     }
 
     /**
@@ -205,16 +207,19 @@ public class PolyUtil {
     }
 
     /**
-     * Computes whether (and where) the given point lies on or near a polyline, within a specified
-     * tolerance in meters. The polyline is composed of great circle segments if geodesic
-     * is true, and of Rhumb segments otherwise.
+     * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
      * If closed, the closing segment between the last and first points of the polyline is not considered.
-     * Return values:
-     * -1 if point does not lie on or near the polyline.
-     * 0 if point is between poly[0] and poly[1] (inclusive),
-     * 1 if between poly[1] and poly[2],
-     * ...,
-     * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     * @param point our needle
+     * @param poly our haystack
+     * @param closed whether the polyline should be considered closed by a segment connecting the last point back to the first one
+     * @param geodesic the polyline is composed of great circle segments if geodesic
+     *                 is true, and of Rhumb segments otherwise
+     * @param toleranceEarth tolerance (in meters)
+     * @return -1 if point does not lie on or near the polyline.
+     *          0 if point is between poly[0] and poly[1] (inclusive),
+     *          1 if between poly[1] and poly[2],
+     *          ...,
+     *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
      */
     private static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
                                           boolean geodesic, double toleranceEarth) {
