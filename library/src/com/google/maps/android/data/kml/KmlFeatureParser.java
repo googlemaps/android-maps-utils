@@ -8,9 +8,15 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
@@ -20,11 +26,13 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
  */
 /* package */ class KmlFeatureParser {
 
-    private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry";
+    private final static String GEOMETRY_REGEX = "Point|LineString|Polygon|MultiGeometry|Track|MultiTrack";
 
     private final static int LONGITUDE_INDEX = 0;
 
     private final static int LATITUDE_INDEX = 1;
+
+    private final static int ALTITUDE_INDEX = 2;
 
     private final static String PROPERTY_REGEX = "name|description|drawOrder|visibility|open|address|phoneNumber";
 
@@ -37,6 +45,23 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     private final static String STYLE_TAG = "Style";
 
     private final static String COMPASS_REGEX = "north|south|east|west";
+
+    private final static String LAT_LNG_ALT_SEPARATOR = ",";
+
+    /**
+     * Internal helper class to store latLng and altitude in a single object.
+     * This allows to parse [lon,lat,altitude] tuples in KML files more efficiently.
+     * Note that altitudes are generally optional so they can be null.
+     */
+    private static class LatLngAlt {
+        public final LatLng latLng;
+        public final Double altitude;
+
+        LatLngAlt(LatLng latLng, Double altitude) {
+            this.latLng = latLng;
+            this.altitude = altitude;
+        }
+    }
 
     /**
      * Creates a new Placemark object (created if a Placemark start tag is read by the
@@ -151,11 +176,14 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                     return createPoint(parser);
                 } else if (parser.getName().equals("LineString")) {
                     return createLineString(parser);
-
+                } else if (parser.getName().equals("Track")) {
+                    return createTrack(parser);
                 } else if (parser.getName().equals("Polygon")) {
                     return createPolygon(parser);
                 } else if (parser.getName().equals("MultiGeometry")) {
                     return createMultiGeometry(parser);
+                } else if (parser.getName().equals("MultiTrack")) {
+                    return createMultiTrack(parser);
                 }
             }
             eventType = parser.next();
@@ -192,15 +220,15 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      */
     private static KmlPoint createPoint(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        LatLng coordinate = null;
+        LatLngAlt latLngAlt = null;
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("Point"))) {
             if (eventType == START_TAG && parser.getName().equals("coordinates")) {
-                coordinate = convertToLatLng(parser.nextText());
+                latLngAlt = convertToLatLngAlt(parser.nextText());
             }
             eventType = parser.next();
         }
-        return new KmlPoint(coordinate);
+        return new KmlPoint(latLngAlt.latLng, latLngAlt.altitude);
     }
 
     /**
@@ -211,14 +239,64 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     private static KmlLineString createLineString(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
+        ArrayList<Double> altitudes = new ArrayList<Double>();
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("LineString"))) {
             if (eventType == START_TAG && parser.getName().equals("coordinates")) {
-                coordinates = convertToLatLngArray(parser.nextText());
+                List <LatLngAlt> latLngAlts = convertToLatLngAltArray(parser.nextText());
+                for (LatLngAlt latLngAlt : latLngAlts) {
+                    coordinates.add(latLngAlt.latLng);
+                    if (latLngAlt.altitude != null) {
+                        altitudes.add(latLngAlt.altitude);
+                    }
+                }
             }
             eventType = parser.next();
         }
-        return new KmlLineString(coordinates);
+        return new KmlLineString(coordinates, altitudes);
+    }
+
+    /**
+     * Creates a new KmlTrack object
+     *
+     * @return KmlTrack object
+     */
+    private static KmlTrack createTrack(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
+        DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+        iso8601.setTimeZone(TimeZone.getTimeZone("UTC"));
+        ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
+        ArrayList<Double> altitudes = new ArrayList<Double>();
+        ArrayList<Long> timestamps = new ArrayList<Long>();
+        HashMap<String, String> properties = new HashMap<>();
+        int eventType = parser.getEventType();
+        while (!(eventType == END_TAG && parser.getName().equals("Track"))) {
+            if (eventType == START_TAG) {
+                if (parser.getName().equals("coord")) {
+                    String coordinateString = parser.nextText();
+                    //fields are separated by spaces instead of commas
+                    LatLngAlt latLngAlt = convertToLatLngAlt(coordinateString, " ");
+                    latLngs.add(latLngAlt.latLng);
+                    if (latLngAlt.altitude != null) {
+                        altitudes.add(latLngAlt.altitude);
+                    }
+                } else if (parser.getName().equals("when")) {
+                    try {
+                        String dateString = parser.nextText();
+                        Date date = iso8601.parse(dateString);
+                        long millis = date.getTime();
+
+                        timestamps.add(millis);
+                    } catch (ParseException e) {
+                        throw new XmlPullParserException("Invalid date", parser, e);
+                    }
+                } else if (parser.getName().equals(EXTENDED_DATA)) {
+                    properties.putAll(setExtendedDataProperties(parser));
+                }
+            }
+            eventType = parser.next();
+        }
+        return new KmlTrack(latLngs, altitudes, timestamps, properties);
     }
 
     /**
@@ -271,33 +349,79 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     }
 
     /**
+     * Creates a new KmlMultiTrack object
+     *
+     * @return KmlMultiTrack object
+     */
+    private static KmlMultiTrack createMultiTrack(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
+        ArrayList <KmlTrack> tracks = new ArrayList<>();
+        // Get next otherwise have an infinite loop
+        int eventType = parser.next();
+        while (!(eventType == END_TAG && parser.getName().equals("MultiTrack"))) {
+            if (eventType == START_TAG && parser.getName().matches("Track")) {
+                tracks.add(createTrack(parser));
+            }
+            eventType = parser.next();
+        }
+        return new KmlMultiTrack(tracks);
+    }
+
+    /**
      * Convert a string of coordinates into an array of LatLngs
      *
      * @param coordinatesString coordinates string to convert from
      * @return array of LatLng objects created from the given coordinate string array
      */
     private static ArrayList<LatLng> convertToLatLngArray(String coordinatesString) {
+        ArrayList<LatLngAlt> latLngAltsArray = convertToLatLngAltArray(coordinatesString);
         ArrayList<LatLng> coordinatesArray = new ArrayList<LatLng>();
-        // Need to trim to avoid whitespace around the coordinates such as tabs
-        String[] coordinates = coordinatesString.trim().split("(\\s+)");
-        for (String coordinate : coordinates) {
-            coordinatesArray.add(convertToLatLng(coordinate));
+        for (LatLngAlt latLngAlt : latLngAltsArray) {
+            coordinatesArray.add(latLngAlt.latLng);
         }
         return coordinatesArray;
     }
 
     /**
-     * Convert a string coordinate from a string into a LatLng object
+     * Convert a string of coordinates into an array of LatLngAlts
+     *
+     * @param coordinatesString coordinates string to convert from
+     * @return array of LatLngAlt objects created from the given coordinate string array
+     */
+    private static ArrayList<LatLngAlt> convertToLatLngAltArray(String coordinatesString) {
+        ArrayList<LatLngAlt> latLngAltsArray = new ArrayList<LatLngAlt>();
+        // Need to trim to avoid whitespace around the coordinates such as tabs
+        String[] coordinates = coordinatesString.trim().split("(\\s+)");
+        for (String coordinate : coordinates) {
+            latLngAltsArray.add(convertToLatLngAlt(coordinate));
+        }
+        return latLngAltsArray;
+    }
+
+    /**
+     * Convert a string coordinate from a string into a LatLngAlt object
      *
      * @param coordinateString coordinate string to convert from
-     * @return LatLng object created from given coordinate string
+     * @return LatLngAlt object created from given coordinate string
      */
-    private static LatLng convertToLatLng(String coordinateString) {
-        // Lat and Lng are separated by a ,
-        String[] coordinate = coordinateString.split(",");
+    private static LatLngAlt convertToLatLngAlt(String coordinateString) {
+        return convertToLatLngAlt(coordinateString, LAT_LNG_ALT_SEPARATOR);
+    }
+
+    /**
+     * Convert a string coordinate from a string into a LatLngAlt object
+     *
+     * @param coordinateString coordinate string to convert from
+     * @param separator separator to use when splitting coordinates
+     * @return LatLngAlt object created from given coordinate string
+     */
+    private static LatLngAlt convertToLatLngAlt(String coordinateString, String separator) {
+        String[] coordinate = coordinateString.split(separator);
         Double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
         Double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
-        return new LatLng(lat, lon);
+        Double alt = (coordinate.length > 2) ? Double.parseDouble(coordinate[ALTITUDE_INDEX]) : null;
+        LatLng latLng = new LatLng(lat, lon);
+        return new LatLngAlt(latLng, alt);
     }
 
     /**
