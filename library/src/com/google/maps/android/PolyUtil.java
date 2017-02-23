@@ -172,9 +172,37 @@ public class PolyUtil {
 
     private static boolean isLocationOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
                                                   boolean geodesic, double toleranceEarth) {
+        int idx = locationIndexOnEdgeOrPath(point, poly, closed, geodesic, toleranceEarth);
+
+        return (idx >= 0);
+    }
+
+    /**
+     * Computes whether (add where) the given point lies on or near a polyline, within a specified
+     * tolerance in meters. The polyline is composed of great circle segments if geodesic
+     * is true, and of Rhumb segments otherwise. The polyline is not closed -- the closing
+     * segment between the first point and the last point is not included.
+     */
+    public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
+                                           boolean geodesic, double tolerance) {
+        return locationIndexOnEdgeOrPath(point, polyline, false, geodesic, tolerance);
+    }
+
+    /**
+     * Same as {@link #locationIndexOnPath(LatLng, List, boolean, double)}
+     *
+     * with a default tolerance of 0.1 meters.
+     */
+    public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
+                                           boolean geodesic) {
+        return locationIndexOnPath(point, polyline, geodesic, DEFAULT_TOLERANCE);
+    }
+
+    private static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
+                                          boolean geodesic, double toleranceEarth) {
         int size = poly.size();
         if (size == 0) {
-            return false;
+            return -1;
         }
         double tolerance = toleranceEarth / EARTH_RADIUS;
         double havTolerance = hav(tolerance);
@@ -183,15 +211,17 @@ public class PolyUtil {
         LatLng prev = poly.get(closed ? size - 1 : 0);
         double lat1 = toRadians(prev.latitude);
         double lng1 = toRadians(prev.longitude);
+        int idx = 0;
         if (geodesic) {
             for (LatLng point2 : poly) {
                 double lat2 = toRadians(point2.latitude);
                 double lng2 = toRadians(point2.longitude);
                 if (isOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance)) {
-                    return true;
+                    return idx;
                 }
                 lat1 = lat2;
                 lng1 = lng2;
+                idx++;
             }
         } else {
             // We project the points to mercator space, where the Rhumb segment is a straight line,
@@ -225,16 +255,17 @@ public class PolyUtil {
                         double latClosest = inverseMercator(yClosest);
                         double havDist = havDistance(lat3, latClosest, x3 - xClosest);
                         if (havDist < havTolerance) {
-                            return true;
+                            return idx;
                         }
                     }
                 }
                 lat1 = lat2;
                 lng1 = lng2;
                 y1 = y2;
+                idx++;
             }
         }
-        return false;
+        return -1;
     }
 
     /**
