@@ -65,12 +65,32 @@ public class PolyUtilTest extends TestCase {
             Assert.assertFalse(PolyUtil.isLocationOnPath(point, poly, geodesic));
         }
     }
-    
+
     private static void onEdgeCase(List<LatLng> poly, List<LatLng> yes, List<LatLng> no) {
         onEdgeCase(true, poly, yes, no);
         onEdgeCase(false, poly, yes, no);
     }
-    
+
+    private static void locationIndexCase(boolean geodesic,
+                                          List<LatLng> poly, LatLng point, int idx) {
+        Assert.assertTrue(idx == PolyUtil.locationIndexOnPath(point, poly, geodesic));
+    }
+
+    private static void locationIndexCase(List<LatLng> poly, LatLng point, int idx) {
+        locationIndexCase(true, poly, point, idx);
+        locationIndexCase(false, poly, point, idx);
+    }
+
+    private static void locationIndexToleranceCase(boolean geodesic,
+                                          List<LatLng> poly, LatLng point, double tolerance, int idx) {
+        Assert.assertTrue(idx == PolyUtil.locationIndexOnPath(point, poly, geodesic, tolerance));
+    }
+
+    private static void locationIndexToleranceCase(List<LatLng> poly, LatLng point, double tolerance, int idx) {
+        locationIndexToleranceCase(true, poly, point, tolerance, idx);
+        locationIndexToleranceCase(false, poly, point, tolerance, idx);
+    }
+
     public void testOnEdge() {
         // Empty
         onEdgeCase(makeList(), makeList(), makeList(0, 0));
@@ -123,6 +143,42 @@ public class PolyUtilTest extends TestCase {
         onEdgeCase(false, makeList(80, 0, 80, 180-small),
                    makeList(80-small, 0, 80+small, 0, 80, 90),
                    makeList(79, big, 90-small, -90, 90, -135));
+    }
+
+    public void testLocationIndex() {
+        // Empty.
+        locationIndexCase(makeList(), new LatLng(0, 0), -1);
+
+        // One point.
+        locationIndexCase(makeList(1, 2), new LatLng(1, 2), 0);
+        locationIndexCase(makeList(1, 2), new LatLng(3, 5), -1);
+
+        // Two points.
+        locationIndexCase(makeList(1, 2, 3, 5), new LatLng(1, 2), 0);
+        locationIndexCase(makeList(1, 2, 3, 5), new LatLng(3, 5), 0);
+        locationIndexCase(makeList(1, 2, 3, 5), new LatLng(4, 6), -1);
+
+        // Three points.
+        locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 80), 0);
+        locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 85), 0);
+        locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 90), 0);
+        locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 95), 1);
+        locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 100), 1);
+        locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 110), -1);
+    }
+
+    public void testLocationIndexTolerance() {
+        final double small = 5e-7;  // About 5cm on equator, half the default tolerance.
+        final double big   = 2e-6;  // About 10cm on equator, double the default tolerance.
+
+        // Test tolerance.
+        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90), 0.1, 0);
+        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+small), 0.1, 0);
+        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+2*small), 0.1, 1);
+        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+3*small), 0.1, -1);
+        locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90), 0.1, 0);
+        locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+big), 0.1, 1);
+        locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+2*big), 0.1, -1);
     }
 
     public void testContainsLocation() {
