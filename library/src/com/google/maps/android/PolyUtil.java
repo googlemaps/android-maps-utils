@@ -172,9 +172,60 @@ public class PolyUtil {
 
     private static boolean isLocationOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
                                                   boolean geodesic, double toleranceEarth) {
+        int idx = locationIndexOnEdgeOrPath(point, poly, closed, geodesic, toleranceEarth);
+
+        return (idx >= 0);
+    }
+
+    /**
+     * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
+     * The polyline is not closed -- the closing segment between the first point and the last point is not included.
+     * @param point our needle
+     * @param poly our haystack
+     * @param geodesic the polyline is composed of great circle segments if geodesic
+     *                 is true, and of Rhumb segments otherwise
+     * @param tolerance tolerance (in meters)
+     * @return -1 if point does not lie on or near the polyline.
+     *          0 if point is between poly[0] and poly[1] (inclusive),
+     *          1 if between poly[1] and poly[2],
+     *          ...,
+     *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     */
+    public static int locationIndexOnPath(LatLng point, List<LatLng> poly,
+                                           boolean geodesic, double tolerance) {
+        return locationIndexOnEdgeOrPath(point, poly, false, geodesic, tolerance);
+    }
+
+    /**
+     * Same as {@link #locationIndexOnPath(LatLng, List, boolean, double)}
+     *
+     * with a default tolerance of 0.1 meters.
+     */
+    public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
+                                           boolean geodesic) {
+        return locationIndexOnPath(point, polyline, geodesic, DEFAULT_TOLERANCE);
+    }
+
+    /**
+     * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
+     * If closed, the closing segment between the last and first points of the polyline is not considered.
+     * @param point our needle
+     * @param poly our haystack
+     * @param closed whether the polyline should be considered closed by a segment connecting the last point back to the first one
+     * @param geodesic the polyline is composed of great circle segments if geodesic
+     *                 is true, and of Rhumb segments otherwise
+     * @param toleranceEarth tolerance (in meters)
+     * @return -1 if point does not lie on or near the polyline.
+     *          0 if point is between poly[0] and poly[1] (inclusive),
+     *          1 if between poly[1] and poly[2],
+     *          ...,
+     *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     */
+    private static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
+                                          boolean geodesic, double toleranceEarth) {
         int size = poly.size();
         if (size == 0) {
-            return false;
+            return -1;
         }
         double tolerance = toleranceEarth / EARTH_RADIUS;
         double havTolerance = hav(tolerance);
@@ -183,15 +234,17 @@ public class PolyUtil {
         LatLng prev = poly.get(closed ? size - 1 : 0);
         double lat1 = toRadians(prev.latitude);
         double lng1 = toRadians(prev.longitude);
+        int idx = 0;
         if (geodesic) {
             for (LatLng point2 : poly) {
                 double lat2 = toRadians(point2.latitude);
                 double lng2 = toRadians(point2.longitude);
                 if (isOnSegmentGC(lat1, lng1, lat2, lng2, lat3, lng3, havTolerance)) {
-                    return true;
+                    return Math.max(0, idx - 1);
                 }
                 lat1 = lat2;
                 lng1 = lng2;
+                idx++;
             }
         } else {
             // We project the points to mercator space, where the Rhumb segment is a straight line,
@@ -225,16 +278,17 @@ public class PolyUtil {
                         double latClosest = inverseMercator(yClosest);
                         double havDist = havDistance(lat3, latClosest, x3 - xClosest);
                         if (havDist < havTolerance) {
-                            return true;
+                            return Math.max(0, idx - 1);
                         }
                     }
                 }
                 lat1 = lat2;
                 lng1 = lng2;
                 y1 = y2;
+                idx++;
             }
         }
-        return false;
+        return -1;
     }
 
     /**
@@ -409,7 +463,7 @@ public class PolyUtil {
      */
     public static double distanceToLine(final LatLng p, final LatLng start, final LatLng end) {
         if (start.equals(end)) {
-            computeDistanceBetween(end, p);
+            return computeDistanceBetween(end, p);
         }
 
         final double s0lat = toRadians(p.latitude);

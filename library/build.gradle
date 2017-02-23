@@ -11,9 +11,14 @@ dependencies {
 
 android {
     compileSdkVersion 24
+
     buildToolsVersion "23.0.3"
 
     resourcePrefix 'amu_'
+
+    defaultConfig {
+        minSdkVersion 14
+    }
 
     sourceSets {
         main {

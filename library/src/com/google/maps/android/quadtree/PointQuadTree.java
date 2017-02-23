@@ -21,7 +21,9 @@ import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A quad tree which tracks items with a Point geometry.
@@ -50,7 +52,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     /**
      * The elements inside this quad, if any.
      */
-    private List<T> mItems;
+    private Set<T> mItems;
 
     /**
      * Maximum depth.
@@ -115,7 +117,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
             return;
         }
         if (mItems == null) {
-            mItems = new ArrayList<T>();
+            mItems = new HashSet<>();
         }
         mItems.add(item);
         if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
@@ -133,7 +135,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
         mChildren.add(new PointQuadTree<T>(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY, mDepth + 1));
         mChildren.add(new PointQuadTree<T>(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY, mDepth + 1));
 
-        List<T> items = mItems;
+        Set<T> items = mItems;
         mItems = null;
 
         for (T item : items) {
@@ -211,7 +213,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
             }
         } else if (mItems != null) {
             if (searchBounds.contains(mBounds)) {
-	            results.addAll(mItems);
+                results.addAll(mItems);
             } else {
                 for (T item : mItems) {
                     if (searchBounds.contains(item.getPoint())) {

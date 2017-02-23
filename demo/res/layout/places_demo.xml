@@ -15,7 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:hint="@string/input_text"
-            android:imeOptions="actionUnspecified"
+            android:imeOptions="actionGo"
             android:imeActionLabel="@string/button_send"/>
         <ProgressBar
             android:id="@+id/progress_bar"
