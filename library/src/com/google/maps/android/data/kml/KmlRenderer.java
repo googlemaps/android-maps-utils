@@ -44,20 +44,17 @@ public class KmlRenderer  extends Renderer {
     private ArrayList<KmlContainer> mContainers;
 
     /**
-     * The fully qualified directory name to look in (in the android file system) for any relative-path images.
+     * The fully qualified directory name to look in (in the android file system) for any relative-path images,
+     * or null if we should only look online.
      */
     private String mDirectoryName;
 
     /* package */ KmlRenderer(GoogleMap map, Context context) {
-        super(map, context);
-        mGroundOverlayUrls = new ArrayList<>();
-        mMarkerIconsDownloaded = false;
-        mGroundOverlayImagesDownloaded = false;
+        this(map, context, null);
     }
 
     /**
-     * @param directoryName the fully qualified directory name to look in (in the android external file
-     * system) for any relative-path images.
+     * @param directoryName See {@link KmlRenderer#mDirectoryName}, or null to only look online.
      */
     KmlRenderer(GoogleMap map, Context context, String directoryName) {
         super(map, context);
@@ -463,6 +460,8 @@ public class KmlRenderer  extends Renderer {
          */
         @Override
         protected Bitmap doInBackground(String... params) {
+            //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
+            //Should always check online first, then check in the filesystem.
             try {
                 return getBitmapFromUrl(mIconUrl);
             } catch (MalformedURLException e) {
@@ -516,7 +515,7 @@ public class KmlRenderer  extends Renderer {
         @Override
         protected Bitmap doInBackground(String... params) {
             //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
-            //If it's not a relative URL, then try to load from the world wide web.
+            //Should always check online first, then check in the filesystem.
             try {
                 return getBitmapFromUrl(mGroundOverlayUrl);
             } catch (MalformedURLException e) {
@@ -560,9 +559,13 @@ public class KmlRenderer  extends Renderer {
 
     /**
      * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
-     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName, scaled according to screen density.
+     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName,
+     * or null if {@link KmlRenderer#mDirectoryName} is null.
      */
     private Bitmap getBitmapFromFile(String fileName) {
+        if (mDirectoryName == null) {
+            return null;
+        }
         return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath());
     }
 
