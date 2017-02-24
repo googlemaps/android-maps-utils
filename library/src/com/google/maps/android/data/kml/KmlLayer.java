@@ -16,17 +16,38 @@ import java.io.InputStream;
  */
 public class KmlLayer extends Layer {
 
+
+    /**
+     * Same as {@link KmlLayer#KmlLayer(GoogleMap, int, Context, String)} but with a null directoryName.
+     */
+     public KmlLayer(GoogleMap map, int resourceId, Context context)
+             throws XmlPullParserException, IOException {
+         this(map, resourceId, context, null);
+     }
+
+
+    /**
+     * Same as {@link KmlLayer#KmlLayer(GoogleMap, InputStream, Context, String)} but with a null directoryName.
+     */
+     public KmlLayer(GoogleMap map, InputStream stream, Context context)
+             throws XmlPullParserException, IOException {
+         this(map, stream, context, null);
+     }
+
+
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
      * @param map        GoogleMap object
      * @param resourceId Raw resource KML file
      * @param context    Context object
+     * @param directoryName the fully qualified directory name to look in (in the android file
+     *                      system) for any relative-path images, or null to only look online.
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, int resourceId, Context context)
+    public KmlLayer(GoogleMap map, int resourceId, Context context, String directoryName)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context);
+        this(map, context.getResources().openRawResource(resourceId), context, directoryName);
     }
 
     /**
@@ -34,9 +55,11 @@ public class KmlLayer extends Layer {
      *
      * @param map    GoogleMap object
      * @param stream InputStream containing KML file
+     * @param directoryName the fully qualified directory name to look in (in the android file
+     *                      system) for any relative-path images, or null to only look online.
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, InputStream stream, Context context)
+    public KmlLayer(GoogleMap map, InputStream stream, Context context, String directoryName)
             throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
