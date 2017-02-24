@@ -99,7 +99,10 @@ public class KmlRenderer  extends Renderer {
      */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            groundOverlay.remove();
+            //For some reason, it was getting null overlays. This fixed the problem. I guess it's from malformed KML files.
+            if (groundOverlay != null) {
+                groundOverlay.remove();
+            }
         }
     }
 
