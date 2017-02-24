@@ -16,6 +16,7 @@ import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.Geometry;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -437,18 +438,6 @@ public class KmlRenderer  extends Renderer {
         }
     }
 
-    /**
-     * If the given string's first character is "/", removes that character, and returns the remaining string.
-     * @param string the string to modify
-     * @return the string with the prepended slash removed, if applicable.
-     */
-    private String removePrependedSlash(String string) {
-        if (string.startsWith("/") && string.length() > 0) {
-            return string.substring(1);
-        } else {
-            return string;
-        }
-    }
 
     /**
      * Downloads images for use as marker icons
@@ -457,8 +446,6 @@ public class KmlRenderer  extends Renderer {
 
         private final String mIconUrl;
 
-        private final String mModifiedUrl;
-
         /**
          * Creates a new IconImageDownload object
          *
@@ -466,7 +453,6 @@ public class KmlRenderer  extends Renderer {
          */
         public MarkerIconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
-            mModifiedUrl = removePrependedSlash(iconUrl);
         }
 
         /**
@@ -478,9 +464,9 @@ public class KmlRenderer  extends Renderer {
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
+                return getBitmapFromUrl(mIconUrl);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                return getBitmapFromFile(mIconUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -496,7 +482,7 @@ public class KmlRenderer  extends Renderer {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 //Try to get it from the file system:
-                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                bitmap = getBitmapFromFile(mIconUrl);
             }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
@@ -517,11 +503,8 @@ public class KmlRenderer  extends Renderer {
 
         private final String mGroundOverlayUrl;
 
-        private final String mModifiedUrl;
-
         public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
-            mModifiedUrl = removePrependedSlash(groundOverlayUrl);
         }
 
         /**
@@ -535,10 +518,9 @@ public class KmlRenderer  extends Renderer {
             //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
             //If it's not a relative URL, then try to load from the world wide web.
             try {
-                return BitmapFactory
-                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
+                return getBitmapFromUrl(mGroundOverlayUrl);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                return getBitmapFromFile(mGroundOverlayUrl);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
@@ -554,7 +536,7 @@ public class KmlRenderer  extends Renderer {
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
                 //Try to get it from the file system:
-                bitmap = BitmapFactory.decodeFile(mDirectoryName + "/" + mModifiedUrl);
+                bitmap = getBitmapFromFile(mGroundOverlayUrl);
             }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
@@ -567,4 +549,21 @@ public class KmlRenderer  extends Renderer {
             }
         }
     }
+
+    /**
+     * @param url internet address of the image.
+     * @return the bitmap of that image, scaled according to screen density.
+     */
+    private Bitmap getBitmapFromUrl(String url) throws MalformedURLException, IOException {
+        return BitmapFactory.decodeStream((InputStream) new URL(url).getContent());
+    }
+
+    /**
+     * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
+     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName, scaled according to screen density.
+     */
+    private Bitmap getBitmapFromFile(String fileName) {
+        return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath());
+    }
+
 }
