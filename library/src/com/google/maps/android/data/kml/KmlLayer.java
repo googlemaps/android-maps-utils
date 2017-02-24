@@ -64,7 +64,7 @@ public class KmlLayer extends Layer {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        KmlRenderer mRenderer = new KmlRenderer(map, context);
+        KmlRenderer mRenderer = new KmlRenderer(map, context, directoryName);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();
