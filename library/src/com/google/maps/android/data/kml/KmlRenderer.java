@@ -287,7 +287,7 @@ public class KmlRenderer  extends Renderer {
         for (Feature placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
             KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
-            if ("Point".equals(placemark.getGeometry().getGeometryType())) {
+            if (placemark.getGeometry() != null && "Point".equals(placemark.getGeometry().getGeometryType())) {
                 boolean isInlineStyleIcon = inlineStyle != null && iconUrl
                         .equals(inlineStyle.getIconUrl());
                 boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
