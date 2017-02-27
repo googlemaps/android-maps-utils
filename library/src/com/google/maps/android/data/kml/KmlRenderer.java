@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -41,6 +42,11 @@ public class KmlRenderer  extends Renderer {
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
+    /**
+     * Options to auto-scale the bitmap images according to screen density.
+     */
+    private BitmapFactory.Options mBitmapOptions;
+
     private ArrayList<KmlContainer> mContainers;
 
     /**
@@ -62,6 +68,14 @@ public class KmlRenderer  extends Renderer {
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
+
+        //Set up bitmap options
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        options.inScreenDensity = metrics.densityDpi;
+        options.inTargetDensity =  metrics.densityDpi;
+        options.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+        mBitmapOptions = options;
     }
 
     /**
@@ -554,19 +568,20 @@ public class KmlRenderer  extends Renderer {
      * @return the bitmap of that image, scaled according to screen density.
      */
     private Bitmap getBitmapFromUrl(String url) throws MalformedURLException, IOException {
-        return BitmapFactory.decodeStream((InputStream) new URL(url).getContent());
+        return BitmapFactory.decodeStream((InputStream) new URL(url).getContent(), null, mBitmapOptions);
     }
 
     /**
      * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
      * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName;
      * or the bitmap found at fileName (treated as an absolute path) if {@link KmlRenderer#mDirectoryName} is null.
+     * In both cases, the bitmap is scaled according to screen density.
      */
     private Bitmap getBitmapFromFile(String fileName) {
         if (mDirectoryName == null) {
-            return BitmapFactory.decodeFile(fileName);
+            return BitmapFactory.decodeFile(fileName, mBitmapOptions);
         }
-        return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath());
+        return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath(), mBitmapOptions);
     }
 
 }
