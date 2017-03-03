@@ -17,6 +17,18 @@ public class KmlLineStringTest extends TestCase {
         return new KmlLineString(coordinates);
     }
 
+    public KmlLineString createSimpleLineStringWithAltitudes() {
+        ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
+        ArrayList<Double> altitudes = new ArrayList<Double>();
+        coordinates.add(new LatLng(0, 0));
+        coordinates.add(new LatLng(50, 50));
+        coordinates.add(new LatLng(100, 100));
+        altitudes.add(new Double(100));
+        altitudes.add(new Double(200));
+        altitudes.add(new Double(300));
+        return new KmlLineString(coordinates, altitudes);
+    }
+
     public KmlLineString createLoopedLineString() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(0, 0));
@@ -52,5 +64,20 @@ public class KmlLineStringTest extends TestCase {
         assertEquals(kmlLineString.getGeometryObject().get(1).latitude, 50.0);
         assertEquals(kmlLineString.getGeometryObject().get(2).latitude, 0.0);
 
+    }
+
+    public void testLineStringAltitudes() throws Exception {
+        //test linestring without altitudes
+        kmlLineString = createSimpleLineString();
+        assertNotNull(kmlLineString);
+        assertNull(kmlLineString.getAltitudes());
+
+        //test linestring with altitudes
+        kmlLineString = createSimpleLineStringWithAltitudes();
+        assertNotNull(kmlLineString);
+        assertNotNull(kmlLineString.getAltitudes());
+        assertEquals(kmlLineString.getAltitudes().get(0), 100.0);
+        assertEquals(kmlLineString.getAltitudes().get(1), 200.0);
+        assertEquals(kmlLineString.getAltitudes().get(2), 300.0);
     }
 }
