@@ -5,7 +5,6 @@ import com.google.android.gms.maps.model.LatLng;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class KmlPolygonTest extends TestCase {
 
@@ -17,13 +16,13 @@ public class KmlPolygonTest extends TestCase {
     }
 
     public KmlPolygon createRegularPolygon() {
-        List<LatLng> outerCoordinates = new ArrayList<LatLng>();
+        ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
         outerCoordinates.add(new LatLng(10, 10));
         outerCoordinates.add(new LatLng(20, 20));
         outerCoordinates.add(new LatLng(30, 30));
         outerCoordinates.add(new LatLng(10, 10));
-        List<List<LatLng>> innerCoordinates = new  ArrayList<List<LatLng>>();
-        List<LatLng> innerHole = new ArrayList<LatLng>();
+        ArrayList<ArrayList<LatLng>> innerCoordinates = new  ArrayList<ArrayList<LatLng>>();
+        ArrayList<LatLng> innerHole = new ArrayList<LatLng>();
         innerHole.add(new LatLng(20, 20));
         innerHole.add(new LatLng(10, 10));
         innerHole.add(new LatLng(20, 20));
