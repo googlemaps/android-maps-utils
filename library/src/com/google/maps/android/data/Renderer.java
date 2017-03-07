@@ -902,10 +902,12 @@ public class Renderer {
             public View getInfoContents(Marker arg0) {
                 View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
-                if (arg0.getSnippet() != null) {
+                if (arg0.getSnippet() != null && arg0.getTitle() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else {
+                } else if (arg0.getTitle() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
+                } else {
+                    infoWindowText.setText("");
                 }
                 return view;
             }
