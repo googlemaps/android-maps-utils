@@ -904,9 +904,11 @@ public class Renderer {
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null && arg0.getTitle() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else if (arg0.getTitle() != null) {
+                } else if (arg0.getTitle() != null && arg0.getSnippet() == null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
-                } else {
+                } else if (arg0.getTitle() == null && arg0.getSnippet() != null) {
+                    infoWindowText.setText(Html.fromHtml(arg0.getSnippet()));
+                } else { //Both null
                     infoWindowText.setText("");
                 }
                 return view;
