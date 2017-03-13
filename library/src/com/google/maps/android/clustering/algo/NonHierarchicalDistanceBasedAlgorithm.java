@@ -47,12 +47,14 @@ import com.google.maps.android.quadtree.PointQuadTree;
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
 public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
-    public static final int MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
+    private static final int DEFAULT_MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
+
+    private int mMaxDistance = DEFAULT_MAX_DISTANCE_AT_ZOOM;
 
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final Collection<QuadItem<T>> mItems = new ArrayList<QuadItem<T>>();
+    private final Collection<QuadItem<T>> mItems = new HashSet<>();
 
     /**
      * Any modifications should be synchronized on mQuadTree.
@@ -100,7 +102,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         final int discreteZoom = (int) zoom;
 
-        final double zoomSpecificSpan = MAX_DISTANCE_AT_ZOOM / Math.pow(2, discreteZoom) / 256;
+        final double zoomSpecificSpan = mMaxDistance / Math.pow(2, discreteZoom) / 256;
 
         final Set<QuadItem<T>> visitedCandidates = new HashSet<QuadItem<T>>();
         final Set<Cluster<T>> results = new HashSet<Cluster<T>>();
@@ -108,7 +110,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
         synchronized (mQuadTree) {
-            for (QuadItem<T> candidate : mItems) {
+            for (QuadItem<T> candidate : getClusteringItems(mQuadTree, discreteZoom)) {
                 if (visitedCandidates.contains(candidate)) {
                     // Candidate is already part of another cluster.
                     continue;
@@ -148,6 +150,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         return results;
     }
 
+    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, int discreteZoom) {
+        return mItems;
+    }
+
     @Override
     public Collection<T> getItems() {
         final List<T> items = new ArrayList<T>();
@@ -157,6 +163,16 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
             }
         }
         return items;
+    }
+
+    @Override
+    public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
+        mMaxDistance = maxDistance;
+    }
+
+    @Override
+    public int getMaxDistanceBetweenClusteredItems() {
+        return mMaxDistance;
     }
 
     private double distanceSquared(Point a, Point b) {
@@ -172,7 +188,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
                 p.y - halfSpan, p.y + halfSpan);
     }
 
-    private static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
+    static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
         private final T mClusterItem;
         private final Point mPoint;
         private final LatLng mPosition;

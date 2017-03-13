@@ -348,7 +348,7 @@ public class KmlRenderer  extends Renderer {
         Bitmap bitmapImage = getImagesCache().get(bitmapUrl);
         BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
         ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
-     }
+    }
 
     /**
      * Assigns icons to markers with a url if put in a placemark tag that is nested in a folder.
@@ -453,6 +453,7 @@ public class KmlRenderer  extends Renderer {
             }
         }
     }
+
 
     /**
      * Downloads images for use as marker icons

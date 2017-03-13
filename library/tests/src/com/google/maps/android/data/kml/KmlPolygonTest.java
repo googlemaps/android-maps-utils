@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class KmlPolygonTest extends TestCase {
 
@@ -21,7 +22,7 @@ public class KmlPolygonTest extends TestCase {
         outerCoordinates.add(new LatLng(20, 20));
         outerCoordinates.add(new LatLng(30, 30));
         outerCoordinates.add(new LatLng(10, 10));
-        ArrayList<ArrayList<LatLng>> innerCoordinates = new  ArrayList<ArrayList<LatLng>>();
+        ArrayList<List<LatLng>> innerCoordinates = new ArrayList<List<LatLng>>();
         ArrayList<LatLng> innerHole = new ArrayList<LatLng>();
         innerHole.add(new LatLng(20, 20));
         innerHole.add(new LatLng(10, 10));

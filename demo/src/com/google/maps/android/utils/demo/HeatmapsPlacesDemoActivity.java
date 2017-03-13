@@ -145,7 +145,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 boolean handled = false;
-                if (actionId == EditorInfo.IME_NULL) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
                     submit();
                     handled = true;
                 }

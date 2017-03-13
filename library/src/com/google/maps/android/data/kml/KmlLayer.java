@@ -39,6 +39,7 @@ public class KmlLayer extends Layer {
     }
 
 
+
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
