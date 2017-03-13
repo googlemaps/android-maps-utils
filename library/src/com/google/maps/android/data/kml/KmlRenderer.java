@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +17,7 @@ import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.Geometry;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -40,13 +42,42 @@ public class KmlRenderer  extends Renderer {
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
+    /**
+     * Options to auto-scale the bitmap images according to screen density.
+     */
+    private BitmapFactory.Options mBitmapOptions;
+
     private ArrayList<KmlContainer> mContainers;
 
+    /**
+     * The fully qualified directory name to look in (in the android file system) for any relative-path images,
+     * or null if we should only look online.
+     */
+    private String mDirectoryName;
+
     /* package */ KmlRenderer(GoogleMap map, Context context) {
-        super(map, context);
+        this(map, context, null, true);
+        //For backwards compatibility, will use a default info window adapter by default.
+    }
+
+    /**
+     * @param directoryName See {@link KmlRenderer#mDirectoryName}.
+     * @param setDefaultInfoWindowAdapter See {@link Renderer#Renderer(GoogleMap, Context, boolean)} docs.
+     */
+    public KmlRenderer(GoogleMap map, Context context, String directoryName, boolean setDefaultInfoWindowAdapter) {
+        super(map, context, setDefaultInfoWindowAdapter);
+        mDirectoryName = directoryName;
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
+
+        //Set up bitmap options
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        options.inScreenDensity = metrics.densityDpi;
+        options.inTargetDensity =  metrics.densityDpi;
+        options.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+        mBitmapOptions = options;
     }
 
     /**
@@ -99,7 +130,10 @@ public class KmlRenderer  extends Renderer {
      */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            groundOverlay.remove();
+            //For some reason, it was getting null overlays. This fixed the problem. I guess it's from malformed KML files.
+            if (groundOverlay != null) {
+                groundOverlay.remove();
+            }
         }
     }
 
@@ -287,7 +321,7 @@ public class KmlRenderer  extends Renderer {
         for (Feature placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
             KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
-            if ("Point".equals(placemark.getGeometry().getGeometryType())) {
+            if (placemark.getGeometry() != null && "Point".equals(placemark.getGeometry().getGeometryType())) {
                 boolean isInlineStyleIcon = inlineStyle != null && iconUrl
                         .equals(inlineStyle.getIconUrl());
                 boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
@@ -444,10 +478,12 @@ public class KmlRenderer  extends Renderer {
          */
         @Override
         protected Bitmap doInBackground(String... params) {
+            //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
+            //Should always check online first, then check in the filesystem.
             try {
-                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
+                return getBitmapFromUrl(mIconUrl);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mIconUrl);
+                return getBitmapFromFile(mIconUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -461,6 +497,10 @@ public class KmlRenderer  extends Renderer {
          */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap == null) {
+                //Try to get it from the file system:
+                bitmap = getBitmapFromFile(mIconUrl);
+            }
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             } else {
@@ -492,11 +532,12 @@ public class KmlRenderer  extends Renderer {
          */
         @Override
         protected Bitmap doInBackground(String... params) {
+            //Note: Doing this "URI uri = new URI(mGroundOverlayUrl);" doesn't work because it will always throw a syntax exception if there are spaces.
+            //Should always check online first, then check in the filesystem.
             try {
-                return BitmapFactory
-                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
+                return getBitmapFromUrl(mGroundOverlayUrl);
             } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mGroundOverlayUrl);
+                return getBitmapFromFile(mGroundOverlayUrl);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
@@ -511,6 +552,10 @@ public class KmlRenderer  extends Renderer {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
+                //Try to get it from the file system:
+                bitmap = getBitmapFromFile(mGroundOverlayUrl);
+            }
+            if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
             } else {
                 putImagesCache(mGroundOverlayUrl, bitmap);
@@ -521,4 +566,26 @@ public class KmlRenderer  extends Renderer {
             }
         }
     }
+
+    /**
+     * @param url internet address of the image.
+     * @return the bitmap of that image, scaled according to screen density.
+     */
+    private Bitmap getBitmapFromUrl(String url) throws MalformedURLException, IOException {
+        return BitmapFactory.decodeStream((InputStream) new URL(url).getContent(), null, mBitmapOptions);
+    }
+
+    /**
+     * @param fileName the name of the file to look for within {@link KmlRenderer#mDirectoryName}.
+     * @return the bitmap in the directory {@link KmlRenderer#mDirectoryName} and name fileName;
+     * or the bitmap found at fileName (treated as an absolute path) if {@link KmlRenderer#mDirectoryName} is null.
+     * In both cases, the bitmap is scaled according to screen density.
+     */
+    private Bitmap getBitmapFromFile(String fileName) {
+        if (mDirectoryName == null) {
+            return BitmapFactory.decodeFile(fileName, mBitmapOptions);
+        }
+        return BitmapFactory.decodeFile(new File(mDirectoryName, fileName).getPath(), mBitmapOptions);
+    }
+
 }
