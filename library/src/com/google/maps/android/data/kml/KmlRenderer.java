@@ -56,14 +56,16 @@ public class KmlRenderer  extends Renderer {
     private String mDirectoryName;
 
     /* package */ KmlRenderer(GoogleMap map, Context context) {
-        this(map, context, null);
+        this(map, context, null, true);
+        //For backwards compatibility, will use a default info window adapter by default.
     }
 
     /**
-     * @param directoryName See {@link KmlRenderer#mDirectoryName}, or null to only look online.
+     * @param directoryName See {@link KmlRenderer#mDirectoryName}.
+     * @param setDefaultInfoWindowAdapter See {@link Renderer#Renderer(GoogleMap, Context, boolean)} docs.
      */
-    KmlRenderer(GoogleMap map, Context context, String directoryName) {
-        super(map, context);
+    public KmlRenderer(GoogleMap map, Context context, String directoryName, boolean setDefaultInfoWindowAdapter) {
+        super(map, context, setDefaultInfoWindowAdapter);
         mDirectoryName = directoryName;
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
@@ -128,7 +130,10 @@ public class KmlRenderer  extends Renderer {
      */
     private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            groundOverlay.remove();
+            //For some reason, it was getting null overlays. This fixed the problem. I guess it's from malformed KML files.
+            if (groundOverlay != null) {
+                groundOverlay.remove();
+            }
         }
     }
 
@@ -316,7 +321,7 @@ public class KmlRenderer  extends Renderer {
         for (Feature placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
             KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
-            if ("Point".equals(placemark.getGeometry().getGeometryType())) {
+            if (placemark.getGeometry() != null && "Point".equals(placemark.getGeometry().getGeometryType())) {
                 boolean isInlineStyleIcon = inlineStyle != null && iconUrl
                         .equals(inlineStyle.getIconUrl());
                 boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl

@@ -2,6 +2,8 @@ package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.data.Layer;
+import com.google.maps.android.data.Renderer;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -18,20 +20,22 @@ public class KmlLayer extends Layer {
 
 
     /**
-     * Same as {@link KmlLayer#KmlLayer(GoogleMap, int, Context, String)} but with a null directoryName.
+     * Same as {@link KmlLayer#KmlLayer(GoogleMap, int, Context, String, boolean)} but with a null directoryName
+     * and and will use the default info window adapter.
      */
      public KmlLayer(GoogleMap map, int resourceId, Context context)
              throws XmlPullParserException, IOException {
-         this(map, resourceId, context, null);
+         this(map, resourceId, context, null, true);
      }
 
 
     /**
-     * Same as {@link KmlLayer#KmlLayer(GoogleMap, InputStream, Context, String)} but with a null directoryName.
+     * Same as {@link KmlLayer#KmlLayer(GoogleMap, InputStream, Context, String, boolean)} but with a null directoryName
+     * and will use the default info window adapter.
      */
      public KmlLayer(GoogleMap map, InputStream stream, Context context)
              throws XmlPullParserException, IOException {
-         this(map, stream, context, null);
+         this(map, stream, context, null, true);
      }
 
 
@@ -43,11 +47,12 @@ public class KmlLayer extends Layer {
      * @param context    Context object
      * @param directoryName the fully qualified directory name to look in (in the android file
      *                      system) for any relative-path images, or null to only look online.
+     * @param setDefaultInfoWindowAdapter See {@link Renderer#Renderer(GoogleMap, Context, boolean)} docs.
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, int resourceId, Context context, String directoryName)
+    public KmlLayer(GoogleMap map, int resourceId, Context context, String directoryName, boolean setDefaultInfoWindowAdapter)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context, directoryName);
+        this(map, context.getResources().openRawResource(resourceId), context, directoryName, setDefaultInfoWindowAdapter);
     }
 
     /**
@@ -57,14 +62,15 @@ public class KmlLayer extends Layer {
      * @param stream InputStream containing KML file
      * @param directoryName the fully qualified directory name to look in (in the android file
      *                      system) for any relative-path images, or null to only look online.
+     * @param setDefaultInfoWindowAdapter See {@link Renderer#Renderer(GoogleMap, Context, boolean)} docs.
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, InputStream stream, Context context, String directoryName)
+    public KmlLayer(GoogleMap map, InputStream stream, Context context, String directoryName, boolean setDefaultInfoWindowAdapter)
             throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        KmlRenderer mRenderer = new KmlRenderer(map, context, directoryName);
+        KmlRenderer mRenderer = new KmlRenderer(map, context, directoryName, setDefaultInfoWindowAdapter);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();
