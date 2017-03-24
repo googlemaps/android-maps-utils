@@ -10,6 +10,7 @@ import java.util.List;
  * com.google.android.gms.maps.model.LatLng}s.
  */
 public class GeoJsonLineString extends LineString {
+    private final List<Double> mAltitudes;
 
     /**
      * Creates a new GeoJsonLineString object
@@ -17,7 +18,19 @@ public class GeoJsonLineString extends LineString {
      * @param coordinates list of coordinates of GeoJsonLineString to store
      */
     public GeoJsonLineString(List<LatLng> coordinates) {
+        this(coordinates, null);
+    }
+
+    /**
+     * Creates a new GeoJsonLineString object
+     *
+     * @param coordinates array of coordinates
+     * @param altitudes array of altitudes
+     */
+    public GeoJsonLineString(List<LatLng> coordinates, List<Double> altitudes) {
         super(coordinates);
+
+        this.mAltitudes = altitudes;
     }
 
     /**
@@ -37,5 +50,14 @@ public class GeoJsonLineString extends LineString {
      */
     public List<LatLng> getCoordinates() {
         return getGeometryObject();
+    }
+
+    /**
+     * Gets the altitudes of the GeoJsonLineString
+     *
+     * @return list of altitudes of the GeoJsonLineString
+     */
+    public List <Double> getAltitudes() {
+        return mAltitudes;
     }
 }
