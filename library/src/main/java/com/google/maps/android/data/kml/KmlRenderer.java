@@ -3,6 +3,7 @@ package com.google.maps.android.data.kml;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
@@ -47,11 +48,15 @@ public class KmlRenderer extends Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
+    private final LruCache<String, Bitmap> mBitmapCache;
+
     /* package */ KmlRenderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         super(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
+
+        mBitmapCache = new LruCache<>(LRU_CACHE_SIZE);
     }
 
     /**
@@ -306,8 +311,22 @@ public class KmlRenderer extends Renderer {
                              KmlPlacemark placemark) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
-        Bitmap bitmapImage = getImagesCache().get(bitmapUrl);
-        BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
+        BitmapDescriptor scaledBitmap;
+        if (bitmapScale == 1.0d) {
+            scaledBitmap = getImagesCache().get(bitmapUrl);
+            if (scaledBitmap == null) {
+                Bitmap bitmap = mBitmapCache.get(bitmapUrl);
+                scaledBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
+                putImagesCache(bitmapUrl, scaledBitmap);
+            }
+        } else {
+            scaledBitmap = getImagesCache().get(bitmapScale + ":" + bitmapUrl);
+            if (scaledBitmap == null) {
+                Bitmap bitmap = mBitmapCache.get(bitmapUrl);
+                scaledBitmap = scaleIcon(bitmap, bitmapScale);
+                putImagesCache(bitmapScale + ":" + bitmapUrl, scaledBitmap);
+            }
+        }
         ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
     }
 
@@ -382,8 +401,7 @@ public class KmlRenderer extends Renderer {
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
                                        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
-        BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
-                .fromBitmap(getImagesCache().get(groundOverlayUrl));
+        BitmapDescriptor groundOverlayBitmap = getImagesCache().get(groundOverlayUrl);
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
             if (kmlGroundOverlay.getImageUrl().equals(groundOverlayUrl)) {
                 GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
@@ -459,7 +477,7 @@ public class KmlRenderer extends Renderer {
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             } else {
-                putImagesCache(mIconUrl, bitmap);
+                mBitmapCache.put(mIconUrl, bitmap);
                 if (isLayerOnMap()) {
                     addIconToMarkers(mIconUrl, (HashMap<KmlPlacemark, Object>) getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
@@ -507,7 +525,7 @@ public class KmlRenderer extends Renderer {
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
             } else {
-                putImagesCache(mGroundOverlayUrl, bitmap);
+                putImagesCache(mGroundOverlayUrl, BitmapDescriptorFactory.fromBitmap(bitmap));
                 if (isLayerOnMap()) {
                     addGroundOverlayToMap(mGroundOverlayUrl, getGroundOverlayMap(), true);
                     addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
