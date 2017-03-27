@@ -16,8 +16,11 @@
 
 package com.google.maps.android.data;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -92,7 +95,7 @@ public class Renderer {
 
     private boolean mLayerOnMap;
 
-    private Context mContext;
+    private Activity mActivity;
 
     private ArrayList<KmlContainer> mContainers;
 
@@ -106,13 +109,19 @@ public class Renderer {
      * Creates a new Renderer object
      *
      * @param map map to place objects on
-     * @param context context needed to add info windows
+     * @param activity activity needed to add info windows and retain bitmap cache fragment
      */
-    public Renderer(GoogleMap map, Context context) {
+    public Renderer(GoogleMap map, Activity activity) {
         mMap = map;
-        mContext = context;
+        mActivity = activity;
         mLayerOnMap = false;
-        mImagesCache = new LruCache<>(LRU_CACHE_SIZE);
+        RetainFragment retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getFragmentManager());
+        LruCache<String, Bitmap> imagesCache = retainFragment.mRetainedCache;
+        if (imagesCache == null) {
+            imagesCache = new LruCache<>(LRU_CACHE_SIZE);
+            retainFragment.mRetainedCache = imagesCache;
+        }
+        mImagesCache = imagesCache;
         mMarkerIconUrls = new ArrayList<>();
         mStylesRenderer = new HashMap<>();
         mDefaultPointStyle = null;
@@ -137,6 +146,29 @@ public class Renderer {
         mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mImagesCache = null;
         mContainerFeatures = null;
+    }
+
+    /**
+     * Fragment for retaining the bitmap cache between configuration changes.
+     */
+    public static class RetainFragment extends Fragment {
+        private static final String TAG = RetainFragment.class.getName();
+        public LruCache<String, Bitmap> mRetainedCache;
+
+        public static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
+            RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
+            if (fragment == null) {
+                fragment = new RetainFragment();
+                fm.beginTransaction().add(fragment, TAG).commit();
+            }
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setRetainInstance(true);
+        }
     }
 
     /**
@@ -900,7 +932,7 @@ public class Renderer {
             }
 
             public View getInfoContents(Marker arg0) {
-                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
+                View view =  LayoutInflater.from(mActivity).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
@@ -911,5 +943,4 @@ public class Renderer {
             }
         });
     }
-
 }

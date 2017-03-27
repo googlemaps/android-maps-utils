@@ -6,7 +6,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.content.Context;
+import android.app.Activity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,12 +21,12 @@ public class KmlLayer extends Layer {
      *
      * @param map        GoogleMap object
      * @param resourceId Raw resource KML file
-     * @param context    Context object
+     * @param activity   Activity object
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, int resourceId, Context context)
+    public KmlLayer(GoogleMap map, int resourceId, Activity activity)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context);
+        this(map, activity.getResources().openRawResource(resourceId), activity);
     }
 
     /**
@@ -36,12 +36,12 @@ public class KmlLayer extends Layer {
      * @param stream InputStream containing KML file
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, InputStream stream, Context context)
+    public KmlLayer(GoogleMap map, InputStream stream, Activity activity)
             throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        KmlRenderer mRenderer = new KmlRenderer(map, context);
+        KmlRenderer mRenderer = new KmlRenderer(map, activity);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();
