@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.maps.android;
+package com.google.maps.android.collections;
 
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Keeps track of collections of markers on the map. Delegates all Marker-related events to each
@@ -35,44 +29,19 @@ import java.util.Set;
  * All marker operations (adds and removes) should occur via its collection class. That is, don't
  * add a marker via a collection, then remove it via Marker.remove()
  */
-public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.InfoWindowAdapter {
-    private final GoogleMap mMap;
-
-    private final Map<String, Collection> mNamedCollections = new HashMap<String, Collection>();
-    private final Map<Marker, Collection> mAllMarkers = new HashMap<Marker, Collection>();
+public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collection> implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.InfoWindowAdapter {
 
     public MarkerManager(GoogleMap map) {
-        this.mMap = map;
+        super(map);
     }
 
     public Collection newCollection() {
         return new Collection();
     }
 
-    /**
-     * Create a new named collection, which can later be looked up by {@link #getCollection(String)}
-     * @param id a unique id for this collection.
-     */
-    public Collection newCollection(String id) {
-        if (mNamedCollections.get(id) != null) {
-            throw new IllegalArgumentException("collection id is not unique: " + id);
-        }
-        Collection collection = new Collection();
-        mNamedCollections.put(id, collection);
-        return collection;
-    }
-
-    /**
-     * Gets a named collection that was created by {@link #newCollection(String)}
-     * @param id the unique id for this collection.
-     */
-    public Collection getCollection(String id) {
-        return mNamedCollections.get(id);
-    }
-
     @Override
     public View getInfoWindow(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowAdapter != null) {
             return collection.mInfoWindowAdapter.getInfoWindow(marker);
         }
@@ -81,7 +50,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public View getInfoContents(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowAdapter != null) {
             return collection.mInfoWindowAdapter.getInfoContents(marker);
         }
@@ -90,7 +59,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowClickListener != null) {
             collection.mInfoWindowClickListener.onInfoWindowClick(marker);
         }
@@ -98,7 +67,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerClickListener != null) {
             return collection.mMarkerClickListener.onMarkerClick(marker);
         }
@@ -107,7 +76,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerDragListener != null) {
             collection.mMarkerDragListener.onMarkerDragStart(marker);
         }
@@ -115,7 +84,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public void onMarkerDrag(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerDragListener != null) {
             collection.mMarkerDragListener.onMarkerDrag(marker);
         }
@@ -123,25 +92,18 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
+        Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerDragListener != null) {
             collection.mMarkerDragListener.onMarkerDragEnd(marker);
         }
     }
 
-    /**
-     * Removes a marker from its collection.
-     *
-     * @param marker the marker to remove.
-     * @return true if the marker was removed.
-     */
-    public boolean remove(Marker marker) {
-        Collection collection = mAllMarkers.get(marker);
-        return collection != null && collection.remove(marker);
+    @Override
+    protected void removeObjectFromMap(Marker object) {
+        object.remove();
     }
 
-    public class Collection {
-        private final Set<Marker> mMarkers = new HashSet<Marker>();
+    public class Collection extends MapObjectManager.Collection {
         private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
         private GoogleMap.OnMarkerClickListener mMarkerClickListener;
         private GoogleMap.OnMarkerDragListener mMarkerDragListener;
@@ -152,30 +114,16 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
         public Marker addMarker(MarkerOptions opts) {
             Marker marker = mMap.addMarker(opts);
-            mMarkers.add(marker);
-            mAllMarkers.put(marker, Collection.this);
+            super.add(marker);
             return marker;
         }
 
         public boolean remove(Marker marker) {
-            if (mMarkers.remove(marker)) {
-                mAllMarkers.remove(marker);
-                marker.remove();
-                return true;
-            }
-            return false;
-        }
-
-        public void clear() {
-            for (Marker marker : mMarkers) {
-                marker.remove();
-                mAllMarkers.remove(marker);
-            }
-            mMarkers.clear();
+            return super.remove(marker);
         }
 
         public java.util.Collection<Marker> getMarkers() {
-            return Collections.unmodifiableCollection(mMarkers);
+            return getObjects();
         }
 
         public void setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener infoWindowClickListener) {
@@ -190,7 +138,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             mMarkerDragListener = markerDragListener;
         }
 
-        public void setOnInfoWindowAdapter(GoogleMap.InfoWindowAdapter infoWindowAdapter) {
+        public void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter infoWindowAdapter) {
             mInfoWindowAdapter = infoWindowAdapter;
         }
     }

@@ -87,69 +87,7 @@ public abstract class Layer {
      * @param listener Listener providing the onFeatureClick method to call.
      */
     public void setOnFeatureClickListener(final OnFeatureClickListener listener) {
-
-        GoogleMap map = getMap();
-
-        map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
-            @Override
-            public void onPolygonClick(Polygon polygon) {
-                if (getFeature(polygon) != null) {
-                    listener.onFeatureClick(getFeature(polygon));
-                } else if (getContainerFeature(polygon) != null) {
-                    listener.onFeatureClick(getContainerFeature(polygon));
-                } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
-                }
-            }
-        });
-
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if (getFeature(marker) != null) {
-                    listener.onFeatureClick(getFeature(marker));
-                }  else if (getContainerFeature(marker) != null) {
-                    listener.onFeatureClick(getContainerFeature(marker));
-                } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
-                }
-                return false;
-            }
-        });
-
-        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-            @Override
-            public void onPolylineClick(Polyline polyline) {
-                if (getFeature(polyline) != null) {
-                    listener.onFeatureClick(getFeature(polyline));
-                } else if (getContainerFeature(polyline) != null) {
-                    listener.onFeatureClick(getContainerFeature(polyline));
-                }  else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
-                }
-            }
-        });
-    }
-
-    /**
-     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
-     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
-     * respectively.
-     *
-     * @param mapObject Object
-     * @return an ArrayList of the individual
-     */
-    private ArrayList<?> multiObjectHandler(Object mapObject) {
-        for (Object value : mRenderer.getValues()) {
-            Class c = value.getClass();
-            if (c.getSimpleName().equals("ArrayList")) {
-                ArrayList<?> mapObjects = (ArrayList<?>) value;
-                if (mapObjects.contains(mapObject)) {
-                    return mapObjects;
-                }
-            }
-        }
-        return null;
+        mRenderer.setOnFeatureClickListener(listener);
     }
 
     /**

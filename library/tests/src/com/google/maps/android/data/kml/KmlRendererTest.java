@@ -14,7 +14,7 @@ public class KmlRendererTest extends ActivityTestCase {
         KmlStyle redStyle = new KmlStyle();
         styles.put("BlueValue", blueStyle);
         styles.put("RedValue", redStyle);
-        KmlRenderer renderer = new KmlRenderer(null, null);
+        KmlRenderer renderer = new KmlRenderer(null, null, null, null, null, null);
         renderer.assignStyleMap(styleMap, styles);
         assertNotNull(styles.get("BlueKey"));
         assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));

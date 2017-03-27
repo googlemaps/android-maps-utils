@@ -12,6 +12,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.collections.GroundOverlayManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.collections.PolygonManager;
+import com.google.maps.android.collections.PolylineManager;
 import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.Geometry;
@@ -42,8 +46,8 @@ public class KmlRenderer  extends Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
-    /* package */ KmlRenderer(GoogleMap map, Context context) {
-        super(map, context);
+    /* package */ KmlRenderer(GoogleMap map, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+        super(map, context, markerManager, polygonManager, polylineManager, groundOverlayManager);
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
