@@ -136,12 +136,24 @@ public class Renderer {
         mDefaultLineStringStyle = null;
         mDefaultPolygonStyle = null;
         mContainerFeatures = new BiMultiMap<>();
+        if (markerManager == null) {
+            markerManager = new MarkerManager(map);
+        }
         mMarkerManager = markerManager;
         mMarkers = markerManager.newCollection();
+        if (polygonManager == null) {
+            polygonManager = new PolygonManager(map);
+        }
         mPolygonManager = polygonManager;
         mPolygons = polygonManager.newCollection();
+        if (polylineManager == null) {
+            polylineManager = new PolylineManager(map);
+        }
         mPolylineManager = polylineManager;
         mPolylines = polylineManager.newCollection();
+        if (groundOverlayManager == null) {
+            groundOverlayManager = new GroundOverlayManager(map);
+        }
         mGroundOverlayManager = groundOverlayManager;
         mGroundOverlays = groundOverlayManager.newCollection();
     }

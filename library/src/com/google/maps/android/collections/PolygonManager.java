@@ -31,6 +31,7 @@ public class PolygonManager extends MapObjectManager<Polygon, PolygonManager.Col
 
     public PolygonManager(GoogleMap map) {
         super(map);
+        map.setOnPolygonClickListener(this);
     }
 
     @Override
