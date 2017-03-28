@@ -958,9 +958,9 @@ public class Renderer {
     }
 
     /**
-     * Sets a single click listener for the entire GoogleMap object, that will be called
-     * with the corresponding Feature object when an object on the map (Polygon,
-     * Marker, Polyline) is clicked.
+     * Sets a single click listener for each of the map object collections, that will be called
+     * with the corresponding Feature object when an object on the map (Polygon, Marker, Polyline)
+     * from one of this Renderer's collections is clicked.
      *
      * If getFeature() returns null this means that either the object is inside a KMLContainer,
      * or the object is a MultiPolygon, MultiLineString or MultiPoint and must
