@@ -31,7 +31,11 @@ public class CircleManager extends MapObjectManager<Circle, CircleManager.Collec
 
     public CircleManager(GoogleMap map) {
         super(map);
-        map.setOnCircleClickListener(this);
+    }
+
+    @Override
+    void setListenersOnUiThread() {
+        mMap.setOnCircleClickListener(this);
     }
 
     @Override

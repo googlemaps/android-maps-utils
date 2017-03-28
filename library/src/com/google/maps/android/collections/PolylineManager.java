@@ -31,7 +31,11 @@ public class PolylineManager extends MapObjectManager<Polyline, PolylineManager.
 
     public PolylineManager(GoogleMap map) {
         super(map);
-        map.setOnPolylineClickListener(this);
+    }
+
+    @Override
+    void setListenersOnUiThread() {
+        mMap.setOnPolylineClickListener(this);
     }
 
     @Override

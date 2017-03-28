@@ -16,6 +16,9 @@
 
 package com.google.maps.android.collections;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.google.android.gms.maps.GoogleMap;
 
 import java.util.Collections;
@@ -41,7 +44,15 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
 
     public MapObjectManager(GoogleMap map) {
         this.mMap = map;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                setListenersOnUiThread();
+            }
+        });
     }
+
+    abstract void setListenersOnUiThread();
 
     public abstract C newCollection();
 

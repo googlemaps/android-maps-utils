@@ -34,6 +34,11 @@ public class GroundOverlayManager extends MapObjectManager<GroundOverlay, Ground
     }
 
     @Override
+    void setListenersOnUiThread() {
+        mMap.setOnGroundOverlayClickListener(this);
+    }
+
+    @Override
     public Collection newCollection() {
         return new Collection();
     }

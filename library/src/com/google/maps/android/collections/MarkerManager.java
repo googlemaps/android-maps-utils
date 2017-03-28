@@ -33,10 +33,14 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
     public MarkerManager(GoogleMap map) {
         super(map);
-        map.setOnInfoWindowClickListener(this);
-        map.setOnMarkerClickListener(this);
-        map.setOnMarkerDragListener(this);
-        map.setInfoWindowAdapter(this);
+    }
+
+    @Override
+    void setListenersOnUiThread() {
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMarkerDragListener(this);
+        mMap.setInfoWindowAdapter(this);
     }
 
     public Collection newCollection() {
