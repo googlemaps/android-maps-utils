@@ -16,6 +16,8 @@
 
 package com.google.maps.android.collections;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -29,7 +31,7 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
  */
 public class GroundOverlayManager extends MapObjectManager<GroundOverlay, GroundOverlayManager.Collection> implements GoogleMap.OnGroundOverlayClickListener {
 
-    public GroundOverlayManager(GoogleMap map) {
+    public GroundOverlayManager(@NonNull GoogleMap map) {
         super(map);
     }
 

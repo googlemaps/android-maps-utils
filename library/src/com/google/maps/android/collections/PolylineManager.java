@@ -16,6 +16,8 @@
 
 package com.google.maps.android.collections;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -29,7 +31,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
  */
 public class PolylineManager extends MapObjectManager<Polyline, PolylineManager.Collection> implements GoogleMap.OnPolylineClickListener {
 
-    public PolylineManager(GoogleMap map) {
+    public PolylineManager(@NonNull GoogleMap map) {
         super(map);
     }
 

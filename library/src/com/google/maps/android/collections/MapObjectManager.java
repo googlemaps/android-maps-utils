@@ -18,6 +18,7 @@ package com.google.maps.android.collections;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.GoogleMap;
 
@@ -42,7 +43,7 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
     private final Map<String, C> mNamedCollections = new HashMap<>();
     protected final Map<O, C> mAllObjects = new HashMap<>();
 
-    public MapObjectManager(GoogleMap map) {
+    public MapObjectManager(@NonNull GoogleMap map) {
         this.mMap = map;
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

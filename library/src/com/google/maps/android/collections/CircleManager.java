@@ -16,6 +16,8 @@
 
 package com.google.maps.android.collections;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -29,7 +31,7 @@ import com.google.android.gms.maps.model.CircleOptions;
  */
 public class CircleManager extends MapObjectManager<Circle, CircleManager.Collection> implements GoogleMap.OnCircleClickListener {
 
-    public CircleManager(GoogleMap map) {
+    public CircleManager(@NonNull GoogleMap map) {
         super(map);
     }
 
