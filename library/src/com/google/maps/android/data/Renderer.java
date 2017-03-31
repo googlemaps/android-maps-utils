@@ -425,7 +425,10 @@ public class Renderer {
      */
     protected void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            mGroundOverlays.remove(groundOverlay);
+            // Ground overlay values may be null if their image was not yet downloaded
+            if (groundOverlay != null) {
+                mGroundOverlays.remove(groundOverlay);
+            }
         }
     }
 
