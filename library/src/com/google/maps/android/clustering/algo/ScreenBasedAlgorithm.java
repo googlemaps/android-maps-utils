@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,16 @@
 
 package com.google.maps.android.clustering.algo;
 
-import java.util.Collection;
-import java.util.Set;
-
-import com.google.maps.android.clustering.Cluster;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
- * Logic for computing clusters
+ *
+ * This algorithm uses map position for clustering, and should be reclustered on map movement
+ * @param <T>
  */
-public interface Algorithm<T extends ClusterItem> {
-    void addItem(T item);
 
-    void addItems(Collection<T> items);
+public interface ScreenBasedAlgorithm<T extends ClusterItem> extends Algorithm<T>, GoogleMap.OnCameraChangeListener {
 
-    void clearItems();
-
-    void removeItem(T item);
-
-    Set<? extends Cluster<T>> getClusters(double zoom);
-
-    Collection<T> getItems();
-
-    void setMaxDistanceBetweenClusteredItems(int maxDistance);
-
-    int getMaxDistanceBetweenClusteredItems();
+    boolean shouldReclusterOnMapMovement();
 }
