@@ -113,6 +113,27 @@ public class HeatmapTileProvider implements TileProvider {
     private static final int MAX_RADIUS = 50;
 
     /**
+     * Default points threshold
+     */
+    public static final int DEFAULT_POINTS_THRESHOLD = 1000;
+
+    /**
+     * Default max value
+     */
+    public static final int DEFAULT_MAX_VALUE = 10;
+
+    /*
+     * Minimum number of points or coordinates required before {@link #getMaxValue} takes an
+     * alternative path to calculate the max value
+     */
+    private static Integer mPointsThreshold;
+
+    /*
+     * Max value to be returned by {@link #getMaxValue} when the mPointsThreshold is met
+     */
+    private static int mMaxValue;
+
+    /**
      * Quad tree of all the points to display in the heatmap
      */
     private PointQuadTree<WeightedLatLng> mTree;
@@ -168,6 +189,8 @@ public class HeatmapTileProvider implements TileProvider {
         private int radius = DEFAULT_RADIUS;
         private Gradient gradient = DEFAULT_GRADIENT;
         private double opacity = DEFAULT_OPACITY;
+        private int maxValue = DEFAULT_MAX_VALUE;
+        private Integer pointsThreshold;
 
         /**
          * Constructor for builder.
@@ -247,6 +270,33 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         /**
+         * Setter for pointsThreshold in builder
+         *
+         * @param val minimum number of points or coordinates required before
+         *            {@link #getMaxValue(Collection, Bounds, int, int)} takes an alternative path
+         *            to calculate the max value
+         * @return updated builder object
+         */
+        public Builder pointsThreshold(Integer val) {
+            pointsThreshold = val;
+            return this;
+        }
+
+        /**
+         * Setter for maxValue in builder
+         *
+         * @param val max value to be returned by {@link #getMaxValue(Collection, Bounds, int, int)}
+         *            when the pointsThreshold is met
+         * @return updated builder object
+         * @see #pointsThreshold
+         * @see #DEFAULT_MAX_VALUE
+         */
+        public Builder maxValue(int val) {
+            maxValue = val;
+            return this;
+        }
+
+        /**
          * Call when all desired options have been set.
          * Note: you must set data using data or weightedData before this!
          *
@@ -273,6 +323,9 @@ public class HeatmapTileProvider implements TileProvider {
 
         // Compute kernel density function (sd = 1/3rd of radius)
         mKernel = generateKernel(mRadius, mRadius / 3.0);
+
+        mPointsThreshold = builder.pointsThreshold;
+        mMaxValue = builder.maxValue;
 
         // Generate color map
         setGradient(mGradient);
@@ -722,6 +775,13 @@ public class HeatmapTileProvider implements TileProvider {
      */
     static double getMaxValue(Collection<WeightedLatLng> points, Bounds bounds, int radius,
                               int screenDim) {
+
+        // Return user selected max value if threshold has been met - attempts to overcome the
+        // following issue:
+        // http://stackoverflow.com/questions/25773917/google-map-api-v2-heatmap-not-showing-all-locations/26143688#26143688
+        // https://github.com/googlemaps/android-maps-utils/issues/71
+        if (mPointsThreshold != null && points.size() > mPointsThreshold) return mMaxValue;
+
         // Approximate scale as if entire heatmap is on the screen
         // ie scale dimensions to larger of width or height (screenDim)
         double minX = bounds.minX;
