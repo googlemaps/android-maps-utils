@@ -560,4 +560,71 @@ public class PolyUtil {
         }
         result.append(Character.toChars((int) (v + 63)));
     }
+
+
+	/**
+	 * Reduce the number of points in a curve using the Douglas-Peucker
+	 * algorithm
+	 * @param curve     The curve to reduce
+	 * @param tolerance The tolerance to decide whether or not to keep a point, in the coordinate system of the points (micro-degrees here)
+	 * @return the reduced curve
+	 */
+	public static List<LatLng> simplify(List<LatLng> curve, double tolerance) {
+		int n = curve.size();
+		if (tolerance <= 0 || n < 3) {
+			return curve;
+		}
+		boolean[] marked = new boolean[n];
+		for (int i = 1; i < n - 1; i++)
+			marked[i] = false;
+		marked[0] = marked[n - 1] = true;
+
+		douglasPeuckerReduction(curve, marked, tolerance, 0, n - 1);
+
+		List<LatLng> newShape = new ArrayList<LatLng>(n);
+		for (int i = 0; i < n; i++) {
+			if (marked[i])
+				newShape.add(curve.get(i));
+		}
+		return newShape;
+	}
+
+	private static void douglasPeuckerReduction(List<LatLng> shape, boolean[] marked, double tolerance, int firstIdx, int lastIdx) {
+		if (lastIdx <= firstIdx + 1) {
+			return;
+		}
+		double maxDistance = 0.0;
+		int indexFarthest = 0;
+		LatLng firstPoint = shape.get(firstIdx);
+		LatLng lastPoint = shape.get(lastIdx);
+
+		for (int idx = firstIdx + 1; idx < lastIdx; idx++) {
+			LatLng point = shape.get(idx);
+			double distance = orthogonalDistance(point, firstPoint, lastPoint);
+			if (distance > maxDistance) {
+				maxDistance = distance;
+				indexFarthest = idx;
+			}
+		}
+
+		if (maxDistance > tolerance) {
+			marked[indexFarthest] = true;
+			douglasPeuckerReduction(shape, marked, tolerance, firstIdx, indexFarthest);
+			douglasPeuckerReduction(shape, marked, tolerance, indexFarthest, lastIdx);
+		}
+	}
+
+	private static double orthogonalDistance(LatLng point, LatLng lineStart, LatLng lineEnd) {
+		double area = Math.abs((
+						1.0 * lineStart.latitude * lineEnd.longitude
+								+ 1.0 * lineEnd.latitude * point.longitude
+								+ 1.0 * point.latitude * lineStart.longitude
+								- 1.0 * lineEnd.latitude * lineStart.longitude
+								- 1.0 * point.latitude * lineEnd.longitude
+								- 1.0 * lineStart.latitude * point.longitude) / 2.0);
+		double bottom = Math.hypot(
+				lineStart.latitude - lineEnd.latitude,
+				lineStart.longitude - lineEnd.longitude);
+		return (area / bottom * 2.0);
+	}
 }
