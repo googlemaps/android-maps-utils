@@ -30,8 +30,12 @@ public class BiMultiMap<K> extends HashMap<K, Object> {
     @Override
     public Object put(K key, Object value) {
         // Store value/key in the reverse map.
-        mValuesToKeys.put(value, key);
-        return super.put(key, value);
+        if (value instanceof Collection) {
+            return put(key, (Collection) value);
+        } else {
+            mValuesToKeys.put(value, key);
+            return super.put(key, value);
+        }
     }
 
     public Object put(K key, Collection values) {
