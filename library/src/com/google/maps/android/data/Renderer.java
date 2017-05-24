@@ -406,9 +406,20 @@ public class Renderer {
      * @param features features to remove
      */
     protected void removeFeatures(HashMap<Feature, Object> features) {
+        removeFeatures(features.values());
+    }
+
+    /**
+     * Removes all given Features from the map and clears all stored features.
+     *
+     * @param features features to remove
+     */
+    private void removeFeatures(Collection features) {
         // Remove map object from the map
-        for (Object mapObject : features.values()) {
-            if (mapObject instanceof Marker) {
+        for (Object mapObject : features) {
+            if (mapObject instanceof Collection) {
+                removeFeatures((Collection) mapObject);
+            } else if (mapObject instanceof Marker) {
                 mMarkers.remove((Marker) mapObject);
             } else if (mapObject instanceof Polyline) {
                 mPolylines.remove((Polyline) mapObject);
