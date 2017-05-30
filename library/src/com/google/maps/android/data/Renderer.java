@@ -893,23 +893,7 @@ public class Renderer {
      * the info window to have custom HTML.
      */
     private void createInfoWindow() {
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            public View getInfoContents(Marker arg0) {
-                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
-                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
-                if (arg0.getSnippet() != null) {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
-                }
-                return view;
-            }
-        });
     }
 
 }
