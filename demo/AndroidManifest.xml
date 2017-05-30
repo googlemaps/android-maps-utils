@@ -49,6 +49,7 @@
         <activity android:name=".IconGeneratorDemoActivity"/>
         <activity android:name=".DistanceDemoActivity"/>
         <activity android:name=".ClusteringDemoActivity"/>
+        <activity android:name=".PieChartMarkerClusteringDemoActivity"/>
         <activity android:name=".BigClusteringDemoActivity"/>
         <activity android:name=".CustomMarkerClusteringDemoActivity"/>
         <activity android:name=".TileProviderAndProjectionDemo"/>
