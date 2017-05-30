@@ -103,12 +103,24 @@ public class Renderer {
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
 
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object with the default info window adapter.
      *
      * @param map map to place objects on
      * @param context context needed to add info windows
      */
     public Renderer(GoogleMap map, Context context) {
+        //This constructor is left for backwards compatibility.
+        this(map, context, true);
+    }
+    /**
+     * Creates a new Renderer object, and optionally sets the default info window adapter.
+     *
+     * @param map map to place objects on
+     * @param context context needed to add info windows
+     * @param setDefaultInfoWindowAdapter true to set the given map's info window adapter to one that displays a title and snippet,
+     *                                  or false to not set it (used to prevent this class from overriding your own custom adapter).
+     */
+    public Renderer(GoogleMap map, Context context, boolean setDefaultInfoWindowAdapter) {
         mMap = map;
         mContext = context;
         mLayerOnMap = false;
@@ -119,6 +131,10 @@ public class Renderer {
         mDefaultLineStringStyle = null;
         mDefaultPolygonStyle = null;
         mContainerFeatures = new BiMultiMap<>();
+
+        if (setDefaultInfoWindowAdapter) {
+            setDefaultInfoWindowAdapter();
+        }
     }
 
     /**
@@ -871,28 +887,23 @@ public class Renderer {
         boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
             marker.setTitle(style.getBalloonOptions().get("text"));
-            createInfoWindow();
         } else if (hasBalloonOptions && hasName) {
             marker.setTitle(placemark.getProperty("name"));
-            createInfoWindow();
         } else if (hasName && hasDescription) {
             marker.setTitle(placemark.getProperty("name"));
             marker.setSnippet(placemark.getProperty("description"));
-            createInfoWindow();
         } else if (hasDescription) {
             marker.setTitle(placemark.getProperty("description"));
-            createInfoWindow();
         } else if (hasName) {
             marker.setTitle(placemark.getProperty("name"));
-            createInfoWindow();
         }
     }
 
     /**
-     * Creates a new InfoWindowAdapter and sets text if marker snippet or title is set. This allows
+     * Sets a default InfoWindowAdapter on the map that sets text if marker snippet or title is set. This allows
      * the info window to have custom HTML.
      */
-    private void createInfoWindow() {
+    private void setDefaultInfoWindowAdapter() {
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             public View getInfoWindow(Marker arg0) {
