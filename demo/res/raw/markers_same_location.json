@@ -1,0 +1,7 @@
+[
+{ "lat" : 51.503186, "lng" : -0.126446, "title" : "Marker 1", "snippet": "Marker 1"},
+{ "lat" : 51.503186, "lng" : -0.126446, "title" : "Marker 2", "snippet" : "Marker 2"},
+{ "lat" : 51.503186, "lng" : -0.126446, "title" : "Marker 3", "snippet": "Marker 3"},
+{ "lat" : 51.503186, "lng" : -0.126446, "title" : "Marker 4", "snippet": "Marker 4" },
+{ "lat" : 51.503186, "lng" : -0.126446, "title" : "Marker 5", "snippet": "Marker 5"}
+]

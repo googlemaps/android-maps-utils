@@ -56,6 +56,7 @@
         <activity android:name=".HeatmapsPlacesDemoActivity"/>
         <activity android:name=".GeoJsonDemoActivity"/>
         <activity android:name=".KmlDemoActivity"/>
+        <activity android:name=".ClusteringSameLocationActivity"/>
 
     </application>
 
