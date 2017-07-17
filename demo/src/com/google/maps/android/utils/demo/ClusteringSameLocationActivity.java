@@ -4,13 +4,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClusteringSameLocationActivity extends BaseDemoActivity {
@@ -20,11 +20,23 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
     protected void startDemo() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
 
-        mClusterManager = new ClusterManager<MyItem>(this, getMap());
-        getMap().setOnCameraIdleListener(mClusterManager);
+        mClusterManager = new ClusterManager<>(this, getMap());
+
+        getMap().setOnMarkerClickListener(mClusterManager);
+
+        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
+
+            @Override
+            public boolean onClusterClick(Cluster<MyItem> cluster) {
+
+                return false;
+            }
+        });
 
         try {
             readItems();
+
+            mClusterManager.cluster();
         } catch (JSONException e) {
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
