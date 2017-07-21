@@ -1,16 +1,17 @@
 package com.google.maps.android.utils.demo;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
@@ -47,7 +48,9 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
                     return false;
                 }
 
-                // TODO: show markers included in cluster with the same location
+                Marker marker = ((DefaultClusterRenderer<MyItem>) mClusterManager.getRenderer()).getMarker(cluster);
+                marker.setTitle("Cluster with " + cluster.getItems().size() + " items");
+                marker.showInfoWindow();
 
                 return true;
             }
@@ -68,9 +71,9 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
         mClusterManager.addItems(items);
     }
 
-    class CustomClusterManager<T extends ClusterItem> extends ClusterManager<T> {
+    private class CustomClusterManager<T extends ClusterItem> extends ClusterManager<T> {
 
-        public CustomClusterManager(Context context, GoogleMap map) {
+        CustomClusterManager(Context context, GoogleMap map) {
             super(context, map);
         }
 
@@ -78,7 +81,7 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
             super(context, map, markerManager);
         }
 
-        public boolean hasMarkersSameLocation(Cluster<T> cluster) {
+        boolean hasMarkersSameLocation(Cluster<T> cluster) {
             LinkedList<T> items = new LinkedList<>(cluster.getItems());
             T item = items.remove(0);
 
