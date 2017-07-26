@@ -209,20 +209,21 @@ import java.util.Iterator;
      */
     private static Geometry createGeometry(String geometryType, JSONArray geometryArray)
             throws JSONException {
-        if (geometryType.equals(POINT)) {
-            return createPoint(geometryArray);
-        } else if (geometryType.equals(MULTIPOINT)) {
-            return createMultiPoint(geometryArray);
-        } else if (geometryType.equals(LINESTRING)) {
-            return createLineString(geometryArray);
-        } else if (geometryType.equals(MULTILINESTRING)) {
-            return createMultiLineString(geometryArray);
-        } else if (geometryType.equals(POLYGON)) {
-            return createPolygon(geometryArray);
-        } else if (geometryType.equals(MULTIPOLYGON)) {
-            return createMultiPolygon(geometryArray);
-        } else if (geometryType.equals(GEOMETRY_COLLECTION)) {
-            return createGeometryCollection(geometryArray);
+        switch (geometryType) {
+            case POINT:
+                return createPoint(geometryArray);
+            case MULTIPOINT:
+                return createMultiPoint(geometryArray);
+            case LINESTRING:
+                return createLineString(geometryArray);
+            case MULTILINESTRING:
+                return createMultiLineString(geometryArray);
+            case POLYGON:
+                return createPolygon(geometryArray);
+            case MULTIPOLYGON:
+                return createMultiPolygon(geometryArray);
+            case GEOMETRY_COLLECTION:
+                return createGeometryCollection(geometryArray);
         }
         return null;
     }
