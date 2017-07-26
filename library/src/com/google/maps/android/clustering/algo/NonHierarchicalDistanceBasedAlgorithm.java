@@ -208,7 +208,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         @Override
         public int hashCode() {
             return mClusterItem.hashCode();
-        };
+        }
 
         @Override
         public boolean equals(Object other) {
