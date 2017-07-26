@@ -48,7 +48,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
 
         List<LatLng> simplifiedLine;
 
-        /**
+        /*
          * Simplified lines - increasing the tolerance will result in fewer points in the simplified
          * line
          */
