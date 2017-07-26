@@ -17,4 +17,7 @@
         <item>@string/police_stations</item>
         <item>@string/medicare</item>
     </string-array>
+    <string name="button_radius">Radius</string>
+    <string name="button_gradient">Gradient</string>
+    <string name="button_opacity">Opacity</string>
 </resources>
