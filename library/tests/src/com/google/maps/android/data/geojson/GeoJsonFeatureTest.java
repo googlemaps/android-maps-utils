@@ -41,7 +41,7 @@ public class GeoJsonFeatureTest extends TestCase {
 
     public void testNullProperty() throws Exception {
         GeoJsonLayer layer = new GeoJsonLayer(null, createFeatureCollection());
-        GeoJsonFeature feature = (GeoJsonFeature) layer.getFeatures().iterator().next();
+        GeoJsonFeature feature = layer.getFeatures().iterator().next();
         assertTrue(feature.hasProperty("prop0"));
         assertNull(feature.getProperty("prop0"));
         assertFalse(feature.hasProperty("prop1"));
