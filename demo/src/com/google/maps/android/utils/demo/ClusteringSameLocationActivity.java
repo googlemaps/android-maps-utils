@@ -51,6 +51,7 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
             @Override
             public void onCameraMove() {
 
+                // get markesr back to the original position if they were relocated
                 if (getMap().getCameraPosition().zoom < getMap().getMaxZoomLevel()) {
                     mClusterManager.removeItems(mItemsCache.get(DEFAULT_ADDED_LIST));
                     mClusterManager.addItems(mItemsCache.get(DEFAULT_DELETE_LIST));
@@ -74,11 +75,11 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
                     return false;
                 }
 
-                if (!mClusterManager.hasMarkersSameLocation(cluster)) {
+                if (!mClusterManager.itemsInSameLocation(cluster)) {
                     return false;
                 }
 
-                // distribute the markers around the center
+                // relocate the markers around the current markers position
                 int counter = 0;
                 float rotateFactor = (360 / cluster.getItems().size());
                 for (MyItem item : cluster.getItems()) {
@@ -110,6 +111,7 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.markers_same_location);
         List<MyItem> items = new MyItemReader().read(inputStream);
+
         mClusterManager.addItems(items);
     }
 
@@ -119,11 +121,7 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
             super(context, map);
         }
 
-        public CustomClusterManager(Context context, GoogleMap map, MarkerManager markerManager) {
-            super(context, map, markerManager);
-        }
-
-        boolean hasMarkersSameLocation(Cluster<T> cluster) {
+        boolean itemsInSameLocation(Cluster<T> cluster) {
             LinkedList<T> items = new LinkedList<>(cluster.getItems());
             T item = items.remove(0);
 
