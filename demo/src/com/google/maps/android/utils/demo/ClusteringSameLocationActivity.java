@@ -129,7 +129,7 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
             double latitude = item.getPosition().latitude;
 
             for (T t : items) {
-                if (longitude != t.getPosition().longitude && latitude != t.getPosition().latitude) {
+                if (Double.compare(longitude, t.getPosition().longitude) != 0 && Double.compare(latitude, t.getPosition().latitude) != 0) {
                     return false;
                 }
             }
