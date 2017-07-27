@@ -6,23 +6,38 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ClusteringSameLocationActivity extends BaseDemoActivity {
 
+    private static final double DEFAULT_RADIUS = 0.00003;
+
+    private static final String DEFAULT_DELETE_LIST = "itemsDeleted";
+
+    private static final String DEFAULT_ADDED_LIST = "itemsAdded";
+
     private CustomClusterManager<MyItem> mClusterManager;
+
+    private Map<String, List<MyItem>> mItemsCache;
+
+    public ClusteringSameLocationActivity() {
+        mItemsCache = new HashMap<>();
+        mItemsCache.put(DEFAULT_ADDED_LIST, new ArrayList<MyItem>());
+        mItemsCache.put(DEFAULT_DELETE_LIST, new ArrayList<MyItem>());
+    }
 
     @Override
     protected void startDemo() {
@@ -31,6 +46,21 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
         mClusterManager = new CustomClusterManager<>(this, getMap());
 
         getMap().setOnMarkerClickListener(mClusterManager);
+        getMap().setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+
+            @Override
+            public void onCameraMove() {
+
+                if (getMap().getCameraPosition().zoom < getMap().getMaxZoomLevel()) {
+                    mClusterManager.removeItems(mItemsCache.get(DEFAULT_ADDED_LIST));
+                    mClusterManager.addItems(mItemsCache.get(DEFAULT_DELETE_LIST));
+                    mClusterManager.cluster();
+
+                    mItemsCache.get(DEFAULT_ADDED_LIST).clear();
+                    mItemsCache.get(DEFAULT_DELETE_LIST).clear();
+                }
+            }
+        });
 
         mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
 
@@ -48,9 +78,21 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
                     return false;
                 }
 
-                Marker marker = ((DefaultClusterRenderer<MyItem>) mClusterManager.getRenderer()).getMarker(cluster);
-                marker.setTitle("Cluster with " + cluster.getItems().size() + " items");
-                marker.showInfoWindow();
+                // distribute the markers around the center
+                int counter = 0;
+                float rotateFactor = (360 / cluster.getItems().size());
+                for (MyItem item : cluster.getItems()) {
+                    double lat = item.getPosition().latitude + (DEFAULT_RADIUS * Math.cos(++counter * rotateFactor));
+                    double lng = item.getPosition().longitude + (DEFAULT_RADIUS * Math.sin(counter * rotateFactor));
+                    MyItem copy = new MyItem(lat, lng, item.getTitle(), item.getSnippet());
+
+                    mClusterManager.removeItem(item);
+                    mClusterManager.addItem(copy);
+                    mClusterManager.cluster();
+
+                    mItemsCache.get(DEFAULT_ADDED_LIST).add(copy);
+                    mItemsCache.get(DEFAULT_DELETE_LIST).add(item);
+                }
 
                 return true;
             }
@@ -95,6 +137,13 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
             }
 
             return true;
+        }
+
+        void removeItems(List<T> items) {
+
+            for (T item : items) {
+                removeItem(item);
+            }
         }
     }
 }
