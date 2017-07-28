@@ -69,7 +69,7 @@ public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
     @Override
     public int hashCode() {
         return mCenter.hashCode() + mItems.hashCode();
-    };
+    }
 
     @Override
     public boolean equals(Object other) {

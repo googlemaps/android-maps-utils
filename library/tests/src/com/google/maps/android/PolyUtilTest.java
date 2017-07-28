@@ -22,7 +22,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.lang.String;
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -219,7 +218,7 @@ public class PolyUtilTest extends TestCase {
     }
 
     public void testSimplify() {
-        /**
+        /*
          * Polyline
          */
         final String LINE = "elfjD~a}uNOnFN~Em@fJv@tEMhGDjDe@hG^nF??@lA?n@IvAC`Ay@A{@DwCA{CF_EC{CEi@PBTFDJBJ?V?n@?D@?A@?@?F?F?LAf@?n@@`@@T@~@FpA?fA?p@?r@?vAH`@OR@^ETFJCLD?JA^?J?P?fAC`B@d@?b@A\\@`@Ad@@\\?`@?f@?V?H?DD@DDBBDBD?D?B?B@B@@@B@B@B@D?D?JAF@H@FCLADBDBDCFAN?b@Af@@x@@";
@@ -292,7 +291,7 @@ public class PolyUtilTest extends TestCase {
         assertLineLength(line, simplifiedLine);
         assertInputUnchanged(line, copy);
 
-        /**
+        /*
          * Polygons
          */
         // Open triangle
@@ -307,7 +306,7 @@ public class PolyUtilTest extends TestCase {
 
         copy = copyList(triangle);
         tolerance = 88; // meters
-        List simplifiedTriangle = PolyUtil.simplify(triangle, tolerance);
+        List<LatLng> simplifiedTriangle = PolyUtil.simplify(triangle, tolerance);
         assertEquals(4, simplifiedTriangle.size());
         assertEndPoints(triangle, simplifiedTriangle);
         assertSimplifiedPointsFromLine(triangle, simplifiedTriangle);
