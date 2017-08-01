@@ -27,11 +27,14 @@ import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
+import com.google.maps.android.clustering.view.ClusterItemsDistributor;
 import com.google.maps.android.clustering.view.ClusterRenderer;
+import com.google.maps.android.clustering.view.DefaultClusterItemsDistributor;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -44,6 +47,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class ClusterManager<T extends ClusterItem> implements
         GoogleMap.OnCameraIdleListener,
+        GoogleMap.OnCameraMoveListener,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnInfoWindowClickListener {
 
@@ -54,6 +58,7 @@ public class ClusterManager<T extends ClusterItem> implements
     private Algorithm<T> mAlgorithm;
     private final ReadWriteLock mAlgorithmLock = new ReentrantReadWriteLock();
     private ClusterRenderer<T> mRenderer;
+    private ClusterItemsDistributor mClusterItemsDistributor;
 
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
@@ -77,7 +82,31 @@ public class ClusterManager<T extends ClusterItem> implements
         mRenderer = new DefaultClusterRenderer<T>(context, map, this);
         mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
+        mClusterItemsDistributor = new DefaultClusterItemsDistributor(this);
         mRenderer.onAdd();
+
+        setOnClusterClickListener(new ClusterManager.OnClusterClickListener<T>() {
+
+            @Override
+            public boolean onClusterClick(Cluster<T> cluster) {
+                float maxZoomLevel = mMap.getMaxZoomLevel();
+                float currentZoomLevel = mMap.getCameraPosition().zoom;
+
+                // only show markers if users is in the max zoom level
+                if (currentZoomLevel != maxZoomLevel) {
+                    return false;
+                }
+
+                if (!itemsInSameLocation(cluster)) {
+                    return false;
+                }
+
+                // relocate the markers as defined in the distributor
+                mClusterItemsDistributor.distribute(cluster);
+
+                return true;
+            }
+        });
     }
 
     public MarkerManager.Collection getMarkerCollection() {
@@ -124,6 +153,10 @@ public class ClusterManager<T extends ClusterItem> implements
         mRenderer.setAnimation(animate);
     }
 
+    public void setClusterItemsDistributor(ClusterItemsDistributor clusterItemsDistributor) {
+        this.mClusterItemsDistributor = clusterItemsDistributor;
+    }
+
     public ClusterRenderer<T> getRenderer() {
         return mRenderer;
     }
@@ -157,6 +190,13 @@ public class ClusterManager<T extends ClusterItem> implements
             mAlgorithm.addItem(myItem);
         } finally {
             mAlgorithmLock.writeLock().unlock();
+        }
+    }
+
+    public void removeItems(List<T> items) {
+
+        for (T item : items) {
+            removeItem(item);
         }
     }
 
@@ -205,6 +245,15 @@ public class ClusterManager<T extends ClusterItem> implements
         mPreviousCameraPosition = mMap.getCameraPosition();
 
         cluster();
+    }
+
+    @Override
+    public void onCameraMove() {
+
+        // collect markers to the original position if they were relocated
+        if (mMap.getCameraPosition().zoom < mMap.getMaxZoomLevel()) {
+            mClusterItemsDistributor.collect();
+        }
     }
 
     @Override

@@ -44,6 +44,11 @@ public class QuadItemTest extends TestCase {
         public String getSnippet() {
             return null;
         }
+
+        @Override
+        public TestingItem copy(double lat, double lng) {
+            return new TestingItem(lat, lng);
+        }
     }
 
     public void setUp() {

@@ -44,4 +44,9 @@ public class Person implements ClusterItem {
     public String getSnippet() {
         return null;
     }
+
+    @Override
+    public ClusterItem copy(double lat, double lng) {
+        return new Person(new LatLng(lat, lng), name, profilePhoto);
+    }
 }

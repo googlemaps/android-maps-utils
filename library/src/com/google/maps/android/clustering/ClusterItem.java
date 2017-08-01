@@ -37,4 +37,11 @@ public interface ClusterItem {
      * The description of this marker.
      */
     String getSnippet();
+
+    /**
+     * Produces a copy of the same object but setting the given location.
+     *
+     * @return The new object copied.
+     */
+    ClusterItem copy(double lat, double lng);
 }

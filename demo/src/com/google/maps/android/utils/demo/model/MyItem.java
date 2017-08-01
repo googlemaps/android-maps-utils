@@ -47,6 +47,15 @@ public class MyItem implements ClusterItem {
     @Override
     public String getSnippet() { return mSnippet; }
 
+    @Override
+    public ClusterItem copy(double lat, double lng) {
+        MyItem item = new MyItem(lat, lng);
+        item.setSnippet(getSnippet());
+        item.setTitle(getTitle());
+
+        return item;
+    }
+
     /**
      * Set the title of the marker
      * @param title string to be set as title
