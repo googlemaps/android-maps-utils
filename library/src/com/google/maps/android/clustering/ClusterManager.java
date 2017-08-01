@@ -31,6 +31,7 @@ import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -214,6 +215,30 @@ public class ClusterManager<T extends ClusterItem> implements
     @Override
     public void onInfoWindowClick(Marker marker) {
         getMarkerManager().onInfoWindowClick(marker);
+    }
+
+    public boolean itemsInSameLocation(Cluster<T> cluster) {
+        Collection<T> items = cluster.getItems();
+
+        if (items.size() < 2) {
+            return false;
+        }
+
+        Iterator<T> iterator = items.iterator();
+        T item = iterator.next();
+
+        double longitude = item.getPosition().longitude;
+        double latitude = item.getPosition().latitude;
+
+        while (iterator.hasNext()) {
+            T t = iterator.next();
+
+            if (Double.compare(longitude, t.getPosition().longitude) != 0 && Double.compare(latitude, t.getPosition().latitude) != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

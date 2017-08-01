@@ -121,22 +121,6 @@ public class ClusteringSameLocationActivity extends BaseDemoActivity {
             super(context, map);
         }
 
-        boolean itemsInSameLocation(Cluster<T> cluster) {
-            LinkedList<T> items = new LinkedList<>(cluster.getItems());
-            T item = items.remove(0);
-
-            double longitude = item.getPosition().longitude;
-            double latitude = item.getPosition().latitude;
-
-            for (T t : items) {
-                if (Double.compare(longitude, t.getPosition().longitude) != 0 && Double.compare(latitude, t.getPosition().latitude) != 0) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         void removeItems(List<T> items) {
 
             for (T item : items) {
