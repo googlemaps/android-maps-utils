@@ -58,7 +58,7 @@ public class ClusterManager<T extends ClusterItem> implements
     private Algorithm<T> mAlgorithm;
     private final ReadWriteLock mAlgorithmLock = new ReentrantReadWriteLock();
     private ClusterRenderer<T> mRenderer;
-    private ClusterItemsDistributor mClusterItemsDistributor;
+    private ClusterItemsDistributor<T> mClusterItemsDistributor;
 
     private GoogleMap mMap;
     private CameraPosition mPreviousCameraPosition;
@@ -82,7 +82,7 @@ public class ClusterManager<T extends ClusterItem> implements
         mRenderer = new DefaultClusterRenderer<T>(context, map, this);
         mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
         mClusterTask = new ClusterTask();
-        mClusterItemsDistributor = new DefaultClusterItemsDistributor(this);
+        mClusterItemsDistributor = new DefaultClusterItemsDistributor<>(this);
         mRenderer.onAdd();
 
         setOnClusterClickListener(new ClusterManager.OnClusterClickListener<T>() {
@@ -138,7 +138,7 @@ public class ClusterManager<T extends ClusterItem> implements
         mRenderer.setAnimation(animate);
     }
 
-    public void setClusterItemsDistributor(ClusterItemsDistributor clusterItemsDistributor) {
+    public void setClusterItemsDistributor(ClusterItemsDistributor<T> clusterItemsDistributor) {
         this.mClusterItemsDistributor = clusterItemsDistributor;
     }
 
@@ -275,7 +275,7 @@ public class ClusterManager<T extends ClusterItem> implements
         return true;
     }
 
-    public boolean handleClusterClick(Cluster cluster) {
+    public boolean handleClusterClick(Cluster<T> cluster) {
         float maxZoomLevel = mMap.getMaxZoomLevel();
         float currentZoomLevel = mMap.getCameraPosition().zoom;
 
