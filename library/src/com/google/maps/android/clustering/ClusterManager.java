@@ -89,22 +89,7 @@ public class ClusterManager<T extends ClusterItem> implements
 
             @Override
             public boolean onClusterClick(Cluster<T> cluster) {
-                float maxZoomLevel = mMap.getMaxZoomLevel();
-                float currentZoomLevel = mMap.getCameraPosition().zoom;
-
-                // only show markers if users is in the max zoom level
-                if (currentZoomLevel != maxZoomLevel) {
-                    return false;
-                }
-
-                if (!itemsInSameLocation(cluster)) {
-                    return false;
-                }
-
-                // relocate the markers as defined in the distributor
-                mClusterItemsDistributor.distribute(cluster);
-
-                return true;
+                return handleClusterClick(cluster);
             }
         });
     }
@@ -286,6 +271,25 @@ public class ClusterManager<T extends ClusterItem> implements
                 return false;
             }
         }
+
+        return true;
+    }
+
+    public boolean handleClusterClick(Cluster cluster) {
+        float maxZoomLevel = mMap.getMaxZoomLevel();
+        float currentZoomLevel = mMap.getCameraPosition().zoom;
+
+        // only show markers if users is in the max zoom level
+        if (currentZoomLevel != maxZoomLevel) {
+            return false;
+        }
+
+        if (!itemsInSameLocation(cluster)) {
+            return false;
+        }
+
+        // relocate the markers as defined in the distributor
+        mClusterItemsDistributor.distribute(cluster);
 
         return true;
     }
