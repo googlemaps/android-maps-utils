@@ -22,12 +22,19 @@ public class DefaultClusterItemsDistributor<T extends ClusterItem> implements Cl
 
     private static final String DEFAULT_ADDED_LIST = "itemsAdded";
 
+    private double mDistributionRadius;
+
     private ClusterManager<T> mClusterManager;
 
     private Map<String, List<T>> mItemsCache;
 
     public DefaultClusterItemsDistributor(ClusterManager<T> clusterManager) {
+        this(clusterManager, DEFAULT_RADIUS);
+    }
+
+    public DefaultClusterItemsDistributor(ClusterManager<T> clusterManager, double distributionRadius) {
         mClusterManager = clusterManager;
+        mDistributionRadius = distributionRadius;
         mItemsCache = new HashMap<>();
         mItemsCache.put(DEFAULT_ADDED_LIST, new ArrayList<T>());
         mItemsCache.put(DEFAULT_DELETE_LIST, new ArrayList<T>());
@@ -40,8 +47,8 @@ public class DefaultClusterItemsDistributor<T extends ClusterItem> implements Cl
         float rotateFactor = (360 / cluster.getItems().size());
 
         for (T item : cluster.getItems()) {
-            double lat = item.getPosition().latitude + (DEFAULT_RADIUS * Math.cos(++counter * rotateFactor));
-            double lng = item.getPosition().longitude + (DEFAULT_RADIUS * Math.sin(counter * rotateFactor));
+            double lat = item.getPosition().latitude + (mDistributionRadius * Math.cos(++counter * rotateFactor));
+            double lng = item.getPosition().longitude + (mDistributionRadius * Math.sin(counter * rotateFactor));
             T copy = (T) item.copy(lat, lng);
 
             mClusterManager.removeItem(item);
