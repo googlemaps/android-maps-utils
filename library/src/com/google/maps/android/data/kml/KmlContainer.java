@@ -86,6 +86,14 @@ public class KmlContainer {
     public KmlStyle getStyle(String styleID) {
         return mStyles.get(styleID);
     }
+    
+     /**
+     * Gets a style Id from map based on an ID
+     */
+    public String getStyleIdFromMap(String styleID) {
+        return mStyleMap.get(styleID);
+    }
+
 
     /**
      * @return HashMap of containers
