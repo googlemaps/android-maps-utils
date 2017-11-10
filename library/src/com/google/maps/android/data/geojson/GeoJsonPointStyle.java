@@ -287,6 +287,7 @@ public class GeoJsonPointStyle extends Style implements GeoJsonStyle {
         markerOptions.snippet(mMarkerOptions.getSnippet());
         markerOptions.title(mMarkerOptions.getTitle());
         markerOptions.visible(mMarkerOptions.isVisible());
+        markerOptions.zIndex(mMarkerOptions.getZIndex());
         return markerOptions;
     }
 
@@ -305,7 +306,28 @@ public class GeoJsonPointStyle extends Style implements GeoJsonStyle {
         sb.append(",\n snippet=").append(getSnippet());
         sb.append(",\n title=").append(getTitle());
         sb.append(",\n visible=").append(isVisible());
+        sb.append(",\n z index=").append(getZIndex());
         sb.append("\n}\n");
         return sb.toString();
     }
+
+    /**
+     * Gets the z index of the GeoJsonLineString
+     *
+     * @return z index of the GeoJsonLineString
+     */
+    public float getZIndex() {
+        return mMarkerOptions.getZIndex();
+    }
+
+    /**
+     * Sets the z index of the GeoJsonLineString
+     *
+     * @param zIndex z index value of the GeoJsonPoint
+     */
+    public void setZIndex(float zIndex) {
+        mMarkerOptions.zIndex(zIndex);
+        styleChanged();
+    }
+
 }
