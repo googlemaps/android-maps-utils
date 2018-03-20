@@ -24,7 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 public interface ClusterItem {
 
     /**
-     * The position of this marker. This must always return the same value.
+     * The position of this marker.
+     * This must always return the same value.
      */
     LatLng getPosition();
 
@@ -37,4 +38,17 @@ public interface ClusterItem {
      * The description of this marker.
      */
     String getSnippet();
+
+    /**
+     * Set the title of this marker
+     * @param title
+     */
+     void setTitle(String title);
+
+    /**
+     * Set the the description of this marker
+     * @param snippet
+     */
+    void setSnippet(String snippet);
+
 }
