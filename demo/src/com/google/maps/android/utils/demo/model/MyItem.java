@@ -42,23 +42,21 @@ public class MyItem implements ClusterItem {
     }
 
     @Override
-    public String getTitle() { return mTitle; }
+    public String getTitle() {
+        return mTitle;
+    }
 
     @Override
-    public String getSnippet() { return mSnippet; }
+    public String getSnippet() { 
+        return mSnippet; 
+    }
 
-    /**
-     * Set the title of the marker
-     * @param title string to be set as title
-     */
+    @Override
     public void setTitle(String title) {
         mTitle = title;
     }
 
-    /**
-     * Set the description of the marker
-     * @param snippet string to be set as snippet
-     */
+    @Override
     public void setSnippet(String snippet) {
         mSnippet = snippet;
     }
