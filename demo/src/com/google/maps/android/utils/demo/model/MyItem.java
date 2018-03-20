@@ -36,14 +36,27 @@ public class MyItem implements ClusterItem {
         mSnippet = snippet;
     }
 
+    
+    /**
+     * The position of this marker.
+     * This must always return the same value.
+     */
     @Override
     public LatLng getPosition() {
         return mPosition;
     }
 
+    /**
+     * The title of this marker.
+     */
     @Override
-    public String getTitle() { return mTitle; }
+    public String getTitle() {
+        return mTitle;
+    }
 
+    /**
+     * The description of this marker.
+     */
     @Override
     public String getSnippet() { return mSnippet; }
 
@@ -51,6 +64,7 @@ public class MyItem implements ClusterItem {
      * Set the title of the marker
      * @param title string to be set as title
      */
+    @Override
     public void setTitle(String title) {
         mTitle = title;
     }
@@ -59,6 +73,7 @@ public class MyItem implements ClusterItem {
      * Set the description of the marker
      * @param snippet string to be set as snippet
      */
+    @Override
     public void setSnippet(String snippet) {
         mSnippet = snippet;
     }
