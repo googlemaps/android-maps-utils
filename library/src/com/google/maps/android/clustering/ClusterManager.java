@@ -276,6 +276,11 @@ public class ClusterManager<T extends ClusterItem> implements
      * Called when a Cluster is clicked.
      */
     public interface OnClusterClickListener<T extends ClusterItem> {
+        /**
+         * Called when cluster is clicked. 
+         * Return true if click has been handled
+         * Return false and the click will dispatched to the next listener
+         */ 
         public boolean onClusterClick(Cluster<T> cluster);
     }
 

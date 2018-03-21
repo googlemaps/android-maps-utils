@@ -14,14 +14,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Radius"
+            android:text="@string/button_radius"
             android:onClick="changeRadius" />
 
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Gradient"
+            android:text="@string/button_gradient"
             android:onClick="changeGradient" />
 
 
@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Opacity"
+            android:text="@string/button_opacity"
             android:onClick="changeOpacity" />
 
     </LinearLayout>

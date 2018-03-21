@@ -446,11 +446,7 @@ public class PolyUtil {
     public static boolean isClosedPolygon(List<LatLng> poly) {
         LatLng firstPoint = poly.get(0);
         LatLng lastPoint = poly.get(poly.size()-1);
-        if (firstPoint.equals(lastPoint)) {
-            return true;
-        } else {
-            return false;
-        }
+        return firstPoint.equals(lastPoint);
     }
 
     /**
