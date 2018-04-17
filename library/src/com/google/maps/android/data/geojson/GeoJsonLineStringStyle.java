@@ -1,8 +1,5 @@
 package com.google.maps.android.data.geojson;
 
-import android.graphics.Color;
-
-import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.data.Style;
@@ -192,7 +189,7 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
     }
 
     /**
-     * Sets the z index of the GeoJsonLineString
+     * Gets the pattern of the GeoJsonLineString
      *
      * @return  line style of GeoJsonLineString
      */
@@ -201,7 +198,7 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
     }
 
     /**
-     * Sets the z index of the GeoJsonLineString
+     * Sets the pattern of the GeoJsonLineString
      *
      * @param pattern line style of GeoJsonLineString
      */
