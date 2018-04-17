@@ -59,6 +59,9 @@ public class KmlPlacemark extends Feature{
      * @return new PolygonOptions
      */
     public PolygonOptions getPolygonOptions() {
+         if (mInlineStyle == null){
+            return null;
+        } 
         return mInlineStyle.getPolygonOptions();
     }
 
@@ -68,6 +71,9 @@ public class KmlPlacemark extends Feature{
      * @return  A new MarkerOption
      */
     public MarkerOptions getMarkerOptions(){
+        if (mInlineStyle == null){
+            return null;
+        }    
         return mInlineStyle.getMarkerOptions();
     }
 
@@ -77,6 +83,9 @@ public class KmlPlacemark extends Feature{
      * @return new PolylineOptions
      */
     public PolylineOptions getPolylineOptions(){
+        if (mInlineStyle == null){
+            return null;
+        } 
         return mInlineStyle.getPolylineOptions();
     }
 
