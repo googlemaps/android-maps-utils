@@ -146,7 +146,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_GO) {
-                    submit();
+                    submit(null);
                     handled = true;
                 }
                 return handled;
@@ -176,7 +176,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * Takes the input from the user and generates the required heatmap.
      * Called when a search query is submitted
      */
-    public void submit() {
+    public void submit(View view) {
         if ("YOUR_KEY_HERE".equals(API_KEY)) {
             Toast.makeText(this, "Please sign up for a Places API key and add it to HeatmapsPlacesDemoActivity.API_KEY",
                 Toast.LENGTH_LONG).show();
