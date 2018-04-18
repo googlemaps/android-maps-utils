@@ -72,6 +72,21 @@ import java.util.Iterator;
     private LatLngBounds mBoundingBox;
 
     /**
+     * Internal helper class to store latLng and altitude in a single object.
+     * This allows to parse [lon,lat,altitude] tuples in GeoJson files more efficiently.
+     * Note that altitudes are generally optional so they can be null.
+     */
+    private static class LatLngAlt {
+        public final LatLng latLng;
+        public final Double altitude;
+
+        LatLngAlt(LatLng latLng, Double altitude) {
+            this.latLng = latLng;
+            this.altitude = altitude;
+        }
+    }
+
+    /**
      * Creates a new GeoJsonParser
      *
      * @param geoJsonFile GeoJSON file to parse
@@ -236,7 +251,8 @@ import java.util.Iterator;
      * @throws JSONException if coordinates cannot be parsed
      */
     private static GeoJsonPoint createPoint(JSONArray coordinates) throws JSONException {
-        return new GeoJsonPoint(parseCoordinate(coordinates));
+        LatLngAlt latLngAlt = parseCoordinate(coordinates);
+        return new GeoJsonPoint(latLngAlt.latLng, latLngAlt.altitude);
     }
 
     /**
@@ -262,7 +278,18 @@ import java.util.Iterator;
      * @throws JSONException if coordinates cannot be parsed
      */
     private static GeoJsonLineString createLineString(JSONArray coordinates) throws JSONException {
-        return new GeoJsonLineString(parseCoordinatesArray(coordinates));
+        ArrayList<LatLngAlt> latLngAlts = parseCoordinatesArray(coordinates);
+        ArrayList<LatLng> latLngs = new ArrayList<>();
+        ArrayList<Double> altitudes = new ArrayList<>();
+
+        for (LatLngAlt latLngAlt : latLngAlts) {
+            latLngs.add(latLngAlt.latLng);
+            if (latLngAlt.altitude != null) {
+                altitudes.add(latLngAlt.altitude);
+            }
+        }
+
+        return new GeoJsonLineString(latLngs, altitudes);
     }
 
     /**
@@ -332,15 +359,18 @@ import java.util.Iterator;
     }
 
     /**
-     * Parses an array containing a coordinate into a LatLng object
+     * Parses an array containing a coordinate into a LatLngAlt object
      *
      * @param coordinates array containing the GeoJSON coordinate
-     * @return LatLng object
+     * @return LatLngAlt object
      * @throws JSONException if coordinate cannot be parsed
      */
-    private static LatLng parseCoordinate(JSONArray coordinates) throws JSONException {
+    private static LatLngAlt parseCoordinate(JSONArray coordinates) throws JSONException {
         // GeoJSON stores coordinates as Lng, Lat so we need to reverse
-        return new LatLng(coordinates.getDouble(1), coordinates.getDouble(0));
+        LatLng latLng = new LatLng(coordinates.getDouble(1), coordinates.getDouble(0));
+        Double altitude = (coordinates.length() < 3) ? null : coordinates.getDouble(2);
+
+        return new LatLngAlt(latLng, altitude);
     }
 
     /**
@@ -350,9 +380,9 @@ import java.util.Iterator;
      * @return ArrayList of LatLng objects
      * @throws JSONException if coordinates cannot be parsed
      */
-    private static ArrayList<LatLng> parseCoordinatesArray(JSONArray coordinates)
+    private static ArrayList<LatLngAlt> parseCoordinatesArray(JSONArray coordinates)
             throws JSONException {
-        ArrayList<LatLng> coordinatesArray = new ArrayList<>();
+        ArrayList<LatLngAlt> coordinatesArray = new ArrayList<>();
         for (int i = 0; i < coordinates.length(); i++) {
             coordinatesArray.add(parseCoordinate(coordinates.getJSONArray(i)));
         }
@@ -371,7 +401,13 @@ import java.util.Iterator;
             throws JSONException {
         ArrayList<ArrayList<LatLng>> coordinatesArray = new ArrayList<>();
         for (int i = 0; i < coordinates.length(); i++) {
-            coordinatesArray.add(parseCoordinatesArray(coordinates.getJSONArray(i)));
+            ArrayList<LatLngAlt> latLngAlts = parseCoordinatesArray(coordinates.getJSONArray(i));
+            //this method is called for polygons, which do not have altitude values
+            ArrayList<LatLng> latLngs = new ArrayList<>();
+            for (LatLngAlt latLngAlt : latLngAlts) {
+                latLngs.add(latLngAlt.latLng);
+            }
+            coordinatesArray.add(latLngs);
         }
         return coordinatesArray;
     }

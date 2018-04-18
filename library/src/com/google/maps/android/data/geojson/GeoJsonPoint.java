@@ -7,6 +7,7 @@ import com.google.maps.android.data.Point;
  * A GeoJsonPoint geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
  */
 public class GeoJsonPoint extends Point {
+    private final Double mAltitude;
 
     /**
      * Creates a new GeoJsonPoint
@@ -14,7 +15,19 @@ public class GeoJsonPoint extends Point {
      * @param coordinates coordinates of GeoJsonPoint to store
      */
     public GeoJsonPoint(LatLng coordinates) {
+        this(coordinates, null);
+    }
+
+    /**
+     * Creates a new GeoJsonPoint
+     *
+     * @param coordinates coordinates of the KmlPoint
+     * @param altitude altitude of the KmlPoint
+     */
+    public GeoJsonPoint(LatLng coordinates, Double altitude) {
         super(coordinates);
+
+        this.mAltitude = altitude;
     }
 
     /**
@@ -36,4 +49,12 @@ public class GeoJsonPoint extends Point {
         return getGeometryObject();
     }
 
+    /**
+     * Gets the altitude of the GeoJsonPoint
+     *
+     * @return altitude of the GeoJsonPoint
+     */
+    public Double getAltitude() {
+        return mAltitude;
+    }
 }
