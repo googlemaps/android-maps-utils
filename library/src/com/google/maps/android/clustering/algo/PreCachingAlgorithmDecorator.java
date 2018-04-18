@@ -40,6 +40,7 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
         mAlgorithm = algorithm;
     }
 
+    @Override
     public void addItem(T item) {
         mAlgorithm.addItem(item);
         clearCache();
@@ -57,6 +58,7 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
         clearCache();
     }
 
+    @Override
     public void removeItem(T item) {
         mAlgorithm.removeItem(item);
         clearCache();
@@ -83,6 +85,17 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
     @Override
     public Collection<T> getItems() {
         return mAlgorithm.getItems();
+    }
+
+    @Override
+    public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
+        mAlgorithm.setMaxDistanceBetweenClusteredItems(maxDistance);
+        clearCache();
+    }
+
+    @Override
+    public int getMaxDistanceBetweenClusteredItems() {
+        return mAlgorithm.getMaxDistanceBetweenClusteredItems();
     }
 
     private Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
