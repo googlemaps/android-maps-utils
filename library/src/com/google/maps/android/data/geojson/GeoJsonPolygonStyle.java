@@ -166,6 +166,7 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
         polygonOptions.strokeWidth(mPolygonOptions.getStrokeWidth());
         polygonOptions.visible(mPolygonOptions.isVisible());
         polygonOptions.zIndex(mPolygonOptions.getZIndex());
+        polygonOptions.clickable(mPolygonOptions.isClickable());
         return polygonOptions;
     }
 
@@ -181,5 +182,9 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
         sb.append(",\n z index=").append(getZIndex());
         sb.append("\n}\n");
         return sb.toString();
+    }
+
+    public void setClickable(boolean clickable) {
+        mPolygonOptions.clickable(clickable);
     }
 }
