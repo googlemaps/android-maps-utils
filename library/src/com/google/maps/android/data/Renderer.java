@@ -423,11 +423,11 @@ public class Renderer {
      *
      * @param feature feature to add to the map
      */
-     public void addFeature(Feature feature) {
+    public void addFeature(Feature feature) {
         Object mapObject = FEATURE_NOT_ON_MAP;
-         if (feature instanceof GeoJsonFeature) {
-             setFeatureDefaultStyles((GeoJsonFeature) feature);
-         }
+        if (feature instanceof GeoJsonFeature) {
+            setFeatureDefaultStyles((GeoJsonFeature) feature);
+        }
         if (mLayerOnMap) {
             if (mFeatures.containsKey(feature)) {
                 // Remove current map objects before adding new ones
@@ -637,7 +637,7 @@ public class Renderer {
      * @return Polyline object created from given LineString
      */
     protected Polyline addLineStringToMap(PolylineOptions polylineOptions,
-                                       LineString lineString) {
+                                          LineString lineString) {
         // Add coordinates
         polylineOptions.addAll(lineString.getGeometryObject());
         Polyline addedPolyline = mMap.addPolyline(polylineOptions);
@@ -680,7 +680,7 @@ public class Renderer {
             polygonOptions.addHole(innerBoundary);
         }
         Polygon addedPolygon = mMap.addPolygon(polygonOptions);
-        addedPolygon.setClickable(true);
+        addedPolygon.setClickable(polygonOptions.isClickable());
         return addedPolygon;
     }
 
