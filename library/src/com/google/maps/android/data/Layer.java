@@ -64,6 +64,8 @@ public abstract class Layer {
         }
     }
 
+    public abstract void addLayerToMap() throws IOException, XmlPullParserException;
+
     /**
      * Removes all the data from the map and clears all the stored placemarks
      */
