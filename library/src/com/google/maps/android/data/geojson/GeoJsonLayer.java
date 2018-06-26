@@ -99,6 +99,7 @@ public class GeoJsonLayer extends Layer {
     /**
      * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
      */
+    @Override
     public void addLayerToMap(){
         super.addGeoJsonToMap();
     }

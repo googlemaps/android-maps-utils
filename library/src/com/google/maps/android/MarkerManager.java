@@ -35,14 +35,19 @@ import java.util.Set;
  * All marker operations (adds and removes) should occur via its collection class. That is, don't
  * add a marker via a collection, then remove it via Marker.remove()
  */
-public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.InfoWindowAdapter {
+public class MarkerManager implements
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMarkerDragListener,
+        GoogleMap.InfoWindowAdapter {
+
     private final GoogleMap mMap;
 
     private final Map<String, Collection> mNamedCollections = new HashMap<String, Collection>();
     private final Map<Marker, Collection> mAllMarkers = new HashMap<Marker, Collection>();
 
     public MarkerManager(GoogleMap map) {
-        this.mMap = map;
+        mMap = map;
     }
 
     public Collection newCollection() {
@@ -51,6 +56,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     /**
      * Create a new named collection, which can later be looked up by {@link #getCollection(String)}
+     *
      * @param id a unique id for this collection.
      */
     public Collection newCollection(String id) {
@@ -64,6 +70,7 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
 
     /**
      * Gets a named collection that was created by {@link #newCollection(String)}
+     *
      * @param id the unique id for this collection.
      */
     public Collection getCollection(String id) {
@@ -155,6 +162,30 @@ public class MarkerManager implements GoogleMap.OnInfoWindowClickListener, Googl
             mMarkers.add(marker);
             mAllMarkers.put(marker, Collection.this);
             return marker;
+        }
+
+        public void addAll(java.util.Collection<MarkerOptions> opts) {
+            for (MarkerOptions opt : opts) {
+                addMarker(opt);
+            }
+        }
+
+        public void addAll(java.util.Collection<MarkerOptions> opts, boolean defaultVisible) {
+            for (MarkerOptions opt : opts) {
+                addMarker(opt).setVisible(defaultVisible);
+            }
+        }
+
+        public void showAll() {
+            for (Marker marker : mMarkers) {
+                marker.setVisible(true);
+            }
+        }
+
+        public void hideAll() {
+            for (Marker marker : mMarkers) {
+                marker.setVisible(false);
+            }
         }
 
         public boolean remove(Marker marker) {

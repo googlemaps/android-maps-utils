@@ -27,6 +27,8 @@ import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
+import com.google.maps.android.clustering.algo.ScreenBasedAlgorithm;
+import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
@@ -50,7 +52,7 @@ public class ClusterManager<T extends ClusterItem> implements
     private final MarkerManager.Collection mMarkers;
     private final MarkerManager.Collection mClusterMarkers;
 
-    private Algorithm<T> mAlgorithm;
+    private ScreenBasedAlgorithm<T> mAlgorithm;
     private final ReadWriteLock mAlgorithmLock = new ReentrantReadWriteLock();
     private ClusterRenderer<T> mRenderer;
 
@@ -74,7 +76,9 @@ public class ClusterManager<T extends ClusterItem> implements
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
         mRenderer = new DefaultClusterRenderer<T>(context, map, this);
-        mAlgorithm = new PreCachingAlgorithmDecorator<T>(new NonHierarchicalDistanceBasedAlgorithm<T>());
+        mAlgorithm = new ScreenBasedAlgorithmAdapter<T>(new PreCachingAlgorithmDecorator<T>(
+                new NonHierarchicalDistanceBasedAlgorithm<T>()));
+
         mClusterTask = new ClusterTask();
         mRenderer.onAdd();
     }
@@ -107,15 +111,29 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     public void setAlgorithm(Algorithm<T> algorithm) {
+        if (algorithm instanceof ScreenBasedAlgorithm) {
+            setAlgorithm((ScreenBasedAlgorithm) algorithm);
+        } else {
+            setAlgorithm(new ScreenBasedAlgorithmAdapter<T>(algorithm));
+        }
+    }
+
+    public void setAlgorithm(ScreenBasedAlgorithm<T> algorithm) {
         mAlgorithmLock.writeLock().lock();
         try {
             if (mAlgorithm != null) {
                 algorithm.addItems(mAlgorithm.getItems());
             }
-            mAlgorithm = new PreCachingAlgorithmDecorator<T>(algorithm);
+
+            mAlgorithm = algorithm;
         } finally {
             mAlgorithmLock.writeLock().unlock();
         }
+
+        if (mAlgorithm.shouldReclusterOnMapMovement()) {
+            mAlgorithm.onCameraChange(mMap.getCameraPosition());
+        }
+
         cluster();
     }
 
@@ -196,14 +214,17 @@ public class ClusterManager<T extends ClusterItem> implements
             ((GoogleMap.OnCameraIdleListener) mRenderer).onCameraIdle();
         }
 
-        // Don't re-compute clusters if the map has just been panned/tilted/rotated.
-        CameraPosition position = mMap.getCameraPosition();
-        if (mPreviousCameraPosition != null && mPreviousCameraPosition.zoom == position.zoom) {
-            return;
-        }
-        mPreviousCameraPosition = mMap.getCameraPosition();
+        mAlgorithm.onCameraChange(mMap.getCameraPosition());
 
-        cluster();
+        // delegate clustering to the algorithm
+        if (mAlgorithm.shouldReclusterOnMapMovement()) {
+            cluster();
+
+        // Don't re-compute clusters if the map has just been panned/tilted/rotated.
+        } else if (mPreviousCameraPosition == null || mPreviousCameraPosition.zoom != mMap.getCameraPosition().zoom) {
+            mPreviousCameraPosition = mMap.getCameraPosition();
+            cluster();
+        }
     }
 
     @Override
@@ -276,6 +297,11 @@ public class ClusterManager<T extends ClusterItem> implements
      * Called when a Cluster is clicked.
      */
     public interface OnClusterClickListener<T extends ClusterItem> {
+        /**
+         * Called when cluster is clicked. 
+         * Return true if click has been handled
+         * Return false and the click will dispatched to the next listener
+         */ 
         public boolean onClusterClick(Cluster<T> cluster);
     }
 

@@ -18,8 +18,10 @@ import com.google.maps.android.data.Geometry;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -445,7 +447,7 @@ public class KmlRenderer  extends Renderer {
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                return BitmapFactory.decodeStream((InputStream) new URL(mIconUrl).getContent());
+                return getBitmapFromUrl(mIconUrl);
             } catch (MalformedURLException e) {
                 return BitmapFactory.decodeFile(mIconUrl);
             } catch (IOException e) {
@@ -493,8 +495,7 @@ public class KmlRenderer  extends Renderer {
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                return BitmapFactory
-                        .decodeStream((InputStream) new URL(mGroundOverlayUrl).getContent());
+                return getBitmapFromUrl(mGroundOverlayUrl);
             } catch (MalformedURLException e) {
                 return BitmapFactory.decodeFile(mGroundOverlayUrl);
             } catch (IOException e) {
@@ -520,5 +521,56 @@ public class KmlRenderer  extends Renderer {
                 }
             }
         }
+    }
+
+    /**
+     * @param url internet address of the image.
+     * @return the bitmap of that image, scaled according to screen density.
+     */
+    private Bitmap getBitmapFromUrl(String url) throws MalformedURLException, IOException {
+        return BitmapFactory.decodeStream(openConnectionCheckRedirects(new URL(url).openConnection()));
+    }
+
+    /**
+     * opens a stream allowing redirects.
+     */
+    private InputStream openConnectionCheckRedirects(URLConnection c) throws IOException {
+        boolean redir;
+        int redirects = 0;
+        InputStream in;
+        do {
+            if (c instanceof HttpURLConnection) {
+                ((HttpURLConnection) c).setInstanceFollowRedirects(false);
+            }
+            // We want to open the input stream before getting headers
+            // because getHeaderField() et al swallow IOExceptions.
+            in = c.getInputStream();
+            redir = false;
+            if (c instanceof HttpURLConnection) {
+                HttpURLConnection http = (HttpURLConnection) c;
+                int stat = http.getResponseCode();
+                if (stat >= 300 && stat <= 307 && stat != 306 &&
+                        stat != HttpURLConnection.HTTP_NOT_MODIFIED) {
+                    URL base = http.getURL();
+                    String loc = http.getHeaderField("Location");
+                    URL target = null;
+                    if (loc != null) {
+                        target = new URL(base, loc);
+                    }
+                    http.disconnect();
+                    // Redirection should be allowed only for HTTP and HTTPS
+                    // and should be limited to 5 redirections at most.
+                    if (target == null || !(target.getProtocol().equals("http")
+                            || target.getProtocol().equals("https"))
+                            || redirects >= 5) {
+                        throw new SecurityException("illegal URL redirect");
+                    }
+                    redir = true;
+                    c = target.openConnection();
+                    redirects++;
+                }
+            }
+        } while (redir);
+        return in;
     }
 }
