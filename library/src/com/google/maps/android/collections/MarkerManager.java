@@ -29,7 +29,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * All marker operations (adds and removes) should occur via its collection class. That is, don't
  * add a marker via a collection, then remove it via Marker.remove()
  */
-public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collection> implements GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, GoogleMap.InfoWindowAdapter {
+public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collection> implements
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMarkerDragListener,
+        GoogleMap.InfoWindowAdapter {
 
     public MarkerManager(GoogleMap map) {
         super(map);
@@ -124,6 +128,30 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
             Marker marker = mMap.addMarker(opts);
             super.add(marker);
             return marker;
+        }
+
+        public void addAll(java.util.Collection<MarkerOptions> opts) {
+            for (MarkerOptions opt : opts) {
+                addMarker(opt);
+            }
+        }
+
+        public void addAll(java.util.Collection<MarkerOptions> opts, boolean defaultVisible) {
+            for (MarkerOptions opt : opts) {
+                addMarker(opt).setVisible(defaultVisible);
+            }
+        }
+
+        public void showAll() {
+            for (Marker marker : getMarkers()) {
+                marker.setVisible(true);
+            }
+        }
+
+        public void hideAll() {
+            for (Marker marker : getMarkers()) {
+                marker.setVisible(false);
+            }
         }
 
         public boolean remove(Marker marker) {

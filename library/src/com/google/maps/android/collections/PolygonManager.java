@@ -68,6 +68,30 @@ public class PolygonManager extends MapObjectManager<Polygon, PolygonManager.Col
             return polygon;
         }
 
+        public void addAll(java.util.Collection<PolygonOptions> opts) {
+            for (PolygonOptions opt : opts) {
+                addPolygon(opt);
+            }
+        }
+
+        public void addAll(java.util.Collection<PolygonOptions> opts, boolean defaultVisible) {
+            for (PolygonOptions opt : opts) {
+                addPolygon(opt).setVisible(defaultVisible);
+            }
+        }
+
+        public void showAll() {
+            for (Polygon polygon : getPolygons()) {
+                polygon.setVisible(true);
+            }
+        }
+
+        public void hideAll() {
+            for (Polygon polygon : getPolygons()) {
+                polygon.setVisible(false);
+            }
+        }
+
         public boolean remove(Polygon polygon) {
             return super.remove(polygon);
         }

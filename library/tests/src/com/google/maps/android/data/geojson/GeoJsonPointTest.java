@@ -23,4 +23,9 @@ public class GeoJsonPointTest extends TestCase {
             assertEquals("Coordinates cannot be null", e.getMessage());
         }
     }
+
+    public void testGetAltitude() throws Exception {
+        p = new GeoJsonPoint(new LatLng(0, 0), new Double(100));
+        assertEquals(new Double(100), p.getAltitude());
+    }
 }

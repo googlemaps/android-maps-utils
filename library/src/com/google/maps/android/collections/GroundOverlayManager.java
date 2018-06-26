@@ -70,6 +70,30 @@ public class GroundOverlayManager extends MapObjectManager<GroundOverlay, Ground
             return groundOverlay;
         }
 
+        public void addAll(java.util.Collection<GroundOverlayOptions> opts) {
+            for (GroundOverlayOptions opt : opts) {
+                addGroundOverlay(opt);
+            }
+        }
+
+        public void addAll(java.util.Collection<GroundOverlayOptions> opts, boolean defaultVisible) {
+            for (GroundOverlayOptions opt : opts) {
+                addGroundOverlay(opt).setVisible(defaultVisible);
+            }
+        }
+
+        public void showAll() {
+            for (GroundOverlay groundOverlay : getGroundOverlays()) {
+                groundOverlay.setVisible(true);
+            }
+        }
+
+        public void hideAll() {
+            for (GroundOverlay groundOverlay : getGroundOverlays()) {
+                groundOverlay.setVisible(false);
+            }
+        }
+
         public boolean remove(GroundOverlay groundOverlay) {
             return super.remove(groundOverlay);
         }

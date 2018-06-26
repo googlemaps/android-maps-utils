@@ -102,16 +102,21 @@ public class IconGenerator {
 
         Canvas canvas = new Canvas(r);
 
-        if (mRotation == 0) {
-            // do nothing
-        } else if (mRotation == 1) {
-            canvas.translate(measuredWidth, 0);
-            canvas.rotate(90);
-        } else if (mRotation == 2) {
-            canvas.rotate(180, measuredWidth / 2, measuredHeight / 2);
-        } else {
-            canvas.translate(0, measuredHeight);
-            canvas.rotate(270);
+        switch (mRotation) {
+            case 0:
+                // do nothing
+                break;
+            case 1:
+                canvas.translate(measuredWidth, 0);
+                canvas.rotate(90);
+                break;
+            case 2:
+                canvas.rotate(180, measuredWidth / 2, measuredHeight / 2);
+                break;
+            case 3:
+                canvas.translate(0, measuredHeight);
+                canvas.rotate(270);
+                break;
         }
         mContainer.draw(canvas);
         return r;
@@ -121,7 +126,7 @@ public class IconGenerator {
      * Sets the child view for the icon.
      * <p/>
      * If the view contains a {@link TextView} with the id "text", operations such as {@link
-     * #setTextAppearance} and {@link #makeIcon(String)} will operate upon that {@link TextView}.
+     * #setTextAppearance} and {@link #makeIcon(CharSequence)} will operate upon that {@link TextView}.
      */
     public void setContentView(View contentView) {
         mRotationLayout.removeAllViews();

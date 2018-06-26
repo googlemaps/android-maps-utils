@@ -68,8 +68,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.MAX_DISTANCE_AT_ZOOM;
-
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
@@ -379,7 +377,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
             List<Point> existingClustersOnScreen = null;
-            if (DefaultClusterRenderer.this.mClusters != null && SHOULD_ANIMATE) {
+            if (DefaultClusterRenderer.this.mClusters != null && SHOULD_ANIMATE && mAnimate) {
                 existingClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : DefaultClusterRenderer.this.mClusters) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
@@ -394,10 +392,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                     new ConcurrentHashMap<MarkerWithPosition, Boolean>());
             for (Cluster<T> c : clusters) {
                 boolean onScreen = visibleBounds.contains(c.getPosition());
-                if (zoomingIn && onScreen && SHOULD_ANIMATE) {
+                if (zoomingIn && onScreen && SHOULD_ANIMATE && mAnimate) {
                     Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                     Point closest = findClosestCluster(existingClustersOnScreen, point);
-                    if (closest != null && mAnimate) {
+                    if (closest != null) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateTo));
                     } else {
@@ -418,7 +416,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             // Find all of the new clusters that were added on-screen. These are candidates for
             // markers to animate from.
             List<Point> newClustersOnScreen = null;
-            if (SHOULD_ANIMATE) {
+            if (SHOULD_ANIMATE && mAnimate) {
                 newClustersOnScreen = new ArrayList<Point>();
                 for (Cluster<T> c : clusters) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
@@ -433,10 +431,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 boolean onScreen = visibleBounds.contains(marker.position);
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
-                if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE) {
+                if (!zoomingIn && zoomDelta > -3 && onScreen && SHOULD_ANIMATE && mAnimate) {
                     final Point point = mSphericalMercatorProjection.toPoint(marker.position);
                     final Point closest = findClosestCluster(newClustersOnScreen, point);
-                    if (closest != null && mAnimate) {
+                    if (closest != null) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
                         markerModifier.animateThenRemove(marker, marker.position, animateTo);
                     } else {
@@ -491,11 +489,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
 
-    private static Point findClosestCluster(List<Point> markers, Point point) {
+    private Point findClosestCluster(List<Point> markers, Point point) {
         if (markers == null || markers.isEmpty()) return null;
 
-        // TODO: make this configurable.
-        double minDistSquared = MAX_DISTANCE_AT_ZOOM * MAX_DISTANCE_AT_ZOOM;
+        int maxDistance = mClusterManager.getAlgorithm().getMaxDistanceBetweenClusteredItems();
+        double minDistSquared = maxDistance * maxDistance;
         Point closest = null;
         for (Point candidate : markers) {
             double dist = distanceSquared(candidate, point);

@@ -34,4 +34,20 @@ public class GeoJsonLineStringTest extends TestCase {
             assertEquals("Coordinates cannot be null", e.getMessage());
         }
     }
+
+    public void testGetAltitudes() throws Exception {
+        ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
+        coordinates.add(new LatLng(0, 0));
+        coordinates.add(new LatLng(50, 50));
+        coordinates.add(new LatLng(100, 100));
+        ArrayList<Double> altitudes = new ArrayList<Double>();
+        altitudes.add(new Double(100));
+        altitudes.add(new Double(200));
+        altitudes.add(new Double(300));
+        ls = new GeoJsonLineString(coordinates,altitudes);
+        assertEquals(altitudes, ls.getAltitudes());
+        assertEquals(ls.getAltitudes().get(0), 100.0);
+        assertEquals(ls.getAltitudes().get(1), 200.0);
+        assertEquals(ls.getAltitudes().get(2), 300.0);
+    }
 }

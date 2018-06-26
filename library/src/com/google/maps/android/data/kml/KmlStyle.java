@@ -331,7 +331,7 @@ public class  KmlStyle extends Style {
     /* package */ void setOutlineColor(String color) {
         // Add # to allow for mOutline color to be parsed correctly
         mPolylineOptions.color(Color.parseColor("#" + convertColor(color)));
-        mPolygonOptions.strokeColor(Color.parseColor("#" + color));
+        mPolygonOptions.strokeColor(Color.parseColor("#" + convertColor(color)));
         mStylesSet.add("outlineColor");
     }
 

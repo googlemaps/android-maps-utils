@@ -113,6 +113,7 @@ public class KmlLayer extends Layer {
     /**
      * Adds the KML data to the map
      */
+    @Override
     public void addLayerToMap() throws IOException, XmlPullParserException {
         super.addKMLToMap();
     }

@@ -70,6 +70,30 @@ public class PolylineManager extends MapObjectManager<Polyline, PolylineManager.
             return polyline;
         }
 
+        public void addAll(java.util.Collection<PolylineOptions> opts) {
+            for (PolylineOptions opt : opts) {
+                addPolyline(opt);
+            }
+        }
+
+        public void addAll(java.util.Collection<PolylineOptions> opts, boolean defaultVisible) {
+            for (PolylineOptions opt : opts) {
+                addPolyline(opt).setVisible(defaultVisible);
+            }
+        }
+
+        public void showAll() {
+            for (Polyline polyline : getPolylines()) {
+                polyline.setVisible(true);
+            }
+        }
+
+        public void hideAll() {
+            for (Polyline polyline : getPolylines()) {
+                polyline.setVisible(false);
+            }
+        }
+
         public boolean remove(Polyline polyline) {
             return super.remove(polyline);
         }

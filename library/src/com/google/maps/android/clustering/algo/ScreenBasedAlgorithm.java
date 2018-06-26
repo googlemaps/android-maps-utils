@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.maps.android.data.kml;
+
+package com.google.maps.android.clustering.algo;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.clustering.ClusterItem;
 
 /**
- * Utility class to help parse Kml boolean entities.
+ *
+ * This algorithm uses map position for clustering, and should be reclustered on map movement
+ * @param <T>
  */
-public class KmlBoolean {
-    public static boolean parseBoolean(String text) {
-        return "1".equals(text) || "true".equals(text);
-    }
+
+public interface ScreenBasedAlgorithm<T extends ClusterItem> extends Algorithm<T>, GoogleMap.OnCameraChangeListener {
+
+    boolean shouldReclusterOnMapMovement();
 }

@@ -44,7 +44,7 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
     protected final Map<O, C> mAllObjects = new HashMap<>();
 
     public MapObjectManager(@NonNull GoogleMap map) {
-        this.mMap = map;
+        mMap = map;
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -59,6 +59,7 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
 
     /**
      * Create a new named collection, which can later be looked up by {@link #getCollection(String)}
+     *
      * @param id a unique id for this collection.
      */
     public C newCollection(String id) {
@@ -72,6 +73,7 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
 
     /**
      * Gets a named collection that was created by {@link #newCollection(String)}
+     *
      * @param id the unique id for this collection.
      */
     public C getCollection(String id) {

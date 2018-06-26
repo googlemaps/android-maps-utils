@@ -70,6 +70,30 @@ public class CircleManager extends MapObjectManager<Circle, CircleManager.Collec
             return circle;
         }
 
+        public void addAll(java.util.Collection<CircleOptions> opts) {
+            for (CircleOptions opt : opts) {
+                addCircle(opt);
+            }
+        }
+
+        public void addAll(java.util.Collection<CircleOptions> opts, boolean defaultVisible) {
+            for (CircleOptions opt : opts) {
+                addCircle(opt).setVisible(defaultVisible);
+            }
+        }
+
+        public void showAll() {
+            for (Circle circle : getCircles()) {
+                circle.setVisible(true);
+            }
+        }
+
+        public void hideAll() {
+            for (Circle circle : getCircles()) {
+                circle.setVisible(false);
+            }
+        }
+
         public boolean remove(Circle circle) {
             return super.remove(circle);
         }

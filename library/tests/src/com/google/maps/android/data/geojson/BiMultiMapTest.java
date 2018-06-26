@@ -39,4 +39,20 @@ public class BiMultiMapTest extends TestCase {
         }
     }
 
+    public void testCollection() {
+        BiMultiMap<String> map = new BiMultiMap<>();
+        String key = "foo";
+        List<String> values = Arrays.asList("bar", "baz");
+        map.put(key, values);
+        assertEquals(1, map.size());
+        assertEquals(values, map.get(key));
+        for (String value : values) {
+            assertEquals(key, map.getKey(value));
+        }
+        map.remove(key);
+        assertEquals(0, map.size());
+        for (String value : values) {
+            assertEquals(null, map.getKey(value));
+        }
+    }
 }
