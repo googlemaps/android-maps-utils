@@ -32,7 +32,7 @@ public class KmlContainerParserTest extends ActivityTestCase {
         KmlContainer kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
         assertTrue(kmlContainer.hasProperties());
         assertEquals(kmlContainer.getProperty("name"), "Basic Folder");
-        xmlPullParser = createParser(R.raw.amu_unknwown_folder);
+        xmlPullParser = createParser(R.raw.amu_unknown_folder);
         kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
         assertTrue(kmlContainer.hasProperty("name"));
     }
