@@ -18,7 +18,6 @@ package com.google.maps.android.heatmaps;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.v4.util.LongSparseArray;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Tile;
@@ -31,6 +30,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import androidx.collection.LongSparseArray;
 
 /**
  * Tile provider that creates heatmap tiles.
@@ -52,8 +53,8 @@ public class HeatmapTileProvider implements TileProvider {
      * Array of colors, represented by ints.
      */
     private static final int[] DEFAULT_GRADIENT_COLORS = {
-        Color.rgb(102, 225, 0),
-        Color.rgb(255, 0, 0)
+            Color.rgb(102, 225, 0),
+            Color.rgb(255, 0, 0)
     };
 
     /**
@@ -62,7 +63,7 @@ public class HeatmapTileProvider implements TileProvider {
      * These should be a sorted array of floats in the interval [0, 1].
      */
     private static final float[] DEFAULT_GRADIENT_START_POINTS = {
-        0.2f, 1f
+            0.2f, 1f
     };
 
     /**

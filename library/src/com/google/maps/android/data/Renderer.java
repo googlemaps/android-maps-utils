@@ -18,7 +18,6 @@ package com.google.maps.android.data;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +59,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import androidx.collection.LruCache;
 
 /**
  * An abstraction that shares the common properties of
@@ -105,7 +106,7 @@ public class Renderer {
     /**
      * Creates a new Renderer object
      *
-     * @param map map to place objects on
+     * @param map     map to place objects on
      * @param context context needed to add info windows
      */
     public Renderer(GoogleMap map, Context context) {
@@ -124,10 +125,10 @@ public class Renderer {
     /**
      * Creates a new Renderer object
      *
-     * @param map map to place objects on
+     * @param map      map to place objects on
      * @param features contains a hashmap of features and objects that will go on the map
      */
-    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features ) {
+    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features) {
         mMap = map;
         mFeatures.putAll(features);
         mLayerOnMap = false;
@@ -229,42 +230,54 @@ public class Renderer {
      *
      * @return mMarkerIconUrls ArrayList of URLs
      */
-    public ArrayList<String> getMarkerIconUrls()  { return mMarkerIconUrls; }
+    public ArrayList<String> getMarkerIconUrls() {
+        return mMarkerIconUrls;
+    }
 
     /**
      * Gets the styles for KML placemarks
      *
      * @return mStylesRenderer hashmap containing styles for KML placemarks (String, KmlStyle)
      */
-    public HashMap<String, KmlStyle> getStylesRenderer() { return mStylesRenderer; }
+    public HashMap<String, KmlStyle> getStylesRenderer() {
+        return mStylesRenderer;
+    }
 
     /**
      * Gets the styles for KML placemarks
      *
      * @return mStyleMaps hashmap containing styles for KML placemarks (String, String)
      */
-    public HashMap<String, String> getStyleMaps() { return mStyleMaps; }
+    public HashMap<String, String> getStyleMaps() {
+        return mStyleMaps;
+    }
 
     /**
      * Gets the images cache which is needed to download GroundOverlays and Marker Icon images
      *
      * @return mImagesCache
      */
-    public LruCache<String, Bitmap> getImagesCache() { return mImagesCache; }
+    public LruCache<String, Bitmap> getImagesCache() {
+        return mImagesCache;
+    }
 
     /**
      * Gets the ground overlays on the current layer
      *
      * @return mGroundOverlays hashmap contains the ground overlays
      */
-    public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() { return mGroundOverlays; }
+    public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() {
+        return mGroundOverlays;
+    }
 
     /**
      * Gets the list of KmlContainers that are on the current layer
      *
      * @return mContainers list of KmlContainers
      */
-    public ArrayList<KmlContainer> getContainerList() { return mContainers; }
+    public ArrayList<KmlContainer> getContainerList() {
+        return mContainers;
+    }
 
     /**
      * Obtains the styleUrl from a placemark and finds the corresponding style in a list
@@ -309,8 +322,9 @@ public class Renderer {
 
     /**
      * Adds a new mapping to the mFeatures hashmap
+     *
      * @param feature Feature to be added onto the map
-     * @param object Corresponding map object to this feature
+     * @param object  Corresponding map object to this feature
      */
     public void putFeatures(Feature feature, Object object) {
         mFeatures.put(feature, object);
@@ -325,6 +339,7 @@ public class Renderer {
 
     /**
      * Stores new mappings into the mStylesRenderer hashmap
+     *
      * @param styles hashmap of strings and KmlStyles to be added to mStylesRenderer
      */
     public void putStyles(HashMap<String, KmlStyle> styles) {
@@ -593,7 +608,7 @@ public class Renderer {
      * Adds a Point to the map as a Marker
      *
      * @param markerOptions contains relevant styling properties for the Marker
-     * @param point      contains coordinates for the Marker
+     * @param point         contains coordinates for the Marker
      * @return Marker object created from the given Point
      */
     protected Marker addPointToMap(MarkerOptions markerOptions, Point point) {
@@ -668,7 +683,7 @@ public class Renderer {
      * Adds a DataPolygon to the map as a Polygon
      *
      * @param polygonOptions
-     * @param polygon      contains coordinates for the Polygon
+     * @param polygon        contains coordinates for the Polygon
      * @return Polygon object created from given DataPolygon
      */
     protected Polygon addPolygonToMap(PolygonOptions polygonOptions, DataPolygon polygon) {
@@ -766,7 +781,7 @@ public class Renderer {
      * MultiGeometry. Combines styling of the placemark with the coordinates of each geometry.
      *
      * @param multiGeometry contains array of geometries for the MultiGeometry
-     * @param urlStyle         contains relevant styling properties for the MultiGeometry
+     * @param urlStyle      contains relevant styling properties for the MultiGeometry
      * @return array of Marker, Polyline and Polygon objects
      */
     private ArrayList<Object> addMultiGeometryToMap(KmlPlacemark placemark,
@@ -900,7 +915,7 @@ public class Renderer {
             }
 
             public View getInfoContents(Marker arg0) {
-                View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));

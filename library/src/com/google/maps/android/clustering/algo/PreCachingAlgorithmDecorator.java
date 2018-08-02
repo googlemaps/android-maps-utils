@@ -16,8 +16,6 @@
 
 package com.google.maps.android.clustering.algo;
 
-import android.support.v4.util.LruCache;
-
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -25,6 +23,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import androidx.collection.LruCache;
 
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.

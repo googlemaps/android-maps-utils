@@ -21,12 +21,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.support.v4.util.LongSparseArray;
-
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
+
+import androidx.collection.LongSparseArray;
 
 /**
  * Groups markers into a grid.
