@@ -269,6 +269,20 @@ public class SphericalUtilTest extends TestCase {
         expectLatLngApproxEquals(
                 down,
                 SphericalUtil.interpolate(new LatLng(-45, 0), new LatLng(-45, 180), 1 / 2.0));
+
+        // boundary values for fraction, between left and back
+        expectLatLngApproxEquals(
+                left, SphericalUtil.interpolate(left, back, 0));
+        expectLatLngApproxEquals(
+                back, SphericalUtil.interpolate(left, back, 1.0));
+
+        // two nearby points, separated by ~4m, for which the Slerp algorithm is not stable and we
+        // have to fall back to linear interpolation.
+        expectLatLngApproxEquals(
+                new LatLng(-37.756872, 175.325252),
+                SphericalUtil.interpolate(
+                        new LatLng(-37.756891,175.325262),
+                        new LatLng(-37.756853,175.325242), 0.5));
     }
 
     public void testComputeLength() {
