@@ -134,7 +134,9 @@ public class SphericalUtil {
         double angle = computeAngleBetween(from, to);
         double sinAngle = sin(angle);
         if (sinAngle < 1E-6) {
-            return from;
+            return new LatLng(
+                    from.latitude + fraction * (to.latitude - from.latitude),
+                    from.longitude + fraction * (to.longitude - from.longitude));
         }
         double a = sin((1 - fraction) * angle) / sinAngle;
         double b = sin(fraction * angle) / sinAngle;
