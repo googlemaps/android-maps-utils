@@ -6,13 +6,11 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    api 'com.google.android.gms:play-services-maps:15.0.1'
 }
 
 android {
-    compileSdkVersion 25
-
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 28
 
     resourcePrefix 'amu_'
 

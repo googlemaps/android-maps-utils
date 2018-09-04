@@ -3,17 +3,17 @@ apply plugin: 'com.android.application'
 dependencies {
     compile project(':library')
     // Or, fetch from Maven:
-    // compile 'com.google.maps.android:android-maps-utils:0.3+'
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    // implementation 'com.google.maps.android:android-maps-utils:0.3+'
+    // implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    // In library, see: api 'com.google.android.gms:play-services-maps:15.0.1'
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 28
     }
 
     sourceSets {
