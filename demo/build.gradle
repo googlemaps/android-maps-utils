@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile project(':library')
+    implementation project(':library')
     // Or, fetch from Maven:
     // implementation 'com.google.maps.android:android-maps-utils:0.3+'
     // implementation 'com.google.android.gms:play-services-maps:15.0.1'
