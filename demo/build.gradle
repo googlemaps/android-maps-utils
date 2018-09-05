@@ -5,6 +5,7 @@ dependencies {
     // Or, fetch from Maven:
     // compile 'com.google.maps.android:android-maps-utils:0.3+'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.android.support:support-compat:22.1.0'
 }
 
 android {

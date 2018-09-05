@@ -16,14 +16,15 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.graphics.Color;
+import android.support.v4.graphics.ColorUtils;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
-
-import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
 
     private final static String LINE = "elfjD~a}uNOnFN~Em@fJv@tEMhGDjDe@hG^nF??@lA?n@IvAC`Ay@A{@DwCA{CF_EC{CEi@PBTFDJBJ?V?n@?D@?A@?@?F?F?LAf@?n@@`@@T@~@FpA?fA?p@?r@?vAH`@OR@^ETFJCLD?JA^?J?P?fAC`B@d@?b@A\\@`@Ad@@\\?`@?f@?V?H?DD@DDBBDBD?D?B?B@B@@@B@B@B@D?D?JAF@H@FCLADBDBDCFAN?b@Af@@x@@";
     private final static String OVAL_POLYGON = "}wgjDxw_vNuAd@}AN{A]w@_Au@kAUaA?{@Ke@@_@C]D[FULWFOLSNMTOVOXO\\I\\CX?VJXJTDTNXTVVLVJ`@FXA\\AVLZBTATBZ@ZAT?\\?VFT@XGZAP";
-    private final static int ALPHA_ADJUSTMENT = 0x77000000;
+    private final static int ALPHA_ADJUSTMENT = 119;
 
     @Override
     protected void startDemo() {
@@ -56,31 +57,31 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
         simplifiedLine = PolyUtil.simplify(line, tolerance);
         mMap.addPolyline(new PolylineOptions()
                 .addAll(simplifiedLine)
-                .color(Color.RED - ALPHA_ADJUSTMENT));
+                .color(ColorUtils.setAlphaComponent(Color.RED, ALPHA_ADJUSTMENT)));
 
         tolerance = 20; // meters
         simplifiedLine = PolyUtil.simplify(line, tolerance);
         mMap.addPolyline(new PolylineOptions()
                 .addAll(simplifiedLine)
-                .color(Color.GREEN - ALPHA_ADJUSTMENT));
+                .color(ColorUtils.setAlphaComponent(Color.GREEN, ALPHA_ADJUSTMENT)));
 
         tolerance = 50; // meters
         simplifiedLine = PolyUtil.simplify(line, tolerance);
         mMap.addPolyline(new PolylineOptions()
                 .addAll(simplifiedLine)
-                .color(Color.MAGENTA - ALPHA_ADJUSTMENT));
+                .color(ColorUtils.setAlphaComponent(Color.MAGENTA, ALPHA_ADJUSTMENT)));
 
         tolerance = 500; // meters
         simplifiedLine = PolyUtil.simplify(line, tolerance);
         mMap.addPolyline(new PolylineOptions()
                 .addAll(simplifiedLine)
-                .color(Color.YELLOW - ALPHA_ADJUSTMENT));
+                .color(ColorUtils.setAlphaComponent(Color.YELLOW, ALPHA_ADJUSTMENT)));
 
         tolerance = 1000; // meters
         simplifiedLine = PolyUtil.simplify(line, tolerance);
         mMap.addPolyline(new PolylineOptions()
                 .addAll(simplifiedLine)
-                .color(Color.BLUE - ALPHA_ADJUSTMENT));
+                .color(ColorUtils.setAlphaComponent(Color.BLUE, ALPHA_ADJUSTMENT)));
 
 
         // Triangle polygon - the polygon should be closed
@@ -95,7 +96,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
 
         mMap.addPolygon(new PolygonOptions()
                 .addAll(triangle)
-                .fillColor(Color.BLUE - ALPHA_ADJUSTMENT)
+                .fillColor(ColorUtils.setAlphaComponent(Color.BLUE, ALPHA_ADJUSTMENT))
                 .strokeColor(Color.BLUE)
                 .strokeWidth(5));
 
@@ -104,7 +105,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
         List simplifiedTriangle = PolyUtil.simplify(triangle, tolerance);
         mMap.addPolygon(new PolygonOptions()
                 .addAll(simplifiedTriangle)
-                .fillColor(Color.YELLOW - ALPHA_ADJUSTMENT)
+                .fillColor(ColorUtils.setAlphaComponent(Color.YELLOW, ALPHA_ADJUSTMENT))
                 .strokeColor(Color.YELLOW)
                 .strokeWidth(5));
 
@@ -112,7 +113,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
         List<LatLng> oval = PolyUtil.decode(OVAL_POLYGON);
         mMap.addPolygon(new PolygonOptions()
                 .addAll(oval)
-                .fillColor(Color.BLUE - ALPHA_ADJUSTMENT)
+                .fillColor(ColorUtils.setAlphaComponent(Color.BLUE, ALPHA_ADJUSTMENT))
                 .strokeColor(Color.BLUE)
                 .strokeWidth(5));
 
@@ -121,7 +122,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
         List simplifiedOval= PolyUtil.simplify(oval, tolerance);
         mMap.addPolygon(new PolygonOptions()
                 .addAll(simplifiedOval)
-                .fillColor(Color.YELLOW - ALPHA_ADJUSTMENT)
+                .fillColor(ColorUtils.setAlphaComponent(Color.YELLOW, ALPHA_ADJUSTMENT))
                 .strokeColor(Color.YELLOW)
                 .strokeWidth(5));
     }
