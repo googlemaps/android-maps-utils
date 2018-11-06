@@ -69,7 +69,7 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
     }
 
     @Override
-    public Set<? extends Cluster<T>> getClusters(double zoom) {
+    public Set<? extends Cluster<T>> getClusters(float zoom) {
         int discreteZoom = (int) zoom;
         Set<? extends Cluster<T>> results = getClustersInternal(discreteZoom);
         // TODO: Check if requests are already in-flight.
