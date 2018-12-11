@@ -19,7 +19,7 @@ import java.util.Iterator;
  * array of
  * GeoJsonFeature objects parsed from the GeoJSON file.
  */
-/* package */ class GeoJsonParser {
+public class GeoJsonParser {
 
     private static final String LOG_TAG = "GeoJsonParser";
 
@@ -159,7 +159,7 @@ import java.util.Iterator;
      * @param geoJsonGeometry geometry object to parse
      * @return Geometry object
      */
-    private static Geometry parseGeometry(JSONObject geoJsonGeometry) {
+    public static Geometry parseGeometry(JSONObject geoJsonGeometry) {
         try {
             String geometryType = geoJsonGeometry.getString("type");
             JSONArray geometryArray;
