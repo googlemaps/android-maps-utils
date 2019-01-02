@@ -1,5 +1,3 @@
-
-
 buildscript {
     repositories {
         google()
