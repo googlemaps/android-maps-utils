@@ -221,7 +221,7 @@ public class PolyUtil {
      *          ...,
      *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
      */
-    private static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
+    public static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
                                           boolean geodesic, double toleranceEarth) {
         int size = poly.size();
         if (size == 0) {

@@ -52,18 +52,18 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
-import com.google.maps.android.ui.SquareTextView;
 import com.google.maps.android.ui.IconGenerator;
+import com.google.maps.android.ui.SquareTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -371,7 +371,16 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             final float zoomDelta = zoom - mZoom;
 
             final Set<MarkerWithPosition> markersToRemove = mMarkers;
-            final LatLngBounds visibleBounds = mProjection.getVisibleRegion().latLngBounds;
+            // Prevent crashes: https://issuetracker.google.com/issues/35827242
+            LatLngBounds visibleBounds;
+            try {
+                visibleBounds = mProjection.getVisibleRegion().latLngBounds;
+            } catch (Exception e) {
+                e.printStackTrace();
+                visibleBounds = LatLngBounds.builder()
+                        .include(new LatLng(0, 0))
+                        .build();
+            }
             // TODO: Add some padding, so that markers can animate in from off-screen.
 
             // Find all of the existing clusters that are on-screen. These are candidates for
