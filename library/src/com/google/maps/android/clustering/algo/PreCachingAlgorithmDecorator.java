@@ -64,6 +64,12 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
         clearCache();
     }
 
+    @Override
+    public void removeItems(Collection<T> items) {
+        mAlgorithm.removeItems(items);
+        clearCache();
+    }
+
     private void clearCache() {
         mCache.evictAll();
     }

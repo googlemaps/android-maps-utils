@@ -26,6 +26,7 @@ import com.google.maps.android.clustering.ClusterItem;
  * Logic for computing clusters
  */
 public interface Algorithm<T extends ClusterItem> {
+
     void addItem(T item);
 
     void addItems(Collection<T> items);
@@ -33,6 +34,8 @@ public interface Algorithm<T extends ClusterItem> {
     void clearItems();
 
     void removeItem(T item);
+
+    void removeItems(Collection<T> items);
 
     Set<? extends Cluster<T>> getClusters(double zoom);
 

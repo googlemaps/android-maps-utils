@@ -59,6 +59,11 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
     }
 
     @Override
+    public void removeItems(Collection<T> items) {
+        mItems.removeAll(items);
+    }
+
+    @Override
     public void setMaxDistanceBetweenClusteredItems(int maxDistance) {
         mGridSize = maxDistance;
     }

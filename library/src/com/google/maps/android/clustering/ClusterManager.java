@@ -177,6 +177,15 @@ public class ClusterManager<T extends ClusterItem> implements
         }
     }
 
+    public void removeItems(Collection<T> items) {
+        mAlgorithm.lock();
+        try {
+            mAlgorithm.removeItems(items);
+        } finally {
+            mAlgorithm.unlock();
+        }
+    }
+
     public void removeItem(T item) {
         mAlgorithmLock.writeLock().lock();
         try {

@@ -99,6 +99,13 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     }
 
     @Override
+    public void removeItems(Collection<T> items) {
+        for (T item : items) {
+            removeItem(item);
+        }
+    }
+
+    @Override
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         final int discreteZoom = (int) zoom;
 
