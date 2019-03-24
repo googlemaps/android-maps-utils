@@ -20,7 +20,6 @@ import android.arch.lifecycle.ViewModel;
 import android.content.res.Resources;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm;
 import com.google.maps.android.utils.demo.model.MyItem;
 
