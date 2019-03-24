@@ -29,7 +29,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
  */
-public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algorithm<T> {
+public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends AbstractAlgorithm<T> {
     private final Algorithm<T> mAlgorithm;
 
     // TODO: evaluate maxSize parameter for LruCache.

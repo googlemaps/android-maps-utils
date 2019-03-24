@@ -46,7 +46,7 @@ import com.google.maps.android.quadtree.PointQuadTree;
  * <p/>
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
+public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm<T> {
     private static final int DEFAULT_MAX_DISTANCE_AT_ZOOM = 100; // essentially 100 dp.
 
     private int mMaxDistance = DEFAULT_MAX_DISTANCE_AT_ZOOM;

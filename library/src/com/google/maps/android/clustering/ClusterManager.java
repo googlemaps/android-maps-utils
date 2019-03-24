@@ -53,7 +53,6 @@ public class ClusterManager<T extends ClusterItem> implements
     private final MarkerManager.Collection mClusterMarkers;
 
     private ScreenBasedAlgorithm<T> mAlgorithm;
-    private final ReadWriteLock mAlgorithmLock = new ReentrantReadWriteLock();
     private ClusterRenderer<T> mRenderer;
 
     private GoogleMap mMap;
@@ -119,7 +118,7 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     public void setAlgorithm(ScreenBasedAlgorithm<T> algorithm) {
-        mAlgorithmLock.writeLock().lock();
+        algorithm.lock();
         try {
             if (mAlgorithm != null) {
                 algorithm.addItems(mAlgorithm.getItems());
@@ -127,7 +126,7 @@ public class ClusterManager<T extends ClusterItem> implements
 
             mAlgorithm = algorithm;
         } finally {
-            mAlgorithmLock.writeLock().unlock();
+            algorithm.unlock();
         }
 
         if (mAlgorithm.shouldReclusterOnMapMovement()) {
@@ -150,30 +149,29 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     public void clearItems() {
-        mAlgorithmLock.writeLock().lock();
+        mAlgorithm.lock();
         try {
             mAlgorithm.clearItems();
         } finally {
-            mAlgorithmLock.writeLock().unlock();
+            mAlgorithm.unlock();
         }
     }
 
     public void addItems(Collection<T> items) {
-        mAlgorithmLock.writeLock().lock();
+        mAlgorithm.lock();
         try {
             mAlgorithm.addItems(items);
         } finally {
-            mAlgorithmLock.writeLock().unlock();
+            mAlgorithm.unlock();
         }
-
     }
 
     public void addItem(T myItem) {
-        mAlgorithmLock.writeLock().lock();
+        mAlgorithm.lock();
         try {
             mAlgorithm.addItem(myItem);
         } finally {
-            mAlgorithmLock.writeLock().unlock();
+            mAlgorithm.unlock();
         }
     }
 
@@ -187,11 +185,11 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     public void removeItem(T item) {
-        mAlgorithmLock.writeLock().lock();
+        mAlgorithm.lock();
         try {
             mAlgorithm.removeItem(item);
         } finally {
-            mAlgorithmLock.writeLock().unlock();
+            mAlgorithm.unlock();
         }
     }
 
@@ -252,11 +250,11 @@ public class ClusterManager<T extends ClusterItem> implements
     private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
         @Override
         protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
-            mAlgorithmLock.readLock().lock();
+            mAlgorithm.lock();
             try {
                 return mAlgorithm.getClusters(zoom[0]);
             } finally {
-                mAlgorithmLock.readLock().unlock();
+                mAlgorithm.unlock();
             }
         }
 

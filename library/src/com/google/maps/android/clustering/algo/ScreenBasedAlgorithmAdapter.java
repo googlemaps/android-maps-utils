@@ -23,7 +23,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import java.util.Collection;
 import java.util.Set;
 
-public class ScreenBasedAlgorithmAdapter<T extends ClusterItem> implements ScreenBasedAlgorithm<T> {
+public class ScreenBasedAlgorithmAdapter<T extends ClusterItem> extends AbstractAlgorithm<T> implements ScreenBasedAlgorithm<T> {
 
     private Algorithm<T> mAlgorithm;
 

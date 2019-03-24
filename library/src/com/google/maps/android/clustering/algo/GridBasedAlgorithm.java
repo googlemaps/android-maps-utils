@@ -31,7 +31,7 @@ import com.google.maps.android.projection.SphericalMercatorProjection;
 /**
  * Groups markers into a grid.
  */
-public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
+public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm<T> {
     private static final int DEFAULT_GRID_SIZE = 100;
 
     private int mGridSize = DEFAULT_GRID_SIZE;

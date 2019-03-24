@@ -44,4 +44,8 @@ public interface Algorithm<T extends ClusterItem> {
     void setMaxDistanceBetweenClusteredItems(int maxDistance);
 
     int getMaxDistanceBetweenClusteredItems();
+
+    void lock();
+
+    void unlock();
 }
