@@ -33,8 +33,10 @@ import static android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE;
 public class IconGeneratorDemoActivity extends BaseDemoActivity {
 
     @Override
-    protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.8696, 151.2094), 10));
+    protected void startDemo(boolean isRestore) {
+        if (!isRestore) {
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.8696, 151.2094), 10));
+        }
 
         IconGenerator iconFactory = new IconGenerator(this);
         addIcon(iconFactory, "Default", new LatLng(-33.8696, 151.2094));

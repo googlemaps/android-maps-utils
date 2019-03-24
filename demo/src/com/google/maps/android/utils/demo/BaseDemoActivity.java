@@ -24,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
+    private boolean mIsRestore;
 
     protected int getLayoutId() {
         return R.layout.map;
@@ -32,13 +33,8 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mIsRestore = savedInstanceState != null;
         setContentView(getLayoutId());
-        setUpMap();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         setUpMap();
     }
 
@@ -48,7 +44,7 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
             return;
         }
         mMap = map;
-        startDemo();
+        startDemo(mIsRestore);
     }
 
     private void setUpMap() {
@@ -58,7 +54,7 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     /**
      * Run the demo-specific code.
      */
-    protected abstract void startDemo();
+    protected abstract void startDemo(boolean isRestore);
 
     protected GoogleMap getMap() {
         return mMap;

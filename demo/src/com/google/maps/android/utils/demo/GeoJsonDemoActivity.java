@@ -46,7 +46,10 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     }
 
     @Override
-    protected void startDemo() {
+    protected void startDemo(boolean isRestore) {
+        if (!isRestore) {
+            getMap().moveCamera(CameraUpdateFactory.newLatLng(new LatLng(31.4118,-103.5355)));
+        }
         // Download the GeoJSON file.
         retrieveFileFromUrl();
         // Alternate approach of loading a local GeoJSON file.
@@ -133,14 +136,12 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 addGeoJsonLayerToMap(layer);
             }
         }
-
     }
 
     private void addGeoJsonLayerToMap(GeoJsonLayer layer) {
 
         addColorsToMarkers(layer);
         layer.addLayerToMap();
-        getMap().moveCamera(CameraUpdateFactory.newLatLng(new LatLng(31.4118,-103.5355)));
         // Demonstrate receiving features via GeoJsonLayer clicks.
         layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
             @Override
@@ -151,8 +152,5 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             }
 
         });
-
     }
-
 }
-

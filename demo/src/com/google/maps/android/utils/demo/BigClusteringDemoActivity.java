@@ -32,8 +32,10 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
     private ClusterManager<MyItem> mClusterManager;
 
     @Override
-    protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+    protected void startDemo(boolean isRestore) {
+        if (!isRestore) {
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        }
 
         mClusterManager = new ClusterManager<MyItem>(this, getMap());
 

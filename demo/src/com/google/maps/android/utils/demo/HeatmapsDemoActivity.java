@@ -97,11 +97,13 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     @Override
-    protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
+    protected void startDemo(boolean isRestore) {
+        if (!isRestore) {
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
+        }
 
         // Set up the spinner/dropdown list
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.heatmaps_datasets_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -218,5 +220,4 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             return mUrl;
         }
     }
-
 }
