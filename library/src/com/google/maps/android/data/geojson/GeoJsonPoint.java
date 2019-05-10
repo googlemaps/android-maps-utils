@@ -1,10 +1,10 @@
 package com.google.maps.android.data.geojson;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 import com.google.maps.android.data.Point;
 
 /**
- * A GeoJsonPoint geometry contains a single {@link com.google.android.gms.maps.model.LatLng}.
+ * A GeoJsonPoint geometry contains a single {@link com.google.android.libraries.maps.model.LatLng}.
  */
 public class GeoJsonPoint extends Point {
     private final Double mAltitude;

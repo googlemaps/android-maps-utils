@@ -20,9 +20,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.util.LongSparseArray;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Tile;
-import com.google.android.gms.maps.model.TileProvider;
+import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.Tile;
+import com.google.android.libraries.maps.model.TileProvider;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.quadtree.PointQuadTree;

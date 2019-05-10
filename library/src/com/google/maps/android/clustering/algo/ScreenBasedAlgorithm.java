@@ -16,7 +16,7 @@
 
 package com.google.maps.android.clustering.algo;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.libraries.maps.GoogleMap;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**

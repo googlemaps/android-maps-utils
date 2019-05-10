@@ -16,9 +16,9 @@
 
 package com.google.maps.android.data;
 
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.libraries.maps.model.MarkerOptions;
+import com.google.android.libraries.maps.model.PolygonOptions;
+import com.google.android.libraries.maps.model.PolylineOptions;
 
 import java.util.Observable;
 

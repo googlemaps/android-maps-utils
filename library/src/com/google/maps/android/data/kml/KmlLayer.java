@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.libraries.maps.GoogleMap;
 import com.google.maps.android.data.Layer;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
