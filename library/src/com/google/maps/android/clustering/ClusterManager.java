@@ -20,9 +20,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.libraries.maps.GoogleMap;
+import com.google.android.libraries.maps.model.CameraPosition;
+import com.google.android.libraries.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -40,8 +40,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Groups many items on a map based on zoom level.
  * <p/>
- * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraIdleListener}</li>
- * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
+ * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.libraries.maps.GoogleMap.OnCameraIdleListener}</li>
+ * <li>{@link com.google.android.libraries.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
 public class ClusterManager<T extends ClusterItem> implements
         GoogleMap.OnCameraIdleListener,

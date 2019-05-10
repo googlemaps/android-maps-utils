@@ -1,13 +1,13 @@
 package com.google.maps.android.data.geojson;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 import com.google.maps.android.data.LineString;
 
 import java.util.List;
 
 /**
  * A GeoJsonLineString geometry represents a number of connected {@link
- * com.google.android.gms.maps.model.LatLng}s.
+ * com.google.android.libraries.maps.model.LatLng}s.
  */
 public class GeoJsonLineString extends LineString {
     private final List<Double> mAltitudes;

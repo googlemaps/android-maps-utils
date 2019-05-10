@@ -1,8 +1,8 @@
 package com.google.maps.android.data.geojson;
 
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.libraries.maps.MapsInitializer;
+import com.google.android.libraries.maps.model.BitmapDescriptor;
+import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 
 import android.test.AndroidTestCase;
 

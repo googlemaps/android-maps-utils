@@ -2,7 +2,7 @@ package com.google.maps.android.data.kml;
 
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;

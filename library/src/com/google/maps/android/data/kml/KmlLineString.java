@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 import com.google.maps.android.data.LineString;
 
 import java.util.ArrayList;
