@@ -1,7 +1,7 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-archivesBaseName = 'android-maps-utils'
+archivesBaseName = 'android-maps-utils-sdk-3.0-beta-compat'
 group = 'com.google.maps.android'
 
 
@@ -51,7 +51,7 @@ uploadArchives {
             }
 
             modifyPom(addFilter('aar') { artifact, file ->
-                artifact.name == 'android-maps-utils'
+                artifact.name == 'android-maps-utils-sdk-3.0-beta-compat'
             })
 
             modifyPom(addFilter('apklib') { artifact, file ->
@@ -69,8 +69,8 @@ uploadArchives {
 
 def modifyPom(pom) {
     pom.project {
-        name 'Google Maps Android API utility library'
-        description 'Handy extensions to the Google Maps Android API.'
+        name 'Google Maps Android API utility library - Beta Compatible'
+        description 'Handy extensions to the Google Maps Android API. Compatible with the Android SDK v3.0 beta.'
         url 'https://github.com/googlemaps/android-maps-utils'
 
         scm {
