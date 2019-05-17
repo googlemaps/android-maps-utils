@@ -30,7 +30,7 @@ task sourcesJar(type: Jar) {
 
 publishing {
     publications {
-        Util(MavenPublication) {
+        aar(MavenPublication) {
             pom {
                 name = 'Google Maps Android API utility library'
                 description = 'Handy extensions to the Google Maps Android API.'
@@ -67,6 +67,43 @@ publishing {
             artifactId 'android-maps-utils-sdk-v3-compat'
             version '0.1'
             artifact("$buildDir/outputs/aar/android-maps-utils-sdk-v3-compat-release.aar")
+        }
+        apkLib(MavenPublication) {
+            pom {
+                name = 'Google Maps Android API utility library'
+                description = 'Handy extensions to the Google Maps Android API.'
+                url = 'https://github.com/googlemaps/android-maps-utils'
+
+                scm {
+                    url = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                    connection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                    developerConnection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                organization {
+                    name = 'Google Inc'
+                    url = 'http://developers.google.com/maps'
+                }
+
+                developers {
+                    developer {
+                        id = 'broady'
+                        name = 'Chris Broadfoot'
+                        url = 'http://google.com/+ChristopherBroadfoot'
+                    }
+                }
+            }
+            groupId group
+            artifactId 'android-maps-utils-sdk-v3-compat-apklib'
+            version '0.1'
             artifact(apklib)
         }
     }
@@ -82,7 +119,8 @@ publishing {
 }
 
 signing {
-    sign publishing.publications.Util
+    sign publishing.publications.aar
+    sign publishing.publications.apkLib
 }
 
 //signing {
