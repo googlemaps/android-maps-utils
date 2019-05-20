@@ -14,5 +14,4 @@ android:
     - 'android-sdk-license-.+'
 
 script:
-  - ./gradlew clean assembleDebug -x library:signAarPublication -PdisablePreDex
-  - ./gradlew clean assembleDebug -x library:signApkLibPublication -PdisablePreDex
+  - ./gradlew clean assembleDebug -x library:signArchives -PdisablePreDex
