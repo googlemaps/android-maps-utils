@@ -27,7 +27,7 @@ import java.util.Observable;
  */
 public class Feature extends Observable {
 
-    private final String mId;
+    protected String mId;
 
     private final Map<String, String> mProperties;
 

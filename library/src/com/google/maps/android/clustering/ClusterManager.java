@@ -75,8 +75,8 @@ public class ClusterManager<T extends ClusterItem> implements
         mMarkerManager = markerManager;
         mClusterMarkers = markerManager.newCollection();
         mMarkers = markerManager.newCollection();
-        mRenderer = new DefaultClusterRenderer<T>(context, map, this);
-        mAlgorithm = new ScreenBasedAlgorithmAdapter<T>(new PreCachingAlgorithmDecorator<T>(
+        mRenderer = new DefaultClusterRenderer<>(context, map, this);
+        mAlgorithm = new ScreenBasedAlgorithmAdapter<>(new PreCachingAlgorithmDecorator<>(
                 new NonHierarchicalDistanceBasedAlgorithm<T>()));
 
         mClusterTask = new ClusterTask();
@@ -112,9 +112,9 @@ public class ClusterManager<T extends ClusterItem> implements
 
     public void setAlgorithm(Algorithm<T> algorithm) {
         if (algorithm instanceof ScreenBasedAlgorithm) {
-            setAlgorithm((ScreenBasedAlgorithm) algorithm);
+            setAlgorithm((ScreenBasedAlgorithm<T>) algorithm);
         } else {
-            setAlgorithm(new ScreenBasedAlgorithmAdapter<T>(algorithm));
+            setAlgorithm(new ScreenBasedAlgorithmAdapter<>(algorithm));
         }
     }
 
@@ -301,28 +301,28 @@ public class ClusterManager<T extends ClusterItem> implements
          * Called when cluster is clicked. 
          * Return true if click has been handled
          * Return false and the click will dispatched to the next listener
-         */ 
-        public boolean onClusterClick(Cluster<T> cluster);
+         */
+        boolean onClusterClick(Cluster<T> cluster);
     }
 
     /**
      * Called when a Cluster's Info Window is clicked.
      */
     public interface OnClusterInfoWindowClickListener<T extends ClusterItem> {
-        public void onClusterInfoWindowClick(Cluster<T> cluster);
+        void onClusterInfoWindowClick(Cluster<T> cluster);
     }
 
     /**
      * Called when an individual ClusterItem is clicked.
      */
     public interface OnClusterItemClickListener<T extends ClusterItem> {
-        public boolean onClusterItemClick(T item);
+        boolean onClusterItemClick(T item);
     }
 
     /**
      * Called when an individual ClusterItem's Info Window is clicked.
      */
     public interface OnClusterItemInfoWindowClickListener<T extends ClusterItem> {
-        public void onClusterItemInfoWindowClick(T item);
+        void onClusterItemInfoWindowClick(T item);
     }
 }

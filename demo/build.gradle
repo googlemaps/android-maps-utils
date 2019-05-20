@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    implementation project(':library')
     implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
     implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
+    implementation 'com.google.maps.android:android-maps-utils-sdk-v3-compat:0.1'
     implementation 'com.android.support:support-v4:+'
     implementation 'com.android.support:appcompat-v7:+'
     implementation 'com.google.android.gms:play-services-basement:15.0.1'

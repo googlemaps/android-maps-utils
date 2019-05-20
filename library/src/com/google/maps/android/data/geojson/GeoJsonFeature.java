@@ -18,8 +18,6 @@ import java.util.Observer;
  */
 public class GeoJsonFeature extends Feature implements Observer {
 
-    private final String mId;
-
     private final LatLngBounds mBoundingBox;
 
     private GeoJsonPointStyle mPointStyle;
