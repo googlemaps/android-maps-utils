@@ -1,7 +1,7 @@
 package com.google.maps.android.data.kml;
 
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.libraries.maps.model.GroundOverlayOptions;
+import com.google.android.libraries.maps.model.LatLngBounds;
 
 import java.util.HashMap;
 import java.util.Map;

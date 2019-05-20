@@ -20,10 +20,10 @@ import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.maps.CameraUpdateFactory;
+import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
+import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 import static android.graphics.Typeface.BOLD;

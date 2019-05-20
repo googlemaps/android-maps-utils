@@ -1,13 +1,13 @@
 package com.google.maps.android.data.geojson;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 import com.google.maps.android.data.DataPolygon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A GeoJsonPolygon geometry contains an array of arrays of {@link com.google.android.gms.maps.model.LatLng}s.
+ * A GeoJsonPolygon geometry contains an array of arrays of {@link com.google.android.libraries.maps.model.LatLng}s.
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 

@@ -18,8 +18,8 @@ package com.google.maps.android.utils.demo;
 
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.CameraUpdateFactory;
+import com.google.android.libraries.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 

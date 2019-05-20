@@ -6,12 +6,12 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.libraries.maps.GoogleMap;
+import com.google.android.libraries.maps.model.BitmapDescriptor;
+import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
+import com.google.android.libraries.maps.model.GroundOverlay;
+import com.google.android.libraries.maps.model.GroundOverlayOptions;
+import com.google.android.libraries.maps.model.Marker;
 import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.Geometry;
@@ -280,7 +280,7 @@ public class KmlRenderer  extends Renderer {
     }
 
     /**
-     * Adds the marker icon stored in mMarkerIconCache, to the {@link com.google.android.gms.maps.model.Marker}
+     * Adds the marker icon stored in mMarkerIconCache, to the {@link com.google.android.libraries.maps.model.Marker}
      *
      * @param iconUrl icon url of icon to add to markers
      * @param placemarks

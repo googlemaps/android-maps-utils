@@ -1,7 +1,7 @@
 package com.google.maps.android.data.kml;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLngBounds;
 import com.google.maps.android.data.Geometry;
 
 import org.xmlpull.v1.XmlPullParser;

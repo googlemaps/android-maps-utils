@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.libraries.maps.model.GroundOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
