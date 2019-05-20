@@ -1,15 +1,7 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
-    implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
-
-    implementation 'com.android.support:support-v4:+'
-    implementation 'com.android.support:appcompat-v7:+'
-    implementation 'com.google.android.gms:play-services-basement:15.0.1'
-    implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
 }
 
 android {
@@ -18,8 +10,7 @@ android {
     resourcePrefix 'amu_'
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion 14
     }
 
     sourceSets {

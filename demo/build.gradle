@@ -1,22 +1,17 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
-    implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
-    implementation 'com.google.maps.android:android-maps-utils-sdk-v3-compat:0.1'
-    implementation 'com.android.support:support-v4:+'
-    implementation 'com.android.support:appcompat-v7:+'
-    implementation 'com.google.android.gms:play-services-basement:15.0.1'
-    implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation project(':library')
+    // Or, fetch from Maven:
+    // compile 'com.google.maps.android:android-maps-utils:0.3+'
+    implementation 'com.google.android.gms:play-services-maps:11.0.4'
 }
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 28
     }
 
