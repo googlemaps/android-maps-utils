@@ -3,16 +3,19 @@ package com.google.maps.android.data.kml;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.Geometry;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class KmlMultiTrackTest extends TestCase {
+public class KmlMultiTrackTest  {
     KmlMultiTrack kmlMultiTrack;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
+
     }
 
     public KmlMultiTrack createMultiTrack() {
@@ -36,27 +39,30 @@ public class KmlMultiTrackTest extends TestCase {
         return new KmlMultiTrack(kmlTracks);
     }
 
+    @Test
     public void testGetKmlGeometryType() throws Exception {
         kmlMultiTrack = createMultiTrack();
-        assertNotNull(kmlMultiTrack);
-        assertNotNull(kmlMultiTrack.getGeometryType());
-        assertEquals("MultiGeometry", kmlMultiTrack.getGeometryType());
+        Assert.assertNotNull(kmlMultiTrack);
+        Assert.assertNotNull(kmlMultiTrack.getGeometryType());
+        Assert.assertEquals("MultiGeometry", kmlMultiTrack.getGeometryType());
     }
 
+    @Test
     public void testGetGeometry() throws Exception {
         kmlMultiTrack = createMultiTrack();
-        assertNotNull(kmlMultiTrack);
-        assertEquals(kmlMultiTrack.getGeometryObject().size(), 1);
+        Assert.assertNotNull(kmlMultiTrack);
+        Assert.assertEquals(kmlMultiTrack.getGeometryObject().size(), 1);
         KmlTrack lineString = ((KmlTrack) kmlMultiTrack.getGeometryObject().get(0));
-        assertNotNull(lineString);
+        Assert.assertNotNull(lineString);
     }
 
+    @Test
     public void testNullGeometry() {
         try {
             kmlMultiTrack = new KmlMultiTrack(null);
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Tracks cannot be null", e.getMessage());
+            Assert.assertEquals("Tracks cannot be null", e.getMessage());
         }
     }
 }

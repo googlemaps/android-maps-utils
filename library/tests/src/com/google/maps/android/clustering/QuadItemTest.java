@@ -19,9 +19,10 @@ package com.google.maps.android.clustering;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
-public class QuadItemTest extends TestCase {
+public class QuadItemTest {
 
     public class TestingItem implements ClusterItem {
         private final LatLng mPosition;
@@ -50,6 +51,7 @@ public class QuadItemTest extends TestCase {
         // nothing to setup
     }
 
+    @Test
     public void testRemoval() {
         TestingItem item_1_5 = new TestingItem(0.1, 0.5);
         TestingItem item_2_3 = new TestingItem(0.2, 0.3);
@@ -59,13 +61,13 @@ public class QuadItemTest extends TestCase {
         algo.addItem(item_1_5);
         algo.addItem(item_2_3);
 
-        assertEquals(2, algo.getItems().size());
+        Assert.assertEquals(2, algo.getItems().size());
 
         algo.removeItem(item_1_5);
 
-        assertEquals(1, algo.getItems().size());
+        Assert.assertEquals(1, algo.getItems().size());
 
-        assertFalse(algo.getItems().contains(item_1_5));
-        assertTrue(algo.getItems().contains(item_2_3));
+        Assert.assertFalse(algo.getItems().contains(item_1_5));
+        Assert.assertTrue(algo.getItems().contains(item_2_3));
     }
 }

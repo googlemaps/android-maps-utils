@@ -23,6 +23,7 @@ import org.junit.Assert;
 
 public class GradientTest {
 
+    @Test
     public void testInterpolateColor() {
         int red = Color.RED;
         int blue = Color.BLUE;
@@ -58,6 +59,7 @@ public class GradientTest {
         Assert.assertEquals(Gradient.interpolateColor(blue, green, 0.5f), Color.CYAN);
     }
 
+    @Test
     public void testSimpleColorMap() {
         int[] colors = {Color.RED, Color.BLUE};
         float[] startPoints = {0f, 1.0f};
@@ -68,6 +70,7 @@ public class GradientTest {
         Assert.assertEquals(colorMap[1], Gradient.interpolateColor(Color.RED, Color.BLUE, 0.5f));
     }
 
+    @Test
     public void testLargerColorMap() {
         int[] colors = {Color.RED, Color.GREEN};
         float[] startPoints = {0f, 1.0f};
@@ -80,6 +83,7 @@ public class GradientTest {
         }
     }
 
+    @Test
     public void testOpacityInterpolation() {
         int[] colors = {
                 Color.argb(0, 0, 255, 0),

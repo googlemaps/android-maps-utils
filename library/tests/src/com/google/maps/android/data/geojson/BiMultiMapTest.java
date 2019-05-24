@@ -1,58 +1,62 @@
 package com.google.maps.android.data.geojson;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class BiMultiMapTest extends TestCase {
+public class BiMultiMapTest {
 
+    @Test
     public void testSingle() {
         BiMultiMap<String> map = new BiMultiMap<>();
         String key = "foo";
         String value = "bar";
         map.put(key, value);
-        assertEquals(1, map.size());
-        assertEquals(value, map.get(key));
-        assertEquals(key, map.getKey(value));
+        Assert.assertEquals(1, map.size());
+        Assert.assertEquals(value, map.get(key));
+        Assert.assertEquals(key, map.getKey(value));
         map.remove(key);
-        assertEquals(0, map.size());
-        assertNull(map.get(key));
-        assertNull(map.getKey(value));
+        Assert.assertEquals(0, map.size());
+        Assert.assertNull(map.get(key));
+        Assert.assertNull(map.getKey(value));
     }
 
+    @Test
     public void testMulti() {
         BiMultiMap<String> map = new BiMultiMap<>();
         String key = "foo";
         List<String> values = Arrays.asList("bar", "baz");
         map.put(key, values);
-        assertEquals(1, map.size());
-        assertEquals(values, map.get(key));
+        Assert.assertEquals(1, map.size());
+        Assert.assertEquals(values, map.get(key));
         for (String value : values) {
-            assertEquals(key, map.getKey(value));
+            Assert.assertEquals(key, map.getKey(value));
         }
         map.remove(key);
-        assertEquals(0, map.size());
-        assertNull(map.get(key));
+        Assert.assertEquals(0, map.size());
+        Assert.assertNull(map.get(key));
         for (String value : values) {
-            assertEquals(null, map.getKey(value));
+            Assert.assertEquals(null, map.getKey(value));
         }
     }
 
+    @Test
     public void testCollection() {
         BiMultiMap<String> map = new BiMultiMap<>();
         String key = "foo";
         List<String> values = Arrays.asList("bar", "baz");
         map.put(key, values);
-        assertEquals(1, map.size());
-        assertEquals(values, map.get(key));
+        Assert.assertEquals(1, map.size());
+        Assert.assertEquals(values, map.get(key));
         for (String value : values) {
-            assertEquals(key, map.getKey(value));
+            Assert.assertEquals(key, map.getKey(value));
         }
         map.remove(key);
-        assertEquals(0, map.size());
+        Assert.assertEquals(0, map.size());
         for (String value : values) {
-            assertEquals(null, map.getKey(value));
+            Assert.assertEquals(null, map.getKey(value));
         }
     }
 }

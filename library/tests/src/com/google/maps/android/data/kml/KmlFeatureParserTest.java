@@ -25,6 +25,7 @@ public class KmlFeatureParserTest {
         return parser;
     }
 
+    @Test
     public void testPolygon() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_basic_placemark);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
@@ -35,6 +36,7 @@ public class KmlFeatureParserTest {
         Assert.assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
     }
 
+    @Test
     public void testMultiGeometry() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
@@ -44,6 +46,7 @@ public class KmlFeatureParserTest {
         Assert.assertEquals(multiGeometry.getGeometryObject().size(), 3);
     }
 
+    @Test
     public void testProperties() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
@@ -52,12 +55,14 @@ public class KmlFeatureParserTest {
         Assert.assertNull( placemark .getProperty("description"));
     }
 
+    @Test
     public void testExtendedData() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multiple_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
         Assert.assertNotNull(placemark.getProperty("holeNumber"));
     }
 
+    @Test
     public void testGroundOverlay() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_ground_overlay);
         KmlGroundOverlay groundOverlay = KmlFeatureParser.createGroundOverlay(xmlPullParser);
@@ -72,6 +77,7 @@ public class KmlFeatureParserTest {
         Assert.assertNotNull(groundOverlay);
     }
 
+    @Test
     public void testMultiGeometries() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_nested_multigeometry);
         KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
