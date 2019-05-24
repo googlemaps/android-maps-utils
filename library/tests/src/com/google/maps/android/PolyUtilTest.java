@@ -18,14 +18,13 @@ package com.google.maps.android;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
+import org.junit.Test;
+import org.junit.Assert;
 import java.lang.String;
 import java.util.List;
 import java.util.ArrayList;
 
-public class PolyUtilTest extends TestCase {
+public class PolyUtilTest {
     private static final String TEST_LINE = "_cqeFf~cjVf@p@fA}AtAoB`ArAx@hA`GbIvDiFv@gAh@t@X\\|@z@`@Z\\Xf@Vf@VpA\\tATJ@NBBkC";
 
     private static void expectNearNumber(double expected, double actual, double epsilon) {
@@ -90,6 +89,7 @@ public class PolyUtilTest extends TestCase {
         locationIndexToleranceCase(false, poly, point, tolerance, idx);
     }
 
+    @Test
     public void testOnEdge() {
         // Empty
         onEdgeCase(makeList(), makeList(), makeList(0, 0));
@@ -144,6 +144,7 @@ public class PolyUtilTest extends TestCase {
                    makeList(79, big, 90-small, -90, 90, -135));
     }
 
+    @Test
     public void testLocationIndex() {
         // Empty.
         locationIndexCase(makeList(), new LatLng(0, 0), -1);
@@ -166,6 +167,7 @@ public class PolyUtilTest extends TestCase {
         locationIndexCase(makeList(0, 80, 0, 90, 0, 100), new LatLng(0, 110), -1);
     }
 
+    @Test
     public void testLocationIndexTolerance() {
         final double small = 5e-7;  // About 5cm on equator, half the default tolerance.
         final double big   = 2e-6;  // About 10cm on equator, double the default tolerance.
@@ -180,6 +182,7 @@ public class PolyUtilTest extends TestCase {
         locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+2*big), 0.1, -1);
     }
 
+    @Test
     public void testContainsLocation() {
         // Empty.
         containsCase(makeList(),
@@ -217,13 +220,14 @@ public class PolyUtilTest extends TestCase {
                      makeList(15, 10, 0, -15, 0, 25, -1, 0));
     }
 
+    @Test
     public void testSimplify() {
         /*
          * Polyline
          */
         final String LINE = "elfjD~a}uNOnFN~Em@fJv@tEMhGDjDe@hG^nF??@lA?n@IvAC`Ay@A{@DwCA{CF_EC{CEi@PBTFDJBJ?V?n@?D@?A@?@?F?F?LAf@?n@@`@@T@~@FpA?fA?p@?r@?vAH`@OR@^ETFJCLD?JA^?J?P?fAC`B@d@?b@A\\@`@Ad@@\\?`@?f@?V?H?DD@DDBBDBD?D?B?B@B@@@B@B@B@D?D?JAF@H@FCLADBDBDCFAN?b@Af@@x@@";
         List<LatLng> line = PolyUtil.decode(LINE);
-        assertEquals(95, line.size());
+        Assert.assertEquals(95, line.size());
 
         List<LatLng> simplifiedLine;
         List<LatLng> copy;
@@ -231,7 +235,7 @@ public class PolyUtilTest extends TestCase {
         double tolerance = 5; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(21, simplifiedLine.size());
+        Assert.assertEquals(21, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -240,7 +244,7 @@ public class PolyUtilTest extends TestCase {
         tolerance = 10; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(14, simplifiedLine.size());
+        Assert.assertEquals(14, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -249,7 +253,7 @@ public class PolyUtilTest extends TestCase {
         tolerance = 15; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(10, simplifiedLine.size());
+        Assert.assertEquals(10, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -258,7 +262,7 @@ public class PolyUtilTest extends TestCase {
         tolerance = 20; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(8, simplifiedLine.size());
+        Assert.assertEquals(8, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -267,7 +271,7 @@ public class PolyUtilTest extends TestCase {
         tolerance = 50; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(6, simplifiedLine.size());
+        Assert.assertEquals(6, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -276,7 +280,7 @@ public class PolyUtilTest extends TestCase {
         tolerance = 500; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(3, simplifiedLine.size());
+        Assert.assertEquals(3, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -285,7 +289,7 @@ public class PolyUtilTest extends TestCase {
         tolerance = 1000; // meters
         copy = copyList(line);
         simplifiedLine = PolyUtil.simplify(line, tolerance);
-        assertEquals(2, simplifiedLine.size());
+        Assert.assertEquals(2, simplifiedLine.size());
         assertEndPoints(line, simplifiedLine);
         assertSimplifiedPointsFromLine(line, simplifiedLine);
         assertLineLength(line, simplifiedLine);
@@ -302,12 +306,12 @@ public class PolyUtilTest extends TestCase {
         triangle.add(new LatLng(28.06125, -82.40850));
         triangle.add(new LatLng(28.06035, -82.40834));
         triangle.add(new LatLng(28.06038, -82.40924));
-        assertFalse(PolyUtil.isClosedPolygon(triangle));
+        Assert.assertFalse(PolyUtil.isClosedPolygon(triangle));
 
         copy = copyList(triangle);
         tolerance = 88; // meters
         List<LatLng> simplifiedTriangle = PolyUtil.simplify(triangle, tolerance);
-        assertEquals(4, simplifiedTriangle.size());
+        Assert.assertEquals(4, simplifiedTriangle.size());
         assertEndPoints(triangle, simplifiedTriangle);
         assertSimplifiedPointsFromLine(triangle, simplifiedTriangle);
         assertLineLength(triangle, simplifiedTriangle);
@@ -317,12 +321,12 @@ public class PolyUtilTest extends TestCase {
         LatLng p = triangle.get(0);
         LatLng closePoint = new LatLng(p.latitude, p.longitude);
         triangle.add(closePoint);
-        assertTrue(PolyUtil.isClosedPolygon(triangle));
+        Assert.assertTrue(PolyUtil.isClosedPolygon(triangle));
 
         copy = copyList(triangle);
         tolerance = 88; // meters
         simplifiedTriangle = PolyUtil.simplify(triangle, tolerance);
-        assertEquals(4, simplifiedTriangle.size());
+        Assert.assertEquals(4, simplifiedTriangle.size());
         assertEndPoints(triangle, simplifiedTriangle);
         assertSimplifiedPointsFromLine(triangle, simplifiedTriangle);
         assertLineLength(triangle, simplifiedTriangle);
@@ -331,12 +335,12 @@ public class PolyUtilTest extends TestCase {
         // Open oval
         final String OVAL_POLYGON = "}wgjDxw_vNuAd@}AN{A]w@_Au@kAUaA?{@Ke@@_@C]D[FULWFOLSNMTOVOXO\\I\\CX?VJXJTDTNXTVVLVJ`@FXA\\AVLZBTATBZ@ZAT?\\?VFT@XGZ";
         List<LatLng> oval = PolyUtil.decode(OVAL_POLYGON);
-        assertFalse(PolyUtil.isClosedPolygon(oval));
+        Assert.assertFalse(PolyUtil.isClosedPolygon(oval));
 
         copy = copyList(oval);
         tolerance = 10; // meters
         List simplifiedOval= PolyUtil.simplify(oval, tolerance);
-        assertEquals(13, simplifiedOval.size());
+        Assert.assertEquals(13, simplifiedOval.size());
         assertEndPoints(oval, simplifiedOval);
         assertSimplifiedPointsFromLine(oval, simplifiedOval);
         assertLineLength(oval, simplifiedOval);
@@ -346,12 +350,12 @@ public class PolyUtilTest extends TestCase {
         p = oval.get(0);
         closePoint = new LatLng(p.latitude, p.longitude);
         oval.add(closePoint);
-        assertTrue(PolyUtil.isClosedPolygon(oval));
+        Assert.assertTrue(PolyUtil.isClosedPolygon(oval));
 
         copy = copyList(oval);
         tolerance = 10; // meters
         simplifiedOval= PolyUtil.simplify(oval, tolerance);
-        assertEquals(13, simplifiedOval.size());
+        Assert.assertEquals(13, simplifiedOval.size());
         assertEndPoints(oval, simplifiedOval);
         assertSimplifiedPointsFromLine(oval, simplifiedOval);
         assertLineLength(oval, simplifiedOval);
@@ -366,8 +370,8 @@ public class PolyUtilTest extends TestCase {
      * @param simplifiedLine simplified line
      */
     private void assertEndPoints(List<LatLng> line, List<LatLng> simplifiedLine) {
-        assertEquals(line.get(0), simplifiedLine.get(0));
-        assertEquals(line.get(line.size() - 1), simplifiedLine.get(simplifiedLine.size() - 1));
+        Assert.assertEquals(line.get(0), simplifiedLine.get(0));
+        Assert.assertEquals(line.get(line.size() - 1), simplifiedLine.get(simplifiedLine.size() - 1));
     }
 
     /**
@@ -377,7 +381,7 @@ public class PolyUtilTest extends TestCase {
      */
     private void assertSimplifiedPointsFromLine(List<LatLng> line, List<LatLng> simplifiedLine) {
         for (LatLng l : simplifiedLine) {
-            assertTrue(line.contains(l));
+            Assert.assertTrue(line.contains(l));
         }
     }
 
@@ -390,11 +394,11 @@ public class PolyUtilTest extends TestCase {
     private void assertLineLength(List<LatLng> line, List<LatLng> simplifiedLine) {
         if (line.size() == simplifiedLine.size()) {
             // If no points were eliminated, then the length of both lines should be the same
-            assertTrue(SphericalUtil.computeLength(simplifiedLine) == SphericalUtil.computeLength(line));
+            Assert.assertTrue(SphericalUtil.computeLength(simplifiedLine) == SphericalUtil.computeLength(line));
         } else {
-            assertTrue(simplifiedLine.size() < line.size());
+            Assert.assertTrue(simplifiedLine.size() < line.size());
             // If points were eliminated, then the simplified line should always be shorter
-            assertTrue(SphericalUtil.computeLength(simplifiedLine) < SphericalUtil.computeLength(line));
+            Assert.assertTrue(SphericalUtil.computeLength(simplifiedLine) < SphericalUtil.computeLength(line));
         }
     }
 
@@ -424,14 +428,15 @@ public class PolyUtilTest extends TestCase {
      */
     private void assertInputUnchanged(List<LatLng> afterInput, List<LatLng> beforeInput) {
         // Check values
-        assertEquals(beforeInput, afterInput);
+        Assert.assertEquals(beforeInput, afterInput);
 
         // Check references
         for (int i = 0; i < beforeInput.size(); i++) {
-            assertTrue(afterInput.get(i) == beforeInput.get(i));
+            Assert.assertTrue(afterInput.get(i) == beforeInput.get(i));
         }
     }
 
+    @Test
     public void testIsClosedPolygon() {
         ArrayList<LatLng> poly = new ArrayList<>();
         poly.add(new LatLng(28.06025, -82.41030));
@@ -440,13 +445,14 @@ public class PolyUtilTest extends TestCase {
         poly.add(new LatLng(28.06125, -82.40850));
         poly.add(new LatLng(28.06035, -82.40834));
 
-        assertFalse(PolyUtil.isClosedPolygon(poly));
+        Assert.assertFalse(PolyUtil.isClosedPolygon(poly));
 
         // Add the closing point that's same as the first
         poly.add(new LatLng(28.06025, -82.41030));
-        assertTrue(PolyUtil.isClosedPolygon(poly));
+        Assert.assertTrue(PolyUtil.isClosedPolygon(poly));
     }
 
+    @Test
     public void testDistanceToLine() {
         LatLng startLine = new LatLng(28.05359, -82.41632);
         LatLng endLine = new LatLng(28.05310, -82.41634);
@@ -455,7 +461,8 @@ public class PolyUtilTest extends TestCase {
         double distance = PolyUtil.distanceToLine(p, startLine, endLine);
         expectNearNumber(42.989894, distance, 1e-6);
     }
-    
+
+    @Test
     public void testDecodePath() {
         List<LatLng> latLngs = PolyUtil.decode(TEST_LINE);
 
@@ -467,6 +474,7 @@ public class PolyUtilTest extends TestCase {
         expectNearNumber(-122.41488, lastPoint.longitude, 1e-6);
     }
 
+    @Test
     public void testEncodePath() {
         List<LatLng> path = PolyUtil.decode(TEST_LINE);
         String encoded = PolyUtil.encode(path);

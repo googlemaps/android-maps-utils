@@ -1,11 +1,13 @@
 package com.google.maps.android.data.kml;
 
-import android.test.ActivityTestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.HashMap;
 
-public class KmlRendererTest extends ActivityTestCase {
+public class KmlRendererTest {
 
+    @Test
     public void testAssignStyleMap() {
         HashMap<String, String> styleMap = new HashMap<String, String>();
         styleMap.put("BlueKey", "BlueValue");
@@ -16,14 +18,14 @@ public class KmlRendererTest extends ActivityTestCase {
         styles.put("RedValue", redStyle);
         KmlRenderer renderer = new KmlRenderer(null, null);
         renderer.assignStyleMap(styleMap, styles);
-        assertNotNull(styles.get("BlueKey"));
-        assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
+        Assert.assertNotNull(styles.get("BlueKey"));
+        Assert.assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
         styles.put("BlueValue", null);
         renderer.assignStyleMap(styleMap, styles);
-        assertEquals(styles.get("BlueKey"), null);
+        Assert.assertEquals(styles.get("BlueKey"), null);
         styleMap.put("BlueKey", "RedValue");
         renderer.assignStyleMap(styleMap, styles);
-        assertNotNull(styleMap.get("BlueKey"));
-        assertEquals(styles.get("BlueKey"), redStyle);
+        Assert.assertNotNull(styleMap.get("BlueKey"));
+        Assert.assertEquals(styles.get("BlueKey"), redStyle);
     }
 }

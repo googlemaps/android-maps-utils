@@ -2,9 +2,10 @@ package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
-public class KmlPointTest extends TestCase {
+public class KmlPointTest  {
     KmlPoint kmlPoint;
 
     public KmlPoint createSimplePoint() {
@@ -18,31 +19,34 @@ public class KmlPointTest extends TestCase {
         return new KmlPoint(coordinates, altitude);
     }
 
+    @Test
     public void testGetType() throws Exception {
         kmlPoint = createSimplePoint();
-        assertNotNull(kmlPoint);
-        assertNotNull(kmlPoint.getGeometryType());
-        assertEquals("Point", kmlPoint.getGeometryType());
+        Assert.assertNotNull(kmlPoint);
+        Assert.assertNotNull(kmlPoint.getGeometryType());
+        Assert.assertEquals("Point", kmlPoint.getGeometryType());
     }
 
+    @Test
     public void testGetKmlGeometryObject() throws Exception {
         kmlPoint = createSimplePoint();
-        assertNotNull(kmlPoint);
-        assertNotNull(kmlPoint.getGeometryObject());
-        assertEquals(kmlPoint.getGeometryObject().latitude, 0.0);
-        assertEquals(kmlPoint.getGeometryObject().longitude, 50.0);
+        Assert.assertNotNull(kmlPoint);
+        Assert.assertNotNull(kmlPoint.getGeometryObject());
+        Assert.assertEquals(kmlPoint.getGeometryObject().latitude, 0.0);
+        Assert.assertEquals(kmlPoint.getGeometryObject().longitude, 50.0);
     }
 
+    @Test
     public void testPointAltitude() throws Exception {
         //test point without altitude
         kmlPoint = createSimplePoint();
-        assertNotNull(kmlPoint);
-        assertNull(kmlPoint.getAltitude());
+        Assert.assertNotNull(kmlPoint);
+        Assert.assertNull(kmlPoint.getAltitude());
 
         //test point with altitude
         kmlPoint = createSimplePointWithAltitudes();
-        assertNotNull(kmlPoint);
-        assertNotNull(kmlPoint.getAltitude());
-        assertEquals(kmlPoint.getAltitude(), 100.0);
+        Assert.assertNotNull(kmlPoint);
+        Assert.assertNotNull(kmlPoint.getAltitude());
+        Assert.assertEquals(kmlPoint.getAltitude(), 100.0, 0);
     }
 }

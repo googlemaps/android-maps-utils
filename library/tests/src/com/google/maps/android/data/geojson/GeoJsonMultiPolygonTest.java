@@ -2,15 +2,17 @@ package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GeoJsonMultiPolygonTest extends TestCase {
+public class GeoJsonMultiPolygonTest  {
 
     GeoJsonMultiPolygon mp;
 
+    @Test
     public void testGetType() throws Exception {
         ArrayList<GeoJsonPolygon> polygons = new ArrayList<GeoJsonPolygon>();
         ArrayList<ArrayList<LatLng>> polygon = new ArrayList<ArrayList<LatLng>>();
@@ -27,9 +29,10 @@ public class GeoJsonMultiPolygonTest extends TestCase {
                         new LatLng(0, 0))));
         polygons.add(new GeoJsonPolygon(polygon));
         mp = new GeoJsonMultiPolygon(polygons);
-        assertEquals("MultiPolygon", mp.getType());
+        Assert.assertEquals("MultiPolygon", mp.getType());
     }
 
+    @Test
     public void testGetPolygons() throws Exception {
         ArrayList<GeoJsonPolygon> polygons = new ArrayList<GeoJsonPolygon>();
         ArrayList<ArrayList<LatLng>> polygon = new ArrayList<ArrayList<LatLng>>();
@@ -46,17 +49,17 @@ public class GeoJsonMultiPolygonTest extends TestCase {
                         new LatLng(0, 0))));
         polygons.add(new GeoJsonPolygon(polygon));
         mp = new GeoJsonMultiPolygon(polygons);
-        assertEquals(polygons, mp.getPolygons());
+        Assert.assertEquals(polygons, mp.getPolygons());
 
         polygons = new ArrayList<GeoJsonPolygon>();
         mp = new GeoJsonMultiPolygon(polygons);
-        assertEquals(new ArrayList<GeoJsonPolygon>(), mp.getPolygons());
+        Assert.assertEquals(new ArrayList<GeoJsonPolygon>(), mp.getPolygons());
 
         try {
             mp = new GeoJsonMultiPolygon(null);
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Geometries cannot be null", e.getMessage());
+            Assert.assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }
