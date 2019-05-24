@@ -18,9 +18,10 @@ package com.google.maps.android.heatmaps;
 
 import android.graphics.Color;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
-public class GradientTest extends TestCase {
+public class GradientTest {
 
     public void testInterpolateColor() {
         int red = Color.RED;
@@ -29,32 +30,32 @@ public class GradientTest extends TestCase {
 
 
         // Expect itself
-        assertEquals(red, Gradient.interpolateColor(red, red, 0.5f));
-        assertEquals(blue, Gradient.interpolateColor(blue, blue, 0.5f));
-        assertEquals(green, Gradient.interpolateColor(green, green, 0.5f));
+        Assert.assertEquals(red, Gradient.interpolateColor(red, red, 0.5f));
+        Assert.assertEquals(blue, Gradient.interpolateColor(blue, blue, 0.5f));
+        Assert.assertEquals(green, Gradient.interpolateColor(green, green, 0.5f));
 
         // Expect first to be returned
         int result = Gradient.interpolateColor(red, blue, 0);
-        assertEquals(red, result);
+        Assert.assertEquals(red, result);
 
         // Expect second to be returned
         result = Gradient.interpolateColor(red, blue, 1);
-        assertEquals(blue, result);
+        Assert.assertEquals(blue, result);
 
         // Expect same value (should wraparound correctly, shortest path both times)
-        assertEquals(Gradient.interpolateColor(red, blue, 0.5f),
+        Assert.assertEquals(Gradient.interpolateColor(red, blue, 0.5f),
                 Gradient.interpolateColor(blue, red, 0.5f));
-        assertEquals(Gradient.interpolateColor(red, blue, 0.2f),
+        Assert.assertEquals(Gradient.interpolateColor(red, blue, 0.2f),
                 Gradient.interpolateColor(blue, red, 0.8f));
-        assertEquals(Gradient.interpolateColor(red, blue, 0.8f),
+        Assert.assertEquals(Gradient.interpolateColor(red, blue, 0.8f),
                 Gradient.interpolateColor(blue, red, 0.2f));
 
         // Testing actual values now
-        assertEquals(Gradient.interpolateColor(red, blue, 0.2f), -65433);
-        assertEquals(Gradient.interpolateColor(red, blue, 0.5f), Color.MAGENTA);
-        assertEquals(Gradient.interpolateColor(red, blue, 0.8f), -10092289);
-        assertEquals(Gradient.interpolateColor(red, green, 0.5f), Color.YELLOW);
-        assertEquals(Gradient.interpolateColor(blue, green, 0.5f), Color.CYAN);
+        Assert.assertEquals(Gradient.interpolateColor(red, blue, 0.2f), -65434);
+        Assert.assertEquals(Gradient.interpolateColor(red, blue, 0.5f), Color.MAGENTA);
+        Assert.assertEquals(Gradient.interpolateColor(red, blue, 0.8f), -10092289);
+        Assert.assertEquals(Gradient.interpolateColor(red, green, 0.5f), Color.YELLOW);
+        Assert.assertEquals(Gradient.interpolateColor(blue, green, 0.5f), Color.CYAN);
     }
 
     public void testSimpleColorMap() {
@@ -63,8 +64,8 @@ public class GradientTest extends TestCase {
 
         Gradient g = new Gradient(colors, startPoints, 2);
         int[] colorMap = g.generateColorMap(1.0);
-        assertEquals(colorMap[0], Color.RED);
-        assertEquals(colorMap[1], Gradient.interpolateColor(Color.RED, Color.BLUE, 0.5f));
+        Assert.assertEquals(colorMap[0], Color.RED);
+        Assert.assertEquals(colorMap[1], Gradient.interpolateColor(Color.RED, Color.BLUE, 0.5f));
     }
 
     public void testLargerColorMap() {
@@ -73,9 +74,9 @@ public class GradientTest extends TestCase {
 
         Gradient g = new Gradient(colors, startPoints, 10);
         int[] colorMap = g.generateColorMap(1.0);
-        assertEquals(colorMap[0], Color.RED);
+        Assert.assertEquals(colorMap[0], Color.RED);
         for (int i = 1; i < 10; i++) {
-            assertEquals(colorMap[i], Gradient.interpolateColor(Color.RED, Color.GREEN, (i * 0.1f)));
+            Assert.assertEquals(colorMap[i], Gradient.interpolateColor(Color.RED, Color.GREEN, (i * 0.1f)));
         }
     }
 
@@ -90,23 +91,24 @@ public class GradientTest extends TestCase {
         };
         Gradient g = new Gradient(colors, startPoints, 10);
         int[] colorMap = g.generateColorMap(1.0);
-        assertEquals(colorMap[0], Color.argb(0, 0, 255, 0));
-        assertEquals(colorMap[1], Color.argb(127, 0, 255, 0));
-        assertEquals(colorMap[2], Color.GREEN);
-        assertEquals(colorMap[3], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.125f));
-        assertEquals(colorMap[4], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.25f));
-        assertEquals(colorMap[5], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.375f));
-        assertEquals(colorMap[6], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.5f));
-        assertEquals(colorMap[7], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.625f));
-        assertEquals(colorMap[8], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.75f));
-        assertEquals(colorMap[9], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.875f));
+        Assert.assertEquals(colorMap[0], Color.argb(0, 0, 255, 0));
+        Assert.assertEquals(colorMap[1], Color.argb(127, 0, 255, 0));
+        Assert.assertEquals(colorMap[2], Color.GREEN);
+        Assert.assertEquals(colorMap[3], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.125f));
+        Assert.assertEquals(colorMap[4], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.25f));
+        Assert.assertEquals(colorMap[5], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.375f));
+        Assert.assertEquals(colorMap[6], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.5f));
+        Assert.assertEquals(colorMap[7], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.625f));
+        Assert.assertEquals(colorMap[8], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.75f));
+        Assert.assertEquals(colorMap[9], Gradient.interpolateColor(Color.GREEN, Color.RED, 0.875f));
 
         colorMap = g.generateColorMap(0.5);
-        assertEquals(colorMap[0], Color.argb(0, 0, 255, 0));
-        assertEquals(colorMap[1], Color.argb(63, 0, 255, 0));
-        assertEquals(colorMap[2], Color.argb(127, 0, 255, 0));
+        Assert.assertEquals(colorMap[0], Color.argb(0, 0, 255, 0));
+        Assert.assertEquals(colorMap[1], Color.argb(63, 0, 255, 0));
+        Assert.assertEquals(colorMap[2], Color.argb(127, 0, 255, 0));
     }
 
+    @Test
     public void testMoreColorsThanColorMap() {
         int[] colors = {
                 Color.argb(0, 0, 255, 0),
@@ -119,7 +121,7 @@ public class GradientTest extends TestCase {
         };
         Gradient g = new Gradient(colors, startPoints, 2);
         int[] colorMap = g.generateColorMap(1.0);
-        assertEquals(colorMap[0], Color.GREEN);
-        assertEquals(colorMap[1], Color.RED);
+        Assert.assertEquals(colorMap[0], Color.GREEN);
+        Assert.assertEquals(colorMap[1], Color.RED);
     }
 }

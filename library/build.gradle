@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 
 dependencies {
+    androidTestImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:0.5'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
 }
 
