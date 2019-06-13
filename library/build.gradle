@@ -31,6 +31,7 @@ android {
 
         androidTest {
             java.srcDirs = ['tests/src']
+            res.srcDirs = ['tests/res']
         }
     }
 
@@ -39,7 +40,6 @@ android {
         timeOutInMs 10 * 60 * 1000  // 10 minutes
         installOptions "-d", "-t"
     }
-
 }
 
 task instrumentTest(dependsOn: connectedCheck)
