@@ -19,9 +19,10 @@ package com.google.maps.android.clustering;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.StaticCluster;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
-public class StaticClusterTest extends TestCase {
+public class StaticClusterTest {
 
     private StaticCluster<ClusterItem> mCluster;
 
@@ -29,20 +30,22 @@ public class StaticClusterTest extends TestCase {
         mCluster = new StaticCluster<ClusterItem>(new LatLng(0.1, 0.5));
     }
 
+    @Test
     public void testEquality() {
         StaticCluster<ClusterItem> cluster_1_5 = new StaticCluster<ClusterItem>(
                 new LatLng(0.1, 0.5));
 
-        assertEquals(cluster_1_5, mCluster);
-        assertNotSame(cluster_1_5, mCluster);
-        assertEquals(cluster_1_5.hashCode(), mCluster.hashCode());
+        Assert.assertEquals(cluster_1_5, mCluster);
+        Assert.assertNotSame(cluster_1_5, mCluster);
+        Assert.assertEquals(cluster_1_5.hashCode(), mCluster.hashCode());
     }
 
+    @Test
     public void testUnequality() {
         StaticCluster<ClusterItem> cluster_2_3 = new StaticCluster<ClusterItem>(
                 new LatLng(0.2, 0.3));
 
-        assertFalse(mCluster.equals(cluster_2_3));
-        assertFalse(cluster_2_3.hashCode() == mCluster.hashCode());
+        Assert.assertFalse(mCluster.equals(cluster_2_3));
+        Assert.assertFalse(cluster_2_3.hashCode() == mCluster.hashCode());
     }
 }

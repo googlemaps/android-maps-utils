@@ -2,30 +2,34 @@ package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
-public class GeoJsonPointTest extends TestCase {
+public class GeoJsonPointTest  {
 
     GeoJsonPoint p;
 
+    @Test
     public void testGetType() throws Exception {
         p = new GeoJsonPoint(new LatLng(0, 0));
-        assertEquals("Point", p.getType());
+        Assert.assertEquals("Point", p.getType());
     }
 
+    @Test
     public void testGetCoordinates() throws Exception {
         p = new GeoJsonPoint(new LatLng(0, 0));
-        assertEquals(new LatLng(0, 0), p.getCoordinates());
+        Assert.assertEquals(new LatLng(0, 0), p.getCoordinates());
         try {
             p = new GeoJsonPoint(null);
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Coordinates cannot be null", e.getMessage());
+            Assert.assertEquals("Coordinates cannot be null", e.getMessage());
         }
     }
 
+    @Test
     public void testGetAltitude() throws Exception {
         p = new GeoJsonPoint(new LatLng(0, 0), new Double(100));
-        assertEquals(new Double(100), p.getAltitude());
+        Assert.assertEquals(new Double(100), p.getAltitude());
     }
 }
