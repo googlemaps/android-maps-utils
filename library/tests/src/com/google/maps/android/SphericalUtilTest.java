@@ -17,14 +17,14 @@
 package com.google.maps.android;
 
 import com.google.android.gms.maps.model.LatLng;
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SphericalUtilTest extends TestCase {
+public class SphericalUtilTest  {
     static final double EARTH_RADIUS = MathUtil.EARTH_RADIUS;
     // The vertices of an octahedron, for testing
     private final LatLng up = new LatLng(90, 0);
@@ -53,6 +53,7 @@ public class SphericalUtilTest extends TestCase {
                 Math.abs(expected - actual) <= epsilon);
     }
 
+    @Test
     public void testAngles() {
         // Same vertex
         expectNearNumber(SphericalUtil.computeAngleBetween(up, up), 0, 1e-6);
@@ -84,11 +85,13 @@ public class SphericalUtilTest extends TestCase {
         expectNearNumber(SphericalUtil.computeAngleBetween(left, right), Math.PI, 1e-6);
     }
 
+    @Test
     public void testDistances() {
         expectNearNumber(SphericalUtil.computeDistanceBetween(up, down),
                 Math.PI * EARTH_RADIUS, 1e-6);
     }
 
+    @Test
     public void testHeadings() {
         // Opposing vertices for which there is a result
         expectNearNumber(SphericalUtil.computeHeading(up, down), -180, 1e-6);
@@ -112,6 +115,7 @@ public class SphericalUtilTest extends TestCase {
         expectNearNumber(SphericalUtil.computeHeading(back, right), -90, 1e-6);
     }
 
+    @Test
     public void testComputeOffset() {
         // From front
         expectLatLngApproxEquals(
@@ -149,6 +153,7 @@ public class SphericalUtilTest extends TestCase {
         // from up/down.
     }
 
+    @Test
     public void testComputeOffsetOrigin() {
         expectLatLngApproxEquals(
                 front, SphericalUtil.computeOffsetOrigin(front, 0, 0));
@@ -178,6 +183,7 @@ public class SphericalUtilTest extends TestCase {
                 Math.PI * EARTH_RADIUS / 4, 90));
     }
 
+    @Test
     public void testComputeOffsetAndBackToOrigin() {
         LatLng start = new LatLng(40, 40);
         double distance = 1e5;
@@ -224,6 +230,7 @@ public class SphericalUtilTest extends TestCase {
             SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
     }
 
+    @Test
     public void testInterpolate() {
         // Same point
         expectLatLngApproxEquals(
@@ -285,6 +292,7 @@ public class SphericalUtilTest extends TestCase {
                         new LatLng(-37.756853,175.325242), 0.5));
     }
 
+    @Test
     public void testComputeLength() {
         List<LatLng> latLngs;
 
@@ -311,7 +319,8 @@ public class SphericalUtilTest extends TestCase {
     private static int isCCW(LatLng a, LatLng b, LatLng c) {
         return computeSignedTriangleArea(a, b, c) > 0 ? 1 : -1;
     }
-    
+
+    @Test
     public void testIsCCW() {
         // One face of the octahedron
         expectEq(1, isCCW(right, up, front));
@@ -322,6 +331,7 @@ public class SphericalUtilTest extends TestCase {
         expectEq(-1, isCCW(right, front, up));
     }
 
+    @Test
     public void testComputeTriangleArea() {
         expectNearNumber(computeTriangleArea(right, up, front), Math.PI / 2, 1e-6);
         expectNearNumber(computeTriangleArea(front, up, right), Math.PI / 2, 1e-6);
@@ -336,6 +346,7 @@ public class SphericalUtilTest extends TestCase {
         Assert.assertTrue(Math.abs(expectedArea - area) < 1e-20);
     }
 
+    @Test
     public void testComputeSignedTriangleArea() {
         expectNearNumber(
                 computeSignedTriangleArea(
@@ -349,6 +360,7 @@ public class SphericalUtilTest extends TestCase {
                 -Math.PI / 2, 1e-6);
     }
 
+    @Test
     public void testComputeArea() {
         expectNearNumber(SphericalUtil.computeArea(Arrays.asList(right, up, front, down, right)),
                 Math.PI * EARTH_RADIUS * EARTH_RADIUS, .4);
@@ -357,6 +369,7 @@ public class SphericalUtilTest extends TestCase {
                 Math.PI * EARTH_RADIUS * EARTH_RADIUS, .4);
     }
 
+    @Test
     public void testComputeSignedArea() {
         List<LatLng> path = Arrays.asList(right, up, front, down, right);
         List<LatLng> pathReversed = Arrays.asList(right, down, front, up, right);

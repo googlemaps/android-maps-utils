@@ -19,7 +19,8 @@ package com.google.maps.android.heatmaps;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geometry.Bounds;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +29,9 @@ import java.util.Arrays;
 /**
  * Tests for heatmap utility functions
  */
-public class UtilTest extends TestCase {
+public class UtilTest  {
 
+    @Test
     public void testGenerateKernel() {
         double[] testKernel = HeatmapTileProvider.generateKernel(5, 1.5);
         double[] expectedKernel = {0.0038659201394728076, 0.028565500784550377, 0.1353352832366127,
@@ -37,9 +39,10 @@ public class UtilTest extends TestCase {
                 0.41111229050718745, 0.1353352832366127, 0.028565500784550377,
                 0.0038659201394728076};
 
-        assertTrue(Arrays.equals(testKernel, expectedKernel));
+        Assert.assertTrue(Arrays.equals(testKernel, expectedKernel));
     }
 
+    @Test
     public void testConvolveCorners() {
         /*
          1 0 0 0 1
@@ -56,9 +59,10 @@ public class UtilTest extends TestCase {
         double[] testKernel = {0.5, 1, 0.5};
         double[][] convolved = HeatmapTileProvider.convolve(grid, testKernel);
         double[][] expected = {{0.25, 0, 0.25}, {0, 0, 0}, {0.25, 0, 0.25}};
-        assertTrue(Arrays.deepEquals(convolved, expected));
+        Assert.assertTrue(Arrays.deepEquals(convolved, expected));
     }
 
+    @Test
     public void testConvolveEdges() {
         /*
          0 0 1 0 0
@@ -75,9 +79,10 @@ public class UtilTest extends TestCase {
         double[] testKernel = {0.5, 1, 0.5};
         double[][] convolved = HeatmapTileProvider.convolve(grid, testKernel);
         double[][] expected = {{0.5, 0.5, 0.5}, {0.5, 0, 0.5}, {0.5, 0.5, 0.5}};
-        assertTrue(Arrays.deepEquals(convolved, expected));
+        Assert.assertTrue(Arrays.deepEquals(convolved, expected));
     }
 
+    @Test
     public void testConvolveCentre() {
         /*
          0 0 0 0 0
@@ -95,9 +100,10 @@ public class UtilTest extends TestCase {
         double[] testKernel = {0.5, 1, 0.5};
         double[][] convolved = HeatmapTileProvider.convolve(grid, testKernel);
         double[][] expected = {{1.5, 2.5, 1.5}, {2.5, 4.0, 2.5}, {1.5, 2.5, 1.5}};
-        assertTrue(Arrays.deepEquals(convolved, expected));
+        Assert.assertTrue(Arrays.deepEquals(convolved, expected));
     }
 
+    @Test
     public void testGetBounds() {
 
         /*
@@ -118,7 +124,7 @@ public class UtilTest extends TestCase {
         Bounds bounds = HeatmapTileProvider.getBounds(data);
         Bounds expected = new Bounds(x1, x1, y1, y1);
 
-        assertTrue(bounds.contains(expected) && expected.contains(bounds));
+        Assert.assertTrue(bounds.contains(expected) && expected.contains(bounds));
 
         WeightedLatLng second = new WeightedLatLng(new LatLng(20, 30));
         data.add(second);
@@ -128,7 +134,7 @@ public class UtilTest extends TestCase {
         bounds = HeatmapTileProvider.getBounds(data);
         expected = new Bounds(x1, x2, y2, y1);
 
-        assertTrue(bounds.contains(expected) && expected.contains(bounds));
+        Assert.assertTrue(bounds.contains(expected) && expected.contains(bounds));
 
         WeightedLatLng third = new WeightedLatLng(new LatLng(5, 10));
         data.add(third);
@@ -137,6 +143,6 @@ public class UtilTest extends TestCase {
 
         bounds = HeatmapTileProvider.getBounds(data);
         expected = new Bounds(x3, x2, y2, y3);
-        assertTrue(bounds.contains(expected) && expected.contains(bounds));
+        Assert.assertTrue(bounds.contains(expected) && expected.contains(bounds));
     }
 }
