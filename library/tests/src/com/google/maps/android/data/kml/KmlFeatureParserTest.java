@@ -1,6 +1,8 @@
 package com.google.maps.android.data.kml;
 
-import android.test.ActivityTestCase;
+import android.support.test.InstrumentationRegistry;
+import org.junit.Test;
+import org.junit.Assert;
 
 import com.google.maps.android.data.Geometry;
 import com.google.maps.android.test.R;
@@ -11,10 +13,10 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class KmlFeatureParserTest extends ActivityTestCase {
+public class KmlFeatureParserTest {
 
     public XmlPullParser createParser(int res) throws Exception {
-        InputStream stream = getInstrumentation().getContext().getResources().openRawResource(res);
+        InputStream stream = InstrumentationRegistry.getTargetContext().getResources().openRawResource(res);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
@@ -23,66 +25,72 @@ public class KmlFeatureParserTest extends ActivityTestCase {
         return parser;
     }
 
+    @Test
     public void testPolygon() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_basic_placemark);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
-        assertNotNull(placemark);
-        assertEquals(placemark.getGeometry().getGeometryType(), "Polygon");
+        Assert.assertNotNull(placemark);
+        Assert.assertEquals(placemark.getGeometry().getGeometryType(), "Polygon");
         KmlPolygon polygon = ((KmlPolygon) placemark.getGeometry());
-        assertEquals(polygon.getInnerBoundaryCoordinates().size(), 2);
-        assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
+        Assert.assertEquals(polygon.getInnerBoundaryCoordinates().size(), 2);
+        Assert.assertEquals(polygon.getOuterBoundaryCoordinates().size(), 5);
     }
 
+    @Test
     public void testMultiGeometry() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
-        assertNotNull( placemark );
-        assertEquals( placemark .getGeometry().getGeometryType(), "MultiGeometry");
+        Assert.assertNotNull( placemark );
+        Assert.assertEquals( placemark .getGeometry().getGeometryType(), "MultiGeometry");
         KmlMultiGeometry multiGeometry = ((KmlMultiGeometry) placemark .getGeometry());
-        assertEquals(multiGeometry.getGeometryObject().size(), 3);
+        Assert.assertEquals(multiGeometry.getGeometryObject().size(), 3);
     }
 
+    @Test
     public void testProperties() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
-        assertTrue( placemark.hasProperties());
-        assertEquals( placemark .getProperty("name"), "Placemark Test");
-        assertNull( placemark .getProperty("description"));
+        Assert.assertTrue( placemark.hasProperties());
+        Assert.assertEquals( placemark .getProperty("name"), "Placemark Test");
+        Assert.assertNull( placemark .getProperty("description"));
     }
 
+    @Test
     public void testExtendedData() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multiple_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
-        assertNotNull(placemark.getProperty("holeNumber"));
+        Assert.assertNotNull(placemark.getProperty("holeNumber"));
     }
 
+    @Test
     public void testGroundOverlay() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_ground_overlay);
         KmlGroundOverlay groundOverlay = KmlFeatureParser.createGroundOverlay(xmlPullParser);
-        assertNotNull(groundOverlay);
-        assertEquals(groundOverlay.getProperty("name"), "Sample Ground Overlay");
-        assertNotNull(groundOverlay.getImageUrl());
-        assertEquals(groundOverlay.getGroundOverlayOptions().getZIndex(), 99.0f);
-        assertTrue(groundOverlay.getGroundOverlayOptions().isVisible());
-        assertNotNull(groundOverlay.getLatLngBox());
+        Assert.assertNotNull(groundOverlay);
+        Assert.assertEquals(groundOverlay.getProperty("name"), "Sample Ground Overlay");
+        Assert.assertNotNull(groundOverlay.getImageUrl());
+        Assert.assertEquals(groundOverlay.getGroundOverlayOptions().getZIndex(), 99.0f);
+        Assert.assertTrue(groundOverlay.getGroundOverlayOptions().isVisible());
+        Assert.assertNotNull(groundOverlay.getLatLngBox());
         xmlPullParser = createParser(R.raw.amu_ground_overlay_color);
         groundOverlay = KmlFeatureParser.createGroundOverlay(xmlPullParser);
-        assertNotNull(groundOverlay);
+        Assert.assertNotNull(groundOverlay);
     }
 
+    @Test
     public void testMultiGeometries() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_nested_multigeometry);
         KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
-        assertEquals(feature.getProperty("name"), "multiPointLine");
-        assertEquals(feature.getProperty("description"), "Nested MultiGeometry structure");
-        assertEquals(feature.getGeometry().getGeometryType(), "MultiGeometry");
+        Assert.assertEquals(feature.getProperty("name"), "multiPointLine");
+        Assert.assertEquals(feature.getProperty("description"), "Nested MultiGeometry structure");
+        Assert.assertEquals(feature.getGeometry().getGeometryType(), "MultiGeometry");
         ArrayList<Geometry> objects = (ArrayList<Geometry>) feature.getGeometry().getGeometryObject();
-        assertEquals(objects.get(0).getGeometryType(), "Point");
-        assertEquals(objects.get(1).getGeometryType(), "LineString");
-        assertEquals(objects.get(2).getGeometryType(), "MultiGeometry");
+        Assert.assertEquals(objects.get(0).getGeometryType(), "Point");
+        Assert.assertEquals(objects.get(1).getGeometryType(), "LineString");
+        Assert.assertEquals(objects.get(2).getGeometryType(), "MultiGeometry");
         ArrayList<Geometry> subObjects = (ArrayList<Geometry>) objects.get(2).getGeometryObject();
-        assertEquals(subObjects.get(0).getGeometryType(), "Point");
-        assertEquals(subObjects.get(1).getGeometryType(), "LineString");
+        Assert.assertEquals(subObjects.get(0).getGeometryType(), "Point");
+        Assert.assertEquals(subObjects.get(1).getGeometryType(), "LineString");
     }
 
 

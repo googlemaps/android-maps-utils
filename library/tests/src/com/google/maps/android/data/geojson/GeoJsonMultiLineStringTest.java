@@ -2,15 +2,17 @@ package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GeoJsonMultiLineStringTest extends TestCase {
+public class GeoJsonMultiLineStringTest  {
 
     GeoJsonMultiLineString mls;
 
+    @Test
     public void testGetType() throws Exception {
         ArrayList<GeoJsonLineString> lineStrings = new ArrayList<GeoJsonLineString>();
         lineStrings.add(new GeoJsonLineString(
@@ -18,9 +20,10 @@ public class GeoJsonMultiLineStringTest extends TestCase {
         lineStrings.add(new GeoJsonLineString(
                 new ArrayList<LatLng>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
         mls = new GeoJsonMultiLineString(lineStrings);
-        assertEquals("MultiLineString", mls.getType());
+        Assert.assertEquals("MultiLineString", mls.getType());
     }
 
+    @Test
     public void testGetLineStrings() throws Exception {
         ArrayList<GeoJsonLineString> lineStrings = new ArrayList<GeoJsonLineString>();
         lineStrings.add(new GeoJsonLineString(
@@ -28,17 +31,17 @@ public class GeoJsonMultiLineStringTest extends TestCase {
         lineStrings.add(new GeoJsonLineString(
                 new ArrayList<LatLng>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
         mls = new GeoJsonMultiLineString(lineStrings);
-        assertEquals(lineStrings, mls.getLineStrings());
+        Assert.assertEquals(lineStrings, mls.getLineStrings());
 
         lineStrings = new ArrayList<GeoJsonLineString>();
         mls = new GeoJsonMultiLineString(lineStrings);
-        assertEquals(new ArrayList<GeoJsonLineString>(), mls.getLineStrings());
+        Assert.assertEquals(new ArrayList<GeoJsonLineString>(), mls.getLineStrings());
 
         try {
             mls = new GeoJsonMultiLineString(null);
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Geometries cannot be null", e.getMessage());
+            Assert.assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }

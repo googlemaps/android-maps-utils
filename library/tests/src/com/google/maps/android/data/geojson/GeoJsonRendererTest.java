@@ -3,7 +3,9 @@ package com.google.maps.android.data.geojson;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.Assert;
 
 import org.json.JSONObject;
 
@@ -13,7 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-public class GeoJsonRendererTest extends TestCase {
+public class GeoJsonRendererTest  {
 
     GoogleMap mMap1;
     Set<GeoJsonFeature> geoJsonFeaturesSet;
@@ -22,8 +24,8 @@ public class GeoJsonRendererTest extends TestCase {
     GeoJsonFeature mGeoJsonFeature;
     Collection<Object> mValues;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         GeoJsonParser parser = new GeoJsonParser(createFeatureCollection());
         HashMap<GeoJsonFeature, Object> geoJsonFeatures = new HashMap<GeoJsonFeature, Object>();
         for (GeoJsonFeature feature : parser.getFeatures()) {
@@ -42,42 +44,49 @@ public class GeoJsonRendererTest extends TestCase {
 
     }
 
+    @Test
     public void testGetMap() throws Exception {
-        assertEquals(mMap1, mRenderer.getMap());
+        Assert.assertEquals(mMap1, mRenderer.getMap());
     }
 
+    @Test
     public void testSetMap() throws Exception {
         mLayer = new GeoJsonLayer(mMap1, createFeatureCollection());
         mMap1 = mLayer.getMap();
         mRenderer.setMap(mMap1);
-        assertEquals(mMap1, mRenderer.getMap());
+        Assert.assertEquals(mMap1, mRenderer.getMap());
         mRenderer.setMap(null);
-        assertEquals(null, mRenderer.getMap());
+        Assert.assertEquals(null, mRenderer.getMap());
     }
 
+    @Test
     public void testGetFeatures() throws Exception {
-        assertEquals(geoJsonFeaturesSet, mRenderer.getFeatures());
+        Assert.assertEquals(geoJsonFeaturesSet, mRenderer.getFeatures());
     }
 
+    @Test
     public void testAddFeature() throws Exception {
         mRenderer.addFeature(mGeoJsonFeature);
-        assertTrue(mRenderer.getFeatures().contains(mGeoJsonFeature));
+        Assert.assertTrue(mRenderer.getFeatures().contains(mGeoJsonFeature));
     }
 
+    @Test
     public void testGetValues() {
-        assertEquals(mValues.size(), mRenderer.getValues().size());
+        Assert.assertEquals(mValues.size(), mRenderer.getValues().size());
     }
 
+    @Test
     public void testRemoveLayerFromMap() throws Exception {
         mLayer = new GeoJsonLayer(mMap1, createFeatureCollection());
         mRenderer.removeLayerFromMap();
-        assertEquals(mMap1, mRenderer.getMap());
+        Assert.assertEquals(mMap1, mRenderer.getMap());
     }
 
+    @Test
     public void testRemoveFeature() throws Exception {
         mRenderer.addFeature(mGeoJsonFeature);
         mRenderer.removeFeature(mGeoJsonFeature);
-        assertFalse(mRenderer.getFeatures().contains(mGeoJsonFeature));
+        Assert.assertFalse(mRenderer.getFeatures().contains(mGeoJsonFeature));
     }
 
     private JSONObject createFeatureCollection() throws Exception {
