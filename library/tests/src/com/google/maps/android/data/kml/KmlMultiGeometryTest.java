@@ -3,15 +3,18 @@ package com.google.maps.android.data.kml;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.Geometry;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class KmlMultiGeometryTest extends TestCase {
+public class KmlMultiGeometryTest  {
     KmlMultiGeometry kmlMultiGeometry;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
+        
     }
 
     public KmlMultiGeometry createMultiGeometry() {
@@ -25,27 +28,30 @@ public class KmlMultiGeometryTest extends TestCase {
         return new KmlMultiGeometry(kmlGeometries);
     }
 
+    @Test
     public void testGetKmlGeometryType() throws Exception {
         kmlMultiGeometry = createMultiGeometry();
-        assertNotNull(kmlMultiGeometry);
-        assertNotNull(kmlMultiGeometry.getGeometryType());
-        assertEquals("MultiGeometry", kmlMultiGeometry.getGeometryType());
+        Assert.assertNotNull(kmlMultiGeometry);
+        Assert.assertNotNull(kmlMultiGeometry.getGeometryType());
+        Assert.assertEquals("MultiGeometry", kmlMultiGeometry.getGeometryType());
     }
 
+    @Test
     public void testGetGeometry() throws Exception {
         kmlMultiGeometry = createMultiGeometry();
-        assertNotNull(kmlMultiGeometry);
-        assertEquals(kmlMultiGeometry.getGeometryObject().size(), 1);
+        Assert.assertNotNull(kmlMultiGeometry);
+        Assert.assertEquals(kmlMultiGeometry.getGeometryObject().size(), 1);
         KmlLineString lineString = ((KmlLineString) kmlMultiGeometry.getGeometryObject().get(0));
-        assertNotNull(lineString);
+        Assert.assertNotNull(lineString);
     }
 
+    @Test
     public void testNullGeometry() {
         try {
             kmlMultiGeometry = new KmlMultiGeometry(null);
-            fail();
+            Assert.fail();
         } catch (IllegalArgumentException e) {
-            assertEquals("Geometries cannot be null", e.getMessage());
+            Assert.assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }
