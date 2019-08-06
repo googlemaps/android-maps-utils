@@ -43,7 +43,7 @@ public class DistanceDemoActivity extends BaseDemoActivity implements GoogleMap.
 
     @Override
     protected void startDemo() {
-        mTextView = (TextView) findViewById(R.id.textView);
+        mTextView = findViewById(R.id.textView);
 
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.8256, 151.2395), 10));
         getMap().setOnMarkerDragListener(this);

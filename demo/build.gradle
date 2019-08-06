@@ -1,10 +1,16 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-//    implementation project(':library')
+    implementation project(':library')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     // Or, fetch from Maven:
-    implementation 'com.google.maps.android:android-maps-utils:0.3+'
-    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+//    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.2'
 }
 
 buildscript {
@@ -13,7 +19,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.4.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
