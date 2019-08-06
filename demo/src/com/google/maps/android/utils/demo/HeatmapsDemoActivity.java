@@ -89,7 +89,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
      * Maps name of data set to data (list of LatLngs)
      * Also maps to the URL of the data set for attribution
      */
-    private HashMap<String, DataSet> mLists = new HashMap<String, DataSet>();
+    private HashMap<String, DataSet> mLists = new HashMap<>();
 
     @Override
     protected int getLayoutId() {
@@ -101,7 +101,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
 
         // Set up the spinner/dropdown list
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.heatmaps_datasets_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -159,7 +159,7 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
                                    int pos, long id) {
             String dataset = parent.getItemAtPosition(pos).toString();
 
-            TextView attribution = ((TextView) findViewById(R.id.attribution));
+            TextView attribution = findViewById(R.id.attribution);
 
             // Check if need to instantiate (avoid setData etc twice)
             if (mProvider == null) {
