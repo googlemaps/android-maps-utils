@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
 import org.junit.Assert;
+
 import java.lang.String;
 import java.util.List;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class PolyUtilTest {
     }
 
     private static void locationIndexToleranceCase(boolean geodesic,
-                                          List<LatLng> poly, LatLng point, double tolerance, int idx) {
+                                                   List<LatLng> poly, LatLng point, double tolerance, int idx) {
         Assert.assertTrue(idx == PolyUtil.locationIndexOnPath(point, poly, geodesic, tolerance));
     }
 
@@ -95,53 +96,53 @@ public class PolyUtilTest {
         onEdgeCase(makeList(), makeList(), makeList(0, 0));
 
         final double small = 5e-7;  // About 5cm on equator, half the default tolerance.
-        final double big   = 2e-6;  // About 10cm on equator, double the default tolerance.
-        
+        final double big = 2e-6;  // About 10cm on equator, double the default tolerance.
+
         // Endpoints
         onEdgeCase(makeList(1, 2), makeList(1, 2), makeList(3, 5));
         onEdgeCase(makeList(1, 2, 3, 5), makeList(1, 2, 3, 5), makeList(0, 0));
 
         // On equator.
         onEdgeCase(makeList(0, 90, 0, 180),
-                   makeList(0, 90-small, 0, 90+small, 0-small, 90, 0, 135, small, 135),
-                   makeList(0, 90-big, 0, 0, 0, -90, big, 135));
+                makeList(0, 90 - small, 0, 90 + small, 0 - small, 90, 0, 135, small, 135),
+                makeList(0, 90 - big, 0, 0, 0, -90, big, 135));
 
         // Ends on same latitude.
         onEdgeCase(makeList(-45, -180, -45, -small),
-                   makeList(-45, 180+small, -45, 180-small, -45-small, 180-small, -45, 0),
-                   makeList(-45, big, -45, 180-big, -45+big, -90, -45, 90));
+                makeList(-45, 180 + small, -45, 180 - small, -45 - small, 180 - small, -45, 0),
+                makeList(-45, big, -45, 180 - big, -45 + big, -90, -45, 90));
 
         // Meridian.
         onEdgeCase(makeList(-10, 30, 45, 30),
-                   makeList(10, 30-small, 20, 30+small, -10-small, 30+small),
-                   makeList(-10-big, 30, 10, -150, 0, 30-big));
+                makeList(10, 30 - small, 20, 30 + small, -10 - small, 30 + small),
+                makeList(-10 - big, 30, 10, -150, 0, 30 - big));
 
         // Slanted close to meridian, close to North pole.
-        onEdgeCase(makeList(0, 0, 90-small, 0+big),
-                   makeList(1, 0+small, 2, 0-small, 90-small, -90, 90-small, 10),
-                   makeList(-big, 0, 90-big, 180, 10, big));
-        
+        onEdgeCase(makeList(0, 0, 90 - small, 0 + big),
+                makeList(1, 0 + small, 2, 0 - small, 90 - small, -90, 90 - small, 10),
+                makeList(-big, 0, 90 - big, 180, 10, big));
+
         // Arc > 120 deg.
         onEdgeCase(makeList(0, 0, 0, 179.999),
-                   makeList(0, 90, 0, small, 0, 179, small, 90),
-                   makeList(0, -90, small, -100, 0, 180, 0, -big, 90, 0, -90, 180));
+                makeList(0, 90, 0, small, 0, 179, small, 90),
+                makeList(0, -90, small, -100, 0, 180, 0, -big, 90, 0, -90, 180));
 
         onEdgeCase(makeList(10, 5, 30, 15),
-                   makeList(10+2*big, 5+big, 10+big, 5+big/2, 30-2*big, 15-big),
-                   makeList(20, 10, 10-big, 5-big/2, 30+2*big, 15+big, 10+2*big, 5, 10, 5+big));
+                makeList(10 + 2 * big, 5 + big, 10 + big, 5 + big / 2, 30 - 2 * big, 15 - big),
+                makeList(20, 10, 10 - big, 5 - big / 2, 30 + 2 * big, 15 + big, 10 + 2 * big, 5, 10, 5 + big));
 
-        onEdgeCase(makeList(90-small, 0, 0, 180-small/2),
-                   makeList(big, -180+small/2, big, 180-small/4, big, 180-small),
-                   makeList(-big, -180+small/2, -big, 180, -big, 180-small));
-        
+        onEdgeCase(makeList(90 - small, 0, 0, 180 - small / 2),
+                makeList(big, -180 + small / 2, big, 180 - small / 4, big, 180 - small),
+                makeList(-big, -180 + small / 2, -big, 180, -big, 180 - small));
+
         // Reaching close to North pole.
-        onEdgeCase(true, makeList(80, 0, 80, 180-small),
-                   makeList(90-small, -90, 90, -135, 80-small, 0, 80+small, 0),
-                   makeList(80, 90, 79, big));
+        onEdgeCase(true, makeList(80, 0, 80, 180 - small),
+                makeList(90 - small, -90, 90, -135, 80 - small, 0, 80 + small, 0),
+                makeList(80, 90, 79, big));
 
-        onEdgeCase(false, makeList(80, 0, 80, 180-small),
-                   makeList(80-small, 0, 80+small, 0, 80, 90),
-                   makeList(79, big, 90-small, -90, 90, -135));
+        onEdgeCase(false, makeList(80, 0, 80, 180 - small),
+                makeList(80 - small, 0, 80 + small, 0, 80, 90),
+                makeList(79, big, 90 - small, -90, 90, -135));
     }
 
     @Test
@@ -170,54 +171,54 @@ public class PolyUtilTest {
     @Test
     public void testLocationIndexTolerance() {
         final double small = 5e-7;  // About 5cm on equator, half the default tolerance.
-        final double big   = 2e-6;  // About 10cm on equator, double the default tolerance.
+        final double big = 2e-6;  // About 10cm on equator, double the default tolerance.
 
         // Test tolerance.
-        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90), 0.1, 0);
-        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+small), 0.1, 0);
-        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+2*small), 0.1, 1);
-        locationIndexToleranceCase(makeList(0, 90-small, 0, 90, 0, 90+small), new LatLng(0, 90+3*small), 0.1, -1);
-        locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90), 0.1, 0);
-        locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+big), 0.1, 1);
-        locationIndexToleranceCase(makeList(0, 90-big, 0, 90, 0, 90+big), new LatLng(0, 90+2*big), 0.1, -1);
+        locationIndexToleranceCase(makeList(0, 90 - small, 0, 90, 0, 90 + small), new LatLng(0, 90), 0.1, 0);
+        locationIndexToleranceCase(makeList(0, 90 - small, 0, 90, 0, 90 + small), new LatLng(0, 90 + small), 0.1, 0);
+        locationIndexToleranceCase(makeList(0, 90 - small, 0, 90, 0, 90 + small), new LatLng(0, 90 + 2 * small), 0.1, 1);
+        locationIndexToleranceCase(makeList(0, 90 - small, 0, 90, 0, 90 + small), new LatLng(0, 90 + 3 * small), 0.1, -1);
+        locationIndexToleranceCase(makeList(0, 90 - big, 0, 90, 0, 90 + big), new LatLng(0, 90), 0.1, 0);
+        locationIndexToleranceCase(makeList(0, 90 - big, 0, 90, 0, 90 + big), new LatLng(0, 90 + big), 0.1, 1);
+        locationIndexToleranceCase(makeList(0, 90 - big, 0, 90, 0, 90 + big), new LatLng(0, 90 + 2 * big), 0.1, -1);
     }
 
     @Test
     public void testContainsLocation() {
         // Empty.
         containsCase(makeList(),
-                     makeList(),
-                     makeList(0, 0));
+                makeList(),
+                makeList(0, 0));
 
         // One point.
         containsCase(makeList(1, 2),
-                     makeList(1, 2),
-                     makeList(0, 0));
+                makeList(1, 2),
+                makeList(0, 0));
 
         // Two points.
         containsCase(makeList(1, 2, 3, 5),
-                     makeList(1, 2, 3, 5),
-                     makeList(0, 0, 40, 4));
+                makeList(1, 2, 3, 5),
+                makeList(0, 0, 40, 4));
 
         // Some arbitrary triangle.
         containsCase(makeList(0., 0., 10., 12., 20., 5.),
-                     makeList(10., 12., 10, 11, 19, 5),
-                     makeList(0, 1, 11, 12, 30, 5, 0, -180, 0, 90));
+                makeList(10., 12., 10, 11, 19, 5),
+                makeList(0, 1, 11, 12, 30, 5, 0, -180, 0, 90));
 
         // Around North Pole.
         containsCase(makeList(89, 0, 89, 120, 89, -120),
-                     makeList(90, 0, 90, 180, 90, -90),
-                     makeList(-90, 0, 0, 0));
+                makeList(90, 0, 90, 180, 90, -90),
+                makeList(-90, 0, 0, 0));
 
         // Around South Pole.
         containsCase(makeList(-89, 0, -89, 120, -89, -120),
-                    makeList(90, 0, 90, 180, 90, -90, 0, 0),
-                    makeList(-90, 0, -90, 90));
+                makeList(90, 0, 90, 180, 90, -90, 0, 0),
+                makeList(-90, 0, -90, 90));
 
         // Over/under segment on meridian and equator.
         containsCase(makeList(5, 10, 10, 10, 0, 20, 0, -10),
-                     makeList(2.5, 10, 1, 0),
-                     makeList(15, 10, 0, -15, 0, 25, -1, 0));
+                makeList(2.5, 10, 1, 0),
+                makeList(15, 10, 0, -15, 0, 25, -1, 0));
     }
 
     @Test
@@ -300,7 +301,7 @@ public class PolyUtilTest {
          */
         // Open triangle
         ArrayList<LatLng> triangle = new ArrayList<>();
-        triangle.add(new LatLng(28.06025,-82.41030));
+        triangle.add(new LatLng(28.06025, -82.41030));
         triangle.add(new LatLng(28.06129, -82.40945));
         triangle.add(new LatLng(28.06206, -82.40917));
         triangle.add(new LatLng(28.06125, -82.40850));
@@ -339,7 +340,7 @@ public class PolyUtilTest {
 
         copy = copyList(oval);
         tolerance = 10; // meters
-        List simplifiedOval= PolyUtil.simplify(oval, tolerance);
+        List simplifiedOval = PolyUtil.simplify(oval, tolerance);
         Assert.assertEquals(13, simplifiedOval.size());
         assertEndPoints(oval, simplifiedOval);
         assertSimplifiedPointsFromLine(oval, simplifiedOval);
@@ -354,7 +355,7 @@ public class PolyUtilTest {
 
         copy = copyList(oval);
         tolerance = 10; // meters
-        simplifiedOval= PolyUtil.simplify(oval, tolerance);
+        simplifiedOval = PolyUtil.simplify(oval, tolerance);
         Assert.assertEquals(13, simplifiedOval.size());
         assertEndPoints(oval, simplifiedOval);
         assertSimplifiedPointsFromLine(oval, simplifiedOval);
@@ -366,7 +367,8 @@ public class PolyUtilTest {
      * Asserts that the beginning point of the original line matches the beginning point of the
      * simplified line, and that the end point of the original line matches the end point of the
      * simplified line.
-     * @param line original line
+     *
+     * @param line           original line
      * @param simplifiedLine simplified line
      */
     private void assertEndPoints(List<LatLng> line, List<LatLng> simplifiedLine) {
@@ -376,7 +378,8 @@ public class PolyUtilTest {
 
     /**
      * Asserts that the simplified line is composed of points from the original line.
-     * @param line original line
+     *
+     * @param line           original line
      * @param simplifiedLine simplified line
      */
     private void assertSimplifiedPointsFromLine(List<LatLng> line, List<LatLng> simplifiedLine) {
@@ -388,7 +391,8 @@ public class PolyUtilTest {
     /**
      * Asserts that the length of the simplified line is always equal to or less than the length of
      * the original line, if simplification has eliminated any points from the original line
-     * @param line original line
+     *
+     * @param line           original line
      * @param simplifiedLine simplified line
      */
     private void assertLineLength(List<LatLng> line, List<LatLng> simplifiedLine) {
@@ -406,6 +410,7 @@ public class PolyUtilTest {
      * Returns a copy of the LatLng objects contained in one list to another list.  LatLng.latitude
      * and LatLng.longitude are immutable, so having references to the same LatLng object is
      * sufficient to guarantee that the contents are the same.
+     *
      * @param original original list
      * @return a copy of the original list, containing references to the same LatLng elements in
      * the same order.
@@ -422,8 +427,9 @@ public class PolyUtilTest {
      * Asserts that the contents of the original List passed into the PolyUtil.simplify() method
      * doesn't change after the method is executed.  We test for this because the poly is modified
      * (a small offset is added to the last point) to allow for polygon simplification.
-     * @param afterInput the list passed into PolyUtil.simplify(), after PolyUtil.simplify() has
-     *                   finished executing
+     *
+     * @param afterInput  the list passed into PolyUtil.simplify(), after PolyUtil.simplify() has
+     *                    finished executing
      * @param beforeInput a copy of the list before it is passed into PolyUtil.simplify()
      */
     private void assertInputUnchanged(List<LatLng> afterInput, List<LatLng> beforeInput) {

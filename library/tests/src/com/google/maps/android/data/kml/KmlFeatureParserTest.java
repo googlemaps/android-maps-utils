@@ -1,6 +1,7 @@
 package com.google.maps.android.data.kml;
 
 import android.support.test.InstrumentationRegistry;
+
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -40,9 +41,9 @@ public class KmlFeatureParserTest {
     public void testMultiGeometry() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
-        Assert.assertNotNull( placemark );
-        Assert.assertEquals( placemark .getGeometry().getGeometryType(), "MultiGeometry");
-        KmlMultiGeometry multiGeometry = ((KmlMultiGeometry) placemark .getGeometry());
+        Assert.assertNotNull(placemark);
+        Assert.assertEquals(placemark.getGeometry().getGeometryType(), "MultiGeometry");
+        KmlMultiGeometry multiGeometry = ((KmlMultiGeometry) placemark.getGeometry());
         Assert.assertEquals(multiGeometry.getGeometryObject().size(), 3);
     }
 
@@ -50,9 +51,9 @@ public class KmlFeatureParserTest {
     public void testProperties() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_multigeometry_placemarks);
         KmlPlacemark placemark = KmlFeatureParser.createPlacemark(xmlPullParser);
-        Assert.assertTrue( placemark.hasProperties());
-        Assert.assertEquals( placemark .getProperty("name"), "Placemark Test");
-        Assert.assertNull( placemark .getProperty("description"));
+        Assert.assertTrue(placemark.hasProperties());
+        Assert.assertEquals(placemark.getProperty("name"), "Placemark Test");
+        Assert.assertNull(placemark.getProperty("description"));
     }
 
     @Test

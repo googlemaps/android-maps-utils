@@ -25,7 +25,7 @@ import org.junit.Assert;
 import java.util.Collection;
 import java.util.Random;
 
-public class PointQuadTreeTest  {
+public class PointQuadTreeTest {
 
     private PointQuadTree<Item> mTree;
 

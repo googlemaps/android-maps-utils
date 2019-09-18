@@ -19,7 +19,7 @@ public class KmlMultiTrack extends KmlMultiGeometry {
     }
 
     private static ArrayList<Geometry> createGeometries(ArrayList<KmlTrack> tracks) {
-        ArrayList <Geometry> geometries = new ArrayList<>();
+        ArrayList<Geometry> geometries = new ArrayList<>();
 
         if (tracks == null) {
             throw new IllegalArgumentException("Tracks cannot be null");

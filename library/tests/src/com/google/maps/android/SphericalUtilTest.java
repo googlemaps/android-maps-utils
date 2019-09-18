@@ -17,6 +17,7 @@
 package com.google.maps.android;
 
 import com.google.android.gms.maps.model.LatLng;
+
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -24,7 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SphericalUtilTest  {
+public class SphericalUtilTest {
     static final double EARTH_RADIUS = MathUtil.EARTH_RADIUS;
     // The vertices of an octahedron, for testing
     private final LatLng up = new LatLng(90, 0);
@@ -160,16 +161,16 @@ public class SphericalUtilTest  {
 
         expectLatLngApproxEquals(
                 front, SphericalUtil.computeOffsetOrigin(new LatLng(0, 45),
-                Math.PI * EARTH_RADIUS / 4, 90));
+                        Math.PI * EARTH_RADIUS / 4, 90));
         expectLatLngApproxEquals(
                 front, SphericalUtil.computeOffsetOrigin(new LatLng(0, -45),
-                Math.PI * EARTH_RADIUS / 4, -90));
+                        Math.PI * EARTH_RADIUS / 4, -90));
         expectLatLngApproxEquals(
                 front, SphericalUtil.computeOffsetOrigin(new LatLng(45, 0),
-                Math.PI * EARTH_RADIUS / 4, 0));
+                        Math.PI * EARTH_RADIUS / 4, 0));
         expectLatLngApproxEquals(
                 front, SphericalUtil.computeOffsetOrigin(new LatLng(-45, 0),
-                Math.PI * EARTH_RADIUS / 4, 180));
+                        Math.PI * EARTH_RADIUS / 4, 180));
         /*expectLatLngApproxEquals(
                 front, SphericalUtil.computeOffsetOrigin(new LatLng(-45, 0),
                 Math.PI / 4, 180, 1)); */
@@ -226,8 +227,8 @@ public class SphericalUtilTest  {
         start = SphericalUtil.computeOffsetOrigin(new LatLng(90, 0),
                 Math.PI * EARTH_RADIUS / 4, 0);
         expectLatLngApproxEquals(
-            new LatLng(90, 0),
-            SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
+                new LatLng(90, 0),
+                SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
     }
 
     @Test
@@ -288,8 +289,8 @@ public class SphericalUtilTest  {
         expectLatLngApproxEquals(
                 new LatLng(-37.756872, 175.325252),
                 SphericalUtil.interpolate(
-                        new LatLng(-37.756891,175.325262),
-                        new LatLng(-37.756853,175.325242), 0.5));
+                        new LatLng(-37.756891, 175.325262),
+                        new LatLng(-37.756853, 175.325242), 0.5));
     }
 
     @Test
@@ -315,7 +316,7 @@ public class SphericalUtilTest  {
     private static double computeTriangleArea(LatLng a, LatLng b, LatLng c) {
         return Math.abs(computeSignedTriangleArea(a, b, c));
     }
-    
+
     private static int isCCW(LatLng a, LatLng b, LatLng c) {
         return computeSignedTriangleArea(a, b, c) > 0 ? 1 : -1;
     }

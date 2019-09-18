@@ -772,15 +772,17 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Get the marker from a ClusterItem
+     *
      * @param clusterItem ClusterItem which you will obtain its marker
      * @return a marker from a ClusterItem or null if it does not exists
      */
-    public Marker getMarker(T  clusterItem) {
+    public Marker getMarker(T clusterItem) {
         return mMarkerCache.get(clusterItem);
     }
 
     /**
      * Get the ClusterItem from a marker
+     *
      * @param marker which you will obtain its ClusterItem
      * @return a ClusterItem from a marker or null if it does not exists
      */
@@ -790,15 +792,17 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Get the marker from a Cluster
+     *
      * @param cluster which you will obtain its marker
      * @return a marker from a cluster or null if it does not exists
      */
-    public Marker getMarker(Cluster<T>  cluster) {
+    public Marker getMarker(Cluster<T> cluster) {
         return mClusterToMarker.get(cluster);
     }
 
     /**
      * Get the Cluster from a marker
+     *
      * @param marker which you will obtain its Cluster
      * @return a Cluster from a marker or null if it does not exists
      */
@@ -839,7 +843,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         } else {
                             markerOptions.position(item.getPosition());
                         }
-                        if (!(item.getTitle()== null) && !(item.getSnippet() == null)) {
+                        if (!(item.getTitle() == null) && !(item.getSnippet() == null)) {
                             markerOptions.title(item.getTitle());
                             markerOptions.snippet(item.getSnippet());
                         } else if (!(item.getSnippet() == null)) {

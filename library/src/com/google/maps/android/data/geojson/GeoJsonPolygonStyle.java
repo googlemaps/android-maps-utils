@@ -22,7 +22,9 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
         mPolygonOptions = new PolygonOptions();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] getGeometryType() {
         return GEOMETRY_TYPE;

@@ -28,7 +28,8 @@ import static com.google.maps.android.MathUtil.*;
 
 public class PolyUtil {
 
-    private PolyUtil() {}
+    private PolyUtil() {
+    }
 
     /**
      * Returns tan(latitude-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
@@ -57,11 +58,11 @@ public class PolyUtil {
             return false;
         }
         // Point is South Pole.
-        if (lat3 <= -PI/2) {
+        if (lat3 <= -PI / 2) {
             return false;
         }
         // Any segment end is a pole.
-        if (lat1 <= -PI/2 || lat2 <= -PI/2 || lat1 >= PI/2 || lat2 >= PI/2) {
+        if (lat1 <= -PI / 2 || lat2 <= -PI / 2 || lat1 >= PI / 2 || lat2 >= PI / 2) {
             return false;
         }
         if (lng2 <= -PI) {
@@ -77,14 +78,14 @@ public class PolyUtil {
             return true;
         }
         // North Pole.
-        if (lat3 >= PI/2) {
+        if (lat3 >= PI / 2) {
             return true;
         }
         // Compare lat3 with latitude on the GC/Rhumb segment corresponding to lng3.
         // Compare through a strictly-increasing function (tan() or mercator()) as convenient.
         return geodesic ?
-            tan(lat3) >= tanLatGC(lat1, lat2, lng2, lng3) :
-            mercator(lat3) >= mercatorLatRhumb(lat1, lat2, lng2, lng3);
+                tan(lat3) >= tanLatGC(lat1, lat2, lng2, lng3) :
+                mercator(lat3) >= mercatorLatRhumb(lat1, lat2, lng2, lng3);
     }
 
     public static boolean containsLocation(LatLng point, List<LatLng> polygon, boolean geodesic) {
@@ -162,7 +163,7 @@ public class PolyUtil {
 
     /**
      * Same as {@link #isLocationOnPath(LatLng, List, boolean, double)}
-     *
+     * <p>
      * with a default tolerance of 0.1 meters.
      */
     public static boolean isLocationOnPath(LatLng point, List<LatLng> polyline,
@@ -180,49 +181,51 @@ public class PolyUtil {
     /**
      * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
      * The polyline is not closed -- the closing segment between the first point and the last point is not included.
-     * @param point our needle
-     * @param poly our haystack
-     * @param geodesic the polyline is composed of great circle segments if geodesic
-     *                 is true, and of Rhumb segments otherwise
+     *
+     * @param point     our needle
+     * @param poly      our haystack
+     * @param geodesic  the polyline is composed of great circle segments if geodesic
+     *                  is true, and of Rhumb segments otherwise
      * @param tolerance tolerance (in meters)
      * @return -1 if point does not lie on or near the polyline.
-     *          0 if point is between poly[0] and poly[1] (inclusive),
-     *          1 if between poly[1] and poly[2],
-     *          ...,
-     *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     * 0 if point is between poly[0] and poly[1] (inclusive),
+     * 1 if between poly[1] and poly[2],
+     * ...,
+     * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
      */
     public static int locationIndexOnPath(LatLng point, List<LatLng> poly,
-                                           boolean geodesic, double tolerance) {
+                                          boolean geodesic, double tolerance) {
         return locationIndexOnEdgeOrPath(point, poly, false, geodesic, tolerance);
     }
 
     /**
      * Same as {@link #locationIndexOnPath(LatLng, List, boolean, double)}
-     *
+     * <p>
      * with a default tolerance of 0.1 meters.
      */
     public static int locationIndexOnPath(LatLng point, List<LatLng> polyline,
-                                           boolean geodesic) {
+                                          boolean geodesic) {
         return locationIndexOnPath(point, polyline, geodesic, DEFAULT_TOLERANCE);
     }
 
     /**
      * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
      * If closed, the closing segment between the last and first points of the polyline is not considered.
-     * @param point our needle
-     * @param poly our haystack
-     * @param closed whether the polyline should be considered closed by a segment connecting the last point back to the first one
-     * @param geodesic the polyline is composed of great circle segments if geodesic
-     *                 is true, and of Rhumb segments otherwise
+     *
+     * @param point          our needle
+     * @param poly           our haystack
+     * @param closed         whether the polyline should be considered closed by a segment connecting the last point back to the first one
+     * @param geodesic       the polyline is composed of great circle segments if geodesic
+     *                       is true, and of Rhumb segments otherwise
      * @param toleranceEarth tolerance (in meters)
      * @return -1 if point does not lie on or near the polyline.
-     *          0 if point is between poly[0] and poly[1] (inclusive),
-     *          1 if between poly[1] and poly[2],
-     *          ...,
-     *          poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
+     * 0 if point is between poly[0] and poly[1] (inclusive),
+     * 1 if between poly[1] and poly[2],
+     * ...,
+     * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
      */
     public static int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, boolean closed,
-                                          boolean geodesic, double toleranceEarth) {
+                                                boolean geodesic, double toleranceEarth) {
         int size = poly.size();
         if (size == 0) {
             return -1;
@@ -347,16 +350,16 @@ public class PolyUtil {
      * Simplifies the given poly (polyline or polygon) using the Douglas-Peucker decimation
      * algorithm.  Increasing the tolerance will result in fewer points in the simplified polyline
      * or polygon.
-     *
+     * <p>
      * When the providing a polygon as input, the first and last point of the list MUST have the
      * same latitude and longitude (i.e., the polygon must be closed).  If the input polygon is not
      * closed, the resulting polygon may not be fully simplified.
-     *
+     * <p>
      * The time complexity of Douglas-Peucker is O(n^2), so take care that you do not call this
      * algorithm too frequently in your code.
      *
-     * @param poly polyline or polygon to be simplified.  Polygon should be closed (i.e.,
-     *              first and last points should have the same latitude and longitude).
+     * @param poly      polyline or polygon to be simplified.  Polygon should be closed (i.e.,
+     *                  first and last points should have the same latitude and longitude).
      * @param tolerance in meters.  Increasing the tolerance will result in fewer points in the
      *                  simplified poly.
      * @return a simplified poly produced by the Douglas-Peucker algorithm
@@ -439,22 +442,23 @@ public class PolyUtil {
     /**
      * Returns true if the provided list of points is a closed polygon (i.e., the first and last
      * points are the same), and false if it is not
+     *
      * @param poly polyline or polygon
      * @return true if the provided list of points is a closed polygon (i.e., the first and last
      * points are the same), and false if it is not
      */
     public static boolean isClosedPolygon(List<LatLng> poly) {
         LatLng firstPoint = poly.get(0);
-        LatLng lastPoint = poly.get(poly.size()-1);
+        LatLng lastPoint = poly.get(poly.size() - 1);
         return firstPoint.equals(lastPoint);
     }
 
     /**
      * Computes the distance on the sphere between the point p and the line segment start to end.
      *
-     * @param p the point to be measured
+     * @param p     the point to be measured
      * @param start the beginning of the line segment
-     * @param end the end of the line segment
+     * @param end   the end of the line segment
      * @return the distance in meters (assuming spherical earth)
      */
     public static double distanceToLine(final LatLng p, final LatLng start, final LatLng end) {
