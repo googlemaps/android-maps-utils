@@ -68,7 +68,7 @@ import java.util.HashMap;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
                 if (mParser.getName().matches(UNSUPPORTED_REGEX)) {
-                   skip(mParser);
+                    skip(mParser);
                 }
                 if (mParser.getName().matches(CONTAINER_REGEX)) {
                     mContainers.add(KmlContainerParser.createContainer(mParser));
@@ -131,9 +131,11 @@ import java.util.HashMap;
 
     /**
      * Skips tags from START TAG to END TAG
-     * @param parser    XmlPullParser
+     *
+     * @param parser XmlPullParser
      */
-    /*package*/ static void skip(XmlPullParser parser)
+    /*package*/
+    static void skip(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             throw new IllegalStateException();

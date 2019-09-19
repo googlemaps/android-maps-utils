@@ -23,7 +23,9 @@ public class GeoJsonPointStyle extends Style implements GeoJsonStyle {
         mMarkerOptions = new MarkerOptions();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] getGeometryType() {
         return GEOMETRY_TYPE;

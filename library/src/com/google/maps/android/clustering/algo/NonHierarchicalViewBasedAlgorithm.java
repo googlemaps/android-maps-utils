@@ -29,6 +29,7 @@ import java.util.Collection;
 /**
  * This algorithm works the same way as {@link NonHierarchicalDistanceBasedAlgorithm} but works, only in
  * visible area. It requires to be reclustered on camera movement because clustering is done only for visible area.
+ *
  * @param <T>
  */
 public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
@@ -64,7 +65,8 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
     /**
      * Update view width and height in case map size was changed.
      * You need to recluster all the clusters, to update view state after view size changes.
-     * @param width map width
+     *
+     * @param width  map width
      * @param height map height
      */
     public void updateViewSize(int width, int height) {

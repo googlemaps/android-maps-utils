@@ -35,12 +35,13 @@ public class Feature extends Observable {
 
     /**
      * Creates a new Feature object
+     *
      * @param featureGeometry type of geometry to assign to the feature
-     * @param id common identifier of the feature
-     * @param properties map containing properties related to the feature
+     * @param id              common identifier of the feature
+     * @param properties      map containing properties related to the feature
      */
     public Feature(Geometry featureGeometry, String id,
-                          Map<String, String> properties){
+                   Map<String, String> properties) {
         mGeometry = featureGeometry;
         mId = id;
         if (properties == null) {
@@ -125,14 +126,14 @@ public class Feature extends Observable {
     }
 
     /**
-     *  Store a new property key and value
+     * Store a new property key and value
      *
      * @param property      key of the property to store
      * @param propertyValue value of the property to store
      * @return previous value with the same key, otherwise null if the key didn't exist
      */
     protected String setProperty(String property, String propertyValue) {
-       return mProperties.put(property, propertyValue);
+        return mProperties.put(property, propertyValue);
     }
 
     /**
@@ -150,5 +151,7 @@ public class Feature extends Observable {
      *
      * @param geometry Geometry to set
      */
-    protected void setGeometry(Geometry geometry) { mGeometry = geometry; }
+    protected void setGeometry(Geometry geometry) {
+        mGeometry = geometry;
+    }
 }

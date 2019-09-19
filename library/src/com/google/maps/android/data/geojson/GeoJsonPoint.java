@@ -22,7 +22,7 @@ public class GeoJsonPoint extends Point {
      * Creates a new GeoJsonPoint
      *
      * @param coordinates coordinates of the KmlPoint
-     * @param altitude altitude of the KmlPoint
+     * @param altitude    altitude of the KmlPoint
      */
     public GeoJsonPoint(LatLng coordinates, Double altitude) {
         super(coordinates);

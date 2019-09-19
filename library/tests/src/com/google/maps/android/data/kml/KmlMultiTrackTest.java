@@ -10,7 +10,7 @@ import org.junit.Assert;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class KmlMultiTrackTest  {
+public class KmlMultiTrackTest {
     KmlMultiTrack kmlMultiTrack;
 
     @Before
@@ -22,7 +22,7 @@ public class KmlMultiTrackTest  {
         ArrayList<KmlTrack> kmlTracks = new ArrayList<KmlTrack>();
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         ArrayList<Double> altitudes = new ArrayList<Double>();
-        ArrayList <Long> timestamps = new ArrayList<Long>();
+        ArrayList<Long> timestamps = new ArrayList<Long>();
         HashMap<String, String> properties = new HashMap<String, String>();
         coordinates.add(new LatLng(0, 0));
         coordinates.add(new LatLng(50, 50));

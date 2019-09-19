@@ -9,12 +9,12 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class KmlMultiGeometryTest  {
+public class KmlMultiGeometryTest {
     KmlMultiGeometry kmlMultiGeometry;
 
     @Before
     public void setUp() throws Exception {
-        
+
     }
 
     public KmlMultiGeometry createMultiGeometry() {

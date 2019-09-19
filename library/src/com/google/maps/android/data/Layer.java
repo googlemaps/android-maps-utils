@@ -46,7 +46,7 @@ public abstract class Layer {
      * Adds the KML data to the map
      */
     protected void addKMLToMap() throws IOException, XmlPullParserException {
-        if (mRenderer instanceof KmlRenderer){
+        if (mRenderer instanceof KmlRenderer) {
             ((KmlRenderer) mRenderer).addLayerToMap();
         } else {
             throw new UnsupportedOperationException("Stored renderer is not a KmlRenderer");
@@ -72,7 +72,7 @@ public abstract class Layer {
     public void removeLayerFromMap() {
         if (mRenderer instanceof GeoJsonRenderer) {
             ((GeoJsonRenderer) mRenderer).removeLayerFromMap();
-        } else if (mRenderer instanceof KmlRenderer){
+        } else if (mRenderer instanceof KmlRenderer) {
             ((KmlRenderer) mRenderer).removeLayerFromMap();
         }
     }
@@ -81,7 +81,7 @@ public abstract class Layer {
      * Sets a single click listener for the entire GoogleMap object, that will be called
      * with the corresponding Feature object when an object on the map (Polygon,
      * Marker, Polyline) is clicked.
-     *
+     * <p>
      * If getFeature() returns null this means that either the object is inside a KMLContainer,
      * or the object is a MultiPolygon, MultiLineString or MultiPoint and must
      * be handled differently.
@@ -110,7 +110,7 @@ public abstract class Layer {
             public boolean onMarkerClick(Marker marker) {
                 if (getFeature(marker) != null) {
                     listener.onFeatureClick(getFeature(marker));
-                }  else if (getContainerFeature(marker) != null) {
+                } else if (getContainerFeature(marker) != null) {
                     listener.onFeatureClick(getContainerFeature(marker));
                 } else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
@@ -126,7 +126,7 @@ public abstract class Layer {
                     listener.onFeatureClick(getFeature(polyline));
                 } else if (getContainerFeature(polyline) != null) {
                     listener.onFeatureClick(getContainerFeature(polyline));
-                }  else {
+                } else {
                     listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
                 }
             }
@@ -175,7 +175,7 @@ public abstract class Layer {
      *
      * @return iterable of Feature elements
      */
-    public Iterable<? extends Feature> getFeatures(){
+    public Iterable<? extends Feature> getFeatures() {
         return mRenderer.getFeatures();
     }
 
@@ -187,7 +187,9 @@ public abstract class Layer {
      * @param mapObject Object
      * @return Feature for the given object
      */
-    public Feature getFeature(Object mapObject) { return mRenderer.getFeature(mapObject); }
+    public Feature getFeature(Object mapObject) {
+        return mRenderer.getFeature(mapObject);
+    }
 
     public Feature getContainerFeature(Object mapObject) {
         return mRenderer.getContainerFeature(mapObject);
@@ -243,7 +245,7 @@ public abstract class Layer {
      *
      * @return map on which the layer is rendered
      */
-    public GoogleMap getMap(){
+    public GoogleMap getMap() {
         return mRenderer.getMap();
     }
 
@@ -253,7 +255,7 @@ public abstract class Layer {
      *
      * @param map to render the layer on, if null the layer is cleared from the current map
      */
-    public void setMap(GoogleMap map){
+    public void setMap(GoogleMap map) {
         mRenderer.setMap(map);
     }
 
@@ -271,7 +273,7 @@ public abstract class Layer {
      *
      * @param feature feature to add to map
      */
-    protected void addFeature(Feature feature){
+    protected void addFeature(Feature feature) {
         mRenderer.addFeature(feature);
     }
 
