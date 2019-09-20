@@ -16,7 +16,7 @@
 
 package com.google.maps.android.utils.demo;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.Toast;

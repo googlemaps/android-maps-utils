@@ -16,7 +16,7 @@
 
 package com.google.maps.android.utils.demo;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 import android.content.res.Resources;
 
 import com.google.android.gms.maps.model.LatLng;
