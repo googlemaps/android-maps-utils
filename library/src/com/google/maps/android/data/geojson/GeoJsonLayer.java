@@ -18,14 +18,14 @@ import java.util.HashMap;
 /**
  * A class that allows the developer to import GeoJSON data, style it and interact with the
  * imported data.
- *
+ * <p>
  * To create a new GeoJsonLayer from a resource stored locally
  * {@code GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.resource,
  * getApplicationContext());}
- *
+ * <p>
  * To render the imported GeoJSON data onto the layer
  * {@code layer.addLayerToMap();}
- *
+ * <p>
  * To remove the rendered data from the layer
  * {@code layer.removeLayerFromMap();}
  */
@@ -93,14 +93,14 @@ public class GeoJsonLayer extends Layer {
         return new JSONObject(result.toString());
     }
 
-    public interface GeoJsonOnFeatureClickListener extends OnFeatureClickListener{
+    public interface GeoJsonOnFeatureClickListener extends OnFeatureClickListener {
     }
 
     /**
      * Adds all the GeoJsonFeature objects parsed from the given GeoJSON data onto the map
      */
     @Override
-    public void addLayerToMap(){
+    public void addLayerToMap() {
         super.addGeoJsonToMap();
     }
 
@@ -109,7 +109,7 @@ public class GeoJsonLayer extends Layer {
      *
      * @return iterable of Feature elements
      */
-    public Iterable<GeoJsonFeature> getFeatures(){
+    public Iterable<GeoJsonFeature> getFeatures() {
         return (Iterable<GeoJsonFeature>) super.getFeatures();
     }
 

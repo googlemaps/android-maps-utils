@@ -13,7 +13,7 @@ public class MultiGeometryTest {
     MultiGeometry mg;
 
     @Test
-    public void testGetGeometryType() throws Exception{
+    public void testGetGeometryType() throws Exception {
         ArrayList<LineString> lineStrings = new ArrayList<>();
         lineStrings.add(new LineString(
                 new ArrayList<>(Arrays.asList(new LatLng(0, 0), new LatLng(50, 50)))));
@@ -71,7 +71,6 @@ public class MultiGeometryTest {
             Assert.assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
-
 
 
 }

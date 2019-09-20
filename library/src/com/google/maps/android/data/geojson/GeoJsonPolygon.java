@@ -58,14 +58,18 @@ public class GeoJsonPolygon implements DataPolygon {
      *
      * @return geometry object
      */
-    public List<? extends List<LatLng>> getGeometryObject() { return getCoordinates(); }
+    public List<? extends List<LatLng>> getGeometryObject() {
+        return getCoordinates();
+    }
 
     /**
      * Gets the type of geometry
      *
      * @return type of geometry
      */
-    public String getGeometryType() { return getType(); }
+    public String getGeometryType() {
+        return getType();
+    }
 
 
     /**

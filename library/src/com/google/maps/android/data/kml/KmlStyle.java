@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * Represents the defined styles in the KML document
  */
-public class  KmlStyle extends Style {
+public class KmlStyle extends Style {
 
     private final static int HSV_VALUES = 3;
 
@@ -81,7 +81,7 @@ public class  KmlStyle extends Style {
     /**
      * Sets id for a style
      *
-     * @param styleId  Id for the style
+     * @param styleId Id for the style
      */
     /* package */ void setStyleId(String styleId) {
         mStyleId = styleId;
@@ -153,7 +153,7 @@ public class  KmlStyle extends Style {
     }
 
     /**
-     *  Sets whether the Polygon has an outline
+     * Sets whether the Polygon has an outline
      *
      * @param outline True if the polygon outline is set, false otherwise
      */
@@ -172,7 +172,7 @@ public class  KmlStyle extends Style {
     }
 
     /**
-     *  Sets the url for the marker icon
+     * Sets the url for the marker icon
      *
      * @param iconUrl Url for the marker icon
      */
@@ -211,7 +211,7 @@ public class  KmlStyle extends Style {
      * @param integerColor Integer representation of a color
      * @return Hue value from a color
      */
-    private static float getHueValue (int integerColor) {
+    private static float getHueValue(int integerColor) {
         float[] hsvValues = new float[HSV_VALUES];
         Color.colorToHSV(integerColor, hsvValues);
         return hsvValues[HUE_VALUE];
@@ -227,7 +227,7 @@ public class  KmlStyle extends Style {
         String newColor;
         if (color.length() > 6) {
             newColor = color.substring(0, 2) + color.substring(6, 8)
-                    + color.substring(4, 6)+ color.substring(2, 4);
+                    + color.substring(4, 6) + color.substring(2, 4);
         } else {
             newColor = color.substring(4, 6) + color.substring(2, 4) +
                     color.substring(0, 2);
@@ -258,7 +258,7 @@ public class  KmlStyle extends Style {
      * @param yUnits units in which the y value is specified
      */
     /* package */ void setHotSpot(float x, float y, String xUnits, String yUnits) {
-        setMarkerHotSpot(x,y, xUnits, yUnits);
+        setMarkerHotSpot(x, y, xUnits, yUnits);
         mStylesSet.add("hotSpot");
     }
 
@@ -364,7 +364,7 @@ public class  KmlStyle extends Style {
      * @return A new MarkerOption
      */
     private static MarkerOptions createMarkerOptions(MarkerOptions originalMarkerOption,
-            boolean iconRandomColorMode, float markerColor) {
+                                                     boolean iconRandomColorMode, float markerColor) {
         MarkerOptions newMarkerOption = new MarkerOptions();
         newMarkerOption.rotation(originalMarkerOption.getRotation());
         newMarkerOption.anchor(originalMarkerOption.getAnchorU(), originalMarkerOption.getAnchorV());
@@ -378,10 +378,11 @@ public class  KmlStyle extends Style {
 
     /**
      * Creates a new PolylineOption from given properties of an existing PolylineOption
+     *
      * @param originalPolylineOption An existing PolylineOption instance
      * @return A new PolylineOption
      */
-    private static PolylineOptions createPolylineOptions (PolylineOptions originalPolylineOption) {
+    private static PolylineOptions createPolylineOptions(PolylineOptions originalPolylineOption) {
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(originalPolylineOption.getColor());
         polylineOptions.width(originalPolylineOption.getWidth());
@@ -389,14 +390,15 @@ public class  KmlStyle extends Style {
     }
 
     /**
-     *Creates a new PolygonOption from given properties of an existing PolygonOption
+     * Creates a new PolygonOption from given properties of an existing PolygonOption
+     *
      * @param originalPolygonOption An existing PolygonOption instance
-     * @param isFill Whether the fill for a polygon is set
-     * @param isOutline Whether the outline for a polygon is set
-     * @return  A new PolygonOption
+     * @param isFill                Whether the fill for a polygon is set
+     * @param isOutline             Whether the outline for a polygon is set
+     * @return A new PolygonOption
      */
-    private static PolygonOptions createPolygonOptions (PolygonOptions originalPolygonOption,
-            boolean isFill, boolean isOutline) {
+    private static PolygonOptions createPolygonOptions(PolygonOptions originalPolygonOption,
+                                                       boolean isFill, boolean isOutline) {
         PolygonOptions polygonOptions = new PolygonOptions();
         if (isFill) {
             polygonOptions.fillColor(originalPolygonOption.getFillColor());
@@ -411,7 +413,7 @@ public class  KmlStyle extends Style {
     /**
      * Gets a MarkerOption
      *
-     * @return  A new MarkerOption
+     * @return A new MarkerOption
      */
     public MarkerOptions getMarkerOptions() {
         return createMarkerOptions(mMarkerOptions, isIconRandomColorMode(), mMarkerColor);
@@ -442,7 +444,7 @@ public class  KmlStyle extends Style {
      * @param color Color represented as an integer
      * @return Integer representing a random color
      */
-     public static int computeRandomColor(int color) {
+    public static int computeRandomColor(int color) {
         Random random = new Random();
         int red = Color.red(color);
         int green = Color.green(color);

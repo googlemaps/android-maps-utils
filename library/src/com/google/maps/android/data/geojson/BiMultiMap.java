@@ -10,7 +10,7 @@ import java.util.Map;
  * Secondly, it supports Collection values, in which case, each item in the collection is
  * used as a key in the internal reverse HashMap. It's therefore up to the caller to ensure
  * the overall set of values, and collection values, are unique.
- *
+ * <p>
  * Used by GeoJsonRenderer to store GeoJsonFeature instances mapped to corresponding Marker,
  * Polyline, and Polygon map objects. We want to look these up in reverse to provide access
  * to GeoJsonFeature instances when map objects are clicked.

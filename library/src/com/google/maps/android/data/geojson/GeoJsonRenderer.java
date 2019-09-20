@@ -19,7 +19,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
     /**
      * Creates a new GeoJsonRender object
      *
-     * @param map map to place GeoJsonFeature objects on
+     * @param map      map to place GeoJsonFeature objects on
      * @param features contains a hashmap of features and objects that will go on the map
      */
     public GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
@@ -58,7 +58,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param feature feature to add to the map
      */
-   public void addFeature(GeoJsonFeature feature) {
+    public void addFeature(GeoJsonFeature feature) {
         super.addFeature(feature);
         if (isLayerOnMap()) {
             feature.addObserver(this);
@@ -83,7 +83,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param feature feature to remove from map
      */
-   public void removeFeature(GeoJsonFeature feature) {
+    public void removeFeature(GeoJsonFeature feature) {
         // Check if given feature is stored
         super.removeFeature(feature);
         if (super.getFeatures().contains(feature)) {

@@ -20,18 +20,18 @@ public class KmlTrack extends KmlLineString {
      * Creates a new KmlTrack object
      *
      * @param coordinates array of coordinates
-     * @param altitudes array of altitudes
-     * @param timestamps array of timestamps
-     * @param properties hashmap of properties
+     * @param altitudes   array of altitudes
+     * @param timestamps  array of timestamps
+     * @param properties  hashmap of properties
      */
-    public KmlTrack(ArrayList<LatLng> coordinates, ArrayList<Double> altitudes, ArrayList <Long> timestamps, HashMap<String, String> properties) {
+    public KmlTrack(ArrayList<LatLng> coordinates, ArrayList<Double> altitudes, ArrayList<Long> timestamps, HashMap<String, String> properties) {
         super(coordinates, altitudes);
 
         this.mTimestamps = timestamps;
         this.mProperties = properties;
     }
 
-    public ArrayList <Long> getTimestamps() {
+    public ArrayList<Long> getTimestamps() {
         return mTimestamps;
     }
 

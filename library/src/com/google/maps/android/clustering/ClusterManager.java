@@ -227,7 +227,7 @@ public class ClusterManager<T extends ClusterItem> implements
         if (mAlgorithm.shouldReclusterOnMapMovement()) {
             cluster();
 
-        // Don't re-compute clusters if the map has just been panned/tilted/rotated.
+            // Don't re-compute clusters if the map has just been panned/tilted/rotated.
         } else if (mPreviousCameraPosition == null || mPreviousCameraPosition.zoom != mMap.getCameraPosition().zoom) {
             mPreviousCameraPosition = mMap.getCameraPosition();
             cluster();
@@ -305,7 +305,7 @@ public class ClusterManager<T extends ClusterItem> implements
      */
     public interface OnClusterClickListener<T extends ClusterItem> {
         /**
-         * Called when cluster is clicked. 
+         * Called when cluster is clicked.
          * Return true if click has been handled
          * Return false and the click will dispatched to the next listener
          */

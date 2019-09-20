@@ -2,6 +2,7 @@ package com.google.maps.android.data.kml;
 
 import android.support.test.InstrumentationRegistry;
 import android.graphics.Color;
+
 import org.junit.Test;
 import org.junit.Assert;
 import org.xmlpull.v1.XmlPullParser;

@@ -65,7 +65,6 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     }
 
     /**
-     *
      * @param styleProperties
      */
     private static void setStyleId(String id, KmlStyle styleProperties) {

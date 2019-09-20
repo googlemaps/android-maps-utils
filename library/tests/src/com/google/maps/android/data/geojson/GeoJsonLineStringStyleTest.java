@@ -8,7 +8,7 @@ import android.graphics.Color;
 
 import java.util.Arrays;
 
-public class GeoJsonLineStringStyleTest  {
+public class GeoJsonLineStringStyleTest {
 
     GeoJsonLineStringStyle lineStringStyle;
 
