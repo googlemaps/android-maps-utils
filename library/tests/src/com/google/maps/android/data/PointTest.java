@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.junit.Test;
 import org.junit.Assert;
 
-public class PointTest  {
+public class PointTest {
 
     Point p;
 

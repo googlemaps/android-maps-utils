@@ -28,13 +28,14 @@ public class GeoJsonFeature extends Feature implements Observer {
 
     /**
      * Creates a new GeoJsonFeature object
+     *
      * @param geometry    type of geometry to assign to the feature
      * @param id          common identifier of the feature
      * @param properties  hashmap of containing properties related to the feature
      * @param boundingBox bounding box of the feature
      */
-   public GeoJsonFeature(Geometry geometry, String id,
-                         HashMap<String, String> properties, LatLngBounds boundingBox) {
+    public GeoJsonFeature(Geometry geometry, String id,
+                          HashMap<String, String> properties, LatLngBounds boundingBox) {
         super(geometry, id, properties);
         mId = id;
         mBoundingBox = boundingBox;
@@ -161,7 +162,7 @@ public class GeoJsonFeature extends Feature implements Observer {
      *
      * @return MarkerOptions object
      */
-    public MarkerOptions getMarkerOptions(){
+    public MarkerOptions getMarkerOptions() {
         return mPointStyle.toMarkerOptions();
     }
 
@@ -170,7 +171,7 @@ public class GeoJsonFeature extends Feature implements Observer {
      *
      * @return Polyline object
      */
-    public PolylineOptions getPolylineOptions(){
+    public PolylineOptions getPolylineOptions() {
         return mLineStringStyle.toPolylineOptions();
     }
 
@@ -190,7 +191,7 @@ public class GeoJsonFeature extends Feature implements Observer {
         }
     }
 
-   /**
+    /**
      * Sets the stored Geometry and redraws it on the layer if it has already been added
      *
      * @param geometry Geometry to set

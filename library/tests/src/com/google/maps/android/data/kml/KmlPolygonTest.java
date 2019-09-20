@@ -9,13 +9,13 @@ import org.junit.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KmlPolygonTest  {
+public class KmlPolygonTest {
 
     KmlPolygon kmlPolygon;
 
     @Before
     public void setUp() throws Exception {
-        
+
     }
 
     public KmlPolygon createRegularPolygon() {

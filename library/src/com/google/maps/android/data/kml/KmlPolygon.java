@@ -25,7 +25,7 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
      * @param innerBoundaryCoordinates multiple arrays of inner boundary coordinates
      */
     public KmlPolygon(List<LatLng> outerBoundaryCoordinates,
-            List<List<LatLng>> innerBoundaryCoordinates) {
+                      List<List<LatLng>> innerBoundaryCoordinates) {
         if (outerBoundaryCoordinates == null) {
             throw new IllegalArgumentException("Outer boundary coordinates cannot be null");
         } else {

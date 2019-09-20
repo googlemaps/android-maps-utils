@@ -29,6 +29,7 @@ public interface ClusterRenderer<T extends ClusterItem> {
 
     /**
      * Called when the view needs to be updated because new clusters need to be displayed.
+     *
      * @param clusters the clusters to be displayed.
      */
     void onClustersChanged(Set<? extends Cluster<T>> clusters);

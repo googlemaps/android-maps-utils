@@ -15,7 +15,7 @@ import java.util.HashMap;
  * {@link com.google.maps.android.data.kml.KmlMultiGeometry}. Stores the properties and styles of the
  * place.
  */
-public class KmlPlacemark extends Feature{
+public class KmlPlacemark extends Feature {
 
     private final String mStyle;
 
@@ -59,21 +59,21 @@ public class KmlPlacemark extends Feature{
      * @return new PolygonOptions
      */
     public PolygonOptions getPolygonOptions() {
-         if (mInlineStyle == null){
+        if (mInlineStyle == null) {
             return null;
-        } 
+        }
         return mInlineStyle.getPolygonOptions();
     }
 
     /**
      * Gets a MarkerOption
      *
-     * @return  A new MarkerOption
+     * @return A new MarkerOption
      */
-    public MarkerOptions getMarkerOptions(){
-        if (mInlineStyle == null){
+    public MarkerOptions getMarkerOptions() {
+        if (mInlineStyle == null) {
             return null;
-        }    
+        }
         return mInlineStyle.getMarkerOptions();
     }
 
@@ -82,10 +82,10 @@ public class KmlPlacemark extends Feature{
      *
      * @return new PolylineOptions
      */
-    public PolylineOptions getPolylineOptions(){
-        if (mInlineStyle == null){
+    public PolylineOptions getPolylineOptions() {
+        if (mInlineStyle == null) {
             return null;
-        } 
+        }
         return mInlineStyle.getPolylineOptions();
     }
 

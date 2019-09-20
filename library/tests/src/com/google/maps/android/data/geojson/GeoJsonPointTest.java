@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.junit.Test;
 import org.junit.Assert;
 
-public class GeoJsonPointTest  {
+public class GeoJsonPointTest {
 
     GeoJsonPoint p;
 

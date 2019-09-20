@@ -7,7 +7,7 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class LineStringTest  {
+public class LineStringTest {
     LineString lineString;
 
     public LineString createSimpleLineString() {

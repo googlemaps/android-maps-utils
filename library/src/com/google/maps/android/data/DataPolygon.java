@@ -24,6 +24,7 @@ import java.util.List;
  * An interface containing the common properties of
  * {@link com.google.maps.android.data.geojson.GeoJsonPolygon GeoJsonPolygon} and
  * {@link com.google.maps.android.data.kml.KmlPolygon KmlPolygon}
+ *
  * @param <T> the type of Polygon - GeoJsonPolygon or KmlPolygon
  */
 public interface DataPolygon<T> extends Geometry {

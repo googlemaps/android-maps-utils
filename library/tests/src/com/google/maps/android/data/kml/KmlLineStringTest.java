@@ -7,7 +7,7 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class KmlLineStringTest  {
+public class KmlLineStringTest {
     KmlLineString kmlLineString;
 
     public KmlLineString createSimpleLineString() {

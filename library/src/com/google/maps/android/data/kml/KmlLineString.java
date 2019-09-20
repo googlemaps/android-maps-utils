@@ -25,7 +25,7 @@ public class KmlLineString extends LineString {
      * Creates a new KmlLineString object
      *
      * @param coordinates array of coordinates
-     * @param altitudes array of altitudes
+     * @param altitudes   array of altitudes
      */
     public KmlLineString(ArrayList<LatLng> coordinates, ArrayList<Double> altitudes) {
         super(coordinates);
@@ -38,7 +38,7 @@ public class KmlLineString extends LineString {
      *
      * @return ArrayList of Double
      */
-    public ArrayList <Double> getAltitudes() {
+    public ArrayList<Double> getAltitudes() {
         return mAltitudes;
     }
 

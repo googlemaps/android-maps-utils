@@ -110,7 +110,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * and stores it into the container.
      */
     private static void setContainerStyleMap(XmlPullParser parser,
-            HashMap<String, String> containerStyleMap) throws XmlPullParserException, IOException {
+                                             HashMap<String, String> containerStyleMap) throws XmlPullParserException, IOException {
         containerStyleMap.putAll(KmlStyleParser.createStyleMap(parser));
     }
 
@@ -120,7 +120,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * or schema, and entity replacements of the form $[dataName] are unsupported.
      */
     private static void setExtendedDataProperties(XmlPullParser parser,
-            HashMap<String, String> mContainerProperties)
+                                                  HashMap<String, String> mContainerProperties)
             throws XmlPullParserException, IOException {
         String propertyKey = null;
         int eventType = parser.getEventType();
@@ -143,7 +143,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * style is not created if it does not have an ID.
      */
     private static void setContainerStyle(XmlPullParser parser,
-            HashMap<String, KmlStyle> containerStyles) throws XmlPullParserException, IOException {
+                                          HashMap<String, KmlStyle> containerStyles) throws XmlPullParserException, IOException {
         if (parser.getAttributeValue(null, "id") != null) {
             KmlStyle style = KmlStyleParser.createStyle(parser);
             String styleId = style.getStyleId();
@@ -156,7 +156,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * to the Placemark and stores this into the given Container.
      */
     private static void setContainerPlacemark(XmlPullParser parser,
-            HashMap<KmlPlacemark, Object> containerPlacemarks)
+                                              HashMap<KmlPlacemark, Object> containerPlacemarks)
             throws XmlPullParserException, IOException {
         containerPlacemarks.put(KmlFeatureParser.createPlacemark(parser), null);
     }

@@ -19,9 +19,10 @@ package com.google.maps.android.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class SquareTextView extends TextView {
+import androidx.appcompat.widget.AppCompatTextView;
+
+public class SquareTextView extends AppCompatTextView {
     private int mOffsetTop = 0;
     private int mOffsetLeft = 0;
 
