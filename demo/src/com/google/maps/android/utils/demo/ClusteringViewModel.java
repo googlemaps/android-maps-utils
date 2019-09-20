@@ -28,7 +28,7 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.List;
 
-class ClusteringViewModel extends ViewModel {
+public class ClusteringViewModel extends ViewModel {
 
     private NonHierarchicalViewBasedAlgorithm<MyItem> mAlgorithm = new NonHierarchicalViewBasedAlgorithm<>(0, 0);
 
