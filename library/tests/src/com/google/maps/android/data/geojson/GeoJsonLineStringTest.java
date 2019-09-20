@@ -7,7 +7,7 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class GeoJsonLineStringTest  {
+public class GeoJsonLineStringTest {
 
     GeoJsonLineString ls;
 
@@ -48,7 +48,7 @@ public class GeoJsonLineStringTest  {
         altitudes.add(new Double(100));
         altitudes.add(new Double(200));
         altitudes.add(new Double(300));
-        ls = new GeoJsonLineString(coordinates,altitudes);
+        ls = new GeoJsonLineString(coordinates, altitudes);
         Assert.assertEquals(altitudes, ls.getAltitudes());
         Assert.assertEquals(ls.getAltitudes().get(0), 100.0, 0);
         Assert.assertEquals(ls.getAltitudes().get(1), 200.0, 0);

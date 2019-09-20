@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GeoJsonParserTest  {
+public class GeoJsonParserTest {
 
     @Before
     public void setUp() throws Exception {

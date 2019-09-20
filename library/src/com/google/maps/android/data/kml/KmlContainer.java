@@ -25,9 +25,9 @@ public class KmlContainer {
     private String mContainerId;
 
     /*package*/ KmlContainer(HashMap<String, String> properties, HashMap<String, KmlStyle> styles,
-            HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
-            ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
-            groundOverlay, String Id) {
+                             HashMap<KmlPlacemark, Object> placemarks, HashMap<String, String> styleMaps,
+                             ArrayList<KmlContainer> containers, HashMap<KmlGroundOverlay, GroundOverlay>
+                                     groundOverlay, String Id) {
         mProperties = properties;
         mPlacemarks = placemarks;
         mStyles = styles;
@@ -86,8 +86,8 @@ public class KmlContainer {
     public KmlStyle getStyle(String styleID) {
         return mStyles.get(styleID);
     }
-    
-     /**
+
+    /**
      * Gets a style Id from map based on an ID
      */
     public String getStyleIdFromMap(String styleID) {

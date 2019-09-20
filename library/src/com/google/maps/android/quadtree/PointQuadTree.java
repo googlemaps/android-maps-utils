@@ -34,6 +34,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
     public interface Item {
         public Point getPoint();
     }
+
     /**
      * The bounds of this quad.
      */
@@ -173,8 +174,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
                     return mChildren.get(3).remove(x, y, item);
                 }
             }
-        }
-        else {
+        } else {
             if (mItems == null) {
                 return false;
             } else {

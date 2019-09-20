@@ -7,7 +7,7 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 
-public class GeoJsonMultiPointTest  {
+public class GeoJsonMultiPointTest {
 
     GeoJsonMultiPoint mp;
 

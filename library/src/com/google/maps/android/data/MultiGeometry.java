@@ -35,6 +35,7 @@ public class MultiGeometry implements Geometry {
 
     /**
      * Creates a new MultiGeometry object
+     *
      * @param geometries contains list of Polygons, Linestrings or Points
      */
     public MultiGeometry(List<? extends Geometry> geometries) {

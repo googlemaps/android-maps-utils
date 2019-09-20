@@ -1,6 +1,7 @@
 package com.google.maps.android.data.kml;
 
 import android.support.test.InstrumentationRegistry;
+
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -71,7 +72,6 @@ public class KmlContainerParserTest {
         }
         Assert.assertEquals(numberOfNestedContainers, 2);
     }
-
 
 
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class FeatureTest  {
+public class FeatureTest {
     Feature feature;
 
     @Test
@@ -58,7 +58,6 @@ public class FeatureTest  {
         feature.setGeometry(lineString);
         Assert.assertEquals(lineString, feature.getGeometry());
     }
-
 
 
 }

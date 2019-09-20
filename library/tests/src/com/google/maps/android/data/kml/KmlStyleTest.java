@@ -5,7 +5,7 @@ import android.graphics.Color;
 import org.junit.Test;
 import org.junit.Assert;
 
-public class KmlStyleTest  {
+public class KmlStyleTest {
 
     @Test
     public void testStyleId() throws Exception {

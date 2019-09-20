@@ -20,8 +20,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
- *
  * This algorithm uses map position for clustering, and should be reclustered on map movement
+ *
  * @param <T>
  */
 

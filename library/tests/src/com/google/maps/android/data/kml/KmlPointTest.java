@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.junit.Test;
 import org.junit.Assert;
 
-public class KmlPointTest  {
+public class KmlPointTest {
     KmlPoint kmlPoint;
 
     public KmlPoint createSimplePoint() {

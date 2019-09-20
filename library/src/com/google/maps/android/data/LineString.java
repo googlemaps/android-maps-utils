@@ -48,7 +48,9 @@ public class LineString implements Geometry<List<LatLng>> {
      *
      * @return type of geometry
      */
-    public String getGeometryType() { return GEOMETRY_TYPE; }
+    public String getGeometryType() {
+        return GEOMETRY_TYPE;
+    }
 
     /**
      * Gets the coordinates of the LineString
