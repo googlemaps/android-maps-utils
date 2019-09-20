@@ -30,7 +30,7 @@ public class KmlGroundOverlay {
      * @param rotation   rotation of image
      */
     /* package */ KmlGroundOverlay(String imageUrl, LatLngBounds latLonBox, float drawOrder,
-            int visibility, HashMap<String, String> properties, float rotation) {
+                                   int visibility, HashMap<String, String> properties, float rotation) {
         mGroundOverlayOptions = new GroundOverlayOptions();
         mImageUrl = imageUrl;
         mProperties = properties;

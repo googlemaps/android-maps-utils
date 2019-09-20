@@ -25,7 +25,9 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
         mPolylineOptions = new PolylineOptions();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] getGeometryType() {
         return GEOMETRY_TYPE;
@@ -49,20 +51,20 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
         mPolylineOptions.color(color);
         styleChanged();
     }
-    
+
     /**
      * Gets the clickability setting for this Options object
-     * 
+     *
      * @return true if the GeoJsonLineString is clickable; false if it is not
      */
     public boolean isClickable() {
         return mPolylineOptions.isClickable();
     }
-    
+
     /**
      * Specifies whether this GeoJsonLineString is clickable
-     * 
-     * @param clickable  - new clickability setting for the GeoJsonLineString
+     *
+     * @param clickable - new clickability setting for the GeoJsonLineString
      */
     public void setClickable(boolean clickable) {
         mPolylineOptions.clickable(clickable);
@@ -191,7 +193,7 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
     /**
      * Gets the pattern of the GeoJsonLineString
      *
-     * @return  line style of GeoJsonLineString
+     * @return line style of GeoJsonLineString
      */
     public List<PatternItem> getPattern() {
         return mPolylineOptions.getPattern();

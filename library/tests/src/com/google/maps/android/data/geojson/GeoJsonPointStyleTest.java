@@ -111,7 +111,7 @@ public class GeoJsonPointStyleTest {
 
     @Test
     public void testDefaultPointStyle() throws Exception {
-        Assert.assertEquals(1.0f, pointStyle.getAlpha(),0 );
+        Assert.assertEquals(1.0f, pointStyle.getAlpha(), 0);
         Assert.assertEquals(0.5f, pointStyle.getAnchorU(), 0);
         Assert.assertEquals(1.0f, pointStyle.getAnchorV(), 0);
         Assert.assertFalse(pointStyle.isDraggable());
@@ -127,7 +127,7 @@ public class GeoJsonPointStyleTest {
 
     @Test
     public void testDefaultGetMarkerOptions() throws Exception {
-        Assert.assertEquals(1.0f, pointStyle.toMarkerOptions().getAlpha(),0 );
+        Assert.assertEquals(1.0f, pointStyle.toMarkerOptions().getAlpha(), 0);
         Assert.assertEquals(0.5f, pointStyle.toMarkerOptions().getAnchorU(), 0);
         Assert.assertEquals(1.0f, pointStyle.toMarkerOptions().getAnchorV(), 0);
         Assert.assertFalse(pointStyle.toMarkerOptions().isDraggable());

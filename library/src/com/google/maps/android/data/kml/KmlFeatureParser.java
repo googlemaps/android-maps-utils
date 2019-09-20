@@ -243,7 +243,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("LineString"))) {
             if (eventType == START_TAG && parser.getName().equals("coordinates")) {
-                List <LatLngAlt> latLngAlts = convertToLatLngAltArray(parser.nextText());
+                List<LatLngAlt> latLngAlts = convertToLatLngAltArray(parser.nextText());
                 for (LatLngAlt latLngAlt : latLngAlts) {
                     coordinates.add(latLngAlt.latLng);
                     if (latLngAlt.altitude != null) {
@@ -355,7 +355,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      */
     private static KmlMultiTrack createMultiTrack(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        ArrayList <KmlTrack> tracks = new ArrayList<>();
+        ArrayList<KmlTrack> tracks = new ArrayList<>();
         // Get next otherwise have an infinite loop
         int eventType = parser.next();
         while (!(eventType == END_TAG && parser.getName().equals("MultiTrack"))) {
@@ -412,7 +412,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * Convert a string coordinate from a string into a LatLngAlt object
      *
      * @param coordinateString coordinate string to convert from
-     * @param separator separator to use when splitting coordinates
+     * @param separator        separator to use when splitting coordinates
      * @return LatLngAlt object created from given coordinate string
      */
     private static LatLngAlt convertToLatLngAlt(String coordinateString, String separator) {
@@ -433,7 +433,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * @param west  West coordinate of the bounding box
      */
     private static LatLngBounds createLatLngBounds(Double north, Double south, Double east,
-            Double west) {
+                                                   Double west) {
         LatLng southWest = new LatLng(south, west);
         LatLng northEast = new LatLng(north, east);
         return new LatLngBounds(southWest, northEast);

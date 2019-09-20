@@ -112,8 +112,8 @@ public class Gradient {
         // Generate color intervals
         for (int i = 1; i < mColors.length; i++) {
             colorIntervals.put(((int) (mColorMapSize * mStartPoints[i - 1])),
-                new ColorInterval(mColors[i - 1], mColors[i],
-                    (mColorMapSize * (mStartPoints[i] - mStartPoints[i - 1]))));
+                    new ColorInterval(mColors[i - 1], mColors[i],
+                            (mColorMapSize * (mStartPoints[i] - mStartPoints[i - 1]))));
         }
         // Extend to a final color
         // If color for 100% intensity is not given, the color of highest intensity is used.

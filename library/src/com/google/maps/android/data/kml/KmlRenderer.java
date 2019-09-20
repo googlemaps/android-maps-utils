@@ -30,7 +30,7 @@ import java.util.Iterator;
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
-public class KmlRenderer  extends Renderer {
+public class KmlRenderer extends Renderer {
 
     private static final String LOG_TAG = "KmlRenderer";
 
@@ -55,7 +55,7 @@ public class KmlRenderer  extends Renderer {
      * Scales a Bitmap to a specified float.
      *
      * @param unscaledBitmap Unscaled bitmap image to scale.
-     * @param scale Scale value. A "1.0" scale value corresponds to the original size of the Bitmap
+     * @param scale          Scale value. A "1.0" scale value corresponds to the original size of the Bitmap
      * @return A scaled bitmap image
      */
     private static BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, Double scale) {
@@ -135,9 +135,9 @@ public class KmlRenderer  extends Renderer {
     }
 
     /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,
-                             HashMap<String, String> styleMaps,
-                             HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
-                             HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+                                  HashMap<String, String> styleMaps,
+                                  HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                                  HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         storeData(styles, styleMaps, features, folders, groundOverlays);
     }
 
@@ -167,7 +167,7 @@ public class KmlRenderer  extends Renderer {
      * @return iterable of KmlPlacemark objects
      */
     /* package */ Iterable<? extends Feature> getKmlPlacemarks() {
-        return (getFeatures()) ;
+        return (getFeatures());
     }
 
     /**
@@ -212,6 +212,7 @@ public class KmlRenderer  extends Renderer {
 
     /**
      * Iterates over the placemarks, gets its style or assigns a default one and adds it to the map
+     *
      * @param placemarks
      */
     private void addPlacemarksToMap(HashMap<? extends Feature, Object> placemarks) {
@@ -226,7 +227,7 @@ public class KmlRenderer  extends Renderer {
      * @param kmlContainers An arraylist of folders
      */
     private void addContainerGroupToMap(Iterable<KmlContainer> kmlContainers,
-            boolean containerVisibility) {
+                                        boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             if (container.getStyles() != null) {
@@ -282,7 +283,7 @@ public class KmlRenderer  extends Renderer {
     /**
      * Adds the marker icon stored in mMarkerIconCache, to the {@link com.google.android.gms.maps.model.Marker}
      *
-     * @param iconUrl icon url of icon to add to markers
+     * @param iconUrl    icon url of icon to add to markers
      * @param placemarks
      */
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
@@ -305,9 +306,10 @@ public class KmlRenderer  extends Renderer {
 
     /**
      * Enlarges or shrinks a bitmap image based on the scale provided
-     * @param style     Style to retrieve iconUrl and scale from
+     *
+     * @param style      Style to retrieve iconUrl and scale from
      * @param placemarks
-     * @param placemark Placemark object to set the image to
+     * @param placemark  Placemark object to set the image to
      */
     private void scaleBitmap(KmlStyle style, HashMap<KmlPlacemark, Object> placemarks,
                              KmlPlacemark placemark) {
@@ -316,7 +318,7 @@ public class KmlRenderer  extends Renderer {
         Bitmap bitmapImage = getImagesCache().get(bitmapUrl);
         BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
         ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
-     }
+    }
 
     /**
      * Assigns icons to markers with a url if put in a placemark tag that is nested in a folder.
@@ -325,7 +327,7 @@ public class KmlRenderer  extends Renderer {
      * @param kmlContainers kml container which contains the marker
      */
     private void addContainerGroupIconsToMarkers(String iconUrl,
-            Iterable<KmlContainer> kmlContainers) {
+                                                 Iterable<KmlContainer> kmlContainers) {
         for (KmlContainer container : kmlContainers) {
             addIconToMarkers(iconUrl, container.getPlacemarksHashMap());
             if (container.hasContainers()) {
@@ -342,7 +344,7 @@ public class KmlRenderer  extends Renderer {
      * @param kmlContainers  containers to check for ground overlays
      */
     private void addGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
-            Iterable<KmlContainer> kmlContainers) {
+                                   Iterable<KmlContainer> kmlContainers) {
         addGroundOverlays(groundOverlays);
         for (KmlContainer container : kmlContainers) {
             addGroundOverlays(container.getGroundOverlayHashMap(),
@@ -388,7 +390,7 @@ public class KmlRenderer  extends Renderer {
      * @param groundOverlays   hashmap of ground overlays to add to the map
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
-            HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
+                                       HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
         BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
                 .fromBitmap(getImagesCache().get(groundOverlayUrl));
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
@@ -411,7 +413,7 @@ public class KmlRenderer  extends Renderer {
      * @param kmlContainers    containers containing ground overlays to add to the map
      */
     private void addGroundOverlayInContainerGroups(String groundOverlayUrl,
-            Iterable<KmlContainer> kmlContainers, boolean containerVisibility) {
+                                                   Iterable<KmlContainer> kmlContainers, boolean containerVisibility) {
         for (KmlContainer container : kmlContainers) {
             boolean isContainerVisible = getContainerVisibility(container, containerVisibility);
             addGroundOverlayToMap(groundOverlayUrl, container.getGroundOverlayHashMap(), isContainerVisible);

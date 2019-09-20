@@ -29,7 +29,7 @@ import java.util.Arrays;
 /**
  * Tests for heatmap utility functions
  */
-public class UtilTest  {
+public class UtilTest {
 
     @Test
     public void testGenerateKernel() {

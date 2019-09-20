@@ -8,7 +8,7 @@ import org.junit.Assert;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GeoJsonPolygonTest  {
+public class GeoJsonPolygonTest {
 
     GeoJsonPolygon p;
 

@@ -22,7 +22,7 @@ public class KmlPoint extends Point {
      * Creates a new KmlPoint
      *
      * @param coordinates coordinates of the KmlPoint
-     * @param altitude altitude of the KmlPoint
+     * @param altitude    altitude of the KmlPoint
      */
     public KmlPoint(LatLng coordinates, Double altitude) {
         super(coordinates);

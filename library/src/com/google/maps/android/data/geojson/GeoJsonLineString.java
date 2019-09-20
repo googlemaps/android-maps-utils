@@ -25,7 +25,7 @@ public class GeoJsonLineString extends LineString {
      * Creates a new GeoJsonLineString object
      *
      * @param coordinates array of coordinates
-     * @param altitudes array of altitudes
+     * @param altitudes   array of altitudes
      */
     public GeoJsonLineString(List<LatLng> coordinates, List<Double> altitudes) {
         super(coordinates);
@@ -57,7 +57,7 @@ public class GeoJsonLineString extends LineString {
      *
      * @return list of altitudes of the GeoJsonLineString
      */
-    public List <Double> getAltitudes() {
+    public List<Double> getAltitudes() {
         return mAltitudes;
     }
 }
