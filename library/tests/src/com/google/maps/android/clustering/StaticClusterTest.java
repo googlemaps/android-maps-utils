@@ -19,6 +19,7 @@ package com.google.maps.android.clustering;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.StaticCluster;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -26,6 +27,7 @@ public class StaticClusterTest {
 
     private StaticCluster<ClusterItem> mCluster;
 
+    @Before
     public void setUp() {
         mCluster = new StaticCluster<ClusterItem>(new LatLng(0.1, 0.5));
     }

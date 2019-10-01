@@ -48,19 +48,19 @@ public class LineStringTest {
         Assert.assertNotNull(lineString);
         Assert.assertNotNull(lineString.getGeometryObject());
         Assert.assertEquals(lineString.getGeometryObject().size(), 6);
-        Assert.assertEquals(lineString.getGeometryObject().get(0).latitude, 90.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(1).latitude, 90.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(2).latitude, 90.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(3).longitude, 53.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(4).longitude, 54.0);
+        Assert.assertEquals(lineString.getGeometryObject().get(0).latitude, 90.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(1).latitude, 90.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(2).latitude, 90.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(3).longitude, 53.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(4).longitude, 54.0, 0);
         lineString = createLoopedLineString();
         Assert.assertNotNull(lineString);
         Assert.assertNotNull(lineString.getGeometryObject());
         Assert.assertEquals(lineString.getGeometryObject().size(), 4);
-        Assert.assertEquals(lineString.getGeometryObject().get(0).latitude, 90.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(1).latitude, 89.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(2).longitude, 62.0);
-        Assert.assertEquals(lineString.getGeometryObject().get(3).longitude, 66.0);
+        Assert.assertEquals(lineString.getGeometryObject().get(0).latitude, 90.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(1).latitude, 89.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(2).longitude, 62.0, 0);
+        Assert.assertEquals(lineString.getGeometryObject().get(3).longitude, 66.0, 0);
 
     }
 

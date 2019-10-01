@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 import org.junit.Assert;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class KmlContainerParserTest {
 
     public XmlPullParser createParser(int res) throws Exception {
-        InputStream stream = InstrumentationRegistry.getTargetContext().getResources().openRawResource(res);
+        InputStream stream = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().openRawResource(res);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();

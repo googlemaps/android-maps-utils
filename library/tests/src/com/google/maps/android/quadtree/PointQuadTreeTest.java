@@ -19,6 +19,7 @@ package com.google.maps.android.quadtree;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -29,6 +30,7 @@ public class PointQuadTreeTest {
 
     private PointQuadTree<Item> mTree;
 
+    @Before
     public void setUp() {
         mTree = new PointQuadTree<Item>(0, 1, 0, 1);
     }

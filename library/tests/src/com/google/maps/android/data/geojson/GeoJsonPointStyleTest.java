@@ -1,6 +1,7 @@
 package com.google.maps.android.data.geojson;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 
@@ -18,7 +20,7 @@ public class GeoJsonPointStyleTest {
 
     @Before
     public void setUp() throws Exception {
-        MapsInitializer.initialize(InstrumentationRegistry.getTargetContext());
+        MapsInitializer.initialize(InstrumentationRegistry.getInstrumentation().getTargetContext());
         pointStyle = new GeoJsonPointStyle();
     }
 

@@ -32,8 +32,8 @@ public class KmlPointTest {
         kmlPoint = createSimplePoint();
         Assert.assertNotNull(kmlPoint);
         Assert.assertNotNull(kmlPoint.getGeometryObject());
-        Assert.assertEquals(kmlPoint.getGeometryObject().latitude, 0.0);
-        Assert.assertEquals(kmlPoint.getGeometryObject().longitude, 50.0);
+        Assert.assertEquals(kmlPoint.getGeometryObject().latitude, 0.0, 0);
+        Assert.assertEquals(kmlPoint.getGeometryObject().longitude, 50.0, 0);
     }
 
     @Test

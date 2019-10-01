@@ -49,9 +49,9 @@ public class KmlStyleTest {
         KmlStyle kmlStyle = new KmlStyle();
         Assert.assertNotNull(kmlStyle);
         Assert.assertNotNull(kmlStyle.getMarkerOptions());
-        Assert.assertEquals(kmlStyle.getMarkerOptions().getRotation(), 0.0f);
+        Assert.assertEquals(kmlStyle.getMarkerOptions().getRotation(), 0.0f, 0);
         kmlStyle.setHeading(3);
-        Assert.assertEquals(kmlStyle.getMarkerOptions().getRotation(), 3.0f);
+        Assert.assertEquals(kmlStyle.getMarkerOptions().getRotation(), 3.0f, 0);
     }
 
     @Test
@@ -63,8 +63,8 @@ public class KmlStyleTest {
         Assert.assertEquals(kmlStyle.getPolylineOptions().getWidth(), 10.0f, 0);
         Assert.assertEquals(kmlStyle.getPolygonOptions().getStrokeWidth(), 10.0f, 0);
         kmlStyle.setWidth(11.0f);
-        Assert.assertEquals(kmlStyle.getPolylineOptions().getWidth(), 11.0f);
-        Assert.assertEquals(kmlStyle.getPolygonOptions().getStrokeWidth(), 11.0f);
+        Assert.assertEquals(kmlStyle.getPolylineOptions().getWidth(), 11.0f, 0);
+        Assert.assertEquals(kmlStyle.getPolygonOptions().getStrokeWidth(), 11.0f, 0);
     }
 
     @Test
