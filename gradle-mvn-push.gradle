@@ -60,7 +60,7 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils'
-            version '0.5'
+            version '0.6.0'
             afterEvaluate {
                 artifact bundleReleaseAar
             }
@@ -100,7 +100,7 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils-apklib'
-            version '0.5'
+            version '0.6.0'
             artifact(apklib)
         }
     }
