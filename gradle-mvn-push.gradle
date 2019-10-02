@@ -1,4 +1,3 @@
-//apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
@@ -62,8 +61,10 @@ publishing {
             groupId group
             artifactId 'android-maps-utils'
             version '0.5'
-            artifact("$buildDir/outputs/aar/android-maps-utils-release.aar")
-        }
+            afterEvaluate {
+                artifact bundleReleaseAar
+            }
+        }                
         apkLib(MavenPublication) {
             pom {
                 name = 'Google Maps Android API utility library'
