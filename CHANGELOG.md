@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.1](https://github.com/googlemaps/android-maps-utils/compare/0.6.0...0.6.1) - 2019-10-03
 ### Changed
-- KML test files are no longer inclued in the library bundle [`#529`](https://github.com/googlemaps/android-maps-utils/pull/529)
+- KML test files are no longer included in the library bundle [`#529`](https://github.com/googlemaps/android-maps-utils/pull/529)
 
 ## [0.6.0](https://github.com/googlemaps/android-maps-utils/compare/0.5.0...0.6.0) - 2019-10-02
 
