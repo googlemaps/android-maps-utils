@@ -195,11 +195,7 @@ public class ClusterManager<T extends ClusterItem> implements
             // Attempt to cancel the in-flight request.
             mClusterTask.cancel(true);
             mClusterTask = new ClusterTask();
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                mClusterTask.execute(mMap.getCameraPosition().zoom);
-            } else {
-                mClusterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMap.getCameraPosition().zoom);
-            }
+            mClusterTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMap.getCameraPosition().zoom);
         } finally {
             mClusterTaskLock.writeLock().unlock();
         }
