@@ -1,4 +1,7 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils) [![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils) ![Analytics](https://maps-ga-beacon.appspot.com/UA-12846745-20/android-maps-utils/readme?pixel)
+[![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils) 
+![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
+[![Stack Exchange questions](https://img.shields.io/stackexchange/stackoverflow/t/google-maps-android-api-2?color=orange&label=google-maps-android-api-2&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/google-maps-android-api-2)
 
 # Google Maps Android API utility library
 
