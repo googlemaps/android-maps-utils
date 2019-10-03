@@ -57,15 +57,15 @@ public class GeoJsonLineStringStyleTest {
     @Test
     public void testWidth() throws Exception {
         lineStringStyle.setWidth(20.2f);
-        Assert.assertEquals(20.2f, lineStringStyle.getWidth());
-        Assert.assertEquals(20.2f, lineStringStyle.toPolylineOptions().getWidth());
+        Assert.assertEquals(20.2f, lineStringStyle.getWidth(), 0);
+        Assert.assertEquals(20.2f, lineStringStyle.toPolylineOptions().getWidth(), 0);
     }
 
     @Test
     public void testZIndex() throws Exception {
         lineStringStyle.setZIndex(50.78f);
-        Assert.assertEquals(50.78f, lineStringStyle.getZIndex());
-        Assert.assertEquals(50.78f, lineStringStyle.toPolylineOptions().getZIndex());
+        Assert.assertEquals(50.78f, lineStringStyle.getZIndex(), 0);
+        Assert.assertEquals(50.78f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
     }
 
     @Test
@@ -73,8 +73,8 @@ public class GeoJsonLineStringStyleTest {
         Assert.assertEquals(Color.BLACK, lineStringStyle.getColor());
         Assert.assertFalse(lineStringStyle.isGeodesic());
         Assert.assertTrue(lineStringStyle.isVisible());
-        Assert.assertEquals(10.0f, lineStringStyle.getWidth());
-        Assert.assertEquals(0.0f, lineStringStyle.getZIndex());
+        Assert.assertEquals(10.0f, lineStringStyle.getWidth(), 0);
+        Assert.assertEquals(0.0f, lineStringStyle.getZIndex(), 0);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class GeoJsonLineStringStyleTest {
         Assert.assertEquals(Color.BLACK, lineStringStyle.toPolylineOptions().getColor());
         Assert.assertFalse(lineStringStyle.toPolylineOptions().isGeodesic());
         Assert.assertTrue(lineStringStyle.toPolylineOptions().isVisible());
-        Assert.assertEquals(10.0f, lineStringStyle.toPolylineOptions().getWidth());
-        Assert.assertEquals(0.0f, lineStringStyle.toPolylineOptions().getZIndex());
+        Assert.assertEquals(10.0f, lineStringStyle.toPolylineOptions().getWidth(), 0);
+        Assert.assertEquals(0.0f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
     }
 }

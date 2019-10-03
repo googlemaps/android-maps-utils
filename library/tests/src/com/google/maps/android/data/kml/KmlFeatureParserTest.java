@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 import org.junit.Assert;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class KmlFeatureParserTest {
 
     public XmlPullParser createParser(int res) throws Exception {
-        InputStream stream = InstrumentationRegistry.getTargetContext().getResources().openRawResource(res);
+        InputStream stream = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().openRawResource(res);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
@@ -70,7 +70,7 @@ public class KmlFeatureParserTest {
         Assert.assertNotNull(groundOverlay);
         Assert.assertEquals(groundOverlay.getProperty("name"), "Sample Ground Overlay");
         Assert.assertNotNull(groundOverlay.getImageUrl());
-        Assert.assertEquals(groundOverlay.getGroundOverlayOptions().getZIndex(), 99.0f);
+        Assert.assertEquals(groundOverlay.getGroundOverlayOptions().getZIndex(), 99.0f, 0);
         Assert.assertTrue(groundOverlay.getGroundOverlayOptions().isVisible());
         Assert.assertNotNull(groundOverlay.getLatLngBox());
         xmlPullParser = createParser(R.raw.amu_ground_overlay_color);

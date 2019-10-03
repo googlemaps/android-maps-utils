@@ -66,8 +66,8 @@ public class GeoJsonPolygonStyleTest {
     @Test
     public void testStrokeWidth() throws Exception {
         polygonStyle.setStrokeWidth(20.0f);
-        Assert.assertEquals(20.0f, polygonStyle.getStrokeWidth());
-        Assert.assertEquals(20.0f, polygonStyle.toPolygonOptions().getStrokeWidth());
+        Assert.assertEquals(20.0f, polygonStyle.getStrokeWidth(), 0);
+        Assert.assertEquals(20.0f, polygonStyle.toPolygonOptions().getStrokeWidth(), 0);
     }
 
     @Test
@@ -80,8 +80,8 @@ public class GeoJsonPolygonStyleTest {
     @Test
     public void testZIndex() throws Exception {
         polygonStyle.setZIndex(3.4f);
-        Assert.assertEquals(3.4f, polygonStyle.getZIndex());
-        Assert.assertEquals(3.4f, polygonStyle.toPolygonOptions().getZIndex());
+        Assert.assertEquals(3.4f, polygonStyle.getZIndex(), 0);
+        Assert.assertEquals(3.4f, polygonStyle.toPolygonOptions().getZIndex(), 0);
     }
 
     @Test
@@ -89,9 +89,9 @@ public class GeoJsonPolygonStyleTest {
         Assert.assertEquals(Color.TRANSPARENT, polygonStyle.getFillColor());
         Assert.assertFalse(polygonStyle.isGeodesic());
         Assert.assertEquals(Color.BLACK, polygonStyle.getStrokeColor());
-        Assert.assertEquals(10.0f, polygonStyle.getStrokeWidth());
+        Assert.assertEquals(10.0f, polygonStyle.getStrokeWidth(), 0);
         Assert.assertTrue(polygonStyle.isVisible());
-        Assert.assertEquals(0.0f, polygonStyle.getZIndex());
+        Assert.assertEquals(0.0f, polygonStyle.getZIndex(), 0);
     }
 
     @Test
@@ -99,8 +99,8 @@ public class GeoJsonPolygonStyleTest {
         Assert.assertEquals(Color.TRANSPARENT, polygonStyle.toPolygonOptions().getFillColor());
         Assert.assertFalse(polygonStyle.toPolygonOptions().isGeodesic());
         Assert.assertEquals(Color.BLACK, polygonStyle.toPolygonOptions().getStrokeColor());
-        Assert.assertEquals(10.0f, polygonStyle.toPolygonOptions().getStrokeWidth());
+        Assert.assertEquals(10.0f, polygonStyle.toPolygonOptions().getStrokeWidth(), 0);
         Assert.assertTrue(polygonStyle.isVisible());
-        Assert.assertEquals(0.0f, polygonStyle.toPolygonOptions().getZIndex());
+        Assert.assertEquals(0.0f, polygonStyle.toPolygonOptions().getZIndex(), 0);
     }
 }
