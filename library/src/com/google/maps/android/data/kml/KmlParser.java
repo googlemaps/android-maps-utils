@@ -37,7 +37,7 @@ import java.util.HashMap;
     private final HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
 
     private final static String UNSUPPORTED_REGEX = "altitude|altitudeModeGroup|altitudeMode|" +
-            "begin|bottomFov|cookie|displayName|displayMode|displayMode|end|expires|extrude|" +
+            "begin|bottomFov|cookie|displayName|displayMode|end|expires|extrude|" +
             "flyToView|gridOrigin|httpQuery|leftFov|linkDescription|linkName|linkSnippet|" +
             "listItemType|maxSnippetLines|maxSessionLength|message|minAltitude|minFadeExtent|" +
             "minLodPixels|minRefreshPeriod|maxAltitude|maxFadeExtent|maxLodPixels|maxHeight|" +

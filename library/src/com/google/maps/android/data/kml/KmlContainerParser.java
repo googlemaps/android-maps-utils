@@ -33,7 +33,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     private final static String GROUND_OVERLAY = "GroundOverlay";
 
     private final static String UNSUPPORTED_REGEX = "altitude|altitudeModeGroup|altitudeMode|" +
-            "begin|bottomFov|cookie|displayName|displayMode|displayMode|end|expires|extrude|flyToView|" +
+            "begin|bottomFov|cookie|displayName|displayMode|end|expires|extrude|flyToView|" +
             "gridOrigin|httpQuery|leftFov|linkDescription|linkName|linkSnippet|listItemType|maxSnippetLines|" +
             "maxSessionLength|message|minAltitude|minFadeExtent|minLodPixels|minRefreshPeriod|maxAltitude|" +
             "maxFadeExtent|maxLodPixels|maxHeight|maxWidth|near|overlayXY|range|" +
