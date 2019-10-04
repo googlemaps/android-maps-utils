@@ -10,7 +10,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class GeoJsonPolygonStyleTest {
-    GeoJsonPolygonStyle polygonStyle;
+    private GeoJsonPolygonStyle polygonStyle;
 
     @Before
     public void setUp() {

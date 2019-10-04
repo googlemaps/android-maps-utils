@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MultiGeometryTest {
-    MultiGeometry mg;
+    private MultiGeometry mg;
 
     @Test
     public void testGetGeometryType() {

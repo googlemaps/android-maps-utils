@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class GeoJsonLineStringTest {
-    GeoJsonLineString ls;
+    private GeoJsonLineString ls;
 
     @Test
     public void testGetType() {

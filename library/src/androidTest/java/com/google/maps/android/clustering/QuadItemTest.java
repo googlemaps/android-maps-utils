@@ -44,7 +44,7 @@ public class QuadItemTest {
         assertTrue(algo.getItems().contains(item_2_3));
     }
 
-    public class TestingItem implements ClusterItem {
+    private class TestingItem implements ClusterItem {
         private final LatLng mPosition;
 
         TestingItem(double lat, double lng) {

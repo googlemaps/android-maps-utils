@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class GeoJsonMultiLineStringTest {
-    GeoJsonMultiLineString mls;
+    private GeoJsonMultiLineString mls;
 
     @Test
     public void testGetType() {
