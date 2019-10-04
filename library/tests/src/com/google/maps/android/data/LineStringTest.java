@@ -8,9 +8,10 @@ import org.junit.Assert;
 import java.util.ArrayList;
 
 public class LineStringTest {
-    LineString lineString;
 
-    public LineString createSimpleLineString() {
+    private LineString lineString;
+
+    private LineString createSimpleLineString() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(95, 60));
         coordinates.add(new LatLng(93, 57));
@@ -21,7 +22,7 @@ public class LineStringTest {
         return new LineString(coordinates);
     }
 
-    public LineString createLoopedLineString() {
+    private LineString createLoopedLineString() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(92, 66));
         coordinates.add(new LatLng(89, 64));

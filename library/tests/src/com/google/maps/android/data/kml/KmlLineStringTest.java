@@ -8,9 +8,10 @@ import org.junit.Assert;
 import java.util.ArrayList;
 
 public class KmlLineStringTest {
-    KmlLineString kmlLineString;
 
-    public KmlLineString createSimpleLineString() {
+    private KmlLineString kmlLineString;
+
+    private KmlLineString createSimpleLineString() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(0, 0));
         coordinates.add(new LatLng(50, 50));
@@ -18,7 +19,7 @@ public class KmlLineStringTest {
         return new KmlLineString(coordinates);
     }
 
-    public KmlLineString createSimpleLineStringWithAltitudes() {
+    private KmlLineString createSimpleLineStringWithAltitudes() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         ArrayList<Double> altitudes = new ArrayList<Double>();
         coordinates.add(new LatLng(0, 0));
@@ -30,7 +31,7 @@ public class KmlLineStringTest {
         return new KmlLineString(coordinates, altitudes);
     }
 
-    public KmlLineString createLoopedLineString() {
+    private KmlLineString createLoopedLineString() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(0, 0));
         coordinates.add(new LatLng(50, 50));

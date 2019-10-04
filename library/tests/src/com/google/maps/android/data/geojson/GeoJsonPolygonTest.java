@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class GeoJsonPolygonTest {
 
-    GeoJsonPolygon p;
+    private GeoJsonPolygon p;
 
     @Test
     public void testGetType() throws Exception {

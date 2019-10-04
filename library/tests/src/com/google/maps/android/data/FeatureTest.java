@@ -10,7 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class FeatureTest {
-    Feature feature;
+
+    private Feature feature;
 
     @Test
     public void testGetId() throws Exception {

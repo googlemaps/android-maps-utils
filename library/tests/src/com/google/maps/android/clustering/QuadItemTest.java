@@ -24,10 +24,10 @@ import org.junit.Assert;
 
 public class QuadItemTest {
 
-    public class TestingItem implements ClusterItem {
+    private class TestingItem implements ClusterItem {
         private final LatLng mPosition;
 
-        public TestingItem(double lat, double lng) {
+        TestingItem(double lat, double lng) {
             mPosition = new LatLng(lat, lng);
         }
 
@@ -45,10 +45,6 @@ public class QuadItemTest {
         public String getSnippet() {
             return null;
         }
-    }
-
-    public void setUp() {
-        // nothing to setup
     }
 
     @Test

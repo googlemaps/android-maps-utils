@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public class GeoJsonPointStyleTest {
 
-    GeoJsonPointStyle pointStyle;
+    private GeoJsonPointStyle pointStyle;
 
     @Before
     public void setUp() throws Exception {

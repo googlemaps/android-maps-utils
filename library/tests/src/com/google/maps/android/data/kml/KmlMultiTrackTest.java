@@ -1,24 +1,18 @@
 package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.data.Geometry;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class KmlMultiTrackTest {
-    KmlMultiTrack kmlMultiTrack;
 
-    @Before
-    public void setUp() throws Exception {
+    private KmlMultiTrack kmlMultiTrack;
 
-    }
-
-    public KmlMultiTrack createMultiTrack() {
+    private KmlMultiTrack createMultiTrack() {
         ArrayList<KmlTrack> kmlTracks = new ArrayList<KmlTrack>();
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         ArrayList<Double> altitudes = new ArrayList<Double>();

@@ -6,14 +6,15 @@ import org.junit.Test;
 import org.junit.Assert;
 
 public class KmlPointTest {
-    KmlPoint kmlPoint;
 
-    public KmlPoint createSimplePoint() {
+    private KmlPoint kmlPoint;
+
+    private KmlPoint createSimplePoint() {
         LatLng coordinates = new LatLng(0, 50);
         return new KmlPoint(coordinates);
     }
 
-    public KmlPoint createSimplePointWithAltitudes() {
+    private KmlPoint createSimplePointWithAltitudes() {
         LatLng coordinates = new LatLng(0, 50);
         Double altitude = new Double(100);
         return new KmlPoint(coordinates, altitude);

@@ -15,9 +15,9 @@ import java.util.Set;
 
 public class RendererTest {
 
-    GoogleMap mMap1;
-    Renderer mRenderer;
-    Set<Feature> featureSet;
+    private GoogleMap mMap1;
+    private Renderer mRenderer;
+    private Set<Feature> featureSet;
 
     @Before
     public void setUp() throws Exception {

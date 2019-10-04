@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class GeoJsonLineStringTest {
 
-    GeoJsonLineString ls;
+    private GeoJsonLineString ls;
 
     @Test
     public void testGetType() throws Exception {

@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class KmlTrackTest {
-    KmlTrack kmlTrack;
 
-    public KmlTrack createSimpleTrack() {
+    private KmlTrack kmlTrack;
+
+    private KmlTrack createSimpleTrack() {
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         ArrayList<Double> altitudes = new ArrayList<Double>();
         ArrayList<Long> timestamps = new ArrayList<Long>();

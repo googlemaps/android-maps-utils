@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 public class KmlContainerParserTest {
 
-    public XmlPullParser createParser(int res) throws Exception {
+    private XmlPullParser createParser(int res) throws Exception {
         InputStream stream = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().openRawResource(res);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);

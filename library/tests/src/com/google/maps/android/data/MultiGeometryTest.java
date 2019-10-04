@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MultiGeometryTest {
-    MultiGeometry mg;
+
+    private MultiGeometry mg;
 
     @Test
     public void testGetGeometryType() throws Exception {

@@ -10,14 +10,15 @@ import org.junit.Assert;
 import java.util.ArrayList;
 
 public class KmlMultiGeometryTest {
-    KmlMultiGeometry kmlMultiGeometry;
+
+    private KmlMultiGeometry kmlMultiGeometry;
 
     @Before
     public void setUp() throws Exception {
 
     }
 
-    public KmlMultiGeometry createMultiGeometry() {
+    private KmlMultiGeometry createMultiGeometry() {
         ArrayList<Geometry> kmlGeometries = new ArrayList<Geometry>();
         ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
         coordinates.add(new LatLng(0, 0));

@@ -11,14 +11,9 @@ import java.util.List;
 
 public class KmlPolygonTest {
 
-    KmlPolygon kmlPolygon;
+    private KmlPolygon kmlPolygon;
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    public KmlPolygon createRegularPolygon() {
+    private KmlPolygon createRegularPolygon() {
         ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
         outerCoordinates.add(new LatLng(10, 10));
         outerCoordinates.add(new LatLng(20, 20));
@@ -33,7 +28,7 @@ public class KmlPolygonTest {
         return new KmlPolygon(outerCoordinates, innerCoordinates);
     }
 
-    public KmlPolygon createOuterPolygon() {
+    private KmlPolygon createOuterPolygon() {
         ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
         outerCoordinates.add(new LatLng(10, 10));
         outerCoordinates.add(new LatLng(20, 20));

@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class GeoJsonMultiLineStringTest {
 
-    GeoJsonMultiLineString mls;
+    private GeoJsonMultiLineString mls;
 
     @Test
     public void testGetType() throws Exception {

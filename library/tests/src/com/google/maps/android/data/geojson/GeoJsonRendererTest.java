@@ -17,12 +17,12 @@ import java.util.Set;
 
 public class GeoJsonRendererTest {
 
-    GoogleMap mMap1;
-    Set<GeoJsonFeature> geoJsonFeaturesSet;
-    GeoJsonRenderer mRenderer;
-    GeoJsonLayer mLayer;
-    GeoJsonFeature mGeoJsonFeature;
-    Collection<Object> mValues;
+    private GoogleMap mMap1;
+    private Set<GeoJsonFeature> geoJsonFeaturesSet;
+    private GeoJsonRenderer mRenderer;
+    private GeoJsonLayer mLayer;
+    private GeoJsonFeature mGeoJsonFeature;
+    private Collection<Object> mValues;
 
     @Before
     public void setUp() throws Exception {

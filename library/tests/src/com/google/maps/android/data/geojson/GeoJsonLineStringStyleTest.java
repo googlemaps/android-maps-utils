@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class GeoJsonLineStringStyleTest {
 
-    GeoJsonLineStringStyle lineStringStyle;
+    private GeoJsonLineStringStyle lineStringStyle;
 
     @Before
     public void setUp() throws Exception {

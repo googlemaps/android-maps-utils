@@ -8,7 +8,7 @@ import org.junit.Assert;
 
 public class PointTest {
 
-    Point p;
+    private Point p;
 
     @Test
     public void testGetGeometryType() throws Exception {

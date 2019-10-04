@@ -15,10 +15,6 @@ import java.util.Arrays;
 
 public class GeoJsonParserTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
     @Test
     public void testParseGeoJson() throws Exception {
         JSONObject validGeoJsonObject = new JSONObject("{ \"type\": \"MultiLineString\",\n"
@@ -310,7 +306,7 @@ public class GeoJsonParserTest {
         Assert.assertEquals(0, parser.getFeatures().size());
     }
 
-    public JSONObject validGeometryCollection() throws Exception {
+    private JSONObject validGeometryCollection() throws Exception {
         return new JSONObject(
                 "{\n" +
                         "   \"type\": \"Feature\",\n" +
@@ -334,13 +330,13 @@ public class GeoJsonParserTest {
                         "}");
     }
 
-    public JSONObject validPoint() throws JSONException {
+    private JSONObject validPoint() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"Point\", \"coordinates\": [100.0, 0.0] }"
         );
     }
 
-    public JSONObject validLineString() throws JSONException {
+    private JSONObject validLineString() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"LineString\",\n"
                         + "    \"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ]\n"
@@ -348,7 +344,7 @@ public class GeoJsonParserTest {
         );
     }
 
-    public JSONObject validPolygon() throws JSONException {
+    private JSONObject validPolygon() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"Polygon\",\n"
                         + "    \"coordinates\": [\n"
@@ -359,7 +355,7 @@ public class GeoJsonParserTest {
         );
     }
 
-    public JSONObject validMultiPoint() throws JSONException {
+    private JSONObject validMultiPoint() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"MultiPoint\",\n"
                         + "    \"coordinates\": [ [100.0, 0.0], [101.0, 1.0] ]\n"
@@ -367,7 +363,7 @@ public class GeoJsonParserTest {
         );
     }
 
-    public JSONObject validMultiLineString() throws JSONException {
+    private JSONObject validMultiLineString() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"MultiLineString\",\n"
                         + "    \"coordinates\": [\n"
@@ -378,7 +374,7 @@ public class GeoJsonParserTest {
         );
     }
 
-    public JSONObject validMultiPolygon() throws Exception {
+    private JSONObject validMultiPolygon() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"MultiPolygon\",\n"
                         + "    \"coordinates\": [\n"
@@ -399,11 +395,11 @@ public class GeoJsonParserTest {
                         + "}");
     }
 
-    public JSONObject emptyFile() {
+    private JSONObject emptyFile() {
         return new JSONObject();
     }
 
-    public JSONObject invalidGeometryNoType() throws Exception {
+    private JSONObject invalidGeometryNoType() throws Exception {
         return new JSONObject(
                 "{\n"
                         + "    \"coordinates\": [100.0, 0.0] \n"
@@ -416,7 +412,7 @@ public class GeoJsonParserTest {
      *
      * @return geometry with invalid coordinates member
      */
-    public JSONObject invalidGeometryInvalidCoordinatesPair() throws Exception {
+    private JSONObject invalidGeometryInvalidCoordinatesPair() throws Exception {
         return new JSONObject("{ \"type\": \"Point\", \"coordinates\": [100.0] }");
     }
 
@@ -425,7 +421,7 @@ public class GeoJsonParserTest {
      *
      * @return geometry with invalid coordinates member
      */
-    public JSONObject invalidGeometryInvalidCoordinatesString() throws Exception {
+    private JSONObject invalidGeometryInvalidCoordinatesString() throws Exception {
         return new JSONObject("{ \"type\": \"Point\", \"coordinates\": [\"BANANA\", \"BOAT\"] }");
     }
 
@@ -434,7 +430,7 @@ public class GeoJsonParserTest {
      *
      * @return feature missing its geometry
      */
-    public JSONObject invalidFeatureNoGeometry() throws Exception {
+    private JSONObject invalidFeatureNoGeometry() throws Exception {
         return new JSONObject(
                 "{\n"
                         + "  \"type\": \"Feature\",\n"
@@ -450,7 +446,7 @@ public class GeoJsonParserTest {
      *
      * @return Geometry collection with invalid geometry
      */
-    public JSONObject invalidGeometryCollectionInvalidGeometry() throws Exception {
+    private JSONObject invalidGeometryCollectionInvalidGeometry() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"GeometryCollection\",\n"
                         + "  \"geometries\": [\n"
@@ -470,7 +466,7 @@ public class GeoJsonParserTest {
      *
      * @return Geometry collection with no geometries
      */
-    public JSONObject invalidGeometryCollectionInvalidGeometries() throws Exception {
+    private JSONObject invalidGeometryCollectionInvalidGeometries() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"GeometryCollection\",\n"
                         + "  \"doge\": [\n"
@@ -491,7 +487,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature containing a geometry collection with an invalid geometry
      */
-    public JSONObject invalidFeatureGeometryCollectionInvalidGeometry() throws Exception {
+    private JSONObject invalidFeatureGeometryCollectionInvalidGeometry() throws Exception {
         return new JSONObject(
                 "{\n"
                         + "  \"type\":\"FeatureCollection\",\n"
@@ -537,7 +533,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature collection with no geometries array
      */
-    public JSONObject invalidFeatureGeometryCollectionNoGeometries() throws Exception {
+    private JSONObject invalidFeatureGeometryCollectionNoGeometries() throws Exception {
         return new JSONObject(
                 "{\n"
                         + "  \"type\":\"FeatureCollection\",\n"
@@ -583,7 +579,7 @@ public class GeoJsonParserTest {
      *
      * @return feature missing its properties
      */
-    public JSONObject invalidFeatureNoProperties() throws Exception {
+    private JSONObject invalidFeatureNoProperties() throws Exception {
         return new JSONObject(
                 "{\n"
                         + "  \"type\": \"Feature\",\n"
@@ -601,7 +597,7 @@ public class GeoJsonParserTest {
      *
      * @return 2 valid features with 1 invalid feature
      */
-    public JSONObject invalidFeatureCollectionNoGeometryTypeInFeature() throws Exception {
+    private JSONObject invalidFeatureCollectionNoGeometryTypeInFeature() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"FeatureCollection\",\n"
                         + "    \"features\": [\n"
@@ -645,7 +641,7 @@ public class GeoJsonParserTest {
      *
      * @return FeatureCollection missing its feature array
      */
-    public JSONObject invalidFeatureCollectionNoFeaturesArray() throws JSONException {
+    private JSONObject invalidFeatureCollectionNoFeaturesArray() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"FeatureCollection\",\n"
                         + "    \"INVALID\": [\n"
@@ -686,7 +682,7 @@ public class GeoJsonParserTest {
     /**
      * Geometry missing its coordinates member
      */
-    public JSONObject invalidGeometryNoCoordinates() throws JSONException {
+    private JSONObject invalidGeometryNoCoordinates() throws JSONException {
         return new JSONObject(
                 "{ \"type\": \"LineString\",\n"
                         + "    \"banana\": [ [100.0, 0.0], [101.0, 1.0] ]\n"
@@ -699,7 +695,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature with geometry missing its coordinates
      */
-    public JSONObject invalidFeatureNoCoordinatesInGeometry() throws JSONException {
+    private JSONObject invalidFeatureNoCoordinatesInGeometry() throws JSONException {
         return new JSONObject(
                 "{\n"
                         + "  \"type\": \"Feature\",\n"
@@ -719,7 +715,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature missing its type
      */
-    public JSONObject invalidFeatureMissingType() throws JSONException {
+    private JSONObject invalidFeatureMissingType() throws JSONException {
         return new JSONObject(
                 "{\n"
                         + "  \"cow\": \"Feature\",\n"
@@ -739,7 +735,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature collection with feature missing its coordinates
      */
-    public JSONObject invalidFeatureCollectionNoCoordinatesInGeometryInFeature() throws Exception {
+    private JSONObject invalidFeatureCollectionNoCoordinatesInGeometryInFeature() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"FeatureCollection\",\n"
                         + "    \"features\": [\n"
@@ -782,7 +778,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature collection with a feature missing its type
      */
-    public JSONObject invalidFeatureCollectionNoTypeInGeometryInFeature() throws Exception {
+    private JSONObject invalidFeatureCollectionNoTypeInGeometryInFeature() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"FeatureCollection\",\n"
                         + "    \"features\": [\n"

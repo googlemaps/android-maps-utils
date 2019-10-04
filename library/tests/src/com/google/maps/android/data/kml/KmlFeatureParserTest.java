@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class KmlFeatureParserTest {
 
-    public XmlPullParser createParser(int res) throws Exception {
+    private XmlPullParser createParser(int res) throws Exception {
         InputStream stream = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().openRawResource(res);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);

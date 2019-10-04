@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class GeoJsonFeatureTest {
 
-    GeoJsonFeature feature;
+    private GeoJsonFeature feature;
 
     @Test
     public void testGetId() throws Exception {
@@ -82,6 +82,7 @@ public class GeoJsonFeatureTest {
         }
     }
 
+    @Test
     public void testPolygonStyle() {
         feature = new GeoJsonFeature(null, null, null, null);
         GeoJsonPolygonStyle polygonStyle = new GeoJsonPolygonStyle();
@@ -96,6 +97,7 @@ public class GeoJsonFeatureTest {
         }
     }
 
+    @Test
     public void testGeometry() {
         feature = new GeoJsonFeature(null, null, null, null);
         Assert.assertNull(feature.getGeometry());
@@ -116,6 +118,7 @@ public class GeoJsonFeatureTest {
         Assert.assertEquals(lineString, feature.getGeometry());
     }
 
+    @Test
     public void testGetBoundingBox() {
         feature = new GeoJsonFeature(null, null, null, null);
         Assert.assertNull(feature.getBoundingBox());

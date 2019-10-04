@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class GeoJsonMultiPointTest {
 
-    GeoJsonMultiPoint mp;
+    private GeoJsonMultiPoint mp;
 
     @Test
     public void testGetType() throws Exception {

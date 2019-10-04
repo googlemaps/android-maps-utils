@@ -7,7 +7,7 @@ import org.junit.Assert;
 
 public class GeoJsonPointTest {
 
-    GeoJsonPoint p;
+    private GeoJsonPoint p;
 
     @Test
     public void testGetType() throws Exception {
