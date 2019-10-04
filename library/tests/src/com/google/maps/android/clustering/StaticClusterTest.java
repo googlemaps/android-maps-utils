@@ -47,7 +47,7 @@ public class StaticClusterTest {
         StaticCluster<ClusterItem> cluster_2_3 = new StaticCluster<ClusterItem>(
                 new LatLng(0.2, 0.3));
 
-        Assert.assertFalse(mCluster.equals(cluster_2_3));
-        Assert.assertFalse(cluster_2_3.hashCode() == mCluster.hashCode());
+        Assert.assertNotEquals(mCluster, cluster_2_3);
+        Assert.assertNotEquals(cluster_2_3.hashCode(), mCluster.hashCode());
     }
 }

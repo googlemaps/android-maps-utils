@@ -20,7 +20,7 @@ public class GeoJsonFeatureTest {
     public void testGetId() throws Exception {
         feature = new GeoJsonFeature(null, "Pirate", null, null);
         Assert.assertNotNull(feature.getId());
-        Assert.assertTrue(feature.getId().equals("Pirate"));
+        Assert.assertEquals("Pirate", feature.getId());
         feature = new GeoJsonFeature(null, null, null, null);
         Assert.assertNull(feature.getId());
     }

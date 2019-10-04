@@ -22,7 +22,7 @@ public class KmlRendererTest {
         Assert.assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
         styles.put("BlueValue", null);
         renderer.assignStyleMap(styleMap, styles);
-        Assert.assertEquals(styles.get("BlueKey"), null);
+        Assert.assertNull(styles.get("BlueKey"));
         styleMap.put("BlueKey", "RedValue");
         renderer.assignStyleMap(styleMap, styles);
         Assert.assertNotNull(styleMap.get("BlueKey"));

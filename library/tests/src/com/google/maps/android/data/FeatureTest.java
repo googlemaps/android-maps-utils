@@ -16,7 +16,7 @@ public class FeatureTest {
     public void testGetId() throws Exception {
         feature = new Feature(null, "Pirate", null);
         Assert.assertNotNull(feature.getId());
-        Assert.assertTrue(feature.getId().equals("Pirate"));
+        Assert.assertEquals("Pirate", feature.getId());
         feature = new Feature(null, null, null);
         Assert.assertNull(feature.getId());
     }

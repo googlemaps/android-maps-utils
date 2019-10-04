@@ -1,11 +1,10 @@
 package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.data.Geometry;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;

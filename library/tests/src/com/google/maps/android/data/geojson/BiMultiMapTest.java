@@ -38,7 +38,7 @@ public class BiMultiMapTest {
         Assert.assertEquals(0, map.size());
         Assert.assertNull(map.get(key));
         for (String value : values) {
-            Assert.assertEquals(null, map.getKey(value));
+            Assert.assertNull(map.getKey(value));
         }
     }
 
@@ -56,7 +56,7 @@ public class BiMultiMapTest {
         map.remove(key);
         Assert.assertEquals(0, map.size());
         for (String value : values) {
-            Assert.assertEquals(null, map.getKey(value));
+            Assert.assertNull(map.getKey(value));
         }
     }
 }
