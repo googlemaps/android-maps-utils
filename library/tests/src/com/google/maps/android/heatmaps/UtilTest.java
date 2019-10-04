@@ -39,7 +39,7 @@ public class UtilTest {
                 0.41111229050718745, 0.1353352832366127, 0.028565500784550377,
                 0.0038659201394728076};
 
-        Assert.assertTrue(Arrays.equals(testKernel, expectedKernel));
+        Assert.assertArrayEquals(testKernel, expectedKernel, 0.0);
     }
 
     @Test

@@ -51,13 +51,13 @@ public class KmlParserTest {
         Assert.assertNotNull(mParser.getPlacemarks());
         Assert.assertEquals(1, mParser.getContainers().size());
         KmlContainer kmlContainer = mParser.getContainers().get(0);
-        Assert.assertEquals(true, kmlContainer.hasPlacemarks());
+        Assert.assertTrue(kmlContainer.hasPlacemarks());
 
         HashMap<String, KmlStyle> styles = kmlContainer.getStyles();
         KmlStyle kmlStyle = styles.get("#fireadvisory");
         Assert.assertNotNull(kmlStyle);
-        Assert.assertEquals(true, kmlStyle.hasFill());
-        Assert.assertEquals(false, kmlStyle.hasOutline());
+        Assert.assertTrue(kmlStyle.hasFill());
+        Assert.assertFalse(kmlStyle.hasOutline());
     }
 
     @Test
@@ -68,13 +68,13 @@ public class KmlParserTest {
         Assert.assertNotNull(mParser.getPlacemarks());
         Assert.assertEquals(1, mParser.getContainers().size());
         KmlContainer kmlContainer = mParser.getContainers().get(0);
-        Assert.assertEquals(true, kmlContainer.hasPlacemarks());
+        Assert.assertTrue(kmlContainer.hasPlacemarks());
 
         HashMap<String, KmlStyle> styles = kmlContainer.getStyles();
         KmlStyle kmlStyle = styles.get("#fireadvisory");
         Assert.assertNotNull(kmlStyle);
-        Assert.assertEquals(true, kmlStyle.hasFill());
-        Assert.assertEquals(false, kmlStyle.hasOutline());
+        Assert.assertTrue(kmlStyle.hasFill());
+        Assert.assertFalse(kmlStyle.hasOutline());
     }
 
     @Test
@@ -92,6 +92,6 @@ public class KmlParserTest {
         XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_unsupported);
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
-        Assert.assertTrue(mParser.getPlacemarks().size() == 1);
+        Assert.assertEquals(1, mParser.getPlacemarks().size());
     }
 }

@@ -72,7 +72,7 @@ public class PolyUtilTest {
 
     private static void locationIndexCase(boolean geodesic,
                                           List<LatLng> poly, LatLng point, int idx) {
-        Assert.assertTrue(idx == PolyUtil.locationIndexOnPath(point, poly, geodesic));
+        Assert.assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, geodesic));
     }
 
     private static void locationIndexCase(List<LatLng> poly, LatLng point, int idx) {
@@ -82,7 +82,7 @@ public class PolyUtilTest {
 
     private static void locationIndexToleranceCase(boolean geodesic,
                                                    List<LatLng> poly, LatLng point, double tolerance, int idx) {
-        Assert.assertTrue(idx == PolyUtil.locationIndexOnPath(point, poly, geodesic, tolerance));
+        Assert.assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, geodesic, tolerance));
     }
 
     private static void locationIndexToleranceCase(List<LatLng> poly, LatLng point, double tolerance, int idx) {
@@ -398,7 +398,7 @@ public class PolyUtilTest {
     private void assertLineLength(List<LatLng> line, List<LatLng> simplifiedLine) {
         if (line.size() == simplifiedLine.size()) {
             // If no points were eliminated, then the length of both lines should be the same
-            Assert.assertTrue(SphericalUtil.computeLength(simplifiedLine) == SphericalUtil.computeLength(line));
+            Assert.assertEquals(SphericalUtil.computeLength(simplifiedLine), SphericalUtil.computeLength(line), 0.0);
         } else {
             Assert.assertTrue(simplifiedLine.size() < line.size());
             // If points were eliminated, then the simplified line should always be shorter
@@ -438,7 +438,7 @@ public class PolyUtilTest {
 
         // Check references
         for (int i = 0; i < beforeInput.size(); i++) {
-            Assert.assertTrue(afterInput.get(i) == beforeInput.get(i));
+            Assert.assertSame(afterInput.get(i), beforeInput.get(i));
         }
     }
 
