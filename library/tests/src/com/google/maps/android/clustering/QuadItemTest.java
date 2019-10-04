@@ -20,14 +20,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 
 import org.junit.Test;
-import org.junit.Assert;
+
+import static org.junit.Assert.*;
 
 public class QuadItemTest {
+    @Test
+    public void testRemoval() {
+        TestingItem item_1_5 = new TestingItem(0.1, 0.5);
+        TestingItem item_2_3 = new TestingItem(0.2, 0.3);
+
+        NonHierarchicalDistanceBasedAlgorithm<ClusterItem> algo =
+                new NonHierarchicalDistanceBasedAlgorithm<>();
+        algo.addItem(item_1_5);
+        algo.addItem(item_2_3);
+
+        assertEquals(2, algo.getItems().size());
+
+        algo.removeItem(item_1_5);
+
+        assertEquals(1, algo.getItems().size());
+
+        assertFalse(algo.getItems().contains(item_1_5));
+        assertTrue(algo.getItems().contains(item_2_3));
+    }
 
     public class TestingItem implements ClusterItem {
         private final LatLng mPosition;
 
-        public TestingItem(double lat, double lng) {
+        TestingItem(double lat, double lng) {
             mPosition = new LatLng(lat, lng);
         }
 
@@ -45,29 +65,5 @@ public class QuadItemTest {
         public String getSnippet() {
             return null;
         }
-    }
-
-    public void setUp() {
-        // nothing to setup
-    }
-
-    @Test
-    public void testRemoval() {
-        TestingItem item_1_5 = new TestingItem(0.1, 0.5);
-        TestingItem item_2_3 = new TestingItem(0.2, 0.3);
-
-        NonHierarchicalDistanceBasedAlgorithm<ClusterItem> algo
-                = new NonHierarchicalDistanceBasedAlgorithm<ClusterItem>();
-        algo.addItem(item_1_5);
-        algo.addItem(item_2_3);
-
-        Assert.assertEquals(2, algo.getItems().size());
-
-        algo.removeItem(item_1_5);
-
-        Assert.assertEquals(1, algo.getItems().size());
-
-        Assert.assertFalse(algo.getItems().contains(item_1_5));
-        Assert.assertTrue(algo.getItems().contains(item_2_3));
     }
 }

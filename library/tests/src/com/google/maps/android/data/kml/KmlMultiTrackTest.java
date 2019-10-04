@@ -2,36 +2,29 @@ package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.Assert.*;
+
 public class KmlMultiTrackTest {
-    KmlMultiTrack kmlMultiTrack;
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    public KmlMultiTrack createMultiTrack() {
-        ArrayList<KmlTrack> kmlTracks = new ArrayList<KmlTrack>();
-        ArrayList<LatLng> coordinates = new ArrayList<LatLng>();
-        ArrayList<Double> altitudes = new ArrayList<Double>();
-        ArrayList<Long> timestamps = new ArrayList<Long>();
-        HashMap<String, String> properties = new HashMap<String, String>();
+    private KmlMultiTrack createMultiTrack() {
+        ArrayList<KmlTrack> kmlTracks = new ArrayList<>();
+        ArrayList<LatLng> coordinates = new ArrayList<>();
+        ArrayList<Double> altitudes = new ArrayList<>();
+        ArrayList<Long> timestamps = new ArrayList<>();
+        HashMap<String, String> properties = new HashMap<>();
         coordinates.add(new LatLng(0, 0));
         coordinates.add(new LatLng(50, 50));
         coordinates.add(new LatLng(90, 90));
-        altitudes.add(new Double(100));
-        altitudes.add(new Double(200));
-        altitudes.add(new Double(300));
-        timestamps.add(new Long(1000));
-        timestamps.add(new Long(2000));
-        timestamps.add(new Long(3000));
+        altitudes.add(100d);
+        altitudes.add(200d);
+        altitudes.add(300d);
+        timestamps.add(1000L);
+        timestamps.add(2000L);
+        timestamps.add(3000L);
         properties.put("key", "value");
         KmlTrack kmlTrack = new KmlTrack(coordinates, altitudes, timestamps, properties);
         kmlTracks.add(kmlTrack);
@@ -39,29 +32,29 @@ public class KmlMultiTrackTest {
     }
 
     @Test
-    public void testGetKmlGeometryType() throws Exception {
-        kmlMultiTrack = createMultiTrack();
-        Assert.assertNotNull(kmlMultiTrack);
-        Assert.assertNotNull(kmlMultiTrack.getGeometryType());
-        Assert.assertEquals("MultiGeometry", kmlMultiTrack.getGeometryType());
+    public void testGetKmlGeometryType() {
+        KmlMultiTrack kmlMultiTrack = createMultiTrack();
+        assertNotNull(kmlMultiTrack);
+        assertNotNull(kmlMultiTrack.getGeometryType());
+        assertEquals("MultiGeometry", kmlMultiTrack.getGeometryType());
     }
 
     @Test
-    public void testGetGeometry() throws Exception {
-        kmlMultiTrack = createMultiTrack();
-        Assert.assertNotNull(kmlMultiTrack);
-        Assert.assertEquals(kmlMultiTrack.getGeometryObject().size(), 1);
+    public void testGetGeometry() {
+        KmlMultiTrack kmlMultiTrack = createMultiTrack();
+        assertNotNull(kmlMultiTrack);
+        assertEquals(1, kmlMultiTrack.getGeometryObject().size());
         KmlTrack lineString = ((KmlTrack) kmlMultiTrack.getGeometryObject().get(0));
-        Assert.assertNotNull(lineString);
+        assertNotNull(lineString);
     }
 
     @Test
     public void testNullGeometry() {
         try {
-            kmlMultiTrack = new KmlMultiTrack(null);
-            Assert.fail();
+            new KmlMultiTrack(null);
+            fail();
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Tracks cannot be null", e.getMessage());
+            assertEquals("Tracks cannot be null", e.getMessage());
         }
     }
 }
