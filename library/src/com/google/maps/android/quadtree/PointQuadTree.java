@@ -32,7 +32,7 @@ import java.util.Set;
  */
 public class PointQuadTree<T extends PointQuadTree.Item> {
     public interface Item {
-        public Point getPoint();
+        Point getPoint();
     }
 
     /**

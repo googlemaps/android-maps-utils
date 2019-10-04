@@ -11,10 +11,10 @@ interface GeoJsonStyle {
      *
      * @return type of geometries this style can be applied to
      */
-    public String[] getGeometryType();
+    String[] getGeometryType();
 
-    public boolean isVisible();
+    boolean isVisible();
 
-    public void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
 }
