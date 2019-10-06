@@ -56,7 +56,7 @@ public class GeoJsonRendererTest {
         mRenderer.setMap(mMap1);
         Assert.assertEquals(mMap1, mRenderer.getMap());
         mRenderer.setMap(null);
-        Assert.assertEquals(null, mRenderer.getMap());
+        Assert.assertNull(mRenderer.getMap());
     }
 
     @Test

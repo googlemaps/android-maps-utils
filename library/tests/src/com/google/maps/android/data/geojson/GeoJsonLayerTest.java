@@ -58,7 +58,7 @@ public class GeoJsonLayerTest {
         mLayer.setMap(map2);
         Assert.assertEquals(map2, mLayer.getMap());
         mLayer.setMap(null);
-        Assert.assertEquals(null, mLayer.getMap());
+        Assert.assertNull(mLayer.getMap());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class GeoJsonLayerTest {
     @Test
     public void testDefaultPolygonStyle() throws Exception {
         mLayer.getDefaultPolygonStyle().setGeodesic(true);
-        Assert.assertEquals(true, mLayer.getDefaultPolygonStyle().isGeodesic());
+        Assert.assertTrue(mLayer.getDefaultPolygonStyle().isGeodesic());
     }
 
     @Test
