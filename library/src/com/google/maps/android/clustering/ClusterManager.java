@@ -18,7 +18,6 @@ package com.google.maps.android.clustering;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;

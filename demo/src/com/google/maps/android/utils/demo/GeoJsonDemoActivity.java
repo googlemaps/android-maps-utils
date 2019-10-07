@@ -1,5 +1,9 @@
 package com.google.maps.android.utils.demo;
 
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -11,10 +15,6 @@ import com.google.maps.android.data.geojson.GeoJsonPointStyle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
