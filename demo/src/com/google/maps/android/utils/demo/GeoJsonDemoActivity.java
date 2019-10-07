@@ -155,4 +155,3 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
     }
 
 }
-
