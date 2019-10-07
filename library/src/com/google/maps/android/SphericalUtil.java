@@ -20,8 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import static java.lang.Math.*;
 import static com.google.maps.android.MathUtil.*;
+import static java.lang.Math.*;
 
 public class SphericalUtil {
 

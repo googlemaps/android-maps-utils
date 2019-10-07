@@ -13,8 +13,8 @@ import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.data.Feature;
-import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.Geometry;
+import com.google.maps.android.data.Renderer;
 
 import java.io.IOException;
 import java.io.InputStream;

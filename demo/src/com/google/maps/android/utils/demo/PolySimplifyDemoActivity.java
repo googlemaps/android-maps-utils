@@ -16,14 +16,14 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.graphics.Color;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
-
-import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.List;

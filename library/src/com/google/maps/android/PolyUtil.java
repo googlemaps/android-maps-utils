@@ -18,8 +18,8 @@ package com.google.maps.android;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import static com.google.maps.android.SphericalUtil.*;

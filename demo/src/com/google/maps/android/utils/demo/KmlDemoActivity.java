@@ -1,5 +1,9 @@
 package com.google.maps.android.utils.demo;
 
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -11,10 +15,6 @@ import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPolygon;
 
 import org.xmlpull.v1.XmlPullParserException;
-
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

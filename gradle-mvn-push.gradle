@@ -64,7 +64,7 @@ publishing {
             afterEvaluate {
                 artifact bundleReleaseAar
             }
-        }                
+        }
         apkLib(MavenPublication) {
             pom {
                 name = 'Google Maps Android API utility library'

@@ -16,16 +16,16 @@
 
 package com.google.maps.android.utils.demo;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.maps.android.utils.demo.model.MyItem;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class MyItemReader {
 
