@@ -3,48 +3,59 @@ package com.google.maps.android.data.geojson;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class GeoJsonPolygonTest {
-
     GeoJsonPolygon p;
 
     @Test
-    public void testGetType() throws Exception {
-        ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
-        coordinates.add(new ArrayList<LatLng>(
-                Arrays.asList(new LatLng(0, 0), new LatLng(20, 20), new LatLng(60, 60),
-                        new LatLng(0, 0))));
+    public void testGetType() {
+        List<List<LatLng>> coordinates = new ArrayList<>();
+        coordinates.add(
+                new ArrayList<>(
+                        Arrays.asList(
+                                new LatLng(0, 0),
+                                new LatLng(20, 20),
+                                new LatLng(60, 60),
+                                new LatLng(0, 0))));
         p = new GeoJsonPolygon(coordinates);
-        Assert.assertEquals("Polygon", p.getType());
+        assertEquals("Polygon", p.getType());
     }
 
     @Test
-    public void testGetCoordinates() throws Exception {
+    public void testGetCoordinates() {
         // No holes
-        ArrayList<ArrayList<LatLng>> coordinates = new ArrayList<ArrayList<LatLng>>();
-        coordinates.add(new ArrayList<LatLng>(
-                Arrays.asList(new LatLng(0, 0), new LatLng(20, 20), new LatLng(60, 60),
-                        new LatLng(0, 0))));
+        List<List<LatLng>> coordinates = new ArrayList<>();
+        coordinates.add(
+                new ArrayList<>(
+                        Arrays.asList(
+                                new LatLng(0, 0),
+                                new LatLng(20, 20),
+                                new LatLng(60, 60),
+                                new LatLng(0, 0))));
         p = new GeoJsonPolygon(coordinates);
-        Assert.assertEquals(coordinates, p.getCoordinates());
+        assertEquals(coordinates, p.getCoordinates());
 
         // Holes
-        coordinates.add(new ArrayList<LatLng>(
-                Arrays.asList(new LatLng(0, 0), new LatLng(20, 20), new LatLng(60, 60),
-                        new LatLng(0, 0))));
+        coordinates.add(
+                new ArrayList<>(
+                        Arrays.asList(
+                                new LatLng(0, 0),
+                                new LatLng(20, 20),
+                                new LatLng(60, 60),
+                                new LatLng(0, 0))));
         p = new GeoJsonPolygon(coordinates);
-
 
         try {
             p = new GeoJsonPolygon(null);
-            Assert.fail();
+            fail();
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Coordinates cannot be null", e.getMessage());
+            assertEquals("Coordinates cannot be null", e.getMessage());
         }
-
     }
 }

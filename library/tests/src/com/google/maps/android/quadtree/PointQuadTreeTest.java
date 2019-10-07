@@ -19,9 +19,9 @@ package com.google.maps.android.quadtree;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.Collection;
 import java.util.Random;
@@ -32,7 +32,7 @@ public class PointQuadTreeTest {
 
     @Before
     public void setUp() {
-        mTree = new PointQuadTree<Item>(0, 1, 0, 1);
+        mTree = new PointQuadTree<>(0, 1, 0, 1);
     }
 
     @Test
@@ -110,7 +110,8 @@ public class PointQuadTreeTest {
         }
 
         Assert.assertEquals(10000, searchAll().size());
-        Assert.assertEquals(1, mTree.search(new Bounds((double) 0, 0.00001, (double) 0, 0.00001)).size());
+        Assert.assertEquals(
+                1, mTree.search(new Bounds((double) 0, 0.00001, (double) 0, 0.00001)).size());
         Assert.assertEquals(0, mTree.search(new Bounds(.7, .8, .7, .8)).size());
     }
 
@@ -125,8 +126,7 @@ public class PointQuadTreeTest {
     }
 
     /**
-     * Tests 30,000 items at the same point.
-     * Timing results are averaged.
+     * Tests 30,000 items at the same point. Timing results are averaged.
      */
     @Test
     public void testVeryDeepTree() {
@@ -142,8 +142,8 @@ public class PointQuadTreeTest {
     }
 
     /**
-     * Tests 400,000 points relatively uniformly distributed across the space.
-     * Timing results are averaged.
+     * Tests 400,000 points relatively uniformly distributed across the space. Timing results are
+     * averaged.
      */
     @Test
     public void testManyPoints() {
@@ -177,8 +177,7 @@ public class PointQuadTreeTest {
     }
 
     /**
-     * Runs a test with 100,000 points.
-     * Timing results are averaged.
+     * Runs a test with 100,000 points. Timing results are averaged.
      */
     @Test
     public void testRandomPoints() {

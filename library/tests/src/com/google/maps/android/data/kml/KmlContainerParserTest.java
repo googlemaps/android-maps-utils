@@ -2,20 +2,23 @@ package com.google.maps.android.data.kml;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.junit.Test;
-import org.junit.Assert;
-
 import com.google.maps.android.test.R;
 
+import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.InputStream;
 
-public class KmlContainerParserTest {
+import static org.junit.Assert.*;
 
-    public XmlPullParser createParser(int res) throws Exception {
-        InputStream stream = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().openRawResource(res);
+public class KmlContainerParserTest {
+    private XmlPullParser createParser(int res) throws Exception {
+        InputStream stream =
+                InstrumentationRegistry.getInstrumentation()
+                        .getTargetContext()
+                        .getResources()
+                        .openRawResource(res);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
@@ -28,50 +31,48 @@ public class KmlContainerParserTest {
     public void testCDataEntity() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_cdata);
         KmlContainer kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertEquals(kmlContainer.getProperty("description"), "TELEPORT");
+        assertEquals("TELEPORT", kmlContainer.getProperty("description"));
     }
 
     @Test
     public void testCreateContainerProperty() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_basic_folder);
         KmlContainer kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertTrue(kmlContainer.hasProperties());
-        Assert.assertEquals(kmlContainer.getProperty("name"), "Basic Folder");
+        assertTrue(kmlContainer.hasProperties());
+        assertEquals("Basic Folder", kmlContainer.getProperty("name"));
         xmlPullParser = createParser(R.raw.amu_unknown_folder);
         kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertTrue(kmlContainer.hasProperty("name"));
+        assertTrue(kmlContainer.hasProperty("name"));
     }
 
     @Test
     public void testCreateContainerPlacemark() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_basic_folder);
         KmlContainer kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertTrue(kmlContainer.hasPlacemarks());
-        Assert.assertEquals(kmlContainer.getPlacemarksHashMap().size(), 1);
+        assertTrue(kmlContainer.hasPlacemarks());
+        assertEquals(1, kmlContainer.getPlacemarksHashMap().size());
         xmlPullParser = createParser(R.raw.amu_multiple_placemarks);
         kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertTrue(kmlContainer.hasPlacemarks());
-        Assert.assertEquals(kmlContainer.getPlacemarksHashMap().size(), 2);
+        assertTrue(kmlContainer.hasPlacemarks());
+        assertEquals(2, kmlContainer.getPlacemarksHashMap().size());
     }
 
     @Test
     public void testCreateContainerGroundOverlay() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_ground_overlay);
         KmlContainer kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertEquals(kmlContainer.getGroundOverlayHashMap().size(), 2);
+        assertEquals(2, kmlContainer.getGroundOverlayHashMap().size());
     }
 
     @Test
     public void testCreateContainerObjects() throws Exception {
         XmlPullParser xmlPullParser = createParser(R.raw.amu_nested_folders);
         KmlContainer kmlContainer = KmlContainerParser.createContainer(xmlPullParser);
-        Assert.assertNotNull(kmlContainer.getContainers());
+        assertNotNull(kmlContainer.getContainers());
         int numberOfNestedContainers = 0;
         for (KmlContainer container : kmlContainer.getContainers()) {
             numberOfNestedContainers++;
         }
-        Assert.assertEquals(numberOfNestedContainers, 2);
+        assertEquals(2, numberOfNestedContainers);
     }
-
-
 }

@@ -1,31 +1,31 @@
 package com.google.maps.android.data.kml;
 
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.HashMap;
 
-public class KmlRendererTest {
+import static org.junit.Assert.*;
 
+public class KmlRendererTest {
     @Test
     public void testAssignStyleMap() {
-        HashMap<String, String> styleMap = new HashMap<String, String>();
+        HashMap<String, String> styleMap = new HashMap<>();
         styleMap.put("BlueKey", "BlueValue");
-        HashMap<String, KmlStyle> styles = new HashMap<String, KmlStyle>();
+        HashMap<String, KmlStyle> styles = new HashMap<>();
         KmlStyle blueStyle = new KmlStyle();
         KmlStyle redStyle = new KmlStyle();
         styles.put("BlueValue", blueStyle);
         styles.put("RedValue", redStyle);
         KmlRenderer renderer = new KmlRenderer(null, null);
         renderer.assignStyleMap(styleMap, styles);
-        Assert.assertNotNull(styles.get("BlueKey"));
-        Assert.assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
+        assertNotNull(styles.get("BlueKey"));
+        assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
         styles.put("BlueValue", null);
         renderer.assignStyleMap(styleMap, styles);
-        Assert.assertNull(styles.get("BlueKey"));
+        assertNull(styles.get("BlueKey"));
         styleMap.put("BlueKey", "RedValue");
         renderer.assignStyleMap(styleMap, styles);
-        Assert.assertNotNull(styleMap.get("BlueKey"));
-        Assert.assertEquals(styles.get("BlueKey"), redStyle);
+        assertNotNull(styleMap.get("BlueKey"));
+        assertEquals(styles.get("BlueKey"), redStyle);
     }
 }

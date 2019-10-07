@@ -1,17 +1,17 @@
 package com.google.maps.android.data.geojson;
 
+import android.graphics.Color;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.data.Feature;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
-import org.json.JSONObject;
-
-import android.graphics.Color;
+import static org.junit.Assert.*;
 
 public class GeoJsonLayerTest {
     GoogleMap map;
@@ -24,73 +24,75 @@ public class GeoJsonLayerTest {
     }
 
     @Test
-    public void testGetFeatures() throws Exception {
+    public void testGetFeatures() {
         int featureCount = 0;
         for (Feature ignored : mLayer.getFeatures()) {
             featureCount++;
         }
-        Assert.assertEquals(3, featureCount);
+        assertEquals(3, featureCount);
     }
 
     @Test
-    public void testAddFeature() throws Exception {
+    public void testAddFeature() {
         int featureCount = 0;
         mLayer.addFeature(new GeoJsonFeature(null, null, null, null));
         for (Feature ignored : mLayer.getFeatures()) {
             featureCount++;
         }
-        Assert.assertEquals(4, featureCount);
+        assertEquals(4, featureCount);
     }
 
     @Test
-    public void testRemoveFeature() throws Exception {
+    public void testRemoveFeature() {
         int featureCount = 0;
         for (Feature ignored : mLayer.getFeatures()) {
             featureCount++;
         }
-        Assert.assertEquals(3, featureCount);
+        assertEquals(3, featureCount);
     }
 
     @Test
-    public void testMap() throws Exception {
-        Assert.assertEquals(map, mLayer.getMap());
+    public void testMap() {
+        assertEquals(map, mLayer.getMap());
         mLayer.setMap(map2);
-        Assert.assertEquals(map2, mLayer.getMap());
+        assertEquals(map2, mLayer.getMap());
         mLayer.setMap(null);
-        Assert.assertNull(mLayer.getMap());
+        assertNull(mLayer.getMap());
     }
 
     @Test
-    public void testDefaultPointStyle() throws Exception {
+    public void testDefaultPointStyle() {
         mLayer.getDefaultPointStyle().setTitle("Dolphin");
-        Assert.assertEquals("Dolphin", mLayer.getDefaultPointStyle().getTitle());
+        assertEquals("Dolphin", mLayer.getDefaultPointStyle().getTitle());
     }
 
     @Test
-    public void testDefaultLineStringStyle() throws Exception {
+    public void testDefaultLineStringStyle() {
         mLayer.getDefaultLineStringStyle().setColor(Color.BLUE);
-        Assert.assertEquals(Color.BLUE, mLayer.getDefaultLineStringStyle().getColor());
+        assertEquals(Color.BLUE, mLayer.getDefaultLineStringStyle().getColor());
     }
 
     @Test
-    public void testDefaultPolygonStyle() throws Exception {
+    public void testDefaultPolygonStyle() {
         mLayer.getDefaultPolygonStyle().setGeodesic(true);
-        Assert.assertTrue(mLayer.getDefaultPolygonStyle().isGeodesic());
+        assertTrue(mLayer.getDefaultPolygonStyle().isGeodesic());
     }
 
     @Test
-    public void testGetBoundingBox() throws Exception {
-        Assert.assertEquals(new LatLngBounds(new LatLng(-80, -150), new LatLng(80, 150)), mLayer.getBoundingBox());
+    public void testGetBoundingBox() {
+        assertEquals(
+                new LatLngBounds(new LatLng(-80, -150), new LatLng(80, 150)),
+                mLayer.getBoundingBox());
     }
 
     private JSONObject createFeatureCollection() throws Exception {
         return new JSONObject(
                 "{ \"type\": \"FeatureCollection\",\n"
-                        + "\"bbox\": [-150.0, -80.0, 150.0, 80.0],"
-                        + "    \"features\": [\n"
+                        + "\"bbox\": [-150.0, -80.0, 150.0, 80.0],    \"features\": [\n"
                         + "      { \"type\": \"Feature\",\n"
                         + "        \"id\": \"point\", \n"
-                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},\n"
+                        + "        \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0,"
+                        + " 0.5]},\n"
                         + "        \"properties\": {\"prop0\": \"value0\"}\n"
                         + "        },\n"
                         + "      { \"type\": \"Feature\",\n"
@@ -119,7 +121,6 @@ public class GeoJsonLayerTest {
                         + "           }\n"
                         + "         }\n"
                         + "       ]\n"
-                        + "     }"
-        );
+                        + "     }");
     }
 }

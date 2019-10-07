@@ -3,45 +3,50 @@ package com.google.maps.android.data.geojson;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class GeoJsonMultiLineStringTest {
-
     GeoJsonMultiLineString mls;
 
     @Test
-    public void testGetType() throws Exception {
-        ArrayList<GeoJsonLineString> lineStrings = new ArrayList<GeoJsonLineString>();
-        lineStrings.add(new GeoJsonLineString(
-                new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 0), new LatLng(50, 50)))));
-        lineStrings.add(new GeoJsonLineString(
-                new ArrayList<LatLng>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
+    public void testGetType() {
+        List<GeoJsonLineString> lineStrings = new ArrayList<>();
+        lineStrings.add(
+                new GeoJsonLineString(
+                        new ArrayList<>(Arrays.asList(new LatLng(0, 0), new LatLng(50, 50)))));
+        lineStrings.add(
+                new GeoJsonLineString(
+                        new ArrayList<>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
         mls = new GeoJsonMultiLineString(lineStrings);
-        Assert.assertEquals("MultiLineString", mls.getType());
+        assertEquals("MultiLineString", mls.getType());
     }
 
     @Test
-    public void testGetLineStrings() throws Exception {
-        ArrayList<GeoJsonLineString> lineStrings = new ArrayList<GeoJsonLineString>();
-        lineStrings.add(new GeoJsonLineString(
-                new ArrayList<LatLng>(Arrays.asList(new LatLng(0, 0), new LatLng(50, 50)))));
-        lineStrings.add(new GeoJsonLineString(
-                new ArrayList<LatLng>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
+    public void testGetLineStrings() {
+        List<GeoJsonLineString> lineStrings = new ArrayList<>();
+        lineStrings.add(
+                new GeoJsonLineString(
+                        new ArrayList<>(Arrays.asList(new LatLng(0, 0), new LatLng(50, 50)))));
+        lineStrings.add(
+                new GeoJsonLineString(
+                        new ArrayList<>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
         mls = new GeoJsonMultiLineString(lineStrings);
-        Assert.assertEquals(lineStrings, mls.getLineStrings());
+        assertEquals(lineStrings, mls.getLineStrings());
 
-        lineStrings = new ArrayList<GeoJsonLineString>();
+        lineStrings = new ArrayList<>();
         mls = new GeoJsonMultiLineString(lineStrings);
-        Assert.assertEquals(new ArrayList<GeoJsonLineString>(), mls.getLineStrings());
+        assertEquals(new ArrayList<GeoJsonLineString>(), mls.getLineStrings());
 
         try {
             mls = new GeoJsonMultiLineString(null);
-            Assert.fail();
+            fail();
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Geometries cannot be null", e.getMessage());
+            assertEquals("Geometries cannot be null", e.getMessage());
         }
     }
 }

@@ -1,88 +1,88 @@
 package com.google.maps.android.data.geojson;
 
+import android.graphics.Color;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
-
-import android.graphics.Color;
 
 import java.util.Arrays;
 
-public class GeoJsonLineStringStyleTest {
+import static org.junit.Assert.*;
 
+public class GeoJsonLineStringStyleTest {
     GeoJsonLineStringStyle lineStringStyle;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         lineStringStyle = new GeoJsonLineStringStyle();
     }
 
     @Test
-    public void testGetGeometryType() throws Exception {
-        Assert.assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("LineString"));
-        Assert.assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("MultiLineString"));
-        Assert.assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("GeometryCollection"));
-        Assert.assertEquals(3, lineStringStyle.getGeometryType().length);
+    public void testGetGeometryType() {
+        assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("LineString"));
+        assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("MultiLineString"));
+        assertTrue(Arrays.asList(lineStringStyle.getGeometryType()).contains("GeometryCollection"));
+        assertEquals(3, lineStringStyle.getGeometryType().length);
     }
 
     @Test
-    public void testColor() throws Exception {
+    public void testColor() {
         lineStringStyle.setColor(Color.YELLOW);
-        Assert.assertEquals(Color.YELLOW, lineStringStyle.getColor());
-        Assert.assertEquals(Color.YELLOW, lineStringStyle.toPolylineOptions().getColor());
+        assertEquals(Color.YELLOW, lineStringStyle.getColor());
+        assertEquals(Color.YELLOW, lineStringStyle.toPolylineOptions().getColor());
 
         lineStringStyle.setColor(0x76543210);
-        Assert.assertEquals(0x76543210, lineStringStyle.getColor());
-        Assert.assertEquals(0x76543210, lineStringStyle.toPolylineOptions().getColor());
+        assertEquals(0x76543210, lineStringStyle.getColor());
+        assertEquals(0x76543210, lineStringStyle.toPolylineOptions().getColor());
 
         lineStringStyle.setColor(Color.parseColor("#000000"));
-        Assert.assertEquals(Color.parseColor("#000000"), lineStringStyle.getColor());
-        Assert.assertEquals(Color.parseColor("#000000"), lineStringStyle.toPolylineOptions().getColor());
+        assertEquals(Color.parseColor("#000000"), lineStringStyle.getColor());
+        assertEquals(Color.parseColor("#000000"), lineStringStyle.toPolylineOptions().getColor());
     }
 
     @Test
-    public void testGeodesic() throws Exception {
+    public void testGeodesic() {
         lineStringStyle.setGeodesic(true);
-        Assert.assertTrue(lineStringStyle.isGeodesic());
-        Assert.assertTrue(lineStringStyle.toPolylineOptions().isGeodesic());
+        assertTrue(lineStringStyle.isGeodesic());
+        assertTrue(lineStringStyle.toPolylineOptions().isGeodesic());
     }
 
     @Test
-    public void testVisible() throws Exception {
+    public void testVisible() {
         lineStringStyle.setVisible(false);
-        Assert.assertFalse(lineStringStyle.isVisible());
-        Assert.assertFalse(lineStringStyle.toPolylineOptions().isVisible());
+        assertFalse(lineStringStyle.isVisible());
+        assertFalse(lineStringStyle.toPolylineOptions().isVisible());
     }
 
     @Test
-    public void testWidth() throws Exception {
+    public void testWidth() {
         lineStringStyle.setWidth(20.2f);
-        Assert.assertEquals(20.2f, lineStringStyle.getWidth(), 0);
-        Assert.assertEquals(20.2f, lineStringStyle.toPolylineOptions().getWidth(), 0);
+        assertEquals(20.2f, lineStringStyle.getWidth(), 0);
+        assertEquals(20.2f, lineStringStyle.toPolylineOptions().getWidth(), 0);
     }
 
     @Test
-    public void testZIndex() throws Exception {
+    public void testZIndex() {
         lineStringStyle.setZIndex(50.78f);
-        Assert.assertEquals(50.78f, lineStringStyle.getZIndex(), 0);
-        Assert.assertEquals(50.78f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
+        assertEquals(50.78f, lineStringStyle.getZIndex(), 0);
+        assertEquals(50.78f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
     }
 
     @Test
     public void testDefaultLineStringStyle() {
-        Assert.assertEquals(Color.BLACK, lineStringStyle.getColor());
-        Assert.assertFalse(lineStringStyle.isGeodesic());
-        Assert.assertTrue(lineStringStyle.isVisible());
-        Assert.assertEquals(10.0f, lineStringStyle.getWidth(), 0);
-        Assert.assertEquals(0.0f, lineStringStyle.getZIndex(), 0);
+        assertEquals(Color.BLACK, lineStringStyle.getColor());
+        assertFalse(lineStringStyle.isGeodesic());
+        assertTrue(lineStringStyle.isVisible());
+        assertEquals(10.0f, lineStringStyle.getWidth(), 0);
+        assertEquals(0.0f, lineStringStyle.getZIndex(), 0);
     }
 
     @Test
-    public void testDefaultGetPolylineOptions() throws Exception {
-        Assert.assertEquals(Color.BLACK, lineStringStyle.toPolylineOptions().getColor());
-        Assert.assertFalse(lineStringStyle.toPolylineOptions().isGeodesic());
-        Assert.assertTrue(lineStringStyle.toPolylineOptions().isVisible());
-        Assert.assertEquals(10.0f, lineStringStyle.toPolylineOptions().getWidth(), 0);
-        Assert.assertEquals(0.0f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
+    public void testDefaultGetPolylineOptions() {
+        assertEquals(Color.BLACK, lineStringStyle.toPolylineOptions().getColor());
+        assertFalse(lineStringStyle.toPolylineOptions().isGeodesic());
+        assertTrue(lineStringStyle.toPolylineOptions().isVisible());
+        assertEquals(10.0f, lineStringStyle.toPolylineOptions().getWidth(), 0);
+        assertEquals(0.0f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
     }
 }

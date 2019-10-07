@@ -2,30 +2,22 @@ package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 public class KmlPolygonTest {
-
-    KmlPolygon kmlPolygon;
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    public KmlPolygon createRegularPolygon() {
-        ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
+    private KmlPolygon createRegularPolygon() {
+        List<LatLng> outerCoordinates = new ArrayList<>();
         outerCoordinates.add(new LatLng(10, 10));
         outerCoordinates.add(new LatLng(20, 20));
         outerCoordinates.add(new LatLng(30, 30));
         outerCoordinates.add(new LatLng(10, 10));
-        ArrayList<List<LatLng>> innerCoordinates = new ArrayList<List<LatLng>>();
-        ArrayList<LatLng> innerHole = new ArrayList<LatLng>();
+        List<List<LatLng>> innerCoordinates = new ArrayList<>();
+        List<LatLng> innerHole = new ArrayList<>();
         innerHole.add(new LatLng(20, 20));
         innerHole.add(new LatLng(10, 10));
         innerHole.add(new LatLng(20, 20));
@@ -33,8 +25,8 @@ public class KmlPolygonTest {
         return new KmlPolygon(outerCoordinates, innerCoordinates);
     }
 
-    public KmlPolygon createOuterPolygon() {
-        ArrayList<LatLng> outerCoordinates = new ArrayList<LatLng>();
+    private KmlPolygon createOuterPolygon() {
+        ArrayList<LatLng> outerCoordinates = new ArrayList<>();
         outerCoordinates.add(new LatLng(10, 10));
         outerCoordinates.add(new LatLng(20, 20));
         outerCoordinates.add(new LatLng(30, 30));
@@ -43,42 +35,42 @@ public class KmlPolygonTest {
     }
 
     @Test
-    public void testGetType() throws Exception {
-        kmlPolygon = createRegularPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNotNull(kmlPolygon.getGeometryType());
-        Assert.assertEquals("Polygon", kmlPolygon.getGeometryType());
+    public void testGetType() {
+        KmlPolygon kmlPolygon = createRegularPolygon();
+        assertNotNull(kmlPolygon);
+        assertNotNull(kmlPolygon.getGeometryType());
+        assertEquals("Polygon", kmlPolygon.getGeometryType());
     }
 
     @Test
-    public void testGetOuterBoundaryCoordinates() throws Exception {
-        kmlPolygon = createRegularPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNotNull(kmlPolygon.getOuterBoundaryCoordinates());
+    public void testGetOuterBoundaryCoordinates() {
+        KmlPolygon kmlPolygon = createRegularPolygon();
+        assertNotNull(kmlPolygon);
+        assertNotNull(kmlPolygon.getOuterBoundaryCoordinates());
         kmlPolygon = createOuterPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNotNull(kmlPolygon.getOuterBoundaryCoordinates());
+        assertNotNull(kmlPolygon);
+        assertNotNull(kmlPolygon.getOuterBoundaryCoordinates());
     }
 
     @Test
-    public void testGetInnerBoundaryCoordinates() throws Exception {
-        kmlPolygon = createRegularPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNotNull(kmlPolygon.getInnerBoundaryCoordinates());
+    public void testGetInnerBoundaryCoordinates() {
+        KmlPolygon kmlPolygon = createRegularPolygon();
+        assertNotNull(kmlPolygon);
+        assertNotNull(kmlPolygon.getInnerBoundaryCoordinates());
         kmlPolygon = createOuterPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNull(kmlPolygon.getInnerBoundaryCoordinates());
+        assertNotNull(kmlPolygon);
+        assertNull(kmlPolygon.getInnerBoundaryCoordinates());
     }
 
     @Test
-    public void testGetKmlGeometryObject() throws Exception {
-        kmlPolygon = createRegularPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNotNull(kmlPolygon.getGeometryObject());
-        Assert.assertEquals(kmlPolygon.getGeometryObject().size(), 2);
+    public void testGetKmlGeometryObject() {
+        KmlPolygon kmlPolygon = createRegularPolygon();
+        assertNotNull(kmlPolygon);
+        assertNotNull(kmlPolygon.getGeometryObject());
+        assertEquals(2, kmlPolygon.getGeometryObject().size());
         kmlPolygon = createOuterPolygon();
-        Assert.assertNotNull(kmlPolygon);
-        Assert.assertNotNull(kmlPolygon.getGeometryObject());
-        Assert.assertEquals(kmlPolygon.getGeometryObject().size(), 1);
+        assertNotNull(kmlPolygon);
+        assertNotNull(kmlPolygon.getGeometryObject());
+        assertEquals(1, kmlPolygon.getGeometryObject().size());
     }
 }

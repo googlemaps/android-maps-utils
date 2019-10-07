@@ -19,35 +19,27 @@ package com.google.maps.android.clustering;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.StaticCluster;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
+
+import static org.junit.Assert.*;
 
 public class StaticClusterTest {
-
-    private StaticCluster<ClusterItem> mCluster;
-
-    @Before
-    public void setUp() {
-        mCluster = new StaticCluster<ClusterItem>(new LatLng(0.1, 0.5));
-    }
-
     @Test
     public void testEquality() {
-        StaticCluster<ClusterItem> cluster_1_5 = new StaticCluster<ClusterItem>(
-                new LatLng(0.1, 0.5));
+        StaticCluster<ClusterItem> cluster1 = new StaticCluster<>(new LatLng(0.1, 0.5));
+        StaticCluster<ClusterItem> cluster2 = new StaticCluster<>(new LatLng(0.1, 0.5));
 
-        Assert.assertEquals(cluster_1_5, mCluster);
-        Assert.assertNotSame(cluster_1_5, mCluster);
-        Assert.assertEquals(cluster_1_5.hashCode(), mCluster.hashCode());
+        assertEquals(cluster1, cluster2);
+        assertNotSame(cluster1, cluster2);
+        assertEquals(cluster1.hashCode(), cluster2.hashCode());
     }
 
     @Test
     public void testUnequality() {
-        StaticCluster<ClusterItem> cluster_2_3 = new StaticCluster<ClusterItem>(
-                new LatLng(0.2, 0.3));
+        StaticCluster<ClusterItem> cluster1 = new StaticCluster<>(new LatLng(0.1, 0.5));
+        StaticCluster<ClusterItem> cluster2 = new StaticCluster<>(new LatLng(0.2, 0.3));
 
-        Assert.assertNotEquals(mCluster, cluster_2_3);
-        Assert.assertNotEquals(cluster_2_3.hashCode(), mCluster.hashCode());
+        assertNotEquals(cluster1, cluster2);
+        assertNotEquals(cluster1.hashCode(), cluster2.hashCode());
     }
 }
