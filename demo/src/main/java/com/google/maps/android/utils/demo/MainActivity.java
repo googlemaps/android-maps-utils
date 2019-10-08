@@ -23,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewGroup mListView;
 
     //Comment to see if I can push to the repository
@@ -33,7 +35,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        mListView = (ViewGroup) findViewById(R.id.list);
+        mListView = findViewById(R.id.list);
 
         addDemo("Clustering", ClusteringDemoActivity.class);
         addDemo("Clustering: Custom Look", CustomMarkerClusteringDemoActivity.class);

@@ -18,6 +18,7 @@ package com.google.maps.android.utils.demo;
 
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.StyleSpan;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,7 +29,6 @@ import com.google.maps.android.ui.IconGenerator;
 
 import static android.graphics.Typeface.BOLD;
 import static android.graphics.Typeface.ITALIC;
-import static android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 public class IconGeneratorDemoActivity extends BaseDemoActivity {
 
@@ -75,8 +75,8 @@ public class IconGeneratorDemoActivity extends BaseDemoActivity {
         String suffix = "different fonts";
         String sequence = prefix + suffix;
         SpannableStringBuilder ssb = new SpannableStringBuilder(sequence);
-        ssb.setSpan(new StyleSpan(ITALIC), 0, prefix.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssb.setSpan(new StyleSpan(BOLD), prefix.length(), sequence.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new StyleSpan(ITALIC), 0, prefix.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new StyleSpan(BOLD), prefix.length(), sequence.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
     }
 }

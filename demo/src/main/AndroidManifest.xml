@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.maps.android.utils.demo"
-    android:versionCode="1"
-    android:versionName="1.0">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.google.maps.android.utils.demo">
 
     <permission
         android:name="com.google.maps.android.utils.permission.MAPS_RECEIVE"
@@ -26,7 +25,8 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/LightThemeSelector">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data
             android:name="com.google.android.gms.version"
