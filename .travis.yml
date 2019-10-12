@@ -1,18 +1,31 @@
 language: android
 jdk: oraclejdk8
-# Use the Travis Container-Based Infrastructure
 sudo: false
-
 android:
   components:
-    - build-tools-28.0.3
-    - android-28
-    - extra-android-m2repository
-    - extra-google-m2repository
-    - extra-google-google_play_services
+  - build-tools-29.0.2
+  - android-29
+  - extra-android-m2repository
+  - extra-google-m2repository
+  - extra-google-google_play_services
   licenses:
-    - 'android-sdk-license-.+'
-
+  - android-sdk-license-.+
 script:
-  - ./gradlew clean assembleDebug -x library:signAarPublication -PdisablePreDex
-  - ./gradlew clean assembleDebug -x library:signApkLibPublication -PdisablePreDex
+- "./gradlew check"
+- "./gradlew clean assembleDebug -x library:signAarPublication -PdisablePreDex"
+- "./gradlew clean assembleDebug -x library:signApkLibPublication -PdisablePreDex"
+deploy:
+  provider: script
+  script:
+  - openssl aes-256-cbc -K $encrypted_fa6e05112033_key -iv $encrypted_fa6e05112033_iv
+    -in .travis.gpg.enc -out .travis.gpg -d && ./gradlew publish -PsonatypeUsername=${SONATYPE_USERNAME}
+    -PsonatypePassword=${SONATYPE_PASSWORD} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}
+    -Psigning.secretKeyRingFile=../.travis.gpg
+  on:
+    tags: true
+env:
+  global:
+  - secure: SFTu/DgXWRSiMxv7JMRdI6ZiOX3jcfY/49GxJWEvygCTWHOxn97iPrOXJUmXV/wnGtUeQpVk1oXVTLx/swrAIrT0C40dxVUi7qE/7wf+kd4RJVaX31KfXhJNt/4L5t4EeBz9cdLBuq1AmhHspWlThOsbtnaL2Y+6UJo5y7FnZFs=
+  - secure: ZDWMOQXwo0HIl06SkV24+I51UjpXDbXJz00BEJINUMiibCSmRQrhfT1gTQE5/2tC/TV+Q2A39d9kEmjdvSIL3CFMOCCF+ulWNTGWbxWNZSO/wcOWEPRxZ5OMfwS7R8V6nNxe9r0noSVcB4ECQHWF7aXzmDD6fSiWthNltfZtp/g=
+  - secure: Z8ZElXll1fYMvuxMFH5t7SXj2j7duNHsAcEI2lsCC/Ou69M/iGI0txz/Fq3cuvSi2+IMgs8tZw/xH/GVo0IZw8bGoZZiCs5oIfjnlHSGpgM9FMBGf/cBD5zGW+ynnT2GnW7xRwRR5r4QrB5JrwMlsn+1IFCEm6JluKMHkdNbJ94=
+  - secure: Kw1NwOVOUr6pjxXzSZ0U5Pei86wmbmWrfjiDQKalmMIh0dDi8Qz0OgsQcZPe7+elbJQVO4lx+9OErhNfjPUlGarh/lv2hMQ9sP0kLqWXIxBObipr3Se7jNSdqfflAqfBGVyNC4cJ5j+spNPxc6egHtOdt5tXDlaNmdSElFtzWK4=
