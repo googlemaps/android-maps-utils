@@ -4,17 +4,16 @@ apply plugin: 'signing'
 archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
-
 task apklib(type: Zip) {
     dependsOn 'check'
     appendix = extension = 'apklib'
 
     from 'AndroidManifest.xml'
     into('res') {
-        from 'res'
+        from 'src/main/res'
     }
     into('src') {
-        from 'src'
+        from 'src/main/java'
     }
 }
 
@@ -60,11 +59,11 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils'
-            version '0.5'
+            version '0.6.1'
             afterEvaluate {
                 artifact bundleReleaseAar
             }
-        }                
+        }
         apkLib(MavenPublication) {
             pom {
                 name = 'Google Maps Android API utility library'
@@ -100,7 +99,7 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils-apklib'
-            version '0.5'
+            version '0.6.1'
             artifact(apklib)
         }
     }
