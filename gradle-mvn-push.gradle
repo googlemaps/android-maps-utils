@@ -1,10 +1,8 @@
-//apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
-
 
 task apklib(type: Zip) {
     dependsOn 'check'
@@ -12,10 +10,10 @@ task apklib(type: Zip) {
 
     from 'AndroidManifest.xml'
     into('res') {
-        from 'res'
+        from 'src/main/res'
     }
     into('src') {
-        from 'src'
+        from 'src/main/java'
     }
 }
 
@@ -61,8 +59,10 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils'
-            version '0.5'
-            artifact("$buildDir/outputs/aar/android-maps-utils-release.aar")
+            version '0.6.1'
+            afterEvaluate {
+                artifact bundleReleaseAar
+            }
         }
         apkLib(MavenPublication) {
             pom {
@@ -99,7 +99,7 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils-apklib'
-            version '0.5'
+            version '0.6.1'
             artifact(apklib)
         }
     }
