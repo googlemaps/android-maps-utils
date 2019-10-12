@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+    android:layout_above="@id/textView"
+    android:layout_below="@+id/map"
+    android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            tools:layout="@layout/kml_demo"/>
+
+
+</LinearLayout>
