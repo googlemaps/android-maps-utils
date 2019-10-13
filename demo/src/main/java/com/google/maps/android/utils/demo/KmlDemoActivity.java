@@ -42,7 +42,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, this);
             kmlLayer.addLayerToMap();
             moveCameraToKml(kmlLayer);
         } catch (IOException e) {
@@ -103,7 +103,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         protected void onPostExecute(byte[] byteArr) {
             try {
                 KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
-                        getApplicationContext());
+                        KmlDemoActivity.this);
                 kmlLayer.addLayerToMap();
                 kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                     @Override
