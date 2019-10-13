@@ -18,7 +18,7 @@ package com.google.maps.android.collections;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.GoogleMap;
 
