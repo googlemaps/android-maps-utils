@@ -53,8 +53,8 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
     }
 
     @Override
-    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, int discreteZoom) {
-        return quadTree.search(getVisibleBounds(discreteZoom));
+    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, float zoom) {
+        return quadTree.search(getVisibleBounds(zoom));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
         mViewHeight = height;
     }
 
-    private Bounds getVisibleBounds(int zoom) {
+    private Bounds getVisibleBounds(float zoom) {
         if (mMapCenter == null) {
             return new Bounds(0, 0, 0, 0);
         }
