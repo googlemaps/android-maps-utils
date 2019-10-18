@@ -13,7 +13,6 @@ android:
 script:
 - "./gradlew check"
 - "./gradlew clean assembleDebug -x library:signAarPublication -PdisablePreDex"
-- "./gradlew clean assembleDebug -x library:signApkLibPublication -PdisablePreDex"
 deploy:
   provider: script
   script:

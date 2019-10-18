@@ -54,8 +54,8 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
     }
 
     @Override
-    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, int discreteZoom) {
-        Bounds visibleBounds = getVisibleBounds(discreteZoom);
+    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, float zoom) {
+        Bounds visibleBounds = getVisibleBounds(zoom);
         Collection<QuadItem<T>> items = new ArrayList<>();
 
         // Handle wrapping around international date line
@@ -91,7 +91,7 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
         mViewHeight = height;
     }
 
-    private Bounds getVisibleBounds(int zoom) {
+    private Bounds getVisibleBounds(float zoom) {
         if (mMapCenter == null) {
             return new Bounds(0, 0, 0, 0);
         }
