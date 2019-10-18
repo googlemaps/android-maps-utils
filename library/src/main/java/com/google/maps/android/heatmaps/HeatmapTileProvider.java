@@ -159,6 +159,11 @@ public class HeatmapTileProvider implements TileProvider {
     private double[] mMaxIntensity;
 
     /**
+     * Optional user defined maximum intensity for heatmap
+     */
+    private double mCustomMaxIntensity;
+
+    /**
      * Builder class for the HeatmapTileProvider.
      */
     public static class Builder {
@@ -169,6 +174,7 @@ public class HeatmapTileProvider implements TileProvider {
         private int radius = DEFAULT_RADIUS;
         private Gradient gradient = DEFAULT_GRADIENT;
         private double opacity = DEFAULT_OPACITY;
+        private double intensity = 0;
 
         /**
          * Constructor for builder.
@@ -248,6 +254,17 @@ public class HeatmapTileProvider implements TileProvider {
         }
 
         /**
+         * Setter for Max Intensity in builder
+         *
+         * @param val maximum intensity of pixel density
+         * @return updated builder object
+         */
+        public Builder maxIntensity(double val) {
+            intensity = val;
+            return this;
+        }
+
+        /**
          * Call when all desired options have been set.
          * Note: you must set data using data or weightedData before this!
          *
@@ -271,6 +288,7 @@ public class HeatmapTileProvider implements TileProvider {
         mRadius = builder.radius;
         mGradient = builder.gradient;
         mOpacity = builder.opacity;
+        mCustomMaxIntensity = builder.intensity;
 
         // Compute kernel density function (sd = 1/3rd of radius)
         mKernel = generateKernel(mRadius, mRadius / 3.0);
@@ -496,6 +514,18 @@ public class HeatmapTileProvider implements TileProvider {
     }
 
     /**
+     * Setter for max intensity
+     * User should clear overlay's tile cache (using clearTileCache()) after calling this.
+     *
+     * @param intensity intensity to set
+     */
+    public void setMaxIntensity(double intensity) {
+        mCustomMaxIntensity = intensity;
+        // need to recompute data convolution
+        setWeightedData(mData);
+    }
+
+    /**
      * Gets array of maximum intensity values to use with the heatmap for each zoom level
      * This is the value that the highest color on the color map corresponds to
      *
@@ -505,6 +535,16 @@ public class HeatmapTileProvider implements TileProvider {
     private double[] getMaxIntensities(int radius) {
         // Can go from zoom level 3 to zoom level 22
         double[] maxIntensityArray = new double[MAX_ZOOM_LEVEL];
+
+        // A custom max intensity has been specified by user
+        // Set all zoom levels with intensity value
+        if(mCustomMaxIntensity != 0.0) {
+            for(int i = 0; i < MAX_ZOOM_LEVEL; i++) {
+                maxIntensityArray[i] = mCustomMaxIntensity;
+            }
+
+            return maxIntensityArray;
+        }
 
         // Calculate max intensity for each zoom level
         for (int i = DEFAULT_MIN_ZOOM; i < DEFAULT_MAX_ZOOM; i++) {
