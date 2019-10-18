@@ -106,7 +106,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     }
 
     @Override
-    public Set<? extends Cluster<T>> getClusters(double zoom) {
+    public Set<? extends Cluster<T>> getClusters(float zoom) {
         final int discreteZoom = (int) zoom;
 
         final double zoomSpecificSpan = mMaxDistance / Math.pow(2, discreteZoom) / 256;
@@ -117,7 +117,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
         final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
 
         synchronized (mQuadTree) {
-            for (QuadItem<T> candidate : getClusteringItems(mQuadTree, discreteZoom)) {
+            for (QuadItem<T> candidate : getClusteringItems(mQuadTree, zoom)) {
                 if (visitedCandidates.contains(candidate)) {
                     // Candidate is already part of another cluster.
                     continue;
@@ -157,7 +157,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
         return results;
     }
 
-    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, int discreteZoom) {
+    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, float zoom) {
         return mItems;
     }
 

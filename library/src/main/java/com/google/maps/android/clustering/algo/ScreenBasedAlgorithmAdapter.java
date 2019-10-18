@@ -62,7 +62,7 @@ public class ScreenBasedAlgorithmAdapter<T extends ClusterItem> extends Abstract
     }
 
     @Override
-    public Set<? extends Cluster<T>> getClusters(double zoom) {
+    public Set<? extends Cluster<T>> getClusters(float zoom) {
         return mAlgorithm.getClusters(zoom);
     }
 

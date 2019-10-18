@@ -74,7 +74,7 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
     }
 
     @Override
-    public Set<? extends Cluster<T>> getClusters(double zoom) {
+    public Set<? extends Cluster<T>> getClusters(float zoom) {
         long numCells = (long) Math.ceil(256 * Math.pow(2, zoom) / mGridSize);
         SphericalMercatorProjection proj = new SphericalMercatorProjection(numCells);
 
