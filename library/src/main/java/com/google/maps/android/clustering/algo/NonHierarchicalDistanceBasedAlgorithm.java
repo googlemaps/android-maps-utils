@@ -59,13 +59,13 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<QuadItem<T>>(0, 1, 0, 1);
+    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<>(0, 1, 0, 1);
 
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
     @Override
     public void addItem(T item) {
-        final QuadItem<T> quadItem = new QuadItem<T>(item);
+        final QuadItem<T> quadItem = new QuadItem<>(item);
         synchronized (mQuadTree) {
             mItems.add(quadItem);
             mQuadTree.add(quadItem);
@@ -91,7 +91,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     public void removeItem(T item) {
         // QuadItem delegates hashcode() and equals() to its item so,
         //   removing any QuadItem to that item will remove the item
-        final QuadItem<T> quadItem = new QuadItem<T>(item);
+        final QuadItem<T> quadItem = new QuadItem<>(item);
         synchronized (mQuadTree) {
             mItems.remove(quadItem);
             mQuadTree.remove(quadItem);
@@ -100,8 +100,14 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
 
     @Override
     public void removeItems(Collection<T> items) {
-        for (T item : items) {
-            removeItem(item);
+        synchronized (mQuadTree) {
+            for (T item : items) {
+                // QuadItem delegates hashcode() and equals() to its item so,
+                //   removing any QuadItem to that item will remove the item
+                final QuadItem<T> quadItem = new QuadItem<>(item);
+                mItems.remove(quadItem);
+                mQuadTree.remove(quadItem);
+            }
         }
     }
 
@@ -111,10 +117,10 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
 
         final double zoomSpecificSpan = mMaxDistance / Math.pow(2, discreteZoom) / 256;
 
-        final Set<QuadItem<T>> visitedCandidates = new HashSet<QuadItem<T>>();
-        final Set<Cluster<T>> results = new HashSet<Cluster<T>>();
-        final Map<QuadItem<T>, Double> distanceToCluster = new HashMap<QuadItem<T>, Double>();
-        final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<QuadItem<T>, StaticCluster<T>>();
+        final Set<QuadItem<T>> visitedCandidates = new HashSet<>();
+        final Set<Cluster<T>> results = new HashSet<>();
+        final Map<QuadItem<T>, Double> distanceToCluster = new HashMap<>();
+        final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<>();
 
         synchronized (mQuadTree) {
             for (QuadItem<T> candidate : getClusteringItems(mQuadTree, zoom)) {
@@ -133,7 +139,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
                     distanceToCluster.put(candidate, 0d);
                     continue;
                 }
-                StaticCluster<T> cluster = new StaticCluster<T>(candidate.mClusterItem.getPosition());
+                StaticCluster<T> cluster = new StaticCluster<>(candidate.mClusterItem.getPosition());
                 results.add(cluster);
 
                 for (QuadItem<T> clusterItem : clusterItems) {
