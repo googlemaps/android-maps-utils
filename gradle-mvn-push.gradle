@@ -46,7 +46,7 @@ publishing {
             }
             groupId group
             artifactId 'android-maps-utils'
-            version '0.6.1'
+            version '0.6.2'
             afterEvaluate {
                 artifact bundleReleaseAar
             }
