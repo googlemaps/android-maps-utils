@@ -61,8 +61,6 @@ import java.util.Hashtable;
  */
 public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
-    private GoogleMap mMap = null;
-
     private final LatLng SYDNEY = new LatLng(-33.873651, 151.2058896);
 
     /**
@@ -139,8 +137,8 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     }
 
     @Override
-    protected void startDemo() {
-        EditText editText = (EditText) findViewById(R.id.input_text);
+    protected void startDemo(boolean isRestore) {
+        EditText editText = findViewById(R.id.input_text);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -153,23 +151,17 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             }
         });
 
-        mCheckboxLayout = (LinearLayout) findViewById(R.id.checkboxes);
-        setUpMap();
-    }
-
-    private void setUpMap() {
-        if (mMap == null) {
-            mMap = getMap();
-            if (mMap != null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 11));
-                // Add a circle around Sydney to roughly encompass the results
-                mMap.addCircle(new CircleOptions()
-                    .center(SYDNEY)
-                    .radius(SEARCH_RADIUS * 1.2)
-                    .strokeColor(Color.RED)
-                    .strokeWidth(4));
-            }
+        mCheckboxLayout = findViewById(R.id.checkboxes);
+        GoogleMap map = getMap();
+        if (!isRestore) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 11));
         }
+        // Add a circle around Sydney to roughly encompass the results
+        map.addCircle(new CircleOptions()
+                .center(SYDNEY)
+                .radius(SEARCH_RADIUS * 1.2)
+                .strokeColor(Color.RED)
+                .strokeWidth(4));
     }
 
     /**
@@ -182,7 +174,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 Toast.LENGTH_LONG).show();
             return;
         }
-        EditText editText = (EditText) findViewById(R.id.input_text);
+        EditText editText = findViewById(R.id.input_text);
         String keyword = editText.getText().toString();
         if (mOverlays.contains(keyword)) {
             Toast.makeText(this, "This keyword has already been inputted :(", Toast.LENGTH_SHORT).show();
@@ -190,7 +182,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
             Toast.makeText(this, "You can only input " + MAX_CHECKBOXES + " keywords. :(", Toast.LENGTH_SHORT).show();
         } else if (keyword.length() != 0) {
             mOverlaysInput++;
-            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+            ProgressBar progressBar = findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.VISIBLE);
             new MakeOverlayTask().execute(keyword);
             editText.setText("");
