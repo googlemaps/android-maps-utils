@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * Groups markers into a grid.
  */
-public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
+public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm<T> {
     private static final int DEFAULT_GRID_SIZE = 100;
 
     private int mGridSize = DEFAULT_GRID_SIZE;
@@ -56,6 +56,11 @@ public class GridBasedAlgorithm<T extends ClusterItem> implements Algorithm<T> {
     @Override
     public void removeItem(T item) {
         mItems.remove(item);
+    }
+
+    @Override
+    public void removeItems(Collection<T> items) {
+        mItems.removeAll(items);
     }
 
     @Override
