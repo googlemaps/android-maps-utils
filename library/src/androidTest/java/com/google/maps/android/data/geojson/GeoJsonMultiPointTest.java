@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class GeoJsonMultiPointTest {
-    GeoJsonMultiPoint mp;
+    private GeoJsonMultiPoint mp;
 
     @Test
     public void testGetType() {

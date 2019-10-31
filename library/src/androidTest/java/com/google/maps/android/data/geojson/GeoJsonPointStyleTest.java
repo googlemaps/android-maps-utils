@@ -14,7 +14,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class GeoJsonPointStyleTest {
-    GeoJsonPointStyle pointStyle;
+    private GeoJsonPointStyle pointStyle;
 
     @Before
     public void setUp() {

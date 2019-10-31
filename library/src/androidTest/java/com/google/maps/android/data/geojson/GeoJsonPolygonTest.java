@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class GeoJsonPolygonTest {
-    GeoJsonPolygon p;
+    private GeoJsonPolygon p;
 
     @Test
     public void testGetType() {
