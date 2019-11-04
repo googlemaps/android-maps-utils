@@ -66,7 +66,7 @@ public class GeoJsonPointStyleTest {
 
     @Test
     public void testIcon() {
-        if (System.getenv("TRAVIS") != null) {
+        if (System.getProperty("TRAVIS") != null) {
             Assume.assumeTrue("Skipping GeoJsonPointStyleTest.testIcon() - this is expected behavior on Travis CI (#573)", false);
             return;
         }
