@@ -56,7 +56,7 @@ install:
   - echo y | sdkmanager "extras;android;m2repository" >/dev/null
   - echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" >/dev/null # install our emulator
   - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
-  - emulator -verbose -avd test -prop TRAVIS=yes -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
+  - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
   - ./gradlew clean assembleDebug assembleAndroidTest -x lint -x library:signAarPublication --stacktrace
