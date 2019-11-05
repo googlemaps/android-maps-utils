@@ -67,7 +67,7 @@ public class GeoJsonPointStyleTest {
 
     @Test
     public void testIcon() {
-        if (BuildConfig.TRAVIS != null && BuildConfig.TRAVIS.equals("TRAVIS")) {
+        if (BuildConfig.TRAVIS != null && BuildConfig.TRAVIS.equals("true")) {
             Assume.assumeTrue("Skipping GeoJsonPointStyleTest.testIcon() - this is expected behavior on Travis CI (#573)", false);
             return;
         }
