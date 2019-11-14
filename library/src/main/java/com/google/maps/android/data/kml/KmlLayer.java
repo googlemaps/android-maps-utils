@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import android.app.Activity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.data.Layer;
@@ -25,7 +25,7 @@ public class KmlLayer extends Layer {
      * @param activity   Activity object
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, int resourceId, Activity activity)
+    public KmlLayer(GoogleMap map, int resourceId, FragmentActivity activity)
             throws XmlPullParserException, IOException {
         this(map, activity.getResources().openRawResource(resourceId), activity);
     }
@@ -37,7 +37,7 @@ public class KmlLayer extends Layer {
      * @param stream InputStream containing KML file
      * @throws XmlPullParserException if file cannot be parsed
      */
-    public KmlLayer(GoogleMap map, InputStream stream, Activity activity)
+    public KmlLayer(GoogleMap map, InputStream stream, FragmentActivity activity)
             throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");

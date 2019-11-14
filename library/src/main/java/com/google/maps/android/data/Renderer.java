@@ -16,9 +16,6 @@
 
 package com.google.maps.android.data;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
@@ -27,6 +24,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.collection.LruCache;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -96,7 +96,7 @@ public class Renderer {
 
     private boolean mLayerOnMap;
 
-    private Activity mActivity;
+    private FragmentActivity mActivity;
 
     private ArrayList<KmlContainer> mContainers;
 
@@ -112,7 +112,7 @@ public class Renderer {
      * @param map     map to place objects on
      * @param activity activity needed to add info windows and retain bitmap cache fragment
      */
-    public Renderer(GoogleMap map, Activity activity) {
+    public Renderer(GoogleMap map, FragmentActivity activity) {
         mMap = map;
         mActivity = activity;
         mLayerOnMap = false;

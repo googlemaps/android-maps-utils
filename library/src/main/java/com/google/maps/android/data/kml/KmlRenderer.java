@@ -1,10 +1,11 @@
 package com.google.maps.android.data.kml;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -44,7 +45,7 @@ public class KmlRenderer extends Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
-    /* package */ KmlRenderer(GoogleMap map, Activity activity) {
+    /* package */ KmlRenderer(GoogleMap map, FragmentActivity activity) {
         super(map, activity);
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
