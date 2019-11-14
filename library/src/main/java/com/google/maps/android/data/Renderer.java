@@ -116,11 +116,17 @@ public class Renderer {
         mMap = map;
         mActivity = activity;
         mLayerOnMap = false;
-        RetainFragment retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getFragmentManager());
-        LruCache<String, Bitmap> imagesCache = retainFragment.mRetainedCache;
+        LruCache<String, Bitmap> imagesCache = null;
+        RetainFragment retainFragment = null;
+        if (activity != null) {
+            retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getSupportFragmentManager());
+            imagesCache = retainFragment.mRetainedCache;
+        }
         if (imagesCache == null) {
             imagesCache = new LruCache<>(LRU_CACHE_SIZE);
-            retainFragment.mRetainedCache = imagesCache;
+            if (retainFragment != null) {
+                retainFragment.mRetainedCache = imagesCache;
+            }
         }
         mImagesCache = imagesCache;
         mMarkerIconUrls = new ArrayList<>();
