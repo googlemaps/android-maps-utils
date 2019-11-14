@@ -97,8 +97,10 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
     }
 
     @Override
-    protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
+    protected void startDemo(boolean isRestore) {
+        if (!isRestore) {
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-25, 143), 4));
+        }
 
         // Set up the spinner/dropdown list
         Spinner spinner = findViewById(R.id.spinner);
@@ -218,5 +220,4 @@ public class HeatmapsDemoActivity extends BaseDemoActivity {
             return mUrl;
         }
     }
-
 }

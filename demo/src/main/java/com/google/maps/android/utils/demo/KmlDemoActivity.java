@@ -25,12 +25,14 @@ import java.net.URL;
 public class KmlDemoActivity extends BaseDemoActivity {
 
     private GoogleMap mMap;
+    private boolean mIsRestore;
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
     }
 
-    public void startDemo () {
+    public void startDemo (boolean isRestore) {
+        mIsRestore = isRestore;
         try {
             mMap = getMap();
             //retrieveFileFromResource();
@@ -57,6 +59,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     }
 
     private void moveCameraToKml(KmlLayer kmlLayer) {
+        if (mIsRestore) return;
         //Retrieve the first container in the KML layer
         KmlContainer container = kmlLayer.getContainers().iterator().next();
         //Retrieve a nested container within the first container

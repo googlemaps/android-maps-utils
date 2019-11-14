@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class KmlMultiGeometryTest {
-    public KmlMultiGeometry createMultiGeometry() {
+    private KmlMultiGeometry createMultiGeometry() {
         ArrayList<Geometry> kmlGeometries = new ArrayList<>();
         ArrayList<LatLng> coordinates = new ArrayList<>();
         coordinates.add(new LatLng(0, 0));

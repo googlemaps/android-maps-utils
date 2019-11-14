@@ -16,6 +16,7 @@
 
 package com.google.maps.android.ui;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,6 +28,8 @@ import android.graphics.drawable.Drawable;
 
 import com.google.maps.android.R;
 
+import androidx.core.content.ContextCompat;
+
 /**
  * Draws a bubble with a shadow, filled with any color.
  */
@@ -36,9 +39,9 @@ class BubbleDrawable extends Drawable {
     private final Drawable mMask;
     private int mColor = Color.WHITE;
 
-    public BubbleDrawable(Resources res) {
-        mMask = res.getDrawable(R.drawable.amu_bubble_mask);
-        mShadow = res.getDrawable(R.drawable.amu_bubble_shadow);
+    public BubbleDrawable(Context context) {
+        mMask = ContextCompat.getDrawable(context, R.drawable.amu_bubble_mask);
+        mShadow = ContextCompat.getDrawable(context, R.drawable.amu_bubble_shadow);
     }
 
     public void setColor(int color) {
