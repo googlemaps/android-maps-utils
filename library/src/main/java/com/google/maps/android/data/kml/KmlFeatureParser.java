@@ -308,7 +308,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
     private static KmlPolygon createPolygon(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         // Indicates if an outer boundary needs to be defined
-        Boolean isOuterBoundary = false;
+        boolean isOuterBoundary = false;
         List<LatLng> outerBoundary = new ArrayList<>();
         List<List<LatLng>> innerBoundaries = new ArrayList<>();
         int eventType = parser.getEventType();
@@ -417,8 +417,8 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      */
     private static LatLngAlt convertToLatLngAlt(String coordinateString, String separator) {
         String[] coordinate = coordinateString.split(separator);
-        Double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
-        Double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
+        double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
+        double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
         Double alt = (coordinate.length > 2) ? Double.parseDouble(coordinate[ALTITUDE_INDEX]) : null;
         LatLng latLng = new LatLng(lat, lon);
         return new LatLngAlt(latLng, alt);
