@@ -32,7 +32,7 @@ env:
     - API=26 ABI=x86_64 # Occasionally fails with "No compatible devices connected.[TestRunner] FAILED" (see #575)
     - API=27 ABI=x86_64 # Works
     - API=28 ABI=x86_64 # Occasionally fails with "No compatible devices connected.[TestRunner] FAILED" (see #575)
-    # - API=29 # ERROR: Emulator startup stalls, ends with "emulator: got message from guest system fingerprint HAL"
+    - API=29 ABI=x86_64 # ERROR: Emulator startup stalls, ends with "emulator: got message from guest system fingerprint HAL"
 
 android:
   components:
