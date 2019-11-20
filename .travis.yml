@@ -30,15 +30,15 @@ env:
   matrix:
     # - API=15 ABI=x86 EMU_CHANNEL="--channel=4" # ERROR: failed to start emulator
     # - API=16 ABI=x86 AUDIO=-no-audio # ERROR: fails with com.android.ddmlib.InstallException: Unknown failure: Error: Unknown option: -d
-    # - API=17 ABI=x86 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    # - API=18 ABI=armeabi-v7a # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    # - API=19 ABI=x86 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    - API=17 ABI=x86 # Works
+    - API=18 ABI=armeabi-v7a # Works
+    - API=19 ABI=x86 # Works
     # API 20 was Android Wear only
-    # - API=21 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    # - API=22 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    # - API=23 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    # - API=24 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    # - API=25 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    - API=21 # Works
+    - API=22 # Works
+    - API=23 # Works
+    - API=24 # Works
+    - API=25 # Works
     - API=26 ABI=x86_64 # Works
     - API=27 ABI=x86_64 # Works
     - API=28 ABI=x86_64 # Works
