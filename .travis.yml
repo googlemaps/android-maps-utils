@@ -13,18 +13,20 @@ stages:
 env:
   global:
     - BUILD_TOOLS=29.0.2
+    - COMPILE_SDK_VERSION=29
     - ABI=x86_64
     - ADB_INSTALL_TIMEOUT=8
     - ANDROID_HOME=${HOME}/android-sdk
-    - COMPILE_SDK_VERSION=29
+    - ANDROID_TOOLS_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
     - EMU_FLAVOR=default # use google_apis flavor if no default flavor emulator
     - EMU_CHANNEL="" # use default / stable emulator channel normally
     - GRAVIS="https://raw.githubusercontent.com/DanySK/Gravis-CI/master/"
     - JDK="1.8"
     - TOOLS=${ANDROID_HOME}/tools
     # PATH order is incredibly important. e.g. the 'emulator' script exists in more than one place!
-    - ANDROID_TOOLS_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
     - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    - UNIT_TEST=FALSE # by default we don't run the unit tests, they are run only in specific builds
+    - FINALIZE_COVERAGE=FALSE # by default we don't finalize coverage, it is done in one specific build
     - secure: SFTu/DgXWRSiMxv7JMRdI6ZiOX3jcfY/49GxJWEvygCTWHOxn97iPrOXJUmXV/wnGtUeQpVk1oXVTLx/swrAIrT0C40dxVUi7qE/7wf+kd4RJVaX31KfXhJNt/4L5t4EeBz9cdLBuq1AmhHspWlThOsbtnaL2Y+6UJo5y7FnZFs=
     - secure: ZDWMOQXwo0HIl06SkV24+I51UjpXDbXJz00BEJINUMiibCSmRQrhfT1gTQE5/2tC/TV+Q2A39d9kEmjdvSIL3CFMOCCF+ulWNTGWbxWNZSO/wcOWEPRxZ5OMfwS7R8V6nNxe9r0noSVcB4ECQHWF7aXzmDD6fSiWthNltfZtp/g=
     - secure: Z8ZElXll1fYMvuxMFH5t7SXj2j7duNHsAcEI2lsCC/Ou69M/iGI0txz/Fq3cuvSi2+IMgs8tZw/xH/GVo0IZw8bGoZZiCs5oIfjnlHSGpgM9FMBGf/cBD5zGW+ynnT2GnW7xRwRR5r4QrB5JrwMlsn+1IFCEm6JluKMHkdNbJ94=
