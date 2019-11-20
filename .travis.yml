@@ -31,7 +31,7 @@ env:
     # - API=15 ABI=x86 EMU_CHANNEL="--channel=4" # ERROR: failed to start emulator
     # - API=16 ABI=x86 AUDIO=-no-audio # ERROR: fails with com.android.ddmlib.InstallException: Unknown failure: Error: Unknown option: -d
     - API=17 ABI=x86 # Works
-    - API=18 ABI=armeabi-v7a # Works
+    - API=18 ABI=x86 # Works
     - API=19 ABI=x86 # Works
     # API 20 was Android Wear only
     - API=21 # Works
