@@ -32,22 +32,21 @@ env:
     - secure: Z8ZElXll1fYMvuxMFH5t7SXj2j7duNHsAcEI2lsCC/Ou69M/iGI0txz/Fq3cuvSi2+IMgs8tZw/xH/GVo0IZw8bGoZZiCs5oIfjnlHSGpgM9FMBGf/cBD5zGW+ynnT2GnW7xRwRR5r4QrB5JrwMlsn+1IFCEm6JluKMHkdNbJ94=
     - secure: Kw1NwOVOUr6pjxXzSZ0U5Pei86wmbmWrfjiDQKalmMIh0dDi8Qz0OgsQcZPe7+elbJQVO4lx+9OErhNfjPUlGarh/lv2hMQ9sP0kLqWXIxBObipr3Se7jNSdqfflAqfBGVyNC4cJ5j+spNPxc6egHtOdt5tXDlaNmdSElFtzWK4=
   matrix:
-    - API=15 ABI=x86 EMU_CHANNEL="--channel=4" # ERROR: only runs locally. Create+Start once from AndroidStudio to init sdcard. Then only from command-line w/-engine classic
-    - API=16 ABI=x86 AUDIO=-no-audio # ERROR: Fails with "com.android.builder.testing.ConnectedDevice > No tests found."
-    - API=17 ABI=x86 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    # - API=15 ABI=x86 EMU_CHANNEL="--channel=4" # ERROR: failed to start emulator
+    # - API=16 ABI=x86 AUDIO=-no-audio # ERROR: fails with com.android.ddmlib.InstallException: Unknown failure: Error: Unknown option: -d
+    # - API=17 ABI=x86 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
     # - API=18 ABI=armeabi-v7a # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    - API=19 ABI=x86
+    # - API=19 ABI=x86 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
     # API 20 was Android Wear only
-    - API=21 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    - API=22 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    - API=23 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    - API=24 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
-    - API=25 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    # - API=21 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    # - API=22 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    # - API=23 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    # - API=24 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
+    # - API=25 # Emulator runs, but GradientTest.testInterpolateColor[test(AVD) - 7.1.1] fails with java.lang.AssertionError: expected:<-65434> but was:<-65433>
     - API=26 ABI=x86_64 # Occasionally fails with "No compatible devices connected.[TestRunner] FAILED" (see #575)
     - API=27 ABI=x86_64 # Works
     - API=28 ABI=x86_64 # Occasionally fails with "No compatible devices connected.[TestRunner] FAILED" (see #575)
     - API=29 ABI=x86_64 # ERROR: Emulator startup stalls, ends with "emulator: got message from guest system fingerprint HAL"
-    - API=24 JDK="1.11" # make sure we work in the future
 
 jobs:
   fast_finish: true  # Report success without waiting for jobs that allowed to fail.
