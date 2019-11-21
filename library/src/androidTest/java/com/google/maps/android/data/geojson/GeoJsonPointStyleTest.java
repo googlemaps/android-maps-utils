@@ -3,7 +3,7 @@ package com.google.maps.android.data.geojson;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.maps.android.BuildConfig;
+import com.google.maps.android.TestUtil;
 
 import org.junit.Assume;
 import org.junit.Before;
@@ -67,7 +67,7 @@ public class GeoJsonPointStyleTest {
 
     @Test
     public void testIcon() {
-        if (BuildConfig.TRAVIS != null && BuildConfig.TRAVIS.equals("true")) {
+        if (TestUtil.isRunningOnTravis()) {
             Assume.assumeTrue("Skipping GeoJsonPointStyleTest.testIcon() - this is expected behavior on Travis CI (#573)", false);
             return;
         }
