@@ -34,11 +34,11 @@ env:
     - API=18 ABI=x86 # Works
     - API=19 ABI=x86 # Works
     # API 20 was Android Wear only
-    - API=21 # Works
-    - API=22 # Works
-    - API=23 # Works
-    - API=24 # Works
-    - API=25 # Works
+    - API=21 ABI=x86_64 # Works
+    - API=22 ABI=x86_64 # Works
+    - API=23 ABI=x86_64 # Works
+    - API=24 ABI=x86_64 # Works
+    - API=25 ABI=x86_64 # Works
     - API=26 ABI=x86_64 # Works
     - API=27 ABI=x86_64 # Works
     - API=28 ABI=x86_64 # Works
