@@ -112,7 +112,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             throws XmlPullParserException, IOException {
         HashMap<String, String> styleMaps = new HashMap<String, String>();
         // Indicates if a normal style is to be stored
-        Boolean isNormalStyleMapValue = false;
+        boolean isNormalStyleMapValue = false;
         // Append # to style id
         String styleId = "#" + parser.getAttributeValue(null, "id");
         int eventType = parser.getEventType();
@@ -170,7 +170,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * @param style Style object to apply hotspot properties to
      */
     private static void setIconHotSpot(XmlPullParser parser, KmlStyle style) {
-        Float xValue, yValue;
+        float xValue, yValue;
         String xUnits, yUnits;
         xValue = Float.parseFloat(parser.getAttributeValue(null, "x"));
         yValue = Float.parseFloat(parser.getAttributeValue(null, "y"));
