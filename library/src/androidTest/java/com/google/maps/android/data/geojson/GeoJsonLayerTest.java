@@ -14,9 +14,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class GeoJsonLayerTest {
-    GoogleMap map;
-    GeoJsonLayer mLayer;
-    GoogleMap map2;
+    private GoogleMap map;
+    private GeoJsonLayer mLayer;
+    private GoogleMap map2;
 
     @Before
     public void setUp() throws Exception {

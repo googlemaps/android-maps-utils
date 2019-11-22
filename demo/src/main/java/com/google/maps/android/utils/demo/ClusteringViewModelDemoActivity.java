@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2019 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 package com.google.maps.android.utils.demo;
 
+import androidx.lifecycle.ViewModelProviders;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,14 +28,22 @@ import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
 
-import java.io.InputStream;
-import java.util.List;
-
-/**
- * Simple activity demonstrating ClusterManager.
- */
-public class ClusteringDemoActivity extends BaseDemoActivity {
+public class ClusteringViewModelDemoActivity extends BaseDemoActivity {
     private ClusterManager<MyItem> mClusterManager;
+    private ClusteringViewModel mViewModel;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders.of(this).get(ClusteringViewModel.class);
+        if (savedInstanceState == null) {
+            try {
+                mViewModel.readItems(getResources());
+            } catch (JSONException e) {
+                Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     @Override
     protected void startDemo(boolean isRestore) {
@@ -40,19 +51,13 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
         }
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        mViewModel.getAlgorithm().updateViewSize(metrics.widthPixels, metrics.heightPixels);
+
         mClusterManager = new ClusterManager<>(this, getMap());
+        mClusterManager.setAlgorithm(mViewModel.getAlgorithm());
+
         getMap().setOnCameraIdleListener(mClusterManager);
-
-        try {
-            readItems();
-        } catch (JSONException e) {
-            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void readItems() throws JSONException {
-        InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        List<MyItem> items = new MyItemReader().read(inputStream);
-        mClusterManager.addItems(items);
     }
 }

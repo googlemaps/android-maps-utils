@@ -24,6 +24,7 @@ import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -54,7 +55,23 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
 
     @Override
     protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, float zoom) {
-        return quadTree.search(getVisibleBounds(zoom));
+        Bounds visibleBounds = getVisibleBounds(zoom);
+        Collection<QuadItem<T>> items = new ArrayList<>();
+
+        // Handle wrapping around international date line
+        if (visibleBounds.minX < 0) {
+            Bounds wrappedBounds = new Bounds(visibleBounds.minX + 1, 1, visibleBounds.minY, visibleBounds.maxY);
+            items.addAll(quadTree.search(wrappedBounds));
+            visibleBounds = new Bounds(0, visibleBounds.maxX, visibleBounds.minY, visibleBounds.maxY);
+        }
+        if (visibleBounds.maxX > 1) {
+            Bounds wrappedBounds = new Bounds(0, visibleBounds.maxX - 1, visibleBounds.minY, visibleBounds.maxY);
+            items.addAll(quadTree.search(wrappedBounds));
+            visibleBounds = new Bounds(visibleBounds.minX, 1, visibleBounds.minY, visibleBounds.maxY);
+        }
+        items.addAll(quadTree.search(visibleBounds));
+
+        return items;
     }
 
     @Override

@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
 
 android {
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -10,6 +13,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+        // This enables us to tell when we're running unit tests on Travis (#573)
+        buildConfigField("String", "TRAVIS", "\"" + System.getenv('TRAVIS') + "\"")
     }
     buildTypes {
         release {

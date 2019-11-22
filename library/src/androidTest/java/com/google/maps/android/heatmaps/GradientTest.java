@@ -16,11 +16,14 @@
 
 package com.google.maps.android.heatmaps;
 
-import android.graphics.Color;
-
 import org.junit.Test;
 
-import static android.graphics.Color.*;
+import android.graphics.Color;
+import android.os.Build;
+
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
 import static org.junit.Assert.assertEquals;
 
 public class GradientTest {
@@ -50,12 +53,14 @@ public class GradientTest {
                 Gradient.interpolateColor(BLUE, RED, 0.2f),
                 Gradient.interpolateColor(RED, BLUE, 0.8f));
 
-        // Testing actual values now
-        assertEquals(-65434, Gradient.interpolateColor(RED, BLUE, 0.2f));
-        assertEquals(Color.MAGENTA, Gradient.interpolateColor(RED, BLUE, 0.5f));
-        assertEquals(-10092289, Gradient.interpolateColor(RED, BLUE, 0.8f));
-        assertEquals(Color.YELLOW, Gradient.interpolateColor(RED, GREEN, 0.5f));
-        assertEquals(Color.CYAN, Gradient.interpolateColor(BLUE, GREEN, 0.5f));
+        // Due to issue with Color.RGBToHSV() below only works on Android O and greater (#573)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            assertEquals(-65434, Gradient.interpolateColor(RED, BLUE, 0.2f));
+            assertEquals(Color.MAGENTA, Gradient.interpolateColor(RED, BLUE, 0.5f));
+            assertEquals(-10092289, Gradient.interpolateColor(RED, BLUE, 0.8f));
+            assertEquals(Color.YELLOW, Gradient.interpolateColor(RED, GREEN, 0.5f));
+            assertEquals(Color.CYAN, Gradient.interpolateColor(BLUE, GREEN, 0.5f));
+        }
     }
 
     @Test

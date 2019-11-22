@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import android.content.Context;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.collections.GroundOverlayManager;
@@ -26,13 +26,13 @@ public class KmlLayer extends Layer {
      *
      * @param map        GoogleMap object
      * @param resourceId Raw resource KML file
-     * @param context    Context object
+     * @param activity   Activity object
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
      */
-    public KmlLayer(GoogleMap map, int resourceId, Context context)
+    public KmlLayer(GoogleMap map, int resourceId, FragmentActivity activity)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map));
+        this(map, activity.getResources().openRawResource(resourceId), activity, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map));
     }
 
     /**
@@ -44,7 +44,7 @@ public class KmlLayer extends Layer {
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
      */
-    public KmlLayer(GoogleMap map, InputStream stream, Context context)
+    public KmlLayer(GoogleMap map, InputStream stream, FragmentActivity activity)
             throws XmlPullParserException, IOException {
         this(map, stream, context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map));
     }
@@ -85,7 +85,7 @@ public class KmlLayer extends Layer {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        KmlRenderer mRenderer = new KmlRenderer(map, context, markerManager, polygonManager, polylineManager, groundOverlayManager);
+        KmlRenderer mRenderer = new KmlRenderer(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();

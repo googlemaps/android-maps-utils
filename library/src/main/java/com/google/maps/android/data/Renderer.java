@@ -16,14 +16,17 @@
 
 package com.google.maps.android.data;
 
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.collection.LruCache;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -97,7 +100,7 @@ public class Renderer {
 
     private boolean mLayerOnMap;
 
-    private Context mContext;
+    private FragmentActivity mActivity;
 
     private ArrayList<KmlContainer> mContainers;
 
@@ -120,17 +123,29 @@ public class Renderer {
      * Creates a new Renderer object
      *
      * @param map     map to place objects on
-     * @param context context needed to add info windows
+     * @param @param activity activity needed to add info windows and retain bitmap cache fragment
      * @param markerManager marker manager to create marker collection from
      * @param polygonManager polygon manager to create polygon collection from
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public Renderer(GoogleMap map, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+    public Renderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         mMap = map;
-        mContext = context;
+        mActivity = activity;
         mLayerOnMap = false;
-        mImagesCache = new LruCache<>(LRU_CACHE_SIZE);
+        LruCache<String, Bitmap> imagesCache = null;
+        RetainFragment retainFragment = null;
+        if (activity != null) {
+            retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getSupportFragmentManager());
+            imagesCache = retainFragment.mRetainedCache;
+        }
+        if (imagesCache == null) {
+            imagesCache = new LruCache<>(LRU_CACHE_SIZE);
+            if (retainFragment != null) {
+                retainFragment.mRetainedCache = imagesCache;
+            }
+        }
+        mImagesCache = imagesCache;
         mMarkerIconUrls = new ArrayList<>();
         mStylesRenderer = new HashMap<>();
         mDefaultPointStyle = null;
@@ -194,6 +209,29 @@ public class Renderer {
         mPolylines = mPolylineManager.newCollection();
         mGroundOverlayManager = new GroundOverlayManager(map);
         mGroundOverlays = mGroundOverlayManager.newCollection();
+    }
+
+    /**
+     * Fragment for retaining the bitmap cache between configuration changes.
+     */
+    public static class RetainFragment extends Fragment {
+        private static final String TAG = RetainFragment.class.getName();
+        public LruCache<String, Bitmap> mRetainedCache;
+
+        public static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
+            RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
+            if (fragment == null) {
+                fragment = new RetainFragment();
+                fm.beginTransaction().add(fragment, TAG).commit();
+            }
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setRetainInstance(true);
+        }
     }
 
     /**
@@ -998,7 +1036,7 @@ public class Renderer {
             }
 
             public View getInfoContents(Marker arg0) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
+                View view = LayoutInflater.from(mActivity).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = (TextView) view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));

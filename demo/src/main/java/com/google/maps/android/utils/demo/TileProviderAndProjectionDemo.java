@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileProviderAndProjectionDemo extends BaseDemoActivity {
+
     @Override
-    protected void startDemo() {
+    protected void startDemo(boolean isRestore) {
         PointTileOverlay pto = new PointTileOverlay();
         pto.addPoint(new LatLng(0, 0));
         pto.addPoint(new LatLng(21, -10));

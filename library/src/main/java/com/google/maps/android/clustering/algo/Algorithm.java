@@ -26,6 +26,7 @@ import java.util.Set;
  * Logic for computing clusters
  */
 public interface Algorithm<T extends ClusterItem> {
+
     void addItem(T item);
 
     void addItems(Collection<T> items);
@@ -34,6 +35,8 @@ public interface Algorithm<T extends ClusterItem> {
 
     void removeItem(T item);
 
+    void removeItems(Collection<T> items);
+
     Set<? extends Cluster<T>> getClusters(float zoom);
 
     Collection<T> getItems();
@@ -41,4 +44,8 @@ public interface Algorithm<T extends ClusterItem> {
     void setMaxDistanceBetweenClusteredItems(int maxDistance);
 
     int getMaxDistanceBetweenClusteredItems();
+
+    void lock();
+
+    void unlock();
 }

@@ -714,7 +714,7 @@ public class GeoJsonParserTest {
      *
      * @return Feature with geometry missing its coordinates
      */
-    public JSONObject invalidFeatureNoCoordinatesInGeometry() throws JSONException {
+    private JSONObject invalidFeatureNoCoordinatesInGeometry() throws JSONException {
         return new JSONObject(
                 "{\n"
                         + "  \"type\": \"Feature\",\n"

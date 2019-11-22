@@ -25,12 +25,14 @@ import java.net.URL;
 public class KmlDemoActivity extends BaseDemoActivity {
 
     private GoogleMap mMap;
+    private boolean mIsRestore;
 
     protected int getLayoutId() {
         return R.layout.kml_demo;
     }
 
-    public void startDemo () {
+    public void startDemo (boolean isRestore) {
+        mIsRestore = isRestore;
         try {
             mMap = getMap();
             //retrieveFileFromResource();
@@ -42,7 +44,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, getApplicationContext());
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, this);
             kmlLayer.addLayerToMap();
             moveCameraToKml(kmlLayer);
         } catch (IOException e) {
@@ -57,6 +59,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     }
 
     private void moveCameraToKml(KmlLayer kmlLayer) {
+        if (mIsRestore) return;
         //Retrieve the first container in the KML layer
         KmlContainer container = kmlLayer.getContainers().iterator().next();
         //Retrieve a nested container within the first container
@@ -103,7 +106,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         protected void onPostExecute(byte[] byteArr) {
             try {
                 KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
-                        getApplicationContext());
+                        KmlDemoActivity.this);
                 kmlLayer.addLayerToMap();
                 kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                     @Override

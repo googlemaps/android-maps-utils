@@ -14,9 +14,9 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 public class RendererTest {
-    GoogleMap mMap1;
-    Renderer mRenderer;
-    Set<Feature> featureSet;
+    private GoogleMap mMap1;
+    private Renderer mRenderer;
+    private Set<Feature> featureSet;
 
     @Before
     public void setUp() {
