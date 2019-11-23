@@ -41,10 +41,12 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
     @Override
     void setListenersOnUiThread() {
-        mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnMarkerDragListener(this);
-        mMap.setInfoWindowAdapter(this);
+        if (mMap != null) {
+            mMap.setOnInfoWindowClickListener(this);
+            mMap.setOnMarkerClickListener(this);
+            mMap.setOnMarkerDragListener(this);
+            mMap.setInfoWindowAdapter(this);
+        }
     }
 
     public Collection newCollection() {

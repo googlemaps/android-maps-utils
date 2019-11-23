@@ -37,7 +37,9 @@ public class PolylineManager extends MapObjectManager<Polyline, PolylineManager.
 
     @Override
     void setListenersOnUiThread() {
-        mMap.setOnPolylineClickListener(this);
+        if (mMap != null) {
+            mMap.setOnPolylineClickListener(this);
+        }
     }
 
     @Override

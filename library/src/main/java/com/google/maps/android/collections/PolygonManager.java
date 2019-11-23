@@ -35,7 +35,9 @@ public class PolygonManager extends MapObjectManager<Polygon, PolygonManager.Col
 
     @Override
     void setListenersOnUiThread() {
-        mMap.setOnPolygonClickListener(this);
+        if (mMap != null) {
+            mMap.setOnPolygonClickListener(this);
+        }
     }
 
     @Override

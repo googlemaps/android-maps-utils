@@ -37,7 +37,9 @@ public class CircleManager extends MapObjectManager<Circle, CircleManager.Collec
 
     @Override
     void setListenersOnUiThread() {
-        mMap.setOnCircleClickListener(this);
+        if (mMap != null) {
+            mMap.setOnCircleClickListener(this);
+        }
     }
 
     @Override

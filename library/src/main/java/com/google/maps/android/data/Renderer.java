@@ -123,7 +123,7 @@ public class Renderer {
      * Creates a new Renderer object
      *
      * @param map     map to place objects on
-     * @param @param activity activity needed to add info windows and retain bitmap cache fragment
+     * @param activity activity needed to add info windows and retain bitmap cache fragment
      * @param markerManager marker manager to create marker collection from
      * @param polygonManager polygon manager to create polygon collection from
      * @param polylineManager polyline manager to create polyline collection from
