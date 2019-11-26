@@ -479,7 +479,7 @@ public class PolyUtilTest {
         assertEquals(37.947946, distance, 1e-6);
     }
 
-	@Test
+    @Test
     public void testDistanceToLineLessThanDistanceToExtrems() {
         LatLng startLine = new LatLng(28.05359, -82.41632);
         LatLng endLine = new LatLng(28.05310, -82.41634);
