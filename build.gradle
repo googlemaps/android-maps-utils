@@ -1,18 +1,17 @@
-
-
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:3.5.2'
     }
 }
 
 allprojects {
     repositories {
-        mavenLocal()
+        google()
         jcenter()
     }
 }
@@ -26,9 +25,9 @@ project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 subprojects {
     project.plugins.whenPluginAdded { plugin ->
         if (rootProject.ext.has('preDexLibs')) {
-            if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {
                 project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-            } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
                 project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
             }
         }

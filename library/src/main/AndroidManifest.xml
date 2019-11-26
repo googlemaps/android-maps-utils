@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.google.maps.android">
+    <!-- https://groups.google.com/group/adt-dev/browse_thread/thread/c059c0380998092b/6720093fb40fdaf9 -->
+    <application>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+    </application>
+</manifest>

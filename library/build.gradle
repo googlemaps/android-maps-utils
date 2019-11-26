@@ -1,135 +1,47 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-archivesBaseName = 'android-maps-utils'
-group = 'com.google.maps.android'
-
-dependencies {
-    compile 'com.google.android.gms:play-services-maps:9.6.1'
-}
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
-
-    resourcePrefix 'amu_'
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            res.srcDirs = ['res']
-        }
-
-        androidTest {
-            java.srcDirs = ['tests/src']
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+        // This enables us to tell when we're running unit tests on Travis (#573)
+        buildConfigField("String", "TRAVIS", "\"" + System.getenv('TRAVIS') + "\"")
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    resourcePrefix 'amu_'
     // This enables long timeouts required on slow environments, e.g. Travis
     adbOptions {
         timeOutInMs 10 * 60 * 1000  // 10 minutes
-        installOptions "-d","-t"
+        installOptions "-d", "-t"
     }
+}
 
+dependencies {
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 task instrumentTest(dependsOn: connectedCheck)
 
-task apklib(type: Zip) {
-    dependsOn 'check'
-    appendix = extension = 'apklib'
-
-    from 'AndroidManifest.xml'
-    into('res') {
-        from 'res'
-    }
-    into('src') {
-        from 'src'
-    }
-}
-
-artifacts {
-    archives apklib
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-signing {
-    sign configurations.archives
-}
-
-if (!hasProperty("sonatypeUsername")) {
-    sonatypeUsername = ""
-}
-if (!hasProperty("sonatypePassword")) {
-    sonatypePassword = ""
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-            snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-
-            modifyPom(addFilter('aar') { artifact, file ->
-                artifact.name == 'android-maps-utils'
-            })
-
-            modifyPom(addFilter('apklib') { artifact, file ->
-                artifact.name == 'android-maps-utils-apklib'
-            })
-
-            // There's no official apklib for Google Play services, so we
-            // can't really maintain that dependency for the apklib packaging.
-            pom('apklib').whenConfigured { pom ->
-                pom.dependencies = []
-            }
-        }
-    }
-}
-
-def modifyPom(pom) {
-    pom.project {
-        name 'Google Maps Android API utility library'
-        description 'Handy extensions to the Google Maps Android API.'
-        url 'https://github.com/googlemaps/android-maps-utils'
-
-        scm {
-            url 'scm:git@github.com:googlemaps/android-maps-utils.git'
-            connection 'scm:git@github.com:googlemaps/android-maps-utils.git'
-            developerConnection 'scm:git@github.com:googlemaps/android-maps-utils.git'
-        }
-
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
-
-        organization {
-            name 'Google Inc'
-            url 'http://developers.google.com/maps'
-        }
-
-        developers {
-            developer {
-                id 'broady'
-                name 'Chris Broadfoot'
-                url 'http://google.com/+ChristopherBroadfoot'
-            }
-        }
-    }
+if (System.getenv("JITPACK")) {
+    apply plugin: 'maven'
+} else {
+    apply from: '../gradle-mvn-push.gradle'
 }
