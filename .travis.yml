@@ -82,7 +82,7 @@ install:
   # Create an Android emulator
   - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
   - |
-    EMU_PARAMS="-verbose -no-snapshot -no-window -camera-back none -camera-front none -selinux permissive -qemu -m 2048"
+    EMU_PARAMS="-verbose -no-snapshot -no-window -gpu swiftshader_indirect -camera-back none -camera-front none -selinux permissive -qemu -m 2048"
     EMU_COMMAND="emulator"
     if [[ $ABI =~ "x86" ]]; then
       if [ $API != "15" ]; then
