@@ -36,7 +36,7 @@ Please be sure to include as much information as possible:
 
 #### Code example
 
-```python
+```
 # example
 ```
 
