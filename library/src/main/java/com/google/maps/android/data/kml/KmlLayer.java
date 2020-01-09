@@ -52,6 +52,9 @@ public class KmlLayer extends Layer {
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
+     * Use this constructor with shared object managers in order to handle multiple layers with
+     * their own event handlers on the map.
+     *
      * @param map        GoogleMap object
      * @param resourceId Raw resource KML file
      * @param activity   Activity object

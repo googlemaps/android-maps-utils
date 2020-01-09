@@ -90,13 +90,13 @@ public class Renderer {
 
     private HashMap<String, String> mStyleMaps;
 
-    private BiMultiMap<Feature> mContainerFeatures;
+    private final BiMultiMap<Feature> mContainerFeatures;
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlayMap;
 
     private final ArrayList<String> mMarkerIconUrls;
 
-    private final LruCache<String, Bitmap> mImagesCache;
+    private LruCache<String, Bitmap> mImagesCache;
 
     private boolean mLayerOnMap;
 
@@ -130,9 +130,8 @@ public class Renderer {
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
     public Renderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
-        mMap = map;
+        this(map, new ArrayList<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
         mActivity = activity;
-        mLayerOnMap = false;
         LruCache<String, Bitmap> imagesCache = null;
         RetainFragment retainFragment = null;
         if (activity != null) {
@@ -146,12 +145,43 @@ public class Renderer {
             }
         }
         mImagesCache = imagesCache;
-        mMarkerIconUrls = new ArrayList<>();
         mStylesRenderer = new HashMap<>();
-        mDefaultPointStyle = null;
-        mDefaultLineStringStyle = null;
-        mDefaultPolygonStyle = null;
-        mContainerFeatures = new BiMultiMap<>();
+    }
+
+    /**
+     * Creates a new Renderer object
+     *
+     * @param map      map to place objects on
+     * @param features contains a hashmap of features and objects that will go on the map
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     */
+    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+        this(map, null, new GeoJsonPointStyle(), new GeoJsonLineStringStyle(), new GeoJsonPolygonStyle(), null, markerManager, polygonManager, polylineManager, groundOverlayManager);
+        mFeatures.putAll(features);
+        mImagesCache = null;
+    }
+
+    private Renderer(GoogleMap map,
+                     ArrayList<String> markerIconUrls,
+                     GeoJsonPointStyle defaultPointStyle,
+                     GeoJsonLineStringStyle defaultLineStringStyle,
+                     GeoJsonPolygonStyle defaultPolygonStyle,
+                     BiMultiMap<Feature> containerFeatures,
+                     MarkerManager markerManager,
+                     PolygonManager polygonManager,
+                     PolylineManager polylineManager,
+                     GroundOverlayManager groundOverlayManager) {
+
+        mMap = map;
+        mLayerOnMap = false;
+        mMarkerIconUrls = markerIconUrls;
+        mDefaultPointStyle = defaultPointStyle;
+        mDefaultLineStringStyle = defaultLineStringStyle;
+        mDefaultPolygonStyle = defaultPolygonStyle;
+        mContainerFeatures = containerFeatures;
         if (map != null) {
             if (markerManager == null) {
                 markerManager = new MarkerManager(map);
@@ -183,32 +213,6 @@ public class Renderer {
             mGroundOverlayManager = null;
             mGroundOverlays = null;
         }
-    }
-
-    /**
-     * Creates a new Renderer object
-     *
-     * @param map      map to place objects on
-     * @param features contains a hashmap of features and objects that will go on the map
-     */
-    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features) {
-        mMap = map;
-        mFeatures.putAll(features);
-        mLayerOnMap = false;
-        mMarkerIconUrls = null;
-        mDefaultPointStyle = new GeoJsonPointStyle();
-        mDefaultLineStringStyle = new GeoJsonLineStringStyle();
-        mDefaultPolygonStyle = new GeoJsonPolygonStyle();
-        mImagesCache = null;
-        mContainerFeatures = null;
-        mMarkerManager = new MarkerManager(map);
-        mMarkers = mMarkerManager.newCollection();
-        mPolygonManager = new PolygonManager(map);
-        mPolygons = mPolygonManager.newCollection();
-        mPolylineManager = new PolylineManager(map);
-        mPolylines = mPolylineManager.newCollection();
-        mGroundOverlayManager = new GroundOverlayManager(map);
-        mGroundOverlays = mGroundOverlayManager.newCollection();
     }
 
     /**

@@ -31,7 +31,7 @@ public class RendererTest {
         features.put(feature1, null);
         features.put(feature2, null);
         featureSet = features.keySet();
-        mRenderer = new Renderer(mMap1, features);
+        mRenderer = new Renderer(mMap1, features, null, null, null, null);
     }
 
     @Test
