@@ -1,12 +1,12 @@
 package com.google.maps.android.data.kml;
 
-import android.graphics.Color;
-
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.data.Style;
+
+import android.graphics.Color;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -187,6 +187,8 @@ public class KmlStyle extends Style {
      * @param color Fill color for a KML Polygon as a String
      */
     /* package */ void setFillColor(String color) {
+        // Tolerate KML with leading or trailing whitespace in colors
+        color = color.trim();
         // Add # to allow for mOutline color to be parsed correctly
         int polygonColorNum = (Color.parseColor("#" + convertColor(color)));
         setPolygonFillColor(polygonColorNum);
@@ -199,6 +201,8 @@ public class KmlStyle extends Style {
      * @param color Color for a marker
      */
     /* package */ void setMarkerColor(String color) {
+        // Tolerate KML with leading or trailing whitespace in colors
+        color = color.trim();
         int integerColor = Color.parseColor("#" + convertColor(color));
         mMarkerColor = getHueValue(integerColor);
         mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(mMarkerColor));
@@ -231,10 +235,6 @@ public class KmlStyle extends Style {
         } else {
             newColor = color.substring(4, 6) + color.substring(2, 4) +
                     color.substring(0, 2);
-        }
-        // Maps exports KML colors with a leading 0 as a space.
-        if (newColor.substring(0, 1).equals(" ")) {
-            newColor = "0" + newColor.substring(1, newColor.length());
         }
         return newColor;
     }
@@ -329,6 +329,8 @@ public class KmlStyle extends Style {
      * @param color Outline color for a Polyline and a Polygon represented as a String
      */
     /* package */ void setOutlineColor(String color) {
+        // Tolerate KML with leading or trailing whitespace in colors
+        color = color.trim();
         // Add # to allow for mOutline color to be parsed correctly
         mPolylineOptions.color(Color.parseColor("#" + convertColor(color)));
         mPolygonOptions.strokeColor(Color.parseColor("#" + convertColor(color)));
