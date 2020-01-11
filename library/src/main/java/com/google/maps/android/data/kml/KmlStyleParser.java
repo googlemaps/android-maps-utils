@@ -3,8 +3,6 @@ package com.google.maps.android.data.kml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.text.TextUtils;
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -171,13 +169,13 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to apply hotspot properties to
      */
-    private static void setIconHotSpot(XmlPullParser parser, KmlStyle style) {
-        float xValue, yValue;
-        String xUnits, yUnits;
-        if (TextUtils.isEmpty(parser.getAttributeValue(null, "x")) ||
-                TextUtils.isEmpty(parser.getAttributeValue(null, "y"))) {
+    private static void setIconHotSpot(XmlPullParser parser, KmlStyle style)
+            throws XmlPullParserException {
+        if (parser.isEmptyElementTag()) {
             return;
         }
+        float xValue, yValue;
+        String xUnits, yUnits;
         xValue = Float.parseFloat(parser.getAttributeValue(null, "x"));
         yValue = Float.parseFloat(parser.getAttributeValue(null, "y"));
         xUnits = parser.getAttributeValue(null, "xunits");
