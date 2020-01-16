@@ -123,7 +123,7 @@ public class KmlStyleTest {
         assertNotNull(kmlStyle);
         assertNotNull(kmlStyle.getMarkerOptions());
         kmlStyle.setMarkerColor(" FFFFFF");
-        // We can't get the marker color to see if it set correctly
+        assertEquals(Color.WHITE, kmlStyle.mMarkerColor, 1);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class KmlStyleTest {
         assertNotNull(kmlStyle);
         assertNotNull(kmlStyle.getMarkerOptions());
         kmlStyle.setMarkerColor("FFFFFF ");
-        // We can't get the marker color to see if it set correctly
+        assertEquals(Color.WHITE, kmlStyle.mMarkerColor, 1);
     }
 
     @Test

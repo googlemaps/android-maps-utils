@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import androidx.annotation.VisibleForTesting;
+
 /**
  * Represents the defined styles in the KML document
  */
@@ -43,7 +45,8 @@ public class KmlStyle extends Style {
 
     private boolean mPolyRandomColorMode;
 
-    private float mMarkerColor;
+    @VisibleForTesting
+    float mMarkerColor;
 
     /**
      * Creates a new KmlStyle object
