@@ -23,6 +23,8 @@ import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -35,6 +37,7 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends Abstrac
     // TODO: evaluate maxSize parameter for LruCache.
     private final LruCache<Integer, Set<? extends Cluster<T>>> mCache = new LruCache<Integer, Set<? extends Cluster<T>>>(5);
     private final ReadWriteLock mCacheLock = new ReentrantReadWriteLock();
+    private final Executor mExecutor = Executors.newCachedThreadPool();
 
     public PreCachingAlgorithmDecorator(Algorithm<T> algorithm) {
         mAlgorithm = algorithm;
@@ -80,10 +83,10 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends Abstrac
         Set<? extends Cluster<T>> results = getClustersInternal(discreteZoom);
         // TODO: Check if requests are already in-flight.
         if (mCache.get(discreteZoom + 1) == null) {
-            new Thread(new PrecacheRunnable(discreteZoom + 1)).start();
+            mExecutor.execute(new PrecacheRunnable(discreteZoom + 1));
         }
         if (mCache.get(discreteZoom - 1) == null) {
-            new Thread(new PrecacheRunnable(discreteZoom - 1)).start();
+            mExecutor.execute(new PrecacheRunnable(discreteZoom - 1));
         }
         return results;
     }
