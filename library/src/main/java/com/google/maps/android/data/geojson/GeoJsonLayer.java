@@ -39,6 +39,7 @@ public class GeoJsonLayer extends Layer {
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
      *
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
@@ -68,6 +69,7 @@ public class GeoJsonLayer extends Layer {
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
      *
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
@@ -89,6 +91,7 @@ public class GeoJsonLayer extends Layer {
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
      *
      * @param map         map where the layer is to be rendered
      * @param geoJsonFile GeoJSON data to add to the layer
@@ -99,6 +102,7 @@ public class GeoJsonLayer extends Layer {
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
      *
      * @param map        map where the layer is to be rendered
      * @param resourceId GeoJSON file to add to the layer
