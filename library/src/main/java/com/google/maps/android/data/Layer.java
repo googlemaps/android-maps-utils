@@ -45,7 +45,7 @@ public abstract class Layer {
     /**
      * Adds the KML data to the map
      */
-    protected void addKMLToMap() throws IOException, XmlPullParserException {
+    protected void addKMLToMap() {
         if (mRenderer instanceof KmlRenderer) {
             ((KmlRenderer) mRenderer).addLayerToMap();
         } else {
@@ -64,7 +64,7 @@ public abstract class Layer {
         }
     }
 
-    public abstract void addLayerToMap() throws IOException, XmlPullParserException;
+    public abstract void addLayerToMap();
 
     /**
      * Removes all the data from the map and clears all the stored placemarks
