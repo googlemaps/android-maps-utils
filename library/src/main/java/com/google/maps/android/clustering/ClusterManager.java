@@ -93,13 +93,13 @@ public class ClusterManager<T extends ClusterItem> implements
         return mMarkerManager;
     }
 
-    public void setRenderer(ClusterRenderer<T> view) {
+    public void setRenderer(ClusterRenderer<T> renderer) {
         mRenderer.setOnClusterClickListener(null);
         mRenderer.setOnClusterItemClickListener(null);
         mClusterMarkers.clear();
         mMarkers.clear();
         mRenderer.onRemove();
-        mRenderer = view;
+        mRenderer = renderer;
         mRenderer.onAdd();
         mRenderer.setOnClusterClickListener(mOnClusterClickListener);
         mRenderer.setOnClusterInfoWindowClickListener(mOnClusterInfoWindowClickListener);
