@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml>
+    <Style x="20" y="2" xunits="pixels" yunits="pixels" id="shp_centerpoint">
+      <IconStyle>
+        <scale>0.8</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon57.png</href>
+        </Icon>
+        <hotSpot />
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+        <color>FFFFFFFF</color>
+      </LabelStyle>
+    </Style>
+      <Placemark>
+        <name>60A</name>
+        <description>Test</description>
+        <visibility>1</visibility>
+        <Point>
+          <extrude>0</extrude>
+          <tessellate>1</tessellate>
+          <altitudeMode>0</altitudeMode>
+          <coordinates>-111.957935372607,44.0811954480368,0</coordinates>
+        </Point>
+        <styleUrl>#shp_centerpoint</styleUrl>
+      </Placemark>
+</kml>

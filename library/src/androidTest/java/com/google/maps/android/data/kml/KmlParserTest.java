@@ -1,18 +1,21 @@
 package com.google.maps.android.data.kml;
 
-import android.graphics.Color;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+import android.graphics.Color;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class KmlParserTest {
     private XmlPullParser createParser(int res) throws Exception {
@@ -47,6 +50,15 @@ public class KmlParserTest {
                     inlineStyle.getPolygonOptions().getStrokeColor());
             assertEquals(placemark.getGeometry().getGeometryType(), "MultiGeometry");
         }
+    }
+
+    @Test
+    public void testEmptyHotSpotStyle() throws Exception {
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_empty_hotspot);
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(1, mParser.getPlacemarks().size());
     }
 
     @Test

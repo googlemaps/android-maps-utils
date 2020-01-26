@@ -64,6 +64,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -77,6 +79,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
     private boolean mAnimate;
+    private final Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -290,7 +293,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             });
             renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
-            new Thread(renderTask).start();
+            mExecutor.execute(renderTask);
         }
 
         public void queue(Set<? extends Cluster<T>> clusters) {

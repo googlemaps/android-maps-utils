@@ -169,7 +169,11 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to apply hotspot properties to
      */
-    private static void setIconHotSpot(XmlPullParser parser, KmlStyle style) {
+    private static void setIconHotSpot(XmlPullParser parser, KmlStyle style)
+            throws XmlPullParserException {
+        if (parser.isEmptyElementTag()) {
+            return;
+        }
         float xValue, yValue;
         String xUnits, yUnits;
         xValue = Float.parseFloat(parser.getAttributeValue(null, "x"));

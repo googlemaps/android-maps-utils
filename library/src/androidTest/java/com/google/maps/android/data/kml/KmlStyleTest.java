@@ -1,12 +1,28 @@
 package com.google.maps.android.data.kml;
 
-import android.graphics.Color;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.maps.android.TestUtil;
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import android.graphics.Color;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class KmlStyleTest {
+
+    @Before
+    public void setUp() {
+        MapsInitializer.initialize(InstrumentationRegistry.getInstrumentation().getTargetContext());
+    }
+
     @Test
     public void testStyleId() {
         KmlStyle kmlStyle = new KmlStyle();
@@ -34,14 +50,31 @@ public class KmlStyleTest {
     }
 
     @Test
+    public void testFillColorLeadingSpace() {
+        KmlStyle kmlStyle = new KmlStyle();
+        assertNotNull(kmlStyle);
+        assertNotNull(kmlStyle.getPolygonOptions());
+        kmlStyle.setFillColor(" 000000");
+        int fillColor = Color.parseColor("#000000");
+        assertEquals(fillColor, kmlStyle.getPolygonOptions().getFillColor());
+    }
+
+    @Test
+    public void testFillColorTrailingSpace() {
+        KmlStyle kmlStyle = new KmlStyle();
+        assertNotNull(kmlStyle);
+        assertNotNull(kmlStyle.getPolygonOptions());
+        kmlStyle.setFillColor("000000 ");
+        int fillColor = Color.parseColor("#000000");
+        assertEquals(fillColor, kmlStyle.getPolygonOptions().getFillColor());
+    }
+
+    @Test
     public void testColorFormatting() {
         KmlStyle kmlStyle = new KmlStyle();
         // AABBGGRR -> AARRGGBB.
         kmlStyle.setFillColor("ff579D00");
         assertEquals(Color.parseColor("#009D57"), kmlStyle.getPolygonOptions().getFillColor());
-        // Alpha w/ missing 0.
-        kmlStyle.setFillColor(" D579D00");
-        assertEquals(Color.parseColor("#0D009D57"), kmlStyle.getPolygonOptions().getFillColor());
     }
 
     @Test
@@ -81,9 +114,54 @@ public class KmlStyleTest {
     }
 
     @Test
-    public void testMarkerColor() {
+    public void testMarkerColorLeadingSpace() {
+        if (TestUtil.isRunningOnTravis()) {
+            Assume.assumeTrue("Skipping KmlStyleTest.testMarkerColorLeadingSpace() - this is expected behavior on Travis CI (#573)", false);
+            return;
+        }
         KmlStyle kmlStyle = new KmlStyle();
         assertNotNull(kmlStyle);
         assertNotNull(kmlStyle.getMarkerOptions());
+        kmlStyle.setMarkerColor(" FFFFFF");
+        assertEquals(Color.WHITE, kmlStyle.mMarkerColor, 1);
+    }
+
+    @Test
+    public void testMarkerColorTrailingSpace() {
+        if (TestUtil.isRunningOnTravis()) {
+            Assume.assumeTrue("Skipping KmlStyleTest.testMarkerColorTrailingSpace() - this is expected behavior on Travis CI (#573)", false);
+            return;
+        }
+        KmlStyle kmlStyle = new KmlStyle();
+        assertNotNull(kmlStyle);
+        assertNotNull(kmlStyle.getMarkerOptions());
+        kmlStyle.setMarkerColor("FFFFFF ");
+        assertEquals(Color.WHITE, kmlStyle.mMarkerColor, 1);
+    }
+
+    @Test
+    public void testLineColorWithLeadingSpace() {
+        KmlStyle kmlStyle = new KmlStyle();
+        assertNotNull(kmlStyle);
+        assertNotNull(kmlStyle.getPolygonOptions());
+        assertNotNull(kmlStyle.getPolylineOptions());
+        assertEquals(Color.BLACK, kmlStyle.getPolylineOptions().getColor());
+        assertEquals(Color.BLACK, kmlStyle.getPolygonOptions().getStrokeColor());
+        kmlStyle.setOutlineColor(" FFFFFFFF");
+        assertEquals(Color.WHITE, kmlStyle.getPolylineOptions().getColor());
+        assertEquals(Color.WHITE, kmlStyle.getPolygonOptions().getStrokeColor());
+    }
+
+    @Test
+    public void testLineColorWithTrailingSpace() {
+        KmlStyle kmlStyle = new KmlStyle();
+        assertNotNull(kmlStyle);
+        assertNotNull(kmlStyle.getPolygonOptions());
+        assertNotNull(kmlStyle.getPolylineOptions());
+        assertEquals(Color.BLACK, kmlStyle.getPolylineOptions().getColor());
+        assertEquals(Color.BLACK, kmlStyle.getPolygonOptions().getStrokeColor());
+        kmlStyle.setOutlineColor("FFFFFFFF ");
+        assertEquals(Color.WHITE, kmlStyle.getPolylineOptions().getColor());
+        assertEquals(Color.WHITE, kmlStyle.getPolygonOptions().getStrokeColor());
     }
 }
