@@ -312,6 +312,7 @@ public class KmlRenderer extends Renderer {
      *                    or list of sub-objects for multi-geometries
      */
     private void addIconToGeometry(String iconUrl, KmlStyle urlStyle, KmlStyle inlineStyle, Geometry geometry, Object object) {
+        if (geometry == null) return;
         if ("Point".equals(geometry.getGeometryType())) {
             addIconToMarker(iconUrl, urlStyle, inlineStyle, (Marker) object);
         } else if ("MultiGeometry".equals(geometry.getGeometryType())) {
