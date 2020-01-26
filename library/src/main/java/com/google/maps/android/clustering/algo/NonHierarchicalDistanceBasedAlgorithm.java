@@ -201,7 +201,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
                 p.y - halfSpan, p.y + halfSpan);
     }
 
-    static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
+    public static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
         private final T mClusterItem;
         private final Point mPoint;
         private final LatLng mPosition;
