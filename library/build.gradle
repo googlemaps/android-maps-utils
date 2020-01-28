@@ -32,7 +32,6 @@ android {
 
 dependencies {
     implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
-    implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
 
     implementation 'androidx.legacy:legacy-support-v4:+'
     implementation 'com.google.android.gms:play-services-basement:15.0.1'
