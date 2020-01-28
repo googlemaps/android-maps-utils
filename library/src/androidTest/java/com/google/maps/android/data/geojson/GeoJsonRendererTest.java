@@ -31,7 +31,7 @@ public class GeoJsonRendererTest {
             geoJsonFeatures.put(feature, null);
         }
         geoJsonFeaturesSet = geoJsonFeatures.keySet();
-        mRenderer = new GeoJsonRenderer(mMap1, geoJsonFeatures);
+        mRenderer = new GeoJsonRenderer(mMap1, geoJsonFeatures, null, null, null, null);
         mLayer = new GeoJsonLayer(mMap1, createFeatureCollection());
         GeoJsonLineString geoJsonLineString =
                 new GeoJsonLineString(

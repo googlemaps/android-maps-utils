@@ -1,6 +1,10 @@
 package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.collections.GroundOverlayManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.collections.PolygonManager;
+import com.google.maps.android.collections.PolylineManager;
 import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Renderer;
 
@@ -21,10 +25,13 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param map      map to place GeoJsonFeature objects on
      * @param features contains a hashmap of features and objects that will go on the map
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features) {
-        super(map, features);
-
+    /* package */ GeoJsonRenderer(GoogleMap map, HashMap<GeoJsonFeature, Object> features, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+        super(map, features, markerManager, polygonManager, polylineManager, groundOverlayManager);
     }
 
     /**
