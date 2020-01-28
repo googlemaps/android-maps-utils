@@ -2,7 +2,7 @@ package com.google.maps.android.data.kml;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.libraries.maps.GoogleMap;
 import com.google.maps.android.collections.GroundOverlayManager;
 import com.google.maps.android.data.Layer;
 import com.google.maps.android.collections.MarkerManager;

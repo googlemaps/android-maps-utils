@@ -19,7 +19,7 @@ package com.google.maps.android.utils.demo;
 import androidx.lifecycle.ViewModel;
 import android.content.res.Resources;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm;
 import com.google.maps.android.utils.demo.model.MyItem;
 

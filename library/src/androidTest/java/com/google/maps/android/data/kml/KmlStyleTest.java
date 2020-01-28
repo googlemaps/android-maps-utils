@@ -1,6 +1,6 @@
 package com.google.maps.android.data.kml;
 
-import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.libraries.maps.MapsInitializer;
 import com.google.maps.android.TestUtil;
 
 import org.junit.Assume;

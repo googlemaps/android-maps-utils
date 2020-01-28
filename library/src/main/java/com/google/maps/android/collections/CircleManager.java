@@ -18,9 +18,9 @@ package com.google.maps.android.collections;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.libraries.maps.GoogleMap;
+import com.google.android.libraries.maps.model.Circle;
+import com.google.android.libraries.maps.model.CircleOptions;
 
 /**
  * Keeps track of collections of circles on the map. Delegates all Circle-related events to each

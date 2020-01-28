@@ -18,9 +18,9 @@ package com.google.maps.android.collections;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.libraries.maps.GoogleMap;
+import com.google.android.libraries.maps.model.GroundOverlay;
+import com.google.android.libraries.maps.model.GroundOverlayOptions;
 
 /**
  * Keeps track of collections of ground overlays on the map. Delegates all GroundOverlay-related events to each

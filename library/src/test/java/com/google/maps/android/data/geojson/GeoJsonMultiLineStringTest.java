@@ -1,6 +1,6 @@
 package com.google.maps.android.data.geojson;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.maps.model.LatLng;
 
 import org.junit.Test;
 

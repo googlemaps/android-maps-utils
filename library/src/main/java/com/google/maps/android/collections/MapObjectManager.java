@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.libraries.maps.GoogleMap;
 
 import java.util.Collections;
 import java.util.HashMap;

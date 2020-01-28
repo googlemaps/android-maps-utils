@@ -16,9 +16,9 @@
 
 package com.google.maps.android.collections;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.libraries.maps.GoogleMap;
+import com.google.android.libraries.maps.model.Polygon;
+import com.google.android.libraries.maps.model.PolygonOptions;
 
 /**
  * Keeps track of collections of polygons on the map. Delegates all Polygon-related events to each
