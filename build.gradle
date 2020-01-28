@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.3'
     }
 }
 
@@ -28,9 +28,9 @@ project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 subprojects {
     project.plugins.whenPluginAdded { plugin ->
         if (rootProject.ext.has('preDexLibs')) {
-            if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {
                 project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-            } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
                 project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
             }
         }

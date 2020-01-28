@@ -1,45 +1,49 @@
 apply plugin: 'com.android.library'
 
-dependencies {
-    implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
-    implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
-
-    implementation 'com.android.support:support-v4:+'
-    implementation 'com.android.support:appcompat-v7:+'
-    implementation 'com.google.android.gms:play-services-basement:15.0.1'
-    implementation 'com.google.android.gms:play-services-base:15.0.1'
-    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
-}
-
 android {
-    compileSdkVersion 28
-
-    resourcePrefix 'amu_'
-
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+        // This enables us to tell when we're running unit tests on Travis (#573)
+        buildConfigField("String", "TRAVIS", "\"" + System.getenv('TRAVIS') + "\"")
     }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            res.srcDirs = ['res']
-        }
-
-        androidTest {
-            java.srcDirs = ['tests/src']
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    resourcePrefix 'amu_'
     // This enables long timeouts required on slow environments, e.g. Travis
     adbOptions {
         timeOutInMs 10 * 60 * 1000  // 10 minutes
         installOptions "-d", "-t"
     }
+}
 
+dependencies {
+    implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
+    implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
+
+    implementation 'androidx.legacy:legacy-support-v4:+'
+    implementation 'com.google.android.gms:play-services-basement:15.0.1'
+    implementation 'com.google.android.gms:play-services-base:15.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 task instrumentTest(dependsOn: connectedCheck)
