@@ -113,6 +113,8 @@ public class Renderer {
      */
     private Map<String, Bitmap> mBitmapCache;
 
+    private int mNumActiveDownloads = 0;
+
     private boolean mLayerOnMap;
 
     private FragmentActivity mActivity;
@@ -512,6 +514,17 @@ public class Renderer {
      */
     protected void cacheBitmap(String url, Bitmap bitmap) {
         mBitmapCache.put(url, bitmap);
+    }
+
+    protected void downloadStarted() {
+        mNumActiveDownloads++;
+    }
+
+    protected void downloadFinished() {
+        mNumActiveDownloads--;
+        if (mNumActiveDownloads == 0 && mBitmapCache != null && !mBitmapCache.isEmpty()) {
+            mBitmapCache.clear();
+        }
     }
 
     /**

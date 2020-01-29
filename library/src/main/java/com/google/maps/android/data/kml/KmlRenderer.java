@@ -414,6 +414,7 @@ public class KmlRenderer extends Renderer {
          */
         public MarkerIconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
+            downloadStarted();
         }
 
         /**
@@ -450,6 +451,7 @@ public class KmlRenderer extends Renderer {
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
             }
+            downloadFinished();
         }
     }
 
@@ -462,6 +464,7 @@ public class KmlRenderer extends Renderer {
 
         public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
+            downloadStarted();
         }
 
         /**
@@ -498,6 +501,7 @@ public class KmlRenderer extends Renderer {
                     addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
                 }
             }
+            downloadFinished();
         }
     }
 
