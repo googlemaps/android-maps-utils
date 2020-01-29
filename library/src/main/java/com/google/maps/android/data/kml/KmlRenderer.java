@@ -293,7 +293,7 @@ public class KmlRenderer extends Renderer {
                              KmlPlacemark placemark) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
-        BitmapDescriptor scaledBitmap = getCachedImage(bitmapUrl, bitmapScale);
+        BitmapDescriptor scaledBitmap = getCachedMarkerImage(bitmapUrl, bitmapScale);
         ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
     }
 
@@ -339,7 +339,7 @@ public class KmlRenderer extends Renderer {
             String groundOverlayUrl = groundOverlay.getImageUrl();
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
-                if (getCachedImage(groundOverlayUrl, 1.0) != null) {
+                if (getCachedGroundOverlayImage(groundOverlayUrl) != null) {
                     addGroundOverlayToMap(groundOverlayUrl, getGroundOverlayMap(), true);
                 } else {
                     mGroundOverlayUrls.add(groundOverlayUrl);
@@ -368,7 +368,7 @@ public class KmlRenderer extends Renderer {
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
                                        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
-        BitmapDescriptor groundOverlayBitmap = getCachedImage(groundOverlayUrl, 1.0);
+        BitmapDescriptor groundOverlayBitmap = getCachedGroundOverlayImage(groundOverlayUrl);
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
             if (kmlGroundOverlay.getImageUrl().equals(groundOverlayUrl)) {
                 GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
