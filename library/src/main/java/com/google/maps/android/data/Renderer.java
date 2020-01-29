@@ -497,6 +497,13 @@ public class Renderer {
         mStylesRenderer.putAll(styles);
     }
 
+    /**
+     * Cache the scaled BitmapDescriptor for the URL
+     *
+     * @param url              URL image was loaded from
+     * @param scale            scale the image was scaled to
+     * @param bitmapDescriptor BitmapDescriptor to cache for reuse
+     */
     public void putImagesCache(String url, double scale, BitmapDescriptor bitmapDescriptor) {
         Map<Double, BitmapDescriptor> bitmaps = mImagesCache.get(url);
         if (bitmaps == null) {
@@ -516,12 +523,26 @@ public class Renderer {
         mBitmapCache.put(url, bitmap);
     }
 
+    /**
+     * Increment active download count
+     */
     protected void downloadStarted() {
         mNumActiveDownloads++;
     }
 
+    /**
+     * Decrement active download count and check if bitmap cache should be cleared
+     */
     protected void downloadFinished() {
         mNumActiveDownloads--;
+        checkClearBitmapCache();
+    }
+
+    /**
+     * Clear bitmap cache if no active image downloads remain. All images
+     * should be loaded, scaled, and cached as BitmapDescriptors at this point.
+     */
+    private void checkClearBitmapCache() {
         if (mNumActiveDownloads == 0 && mBitmapCache != null && !mBitmapCache.isEmpty()) {
             mBitmapCache.clear();
         }
