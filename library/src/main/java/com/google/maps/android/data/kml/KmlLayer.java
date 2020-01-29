@@ -1,5 +1,8 @@
 package com.google.maps.android.data.kml;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -13,8 +16,11 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Document class allows for users to input their KML data and output it onto the map
@@ -24,8 +30,10 @@ public class KmlLayer extends Layer {
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     *
      * @param map        GoogleMap object
-     * @param resourceId Raw resource KML file
+     * @param resourceId Raw resource KML or KMZ file
      * @param activity   Activity object
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
@@ -38,8 +46,10 @@ public class KmlLayer extends Layer {
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     *
      * @param map    GoogleMap object
-     * @param stream InputStream containing KML file
+     * @param stream InputStream containing KML or KMZ file
      * @param activity   Activity object
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
@@ -52,11 +62,13 @@ public class KmlLayer extends Layer {
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     *
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
      *
      * @param map        GoogleMap object
-     * @param resourceId Raw resource KML file
+     * @param resourceId Raw resource KML or KMZ file
      * @param activity   Activity object
      * @param markerManager marker manager to create marker collection from
      * @param polygonManager polygon manager to create polygon collection from
@@ -73,11 +85,13 @@ public class KmlLayer extends Layer {
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     *
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
      *
      * @param map    GoogleMap object
-     * @param stream InputStream containing KML file
+     * @param stream InputStream containing KML or KMZ file
      * @param activity   Activity object
      * @param markerManager marker manager to create marker collection from
      * @param polygonManager polygon manager to create polygon collection from
@@ -91,14 +105,47 @@ public class KmlLayer extends Layer {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        KmlRenderer mRenderer = new KmlRenderer(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
+        KmlRenderer renderer = new KmlRenderer(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
+
+        BufferedInputStream bis = new BufferedInputStream(stream);
+        ZipInputStream zip = new ZipInputStream(stream);
+        try {
+            KmlParser parser = null;
+            ZipEntry entry = zip.getNextEntry();
+            if (entry != null) { // is a KMZ zip file
+                while (entry != null) {
+                    if ("doc.kml".equals(entry.getName())) {
+                        parser = parseKml(zip);
+                    } else {
+                        Bitmap bitmap = BitmapFactory.decodeStream(zip);
+                        if (bitmap != null) {
+                            renderer.cacheBitmap(entry.getName(), bitmap);
+                        }
+                    }
+                    entry = zip.getNextEntry();
+                }
+            } else {
+                bis.reset();
+                parser = parseKml(bis);
+            }
+            if (parser == null) {
+                throw new IllegalArgumentException("KML not found in InputStream");
+            }
+            renderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+                    parser.getContainers(), parser.getGroundOverlays());
+            storeRenderer(renderer);
+        } finally {
+            stream.close();
+            bis.close();
+            zip.close();
+        }
+    }
+
+    private static KmlParser parseKml(InputStream stream) throws XmlPullParserException, IOException {
         XmlPullParser xmlPullParser = createXmlParser(stream);
         KmlParser parser = new KmlParser(xmlPullParser);
         parser.parseKml();
-        stream.close();
-        mRenderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
-                parser.getContainers(), parser.getGroundOverlays());
-        storeRenderer(mRenderer);
+        return parser;
     }
 
     /**
@@ -117,7 +164,7 @@ public class KmlLayer extends Layer {
     }
 
     /**
-     * Adds the KML data to the map
+     * Adds the KML data to the map - must be called on the main UI thread
      */
     @Override
     public void addLayerToMap() {

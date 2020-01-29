@@ -568,7 +568,7 @@ public class Renderer {
      * @param url    image URL
      * @param bitmap image bitmap
      */
-    protected void cacheBitmap(String url, Bitmap bitmap) {
+    public void cacheBitmap(String url, Bitmap bitmap) {
         mBitmapCache.put(url, bitmap);
     }
 
