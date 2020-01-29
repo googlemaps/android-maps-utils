@@ -99,17 +99,16 @@ public class Renderer {
     /**
      * Map of image URL to map of scale factor to BitmapDescriptors
      *
-     * BitmapDescriptors are cached to avoid generating new BitmapDescriptors
-     * for each individual usage of a Bitmap
-     *
+     * BitmapDescriptors are cached to avoid creating new BitmapDescriptors for each individual
+     * usage of a Bitmap. Each BitmapDescriptor copies the Bitmap it's created from.
      */
     private Map<String, Map<Double, BitmapDescriptor>> mImagesCache;
 
     /**
      * Map of image URL to Bitmap
      *
-     * Holds initial references to bitmaps so they can be scaled and BitmapDescriptors
-     * cached. This cache is cleared once all icon URLs are handled.
+     * Holds initial references to bitmaps so they can be scaled and BitmapDescriptors cached.
+     * This cache is cleared once all icon URLs are loaded, scaled, and cached as BitmapDescriptors.
      */
     private Map<String, Bitmap> mBitmapCache;
 
@@ -504,7 +503,7 @@ public class Renderer {
      * @param scale            scale the image was scaled to
      * @param bitmapDescriptor BitmapDescriptor to cache for reuse
      */
-    public void putImagesCache(String url, double scale, BitmapDescriptor bitmapDescriptor) {
+    private void putImagesCache(String url, double scale, BitmapDescriptor bitmapDescriptor) {
         Map<Double, BitmapDescriptor> bitmaps = mImagesCache.get(url);
         if (bitmaps == null) {
             bitmaps = new HashMap<>();
