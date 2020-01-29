@@ -108,7 +108,8 @@ public class KmlLayer extends Layer {
         KmlRenderer renderer = new KmlRenderer(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
 
         BufferedInputStream bis = new BufferedInputStream(stream);
-        ZipInputStream zip = new ZipInputStream(stream);
+        bis.mark(1024);
+        ZipInputStream zip = new ZipInputStream(bis);
         try {
             KmlParser parser = null;
             ZipEntry entry = zip.getNextEntry();
