@@ -125,7 +125,7 @@ public class KmlLayer extends Layer {
                     }
                     entry = zip.getNextEntry();
                 }
-            } else {
+            } else { // is a KML
                 bis.reset();
                 parser = parseKml(bis);
             }
