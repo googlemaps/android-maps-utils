@@ -123,7 +123,7 @@ public class KmlStyle extends Style {
      *
      * @return scale value
      */
-    /* package */ double getIconScale() {
+    public double getIconScale() {
         return mScale;
     }
 

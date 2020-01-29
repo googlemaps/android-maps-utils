@@ -833,10 +833,10 @@ public class Renderer {
             case "Point":
                 MarkerOptions markerOptions = style.getMarkerOptions();
                 if (inlineStyle != null) {
-                    setInlinePointStyle(markerOptions, inlineStyle, style.getIconUrl());
+                    setInlinePointStyle(markerOptions, inlineStyle, style);
                 } else if (style.getIconUrl() != null) {
                     // Use shared style
-                    addMarkerIcons(style.getIconUrl(), markerOptions);
+                    addMarkerIcons(style.getIconUrl(), style.getIconScale(), markerOptions);
                 }
                 Marker marker = addPointToMap(markerOptions, (KmlPoint) geometry);
                 marker.setVisible(isVisible);
@@ -893,12 +893,12 @@ public class Renderer {
     /**
      * Sets the inline point style by copying over the styles that have been set
      *
-     * @param markerOptions    marker options object to add inline styles to
-     * @param inlineStyle      inline styles to apply
-     * @param markerUrlIconUrl default marker icon URL from shared style
+     * @param markerOptions marker options object to add inline styles to
+     * @param inlineStyle   inline styles to apply
+     * @param defaultStyle  default shared style
      */
     private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
-                                     String markerUrlIconUrl) {
+                                     KmlStyle defaultStyle) {
         MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
         if (inlineStyle.isStyleSet("heading")) {
             markerOptions.rotation(inlineMarkerOptions.getRotation());
@@ -910,11 +910,19 @@ public class Renderer {
         if (inlineStyle.isStyleSet("markerColor")) {
             markerOptions.icon(inlineMarkerOptions.getIcon());
         }
+        double scale;
+        if (inlineStyle.isStyleSet("iconScale")) {
+            scale = inlineStyle.getIconScale();
+        } else if (defaultStyle.isStyleSet("iconScale")) {
+            scale = defaultStyle.getIconScale();
+        } else {
+            scale = 1.0;
+        }
         if (inlineStyle.isStyleSet("iconUrl")) {
-            addMarkerIcons(inlineStyle.getIconUrl(), markerOptions);
-        } else if (markerUrlIconUrl != null) {
+            addMarkerIcons(inlineStyle.getIconUrl(), scale, markerOptions);
+        } else if (defaultStyle.getIconUrl() != null) {
             // Inline style with no icon defined
-            addMarkerIcons(markerUrlIconUrl, markerOptions);
+            addMarkerIcons(defaultStyle.getIconUrl(), scale, markerOptions);
         }
     }
 
@@ -1121,14 +1129,16 @@ public class Renderer {
     }
 
     /**
-     * Sets the marker icon if there was a url that was found
+     * Sets the marker icon if there is a cached image for the URL,
+     * otherwise adds the URL to set to download images
      *
-     * @param styleUrl      The style which we retrieve the icon url from
-     * @param markerOptions The marker which is displaying the icon
+     * @param styleUrl      the icon url from
+     * @param scale         the icon scale
+     * @param markerOptions marker options to set icon on
      */
-    private void addMarkerIcons(String styleUrl, MarkerOptions markerOptions) {
+    private void addMarkerIcons(String styleUrl, double scale, MarkerOptions markerOptions) {
         // BitmapDescriptor stored in cache
-        BitmapDescriptor bitmap = getCachedMarkerImage(styleUrl, 1.0);
+        BitmapDescriptor bitmap = getCachedMarkerImage(styleUrl, scale);
         if (bitmap != null) {
             markerOptions.icon(bitmap);
         } else {
