@@ -110,6 +110,8 @@ public class KmlRenderer extends Renderer {
         if (!mMarkerIconsDownloaded) {
             downloadMarkerIcons();
         }
+        // in case KMZ has no downloaded images
+        checkClearBitmapCache();
     }
 
     /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,

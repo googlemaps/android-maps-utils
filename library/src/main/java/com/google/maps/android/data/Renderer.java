@@ -591,7 +591,7 @@ public class Renderer {
      * Clear bitmap cache if no active image downloads remain. All images
      * should be loaded, scaled, and cached as BitmapDescriptors at this point.
      */
-    private void checkClearBitmapCache() {
+    protected void checkClearBitmapCache() {
         if (mNumActiveDownloads == 0 && mBitmapCache != null && !mBitmapCache.isEmpty()) {
             mBitmapCache.clear();
         }
