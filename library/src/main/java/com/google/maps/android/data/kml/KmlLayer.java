@@ -115,7 +115,7 @@ public class KmlLayer extends Layer {
             ZipEntry entry = zip.getNextEntry();
             if (entry != null) { // is a KMZ zip file
                 while (entry != null) {
-                    if ("doc.kml".equals(entry.getName())) {
+                    if (parser == null && entry.getName().toLowerCase().endsWith(".kml")) {
                         parser = parseKml(zip);
                     } else {
                         Bitmap bitmap = BitmapFactory.decodeStream(zip);
