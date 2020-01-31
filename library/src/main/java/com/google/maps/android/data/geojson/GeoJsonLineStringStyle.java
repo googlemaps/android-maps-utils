@@ -23,6 +23,7 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
      */
     public GeoJsonLineStringStyle() {
         mPolylineOptions = new PolylineOptions();
+        mPolylineOptions.clickable(true);
     }
 
     /**
