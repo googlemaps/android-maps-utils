@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 15
@@ -25,12 +27,14 @@ android {
 
 dependencies {
     implementation project(':library')
-    // Or, fetch from Maven:
-//    implementation 'com.google.maps.android:android-maps-utils:0.6.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    // androidx
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 }
 
 task startDemo(type: Exec) {
