@@ -1,2 +1,4 @@
-include 'library'
-include 'demo'
+include ':android-maps-utils-ktx'
+include ':demo-ktx'
+include ':demo'
+include ':library'
