@@ -1037,7 +1037,7 @@ public class Renderer {
      * @param placemark placemark to get property values from
      * @return string with property values substituted
      */
-    private String substituteProperties(String template, KmlPlacemark placemark) {
+    static String substituteProperties(String template, KmlPlacemark placemark) {
         StringBuffer sb = new StringBuffer();
         Pattern pattern = Pattern.compile("\\$\\[(.+?)]");
         Matcher matcher = pattern.matcher(template);
