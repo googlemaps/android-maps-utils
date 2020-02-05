@@ -164,4 +164,11 @@ public class KmlStyleTest {
         assertEquals(Color.WHITE, kmlStyle.getPolylineOptions().getColor());
         assertEquals(Color.WHITE, kmlStyle.getPolygonOptions().getStrokeColor());
     }
+
+    @Test
+    public void testClickable() {
+        KmlStyle kmlStyle = new KmlStyle();
+        assertTrue(kmlStyle.getPolylineOptions().isClickable());
+        assertTrue(kmlStyle.getPolygonOptions().isClickable());
+    }
 }

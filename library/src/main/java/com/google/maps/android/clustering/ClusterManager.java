@@ -22,7 +22,7 @@ import android.os.AsyncTask;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.MarkerManager;
+import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
@@ -93,13 +93,13 @@ public class ClusterManager<T extends ClusterItem> implements
         return mMarkerManager;
     }
 
-    public void setRenderer(ClusterRenderer<T> view) {
+    public void setRenderer(ClusterRenderer<T> renderer) {
         mRenderer.setOnClusterClickListener(null);
         mRenderer.setOnClusterItemClickListener(null);
         mClusterMarkers.clear();
         mMarkers.clear();
         mRenderer.onRemove();
-        mRenderer = view;
+        mRenderer = renderer;
         mRenderer.onAdd();
         mRenderer.setOnClusterClickListener(mOnClusterClickListener);
         mRenderer.setOnClusterInfoWindowClickListener(mOnClusterInfoWindowClickListener);

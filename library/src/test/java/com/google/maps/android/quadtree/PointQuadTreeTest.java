@@ -16,16 +16,12 @@
 
 package com.google.maps.android.quadtree;
 
-import com.google.maps.android.TestUtil;
 import com.google.maps.android.geometry.Bounds;
 import com.google.maps.android.geometry.Point;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-
-import android.os.Build;
 
 import java.util.Collection;
 import java.util.Random;
@@ -160,11 +156,6 @@ public class PointQuadTreeTest {
      */
     @Test
     public void testManyPoints() {
-        // API 29 emulator occasionally hits an OutOfMemoryError during this test on Travis
-        if (TestUtil.isRunningOnTravis() && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-            Assume.assumeTrue("Skipping PointQuadTreeTest.testManyPoints() - this is expected behavior on Travis CI w/ API 29 emulator (#585)", false);
-            return;
-        }
         System.gc();
         for (double i = 0; i < 200; i++) {
             for (double j = 0; j < 2000; j++) {

@@ -1,13 +1,15 @@
 package com.google.maps.android.data.geojson;
 
-import android.graphics.Color;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.Color;
+
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GeoJsonPolygonStyleTest {
     private GeoJsonPolygonStyle polygonStyle;
@@ -91,6 +93,7 @@ public class GeoJsonPolygonStyleTest {
         assertEquals(10.0f, polygonStyle.getStrokeWidth(), 0);
         assertTrue(polygonStyle.isVisible());
         assertEquals(0.0f, polygonStyle.getZIndex(), 0);
+        assertTrue(polygonStyle.isClickable());
     }
 
     @Test
@@ -99,7 +102,8 @@ public class GeoJsonPolygonStyleTest {
         assertFalse(polygonStyle.toPolygonOptions().isGeodesic());
         assertEquals(Color.BLACK, polygonStyle.toPolygonOptions().getStrokeColor());
         assertEquals(10.0f, polygonStyle.toPolygonOptions().getStrokeWidth(), 0);
-        assertTrue(polygonStyle.isVisible());
+        assertTrue(polygonStyle.toPolygonOptions().isVisible());
         assertEquals(0.0f, polygonStyle.toPolygonOptions().getZIndex(), 0);
+        assertTrue(polygonStyle.toPolygonOptions().isClickable());
     }
 }

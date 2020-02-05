@@ -25,7 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.maps.android.MathUtil.EARTH_RADIUS;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class SphericalUtilTest {
     // The vertices of an octahedron, for testing

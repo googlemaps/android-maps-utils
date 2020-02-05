@@ -4,6 +4,10 @@ import android.content.Context;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.collections.GroundOverlayManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.collections.PolygonManager;
+import com.google.maps.android.collections.PolylineManager;
 import com.google.maps.android.data.Layer;
 
 import org.json.JSONException;
@@ -35,11 +39,19 @@ public class GeoJsonLayer extends Layer {
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
+     *
+     * Use this constructor with shared object managers in order to handle multiple layers with
+     * their own event handlers on the map.
      *
      * @param map         map where the layer is to be rendered
      * @param geoJsonFile GeoJSON data to add to the layer
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile) {
+    public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         if (geoJsonFile == null) {
             throw new IllegalArgumentException("GeoJSON file cannot be null");
         }
@@ -51,12 +63,46 @@ public class GeoJsonLayer extends Layer {
         for (GeoJsonFeature feature : parser.getFeatures()) {
             geoJsonFeatures.put(feature, null);
         }
-        GeoJsonRenderer mRenderer = new GeoJsonRenderer(map, geoJsonFeatures);
+        GeoJsonRenderer mRenderer = new GeoJsonRenderer(map, geoJsonFeatures, markerManager, polygonManager, polylineManager, groundOverlayManager);
         storeRenderer(mRenderer);
     }
 
     /**
      * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
+     *
+     * Use this constructor with shared object managers in order to handle multiple layers with
+     * their own event handlers on the map.
+     *
+     * @param map        map where the layer is to be rendered
+     * @param resourceId GeoJSON file to add to the layer
+     * @param context    context of the application, required to open the GeoJSON file
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @throws IOException   if the file cannot be open for read
+     * @throws JSONException if the JSON file has invalid syntax and cannot be parsed successfully
+     */
+    public GeoJsonLayer(GoogleMap map, int resourceId, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager)
+            throws IOException, JSONException {
+        this(map, createJsonFileObject(context.getResources().openRawResource(resourceId)), markerManager, polygonManager, polylineManager, groundOverlayManager);
+    }
+
+    /**
+     * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
+     *
+     * @param map         map where the layer is to be rendered
+     * @param geoJsonFile GeoJSON data to add to the layer
+     */
+    public GeoJsonLayer(GoogleMap map, JSONObject geoJsonFile) {
+        this(map, geoJsonFile, null, null, null, null);
+    }
+
+    /**
+     * Creates a new GeoJsonLayer object. Default styles are applied to the GeoJsonFeature objects.
+     * addLayerToMap() must be called to trigger rendering onto a map.
      *
      * @param map        map where the layer is to be rendered
      * @param resourceId GeoJSON file to add to the layer
@@ -66,7 +112,7 @@ public class GeoJsonLayer extends Layer {
      */
     public GeoJsonLayer(GoogleMap map, int resourceId, Context context)
             throws IOException, JSONException {
-        this(map, createJsonFileObject(context.getResources().openRawResource(resourceId)));
+        this(map, createJsonFileObject(context.getResources().openRawResource(resourceId)), null, null, null, null);
     }
 
     /**

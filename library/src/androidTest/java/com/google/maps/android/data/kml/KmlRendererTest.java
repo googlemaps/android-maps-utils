@@ -1,31 +1,38 @@
 package com.google.maps.android.data.kml;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.maps.android.data.Feature;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.xmlpull.v1.XmlPullParser;
 
-import java.util.HashMap;
-
-import static org.junit.Assert.*;
+import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
+import static org.junit.Assert.assertTrue;
 
 public class KmlRendererTest {
+    private GoogleMap mMap1;
+    private KmlRenderer mRenderer;
+    KmlParser mParser;
+
+    @Before
+    public void setUp() throws Exception {
+        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_inline_style);
+        mParser = new KmlParser(parser);
+        mParser.parseKml();
+
+        mRenderer = new KmlRenderer(mMap1, null, null, null, null, null);
+        mRenderer.storeKmlData(mParser.getStyles(), mParser.getStyleMaps(), mParser.getPlacemarks(),
+                mParser.getContainers(), mParser.getGroundOverlays());
+    }
+
     @Test
-    public void testAssignStyleMap() {
-        HashMap<String, String> styleMap = new HashMap<>();
-        styleMap.put("BlueKey", "BlueValue");
-        HashMap<String, KmlStyle> styles = new HashMap<>();
-        KmlStyle blueStyle = new KmlStyle();
-        KmlStyle redStyle = new KmlStyle();
-        styles.put("BlueValue", blueStyle);
-        styles.put("RedValue", redStyle);
-        KmlRenderer renderer = new KmlRenderer(null, null);
-        renderer.assignStyleMap(styleMap, styles);
-        assertNotNull(styles.get("BlueKey"));
-        assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
-        styles.put("BlueValue", null);
-        renderer.assignStyleMap(styleMap, styles);
-        assertNull(styles.get("BlueKey"));
-        styleMap.put("BlueKey", "RedValue");
-        renderer.assignStyleMap(styleMap, styles);
-        assertNotNull(styleMap.get("BlueKey"));
-        assertEquals(styles.get("BlueKey"), redStyle);
+    public void testDefaultStyleClickable() {
+        // TODO - we should call mRenderer.addLayerToMap() here for a complete end-to-end test, but
+        // that requires an instantiated GoogleMap be passed into KmlRenderer()
+        for (Feature f : mRenderer.getFeatures()) {
+            assertTrue(((KmlPlacemark)f).getPolylineOptions().isClickable());
+            assertTrue(((KmlPlacemark)f).getPolygonOptions().isClickable());
+        }
     }
 }

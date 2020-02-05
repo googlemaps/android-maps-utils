@@ -16,18 +16,6 @@
 
 package com.google.maps.android.data;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.collection.LruCache;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
@@ -40,6 +28,10 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.R;
+import com.google.maps.android.collections.GroundOverlayManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.collections.PolygonManager;
+import com.google.maps.android.collections.PolylineManager;
 import com.google.maps.android.data.geojson.BiMultiMap;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonGeometryCollection;
@@ -59,6 +51,13 @@ import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.data.kml.KmlStyle;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -66,6 +65,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.collection.LruCache;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * An abstraction that shares the common properties of
@@ -88,13 +92,13 @@ public class Renderer {
 
     private HashMap<String, String> mStyleMaps;
 
-    private BiMultiMap<Feature> mContainerFeatures;
+    private final BiMultiMap<Feature> mContainerFeatures;
 
-    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
+    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlayMap;
 
     private final ArrayList<String> mMarkerIconUrls;
 
-    private final LruCache<String, Bitmap> mImagesCache;
+    private LruCache<String, Bitmap> mImagesCache;
 
     private boolean mLayerOnMap;
 
@@ -108,16 +112,28 @@ public class Renderer {
 
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
 
+    private final MarkerManager mMarkerManager;
+    private final MarkerManager.Collection mMarkers;
+    private final PolygonManager mPolygonManager;
+    private final PolygonManager.Collection mPolygons;
+    private final PolylineManager mPolylineManager;
+    private final PolylineManager.Collection mPolylines;
+    private final GroundOverlayManager mGroundOverlayManager;
+    private final GroundOverlayManager.Collection mGroundOverlays;
+
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object for KML features
      *
      * @param map     map to place objects on
      * @param activity activity needed to add info windows and retain bitmap cache fragment
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public Renderer(GoogleMap map, FragmentActivity activity) {
-        mMap = map;
+    public Renderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+        this(map, new ArrayList<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
         mActivity = activity;
-        mLayerOnMap = false;
         LruCache<String, Bitmap> imagesCache = null;
         RetainFragment retainFragment = null;
         if (activity != null) {
@@ -131,30 +147,74 @@ public class Renderer {
             }
         }
         mImagesCache = imagesCache;
-        mMarkerIconUrls = new ArrayList<>();
         mStylesRenderer = new HashMap<>();
-        mDefaultPointStyle = null;
-        mDefaultLineStringStyle = null;
-        mDefaultPolygonStyle = null;
-        mContainerFeatures = new BiMultiMap<>();
     }
 
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object for GeoJSON features
      *
      * @param map      map to place objects on
      * @param features contains a hashmap of features and objects that will go on the map
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features) {
-        mMap = map;
+    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+        this(map, null, new GeoJsonPointStyle(), new GeoJsonLineStringStyle(), new GeoJsonPolygonStyle(), null, markerManager, polygonManager, polylineManager, groundOverlayManager);
         mFeatures.putAll(features);
-        mLayerOnMap = false;
-        mMarkerIconUrls = null;
-        mDefaultPointStyle = new GeoJsonPointStyle();
-        mDefaultLineStringStyle = new GeoJsonLineStringStyle();
-        mDefaultPolygonStyle = new GeoJsonPolygonStyle();
         mImagesCache = null;
-        mContainerFeatures = null;
+    }
+
+    private Renderer(GoogleMap map,
+                     ArrayList<String> markerIconUrls,
+                     GeoJsonPointStyle defaultPointStyle,
+                     GeoJsonLineStringStyle defaultLineStringStyle,
+                     GeoJsonPolygonStyle defaultPolygonStyle,
+                     BiMultiMap<Feature> containerFeatures,
+                     MarkerManager markerManager,
+                     PolygonManager polygonManager,
+                     PolylineManager polylineManager,
+                     GroundOverlayManager groundOverlayManager) {
+
+        mMap = map;
+        mLayerOnMap = false;
+        mMarkerIconUrls = markerIconUrls;
+        mDefaultPointStyle = defaultPointStyle;
+        mDefaultLineStringStyle = defaultLineStringStyle;
+        mDefaultPolygonStyle = defaultPolygonStyle;
+        mContainerFeatures = containerFeatures;
+        if (map != null) {
+            if (markerManager == null) {
+                markerManager = new MarkerManager(map);
+            }
+            mMarkerManager = markerManager;
+            mMarkers = markerManager.newCollection();
+            if (polygonManager == null) {
+                polygonManager = new PolygonManager(map);
+            }
+            mPolygonManager = polygonManager;
+            mPolygons = polygonManager.newCollection();
+            if (polylineManager == null) {
+                polylineManager = new PolylineManager(map);
+            }
+            mPolylineManager = polylineManager;
+            mPolylines = polylineManager.newCollection();
+            if (groundOverlayManager == null) {
+                groundOverlayManager = new GroundOverlayManager(map);
+            }
+            mGroundOverlayManager = groundOverlayManager;
+            mGroundOverlays = groundOverlayManager.newCollection();
+        } else {
+            mMarkerManager = null;
+            mMarkers = null;
+            mPolygonManager = null;
+            mPolygons = null;
+            mPolylineManager = null;
+            mPolylines = null;
+            mGroundOverlayManager = null;
+            mGroundOverlays = null;
+        }
     }
 
     /**
@@ -304,10 +364,10 @@ public class Renderer {
     /**
      * Gets the ground overlays on the current layer
      *
-     * @return mGroundOverlays hashmap contains the ground overlays
+     * @return mGroundOverlayMap hashmap contains the ground overlays
      */
     public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlayMap() {
-        return mGroundOverlays;
+        return mGroundOverlayMap;
     }
 
     /**
@@ -404,15 +464,40 @@ public class Renderer {
      *
      * @param features features to remove
      */
-    protected static void removeFeatures(HashMap<Feature, Object> features) {
+    protected void removeFeatures(HashMap<Feature, Object> features) {
+        removeFeatures(features.values());
+    }
+
+    /**
+     * Removes all given Features from the map and clears all stored features.
+     *
+     * @param features features to remove
+     */
+    private void removeFeatures(Collection features) {
         // Remove map object from the map
-        for (Object mapObject : features.values()) {
-            if (mapObject instanceof Marker) {
-                ((Marker) mapObject).remove();
+        for (Object mapObject : features) {
+            if (mapObject instanceof Collection) {
+                removeFeatures((Collection) mapObject);
+            } else if (mapObject instanceof Marker) {
+                mMarkers.remove((Marker) mapObject);
             } else if (mapObject instanceof Polyline) {
-                ((Polyline) mapObject).remove();
+                mPolylines.remove((Polyline) mapObject);
             } else if (mapObject instanceof Polygon) {
-                ((Polygon) mapObject).remove();
+                mPolygons.remove((Polygon) mapObject);
+            }
+        }
+    }
+
+    /**
+     * Removes all ground overlays in the given hashmap
+     *
+     * @param groundOverlays hashmap of ground overlays to remove
+     */
+    protected void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+        for (GroundOverlay groundOverlay : groundOverlays.values()) {
+            // Ground overlay values may be null if their image was not yet downloaded
+            if (groundOverlay != null) {
+                mGroundOverlays.remove(groundOverlay);
             }
         }
     }
@@ -470,7 +555,7 @@ public class Renderer {
         mStyleMaps = styleMaps;
         mFeatures.putAll(features);
         mContainers = folders;
-        mGroundOverlays = groundOverlays;
+        mGroundOverlayMap = groundOverlays;
     }
 
     /**
@@ -510,13 +595,15 @@ public class Renderer {
      *
      * @param mapObject map object or array of map objects to remove from the map
      */
-    public static void removeFromMap(Object mapObject) {
+    public void removeFromMap(Object mapObject) {
         if (mapObject instanceof Marker) {
-            ((Marker) mapObject).remove();
+            mMarkers.remove((Marker) mapObject);
         } else if (mapObject instanceof Polyline) {
-            ((Polyline) mapObject).remove();
+            mPolylines.remove((Polyline) mapObject);
         } else if (mapObject instanceof Polygon) {
-            ((Polygon) mapObject).remove();
+            mPolygons.remove((Polygon) mapObject);
+        } else if (mapObject instanceof GroundOverlay) {
+            mGroundOverlays.remove((GroundOverlay) mapObject);
         } else if (mapObject instanceof ArrayList) {
             for (Object mapObjectElement : (ArrayList) mapObject) {
                 removeFromMap(mapObjectElement);
@@ -653,7 +740,7 @@ public class Renderer {
      */
     protected Marker addPointToMap(MarkerOptions markerOptions, Point point) {
         markerOptions.position(point.getGeometryObject());
-        return mMap.addMarker(markerOptions);
+        return mMarkers.addMarker(markerOptions);
     }
 
     /**
@@ -695,8 +782,8 @@ public class Renderer {
                                           LineString lineString) {
         // Add coordinates
         polylineOptions.addAll(lineString.getGeometryObject());
-        Polyline addedPolyline = mMap.addPolyline(polylineOptions);
-        addedPolyline.setClickable(true);
+        Polyline addedPolyline = mPolylines.addPolyline(polylineOptions);
+        addedPolyline.setClickable(polylineOptions.isClickable());
         return addedPolyline;
     }
 
@@ -734,7 +821,7 @@ public class Renderer {
         for (List<LatLng> innerBoundary : innerBoundaries) {
             polygonOptions.addHole(innerBoundary);
         }
-        Polygon addedPolygon = mMap.addPolygon(polygonOptions);
+        Polygon addedPolygon = mPolygons.addPolygon(polygonOptions);
         addedPolygon.setClickable(polygonOptions.isClickable());
         return addedPolygon;
     }
@@ -909,7 +996,7 @@ public class Renderer {
      * @return new GroundOverlay object created from the given GroundOverlayOptions
      */
     public GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
-        return mMap.addGroundOverlay(groundOverlayOptions);
+        return mGroundOverlays.addGroundOverlay(groundOverlayOptions);
     }
 
     /**
@@ -970,7 +1057,7 @@ public class Renderer {
      * the info window to have custom HTML.
      */
     private void createInfoWindow() {
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+        mMarkers.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             public View getInfoWindow(Marker arg0) {
                 return null;
@@ -987,5 +1074,80 @@ public class Renderer {
                 return view;
             }
         });
+    }
+
+    /**
+     * Sets a single click listener for each of the map object collections, that will be called
+     * with the corresponding Feature object when an object on the map (Polygon, Marker, Polyline)
+     * from one of this Renderer's collections is clicked.
+     *
+     * If getFeature() returns null this means that either the object is inside a KMLContainer,
+     * or the object is a MultiPolygon, MultiLineString or MultiPoint and must
+     * be handled differently.
+     *
+     * @param listener Listener providing the onFeatureClick method to call.
+     */
+    public void setOnFeatureClickListener(final Layer.OnFeatureClickListener listener) {
+
+        mPolygons.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(Polygon polygon) {
+                if (getFeature(polygon) != null) {
+                    listener.onFeatureClick(getFeature(polygon));
+                } else if (getContainerFeature(polygon) != null) {
+                    listener.onFeatureClick(getContainerFeature(polygon));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
+                }
+            }
+        });
+
+        mMarkers.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (getFeature(marker) != null) {
+                    listener.onFeatureClick(getFeature(marker));
+                }  else if (getContainerFeature(marker) != null) {
+                    listener.onFeatureClick(getContainerFeature(marker));
+                } else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
+                }
+                return false;
+            }
+        });
+
+        mPolylines.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+                if (getFeature(polyline) != null) {
+                    listener.onFeatureClick(getFeature(polyline));
+                } else if (getContainerFeature(polyline) != null) {
+                    listener.onFeatureClick(getContainerFeature(polyline));
+                }  else {
+                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
+                }
+            }
+        });
+    }
+
+    /**
+     * Called if the map object is a MultiPolygon, MultiLineString or a MultiPoint and returns
+     * the corresponding ArrayList containing the singular Polygons, LineStrings or Points
+     * respectively.
+     *
+     * @param mapObject Object
+     * @return an ArrayList of the individual
+     */
+    private ArrayList<?> multiObjectHandler(Object mapObject) {
+        for (Object value : getValues()) {
+            Class c = value.getClass();
+            if (c.getSimpleName().equals("ArrayList")) {
+                ArrayList<?> mapObjects = (ArrayList<?>) value;
+                if (mapObjects.contains(mapObject)) {
+                    return mapObjects;
+                }
+            }
+        }
+        return null;
     }
 }

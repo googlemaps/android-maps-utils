@@ -13,8 +13,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.collections.GroundOverlayManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.collections.PolygonManager;
+import com.google.maps.android.collections.PolylineManager;
 import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Geometry;
+import com.google.maps.android.data.MultiGeometry;
 import com.google.maps.android.data.Renderer;
 
 import java.io.IOException;
@@ -26,6 +31,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
@@ -41,12 +47,10 @@ public class KmlRenderer extends Renderer {
 
     private boolean mGroundOverlayImagesDownloaded;
 
-    private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlays;
-
     private ArrayList<KmlContainer> mContainers;
 
-    /* package */ KmlRenderer(GoogleMap map, FragmentActivity activity) {
-        super(map, activity);
+    /* package */ KmlRenderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+        super(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
         mGroundOverlayUrls = new ArrayList<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
@@ -96,17 +100,6 @@ public class KmlRenderer extends Renderer {
     }
 
     /**
-     * Removes all ground overlays in the given hashmap
-     *
-     * @param groundOverlays hashmap of ground overlays to remove
-     */
-    private void removeGroundOverlays(HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
-        for (GroundOverlay groundOverlay : groundOverlays.values()) {
-            groundOverlay.remove();
-        }
-    }
-
-    /**
      * Removes all the KML data from the map and clears all the stored placemarks of those which
      * are in a container.
      */
@@ -120,11 +113,10 @@ public class KmlRenderer extends Renderer {
 
     public void addLayerToMap() {
         setLayerVisibility(true);
-        mGroundOverlays = getGroundOverlayMap();
         mContainers = getContainerList();
         putStyles();
         assignStyleMap(getStyleMaps(), getStylesRenderer());
-        addGroundOverlays(mGroundOverlays, mContainers);
+        addGroundOverlays(getGroundOverlayMap(), mContainers);
         addContainerGroupToMap(mContainers, true);
         addPlacemarksToMap(getAllFeatures());
         if (!mGroundOverlayImagesDownloaded) {
@@ -195,7 +187,7 @@ public class KmlRenderer extends Renderer {
      * @return iterable of KmlGroundOverlay objects
      */
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
-        return mGroundOverlays.keySet();
+        return getGroundOverlayMap().keySet();
     }
 
     /**
@@ -203,7 +195,7 @@ public class KmlRenderer extends Renderer {
      */
     public void removeLayerFromMap() {
         removePlacemarks(getAllFeatures());
-        removeGroundOverlays(mGroundOverlays);
+        removeGroundOverlays(getGroundOverlayMap());
         if (hasNestedContainers()) {
             removeContainers(getNestedContainers());
         }
@@ -283,42 +275,92 @@ public class KmlRenderer extends Renderer {
 
     /**
      * Adds the marker icon stored in mMarkerIconCache, to the {@link com.google.android.gms.maps.model.Marker}
+     * recursing over multi-geometry placemarks to add icons to all point geometries
      *
      * @param iconUrl    icon url of icon to add to markers
-     * @param placemarks
+     * @param placemarks map of placemark to features
      */
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
         for (Feature placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
             KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
-            if ("Point".equals(placemark.getGeometry().getGeometryType())) {
-                boolean isInlineStyleIcon = inlineStyle != null && iconUrl
-                        .equals(inlineStyle.getIconUrl());
-                boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
-                        .equals(urlStyle.getIconUrl());
-                if (isInlineStyleIcon) {
-                    scaleBitmap(inlineStyle, placemarks, (KmlPlacemark) placemark);
-                } else if (isPlacemarkStyleIcon) {
-                    scaleBitmap(urlStyle, placemarks, (KmlPlacemark) placemark);
-                }
-            }
+            Geometry geometry = placemark.getGeometry();
+            Object object = placemarks.get(placemark);
+            addIconToGeometry(iconUrl, urlStyle, inlineStyle, geometry, object);
+        }
+    }
+
+    /**
+     * Checks for point geometry and adds icon to marker or
+     * recurses over multi-geometries to add icon to point sub-geometries
+     *
+     * @param iconUrl     icon url of icon to add to markers
+     * @param urlStyle    url style for placemark
+     * @param inlineStyle inline style for placemark
+     * @param geometry    geometry to check
+     * @param object      object related to geometry, marker if point
+     *                    or list of sub-objects for multi-geometries
+     */
+    private void addIconToGeometry(String iconUrl, KmlStyle urlStyle, KmlStyle inlineStyle, Geometry geometry, Object object) {
+        if (geometry == null) return;
+        if ("Point".equals(geometry.getGeometryType())) {
+            addIconToMarker(iconUrl, urlStyle, inlineStyle, (Marker) object);
+        } else if ("MultiGeometry".equals(geometry.getGeometryType())) {
+            addIconToMultiGeometry(iconUrl, urlStyle, inlineStyle, (MultiGeometry) geometry, (List<Object>) object);
+        }
+    }
+
+    /**
+     * Adds icon to point sub-geometries of multi-geometry placemarks
+     *
+     * @param iconUrl       icon url of icon to add to markers
+     * @param urlStyle      url style for placemark
+     * @param inlineStyle   inline style for placemark
+     * @param multiGeometry multi-geometry to iterator over sub-geometries of
+     * @param objects       list of sub-objects for sub-geometries
+     */
+    private void addIconToMultiGeometry(String iconUrl, KmlStyle urlStyle, KmlStyle inlineStyle, MultiGeometry multiGeometry, List<Object> objects) {
+        Iterator<Geometry> geometries = multiGeometry.getGeometryObject().iterator();
+        Iterator<Object> objItr = objects.iterator();
+        while (geometries.hasNext() && objItr.hasNext()) {
+            Geometry geometry = geometries.next();
+            Object object = objItr.next();
+            addIconToGeometry(iconUrl, urlStyle, inlineStyle, geometry, object);
+        }
+    }
+
+    /**
+     * Add icon to marker for point geometry placemarks
+     *
+     * @param iconUrl     icon url of icon to add to markers
+     * @param urlStyle    url style for placemark
+     * @param inlineStyle inline style for placemark
+     * @param marker      marker to add icon to
+     */
+    private void addIconToMarker(String iconUrl, KmlStyle urlStyle, KmlStyle inlineStyle, Marker marker) {
+        boolean isInlineStyleIcon = inlineStyle != null && iconUrl
+                .equals(inlineStyle.getIconUrl());
+        boolean isPlacemarkStyleIcon = urlStyle != null && iconUrl
+                .equals(urlStyle.getIconUrl());
+        if (isInlineStyleIcon) {
+            scaleBitmap(inlineStyle, marker);
+        } else if (isPlacemarkStyleIcon) {
+            scaleBitmap(urlStyle, marker);
         }
     }
 
     /**
      * Enlarges or shrinks a bitmap image based on the scale provided
      *
-     * @param style      Style to retrieve iconUrl and scale from
-     * @param placemarks
-     * @param placemark  Placemark object to set the image to
+     * @param style  Style to retrieve iconUrl and scale from
+     * @param marker Marker to set the image to
      */
-    private void scaleBitmap(KmlStyle style, HashMap<KmlPlacemark, Object> placemarks,
-                             KmlPlacemark placemark) {
+    private void scaleBitmap(KmlStyle style, Marker marker) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
         Bitmap bitmapImage = getImagesCache().get(bitmapUrl);
         BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
-        ((Marker) placemarks.get(placemark)).setIcon(scaledBitmap);
+        marker.setIcon(scaledBitmap);
     }
 
     /**
@@ -364,7 +406,7 @@ public class KmlRenderer extends Renderer {
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
                 if (getImagesCache().get(groundOverlayUrl) != null) {
-                    addGroundOverlayToMap(groundOverlayUrl, mGroundOverlays, true);
+                    addGroundOverlayToMap(groundOverlayUrl, getGroundOverlayMap(), true);
                 } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
                     mGroundOverlayUrls.add(groundOverlayUrl);
                 }
@@ -519,7 +561,7 @@ public class KmlRenderer extends Renderer {
             } else {
                 putImagesCache(mGroundOverlayUrl, bitmap);
                 if (isLayerOnMap()) {
-                    addGroundOverlayToMap(mGroundOverlayUrl, mGroundOverlays, true);
+                    addGroundOverlayToMap(mGroundOverlayUrl, getGroundOverlayMap(), true);
                     addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
                 }
             }
