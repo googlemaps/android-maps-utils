@@ -16,17 +16,6 @@
 
 package com.google.maps.android.data;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -63,6 +52,13 @@ import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.data.kml.KmlStyle;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,6 +66,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * An abstraction that shares the common properties of
@@ -143,7 +143,7 @@ public class Renderer {
     private final GroundOverlayManager.Collection mGroundOverlays;
 
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object for KML features
      *
      * @param map     map to place objects on
      * @param activity activity needed to add info windows and retain bitmap cache fragment
@@ -182,7 +182,7 @@ public class Renderer {
     }
 
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object for GeoJSON features
      *
      * @param map      map to place objects on
      * @param features contains a hashmap of features and objects that will go on the map
@@ -938,7 +938,7 @@ public class Renderer {
         // Add coordinates
         polylineOptions.addAll(lineString.getGeometryObject());
         Polyline addedPolyline = mPolylines.addPolyline(polylineOptions);
-        addedPolyline.setClickable(true);
+        addedPolyline.setClickable(polylineOptions.isClickable());
         return addedPolyline;
     }
 
