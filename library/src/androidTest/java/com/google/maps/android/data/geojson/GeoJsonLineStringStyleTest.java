@@ -1,13 +1,15 @@
 package com.google.maps.android.data.geojson;
 
-import android.graphics.Color;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.Color;
+
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GeoJsonLineStringStyleTest {
     private GeoJsonLineStringStyle lineStringStyle;
@@ -75,6 +77,7 @@ public class GeoJsonLineStringStyleTest {
         assertTrue(lineStringStyle.isVisible());
         assertEquals(10.0f, lineStringStyle.getWidth(), 0);
         assertEquals(0.0f, lineStringStyle.getZIndex(), 0);
+        assertTrue(lineStringStyle.isClickable());
     }
 
     @Test
@@ -84,5 +87,6 @@ public class GeoJsonLineStringStyleTest {
         assertTrue(lineStringStyle.toPolylineOptions().isVisible());
         assertEquals(10.0f, lineStringStyle.toPolylineOptions().getWidth(), 0);
         assertEquals(0.0f, lineStringStyle.toPolylineOptions().getZIndex(), 0);
+        assertTrue(lineStringStyle.toPolylineOptions().isClickable());
     }
 }

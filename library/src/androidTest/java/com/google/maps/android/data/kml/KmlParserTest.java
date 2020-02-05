@@ -2,35 +2,19 @@ package com.google.maps.android.data.kml;
 
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.graphics.Color;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-
+import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class KmlParserTest {
-    private XmlPullParser createParser(int res) throws Exception {
-        InputStream stream =
-                InstrumentationRegistry.getInstrumentation()
-                        .getTargetContext()
-                        .getResources()
-                        .openRawResource(res);
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser parser = factory.newPullParser();
-        parser.setInput(stream, null);
-        parser.next();
-        return parser;
-    }
 
     @Test
     public void testInlineStyle() throws Exception {
