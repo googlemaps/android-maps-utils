@@ -16,10 +16,10 @@
 
 package com.google.maps.android.utils.demo;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.maps.CameraUpdateFactory;
+import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
+import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.GroundOverlayManager;
 import com.google.maps.android.collections.MarkerManager;
