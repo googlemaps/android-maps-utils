@@ -388,6 +388,7 @@ public class KmlStyle extends Style {
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(originalPolylineOption.getColor());
         polylineOptions.width(originalPolylineOption.getWidth());
+        polylineOptions.clickable(originalPolylineOption.isClickable());
         return polylineOptions;
     }
 
@@ -409,6 +410,7 @@ public class KmlStyle extends Style {
             polygonOptions.strokeColor(originalPolygonOption.getStrokeColor());
             polygonOptions.strokeWidth(originalPolygonOption.getStrokeWidth());
         }
+        polygonOptions.clickable(originalPolygonOption.isClickable());
         return polygonOptions;
     }
 

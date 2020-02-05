@@ -43,7 +43,9 @@ public abstract class Style extends Observable {
     public Style() {
         mMarkerOptions = new MarkerOptions();
         mPolylineOptions = new PolylineOptions();
+        mPolylineOptions.clickable(true);
         mPolygonOptions = new PolygonOptions();
+        mPolygonOptions.clickable(true);
     }
 
     /**

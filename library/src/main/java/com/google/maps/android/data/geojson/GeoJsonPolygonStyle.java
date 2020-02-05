@@ -20,6 +20,7 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
      */
     public GeoJsonPolygonStyle() {
         mPolygonOptions = new PolygonOptions();
+        mPolygonOptions.clickable(true);
     }
 
     /**
@@ -182,11 +183,27 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
         sb.append(",\n stroke width=").append(getStrokeWidth());
         sb.append(",\n visible=").append(isVisible());
         sb.append(",\n z index=").append(getZIndex());
+        sb.append(",\n clickable=").append(isClickable());
         sb.append("\n}\n");
         return sb.toString();
     }
 
+    /**
+     * Specifies whether this GeoJsonPolygon is clickable
+     *
+     * @param clickable - new clickability setting for the GeoJsonPolygon
+     */
     public void setClickable(boolean clickable) {
         mPolygonOptions.clickable(clickable);
+        styleChanged();
+    }
+
+    /**
+     * Gets the clickability setting for this Options object
+     *
+     * @return true if the GeoJsonPolygon is clickable; false if it is not
+     */
+    public boolean isClickable() {
+        return mPolygonOptions.isClickable();
     }
 }
