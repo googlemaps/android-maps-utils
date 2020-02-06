@@ -16,9 +16,15 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.graphics.Color;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.GroundOverlayManager;
@@ -35,10 +41,6 @@ import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParserException;
-
-import android.graphics.Color;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,6 +162,15 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                 .position(new LatLng( 51.150000, -0.150032))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 .title("Unclustered marker"));
+        markerCollection.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(MultiLayerDemoActivity.this,
+                        "Marker clicked: " + marker.getTitle(),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
 
     private void readClusterItems() throws JSONException {
