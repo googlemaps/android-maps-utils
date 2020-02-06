@@ -50,6 +50,7 @@ import com.google.maps.android.data.kml.KmlMultiGeometry;
 import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.data.kml.KmlStyle;
+import com.google.maps.android.data.kml.KmlUtil;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -1010,7 +1011,7 @@ public class Renderer {
         boolean hasBalloonOptions = style.hasBalloonStyle();
         boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
-            marker.setTitle(style.getBalloonOptions().get("text"));
+            marker.setTitle(KmlUtil.substituteProperties(style.getBalloonOptions().get("text"), placemark));
             createInfoWindow();
         } else if (hasBalloonOptions && hasName) {
             marker.setTitle(placemark.getProperty("name"));
