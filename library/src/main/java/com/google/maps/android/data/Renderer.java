@@ -50,6 +50,7 @@ import com.google.maps.android.data.kml.KmlMultiGeometry;
 import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.data.kml.KmlStyle;
+import com.google.maps.android.data.kml.KmlUtil;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -63,8 +64,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.collection.LruCache;
 import androidx.fragment.app.Fragment;
@@ -1012,7 +1011,7 @@ public class Renderer {
         boolean hasBalloonOptions = style.hasBalloonStyle();
         boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
-            marker.setTitle(substituteProperties(style.getBalloonOptions().get("text"), placemark));
+            marker.setTitle(KmlUtil.substituteProperties(style.getBalloonOptions().get("text"), placemark));
             createInfoWindow();
         } else if (hasBalloonOptions && hasName) {
             marker.setTitle(placemark.getProperty("name"));
@@ -1028,28 +1027,6 @@ public class Renderer {
             marker.setTitle(placemark.getProperty("name"));
             createInfoWindow();
         }
-    }
-
-    /**
-     * Substitute property values in BalloonStyle text template
-     *
-     * @param template text template
-     * @param placemark placemark to get property values from
-     * @return string with property values substituted
-     */
-    static String substituteProperties(String template, KmlPlacemark placemark) {
-        StringBuffer sb = new StringBuffer();
-        Pattern pattern = Pattern.compile("\\$\\[(.+?)]");
-        Matcher matcher = pattern.matcher(template);
-        while (matcher.find()) {
-            String property = matcher.group(1);
-            String value = placemark.getProperty(property);
-            if (value != null) {
-                matcher.appendReplacement(sb, value);
-            }
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
     }
 
     /**
