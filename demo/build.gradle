@@ -27,11 +27,13 @@ android {
 
 dependencies {
     implementation project(':library')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation project(':android-maps-utils-ktx')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     // androidx
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
