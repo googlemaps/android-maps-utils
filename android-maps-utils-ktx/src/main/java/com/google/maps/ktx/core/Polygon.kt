@@ -7,5 +7,5 @@ import com.google.maps.android.PolyUtil
 /**
  * Computes whether or not [latLng] is contained within this Polygon.
  */
-fun Polygon.contains(latLng: LatLng, isGeodesic: Boolean): Boolean =
-    PolyUtil.containsLocation(latLng, this.points, isGeodesic)
+fun Polygon.contains(latLng: LatLng): Boolean =
+    PolyUtil.containsLocation(latLng, this.points, this.isGeodesic)
