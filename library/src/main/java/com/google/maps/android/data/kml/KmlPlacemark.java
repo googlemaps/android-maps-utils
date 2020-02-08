@@ -6,7 +6,7 @@ import com.google.android.libraries.maps.model.PolylineOptions;
 import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Geometry;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a placemark which is either a {@link com.google.maps.android.data.kml.KmlPoint},
@@ -29,7 +29,7 @@ public class KmlPlacemark extends Feature {
      * @param properties properties hashmap to store
      */
     public KmlPlacemark(Geometry geometry, String style, KmlStyle inlineStyle,
-                        HashMap<String, String> properties) {
+                        Map<String, String> properties) {
         super(geometry, style, properties);
         mStyle = style;
         mInlineStyle = inlineStyle;

@@ -43,15 +43,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
     }
 
     private void retrieveFileFromResource() {
-        try {
-            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.campus, this);
-            kmlLayer.addLayerToMap();
-            moveCameraToKml(kmlLayer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        }
+        new LoadLocalKmlFile(R.raw.campus).execute();
     }
 
     private void retrieveFileFromUrl() {
@@ -60,33 +52,63 @@ public class KmlDemoActivity extends BaseDemoActivity {
 
     private void moveCameraToKml(KmlLayer kmlLayer) {
         if (mIsRestore) return;
-        //Retrieve the first container in the KML layer
-        KmlContainer container = kmlLayer.getContainers().iterator().next();
-        //Retrieve a nested container within the first container
-        container = container.getContainers().iterator().next();
-        //Retrieve the first placemark in the nested container
-        KmlPlacemark placemark = container.getPlacemarks().iterator().next();
-        //Retrieve a polygon object in a placemark
-        KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
-        //Create LatLngBounds of the outer coordinates of the polygon
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
-            builder.include(latLng);
-        }
+        try {
+            //Retrieve the first container in the KML layer
+            KmlContainer container = kmlLayer.getContainers().iterator().next();
+            //Retrieve a nested container within the first container
+            container = container.getContainers().iterator().next();
+            //Retrieve the first placemark in the nested container
+            KmlPlacemark placemark = container.getPlacemarks().iterator().next();
+            //Retrieve a polygon object in a placemark
+            KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+            //Create LatLngBounds of the outer coordinates of the polygon
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
+                builder.include(latLng);
+            }
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 1));
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+            getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 1));
+        } catch (Exception e) {
+            // may fail depending on the KML being shown
+            e.printStackTrace();
+        }
     }
 
-    private class DownloadKmlFile extends AsyncTask<String, Void, byte[]> {
+    private class LoadLocalKmlFile extends AsyncTask<String, Void, KmlLayer> {
+        private final int mResourceId;
+
+        LoadLocalKmlFile(int resourceId) {
+            mResourceId = resourceId;
+        }
+
+        @Override
+        protected KmlLayer doInBackground(String... strings) {
+            try {
+                return new KmlLayer(mMap, mResourceId, KmlDemoActivity.this);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(KmlLayer kmlLayer) {
+            addKmlToMap(kmlLayer);
+        }
+    }
+
+    private class DownloadKmlFile extends AsyncTask<String, Void, KmlLayer> {
         private final String mUrl;
 
-        public DownloadKmlFile(String url) {
+        DownloadKmlFile(String url) {
             mUrl = url;
         }
 
-        protected byte[] doInBackground(String... params) {
+        protected KmlLayer doInBackground(String... params) {
             try {
                 InputStream is =  new URL(mUrl).openStream();
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -96,34 +118,35 @@ public class KmlDemoActivity extends BaseDemoActivity {
                     buffer.write(data, 0, nRead);
                 }
                 buffer.flush();
-                return buffer.toByteArray();
+                try {
+                    return new KmlLayer(mMap, new ByteArrayInputStream(buffer.toByteArray()),
+                            KmlDemoActivity.this);
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
 
-        protected void onPostExecute(byte[] byteArr) {
-            try {
-                KmlLayer kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
-                        KmlDemoActivity.this);
-                kmlLayer.addLayerToMap();
-                kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
-                    @Override
-                    public void onFeatureClick(Feature feature) {
-                        Toast.makeText(KmlDemoActivity.this,
-                                "Feature clicked: " + feature.getId(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-                moveCameraToKml(kmlLayer);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
+        protected void onPostExecute(KmlLayer kmlLayer) {
+            addKmlToMap(kmlLayer);
+        }
+    }
+
+    private void addKmlToMap(KmlLayer kmlLayer) {
+        if (kmlLayer != null) {
+            kmlLayer.addLayerToMap();
+            kmlLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
+                @Override
+                public void onFeatureClick(Feature feature) {
+                    Toast.makeText(KmlDemoActivity.this,
+                            "Feature clicked: " + feature.getId(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+            moveCameraToKml(kmlLayer);
         }
     }
 }
