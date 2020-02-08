@@ -21,10 +21,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.libraries.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.libraries.maps.GoogleMap;
 import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 import com.google.android.libraries.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.libraries.maps.model.Marker;
 import com.google.android.libraries.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.GroundOverlayManager;
