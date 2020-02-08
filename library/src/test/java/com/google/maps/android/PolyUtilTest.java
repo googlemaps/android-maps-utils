@@ -49,41 +49,25 @@ public class PolyUtilTest {
         }
     }
 
-    private static void onEdgeCase(
-            boolean geodesic, List<LatLng> poly, List<LatLng> yes, List<LatLng> no) {
+    private static void onEdgeCase(List<LatLng> poly, List<LatLng> yes, List<LatLng> no) {
         for (LatLng point : yes) {
-            assertTrue(PolyUtil.isLocationOnEdge(point, poly, geodesic));
-            assertTrue(PolyUtil.isLocationOnPath(point, poly, geodesic));
+            assertTrue(PolyUtil.isLocationOnEdge(point, poly, true));
+            assertTrue(PolyUtil.isLocationOnPath(point, poly, false));
         }
         for (LatLng point : no) {
-            assertFalse(PolyUtil.isLocationOnEdge(point, poly, geodesic));
-            assertFalse(PolyUtil.isLocationOnPath(point, poly, geodesic));
+            assertFalse(PolyUtil.isLocationOnEdge(point, poly, true));
+            assertFalse(PolyUtil.isLocationOnPath(point, poly, false));
         }
-    }
-
-    private static void onEdgeCase(List<LatLng> poly, List<LatLng> yes, List<LatLng> no) {
-        onEdgeCase(true, poly, yes, no);
-        onEdgeCase(false, poly, yes, no);
-    }
-
-    private static void locationIndexCase(
-            boolean geodesic, List<LatLng> poly, LatLng point, int idx) {
-        assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, geodesic));
     }
 
     private static void locationIndexCase(List<LatLng> poly, LatLng point, int idx) {
-        locationIndexCase(true, poly, point, idx);
-        locationIndexCase(false, poly, point, idx);
-    }
-
-    private static void locationIndexToleranceCase(
-            boolean geodesic, List<LatLng> poly, LatLng point, int idx) {
-        assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, geodesic, 0.1));
+        assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, true));
+        assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, false));
     }
 
     private static void locationIndexToleranceCase(List<LatLng> poly, LatLng point, int idx) {
-        locationIndexToleranceCase(true, poly, point, idx);
-        locationIndexToleranceCase(false, poly, point, idx);
+        assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, true, 0.1));
+        assertEquals(idx, PolyUtil.locationIndexOnPath(point, poly, false, 0.1));
     }
 
     @Test
