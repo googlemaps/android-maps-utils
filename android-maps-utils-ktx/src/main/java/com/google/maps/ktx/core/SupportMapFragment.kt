@@ -5,6 +5,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+/**
+ * CORE
+ */
 suspend fun SupportMapFragment.awaitMap(): GoogleMap =
     suspendCoroutine { continuation ->
         getMapAsync {
