@@ -2,6 +2,7 @@ package com.google.maps.ktx
 
 import com.google.android.gms.maps.model.LatLng
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LatLngTest {
@@ -16,6 +17,12 @@ class LatLngTest {
         val lineEncoded = "_yfyF_ocsF"
         val line = lineEncoded.toLatLngList()
         assertEquals(LatLng(41.0, 40.0), line.first())
+    }
+
+    @Test
+    fun testIsClosedPolygon() {
+        val latLngList = listOf(LatLng(1.0, 2.0), LatLng(3.0, 4.0), LatLng(1.0, 2.0))
+        assertTrue(latLngList.isClosedPolygon())
     }
 
     @Test

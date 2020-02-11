@@ -1,6 +1,7 @@
 package com.google.maps.ktx
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Polygon
 import com.google.maps.android.PolyUtil
 
 /**
@@ -30,3 +31,10 @@ fun String.toLatLngList(): List<LatLng> = PolyUtil.decode(this)
  * @see [Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
  */
 fun List<LatLng>.latLngListEncode(): String = PolyUtil.encode(this)
+
+/**
+ * Checks whether or not this [LatLng] list is a closed Polygon.
+ *
+ * @return true if this list is a closed Polygon, otherwise, false
+ */
+fun List<LatLng>.isClosedPolygon(): Boolean = PolyUtil.isClosedPolygon(this)
