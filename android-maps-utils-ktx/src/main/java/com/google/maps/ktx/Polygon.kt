@@ -1,4 +1,4 @@
-package com.google.maps.ktx.core
+package com.google.maps.ktx
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polygon
@@ -16,3 +16,13 @@ fun Polygon.contains(latLng: LatLng): Boolean =
  */
 fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = PolyUtil.DEFAULT_TOLERANCE) =
     PolyUtil.isLocationOnEdge(latLng, this.points, this.isGeodesic, tolerance)
+
+/**
+ * Simplifies this Polygon using the Douglas-Peucker decimation. Increasing the value of [tolerance]
+ * will result in fewer points.
+ *
+ * @param tolerance the tolerance in meters.
+ *
+ * @see PolyUtil.simplify
+ */
+fun Polygon.simplify(tolerance: Double) = PolyUtil.simplify(this.points, tolerance)

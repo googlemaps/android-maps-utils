@@ -42,7 +42,7 @@ public class PolySimplifyDemoActivity extends BaseDemoActivity {
         List<LatLng> line = PolyUtil.decode(LINE);
         map.addPolyline(new PolylineOptions()
                 .addAll(line)
-                .color(Color.BLACK));
+                .color(Color.BLACK - ALPHA_ADJUSTMENT));
 
         if (!isRestore) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(28.05870, -82.4090), 15));

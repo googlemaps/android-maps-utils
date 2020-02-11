@@ -1,4 +1,4 @@
-package com.google.maps.ktx.core
+package com.google.maps.ktx
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polygon
