@@ -13,3 +13,20 @@ import com.google.maps.android.PolyUtil
  */
 fun List<LatLng>.simplify(tolerance: Double): List<LatLng> = PolyUtil.simplify(this, tolerance)
 
+/**
+ * Decodes this encoded string into a [LatLng] list.
+ *
+ * @return the decoded [LatLng] list
+ *
+ * @see [Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+ */
+fun String.toLatLngList(): List<LatLng> = PolyUtil.decode(this)
+
+/**
+ * Encodes this [LatLng] list in a String using the <a href=""><M
+ *
+ * @return the encoded String
+ *
+ * @see [Polyline Algorithm Format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+ */
+fun List<LatLng>.latLngListEncode(): String = PolyUtil.encode(this)
