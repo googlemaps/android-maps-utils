@@ -35,7 +35,6 @@ public class SphericalUtil {
      * @return The heading in degrees clockwise from north.
      */
     public static double computeHeading(LatLng from, LatLng to) {
-        // http://williams.best.vwh.net/avform.htm#Crs
         double fromLat = toRadians(from.latitude);
         double fromLng = toRadians(from.longitude);
         double toLat = toRadians(to.latitude);
@@ -52,13 +51,12 @@ public class SphericalUtil {
      * in the specified heading (expressed in degrees clockwise from north).
      *
      * @param from     The LatLng from which to start.
-     * @param distance The distance to travel.
+     * @param distance The distance to travel in meters
      * @param heading  The heading in degrees clockwise from north.
      */
     public static LatLng computeOffset(LatLng from, double distance, double heading) {
         distance /= EARTH_RADIUS;
         heading = toRadians(heading);
-        // http://williams.best.vwh.net/avform.htm#LL
         double fromLat = toRadians(from.latitude);
         double fromLng = toRadians(from.longitude);
         double cosDistance = cos(distance);
