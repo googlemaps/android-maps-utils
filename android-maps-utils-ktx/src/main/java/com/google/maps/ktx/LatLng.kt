@@ -63,7 +63,7 @@ fun List<LatLng>.sphericalPolygonArea(): Double = SphericalUtil.computeArea(this
  * Computes the signed area under a closed path on Earth. The sign of the area may be used to
  * determine the orientation of the path.
  *
- * @return the area in square meters
+ * @return the signed area in square meters
  */
 fun List<LatLng>.sphericalPolygonSignedArea(): Double = SphericalUtil.computeSignedArea(this)
 
