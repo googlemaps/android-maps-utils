@@ -30,10 +30,10 @@ class PolylineTest {
 
     @Test
     fun `validate spherical path length`() {
-        assertEquals(0, mockPolyline(emptyList()).sphericalPathLength)
+        assertEquals(0.0, mockPolyline(emptyList()).sphericalPathLength, 1e-6)
         val polyline = mockPolyline(listOf(LatLng(0.0, 0.0), LatLng(0.1, 0.1)))
         val expectation = earthRadius * Math.sqrt(2.0) * Math.toRadians(0.1)
-        assertEquals(expectation, polyline.sphericalPathLength, 1e-6)
+        assertEquals(expectation, polyline.sphericalPathLength, 1e-1)
     }
 
     private fun mockPolyline(p: List<LatLng>, geodesic: Boolean = true) = mock<Polyline> {
