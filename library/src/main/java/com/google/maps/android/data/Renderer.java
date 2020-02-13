@@ -98,26 +98,7 @@ public class Renderer {
 
     private final Set<String> mMarkerIconUrls;
 
-    /**
-     * Map of image URL to map of scale factor to BitmapDescriptors for point marker icons
-     *
-     * BitmapDescriptors are cached to avoid creating new BitmapDescriptors for each individual
-     * usage of a Bitmap. Each BitmapDescriptor copies the Bitmap it's created from.
-     */
-    private Map<String, Map<Double, BitmapDescriptor>> mMarkerImagesCache;
-
-    /**
-     * Map of image URL to BitmapDescriptors for non-scaled ground overlay images
-     */
-    private Map<String, BitmapDescriptor> mGroundOverlayImagesCache;
-
-    /**
-     * Map of image URL to Bitmap
-     *
-     * Holds initial references to bitmaps so they can be scaled and BitmapDescriptors cached.
-     * This cache is cleared once all icon URLs are loaded, scaled, and cached as BitmapDescriptors.
-     */
-    private Map<String, Bitmap> mBitmapCache;
+    private ImagesCache mImagesCache;
 
     private int mNumActiveDownloads = 0;
 
@@ -151,29 +132,19 @@ public class Renderer {
     public Renderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         this(map, new HashSet<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
         mActivity = activity;
-        Map<String, Map<Double, BitmapDescriptor>> markerImagesCache = null;
-        Map<String, BitmapDescriptor> groundOverlayImagesCache = null;
-        Map<String, Bitmap> bitmapCache = null;
+        ImagesCache imagesCache = null;
         RetainFragment retainFragment = null;
         if (activity != null) {
             retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getSupportFragmentManager());
-            markerImagesCache = retainFragment.mMarkerImagesCache;
-            groundOverlayImagesCache = retainFragment.mGroundOverlayImagesCache;
-            bitmapCache = retainFragment.mBitmapCache;
+            imagesCache = retainFragment.mImagesCache;
         }
-        if (markerImagesCache == null || groundOverlayImagesCache == null || bitmapCache == null) {
-            markerImagesCache = new HashMap<>();
-            groundOverlayImagesCache = new HashMap<>();
-            bitmapCache = new HashMap<>();
+        if (imagesCache == null) {
+            imagesCache = new ImagesCache();
             if (retainFragment != null) {
-                retainFragment.mMarkerImagesCache = markerImagesCache;
-                retainFragment.mGroundOverlayImagesCache = groundOverlayImagesCache;
-                retainFragment.mBitmapCache = bitmapCache;
+                retainFragment.mImagesCache = imagesCache;
             }
         }
-        mMarkerImagesCache = markerImagesCache;
-        mGroundOverlayImagesCache = groundOverlayImagesCache;
-        mBitmapCache = bitmapCache;
+        mImagesCache = imagesCache;
         mStylesRenderer = new HashMap<>();
     }
 
@@ -190,9 +161,7 @@ public class Renderer {
     public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         this(map, null, new GeoJsonPointStyle(), new GeoJsonLineStringStyle(), new GeoJsonPolygonStyle(), null, markerManager, polygonManager, polylineManager, groundOverlayManager);
         mFeatures.putAll(features);
-        mMarkerImagesCache = null;
-        mGroundOverlayImagesCache = null;
-        mBitmapCache = null;
+        mImagesCache = null;
     }
 
     private Renderer(GoogleMap map,
@@ -243,9 +212,7 @@ public class Renderer {
      */
     public static class RetainFragment extends Fragment {
         private static final String TAG = RetainFragment.class.getName();
-        Map<String, Map<Double, BitmapDescriptor>> mMarkerImagesCache;
-        Map<String, BitmapDescriptor> mGroundOverlayImagesCache;
-        Map<String, Bitmap> mBitmapCache;
+        ImagesCache mImagesCache;
 
         static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
             RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
@@ -261,6 +228,30 @@ public class Renderer {
             super.onCreate(savedInstanceState);
             setRetainInstance(true);
         }
+    }
+
+    private static class ImagesCache {
+
+        /**
+         * Map of image URL to map of scale factor to BitmapDescriptors for point marker icons
+         *
+         * BitmapDescriptors are cached to avoid creating new BitmapDescriptors for each individual
+         * usage of a Bitmap. Each BitmapDescriptor copies the Bitmap it's created from.
+         */
+        final Map<String, Map<Double, BitmapDescriptor>> markerImagesCache = new HashMap<>();
+
+        /**
+         * Map of image URL to BitmapDescriptors for non-scaled ground overlay images
+         */
+        final Map<String, BitmapDescriptor> groundOverlayImagesCache = new HashMap<>();
+
+        /**
+         * Map of image URL to Bitmap
+         *
+         * Holds initial references to bitmaps so they can be scaled and BitmapDescriptors cached.
+         * This cache is cleared once all icon URLs are loaded, scaled, and cached as BitmapDescriptors.
+         */
+        final Map<String, Bitmap> bitmapCache = new HashMap<>();
     }
 
     /**
@@ -384,13 +375,13 @@ public class Renderer {
      * @return scaled BitmapDescriptor
      */
     protected BitmapDescriptor getCachedMarkerImage(String url, double scale) {
-        Map<Double, BitmapDescriptor> bitmaps = mMarkerImagesCache.get(url);
+        Map<Double, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
         BitmapDescriptor bitmapDescriptor = null;
         if (bitmaps != null) {
             bitmapDescriptor = bitmaps.get(scale);
         }
         if (bitmapDescriptor == null) {
-            Bitmap bitmap = mBitmapCache.get(url);
+            Bitmap bitmap = mImagesCache.bitmapCache.get(url);
             if (bitmap != null) {
                 bitmapDescriptor = scaleIcon(bitmap, scale);
                 putMarkerImagesCache(url, scale, bitmapDescriptor);
@@ -438,12 +429,12 @@ public class Renderer {
      * @return BitmapDescriptor
      */
     protected BitmapDescriptor getCachedGroundOverlayImage(String url) {
-        BitmapDescriptor bitmapDescriptor = mGroundOverlayImagesCache.get(url);
+        BitmapDescriptor bitmapDescriptor = mImagesCache.groundOverlayImagesCache.get(url);
         if (bitmapDescriptor == null) {
-            Bitmap bitmap = mBitmapCache.get(url);
+            Bitmap bitmap = mImagesCache.bitmapCache.get(url);
             if (bitmap != null) {
                 bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-                mGroundOverlayImagesCache.put(url, bitmapDescriptor);
+                mImagesCache.groundOverlayImagesCache.put(url, bitmapDescriptor);
             }
         }
         return bitmapDescriptor;
@@ -542,10 +533,10 @@ public class Renderer {
      * @param bitmapDescriptor BitmapDescriptor to cache for reuse
      */
     private void putMarkerImagesCache(String url, double scale, BitmapDescriptor bitmapDescriptor) {
-        Map<Double, BitmapDescriptor> bitmaps = mMarkerImagesCache.get(url);
+        Map<Double, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
         if (bitmaps == null) {
             bitmaps = new HashMap<>();
-            mMarkerImagesCache.put(url, bitmaps);
+            mImagesCache.markerImagesCache.put(url, bitmaps);
         }
         bitmaps.put(scale, bitmapDescriptor);
     }
@@ -557,7 +548,7 @@ public class Renderer {
      * @param bitmap image bitmap
      */
     protected void cacheBitmap(String url, Bitmap bitmap) {
-        mBitmapCache.put(url, bitmap);
+        mImagesCache.bitmapCache.put(url, bitmap);
     }
 
     /**
@@ -580,8 +571,8 @@ public class Renderer {
      * should be loaded, scaled, and cached as BitmapDescriptors at this point.
      */
     private void checkClearBitmapCache() {
-        if (mNumActiveDownloads == 0 && mBitmapCache != null && !mBitmapCache.isEmpty()) {
-            mBitmapCache.clear();
+        if (mNumActiveDownloads == 0 && mImagesCache != null && !mImagesCache.bitmapCache.isEmpty()) {
+            mImagesCache.bitmapCache.clear();
         }
     }
 
