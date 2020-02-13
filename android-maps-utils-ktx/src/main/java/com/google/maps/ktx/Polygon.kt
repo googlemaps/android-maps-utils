@@ -3,6 +3,7 @@ package com.google.maps.ktx
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polygon
 import com.google.maps.android.PolyUtil
+import com.google.maps.android.SphericalUtil
 
 /**
  * Computes whether or not [latLng] is contained within this Polygon.
@@ -27,3 +28,16 @@ fun Polygon.contains(latLng: LatLng): Boolean =
  */
 fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = PolyUtil.DEFAULT_TOLERANCE): Boolean =
     PolyUtil.isLocationOnEdge(latLng, this.points, this.isGeodesic, tolerance)
+
+/**
+ * The area of this Polygon on Earth in square meters
+ */
+val Polygon.area: Double
+    get() = SphericalUtil.computeArea(this.points)
+
+/**
+ * Computes the signed area under a closed path on Earth. The sign of the area may be used to
+ * determine the orientation of the path.
+ */
+val Polygon.signedArea: Double
+    get() = SphericalUtil.computeSignedArea(this.points)
