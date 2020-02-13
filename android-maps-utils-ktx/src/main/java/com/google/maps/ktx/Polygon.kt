@@ -30,7 +30,7 @@ fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = PolyUtil.DEFAULT_TOLERA
     PolyUtil.isLocationOnEdge(latLng, this.points, this.isGeodesic, tolerance)
 
 /**
- * The area of this Polygon on Earth in square meters
+ * The area of this Polygon on Earth in square meters.
  */
 val Polygon.area: Double
     get() = SphericalUtil.computeArea(this.points)

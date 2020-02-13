@@ -13,7 +13,7 @@ fun Polyline.contains(latLng: LatLng, tolerance: Double = PolyUtil.DEFAULT_TOLER
     PolyUtil.isLocationOnPath(latLng, this.points, this.isGeodesic, tolerance)
 
 /**
- * The spherical length of this Polyline on Earth as measured in meters
+ * The spherical length of this Polyline on Earth as measured in meters.
  */
 val Polyline.sphericalPathLength: Double
     get() = SphericalUtil.computeLength(this.points)

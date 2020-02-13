@@ -94,4 +94,37 @@ class LatLngTest {
         val down = LatLng(-90.0, 0.0)
         assertEquals(Math.PI * earthRadius, up.sphericalDistance(down), 1e-6)
     }
+
+    @Test
+    fun `validate spherical path length`() {
+        assertEquals(0.0, emptyList<LatLng>().sphericalPathLength(), 1e-6)
+
+        val latLngs = listOf(LatLng(0.0, 0.0), LatLng(0.1, 0.1))
+        val expectation = earthRadius * Math.sqrt(2.0) * Math.toRadians(0.1)
+        assertEquals(expectation, latLngs.sphericalPathLength(), 1e-1)
+    }
+
+    @Test
+    fun `validate spherical polygon area`() {
+        val up = LatLng(90.0, 0.0)
+        val down = LatLng(-90.0, 0.0)
+        val right = LatLng(0.0, 90.0)
+        val polygon = listOf(up, down, right, up)
+        assertEquals(1.2751647824926386E14, polygon.sphericalPolygonArea(), 1e-6)
+        println(polygon.sphericalPolygonSignedArea())
+    }
+
+    @Test
+    fun `validate signed spherical polygon area`() {
+        val up = LatLng(90.0, 0.0)
+        val down = LatLng(-90.0, 0.0)
+        val right = LatLng(0.0, 90.0)
+        val polygon = listOf(up, down, right, up)
+        val reversedPolygon = listOf(up, right, down, up)
+        assertEquals(
+            -polygon.sphericalPolygonSignedArea(),
+            reversedPolygon.sphericalPolygonSignedArea(),
+            1e-6
+        )
+    }
 }

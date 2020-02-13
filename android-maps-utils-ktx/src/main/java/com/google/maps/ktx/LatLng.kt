@@ -52,7 +52,7 @@ fun List<LatLng>.isClosedPolygon(): Boolean = PolyUtil.isClosedPolygon(this)
 fun List<LatLng>.sphericalPathLength(): Double = SphericalUtil.computeLength(this)
 
 /**
- * Computes the area under a closed path on Earth
+ * Computes the area under a closed path on Earth.
  *
  * @return the area in square meters
  */
