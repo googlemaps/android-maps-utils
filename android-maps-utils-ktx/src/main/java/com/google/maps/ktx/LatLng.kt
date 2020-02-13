@@ -45,6 +45,29 @@ fun List<LatLng>.latLngListEncode(): String = PolyUtil.encode(this)
 fun List<LatLng>.isClosedPolygon(): Boolean = PolyUtil.isClosedPolygon(this)
 
 /**
+ * Computes the length of this path on Earth.
+ *
+ * @return the length of this path in meters
+ */
+fun List<LatLng>.sphericalPathLength(): Double = SphericalUtil.computeLength(this)
+
+/**
+ * Computes the area under a closed path on Earth
+ *
+ * @return the area in square meters
+ */
+fun List<LatLng>.sphericalPolygonArea(): Double = SphericalUtil.computeArea(this)
+
+
+/**
+ * Computes the signed area under a closed path on Earth. The sign of the area may be used to
+ * determine the orientation of the path.
+ *
+ * @return the area in square meters
+ */
+fun List<LatLng>.sphericalPolygonSignedArea(): Double = SphericalUtil.computeSignedArea(this)
+
+/**
  * Computes the heading from this LatLng to [toLatLng].
  *
  * @param toLatLng the other LatLng to compute the heading to
