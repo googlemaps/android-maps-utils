@@ -367,8 +367,9 @@ public class Renderer {
     }
 
     /**
-     * Gets a cached image at the specified scale which is
-     * needed for Marker icon images
+     * Gets a cached image at the specified scale which is needed for Marker icon images.
+     * If a BitmapDescriptor doesn't exist in the cache, the Bitmap for the URL from the
+     * bitmap cache is scaled and cached as a BitmapDescriptor.
      *
      * @param url URL to get cached image for
      * @param scale scale to get image at
@@ -1089,7 +1090,6 @@ public class Renderer {
         }
         return polylines;
     }
-
 
     /**
      * Adds all GeoJsonPolygon in the GeoJsonMultiPolygon to the map as multiple Polygons
