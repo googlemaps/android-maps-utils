@@ -6,23 +6,24 @@ import com.google.maps.android.PolyUtil
 
 /**
  * Computes whether or not [latLng] is contained within this Polygon.
+ *
+ * @param latLng the LatLng to inspect
+ * @return true if [latLng] is contained within this Polygon, otherwise, false
+ *
+ * @see PolyUtil.containsLocation
  */
 fun Polygon.contains(latLng: LatLng): Boolean =
     PolyUtil.containsLocation(latLng, this.points, this.isGeodesic)
 
 /**
- * Checks whether or not [latLng] lies on or is near the edge of this Polygon within a tolerate
- * (in meters) of [tolerance]. The default value
+ * Checks whether or not [latLng] lies on or is near the edge of this Polygon within a tolerance
+ * (in meters) of [tolerance]. The default value is [PolyUtil.DEFAULT_TOLERANCE].
+ *
+ * @param latLng the LatLng to inspect
+ * @param tolerance the tolerance in meters
+ * @return true if [latLng] lies on or is near the edge of this Polygon, otherwise, false
+ *
+ * @see PolyUtil.isLocationOnEdge
  */
-fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = PolyUtil.DEFAULT_TOLERANCE) =
+fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = PolyUtil.DEFAULT_TOLERANCE): Boolean =
     PolyUtil.isLocationOnEdge(latLng, this.points, this.isGeodesic, tolerance)
-
-/**
- * Simplifies this Polygon using the Douglas-Peucker decimation. Increasing the value of [tolerance]
- * will result in fewer points.
- *
- * @param tolerance the tolerance in meters.
- *
- * @see PolyUtil.simplify
- */
-fun Polygon.simplify(tolerance: Double) = PolyUtil.simplify(this.points, tolerance)
