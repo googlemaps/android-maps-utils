@@ -133,13 +133,9 @@ public class Renderer {
 
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
 
-    private final MarkerManager mMarkerManager;
     private final MarkerManager.Collection mMarkers;
-    private final PolygonManager mPolygonManager;
     private final PolygonManager.Collection mPolygons;
-    private final PolylineManager mPolylineManager;
     private final PolylineManager.Collection mPolylines;
-    private final GroundOverlayManager mGroundOverlayManager;
     private final GroundOverlayManager.Collection mGroundOverlays;
 
     /**
@@ -221,31 +217,23 @@ public class Renderer {
             if (markerManager == null) {
                 markerManager = new MarkerManager(map);
             }
-            mMarkerManager = markerManager;
             mMarkers = markerManager.newCollection();
             if (polygonManager == null) {
                 polygonManager = new PolygonManager(map);
             }
-            mPolygonManager = polygonManager;
             mPolygons = polygonManager.newCollection();
             if (polylineManager == null) {
                 polylineManager = new PolylineManager(map);
             }
-            mPolylineManager = polylineManager;
             mPolylines = polylineManager.newCollection();
             if (groundOverlayManager == null) {
                 groundOverlayManager = new GroundOverlayManager(map);
             }
-            mGroundOverlayManager = groundOverlayManager;
             mGroundOverlays = groundOverlayManager.newCollection();
         } else {
-            mMarkerManager = null;
             mMarkers = null;
-            mPolygonManager = null;
             mPolygons = null;
-            mPolylineManager = null;
             mPolylines = null;
-            mGroundOverlayManager = null;
             mGroundOverlays = null;
         }
     }
@@ -255,11 +243,11 @@ public class Renderer {
      */
     public static class RetainFragment extends Fragment {
         private static final String TAG = RetainFragment.class.getName();
-        public Map<String, Map<Double, BitmapDescriptor>> mMarkerImagesCache;
-        public Map<String, BitmapDescriptor> mGroundOverlayImagesCache;
-        public Map<String, Bitmap> mBitmapCache;
+        Map<String, Map<Double, BitmapDescriptor>> mMarkerImagesCache;
+        Map<String, BitmapDescriptor> mGroundOverlayImagesCache;
+        Map<String, Bitmap> mBitmapCache;
 
-        public static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
+        static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
             RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
             if (fragment == null) {
                 fragment = new RetainFragment();
@@ -330,11 +318,11 @@ public class Renderer {
      * @param mapObject Marker, Polyline or Polygon
      * @return Feature for the given map object
      */
-    public Feature getFeature(Object mapObject) {
+    Feature getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
     }
 
-    public Feature getContainerFeature(Object mapObject) {
+    Feature getContainerFeature(Object mapObject) {
         if (mContainerFeatures != null) {
             return mContainerFeatures.getKey(mapObject);
         }
@@ -365,7 +353,7 @@ public class Renderer {
      *
      * @return mMarkerIconUrls Set of URLs
      */
-    public Set<String> getMarkerIconUrls() {
+    protected Set<String> getMarkerIconUrls() {
         return mMarkerIconUrls;
     }
 
@@ -374,7 +362,7 @@ public class Renderer {
      *
      * @return mStylesRenderer hashmap containing styles for KML placemarks (String, KmlStyle)
      */
-    public HashMap<String, KmlStyle> getStylesRenderer() {
+    protected HashMap<String, KmlStyle> getStylesRenderer() {
         return mStylesRenderer;
     }
 
@@ -383,7 +371,7 @@ public class Renderer {
      *
      * @return mStyleMaps hashmap containing styles for KML placemarks (String, String)
      */
-    public HashMap<String, String> getStyleMaps() {
+    protected HashMap<String, String> getStyleMaps() {
         return mStyleMaps;
     }
 
@@ -395,7 +383,7 @@ public class Renderer {
      * @param scale scale to get image at
      * @return scaled BitmapDescriptor
      */
-    public BitmapDescriptor getCachedMarkerImage(String url, double scale) {
+    protected BitmapDescriptor getCachedMarkerImage(String url, double scale) {
         Map<Double, BitmapDescriptor> bitmaps = mMarkerImagesCache.get(url);
         BitmapDescriptor bitmapDescriptor = null;
         if (bitmaps != null) {
@@ -449,7 +437,7 @@ public class Renderer {
      * @param url URL to get cached image for
      * @return BitmapDescriptor
      */
-    public BitmapDescriptor getCachedGroundOverlayImage(String url) {
+    protected BitmapDescriptor getCachedGroundOverlayImage(String url) {
         BitmapDescriptor bitmapDescriptor = mGroundOverlayImagesCache.get(url);
         if (bitmapDescriptor == null) {
             Bitmap bitmap = mBitmapCache.get(url);
@@ -475,7 +463,7 @@ public class Renderer {
      *
      * @return mContainers list of KmlContainers
      */
-    public ArrayList<KmlContainer> getContainerList() {
+    protected ArrayList<KmlContainer> getContainerList() {
         return mContainers;
     }
 
@@ -498,7 +486,7 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonPoints
      */
-    public GeoJsonPointStyle getDefaultPointStyle() {
+    GeoJsonPointStyle getDefaultPointStyle() {
         return mDefaultPointStyle;
     }
 
@@ -507,7 +495,7 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonLineStrings
      */
-    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
+    GeoJsonLineStringStyle getDefaultLineStringStyle() {
         return mDefaultLineStringStyle;
     }
 
@@ -516,7 +504,7 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonPolygons
      */
-    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
+    GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mDefaultPolygonStyle;
     }
 
@@ -526,14 +514,14 @@ public class Renderer {
      * @param feature Feature to be added onto the map
      * @param object  Corresponding map object to this feature
      */
-    public void putFeatures(Feature feature, Object object) {
+    protected void putFeatures(Feature feature, Object object) {
         mFeatures.put(feature, object);
     }
 
     /**
      * Adds mStyles to the mStylesRenderer
      */
-    public void putStyles() {
+    protected void putStyles() {
         mStylesRenderer.putAll(mStyles);
     }
 
@@ -542,7 +530,7 @@ public class Renderer {
      *
      * @param styles hashmap of strings and KmlStyles to be added to mStylesRenderer
      */
-    public void putStyles(HashMap<String, KmlStyle> styles) {
+    protected void putStyles(HashMap<String, KmlStyle> styles) {
         mStylesRenderer.putAll(styles);
     }
 
@@ -602,7 +590,7 @@ public class Renderer {
      *
      * @return true if there are placemarks, false otherwise
      */
-    public boolean hasFeatures() {
+    protected boolean hasFeatures() {
         return mFeatures.size() > 0;
     }
 
@@ -681,7 +669,7 @@ public class Renderer {
     /**
      * Removes all the mappings from the mStylesRenderer hashmap
      */
-    public void clearStylesRenderer() {
+    protected void clearStylesRenderer() {
         mStylesRenderer.clear();
     }
 
@@ -710,7 +698,7 @@ public class Renderer {
      *
      * @param feature feature to add to the map
      */
-    public void addFeature(Feature feature) {
+    protected void addFeature(Feature feature) {
         Object mapObject = FEATURE_NOT_ON_MAP;
         if (feature instanceof GeoJsonFeature) {
             setFeatureDefaultStyles((GeoJsonFeature) feature);
@@ -742,7 +730,7 @@ public class Renderer {
      *
      * @param mapObject map object or array of map objects to remove from the map
      */
-    public void removeFromMap(Object mapObject) {
+    protected void removeFromMap(Object mapObject) {
         if (mapObject instanceof Marker) {
             mMarkers.remove((Marker) mapObject);
         } else if (mapObject instanceof Polyline) {
@@ -885,7 +873,7 @@ public class Renderer {
      * @param point         contains coordinates for the Marker
      * @return Marker object created from the given Point
      */
-    protected Marker addPointToMap(MarkerOptions markerOptions, Point point) {
+    private Marker addPointToMap(MarkerOptions markerOptions, Point point) {
         markerOptions.position(point.getGeometryObject());
         return mMarkers.addMarker(markerOptions);
     }
@@ -933,8 +921,8 @@ public class Renderer {
      * @param lineString      contains coordinates for the Polyline
      * @return Polyline object created from given LineString
      */
-    protected Polyline addLineStringToMap(PolylineOptions polylineOptions,
-                                          LineString lineString) {
+    private Polyline addLineStringToMap(PolylineOptions polylineOptions,
+                                        LineString lineString) {
         // Add coordinates
         polylineOptions.addAll(lineString.getGeometryObject());
         Polyline addedPolyline = mPolylines.addPolyline(polylineOptions);
@@ -968,7 +956,7 @@ public class Renderer {
      * @param polygon        contains coordinates for the Polygon
      * @return Polygon object created from given DataPolygon
      */
-    protected Polygon addPolygonToMap(PolygonOptions polygonOptions, DataPolygon polygon) {
+    private Polygon addPolygonToMap(PolygonOptions polygonOptions, DataPolygon polygon) {
         // First array of coordinates are the outline
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         // Following arrays are holes
@@ -1152,7 +1140,7 @@ public class Renderer {
      * @param groundOverlayOptions GroundOverlay style options to be added to the map
      * @return new GroundOverlay object created from the given GroundOverlayOptions
      */
-    public GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
+    protected GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
         return mGroundOverlays.addGroundOverlay(groundOverlayOptions);
     }
 
@@ -1200,7 +1188,7 @@ public class Renderer {
 
             public View getInfoContents(Marker arg0) {
                 View view = LayoutInflater.from(mActivity).inflate(R.layout.amu_info_window, null);
-                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
+                TextView infoWindowText = view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
                 } else {
@@ -1222,7 +1210,7 @@ public class Renderer {
      *
      * @param listener Listener providing the onFeatureClick method to call.
      */
-    public void setOnFeatureClickListener(final Layer.OnFeatureClickListener listener) {
+    void setOnFeatureClickListener(final Layer.OnFeatureClickListener listener) {
 
         mPolygons.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             @Override
