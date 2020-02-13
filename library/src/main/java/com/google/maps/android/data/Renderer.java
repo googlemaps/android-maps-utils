@@ -59,6 +59,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -80,7 +81,9 @@ public class Renderer {
 
     private static final int MARKER_ICON_SIZE = 32;
 
-    private final static Object FEATURE_NOT_ON_MAP = null;
+    private static final Object FEATURE_NOT_ON_MAP = null;
+
+    private static final DecimalFormat sScaleFormat = new DecimalFormat("#.####");
 
     private GoogleMap mMap;
 
@@ -238,7 +241,7 @@ public class Renderer {
          * BitmapDescriptors are cached to avoid creating new BitmapDescriptors for each individual
          * usage of a Bitmap. Each BitmapDescriptor copies the Bitmap it's created from.
          */
-        final Map<String, Map<Double, BitmapDescriptor>> markerImagesCache = new HashMap<>();
+        final Map<String, Map<String, BitmapDescriptor>> markerImagesCache = new HashMap<>();
 
         /**
          * Map of image URL to BitmapDescriptors for non-scaled ground overlay images
@@ -376,16 +379,17 @@ public class Renderer {
      * @return scaled BitmapDescriptor
      */
     protected BitmapDescriptor getCachedMarkerImage(String url, double scale) {
-        Map<Double, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
+        String scaleString = sScaleFormat.format(scale);
+        Map<String, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
         BitmapDescriptor bitmapDescriptor = null;
         if (bitmaps != null) {
-            bitmapDescriptor = bitmaps.get(scale);
+            bitmapDescriptor = bitmaps.get(scaleString);
         }
         if (bitmapDescriptor == null) {
             Bitmap bitmap = mImagesCache.bitmapCache.get(url);
             if (bitmap != null) {
                 bitmapDescriptor = scaleIcon(bitmap, scale);
-                putMarkerImagesCache(url, scale, bitmapDescriptor);
+                putMarkerImagesCache(url, scaleString, bitmapDescriptor);
             }
         }
         return bitmapDescriptor;
@@ -530,11 +534,11 @@ public class Renderer {
      * Cache the scaled BitmapDescriptor for the URL
      *
      * @param url              URL image was loaded from
-     * @param scale            scale the image was scaled to
+     * @param scale            scale the image was scaled to as a formatted string for the cache
      * @param bitmapDescriptor BitmapDescriptor to cache for reuse
      */
-    private void putMarkerImagesCache(String url, double scale, BitmapDescriptor bitmapDescriptor) {
-        Map<Double, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
+    private void putMarkerImagesCache(String url, String scale, BitmapDescriptor bitmapDescriptor) {
+        Map<String, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
         if (bitmaps == null) {
             bitmaps = new HashMap<>();
             mImagesCache.markerImagesCache.put(url, bitmaps);
