@@ -24,12 +24,11 @@ import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,7 +53,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final Collection<QuadItem<T>> mItems = new HashSet<>();
+    private final Collection<QuadItem<T>> mItems = new LinkedHashSet<>();
 
     /**
      * Any modifications should be synchronized on mQuadTree.
@@ -169,7 +168,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
 
     @Override
     public Collection<T> getItems() {
-        final List<T> items = new ArrayList<T>();
+        final Set<T> items = new LinkedHashSet<>();
         synchronized (mQuadTree) {
             for (QuadItem<T> quadItem : mItems) {
                 items.add(quadItem.mClusterItem);
