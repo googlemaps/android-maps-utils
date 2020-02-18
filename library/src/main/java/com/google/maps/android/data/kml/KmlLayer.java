@@ -17,6 +17,7 @@ package com.google.maps.android.data.kml;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -35,7 +36,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -139,6 +139,8 @@ public class KmlLayer extends Layer {
                         Bitmap bitmap = BitmapFactory.decodeStream(zip);
                         if (bitmap != null) {
                             images.put(entry.getName(), bitmap);
+                        } else {
+                            Log.w("KmlLayer", "Unsupported KMZ contents file type: " + entry.getName());
                         }
                     }
                     entry = zip.getNextEntry();
