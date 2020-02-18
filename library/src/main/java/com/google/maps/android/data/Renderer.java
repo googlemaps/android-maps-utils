@@ -553,7 +553,7 @@ public class Renderer {
      * @param url    image URL
      * @param bitmap image bitmap
      */
-    public void cacheBitmap(String url, Bitmap bitmap) {
+    protected void cacheBitmap(String url, Bitmap bitmap) {
         mImagesCache.bitmapCache.put(url, bitmap);
     }
 
@@ -671,7 +671,7 @@ public class Renderer {
     }
 
     /**
-     * Stores all given data and adds it onto the map
+     * Stores all given data
      *
      * @param styles         hashmap of styles
      * @param styleMaps      hashmap of style maps
@@ -681,7 +681,8 @@ public class Renderer {
      */
     protected void storeData(HashMap<String, KmlStyle> styles,
                              HashMap<String, String> styleMaps,
-                             HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                             HashMap<KmlPlacemark, Object> features,
+                             ArrayList<KmlContainer> folders,
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;

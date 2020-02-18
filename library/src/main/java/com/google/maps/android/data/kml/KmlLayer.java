@@ -34,6 +34,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -129,26 +131,29 @@ public class KmlLayer extends Layer {
             KmlParser parser = null;
             ZipEntry entry = zip.getNextEntry();
             if (entry != null) { // is a KMZ zip file
+                HashMap<String, Bitmap> images = new HashMap<>();
                 while (entry != null) {
                     if (parser == null && entry.getName().toLowerCase().endsWith(".kml")) {
                         parser = parseKml(zip);
                     } else {
                         Bitmap bitmap = BitmapFactory.decodeStream(zip);
                         if (bitmap != null) {
-                            renderer.cacheBitmap(entry.getName(), bitmap);
+                            images.put(entry.getName(), bitmap);
                         }
                     }
                     entry = zip.getNextEntry();
                 }
+                if (parser == null) {
+                    throw new IllegalArgumentException("KML not found in InputStream");
+                }
+                renderer.storeKmzData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+                        parser.getContainers(), parser.getGroundOverlays(), images);
             } else { // is a KML
                 bis.reset();
                 parser = parseKml(bis);
+                renderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
+                        parser.getContainers(), parser.getGroundOverlays());
             }
-            if (parser == null) {
-                throw new IllegalArgumentException("KML not found in InputStream");
-            }
-            renderer.storeKmlData(parser.getStyles(), parser.getStyleMaps(), parser.getPlacemarks(),
-                    parser.getContainers(), parser.getGroundOverlays());
             storeRenderer(renderer);
         } finally {
             stream.close();
