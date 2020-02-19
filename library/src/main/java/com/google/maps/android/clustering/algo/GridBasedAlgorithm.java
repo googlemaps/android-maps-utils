@@ -16,8 +16,6 @@
 
 package com.google.maps.android.clustering.algo;
 
-import androidx.collection.LongSparseArray;
-
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Point;
@@ -27,6 +25,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import androidx.collection.LongSparseArray;
 
 /**
  * Groups markers into a grid.
@@ -61,6 +61,12 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
     @Override
     public void removeItems(Collection<T> items) {
         mItems.removeAll(items);
+    }
+
+    @Override
+    public void updateItem(T item) {
+        removeItem(item);
+        addItem(item);
     }
 
     @Override

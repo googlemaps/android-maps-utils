@@ -111,6 +111,13 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     }
 
     @Override
+    public void updateItem(T item) {
+        // TODO - Can this be optimized to update the item in-place if the location hasn't changed?
+        removeItem(item);
+        addItem(item);
+    }
+
+    @Override
     public Set<? extends Cluster<T>> getClusters(float zoom) {
         final int discreteZoom = (int) zoom;
 

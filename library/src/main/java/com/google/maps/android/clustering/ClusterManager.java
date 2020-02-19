@@ -16,13 +16,9 @@
 
 package com.google.maps.android.clustering;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.clustering.algo.Algorithm;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
@@ -30,6 +26,10 @@ import com.google.maps.android.clustering.algo.ScreenBasedAlgorithm;
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.collections.MarkerManager;
+
+import android.content.Context;
+import android.os.AsyncTask;
 
 import java.util.Collection;
 import java.util.Set;
@@ -147,6 +147,10 @@ public class ClusterManager<T extends ClusterItem> implements
         return mAlgorithm;
     }
 
+    /**
+     * Removes all items from the cluster manager. After calling this method you must invoke
+     * cluster() for the map to be cleared.
+     */
     public void clearItems() {
         mAlgorithm.lock();
         try {
@@ -156,6 +160,11 @@ public class ClusterManager<T extends ClusterItem> implements
         }
     }
 
+    /**
+     * Adds items to clusters. After calling this method you must invoke cluster() for the state
+     * of the clusters to be updated on the map.
+     * @param items items to add to clusters
+     */
     public void addItems(Collection<T> items) {
         mAlgorithm.lock();
         try {
@@ -165,6 +174,11 @@ public class ClusterManager<T extends ClusterItem> implements
         }
     }
 
+    /**
+     * Adds an item to a cluster. After calling this method you must invoke cluster() for the state
+     * of the clusters to be updated on the map.
+     * @param myItem item to add to clusters
+     */
     public void addItem(T myItem) {
         mAlgorithm.lock();
         try {
@@ -174,6 +188,11 @@ public class ClusterManager<T extends ClusterItem> implements
         }
     }
 
+    /**
+     * Removes items from clusters. After calling this method you must invoke cluster() for the state
+     * of the clusters to be updated on the map.
+     * @param items items to remove from clusters
+     */
     public void removeItems(Collection<T> items) {
         mAlgorithm.lock();
         try {
@@ -183,6 +202,11 @@ public class ClusterManager<T extends ClusterItem> implements
         }
     }
 
+    /**
+     * Removes an item from clusters. After calling this method you must invoke cluster() for the state
+     * of the clusters to be updated on the map.
+     * @param item item to remove from clusters
+     */
     public void removeItem(T item) {
         mAlgorithm.lock();
         try {
@@ -193,7 +217,22 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Force a re-cluster. You may want to call this after adding new item(s).
+     * Updates an item in clusters. After calling this method you must invoke cluster() for the state
+     * of the clusters to be updated on the map.
+     * @param item item to update in clusters
+     */
+    public void updateItem(T item) {
+        mAlgorithm.lock();
+        try {
+            mAlgorithm.updateItem(item);
+        } finally {
+            mAlgorithm.unlock();
+        }
+    }
+
+    /**
+     * Force a re-cluster on the map. You should call this after adding, removing, updating,
+     * or clearing item(s).
      */
     public void cluster() {
         mClusterTaskLock.writeLock().lock();

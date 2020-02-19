@@ -16,8 +16,6 @@
 
 package com.google.maps.android.clustering.algo;
 
-import androidx.collection.LruCache;
-
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -27,6 +25,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import androidx.collection.LruCache;
 
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
@@ -70,6 +70,12 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends Abstrac
     @Override
     public void removeItems(Collection<T> items) {
         mAlgorithm.removeItems(items);
+        clearCache();
+    }
+
+    @Override
+    public void updateItem(T item) {
+        mAlgorithm.updateItem(item);
         clearCache();
     }
 

@@ -16,6 +16,24 @@
 
 package com.google.maps.android.clustering.view;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.R;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.geometry.Point;
+import com.google.maps.android.projection.SphericalMercatorProjection;
+import com.google.maps.android.ui.IconGenerator;
+import com.google.maps.android.ui.SquareTextView;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
@@ -36,24 +54,6 @@ import android.os.MessageQueue;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.collections.MarkerManager;
-import com.google.maps.android.R;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.geometry.Point;
-import com.google.maps.android.projection.SphericalMercatorProjection;
-import com.google.maps.android.ui.IconGenerator;
-import com.google.maps.android.ui.SquareTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -737,15 +737,94 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Called before the marker for a ClusterItem is added to the map.
+     *
+     * The first time ClusterManager.cluster() is invoked on a set of items
+     * onBeforeClusterItemRendered() will be called and onClusterItemUpdated() will not be called.
+     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
+     * again, then onClusterItemUpdated() will be called and onBeforeClusterItemRendered() will not
+     * be called.
+     *
+     * @param item item to be rendered
+     * @param markerOptions the markerOptions representing the provided item
      */
     protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
     }
 
     /**
+     * Called when a cached marker for a ClusterItem already exists on the map so the marker may
+     * be updated to the latest item values. Default implementation updates the title and snippet
+     * of the marker if they have changed and refreshes the info window of the marker if it is open.
+     * Note that the contents of the item may not have changed since the cached marker was created -
+     * implementations of this method are responsible for checking if something changed (if that
+     * matters to the implementation).
+     *
+     * The first time ClusterManager.cluster() is invoked on a set of items
+     * onBeforeClusterItemRendered() will be called and onClusterItemUpdated() will not be called.
+     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
+     * again, then onClusterItemUpdated() will be called and onBeforeClusterItemRendered() will not
+     * be called.
+     *
+     * @param item item being updated
+     * @param marker cached marker that contains a potentially previous state of the item.
+     */
+    protected void onClusterItemUpdated(T item, Marker marker) {
+        boolean changed = false;
+        // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
+        if (item.getTitle() != null && item.getSnippet() != null) {
+            if (!marker.getTitle().equals(item.getTitle())) {
+                marker.setTitle(item.getTitle());
+                changed = true;
+            }
+            if (!marker.getSnippet().equals(item.getSnippet())) {
+                marker.setSnippet(item.getSnippet());
+                changed = true;
+            }
+        } else if (item.getSnippet() != null && !item.getSnippet().equals(marker.getTitle())) {
+            marker.setTitle(item.getSnippet());
+            changed = true;
+        } else if (item.getTitle() != null && !item.getTitle().equals(marker.getTitle())) {
+            marker.setTitle(item.getTitle());
+            changed = true;
+        }
+        // Update marker position if the item changed position
+        if (!marker.getPosition().equals(item.getPosition())) {
+            marker.setPosition(item.getPosition());
+            changed = true;
+        }
+        if (changed && marker.isInfoWindowShown()) {
+            // Force a refresh of marker info window contents
+            marker.showInfoWindow();
+        }
+    }
+
+    /**
      * Called before the marker for a Cluster is added to the map.
      * The default implementation draws a circle with a rough count of the number of items.
+     *
+     * The first time ClusterManager.cluster() is invoked on a set of items
+     * onBeforeClusterRendered() will be called and onClusterUpdated() will not be called.
+     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
+     * again, then onClusterUpdated() will be called and onBeforeClusterRendered() will not be
+     * called.
+     *
+     * @param cluster cluster to be rendered
+     * @param markerOptions markerOptions representing the provided cluster
      */
     protected void onBeforeClusterRendered(Cluster<T> cluster, MarkerOptions markerOptions) {
+        // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
+        markerOptions.icon(getDescriptorForCluster(cluster));
+    }
+
+    /**
+     * Gets a BitmapDescriptor for the given cluster that contains a rough count of the number of
+     * items. Used to set the cluster marker icon in the default implementations of
+     * onBeforeClusterRendered() and onClusterUpdated().
+     *
+     * @param cluster cluster to get BitmapDescriptor for
+     * @return a BitmapDescriptor for the marker icon for the given cluster that contains a rough
+     * count of the number of items.
+     */
+    protected BitmapDescriptor getDescriptorForCluster(Cluster<T> cluster) {
         int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
@@ -753,18 +832,44 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
-        // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
-        markerOptions.icon(descriptor);
+        return descriptor;
     }
 
     /**
      * Called after the marker for a Cluster has been added to the map.
+     *
+     * @param cluster the cluster that was just added to the map
+     * @param marker the marker representing the cluster that was just added to the map
      */
     protected void onClusterRendered(Cluster<T> cluster, Marker marker) {
     }
 
     /**
+     * Called when a cached marker for a Cluster already exists on the map so the marker may
+     * be updated to the latest cluster values. Default implementation updated the icon with a
+     * circle with a rough count of the number of items. Note that the contents of the cluster may
+     * not have changed since the cached marker was created - implementations of this method are
+     * responsible for checking if something changed (if that matters to the implementation).
+     *
+     * The first time ClusterManager.cluster() is invoked on a set of items
+     * onBeforeClusterRendered() will be called and onClusterUpdated() will not be called.
+     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
+     * again, then onClusterUpdated() will be called and onBeforeClusterRendered() will not be
+     * called.
+     *
+     * @param cluster cluster being updated
+     * @param marker cached marker that contains a potentially previous state of the cluster
+     */
+    protected void onClusterUpdated(Cluster<T> cluster, Marker marker) {
+        // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
+        marker.setIcon(getDescriptorForCluster(cluster));
+    }
+
+    /**
      * Called after the marker for a ClusterItem has been added to the map.
+     *
+     * @param clusterItem the item that was just added to the map
+     * @param marker the marker representing the item that was just added to the map
      */
     protected void onClusterItemRendered(T clusterItem, Marker marker) {
     }
@@ -842,6 +947,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         } else {
                             markerOptions.position(item.getPosition());
                         }
+                        // TODO (?) - Refactor set marker text into onBeforeClusterItemRendered()
                         if (!(item.getTitle() == null) && !(item.getSnippet() == null)) {
                             markerOptions.title(item.getTitle());
                             markerOptions.snippet(item.getSnippet());
@@ -859,6 +965,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         }
                     } else {
                         markerWithPosition = new MarkerWithPosition(marker);
+                        onClusterItemUpdated(item, marker);
                     }
                     onClusterItemRendered(item, marker);
                     newMarkers.add(markerWithPosition);
@@ -880,6 +987,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 }
             } else {
                 markerWithPosition = new MarkerWithPosition(marker);
+                onClusterUpdated(cluster, marker);
             }
             onClusterRendered(cluster, marker);
             newMarkers.add(markerWithPosition);
