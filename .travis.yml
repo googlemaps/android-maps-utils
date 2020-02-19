@@ -96,7 +96,7 @@ install:
   - source ~/.install-jdk-travis.sh
 
 script:
-  - if [ "$API" != "NONE" ]; then ./gradlew test check connectedCheck -x lint --stacktrace; fi
+  - if [ "$API" != "NONE" ]; then ./gradlew test check jacocoTestReport connectedCheck -x lint --stacktrace; fi
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -117,3 +117,6 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
