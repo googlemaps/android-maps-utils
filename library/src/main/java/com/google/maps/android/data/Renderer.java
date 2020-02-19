@@ -16,19 +16,8 @@
 
 package com.google.maps.android.data;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.collection.LruCache;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -62,12 +51,27 @@ import com.google.maps.android.data.kml.KmlMultiGeometry;
 import com.google.maps.android.data.kml.KmlPlacemark;
 import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.data.kml.KmlStyle;
+import com.google.maps.android.data.kml.KmlUtil;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * An abstraction that shares the common properties of
@@ -76,9 +80,11 @@ import java.util.Set;
  */
 public class Renderer {
 
-    private final static Object FEATURE_NOT_ON_MAP = null;
+    private static final int MARKER_ICON_SIZE = 32;
 
-    private static final int LRU_CACHE_SIZE = 50;
+    private static final Object FEATURE_NOT_ON_MAP = null;
+
+    private static final DecimalFormat sScaleFormat = new DecimalFormat("#.####");
 
     private GoogleMap mMap;
 
@@ -94,9 +100,11 @@ public class Renderer {
 
     private HashMap<KmlGroundOverlay, GroundOverlay> mGroundOverlayMap;
 
-    private final ArrayList<String> mMarkerIconUrls;
+    private final Set<String> mMarkerIconUrls;
 
-    private LruCache<String, Bitmap> mImagesCache;
+    private ImagesCache mImagesCache;
+
+    private int mNumActiveDownloads = 0;
 
     private boolean mLayerOnMap;
 
@@ -110,17 +118,13 @@ public class Renderer {
 
     private final GeoJsonPolygonStyle mDefaultPolygonStyle;
 
-    private final MarkerManager mMarkerManager;
     private final MarkerManager.Collection mMarkers;
-    private final PolygonManager mPolygonManager;
     private final PolygonManager.Collection mPolygons;
-    private final PolylineManager mPolylineManager;
     private final PolylineManager.Collection mPolylines;
-    private final GroundOverlayManager mGroundOverlayManager;
     private final GroundOverlayManager.Collection mGroundOverlays;
 
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object for KML features
      *
      * @param map     map to place objects on
      * @param activity activity needed to add info windows and retain bitmap cache fragment
@@ -130,18 +134,18 @@ public class Renderer {
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
     public Renderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
-        this(map, new ArrayList<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
+        this(map, new HashSet<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
         mActivity = activity;
-        LruCache<String, Bitmap> imagesCache = null;
+        ImagesCache imagesCache = null;
         RetainFragment retainFragment = null;
         if (activity != null) {
             retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getSupportFragmentManager());
-            imagesCache = retainFragment.mRetainedCache;
+            imagesCache = retainFragment.mImagesCache;
         }
         if (imagesCache == null) {
-            imagesCache = new LruCache<>(LRU_CACHE_SIZE);
+            imagesCache = new ImagesCache();
             if (retainFragment != null) {
-                retainFragment.mRetainedCache = imagesCache;
+                retainFragment.mImagesCache = imagesCache;
             }
         }
         mImagesCache = imagesCache;
@@ -149,7 +153,7 @@ public class Renderer {
     }
 
     /**
-     * Creates a new Renderer object
+     * Creates a new Renderer object for GeoJSON features
      *
      * @param map      map to place objects on
      * @param features contains a hashmap of features and objects that will go on the map
@@ -165,7 +169,7 @@ public class Renderer {
     }
 
     private Renderer(GoogleMap map,
-                     ArrayList<String> markerIconUrls,
+                     Set<String> markerIconUrls,
                      GeoJsonPointStyle defaultPointStyle,
                      GeoJsonLineStringStyle defaultLineStringStyle,
                      GeoJsonPolygonStyle defaultPolygonStyle,
@@ -186,31 +190,23 @@ public class Renderer {
             if (markerManager == null) {
                 markerManager = new MarkerManager(map);
             }
-            mMarkerManager = markerManager;
             mMarkers = markerManager.newCollection();
             if (polygonManager == null) {
                 polygonManager = new PolygonManager(map);
             }
-            mPolygonManager = polygonManager;
             mPolygons = polygonManager.newCollection();
             if (polylineManager == null) {
                 polylineManager = new PolylineManager(map);
             }
-            mPolylineManager = polylineManager;
             mPolylines = polylineManager.newCollection();
             if (groundOverlayManager == null) {
                 groundOverlayManager = new GroundOverlayManager(map);
             }
-            mGroundOverlayManager = groundOverlayManager;
             mGroundOverlays = groundOverlayManager.newCollection();
         } else {
-            mMarkerManager = null;
             mMarkers = null;
-            mPolygonManager = null;
             mPolygons = null;
-            mPolylineManager = null;
             mPolylines = null;
-            mGroundOverlayManager = null;
             mGroundOverlays = null;
         }
     }
@@ -220,9 +216,9 @@ public class Renderer {
      */
     public static class RetainFragment extends Fragment {
         private static final String TAG = RetainFragment.class.getName();
-        public LruCache<String, Bitmap> mRetainedCache;
+        ImagesCache mImagesCache;
 
-        public static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
+        static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
             RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
             if (fragment == null) {
                 fragment = new RetainFragment();
@@ -236,6 +232,30 @@ public class Renderer {
             super.onCreate(savedInstanceState);
             setRetainInstance(true);
         }
+    }
+
+    private static class ImagesCache {
+
+        /**
+         * Map of image URL to map of scale factor to BitmapDescriptors for point marker icons
+         *
+         * BitmapDescriptors are cached to avoid creating new BitmapDescriptors for each individual
+         * usage of a Bitmap. Each BitmapDescriptor copies the Bitmap it's created from.
+         */
+        final Map<String, Map<String, BitmapDescriptor>> markerImagesCache = new HashMap<>();
+
+        /**
+         * Map of image URL to BitmapDescriptors for non-scaled ground overlay images
+         */
+        final Map<String, BitmapDescriptor> groundOverlayImagesCache = new HashMap<>();
+
+        /**
+         * Map of image URL to Bitmap
+         *
+         * Holds initial references to bitmaps so they can be scaled and BitmapDescriptors cached.
+         * This cache is cleared once all icon URLs are loaded, scaled, and cached as BitmapDescriptors.
+         */
+        final Map<String, Bitmap> bitmapCache = new HashMap<>();
     }
 
     /**
@@ -293,11 +313,11 @@ public class Renderer {
      * @param mapObject Marker, Polyline or Polygon
      * @return Feature for the given map object
      */
-    public Feature getFeature(Object mapObject) {
+    Feature getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
     }
 
-    public Feature getContainerFeature(Object mapObject) {
+    Feature getContainerFeature(Object mapObject) {
         if (mContainerFeatures != null) {
             return mContainerFeatures.getKey(mapObject);
         }
@@ -326,9 +346,9 @@ public class Renderer {
     /**
      * Gets the URLs stored for the Marker icons
      *
-     * @return mMarkerIconUrls ArrayList of URLs
+     * @return mMarkerIconUrls Set of URLs
      */
-    public ArrayList<String> getMarkerIconUrls() {
+    protected Set<String> getMarkerIconUrls() {
         return mMarkerIconUrls;
     }
 
@@ -337,7 +357,7 @@ public class Renderer {
      *
      * @return mStylesRenderer hashmap containing styles for KML placemarks (String, KmlStyle)
      */
-    public HashMap<String, KmlStyle> getStylesRenderer() {
+    protected HashMap<String, KmlStyle> getStylesRenderer() {
         return mStylesRenderer;
     }
 
@@ -346,17 +366,84 @@ public class Renderer {
      *
      * @return mStyleMaps hashmap containing styles for KML placemarks (String, String)
      */
-    public HashMap<String, String> getStyleMaps() {
+    protected HashMap<String, String> getStyleMaps() {
         return mStyleMaps;
     }
 
     /**
-     * Gets the images cache which is needed to download GroundOverlays and Marker Icon images
+     * Gets a cached image at the specified scale which is needed for Marker icon images.
+     * If a BitmapDescriptor doesn't exist in the cache, the Bitmap for the URL from the
+     * bitmap cache is scaled and cached as a BitmapDescriptor.
      *
-     * @return mImagesCache
+     * @param url URL to get cached image for
+     * @param scale scale to get image at
+     * @return scaled BitmapDescriptor
      */
-    public LruCache<String, Bitmap> getImagesCache() {
-        return mImagesCache;
+    protected BitmapDescriptor getCachedMarkerImage(String url, double scale) {
+        String scaleString = sScaleFormat.format(scale);
+        Map<String, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
+        BitmapDescriptor bitmapDescriptor = null;
+        if (bitmaps != null) {
+            bitmapDescriptor = bitmaps.get(scaleString);
+        }
+        if (bitmapDescriptor == null) {
+            Bitmap bitmap = mImagesCache.bitmapCache.get(url);
+            if (bitmap != null) {
+                bitmapDescriptor = scaleIcon(bitmap, scale);
+                putMarkerImagesCache(url, scaleString, bitmapDescriptor);
+            }
+        }
+        return bitmapDescriptor;
+    }
+
+    /**
+     * Scales a bitmap by a specified float, taking into account the display density such
+     * that the bitmap is scaled for a standard sized KML point marker.
+     *
+     * @param unscaledBitmap Unscaled bitmap image to scale.
+     * @param scale          Scale value. A "1.0" scale value corresponds to the original size of the Bitmap
+     * @return A scaled bitmap image
+     */
+    private BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, double scale) {
+        float density = mActivity.getResources().getDisplayMetrics().density;
+        int minSize = (int) (MARKER_ICON_SIZE * density * scale);
+
+        int unscaledWidth = unscaledBitmap.getWidth();
+        int unscaledHeight = unscaledBitmap.getHeight();
+
+        int width;
+        int height;
+        if (unscaledWidth < unscaledHeight) {
+            width = minSize;
+            height = (int) ((float) (minSize * unscaledHeight) / (float) unscaledWidth);
+        } else if (unscaledWidth > unscaledHeight) {
+            width = (int) ((float) (minSize * unscaledWidth) / (float) unscaledHeight);
+            height = minSize;
+        } else {
+            width = minSize;
+            height = minSize;
+        }
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(unscaledBitmap, width, height, false);
+        return BitmapDescriptorFactory.fromBitmap(scaledBitmap);
+    }
+
+    /**
+     * Gets a cached image needed for GroundOverlays images
+     *
+     * @param url URL to get cached image for
+     * @return BitmapDescriptor
+     */
+    protected BitmapDescriptor getCachedGroundOverlayImage(String url) {
+        BitmapDescriptor bitmapDescriptor = mImagesCache.groundOverlayImagesCache.get(url);
+        if (bitmapDescriptor == null) {
+            Bitmap bitmap = mImagesCache.bitmapCache.get(url);
+            if (bitmap != null) {
+                bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                mImagesCache.groundOverlayImagesCache.put(url, bitmapDescriptor);
+            }
+        }
+        return bitmapDescriptor;
     }
 
     /**
@@ -373,7 +460,7 @@ public class Renderer {
      *
      * @return mContainers list of KmlContainers
      */
-    public ArrayList<KmlContainer> getContainerList() {
+    protected ArrayList<KmlContainer> getContainerList() {
         return mContainers;
     }
 
@@ -396,7 +483,7 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonPoints
      */
-    public GeoJsonPointStyle getDefaultPointStyle() {
+    GeoJsonPointStyle getDefaultPointStyle() {
         return mDefaultPointStyle;
     }
 
@@ -405,7 +492,7 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonLineStrings
      */
-    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
+    GeoJsonLineStringStyle getDefaultLineStringStyle() {
         return mDefaultLineStringStyle;
     }
 
@@ -414,7 +501,7 @@ public class Renderer {
      *
      * @return default style used to render GeoJsonPolygons
      */
-    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
+    GeoJsonPolygonStyle getDefaultPolygonStyle() {
         return mDefaultPolygonStyle;
     }
 
@@ -424,14 +511,14 @@ public class Renderer {
      * @param feature Feature to be added onto the map
      * @param object  Corresponding map object to this feature
      */
-    public void putFeatures(Feature feature, Object object) {
+    protected void putFeatures(Feature feature, Object object) {
         mFeatures.put(feature, object);
     }
 
     /**
      * Adds mStyles to the mStylesRenderer
      */
-    public void putStyles() {
+    protected void putStyles() {
         mStylesRenderer.putAll(mStyles);
     }
 
@@ -440,12 +527,59 @@ public class Renderer {
      *
      * @param styles hashmap of strings and KmlStyles to be added to mStylesRenderer
      */
-    public void putStyles(HashMap<String, KmlStyle> styles) {
+    protected void putStyles(HashMap<String, KmlStyle> styles) {
         mStylesRenderer.putAll(styles);
     }
 
-    public void putImagesCache(String groundOverlayUrl, Bitmap bitmap) {
-        mImagesCache.put(groundOverlayUrl, bitmap);
+    /**
+     * Cache the scaled BitmapDescriptor for the URL
+     *
+     * @param url              URL image was loaded from
+     * @param scale            scale the image was scaled to as a formatted string for the cache
+     * @param bitmapDescriptor BitmapDescriptor to cache for reuse
+     */
+    private void putMarkerImagesCache(String url, String scale, BitmapDescriptor bitmapDescriptor) {
+        Map<String, BitmapDescriptor> bitmaps = mImagesCache.markerImagesCache.get(url);
+        if (bitmaps == null) {
+            bitmaps = new HashMap<>();
+            mImagesCache.markerImagesCache.put(url, bitmaps);
+        }
+        bitmaps.put(scale, bitmapDescriptor);
+    }
+
+    /**
+     * Cache loaded bitmap images
+     *
+     * @param url    image URL
+     * @param bitmap image bitmap
+     */
+    protected void cacheBitmap(String url, Bitmap bitmap) {
+        mImagesCache.bitmapCache.put(url, bitmap);
+    }
+
+    /**
+     * Increment active download count
+     */
+    protected void downloadStarted() {
+        mNumActiveDownloads++;
+    }
+
+    /**
+     * Decrement active download count and check if bitmap cache should be cleared
+     */
+    protected void downloadFinished() {
+        mNumActiveDownloads--;
+        checkClearBitmapCache();
+    }
+
+    /**
+     * Clear bitmap cache if no active image downloads remain. All images
+     * should be loaded, scaled, and cached as BitmapDescriptors at this point.
+     */
+    protected void checkClearBitmapCache() {
+        if (mNumActiveDownloads == 0 && mImagesCache != null && !mImagesCache.bitmapCache.isEmpty()) {
+            mImagesCache.bitmapCache.clear();
+        }
     }
 
     /**
@@ -453,7 +587,7 @@ public class Renderer {
      *
      * @return true if there are placemarks, false otherwise
      */
-    public boolean hasFeatures() {
+    protected boolean hasFeatures() {
         return mFeatures.size() > 0;
     }
 
@@ -462,7 +596,7 @@ public class Renderer {
      *
      * @param features features to remove
      */
-    protected void removeFeatures(HashMap<Feature, Object> features) {
+    protected void removeFeatures(HashMap<? extends Feature, Object> features) {
         removeFeatures(features.values());
     }
 
@@ -532,12 +666,12 @@ public class Renderer {
     /**
      * Removes all the mappings from the mStylesRenderer hashmap
      */
-    public void clearStylesRenderer() {
+    protected void clearStylesRenderer() {
         mStylesRenderer.clear();
     }
 
     /**
-     * Stores all given data and adds it onto the map
+     * Stores all given data
      *
      * @param styles         hashmap of styles
      * @param styleMaps      hashmap of style maps
@@ -547,7 +681,8 @@ public class Renderer {
      */
     protected void storeData(HashMap<String, KmlStyle> styles,
                              HashMap<String, String> styleMaps,
-                             HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                             HashMap<KmlPlacemark, Object> features,
+                             ArrayList<KmlContainer> folders,
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;
@@ -561,7 +696,7 @@ public class Renderer {
      *
      * @param feature feature to add to the map
      */
-    public void addFeature(Feature feature) {
+    protected void addFeature(Feature feature) {
         Object mapObject = FEATURE_NOT_ON_MAP;
         if (feature instanceof GeoJsonFeature) {
             setFeatureDefaultStyles((GeoJsonFeature) feature);
@@ -593,7 +728,7 @@ public class Renderer {
      *
      * @param mapObject map object or array of map objects to remove from the map
      */
-    public void removeFromMap(Object mapObject) {
+    protected void removeFromMap(Object mapObject) {
         if (mapObject instanceof Marker) {
             mMarkers.remove((Marker) mapObject);
         } else if (mapObject instanceof Polyline) {
@@ -684,10 +819,10 @@ public class Renderer {
             case "Point":
                 MarkerOptions markerOptions = style.getMarkerOptions();
                 if (inlineStyle != null) {
-                    setInlinePointStyle(markerOptions, inlineStyle, style.getIconUrl());
+                    setInlinePointStyle(markerOptions, inlineStyle, style);
                 } else if (style.getIconUrl() != null) {
                     // Use shared style
-                    addMarkerIcons(style.getIconUrl(), markerOptions);
+                    addMarkerIcons(style.getIconUrl(), style.getIconScale(), markerOptions);
                 }
                 Marker marker = addPointToMap(markerOptions, (KmlPoint) geometry);
                 marker.setVisible(isVisible);
@@ -736,7 +871,7 @@ public class Renderer {
      * @param point         contains coordinates for the Marker
      * @return Marker object created from the given Point
      */
-    protected Marker addPointToMap(MarkerOptions markerOptions, Point point) {
+    private Marker addPointToMap(MarkerOptions markerOptions, Point point) {
         markerOptions.position(point.getGeometryObject());
         return mMarkers.addMarker(markerOptions);
     }
@@ -744,12 +879,12 @@ public class Renderer {
     /**
      * Sets the inline point style by copying over the styles that have been set
      *
-     * @param markerOptions    marker options object to add inline styles to
-     * @param inlineStyle      inline styles to apply
-     * @param markerUrlIconUrl default marker icon URL from shared style
+     * @param markerOptions marker options object to add inline styles to
+     * @param inlineStyle   inline styles to apply
+     * @param defaultStyle  default shared style
      */
     private void setInlinePointStyle(MarkerOptions markerOptions, KmlStyle inlineStyle,
-                                     String markerUrlIconUrl) {
+                                     KmlStyle defaultStyle) {
         MarkerOptions inlineMarkerOptions = inlineStyle.getMarkerOptions();
         if (inlineStyle.isStyleSet("heading")) {
             markerOptions.rotation(inlineMarkerOptions.getRotation());
@@ -761,11 +896,19 @@ public class Renderer {
         if (inlineStyle.isStyleSet("markerColor")) {
             markerOptions.icon(inlineMarkerOptions.getIcon());
         }
+        double scale;
+        if (inlineStyle.isStyleSet("iconScale")) {
+            scale = inlineStyle.getIconScale();
+        } else if (defaultStyle.isStyleSet("iconScale")) {
+            scale = defaultStyle.getIconScale();
+        } else {
+            scale = 1.0;
+        }
         if (inlineStyle.isStyleSet("iconUrl")) {
-            addMarkerIcons(inlineStyle.getIconUrl(), markerOptions);
-        } else if (markerUrlIconUrl != null) {
+            addMarkerIcons(inlineStyle.getIconUrl(), scale, markerOptions);
+        } else if (defaultStyle.getIconUrl() != null) {
             // Inline style with no icon defined
-            addMarkerIcons(markerUrlIconUrl, markerOptions);
+            addMarkerIcons(defaultStyle.getIconUrl(), scale, markerOptions);
         }
     }
 
@@ -776,12 +919,12 @@ public class Renderer {
      * @param lineString      contains coordinates for the Polyline
      * @return Polyline object created from given LineString
      */
-    protected Polyline addLineStringToMap(PolylineOptions polylineOptions,
-                                          LineString lineString) {
+    private Polyline addLineStringToMap(PolylineOptions polylineOptions,
+                                        LineString lineString) {
         // Add coordinates
         polylineOptions.addAll(lineString.getGeometryObject());
         Polyline addedPolyline = mPolylines.addPolyline(polylineOptions);
-        addedPolyline.setClickable(true);
+        addedPolyline.setClickable(polylineOptions.isClickable());
         return addedPolyline;
     }
 
@@ -811,7 +954,7 @@ public class Renderer {
      * @param polygon        contains coordinates for the Polygon
      * @return Polygon object created from given DataPolygon
      */
-    protected Polygon addPolygonToMap(PolygonOptions polygonOptions, DataPolygon polygon) {
+    private Polygon addPolygonToMap(PolygonOptions polygonOptions, DataPolygon polygon) {
         // First array of coordinates are the outline
         polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
         // Following arrays are holes
@@ -954,7 +1097,6 @@ public class Renderer {
         return polylines;
     }
 
-
     /**
      * Adds all GeoJsonPolygon in the GeoJsonMultiPolygon to the map as multiple Polygons
      *
@@ -972,17 +1114,19 @@ public class Renderer {
     }
 
     /**
-     * Sets the marker icon if there was a url that was found
+     * Sets the marker icon if there is a cached image for the URL,
+     * otherwise adds the URL to set to download images
      *
-     * @param styleUrl      The style which we retrieve the icon url from
-     * @param markerOptions The marker which is displaying the icon
+     * @param styleUrl      the icon url from
+     * @param scale         the icon scale
+     * @param markerOptions marker options to set icon on
      */
-    private void addMarkerIcons(String styleUrl, MarkerOptions markerOptions) {
-        if (mImagesCache.get(styleUrl) != null) {
-            // Bitmap stored in cache
-            Bitmap bitmap = mImagesCache.get(styleUrl);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-        } else if (!mMarkerIconUrls.contains(styleUrl)) {
+    private void addMarkerIcons(String styleUrl, double scale, MarkerOptions markerOptions) {
+        // BitmapDescriptor stored in cache
+        BitmapDescriptor bitmap = getCachedMarkerImage(styleUrl, scale);
+        if (bitmap != null) {
+            markerOptions.icon(bitmap);
+        } else {
             mMarkerIconUrls.add(styleUrl);
         }
     }
@@ -993,7 +1137,7 @@ public class Renderer {
      * @param groundOverlayOptions GroundOverlay style options to be added to the map
      * @return new GroundOverlay object created from the given GroundOverlayOptions
      */
-    public GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
+    protected GroundOverlay attachGroundOverlay(GroundOverlayOptions groundOverlayOptions) {
         return mGroundOverlays.addGroundOverlay(groundOverlayOptions);
     }
 
@@ -1010,7 +1154,7 @@ public class Renderer {
         boolean hasBalloonOptions = style.hasBalloonStyle();
         boolean hasBalloonText = style.getBalloonOptions().containsKey("text");
         if (hasBalloonOptions && hasBalloonText) {
-            marker.setTitle(style.getBalloonOptions().get("text"));
+            marker.setTitle(KmlUtil.substituteProperties(style.getBalloonOptions().get("text"), placemark));
             createInfoWindow();
         } else if (hasBalloonOptions && hasName) {
             marker.setTitle(placemark.getProperty("name"));
@@ -1041,7 +1185,7 @@ public class Renderer {
 
             public View getInfoContents(Marker arg0) {
                 View view = LayoutInflater.from(mActivity).inflate(R.layout.amu_info_window, null);
-                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
+                TextView infoWindowText = view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
                 } else {
@@ -1063,7 +1207,7 @@ public class Renderer {
      *
      * @param listener Listener providing the onFeatureClick method to call.
      */
-    public void setOnFeatureClickListener(final Layer.OnFeatureClickListener listener) {
+    void setOnFeatureClickListener(final Layer.OnFeatureClickListener listener) {
 
         mPolygons.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
             @Override

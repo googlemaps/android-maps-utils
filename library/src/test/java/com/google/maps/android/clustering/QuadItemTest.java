@@ -21,11 +21,14 @@ import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgor
 
 import org.junit.Test;
 
+import java.util.Collection;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class QuadItemTest {
+
     @Test
     public void testRemoval() {
         TestingItem item_1_5 = new TestingItem(0.1, 0.5);
@@ -46,10 +49,39 @@ public class QuadItemTest {
         assertTrue(algo.getItems().contains(item_2_3));
     }
 
+    /**
+     * Test if insertion order into the algorithm is the same as returned item order. This matters
+     * because we want repeatable clustering behavior when updating model values and re-clustering.
+     */
+    @Test
+    public void testInsertionOrder() {
+        NonHierarchicalDistanceBasedAlgorithm<ClusterItem> algo =
+                new NonHierarchicalDistanceBasedAlgorithm<>();
+        for (int i = 0; i < 100; i++) {
+            algo.addItem(new TestingItem(Integer.toString(i), 0.0, 0.0));
+        }
+
+        assertEquals(100, algo.getItems().size());
+
+        Collection<ClusterItem> items = algo.getItems();
+        int counter = 0;
+        for (ClusterItem item : items) {
+            assertEquals(Integer.toString(counter), item.getTitle());
+            counter++;
+        }
+    }
+
     private class TestingItem implements ClusterItem {
         private final LatLng mPosition;
+        private final String mTitle;
+
+        TestingItem(String title, double lat, double lng) {
+            mTitle = title;
+            mPosition = new LatLng(lat, lng);
+        }
 
         TestingItem(double lat, double lng) {
+            mTitle = "";
             mPosition = new LatLng(lat, lng);
         }
 
@@ -60,7 +92,7 @@ public class QuadItemTest {
 
         @Override
         public String getTitle() {
-            return null;
+            return mTitle;
         }
 
         @Override

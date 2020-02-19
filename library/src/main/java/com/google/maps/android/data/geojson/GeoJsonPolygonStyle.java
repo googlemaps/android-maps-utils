@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -20,6 +35,7 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
      */
     public GeoJsonPolygonStyle() {
         mPolygonOptions = new PolygonOptions();
+        mPolygonOptions.clickable(true);
     }
 
     /**
@@ -182,11 +198,27 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
         sb.append(",\n stroke width=").append(getStrokeWidth());
         sb.append(",\n visible=").append(isVisible());
         sb.append(",\n z index=").append(getZIndex());
+        sb.append(",\n clickable=").append(isClickable());
         sb.append("\n}\n");
         return sb.toString();
     }
 
+    /**
+     * Specifies whether this GeoJsonPolygon is clickable
+     *
+     * @param clickable - new clickability setting for the GeoJsonPolygon
+     */
     public void setClickable(boolean clickable) {
         mPolygonOptions.clickable(clickable);
+        styleChanged();
+    }
+
+    /**
+     * Gets the clickability setting for this Options object
+     *
+     * @return true if the GeoJsonPolygon is clickable; false if it is not
+     */
+    public boolean isClickable() {
+        return mPolygonOptions.isClickable();
     }
 }

@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("Heatmaps with Places API", HeatmapsPlacesDemoActivity.class);
         addDemo("GeoJSON Layer", GeoJsonDemoActivity.class);
         addDemo("KML Layer Overlay", KmlDemoActivity.class);
+        addDemo("Multi Layer", MultiLayerDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {

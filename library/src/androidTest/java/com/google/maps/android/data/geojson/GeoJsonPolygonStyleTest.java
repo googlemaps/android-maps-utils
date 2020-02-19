@@ -1,13 +1,30 @@
+/*
+ * Copyright 2020 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.maps.android.data.geojson;
-
-import android.graphics.Color;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import android.graphics.Color;
+
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GeoJsonPolygonStyleTest {
     private GeoJsonPolygonStyle polygonStyle;
@@ -91,6 +108,7 @@ public class GeoJsonPolygonStyleTest {
         assertEquals(10.0f, polygonStyle.getStrokeWidth(), 0);
         assertTrue(polygonStyle.isVisible());
         assertEquals(0.0f, polygonStyle.getZIndex(), 0);
+        assertTrue(polygonStyle.isClickable());
     }
 
     @Test
@@ -99,7 +117,8 @@ public class GeoJsonPolygonStyleTest {
         assertFalse(polygonStyle.toPolygonOptions().isGeodesic());
         assertEquals(Color.BLACK, polygonStyle.toPolygonOptions().getStrokeColor());
         assertEquals(10.0f, polygonStyle.toPolygonOptions().getStrokeWidth(), 0);
-        assertTrue(polygonStyle.isVisible());
+        assertTrue(polygonStyle.toPolygonOptions().isVisible());
         assertEquals(0.0f, polygonStyle.toPolygonOptions().getZIndex(), 0);
+        assertTrue(polygonStyle.toPolygonOptions().isClickable());
     }
 }

@@ -1,9 +1,24 @@
+/*
+ * Copyright 2020 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.maps.android.data.geojson;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.data.Feature;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +28,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static com.google.maps.android.data.geojson.GeoJsonTestUtil.createFeatureCollection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class GeoJsonRendererTest {
     private GoogleMap mMap1;
@@ -28,6 +47,10 @@ public class GeoJsonRendererTest {
         GeoJsonParser parser = new GeoJsonParser(createFeatureCollection());
         HashMap<GeoJsonFeature, Object> geoJsonFeatures = new HashMap<>();
         for (GeoJsonFeature feature : parser.getFeatures()) {
+            // Set default styles
+            feature.setPointStyle(new GeoJsonPointStyle());
+            feature.setLineStringStyle(new GeoJsonLineStringStyle());
+            feature.setPolygonStyle(new GeoJsonPolygonStyle());
             geoJsonFeatures.put(feature, null);
         }
         geoJsonFeaturesSet = geoJsonFeatures.keySet();
@@ -85,42 +108,39 @@ public class GeoJsonRendererTest {
         assertFalse(mRenderer.getFeatures().contains(mGeoJsonFeature));
     }
 
-    private JSONObject createFeatureCollection() throws Exception {
-        return new JSONObject(
-                "{ \"type\": \"FeatureCollection\",\n"
-                        + "    \"features\": [\n"
-                        + "      { \"type\": \"Feature\",\n"
-                        + "        \"geometry\": {\"type\": \"MultiPoint\", \"coordinates\": [[102.0,"
-                        + " 0.5], [100, 0.5]]},\n"
-                        + "        \"properties\": {\"title\": \"Test MultiPoint\"}\n"
-                        + "        },\n"
-                        + "      { \"type\": \"Feature\",\n"
-                        + "        \"geometry\": {\n"
-                        + "          \"type\": \"MultiLineString\",\n"
-                        + "          \"coordinates\": [\n"
-                        + "            [[100, 0],[101, 1]], [[102, 2], [103, 3]]\n"
-                        + "            ]\n"
-                        + "          },\n"
-                        + "        \"properties\": {\n"
-                        + "          \"title\": \"Test MultiLineString\"\n"
-                        + "          }\n"
-                        + "        },\n"
-                        + "      { \"type\": \"Feature\",\n"
-                        + "         \"geometry\": {\n"
-                        + "           \"type\": \"MultiPolygon\",\n"
-                        + "           \"coordinates\": [\n"
-                        + "             [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0],"
-                        + " [102.0, 2.0]]],\n"
-                        + "      [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0,"
-                        + " 0.0]],\n"
-                        + "       [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2,"
-                        + " 0.2]]],\n"
-                        + "             ]\n"
-                        + "         },\n"
-                        + "         \"properties\": {\n"
-                        + "           \"title\": \"Test MultiPolygon\"}\n"
-                        + "         }\n"
-                        + "       ]\n"
-                        + "     }");
+    @Test
+    public void testDefaultStyleClickable() {
+        // TODO - we should call mRenderer.addLayerToMap() here for a complete end-to-end test, but
+        // that requires an instantiated GoogleMap be passed into GeoJsonRenderer()
+        for (Feature f : mRenderer.getFeatures()) {
+            assertTrue(((GeoJsonFeature)f).getPolylineOptions().isClickable());
+            assertTrue(((GeoJsonFeature)f).getPolygonOptions().isClickable());
+        }
+    }
+
+    @Test
+    public void testCustomStyleNotClickable() throws Exception {
+        GeoJsonParser parser = new GeoJsonParser(createFeatureCollection());
+        HashMap<GeoJsonFeature, Object> geoJsonFeatures = new HashMap<>();
+        for (GeoJsonFeature feature : parser.getFeatures()) {
+            // Set default style for points
+            feature.setPointStyle(new GeoJsonPointStyle());
+            // Set custom style of not clickable for lines and polygons
+            GeoJsonLineStringStyle ls = new GeoJsonLineStringStyle();
+            ls.setClickable(false);
+            feature.setLineStringStyle(ls);
+            GeoJsonPolygonStyle ps = new GeoJsonPolygonStyle();
+            ps.setClickable(false);
+            feature.setPolygonStyle(ps);
+            geoJsonFeatures.put(feature, null);
+        }
+
+        GeoJsonRenderer renderer = new GeoJsonRenderer(mMap1, geoJsonFeatures, null, null, null, null);
+        // TODO - we should call renderer.addLayerToMap() here for a complete end-to-end test, but
+        // that requires an instantiated GoogleMap be passed into GeoJsonRenderer()
+        for (Feature f : renderer.getFeatures()) {
+            assertFalse(((GeoJsonFeature)f).getPolylineOptions().isClickable());
+            assertFalse(((GeoJsonFeature)f).getPolygonOptions().isClickable());
+        }
     }
 }
