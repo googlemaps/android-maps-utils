@@ -15,6 +15,7 @@
  */
 
 apply plugin: 'com.android.library'
+apply plugin: 'jacoco-android'
 
 android {
     dexOptions {
@@ -52,6 +53,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+}
+
+tasks.withType(Test) {
+  jacoco.includeNoLocationClasses = true
 }
 
 task instrumentTest(dependsOn: connectedCheck)
