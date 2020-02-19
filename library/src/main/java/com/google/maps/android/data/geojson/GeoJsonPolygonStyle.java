@@ -15,6 +15,8 @@
  */
 package com.google.maps.android.data.geojson;
 
+import androidx.annotation.ColorInt;
+
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.data.Style;
 
@@ -60,7 +62,7 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
      *
      * @param fillColor fill color value of the GeoJsonPolygon
      */
-    public void setFillColor(int fillColor) {
+    public void setFillColor(@ColorInt int fillColor) {
         setPolygonFillColor(fillColor);
         styleChanged();
     }
@@ -98,7 +100,7 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
      *
      * @param strokeColor stroke color value of the GeoJsonPolygon
      */
-    public void setStrokeColor(int strokeColor) {
+    public void setStrokeColor(@ColorInt int strokeColor) {
         mPolygonOptions.strokeColor(strokeColor);
         styleChanged();
     }

@@ -8,7 +8,7 @@ import kotlin.coroutines.suspendCoroutine
 /**
  * CORE
  */
-suspend fun SupportMapFragment.awaitMap(): GoogleMap =
+suspend inline fun SupportMapFragment.awaitMap(): GoogleMap =
     suspendCoroutine { continuation ->
         getMapAsync {
             continuation.resume(it)

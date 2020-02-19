@@ -8,3 +8,4 @@ import com.google.android.gms.maps.model.PolygonOptions
  */
 inline fun buildPolygonOptions(optionsActions: PolygonOptions.() -> Unit): PolygonOptions =
     PolygonOptions().apply(optionsActions)
+
