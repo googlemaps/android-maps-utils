@@ -17,9 +17,6 @@
 package com.google.maps.android.data;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
@@ -27,11 +24,6 @@ import com.google.maps.android.data.geojson.GeoJsonRenderer;
 import com.google.maps.android.data.kml.KmlContainer;
 import com.google.maps.android.data.kml.KmlGroundOverlay;
 import com.google.maps.android.data.kml.KmlRenderer;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * An abstraction that shares the common properties of
