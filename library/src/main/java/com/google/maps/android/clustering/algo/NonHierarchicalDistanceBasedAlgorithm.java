@@ -62,20 +62,39 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
 
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
+    /**
+     * Adds an item to the algorithm
+     * @param item the item to be added
+     * @return true if the algorithm contents changed as a result of the call
+     */
     @Override
-    public void addItem(T item) {
+    public boolean addItem(T item) {
+        boolean result;
         final QuadItem<T> quadItem = new QuadItem<>(item);
         synchronized (mQuadTree) {
-            mItems.add(quadItem);
-            mQuadTree.add(quadItem);
+            result = mItems.add(quadItem);
+            if (result) {
+                mQuadTree.add(quadItem);
+            }
         }
+        return result;
     }
 
+    /**
+     * Adds a collection of items to the algorithm
+     * @param items the items to be added
+     * @return true if the algorithm contents changed as a result of the call
+     */
     @Override
-    public void addItems(Collection<T> items) {
+    public boolean addItems(Collection<T> items) {
+        boolean result = false;
         for (T item : items) {
-            addItem(item);
+            boolean individualResult = addItem(item);
+            if (individualResult) {
+                result = true;
+            }
         }
+        return result;
     }
 
     @Override
@@ -86,28 +105,68 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
         }
     }
 
+    /**
+     * Removes an item from the algorithm
+     * @param item the item to be removed
+     * @return true if this algorithm contained the specified element (or equivalently, if this
+     * algorithm changed as a result of the call).
+     */
     @Override
-    public void removeItem(T item) {
+    public boolean removeItem(T item) {
+        boolean result;
         // QuadItem delegates hashcode() and equals() to its item so,
         //   removing any QuadItem to that item will remove the item
         final QuadItem<T> quadItem = new QuadItem<>(item);
         synchronized (mQuadTree) {
-            mItems.remove(quadItem);
-            mQuadTree.remove(quadItem);
+            result = mItems.remove(quadItem);
+            if (result) {
+                mQuadTree.remove(quadItem);
+            }
         }
+        return result;
     }
 
+    /**
+     * Removes a collection of items from the algorithm
+     * @param items the items to be removed
+     * @return true if this algorithm contents changed as a result of the call
+     */
     @Override
-    public void removeItems(Collection<T> items) {
+    public boolean removeItems(Collection<T> items) {
+        boolean result = false;
         synchronized (mQuadTree) {
             for (T item : items) {
                 // QuadItem delegates hashcode() and equals() to its item so,
                 //   removing any QuadItem to that item will remove the item
                 final QuadItem<T> quadItem = new QuadItem<>(item);
-                mItems.remove(quadItem);
-                mQuadTree.remove(quadItem);
+                boolean individualResult = mItems.remove(quadItem);
+                if (individualResult) {
+                    mQuadTree.remove(quadItem);
+                    result = true;
+                }
             }
         }
+        return result;
+    }
+
+    /**
+     * Updates the provided item in the algorithm
+     * @param item the item to be updated
+     * @return true if the item existed in the algorithm and was updated, or false if the item did
+     * not exist in the algorithm and the algorithm contents remain unchanged.
+     */
+    @Override
+    public boolean updateItem(T item) {
+        // TODO - Can this be optimized to update the item in-place if the location hasn't changed?
+        boolean result;
+        synchronized (mQuadTree) {
+            result = removeItem(item);
+            if (result) {
+                // Only add the item if it was removed (to help prevent accidental duplicates on map)
+                result = addItem(item);
+            }
+        }
+        return result;
     }
 
     @Override
