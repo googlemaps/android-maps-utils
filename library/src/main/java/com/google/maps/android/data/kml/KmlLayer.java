@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import androidx.annotation.RawRes;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -94,7 +95,7 @@ public class KmlLayer extends Layer {
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
      */
-    public KmlLayer(GoogleMap map, int resourceId, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager)
+    public KmlLayer(GoogleMap map, @RawRes int resourceId, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager)
             throws XmlPullParserException, IOException {
         this(map, activity.getResources().openRawResource(resourceId), activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
     }
