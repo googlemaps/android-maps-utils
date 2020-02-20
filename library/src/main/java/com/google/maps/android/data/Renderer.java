@@ -53,6 +53,7 @@ import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.data.kml.KmlStyle;
 import com.google.maps.android.data.kml.KmlUtil;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
@@ -102,13 +103,13 @@ public class Renderer {
 
     private final Set<String> mMarkerIconUrls;
 
-    private ImagesCache mImagesCache;
+    private ImagesCache mImagesCache = new ImagesCache();
 
     private int mNumActiveDownloads = 0;
 
     private boolean mLayerOnMap;
 
-    private FragmentActivity mActivity;
+    private Context mContext;
 
     private ArrayList<KmlContainer> mContainers;
 
@@ -127,28 +128,15 @@ public class Renderer {
      * Creates a new Renderer object for KML features
      *
      * @param map     map to place objects on
-     * @param activity activity needed to add info windows and retain bitmap cache fragment
+     * @param context the Context
      * @param markerManager marker manager to create marker collection from
      * @param polygonManager polygon manager to create polygon collection from
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public Renderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+    public Renderer(GoogleMap map, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         this(map, new HashSet<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
-        mActivity = activity;
-        ImagesCache imagesCache = null;
-        RetainFragment retainFragment = null;
-        if (activity != null) {
-            retainFragment = RetainFragment.findOrCreateRetainFragment(activity.getSupportFragmentManager());
-            imagesCache = retainFragment.mImagesCache;
-        }
-        if (imagesCache == null) {
-            imagesCache = new ImagesCache();
-            if (retainFragment != null) {
-                retainFragment.mImagesCache = imagesCache;
-            }
-        }
-        mImagesCache = imagesCache;
+        mContext = context;
         mStylesRenderer = new HashMap<>();
     }
 
@@ -211,30 +199,7 @@ public class Renderer {
         }
     }
 
-    /**
-     * Fragment for retaining the bitmap cache between configuration changes.
-     */
-    public static class RetainFragment extends Fragment {
-        private static final String TAG = RetainFragment.class.getName();
-        ImagesCache mImagesCache;
-
-        static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
-            RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
-            if (fragment == null) {
-                fragment = new RetainFragment();
-                fm.beginTransaction().add(fragment, TAG).commit();
-            }
-            return fragment;
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setRetainInstance(true);
-        }
-    }
-
-    private static class ImagesCache {
+    public static final class ImagesCache {
 
         /**
          * Map of image URL to map of scale factor to BitmapDescriptors for point marker icons
@@ -256,6 +221,17 @@ public class Renderer {
          * This cache is cleared once all icon URLs are loaded, scaled, and cached as BitmapDescriptors.
          */
         final Map<String, Bitmap> bitmapCache = new HashMap<>();
+    }
+
+    /**
+     * Sets the {@link ImagesCache} to be used by this Renderer for images that are fetched. Calling
+     * this method is a mechanism to reuse an existing cache across multiple Renderer instance which
+     * may be desirable to handle configuration changes.
+     *
+     * @param cache the ImagesCache to use for this Renderer
+     */
+    public void setImagesCache(ImagesCache cache) {
+        this.mImagesCache = cache;
     }
 
     /**
@@ -405,7 +381,7 @@ public class Renderer {
      * @return A scaled bitmap image
      */
     private BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, double scale) {
-        float density = mActivity.getResources().getDisplayMetrics().density;
+        float density = mContext.getResources().getDisplayMetrics().density;
         int minSize = (int) (MARKER_ICON_SIZE * density * scale);
 
         int unscaledWidth = unscaledBitmap.getWidth();
@@ -1184,7 +1160,7 @@ public class Renderer {
             }
 
             public View getInfoContents(Marker arg0) {
-                View view = LayoutInflater.from(mActivity).inflate(R.layout.amu_info_window, null);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
