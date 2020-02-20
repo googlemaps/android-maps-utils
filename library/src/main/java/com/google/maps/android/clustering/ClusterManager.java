@@ -167,14 +167,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean addItems(Collection<T> items) {
-        boolean result;
         mAlgorithm.lock();
         try {
-            result = mAlgorithm.addItems(items);
+            return mAlgorithm.addItems(items);
         } finally {
             mAlgorithm.unlock();
         }
-        return result;
     }
 
     /**
@@ -184,14 +182,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean addItem(T myItem) {
-        boolean result;
         mAlgorithm.lock();
         try {
-            result = mAlgorithm.addItem(myItem);
+            return mAlgorithm.addItem(myItem);
         } finally {
             mAlgorithm.unlock();
         }
-        return result;
     }
 
     /**
@@ -201,14 +197,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean removeItems(Collection<T> items) {
-        boolean result;
         mAlgorithm.lock();
         try {
-            result = mAlgorithm.removeItems(items);
+            return mAlgorithm.removeItems(items);
         } finally {
             mAlgorithm.unlock();
         }
-        return result;
     }
 
     /**
@@ -218,14 +212,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the item was removed from the cluster manager as a result of this call
      */
     public boolean removeItem(T item) {
-        boolean result;
         mAlgorithm.lock();
         try {
-            result = mAlgorithm.removeItem(item);
+            return mAlgorithm.removeItem(item);
         } finally {
             mAlgorithm.unlock();
         }
-        return result;
     }
 
     /**
@@ -236,14 +228,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * contained within the cluster manager and the cluster manager contents are unchanged
      */
     public boolean updateItem(T item) {
-        boolean result;
         mAlgorithm.lock();
         try {
-            result = mAlgorithm.updateItem(item);
+            return mAlgorithm.updateItem(item);
         } finally {
             mAlgorithm.unlock();
         }
-        return result;
     }
 
     /**
