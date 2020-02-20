@@ -576,7 +576,7 @@ public class Renderer {
      * Clear bitmap cache if no active image downloads remain. All images
      * should be loaded, scaled, and cached as BitmapDescriptors at this point.
      */
-    private void checkClearBitmapCache() {
+    protected void checkClearBitmapCache() {
         if (mNumActiveDownloads == 0 && mImagesCache != null && !mImagesCache.bitmapCache.isEmpty()) {
             mImagesCache.bitmapCache.clear();
         }
@@ -671,7 +671,7 @@ public class Renderer {
     }
 
     /**
-     * Stores all given data and adds it onto the map
+     * Stores all given data
      *
      * @param styles         hashmap of styles
      * @param styleMaps      hashmap of style maps
@@ -681,7 +681,8 @@ public class Renderer {
      */
     protected void storeData(HashMap<String, KmlStyle> styles,
                              HashMap<String, String> styleMaps,
-                             HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                             HashMap<KmlPlacemark, Object> features,
+                             ArrayList<KmlContainer> folders,
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
         mStyleMaps = styleMaps;

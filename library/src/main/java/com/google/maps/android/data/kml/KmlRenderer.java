@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -127,13 +128,49 @@ public class KmlRenderer extends Renderer {
         if (!mMarkerIconsDownloaded) {
             downloadMarkerIcons();
         }
+        // in case KMZ has no downloaded images
+        checkClearBitmapCache();
     }
 
+    /**
+     * Stores all given data from KML file
+     *
+     * @param styles         hashmap of styles
+     * @param styleMaps      hashmap of style maps
+     * @param features       hashmap of features
+     * @param folders        array of containers
+     * @param groundOverlays hashmap of ground overlays
+     */
     /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,
                                   HashMap<String, String> styleMaps,
-                                  HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                                  HashMap<KmlPlacemark, Object> features,
+                                  ArrayList<KmlContainer> folders,
                                   HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+
         storeData(styles, styleMaps, features, folders, groundOverlays);
+    }
+
+    /**
+     * Stores all given data from KMZ file
+     *
+     * @param styles         hashmap of styles
+     * @param styleMaps      hashmap of style maps
+     * @param features       hashmap of features
+     * @param folders        array of containers
+     * @param groundOverlays hashmap of ground overlays
+     * @param images         hashmap of images
+     */
+    /*package*/ void storeKmzData(HashMap<String, KmlStyle> styles,
+                                  HashMap<String, String> styleMaps,
+                                  HashMap<KmlPlacemark, Object> features,
+                                  ArrayList<KmlContainer> folders,
+                                  HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
+                                  HashMap<String, Bitmap> images) {
+
+        storeData(styles, styleMaps, features, folders, groundOverlays);
+        for (Map.Entry<String, Bitmap> entry : images.entrySet()) {
+            cacheBitmap(entry.getKey(), entry.getValue());
+        }
     }
 
     /**
