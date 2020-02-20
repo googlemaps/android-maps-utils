@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.maps.android.data.kml;
 
 import android.graphics.Bitmap;
@@ -9,7 +24,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.libraries.maps.GoogleMap;
 import com.google.android.libraries.maps.model.BitmapDescriptor;
-import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 import com.google.android.libraries.maps.model.GroundOverlay;
 import com.google.android.libraries.maps.model.GroundOverlayOptions;
 import com.google.android.libraries.maps.model.Marker;
@@ -30,8 +44,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
@@ -41,7 +58,7 @@ public class KmlRenderer extends Renderer {
 
     private static final String LOG_TAG = "KmlRenderer";
 
-    private final ArrayList<String> mGroundOverlayUrls;
+    private final Set<String> mGroundOverlayUrls;
 
     private boolean mMarkerIconsDownloaded;
 
@@ -51,23 +68,9 @@ public class KmlRenderer extends Renderer {
 
     /* package */ KmlRenderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         super(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
-        mGroundOverlayUrls = new ArrayList<>();
+        mGroundOverlayUrls = new HashSet<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
-    }
-
-    /**
-     * Scales a Bitmap to a specified float.
-     *
-     * @param unscaledBitmap Unscaled bitmap image to scale.
-     * @param scale          Scale value. A "1.0" scale value corresponds to the original size of the Bitmap
-     * @return A scaled bitmap image
-     */
-    private static BitmapDescriptor scaleIcon(Bitmap unscaledBitmap, Double scale) {
-        int width = (int) (unscaledBitmap.getWidth() * scale);
-        int height = (int) (unscaledBitmap.getHeight() * scale);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(unscaledBitmap, width, height, false);
-        return BitmapDescriptorFactory.fromBitmap(scaledBitmap);
     }
 
     /**
@@ -77,7 +80,7 @@ public class KmlRenderer extends Renderer {
      */
     private void removePlacemarks(HashMap<? extends Feature, Object> placemarks) {
         // Remove map object from the map
-        removeFeatures((HashMap<Feature, Object>) placemarks);
+        removeFeatures(placemarks);
     }
 
     /**
@@ -125,13 +128,49 @@ public class KmlRenderer extends Renderer {
         if (!mMarkerIconsDownloaded) {
             downloadMarkerIcons();
         }
+        // in case KMZ has no downloaded images
+        checkClearBitmapCache();
     }
 
+    /**
+     * Stores all given data from KML file
+     *
+     * @param styles         hashmap of styles
+     * @param styleMaps      hashmap of style maps
+     * @param features       hashmap of features
+     * @param folders        array of containers
+     * @param groundOverlays hashmap of ground overlays
+     */
     /*package*/ void storeKmlData(HashMap<String, KmlStyle> styles,
                                   HashMap<String, String> styleMaps,
-                                  HashMap<KmlPlacemark, Object> features, ArrayList<KmlContainer> folders,
+                                  HashMap<KmlPlacemark, Object> features,
+                                  ArrayList<KmlContainer> folders,
                                   HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
+
         storeData(styles, styleMaps, features, folders, groundOverlays);
+    }
+
+    /**
+     * Stores all given data from KMZ file
+     *
+     * @param styles         hashmap of styles
+     * @param styleMaps      hashmap of style maps
+     * @param features       hashmap of features
+     * @param folders        array of containers
+     * @param groundOverlays hashmap of ground overlays
+     * @param images         hashmap of images
+     */
+    /*package*/ void storeKmzData(HashMap<String, KmlStyle> styles,
+                                  HashMap<String, String> styleMaps,
+                                  HashMap<KmlPlacemark, Object> features,
+                                  ArrayList<KmlContainer> folders,
+                                  HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays,
+                                  HashMap<String, Bitmap> images) {
+
+        storeData(styles, styleMaps, features, folders, groundOverlays);
+        for (Map.Entry<String, Bitmap> entry : images.entrySet()) {
+            cacheBitmap(entry.getKey(), entry.getValue());
+        }
     }
 
     /**
@@ -358,8 +397,7 @@ public class KmlRenderer extends Renderer {
     private void scaleBitmap(KmlStyle style, Marker marker) {
         double bitmapScale = style.getIconScale();
         String bitmapUrl = style.getIconUrl();
-        Bitmap bitmapImage = getImagesCache().get(bitmapUrl);
-        BitmapDescriptor scaledBitmap = scaleIcon(bitmapImage, bitmapScale);
+        BitmapDescriptor scaledBitmap = getCachedMarkerImage(bitmapUrl, bitmapScale);
         marker.setIcon(scaledBitmap);
     }
 
@@ -405,9 +443,9 @@ public class KmlRenderer extends Renderer {
             String groundOverlayUrl = groundOverlay.getImageUrl();
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
-                if (getImagesCache().get(groundOverlayUrl) != null) {
+                if (getCachedGroundOverlayImage(groundOverlayUrl) != null) {
                     addGroundOverlayToMap(groundOverlayUrl, getGroundOverlayMap(), true);
-                } else if (!mGroundOverlayUrls.contains(groundOverlayUrl)) {
+                } else {
                     mGroundOverlayUrls.add(groundOverlayUrl);
                 }
             }
@@ -434,8 +472,7 @@ public class KmlRenderer extends Renderer {
      */
     private void addGroundOverlayToMap(String groundOverlayUrl,
                                        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
-        BitmapDescriptor groundOverlayBitmap = BitmapDescriptorFactory
-                .fromBitmap(getImagesCache().get(groundOverlayUrl));
+        BitmapDescriptor groundOverlayBitmap = getCachedGroundOverlayImage(groundOverlayUrl);
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
             if (kmlGroundOverlay.getImageUrl().equals(groundOverlayUrl)) {
                 GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
@@ -481,6 +518,7 @@ public class KmlRenderer extends Renderer {
          */
         public MarkerIconImageDownload(String iconUrl) {
             mIconUrl = iconUrl;
+            downloadStarted();
         }
 
         /**
@@ -511,12 +549,13 @@ public class KmlRenderer extends Renderer {
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mIconUrl);
             } else {
-                putImagesCache(mIconUrl, bitmap);
+                cacheBitmap(mIconUrl, bitmap);
                 if (isLayerOnMap()) {
                     addIconToMarkers(mIconUrl, (HashMap<KmlPlacemark, Object>) getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
             }
+            downloadFinished();
         }
     }
 
@@ -529,6 +568,7 @@ public class KmlRenderer extends Renderer {
 
         public GroundOverlayImageDownload(String groundOverlayUrl) {
             mGroundOverlayUrl = groundOverlayUrl;
+            downloadStarted();
         }
 
         /**
@@ -559,12 +599,13 @@ public class KmlRenderer extends Renderer {
             if (bitmap == null) {
                 Log.e(LOG_TAG, "Image at this URL could not be found " + mGroundOverlayUrl);
             } else {
-                putImagesCache(mGroundOverlayUrl, bitmap);
+                cacheBitmap(mGroundOverlayUrl, bitmap);
                 if (isLayerOnMap()) {
                     addGroundOverlayToMap(mGroundOverlayUrl, getGroundOverlayMap(), true);
                     addGroundOverlayInContainerGroups(mGroundOverlayUrl, mContainers, true);
                 }
             }
+            downloadFinished();
         }
     }
 
@@ -572,7 +613,7 @@ public class KmlRenderer extends Renderer {
      * @param url internet address of the image.
      * @return the bitmap of that image, scaled according to screen density.
      */
-    private Bitmap getBitmapFromUrl(String url) throws MalformedURLException, IOException {
+    private Bitmap getBitmapFromUrl(String url) throws IOException {
         return BitmapFactory.decodeStream(openConnectionCheckRedirects(new URL(url).openConnection()));
     }
 

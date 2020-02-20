@@ -21,7 +21,7 @@ import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -118,7 +118,7 @@ public class PointQuadTree<T extends PointQuadTree.Item> {
             return;
         }
         if (mItems == null) {
-            mItems = new HashSet<>();
+            mItems = new LinkedHashSet<>();
         }
         mItems.add(item);
         if (mItems.size() > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
