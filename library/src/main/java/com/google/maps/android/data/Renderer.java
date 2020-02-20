@@ -17,7 +17,7 @@
 package com.google.maps.android.data;
 
 import com.google.android.libraries.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.libraries.maps.model.BitmapDescriptor;
 import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 import com.google.android.libraries.maps.model.GroundOverlay;
 import com.google.android.libraries.maps.model.GroundOverlayOptions;
