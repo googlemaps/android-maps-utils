@@ -952,7 +952,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                         } else {
                             markerOptions.position(item.getPosition());
                         }
-                        // TODO (?) - Refactor set marker text into onBeforeClusterItemRendered()
                         if (!(item.getTitle() == null) && !(item.getSnippet() == null)) {
                             markerOptions.title(item.getTitle());
                             markerOptions.snippet(item.getSnippet());
