@@ -44,15 +44,21 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends Abstrac
     }
 
     @Override
-    public void addItem(T item) {
-        mAlgorithm.addItem(item);
-        clearCache();
+    public boolean addItem(T item) {
+        boolean result = mAlgorithm.addItem(item);
+        if (result) {
+            clearCache();
+        }
+        return result;
     }
 
     @Override
-    public void addItems(Collection<T> items) {
-        mAlgorithm.addItems(items);
-        clearCache();
+    public boolean addItems(Collection<T> items) {
+        boolean result = mAlgorithm.addItems(items);
+        if (result) {
+            clearCache();
+        }
+        return result;
     }
 
     @Override
@@ -62,21 +68,30 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends Abstrac
     }
 
     @Override
-    public void removeItem(T item) {
-        mAlgorithm.removeItem(item);
-        clearCache();
+    public boolean removeItem(T item) {
+        boolean result = mAlgorithm.removeItem(item);
+        if (result) {
+            clearCache();
+        }
+        return result;
     }
 
     @Override
-    public void removeItems(Collection<T> items) {
-        mAlgorithm.removeItems(items);
-        clearCache();
+    public boolean removeItems(Collection<T> items) {
+        boolean result = mAlgorithm.removeItems(items);
+        if (result) {
+            clearCache();
+        }
+        return result;
     }
 
     @Override
-    public void updateItem(T item) {
-        mAlgorithm.updateItem(item);
-        clearCache();
+    public boolean updateItem(T item) {
+        boolean result = mAlgorithm.updateItem(item);
+        if (result) {
+            clearCache();
+        }
+        return result;
     }
 
     private void clearCache() {

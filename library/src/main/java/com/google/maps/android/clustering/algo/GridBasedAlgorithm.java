@@ -38,14 +38,24 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
 
     private final Set<T> mItems = Collections.synchronizedSet(new HashSet<T>());
 
+    /**
+     * Adds an item to the algorithm
+     * @param item the item to be added
+     * @return true if the algorithm contents changed as a result of the call
+     */
     @Override
-    public void addItem(T item) {
-        mItems.add(item);
+    public boolean addItem(T item) {
+        return mItems.add(item);
     }
 
+    /**
+     * Adds a collection of items to the algorithm
+     * @param items the items to be added
+     * @return true if the algorithm contents changed as a result of the call
+     */
     @Override
-    public void addItems(Collection<T> items) {
-        mItems.addAll(items);
+    public boolean addItems(Collection<T> items) {
+        return mItems.addAll(items);
     }
 
     @Override
@@ -53,20 +63,44 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
         mItems.clear();
     }
 
+    /**
+     * Removes an item from the algorithm
+     * @param item the item to be removed
+     * @return true if this algorithm contained the specified element (or equivalently, if this
+     * algorithm changed as a result of the call).
+     */
     @Override
-    public void removeItem(T item) {
-        mItems.remove(item);
+    public boolean removeItem(T item) {
+        return mItems.remove(item);
     }
 
+    /**
+     * Removes a collection of items from the algorithm
+     * @param items the items to be removed
+     * @return true if this algorithm contents changed as a result of the call
+     */
     @Override
-    public void removeItems(Collection<T> items) {
-        mItems.removeAll(items);
+    public boolean removeItems(Collection<T> items) {
+        return mItems.removeAll(items);
     }
 
+    /**
+     * Updates the provided item in the algorithm
+     * @param item the item to be updated
+     * @return true if the item existed in the algorithm and was updated, or false if the item did
+     * not exist in the algorithm and the algorithm contents remain unchanged.
+     */
     @Override
-    public void updateItem(T item) {
-        removeItem(item);
-        addItem(item);
+    public boolean updateItem(T item) {
+        boolean result;
+        synchronized (mItems) {
+            result = removeItem(item);
+            if (result) {
+                // Only add the item if it was removed (to help prevent accidental duplicates on map)
+                result = addItem(item);
+            }
+        }
+        return result;
     }
 
     @Override

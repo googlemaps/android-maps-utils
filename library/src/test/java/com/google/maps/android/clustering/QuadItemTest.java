@@ -21,7 +21,9 @@ import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgor
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,23 +32,48 @@ import static org.junit.Assert.assertTrue;
 public class QuadItemTest {
 
     @Test
-    public void testRemoval() {
-        TestingItem item_1_5 = new TestingItem(0.1, 0.5);
-        TestingItem item_2_3 = new TestingItem(0.2, 0.3);
+    public void testAddRemoveUpdateClear() {
+        ClusterItem item_1_5 = new TestingItem("title1", 0.1, 0.5);
+        ClusterItem item_2_3 = new TestingItem("title2", 0.2, 0.3);
 
         NonHierarchicalDistanceBasedAlgorithm<ClusterItem> algo =
                 new NonHierarchicalDistanceBasedAlgorithm<>();
-        algo.addItem(item_1_5);
-        algo.addItem(item_2_3);
+        assertTrue(algo.addItem(item_1_5));
+        assertTrue(algo.addItem(item_2_3));
 
         assertEquals(2, algo.getItems().size());
 
-        algo.removeItem(item_1_5);
+        assertTrue(algo.removeItem(item_1_5));
 
         assertEquals(1, algo.getItems().size());
 
         assertFalse(algo.getItems().contains(item_1_5));
         assertTrue(algo.getItems().contains(item_2_3));
+
+        // Update the item still in the algorithm
+        ((TestingItem) item_2_3).setTitle("newTitle");
+        assertTrue(algo.updateItem(item_2_3));
+
+        // Try to remove the item that was already removed
+        assertFalse(algo.removeItem(item_1_5));
+
+        // Try to update the item that was already removed
+        assertFalse(algo.updateItem(item_1_5));
+
+        algo.clearItems();
+        assertEquals(0, algo.getItems().size());
+
+        // Test bulk operations
+        List<ClusterItem> items = Arrays.asList(item_1_5, item_2_3);
+        assertTrue(algo.addItems(items));
+
+        // Try to bulk add items that were already added
+        assertFalse(algo.addItems(items));
+
+        assertTrue(algo.removeItems(items));
+
+        // Try to bulk remove items that were already removed
+        assertFalse(algo.removeItems(items));
     }
 
     /**
@@ -73,7 +100,7 @@ public class QuadItemTest {
 
     private class TestingItem implements ClusterItem {
         private final LatLng mPosition;
-        private final String mTitle;
+        private String mTitle;
 
         TestingItem(String title, double lat, double lng) {
             mTitle = title;
@@ -98,6 +125,10 @@ public class QuadItemTest {
         @Override
         public String getSnippet() {
             return null;
+        }
+
+        public void setTitle(String title) {
+            mTitle = title;
         }
     }
 }

@@ -37,13 +37,13 @@ public class ScreenBasedAlgorithmAdapter<T extends ClusterItem> extends Abstract
     }
 
     @Override
-    public void addItem(T item) {
-        mAlgorithm.addItem(item);
+    public boolean addItem(T item) {
+        return mAlgorithm.addItem(item);
     }
 
     @Override
-    public void addItems(Collection<T> items) {
-        mAlgorithm.addItems(items);
+    public boolean addItems(Collection<T> items) {
+        return mAlgorithm.addItems(items);
     }
 
     @Override
@@ -52,18 +52,18 @@ public class ScreenBasedAlgorithmAdapter<T extends ClusterItem> extends Abstract
     }
 
     @Override
-    public void removeItem(T item) {
-        mAlgorithm.removeItem(item);
+    public boolean removeItem(T item) {
+        return mAlgorithm.removeItem(item);
     }
 
     @Override
-    public void removeItems(Collection<T> items) {
-        mAlgorithm.removeItems(items);
+    public boolean removeItems(Collection<T> items) {
+        return mAlgorithm.removeItems(items);
     }
 
     @Override
-    public void updateItem(T item) {
-        mAlgorithm.updateItem(item);
+    public boolean updateItem(T item) {
+        return mAlgorithm.updateItem(item);
     }
 
     @Override

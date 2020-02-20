@@ -164,70 +164,86 @@ public class ClusterManager<T extends ClusterItem> implements
      * Adds items to clusters. After calling this method you must invoke {@link #cluster()} for the
      * state of the clusters to be updated on the map.
      * @param items items to add to clusters
+     * @return true if the cluster manager contents changed as a result of the call
      */
-    public void addItems(Collection<T> items) {
+    public boolean addItems(Collection<T> items) {
+        boolean result;
         mAlgorithm.lock();
         try {
-            mAlgorithm.addItems(items);
+            result = mAlgorithm.addItems(items);
         } finally {
             mAlgorithm.unlock();
         }
+        return result;
     }
 
     /**
      * Adds an item to a cluster. After calling this method you must invoke {@link #cluster()} for
      * the state of the clusters to be updated on the map.
      * @param myItem item to add to clusters
+     * @return true if the cluster manager contents changed as a result of the call
      */
-    public void addItem(T myItem) {
+    public boolean addItem(T myItem) {
+        boolean result;
         mAlgorithm.lock();
         try {
-            mAlgorithm.addItem(myItem);
+            result = mAlgorithm.addItem(myItem);
         } finally {
             mAlgorithm.unlock();
         }
+        return result;
     }
 
     /**
      * Removes items from clusters. After calling this method you must invoke {@link #cluster()} for
      * the state of the clusters to be updated on the map.
      * @param items items to remove from clusters
+     * @return true if the cluster manager contents changed as a result of the call
      */
-    public void removeItems(Collection<T> items) {
+    public boolean removeItems(Collection<T> items) {
+        boolean result;
         mAlgorithm.lock();
         try {
-            mAlgorithm.removeItems(items);
+            result = mAlgorithm.removeItems(items);
         } finally {
             mAlgorithm.unlock();
         }
+        return result;
     }
 
     /**
      * Removes an item from clusters. After calling this method you must invoke {@link #cluster()}
      * for the state of the clusters to be updated on the map.
      * @param item item to remove from clusters
+     * @return true if the item was removed from the cluster manager as a result of this call
      */
-    public void removeItem(T item) {
+    public boolean removeItem(T item) {
+        boolean result;
         mAlgorithm.lock();
         try {
-            mAlgorithm.removeItem(item);
+            result = mAlgorithm.removeItem(item);
         } finally {
             mAlgorithm.unlock();
         }
+        return result;
     }
 
     /**
      * Updates an item in clusters. After calling this method you must invoke {@link #cluster()} for
      * the state of the clusters to be updated on the map.
      * @param item item to update in clusters
+     * @return true if the item was updated in the cluster manager, false if the item is not
+     * contained within the cluster manager and the cluster manager contents are unchanged
      */
-    public void updateItem(T item) {
+    public boolean updateItem(T item) {
+        boolean result;
         mAlgorithm.lock();
         try {
-            mAlgorithm.updateItem(item);
+            result = mAlgorithm.updateItem(item);
         } finally {
             mAlgorithm.unlock();
         }
+        return result;
     }
 
     /**
