@@ -70,6 +70,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -103,7 +104,7 @@ public class Renderer {
 
     private final Set<String> mMarkerIconUrls;
 
-    private ImagesCache mImagesCache = new ImagesCache();
+    private ImagesCache mImagesCache;
 
     private int mNumActiveDownloads = 0;
 
@@ -134,10 +135,17 @@ public class Renderer {
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public Renderer(GoogleMap map, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+    public Renderer(GoogleMap map,
+                    Context context,
+                    MarkerManager markerManager,
+                    PolygonManager polygonManager,
+                    PolylineManager polylineManager,
+                    GroundOverlayManager groundOverlayManager,
+                    @Nullable ImagesCache imagesCache) {
         this(map, new HashSet<String>(), null, null, null, new BiMultiMap<Feature>(), markerManager, polygonManager, polylineManager, groundOverlayManager);
         mContext = context;
         mStylesRenderer = new HashMap<>();
+        mImagesCache = (imagesCache == null) ? new ImagesCache() : imagesCache;
     }
 
     /**
@@ -221,17 +229,6 @@ public class Renderer {
          * This cache is cleared once all icon URLs are loaded, scaled, and cached as BitmapDescriptors.
          */
         final Map<String, Bitmap> bitmapCache = new HashMap<>();
-    }
-
-    /**
-     * Sets the {@link ImagesCache} to be used by this Renderer for images that are fetched. Calling
-     * this method is a mechanism to reuse an existing cache across multiple Renderer instance which
-     * may be desirable to handle configuration changes.
-     *
-     * @param cache the ImagesCache to use for this Renderer
-     */
-    public void setImagesCache(ImagesCache cache) {
-        this.mImagesCache = cache;
     }
 
     /**

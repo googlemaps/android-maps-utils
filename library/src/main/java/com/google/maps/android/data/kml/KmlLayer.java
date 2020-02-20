@@ -29,6 +29,7 @@ import com.google.maps.android.data.Layer;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.collections.PolygonManager;
 import com.google.maps.android.collections.PolylineManager;
+import com.google.maps.android.data.Renderer;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -59,7 +60,7 @@ public class KmlLayer extends Layer {
      */
     public KmlLayer(GoogleMap map, int resourceId, Context context)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map));
+        this(map, context.getResources().openRawResource(resourceId), context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null);
     }
 
     /**
@@ -75,7 +76,7 @@ public class KmlLayer extends Layer {
      */
     public KmlLayer(GoogleMap map, InputStream stream, Context context)
             throws XmlPullParserException, IOException {
-        this(map, stream, context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map));
+        this(map, stream, context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null);
     }
 
     /**
@@ -93,12 +94,20 @@ public class KmlLayer extends Layer {
      * @param polygonManager polygon manager to create polygon collection from
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @param cache cache to be used for fetched images
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
      */
-    public KmlLayer(GoogleMap map, @RawRes int resourceId, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager)
+    public KmlLayer(GoogleMap map,
+                    @RawRes int resourceId,
+                    Context context,
+                    MarkerManager markerManager,
+                    PolygonManager polygonManager,
+                    PolylineManager polylineManager,
+                    GroundOverlayManager groundOverlayManager,
+                    Renderer.ImagesCache cache)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context, markerManager, polygonManager, polylineManager, groundOverlayManager);
+        this(map, context.getResources().openRawResource(resourceId), context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache);
     }
 
     /**
@@ -116,15 +125,23 @@ public class KmlLayer extends Layer {
      * @param polygonManager polygon manager to create polygon collection from
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @param cache cache to be used for fetched images
      * @throws XmlPullParserException if file cannot be parsed
      * @throws IOException if I/O error
      */
-    public KmlLayer(GoogleMap map, InputStream stream, Context context, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager)
+    public KmlLayer(GoogleMap map,
+                    InputStream stream,
+                    Context context,
+                    MarkerManager markerManager,
+                    PolygonManager polygonManager,
+                    PolylineManager polylineManager,
+                    GroundOverlayManager groundOverlayManager,
+                    Renderer.ImagesCache cache)
             throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
-        KmlRenderer renderer = new KmlRenderer(map, context, markerManager, polygonManager, polylineManager, groundOverlayManager);
+        KmlRenderer renderer = new KmlRenderer(map, context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache);
 
         BufferedInputStream bis = new BufferedInputStream(stream);
         bis.mark(1024);
