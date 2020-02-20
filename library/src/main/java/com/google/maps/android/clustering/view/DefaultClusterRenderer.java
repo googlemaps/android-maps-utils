@@ -738,11 +738,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     /**
      * Called before the marker for a ClusterItem is added to the map.
      *
-     * The first time ClusterManager.cluster() is invoked on a set of items
-     * onBeforeClusterItemRendered() will be called and onClusterItemUpdated() will not be called.
-     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
-     * again, then onClusterItemUpdated() will be called and onBeforeClusterItemRendered() will not
-     * be called.
+     * The first time {@link ClusterManager#cluster()} is invoked on a set of items
+     * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will be called and
+     * {@link #onClusterItemUpdated(ClusterItem, Marker)} will not be called.
+     * If an item is removed and re-added (or updated) and {@link ClusterManager#cluster()} is
+     * invoked again, then {@link #onClusterItemUpdated(ClusterItem, Marker)} will be called and
+     * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will not be called.
      *
      * @param item item to be rendered
      * @param markerOptions the markerOptions representing the provided item
@@ -758,11 +759,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * implementations of this method are responsible for checking if something changed (if that
      * matters to the implementation).
      *
-     * The first time ClusterManager.cluster() is invoked on a set of items
-     * onBeforeClusterItemRendered() will be called and onClusterItemUpdated() will not be called.
-     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
-     * again, then onClusterItemUpdated() will be called and onBeforeClusterItemRendered() will not
-     * be called.
+     * The first time {@link ClusterManager#cluster()} is invoked on a set of items
+     * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will be called and
+     * {@link #onClusterItemUpdated(ClusterItem, Marker)} will not be called.
+     * If an item is removed and re-added (or updated) and {@link ClusterManager#cluster()} is
+     * invoked again, then {@link #onClusterItemUpdated(ClusterItem, Marker)} will be called and
+     * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will not be called.
      *
      * @param item item being updated
      * @param marker cached marker that contains a potentially previous state of the item.
@@ -801,11 +803,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Called before the marker for a Cluster is added to the map.
      * The default implementation draws a circle with a rough count of the number of items.
      *
-     * The first time ClusterManager.cluster() is invoked on a set of items
-     * onBeforeClusterRendered() will be called and onClusterUpdated() will not be called.
-     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
-     * again, then onClusterUpdated() will be called and onBeforeClusterRendered() will not be
-     * called.
+     * The first time {@link ClusterManager#cluster()} is invoked on a set of items
+     * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will be called and
+     * {@link #onClusterUpdated(Cluster, Marker)} will not be called. If an item is removed and
+     * re-added (or updated) and {@link ClusterManager#cluster()} is invoked
+     * again, then {@link #onClusterUpdated(Cluster, Marker)} will be called and
+     * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will not be called.
      *
      * @param cluster cluster to be rendered
      * @param markerOptions markerOptions representing the provided cluster
@@ -818,7 +821,8 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     /**
      * Gets a BitmapDescriptor for the given cluster that contains a rough count of the number of
      * items. Used to set the cluster marker icon in the default implementations of
-     * onBeforeClusterRendered() and onClusterUpdated().
+     * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} and
+     * {@link #onClusterUpdated(Cluster, Marker)}.
      *
      * @param cluster cluster to get BitmapDescriptor for
      * @return a BitmapDescriptor for the marker icon for the given cluster that contains a rough
@@ -851,11 +855,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * not have changed since the cached marker was created - implementations of this method are
      * responsible for checking if something changed (if that matters to the implementation).
      *
-     * The first time ClusterManager.cluster() is invoked on a set of items
-     * onBeforeClusterRendered() will be called and onClusterUpdated() will not be called.
-     * If an item is removed and re-added (or updated) and ClusterManager.cluster() is invoked
-     * again, then onClusterUpdated() will be called and onBeforeClusterRendered() will not be
-     * called.
+     * The first time {@link ClusterManager#cluster()} is invoked on a set of items
+     * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will be called and
+     * {@link #onClusterUpdated(Cluster, Marker)} will not be called. If an item is removed and
+     * re-added (or updated) and {@link ClusterManager#cluster()} is invoked
+     * again, then {@link #onClusterUpdated(Cluster, Marker)} will be called and
+     * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will not be called.
      *
      * @param cluster cluster being updated
      * @param marker cached marker that contains a potentially previous state of the cluster
@@ -995,7 +1000,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     }
 
     /**
-     * A Marker and its position. Marker.getPosition() must be called from the UI thread, so this
+     * A Marker and its position. {@link Marker#getPosition()} must be called from the UI thread, so this
      * object allows lookup from other threads.
      */
     private static class MarkerWithPosition {

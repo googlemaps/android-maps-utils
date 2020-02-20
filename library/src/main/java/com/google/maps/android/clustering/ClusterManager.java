@@ -149,7 +149,7 @@ public class ClusterManager<T extends ClusterItem> implements
 
     /**
      * Removes all items from the cluster manager. After calling this method you must invoke
-     * cluster() for the map to be cleared.
+     * {@link #cluster()} for the map to be cleared.
      */
     public void clearItems() {
         mAlgorithm.lock();
@@ -161,8 +161,8 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Adds items to clusters. After calling this method you must invoke cluster() for the state
-     * of the clusters to be updated on the map.
+     * Adds items to clusters. After calling this method you must invoke {@link #cluster()} for the
+     * state of the clusters to be updated on the map.
      * @param items items to add to clusters
      */
     public void addItems(Collection<T> items) {
@@ -175,8 +175,8 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Adds an item to a cluster. After calling this method you must invoke cluster() for the state
-     * of the clusters to be updated on the map.
+     * Adds an item to a cluster. After calling this method you must invoke {@link #cluster()} for
+     * the state of the clusters to be updated on the map.
      * @param myItem item to add to clusters
      */
     public void addItem(T myItem) {
@@ -189,8 +189,8 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Removes items from clusters. After calling this method you must invoke cluster() for the state
-     * of the clusters to be updated on the map.
+     * Removes items from clusters. After calling this method you must invoke {@link #cluster()} for
+     * the state of the clusters to be updated on the map.
      * @param items items to remove from clusters
      */
     public void removeItems(Collection<T> items) {
@@ -203,8 +203,8 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Removes an item from clusters. After calling this method you must invoke cluster() for the state
-     * of the clusters to be updated on the map.
+     * Removes an item from clusters. After calling this method you must invoke {@link #cluster()}
+     * for the state of the clusters to be updated on the map.
      * @param item item to remove from clusters
      */
     public void removeItem(T item) {
@@ -217,8 +217,8 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Updates an item in clusters. After calling this method you must invoke cluster() for the state
-     * of the clusters to be updated on the map.
+     * Updates an item in clusters. After calling this method you must invoke {@link #cluster()} for
+     * the state of the clusters to be updated on the map.
      * @param item item to update in clusters
      */
     public void updateItem(T item) {
