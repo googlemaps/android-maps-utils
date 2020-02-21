@@ -134,6 +134,7 @@ public class Renderer {
      * @param polygonManager polygon manager to create polygon collection from
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @param imagesCache an optional ImagesCache to be used for caching images fetched
      */
     public Renderer(GoogleMap map,
                     Context context,
