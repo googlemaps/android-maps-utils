@@ -736,7 +736,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     }
 
     /**
-     * Called before the marker for a ClusterItem is added to the map.
+     * Called before the marker for a ClusterItem is added to the map. The default implementation
+     * sets the marker and snippet text based on the respective item text if they are both
+     * available, otherwise it will set the title if available, and if not it will set the marker
+     * title to the item snippet text if that is available.
      *
      * The first time {@link ClusterManager#cluster()} is invoked on a set of items
      * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will be called and
@@ -749,6 +752,14 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param markerOptions the markerOptions representing the provided item
      */
     protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
+        if (item.getTitle() != null && item.getSnippet() != null) {
+            markerOptions.title(item.getTitle());
+            markerOptions.snippet(item.getSnippet());
+        } else if (item.getTitle() != null) {
+            markerOptions.title(item.getTitle());
+        } else if (item.getSnippet() != null) {
+            markerOptions.title(item.getSnippet());
+        }
     }
 
     /**
@@ -951,14 +962,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                             markerOptions.position(animateFrom);
                         } else {
                             markerOptions.position(item.getPosition());
-                        }
-                        if (!(item.getTitle() == null) && !(item.getSnippet() == null)) {
-                            markerOptions.title(item.getTitle());
-                            markerOptions.snippet(item.getSnippet());
-                        } else if (!(item.getSnippet() == null)) {
-                            markerOptions.title(item.getSnippet());
-                        } else if (!(item.getTitle() == null)) {
-                            markerOptions.title(item.getTitle());
                         }
                         onBeforeClusterItemRendered(item, markerOptions);
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
