@@ -36,7 +36,7 @@ public class KmlRendererTest {
         mParser = new KmlParser(parser);
         mParser.parseKml();
 
-        mRenderer = new KmlRenderer(mMap1, null, null, null, null, null);
+        mRenderer = new KmlRenderer(mMap1, null, null, null, null, null, null);
         mRenderer.storeKmlData(mParser.getStyles(), mParser.getStyleMaps(), mParser.getPlacemarks(),
                 mParser.getContainers(), mParser.getGroundOverlays());
     }

@@ -17,14 +17,23 @@
 package com.google.maps.android.utils.demo;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.collections.GroundOverlayManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.collections.PolygonManager;
+import com.google.maps.android.collections.PolylineManager;
 import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.kml.KmlContainer;
 import com.google.maps.android.data.kml.KmlLayer;
 import com.google.maps.android.data.kml.KmlPlacemark;
@@ -92,6 +101,35 @@ public class KmlDemoActivity extends BaseDemoActivity {
         }
     }
 
+    private Renderer.ImagesCache getImagesCache() {
+        final RetainFragment retainFragment =
+                RetainFragment.findOrCreateRetainFragment(getSupportFragmentManager());
+        return retainFragment.mImagesCache;
+    }
+
+    /**
+     * Fragment for retaining the bitmap cache between configuration changes.
+     */
+    public static class RetainFragment extends Fragment {
+        private static final String TAG = RetainFragment.class.getName();
+        Renderer.ImagesCache mImagesCache;
+
+        static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
+            RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);
+            if (fragment == null) {
+                fragment = new RetainFragment();
+                fm.beginTransaction().add(fragment, TAG).commit();
+            }
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setRetainInstance(true);
+        }
+    }
+
     private class LoadLocalKmlFile extends AsyncTask<String, Void, KmlLayer> {
         private final int mResourceId;
 
@@ -135,8 +173,14 @@ public class KmlDemoActivity extends BaseDemoActivity {
                 }
                 buffer.flush();
                 try {
-                    return new KmlLayer(mMap, new ByteArrayInputStream(buffer.toByteArray()),
-                            KmlDemoActivity.this);
+                    return new KmlLayer(mMap,
+                            new ByteArrayInputStream(buffer.toByteArray()),
+                            KmlDemoActivity.this,
+                            new MarkerManager(mMap),
+                            new PolygonManager(mMap),
+                            new PolylineManager(mMap),
+                            new GroundOverlayManager(mMap),
+                            getImagesCache());
                 } catch (XmlPullParserException e) {
                     e.printStackTrace();
                 }
