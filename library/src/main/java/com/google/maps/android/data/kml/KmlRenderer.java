@@ -1,12 +1,12 @@
 /*
  * Copyright 2020 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,13 @@
  */
 package com.google.maps.android.data.kml;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -66,8 +67,14 @@ public class KmlRenderer extends Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
-    /* package */ KmlRenderer(GoogleMap map, FragmentActivity activity, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
-        super(map, activity, markerManager, polygonManager, polylineManager, groundOverlayManager);
+    /* package */ KmlRenderer(GoogleMap map,
+                              Context context,
+                              MarkerManager markerManager,
+                              PolygonManager polygonManager,
+                              PolylineManager polylineManager,
+                              GroundOverlayManager groundOverlayManager,
+                              @Nullable ImagesCache imagesCache) {
+        super(map, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache);
         mGroundOverlayUrls = new HashSet<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
