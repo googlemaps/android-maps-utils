@@ -10,7 +10,7 @@ Releasing
 6. Once the pull request has been merged, create a git tag and push it (Travis will handle publishing to Maven)
 7. Create a GitHub release with the tag
 
-
 [conventional-changelog-cli]: https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-cli
 [gradle-mvn-push.gradle]: https://github.com/googlemaps/android-maps-utils/blob/master/gradle-mvn-push.gradle#L65
 [CHANGELOG.md]: CHANGELOG.md
+[README.md]: README.md
