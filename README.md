@@ -40,7 +40,7 @@ dependencies {
 Encounter an issue while using this library?
 
 If you find a bug or have a feature request, please [file an issue].
-Or, if you'd like to contribute, send us a [pull request].
+Or, if you'd like to contribute, send us a [pull request] and refer to our [code of conduct].
 
 You can also reach us on our [Discord channel].
 
