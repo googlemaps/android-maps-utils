@@ -31,7 +31,7 @@ range of applications using the [Google Maps Android API][android-site].
 
 ```groovy
 dependencies {
-    implementation 'com.google.maps.android:android-maps-utils:0.6.2'
+    implementation 'com.google.maps.android:android-maps-utils:1.0.0'
 }
 ```
 
