@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. Dates are d
 
 ### BREAKING CHANGES
 * Add MapObjectManager for multi-layer support with KML/GeoJSON renderers ([#380](https://github.com/googlemaps/android-maps-utils/pull/380))
+* Default item rendering to onBeforeClusterItemRendered() ([#633](https://github.com/googlemaps/android-maps-utils/pull/633))
 
 ### Bug Fixes
 
