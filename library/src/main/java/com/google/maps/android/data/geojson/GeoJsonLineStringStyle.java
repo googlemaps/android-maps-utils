@@ -15,6 +15,8 @@
  */
 package com.google.maps.android.data.geojson;
 
+import androidx.annotation.ColorInt;
+
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.data.Style;
@@ -63,7 +65,7 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
      *
      * @param color color value of the GeoJsonLineString
      */
-    public void setColor(int color) {
+    public void setColor(@ColorInt int color) {
         mPolylineOptions.color(color);
         styleChanged();
     }

@@ -21,14 +21,13 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.RawRes;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.collections.GroundOverlayManager;
-import com.google.maps.android.data.Layer;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.collections.PolygonManager;
 import com.google.maps.android.collections.PolylineManager;
+import com.google.maps.android.data.Layer;
 import com.google.maps.android.data.Renderer;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -105,8 +104,7 @@ public class KmlLayer extends Layer {
                     PolygonManager polygonManager,
                     PolylineManager polylineManager,
                     GroundOverlayManager groundOverlayManager,
-                    Renderer.ImagesCache cache)
-            throws XmlPullParserException, IOException {
+                    Renderer.ImagesCache cache) throws XmlPullParserException, IOException {
         this(map, context.getResources().openRawResource(resourceId), context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache);
     }
 
