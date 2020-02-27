@@ -39,7 +39,7 @@ android {
     }
 }
 
-// [START android_maps_utils_install_snippet]
+// [START maps_android_utils_install_snippet]
 dependencies {
     implementation 'com.google.maps.android:android-maps-utils:1.0.0'
     // [START_EXCLUDE silent]
@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     // [END_EXCLUDE]
 }
-// [END android_maps_utils_install_snippet]
+// [END maps_android_utils_install_snippet]
 
 task startDemo(type: Exec) {
     dependsOn 'installDebug'
