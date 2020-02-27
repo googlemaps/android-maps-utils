@@ -39,15 +39,16 @@ android {
     }
 }
 
+// [START android_maps_utils_install_snippet]
 dependencies {
-    implementation project(':library')
-    // Or, fetch from Maven:
-//    implementation 'com.google.maps.android:android-maps-utils:0.6.1'
-
+    implementation 'com.google.maps.android:android-maps-utils:1.0.0'
+    // [START_EXCLUDE silent]
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    // [END_EXCLUDE]
 }
+// [END android_maps_utils_install_snippet]
 
 task startDemo(type: Exec) {
     dependsOn 'installDebug'
