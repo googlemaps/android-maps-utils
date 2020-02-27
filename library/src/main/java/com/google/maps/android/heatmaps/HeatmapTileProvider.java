@@ -241,6 +241,8 @@ public class HeatmapTileProvider implements TileProvider {
         /**
          * Setter for opacity in builder
          *
+         * @throws IllegalStateException when opacity is not in the range [0, 1]
+         *
          * @param val Opacity of the entire heatmap in range [0, 1]
          * @return updated builder object
          */
@@ -267,6 +269,8 @@ public class HeatmapTileProvider implements TileProvider {
         /**
          * Call when all desired options have been set.
          * Note: you must set data using data or weightedData before this!
+         *
+         * @throws IllegalStateException when data was not provided
          *
          * @return HeatmapTileProvider created with desired options.
          */
