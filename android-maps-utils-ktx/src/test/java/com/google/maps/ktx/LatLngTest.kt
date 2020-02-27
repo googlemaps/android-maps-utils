@@ -1,11 +1,27 @@
 package com.google.maps.ktx
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.projection.SphericalMercatorProjection
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 
 class LatLngTest {
+
     private val earthRadius = 6371009.0
+    private lateinit var projection: SphericalMercatorProjection
+
+    @Suppress("DEPRECATION")
+    @Before
+    fun setUp() {
+        projection = mock {
+            on { toPoint(any()) } doReturn com.google.maps.android.projection.Point(0.0, 0.0)
+        }
+    }
 
     @Test
     fun `single LatLng encoding`() {
@@ -126,5 +142,12 @@ class LatLngTest {
             reversedPolygon.sphericalPolygonSignedArea(),
             1e-6
         )
+    }
+
+    @Test
+    fun `validate toPoint passthrough`() {
+        val latLng = LatLng(1.0, 2.0)
+        latLng.toPoint(projection)
+        verify(projection).toPoint(latLng)
     }
 }

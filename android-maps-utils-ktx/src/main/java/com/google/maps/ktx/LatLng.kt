@@ -3,6 +3,8 @@ package com.google.maps.ktx
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import com.google.maps.android.SphericalUtil
+import com.google.maps.android.geometry.Point
+import com.google.maps.android.projection.SphericalMercatorProjection
 
 /**
  * Simplifies this list of LatLng using the Douglas-Peucker decimation. Increasing the value of
@@ -13,7 +15,8 @@ import com.google.maps.android.SphericalUtil
  *
  * @see PolyUtil.simplify
  */
-inline fun List<LatLng>.simplify(tolerance: Double): List<LatLng> = PolyUtil.simplify(this, tolerance)
+inline fun List<LatLng>.simplify(tolerance: Double): List<LatLng> =
+    PolyUtil.simplify(this, tolerance)
 
 /**
  * Decodes this encoded string into a [LatLng] list.
@@ -124,3 +127,12 @@ inline fun LatLng.withSphericalLinearInterpolation(to: LatLng, fraction: Double)
  */
 inline fun LatLng.sphericalDistance(to: LatLng): Double =
     SphericalUtil.computeDistanceBetween(this, to)
+
+/**
+ * Converts this LatLng to a [Point] given the [SphericalMercatorProjection] [projection],
+ *
+ * @param sphericalProjection the projection
+ * @return this LatLng represented as a Point in the provided [projection]
+ */
+inline fun LatLng.toPoint(projection: SphericalMercatorProjection): Point =
+    projection.toPoint(this)

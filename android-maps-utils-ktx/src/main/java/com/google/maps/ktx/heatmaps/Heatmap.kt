@@ -23,7 +23,7 @@ inline fun heatmapTileProviderWithData(
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
     opacity: Double = HeatmapTileProvider.DEFAULT_OPACITY,
     maxIntensity: Double = 0.0
-) : HeatmapTileProvider {
+): HeatmapTileProvider {
     return HeatmapTileProvider.Builder()
         .data(latLngs)
         .radius(radius)
@@ -45,7 +45,7 @@ inline fun heatmapTileProviderWithWeightedData(
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
     opacity: Double = HeatmapTileProvider.DEFAULT_OPACITY,
     maxIntensity: Double = 0.0
-) : HeatmapTileProvider {
+): HeatmapTileProvider {
     return HeatmapTileProvider.Builder()
         .weightedData(latLngs)
         .radius(radius)

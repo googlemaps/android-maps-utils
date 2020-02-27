@@ -18,8 +18,12 @@ package com.google.maps.android.projection;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * A spherical mercator map projection class that can convert a {@link LatLng} to a
+ * {@link com.google.maps.android.geometry.Point} and vice versa.
+ */
 public class SphericalMercatorProjection {
-    final double mWorldWidth;
+    private final double mWorldWidth;
 
     public SphericalMercatorProjection(final double worldWidth) {
         mWorldWidth = worldWidth;

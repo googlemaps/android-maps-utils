@@ -23,7 +23,7 @@ inline fun kmlLayer(
     polylineManager: PolylineManager = PolylineManager(map),
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
     imagesCache: Renderer.ImagesCache? = null
-) : KmlLayer = KmlLayer(
+): KmlLayer = KmlLayer(
     map,
     resourceId,
     context,
@@ -46,7 +46,7 @@ inline fun kmlLayer(
     polylineManager: PolylineManager = PolylineManager(map),
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
     imagesCache: Renderer.ImagesCache? = null
-) : KmlLayer = KmlLayer(
+): KmlLayer = KmlLayer(
     map,
     stream,
     context,
