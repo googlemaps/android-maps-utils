@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
 ![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
+[![Discord](https://img.shields.io/discord/676948200904589322)](https://discord.gg/hYsWbmk)
 ![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
 
 # Maps SDK for Android Utility Library
