@@ -2,6 +2,7 @@ com.google.maps.android
 com.google.maps.android.clustering
 com.google.maps.android.clustering.algo
 com.google.maps.android.clustering.view
+com.google.maps.android.collections
 com.google.maps.android.data
 com.google.maps.android.data.geojson
 com.google.maps.android.data.kml
