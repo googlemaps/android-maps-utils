@@ -15,10 +15,12 @@
  */
 package com.google.maps.android.data.kml;
 
-import org.junit.Test;
-import org.xmlpull.v1.XmlPullParser;
-
 import android.graphics.Color;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +31,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
 public class KmlParserTest {
 
     @Test

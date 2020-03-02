@@ -20,11 +20,14 @@ import com.google.maps.android.data.Feature;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
 
 import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
 public class KmlRendererTest {
     private GoogleMap mMap1;
     private KmlRenderer mRenderer;

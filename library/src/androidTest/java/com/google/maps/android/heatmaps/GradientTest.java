@@ -16,16 +16,19 @@
 
 package com.google.maps.android.heatmaps;
 
-import org.junit.Test;
-
 import android.graphics.Color;
 import android.os.Build;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
 import static android.graphics.Color.RED;
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class GradientTest {
     @Test
     public void testInterpolateColor() {

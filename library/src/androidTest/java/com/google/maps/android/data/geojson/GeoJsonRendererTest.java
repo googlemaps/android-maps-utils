@@ -21,6 +21,8 @@ import com.google.maps.android.data.Feature;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +36,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
 public class GeoJsonRendererTest {
     private GoogleMap mMap1;
     private Set<GeoJsonFeature> geoJsonFeaturesSet;

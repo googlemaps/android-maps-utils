@@ -18,6 +18,8 @@ package com.google.maps.android.data.kml;
 import androidx.annotation.IdRes;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -28,6 +30,7 @@ import java.io.InputStream;
 /**
  * Shared utilities for KML tests
  */
+@RunWith(RobolectricTestRunner.class)
 public class KmlTestUtil {
 
     /**

@@ -15,10 +15,12 @@
  */
 package com.google.maps.android.data.geojson;
 
+import android.graphics.Color;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import android.graphics.Color;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.Arrays;
 
@@ -26,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
 public class GeoJsonLineStringStyleTest {
     private GeoJsonLineStringStyle lineStringStyle;
 
