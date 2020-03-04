@@ -15,12 +15,12 @@
  */
 package com.google.maps.android.data.geojson;
 
-import android.graphics.Color;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+
+import android.graphics.Color;
 
 import java.util.Arrays;
 

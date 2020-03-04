@@ -15,12 +15,12 @@
  */
 package com.google.maps.android.data.kml;
 
-import android.graphics.Color;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
+
+import android.graphics.Color;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -15,37 +15,20 @@
  */
 package com.google.maps.android.data.kml;
 
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.google.maps.android.test.R;
+import com.google.maps.android.R;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.InputStream;
-
+import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class KmlContainerParserTest {
-    private XmlPullParser createParser(int res) throws Exception {
-        InputStream stream =
-                InstrumentationRegistry.getInstrumentation()
-                        .getTargetContext()
-                        .getResources()
-                        .openRawResource(res);
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser parser = factory.newPullParser();
-        parser.setInput(stream, null);
-        parser.next();
-        return parser;
-    }
 
     @Test
     public void testCDataEntity() throws Exception {

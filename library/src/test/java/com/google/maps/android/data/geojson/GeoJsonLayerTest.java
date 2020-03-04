@@ -15,8 +15,6 @@
  */
 package com.google.maps.android.data.geojson;
 
-import android.graphics.Color;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -27,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+
+import android.graphics.Color;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

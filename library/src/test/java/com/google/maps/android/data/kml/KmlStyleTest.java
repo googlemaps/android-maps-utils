@@ -15,10 +15,6 @@
  */
 package com.google.maps.android.data.kml;
 
-import android.graphics.Color;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.maps.android.TestUtil;
 
@@ -27,6 +23,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+
+import android.graphics.Color;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

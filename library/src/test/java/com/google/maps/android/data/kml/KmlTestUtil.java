@@ -15,11 +15,9 @@
  */
 package com.google.maps.android.data.kml;
 
-import androidx.annotation.IdRes;
-import androidx.test.platform.app.InstrumentationRegistry;
-
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowInstrumentation;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -39,9 +37,9 @@ public class KmlTestUtil {
      * @return an XmlPullParser for the given KML file
      * @throws XmlPullParserException, IOException
      */
-    static XmlPullParser createParser(@IdRes int res) throws XmlPullParserException, IOException {
+    static XmlPullParser createParser(int res) throws XmlPullParserException, IOException {
         InputStream stream =
-                InstrumentationRegistry.getInstrumentation()
+                ShadowInstrumentation.getInstrumentation()
                         .getTargetContext()
                         .getResources()
                         .openRawResource(res);
