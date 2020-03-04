@@ -31,7 +31,6 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
         // This enables us to tell when we're running unit tests on Travis (#573)
         buildConfigField("String", "TRAVIS", "\"" + System.getenv('TRAVIS') + "\"")
-        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -82,8 +81,6 @@ dependencies {
         exclude group: 'org.codehaus', module: 'classworlds'
         exclude group: 'org.codehaus', module: 'plexus'
     }
-    // Required to support multidex for minSdkVersion <= 20
-    implementation 'androidx.multidex:multidex:2.0.1'
 }
 
 jacoco {
