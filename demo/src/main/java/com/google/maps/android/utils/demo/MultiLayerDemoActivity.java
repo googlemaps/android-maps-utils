@@ -128,7 +128,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         KmlLayer kmlPolygonLayer;
         try {
             // KML Polyline
-            kmlPolylineLayer = new KmlLayer(getMap(), R.raw.south_london_line_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager);
+            kmlPolylineLayer = new KmlLayer(getMap(), R.raw.south_london_line_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
             kmlPolylineLayer.addLayerToMap();
             kmlPolylineLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                 @Override
@@ -140,7 +140,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
             });
 
             // KML Polygon
-            kmlPolygonLayer = new KmlLayer(getMap(), R.raw.south_london_square_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager);
+            kmlPolygonLayer = new KmlLayer(getMap(), R.raw.south_london_square_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
             kmlPolygonLayer.addLayerToMap();
             kmlPolygonLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                 @Override

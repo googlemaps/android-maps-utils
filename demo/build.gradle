@@ -39,12 +39,14 @@ android {
     }
 }
 
+// [START maps_android_utils_install_snippet]
 dependencies {
-    implementation project(':library')
+    implementation 'com.google.maps.android:android-maps-utils:1.0.0'
+    // [START_EXCLUDE silent]
+    // implementation project(':library')
     implementation name:'maps-sdk-3.0.0-beta', ext:'aar'
     implementation name:'places-maps-sdk-3.0.0-beta', ext:'aar'
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.gms:play-services-basement:17.1.1'
     implementation 'com.google.android.gms:play-services-base:17.1.0'
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
@@ -52,7 +54,9 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    // [END_EXCLUDE]
 }
+// [END maps_android_utils_install_snippet]
 
 task startDemo(type: Exec) {
     dependsOn 'installDebug'

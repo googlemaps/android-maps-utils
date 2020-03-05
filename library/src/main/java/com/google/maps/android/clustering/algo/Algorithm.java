@@ -27,15 +27,44 @@ import java.util.Set;
  */
 public interface Algorithm<T extends ClusterItem> {
 
-    void addItem(T item);
+    /**
+     * Adds an item to the algorithm
+     * @param item the item to be added
+     * @return true if the algorithm contents changed as a result of the call
+     */
+    boolean addItem(T item);
 
-    void addItems(Collection<T> items);
+    /**
+     * Adds a collection of items to the algorithm
+     * @param items the items to be added
+     * @return true if the algorithm contents changed as a result of the call
+     */
+    boolean addItems(Collection<T> items);
 
     void clearItems();
 
-    void removeItem(T item);
+    /**
+     * Removes an item from the algorithm
+     * @param item the item to be removed
+     * @return true if this algorithm contained the specified element (or equivalently, if this
+     * algorithm changed as a result of the call).
+     */
+    boolean removeItem(T item);
 
-    void removeItems(Collection<T> items);
+    /**
+     * Updates the provided item in the algorithm
+     * @param item the item to be updated
+     * @return true if the item existed in the algorithm and was updated, or false if the item did
+     * not exist in the algorithm and the algorithm contents remain unchanged.
+     */
+    boolean updateItem(T item);
+
+    /**
+     * Removes a collection of items from the algorithm
+     * @param items the items to be removed
+     * @return true if this algorithm contents changed as a result of the call
+     */
+    boolean removeItems(Collection<T> items);
 
     Set<? extends Cluster<T>> getClusters(float zoom);
 
