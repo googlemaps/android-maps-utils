@@ -15,20 +15,16 @@
  */
 package com.google.maps.android.data.kml;
 
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Shared utilities for KML tests
  */
-@RunWith(RobolectricTestRunner.class)
 public class KmlTestUtil {
 
     /**
@@ -38,7 +34,7 @@ public class KmlTestUtil {
      * @throws XmlPullParserException, IOException
      */
     static XmlPullParser createParser(String fileName) throws XmlPullParserException, IOException {
-        InputStream stream = new FileInputStream(KmlTestUtil.class.getClassLoader().getResource(fileName).getFile());
+        InputStream stream = KmlTestUtil.class.getClassLoader().getResourceAsStream(fileName);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();

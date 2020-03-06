@@ -56,7 +56,7 @@ public class KmlParserTest {
 
     @Test
     public void testEmptyHotSpotStyle() throws Exception {
-        XmlPullParser parser = createParser("raw.amu_empty_hotspot.kml");
+        XmlPullParser parser = createParser("amu_empty_hotspot.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());

@@ -17,13 +17,10 @@ package com.google.maps.android.data.geojson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
 /**
  * Shared utilities for GeoJSON tests
  */
-@RunWith(RobolectricTestRunner.class)
 public class GeoJsonTestUtil {
     static JSONObject validGeometryCollection() throws Exception {
         return new JSONObject(

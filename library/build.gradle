@@ -55,8 +55,10 @@ android {
 //        }
 //    }
     testOptions {
+        animationsDisabled true
         unitTests {
             includeAndroidResources = true
+            returnDefaultValues = true
         }
     }
 }
@@ -65,9 +67,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'net.sf.kxml:kxml2:2.3.0'
 }
 
 jacoco {
