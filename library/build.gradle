@@ -67,20 +67,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    testImplementation ('org.robolectric:robolectric:4.3') {
-        exclude group: 'org.apache.maven', module: 'maven-artifact'
-        exclude group: 'org.apache.maven', module: 'maven-artifact-manager'
-        exclude group: 'org.apache.maven', module: 'maven-model'
-        exclude group: 'org.apache.maven', module: 'maven-plugin-registry'
-        exclude group: 'org.apache.maven', module: 'maven-profile'
-        exclude group: 'org.apache.maven', module: 'maven-project'
-        exclude group: 'org.apache.maven', module: 'maven-settings'
-        exclude group: 'org.apache.maven', module: 'maven-error-diagnostics'
-        exclude group: 'org.apache.maven.wagon'
-        exclude group: 'org.apache.maven', module: 'maven-ant-tasks'
-        exclude group: 'org.codehaus', module: 'classworlds'
-        exclude group: 'org.codehaus', module: 'plexus'
-    }
+    testImplementation 'org.robolectric:robolectric:4.3.1'
 }
 
 jacoco {

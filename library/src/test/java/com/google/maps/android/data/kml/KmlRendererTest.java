@@ -16,7 +16,6 @@
 package com.google.maps.android.data.kml;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.maps.android.R;
 import com.google.maps.android.data.Feature;
 
 import org.junit.Before;
@@ -38,7 +37,7 @@ public class KmlRendererTest {
 
     @Before
     public void setUp() throws Exception {
-        XmlPullParser parser = createParser(R.raw.amu_inline_style);
+        XmlPullParser parser = createParser("amu_inline_style.kml");
         mParser = new KmlParser(parser);
         mParser.parseKml();
 

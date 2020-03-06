@@ -17,11 +17,11 @@ package com.google.maps.android.data.kml;
 
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowInstrumentation;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -33,16 +33,12 @@ public class KmlTestUtil {
 
     /**
      * Returns an XmlPullParser for the given KML file
-     * @param res the resource ID for a KML file
+     * @param fileName the file name for a KML file
      * @return an XmlPullParser for the given KML file
      * @throws XmlPullParserException, IOException
      */
-    static XmlPullParser createParser(int res) throws XmlPullParserException, IOException {
-        InputStream stream =
-                ShadowInstrumentation.getInstrumentation()
-                        .getTargetContext()
-                        .getResources()
-                        .openRawResource(res);
+    static XmlPullParser createParser(String fileName) throws XmlPullParserException, IOException {
+        InputStream stream = new FileInputStream(KmlTestUtil.class.getClassLoader().getResource(fileName).getFile());
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
