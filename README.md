@@ -23,6 +23,8 @@ range of applications using the [Google Maps Android API][android-site].
 
 <p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
 
+You can also find Kotlin extensions for this library [here][android-maps-ktx].
+
 ## Requirements
 
 * Android API level 15+
@@ -57,3 +59,4 @@ For more information, check out the detailed guide on the
 [android-site]: https://developer.android.com/training/maps/index.html
 [devsite-guide]: https://developers.google.com/maps/documentation/android-api/utility/
 [javadoc]: http://googlemaps.github.io/android-maps-utils/javadoc/
+[android-maps-ktx]: https://github.com/googlemaps/android-maps-ktx
