@@ -48,12 +48,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    // Robolectric
-//    sourceSets {
-//        test {
-//            res.srcDirs = ['src/test/res', 'src/main/res']
-//        }
-//    }
+
     testOptions {
         animationsDisabled true
         unitTests {
