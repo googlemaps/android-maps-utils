@@ -16,6 +16,8 @@
 package com.google.maps.android.data.kml;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.graphics.Color;
@@ -29,11 +31,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
 public class KmlParserTest {
 
     @Test
     public void testInlineStyle() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_inline_style);
+        XmlPullParser parser = createParser("amu_inline_style.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -53,7 +56,7 @@ public class KmlParserTest {
 
     @Test
     public void testEmptyHotSpotStyle() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_empty_hotspot);
+        XmlPullParser parser = createParser("amu_empty_hotspot.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -63,7 +66,7 @@ public class KmlParserTest {
     @Test
     public void testPolyStyleBooleanNumeric() throws Exception {
         XmlPullParser parser =
-                createParser(com.google.maps.android.test.R.raw.amu_poly_style_boolean_numeric);
+                createParser("amu_poly_style_boolean_numeric.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -81,7 +84,7 @@ public class KmlParserTest {
     @Test
     public void testPolyStyleBooleanAlpha() throws Exception {
         XmlPullParser parser =
-                createParser(com.google.maps.android.test.R.raw.amu_poly_style_boolean_alpha);
+                createParser("amu_poly_style_boolean_alpha.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
@@ -98,7 +101,7 @@ public class KmlParserTest {
 
     @Test
     public void testContainerHeirarchy() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_document_nest);
+        XmlPullParser parser = createParser("amu_document_nest.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertEquals(mParser.getContainers().get(0).getContainerId(), "hasId");
@@ -108,7 +111,7 @@ public class KmlParserTest {
 
     @Test
     public void testPlacemarkParsing() throws Exception {
-        XmlPullParser parser = createParser(com.google.maps.android.test.R.raw.amu_unsupported);
+        XmlPullParser parser = createParser("amu_unsupported.kml");
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertEquals(1, mParser.getPlacemarks().size());

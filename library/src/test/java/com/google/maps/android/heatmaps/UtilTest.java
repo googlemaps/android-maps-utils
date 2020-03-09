@@ -20,14 +20,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geometry.Bounds;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for heatmap utility functions
  */
+@RunWith(RobolectricTestRunner.class)
 public class UtilTest {
     @Test
     public void testGenerateKernel() {
