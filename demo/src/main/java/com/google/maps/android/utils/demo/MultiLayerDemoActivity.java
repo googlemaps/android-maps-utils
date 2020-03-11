@@ -16,10 +16,6 @@
 
 package com.google.maps.android.utils.demo;
 
-import android.graphics.Color;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -42,6 +38,10 @@ import com.google.maps.android.utils.demo.model.MyItem;
 import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.graphics.Color;
+import android.util.Log;
+import android.widget.Toast;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -53,8 +53,6 @@ import java.util.List;
 public class MultiLayerDemoActivity extends BaseDemoActivity {
     public final static String TAG = "MultiDemo";
 
-    private ClusterManager<MyItem> mClusterManager;
-
     @Override
     protected void startDemo(boolean isRestore) {
         if (!isRestore) {
@@ -62,26 +60,26 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         }
 
         // Shared object managers - used to support multiple layer types on the map simultaneously
+        // [START maps_multilayer_demo_init1]
         MarkerManager markerManager = new MarkerManager(getMap());
         GroundOverlayManager groundOverlayManager = new GroundOverlayManager(getMap());
         PolygonManager polygonManager = new PolygonManager(getMap());
         PolylineManager polylineManager = new PolylineManager(getMap());
+        // [END maps_multilayer_demo_init1]
 
         // Add clustering
-        mClusterManager = new ClusterManager<>(this, getMap(), markerManager);
-        getMap().setOnCameraIdleListener(mClusterManager);
-
-        try {
-            readClusterItems();
-        } catch (JSONException e) {
-            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+        // [START maps_multilayer_demo_init2]
+        ClusterManager<MyItem> clusterManager = new ClusterManager<>(this, getMap(), markerManager);
+        // [END maps_multilayer_demo_init2]
+        getMap().setOnCameraIdleListener(clusterManager);
+        addClusterItems(clusterManager);
 
         // Add GeoJSON from resource
         try {
             // GeoJSON polyline
+            // [START maps_multilayer_demo_init3]
             GeoJsonLayer geoJsonLineLayer = new GeoJsonLayer(getMap(), R.raw.south_london_line_geojson, this, markerManager, polygonManager, polylineManager, groundOverlayManager);
+            // [END maps_multilayer_demo_init3]
             // Make the line red
             GeoJsonLineStringStyle geoJsonLineStringStyle = new GeoJsonLineStringStyle();
             geoJsonLineStringStyle.setColor(Color.RED);
@@ -124,11 +122,12 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         }
 
         // Add KMLs from resources
-        KmlLayer kmlPolylineLayer;
-        KmlLayer kmlPolygonLayer;
         try {
             // KML Polyline
-            kmlPolylineLayer = new KmlLayer(getMap(), R.raw.south_london_line_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
+            // [START maps_multilayer_demo_init4]
+            KmlLayer kmlPolylineLayer = new KmlLayer(getMap(), R.raw.south_london_line_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
+            // [END maps_multilayer_demo_init4]
+            // [START maps_multilayer_demo_init6]
             kmlPolylineLayer.addLayerToMap();
             kmlPolylineLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                 @Override
@@ -138,9 +137,10 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                             Toast.LENGTH_SHORT).show();
                 }
             });
+            // [END maps_multilayer_demo_init6]
 
             // KML Polygon
-            kmlPolygonLayer = new KmlLayer(getMap(), R.raw.south_london_square_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
+            KmlLayer kmlPolygonLayer = new KmlLayer(getMap(), R.raw.south_london_square_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
             kmlPolygonLayer.addLayerToMap();
             kmlPolygonLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
                 @Override
@@ -157,11 +157,14 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         }
 
         // Unclustered marker - instead of adding to the map directly, use the MarkerManager
+        // [START maps_multilayer_demo_init5]
         MarkerManager.Collection markerCollection = markerManager.newCollection();
         markerCollection.addMarker(new MarkerOptions()
                 .position(new LatLng( 51.150000, -0.150032))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 .title("Unclustered marker"));
+        // [END maps_multilayer_demo_init5]
+        // [START maps_multilayer_demo_init7]
         markerCollection.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -171,11 +174,18 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                 return false;
             }
         });
+        // [START maps_multilayer_demo_init7]
     }
 
-    private void readClusterItems() throws JSONException {
+    private void addClusterItems(ClusterManager clusterManager) {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        List<MyItem> items = new MyItemReader().read(inputStream);
-        mClusterManager.addItems(items);
+        List<MyItem> items;
+        try {
+            items = new MyItemReader().read(inputStream);
+            clusterManager.addItems(items);
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 }
