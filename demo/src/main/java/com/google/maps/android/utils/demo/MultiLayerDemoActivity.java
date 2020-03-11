@@ -174,7 +174,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                 return false;
             }
         });
-        // [START maps_multilayer_demo_init7]
+        // [END maps_multilayer_demo_init7]
     }
 
     private void addClusterItems(ClusterManager clusterManager) {
