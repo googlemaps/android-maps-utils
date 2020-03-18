@@ -129,7 +129,7 @@ public class PolyUtil {
         return (nIntersect & 1) != 0;
     }
 
-    private static final double DEFAULT_TOLERANCE = 0.1;  // meters.
+    public static final double DEFAULT_TOLERANCE = 0.1;  // meters.
 
     /**
      * Computes whether the given point lies on or near the edge of a polygon, within a specified
