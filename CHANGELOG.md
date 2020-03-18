@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.0...HEAD)
+#### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.1...HEAD)
+
+#### [1.0.1](https://github.com/googlemaps/android-maps-utils/compare/1.0.0...1.0.1)
+
+> 18 March 2020
+
+### Features
+* Expose PolyUtil.DEFAULT_TOLERANCE ([46cbac5](https://github.com/googlemaps/android-maps-utils/commit/46cbac53883d0c5a99492b005b18a3ea558737b1))
 
 #### [1.0.0](https://github.com/googlemaps/android-maps-utils/compare/0.6.2...1.0.0)
 
