@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file. Dates are d
 
 #### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.0...HEAD)
 
+#### [1.0.1](https://github.com/googlemaps/android-maps-utils/compare/1.0.0...1.0.1)
+
+> 18 March 2020
+
+### Features
+* Expose PolyUtil.DEFAULT_TOLERANCE ([46cbac5](https://github.com/googlemaps/android-maps-utils/commit/46cbac53883d0c5a99492b005b18a3ea558737b1))
+
+### BREAKING CHANGES
+* Add MapObjectManager for multi-layer support with KML/GeoJSON renderers ([#380](https://github.com/googlemaps/android-maps-utils/pull/380))
+* Default item rendering to onBeforeClusterItemRendered() ([#633](https://github.com/googlemaps/android-maps-utils/pull/633))
+* MarkerManager.Collection.setOnInfoWindowAdapter() was renamed to MarkerManager.Collection.setInfoWindowAdapter() ([#380](https://github.com/googlemaps/android-maps-utils/pull/380))
+
 #### [1.0.0](https://github.com/googlemaps/android-maps-utils/compare/0.6.2...1.0.0)
 
 > 24 February 2020
