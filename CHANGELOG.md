@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. Dates are d
 
 #### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.2...HEAD)
 
-#### [1.0.1](https://github.com/googlemaps/android-maps-utils/compare/1.0.1...1.0.2)
+#### [1.0.2](https://github.com/googlemaps/android-maps-utils/compare/1.0.1...1.0.2)
 
 > 19 March 2020
 
