@@ -29,6 +29,7 @@ task javadoc(type: Javadoc) {
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
