@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.1...HEAD)
+#### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.2...HEAD)
+
+#### [1.0.2](https://github.com/googlemaps/android-maps-utils/compare/1.0.1...1.0.2)
+
+> 19 March 2020
+
+### Bug Fixes
+
+* Fix including sources in release [#669](https://github.com/CUTR-at-USF/android-maps-utils/issues/669) ([bec98c2](https://github.com/CUTR-at-USF/android-maps-utils/commit/bec98c247897838f512eb8219ce2cee6fb1b3078)), closes [#668](https://github.com/CUTR-at-USF/android-maps-utils/issues/668)
+* Revert "Use thread pools ([#601](https://github.com/CUTR-at-USF/android-maps-utils/issues/601))" ([#665](https://github.com/CUTR-at-USF/android-maps-utils/issues/665)) ([ace4909](https://github.com/CUTR-at-USF/android-maps-utils/commit/ace4909d8b1d599bed728ba122985cbc3aaee78d)), closes [#660](https://github.com/CUTR-at-USF/android-maps-utils/issues/660)
+* Update ending tag for snippet ([2a7ef16](https://github.com/CUTR-at-USF/android-maps-utils/commit/2a7ef16419af0aa740ee68a7f405b3ada3fd6706))
 
 #### [1.0.1](https://github.com/googlemaps/android-maps-utils/compare/1.0.0...1.0.1)
 
