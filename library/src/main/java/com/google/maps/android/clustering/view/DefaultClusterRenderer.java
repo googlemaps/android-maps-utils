@@ -16,24 +16,6 @@
 
 package com.google.maps.android.clustering.view;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.R;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.collections.MarkerManager;
-import com.google.maps.android.geometry.Point;
-import com.google.maps.android.projection.SphericalMercatorProjection;
-import com.google.maps.android.ui.IconGenerator;
-import com.google.maps.android.ui.SquareTextView;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
@@ -55,6 +37,24 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.R;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.collections.MarkerManager;
+import com.google.maps.android.geometry.Point;
+import com.google.maps.android.projection.SphericalMercatorProjection;
+import com.google.maps.android.ui.IconGenerator;
+import com.google.maps.android.ui.SquareTextView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,8 +64,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -79,7 +77,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
     private boolean mAnimate;
-    private final Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -292,7 +289,8 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             });
             renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
-            mExecutor.execute(renderTask);
+            // It seems this cannot use a thread pool due to thread locking issues (#660)
+            new Thread(renderTask).start();
         }
 
         public void queue(Set<? extends Cluster<T>> clusters) {
