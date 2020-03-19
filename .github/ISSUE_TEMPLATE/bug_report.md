@@ -39,8 +39,8 @@ What did you see instead?  Describe your issue in detail here.
 #### Environment details
 
 1. Device make and model, or emulator details
-1. Android version
-1. Library version and other environment information
+2. Android version
+3. Library version and other environment information
 
 #### Steps to reproduce
 
