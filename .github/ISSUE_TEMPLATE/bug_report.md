@@ -24,13 +24,27 @@ Check for answers on StackOverflow with the [google-maps](http://stackoverflow.c
 
 Please be sure to include as much information as possible:
 
+#### Summary
+
+Summarize your issue in one or two sentences
+
+#### Expected behavior
+
+What did you expect?
+
+#### Observed behavior
+
+What did you see instead?  Describe your issue in detail here.
+
 #### Environment details
 
-1. Specify the API at the beginning of the title (for example, "Places: ...")
-2. OS type and version
+1. Device make and model, or emulator details
+2. Android version
 3. Library version and other environment information
 
 #### Steps to reproduce
+
+If you can reproduce using the demo app in the project, it helps us troubleshoot faster.
 
   1. ?
 
