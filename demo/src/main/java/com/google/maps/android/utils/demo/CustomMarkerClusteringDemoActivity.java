@@ -24,9 +24,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
@@ -74,17 +76,53 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
         @Override
         protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
-            // Draw a single person.
-            // Set the info window to show their name.
+            // Draw a single person - show their profile photo and set the info window to show their name
+            markerOptions
+                    .icon(getItemIcon(person))
+                    .title(person.name);
+        }
+
+        @Override
+        protected void onClusterItemUpdated(Person person, Marker marker) {
+            // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
+            marker.setIcon(getItemIcon(person));
+            marker.setTitle(person.name);
+        }
+
+        /**
+         * Get a descriptor for a single person (i.e., a marker outside a cluster) from their
+         * profile photo to be used for a marker icon
+         *
+         * @param person person to return an BitmapDescriptor for
+         * @return the person's profile photo as a BitmapDescriptor
+         */
+        private BitmapDescriptor getItemIcon(Person person) {
             mImageView.setImageResource(person.profilePhoto);
             Bitmap icon = mIconGenerator.makeIcon();
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(person.name);
+            return BitmapDescriptorFactory.fromBitmap(icon);
         }
 
         @Override
         protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            markerOptions.icon(getClusterIcon(cluster));
+        }
+
+        @Override
+        protected void onClusterUpdated(Cluster<Person> cluster, Marker marker) {
+            // Same implementation as onBeforeClusterRendered() (to update cached markers)
+            marker.setIcon(getClusterIcon(cluster));
+        }
+
+        /**
+         * Get a descriptor for multiple people (a cluster) to be used for a marker icon. Note: this
+         * method runs on the UI thread. Don't spend too much time in here (like in this example).
+         *
+         * @param cluster cluster to draw a BitmapDescriptor for
+         * @return a BitmapDescriptor representing a cluster
+         */
+        private BitmapDescriptor getClusterIcon(Cluster<Person> cluster) {
             List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
@@ -101,7 +139,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
             mClusterImageView.setImageDrawable(multiDrawable);
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+            return BitmapDescriptorFactory.fromBitmap(icon);
         }
 
         @Override
