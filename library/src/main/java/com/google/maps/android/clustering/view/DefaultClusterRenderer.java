@@ -782,11 +782,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         boolean changed = false;
         // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
         if (item.getTitle() != null && item.getSnippet() != null) {
-            if (!marker.getTitle().equals(item.getTitle())) {
+            if (!item.getTitle().equals(marker.getTitle())) {
                 marker.setTitle(item.getTitle());
                 changed = true;
             }
-            if (!marker.getSnippet().equals(item.getSnippet())) {
+            if (!item.getSnippet().equals(marker.getSnippet())) {
                 marker.setSnippet(item.getSnippet());
                 changed = true;
             }
