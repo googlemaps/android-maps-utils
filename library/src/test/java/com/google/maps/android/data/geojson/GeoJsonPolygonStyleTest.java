@@ -1,12 +1,12 @@
 /*
  * Copyright 2020 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,10 @@
  */
 package com.google.maps.android.data.geojson;
 
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.JointType;
+import com.google.android.gms.maps.model.PatternItem;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +26,13 @@ import org.robolectric.RobolectricTestRunner;
 
 import android.graphics.Color;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -83,6 +90,23 @@ public class GeoJsonPolygonStyleTest {
     }
 
     @Test
+    public void testStrokeJointType() {
+        polygonStyle.setStrokeJointType(JointType.ROUND);
+        assertEquals(JointType.ROUND, polygonStyle.getStrokeJointType());
+        assertEquals(JointType.ROUND, polygonStyle.toPolygonOptions().getStrokeJointType());
+    }
+
+    @Test
+    public void testStrokePattern() {
+        List<PatternItem> strokePatternItems = new ArrayList<>();
+        strokePatternItems.add(new Dot());
+
+        polygonStyle.setStrokePattern(strokePatternItems);
+        assertEquals(strokePatternItems, polygonStyle.getStrokePattern());
+        assertEquals(strokePatternItems, polygonStyle.toPolygonOptions().getStrokePattern());
+    }
+
+    @Test
     public void testStrokeWidth() {
         polygonStyle.setStrokeWidth(20.0f);
         assertEquals(20.0f, polygonStyle.getStrokeWidth(), 0);
@@ -108,6 +132,8 @@ public class GeoJsonPolygonStyleTest {
         assertEquals(Color.TRANSPARENT, polygonStyle.getFillColor());
         assertFalse(polygonStyle.isGeodesic());
         assertEquals(Color.BLACK, polygonStyle.getStrokeColor());
+        assertEquals(JointType.DEFAULT, polygonStyle.getStrokeJointType());
+        assertNull(polygonStyle.getStrokePattern());
         assertEquals(10.0f, polygonStyle.getStrokeWidth(), 0);
         assertTrue(polygonStyle.isVisible());
         assertEquals(0.0f, polygonStyle.getZIndex(), 0);
@@ -119,6 +145,8 @@ public class GeoJsonPolygonStyleTest {
         assertEquals(Color.TRANSPARENT, polygonStyle.toPolygonOptions().getFillColor());
         assertFalse(polygonStyle.toPolygonOptions().isGeodesic());
         assertEquals(Color.BLACK, polygonStyle.toPolygonOptions().getStrokeColor());
+        assertEquals(JointType.DEFAULT, polygonStyle.toPolygonOptions().getStrokeJointType());
+        assertNull(polygonStyle.toPolygonOptions().getStrokePattern());
         assertEquals(10.0f, polygonStyle.toPolygonOptions().getStrokeWidth(), 0);
         assertTrue(polygonStyle.toPolygonOptions().isVisible());
         assertEquals(0.0f, polygonStyle.toPolygonOptions().getZIndex(), 0);
