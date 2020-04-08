@@ -16,6 +16,8 @@
 
 package com.google.maps.android.clustering;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 
@@ -112,6 +114,7 @@ public class QuadItemTest {
             mPosition = new LatLng(lat, lng);
         }
 
+        @NonNull
         @Override
         public LatLng getPosition() {
             return mPosition;
