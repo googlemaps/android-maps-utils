@@ -37,6 +37,8 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -208,7 +210,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         });
     }
 
-    protected String getClusterText(int bucket) {
+    @NonNull protected String getClusterText(int bucket) {
         if (bucket < BUCKETS[0]) {
             return String.valueOf(bucket);
         }
@@ -219,7 +221,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Gets the "bucket" for a particular cluster. By default, uses the number of points within the
      * cluster, bucketed to some set points.
      */
-    protected int getBucket(Cluster<T> cluster) {
+    protected int getBucket(@NonNull Cluster<T> cluster) {
         int size = cluster.getSize();
         if (size <= BUCKETS[0]) {
             return size;
@@ -305,7 +307,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     /**
      * Determine whether the cluster should be rendered as individual markers or a cluster.
      */
-    protected boolean shouldRenderAsCluster(Cluster<T> cluster) {
+    protected boolean shouldRenderAsCluster(@NonNull Cluster<T> cluster) {
         return cluster.getSize() > mMinClusterSize;
     }
 
@@ -749,7 +751,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param item item to be rendered
      * @param markerOptions the markerOptions representing the provided item
      */
-    protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(@NonNull T item, @NonNull MarkerOptions markerOptions) {
         if (item.getTitle() != null && item.getSnippet() != null) {
             markerOptions.title(item.getTitle());
             markerOptions.snippet(item.getSnippet());
@@ -778,7 +780,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param item item being updated
      * @param marker cached marker that contains a potentially previous state of the item.
      */
-    protected void onClusterItemUpdated(T item, Marker marker) {
+    protected void onClusterItemUpdated(@NonNull T item, @NonNull Marker marker) {
         boolean changed = false;
         // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
         if (item.getTitle() != null && item.getSnippet() != null) {
@@ -822,7 +824,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param cluster cluster to be rendered
      * @param markerOptions markerOptions representing the provided cluster
      */
-    protected void onBeforeClusterRendered(Cluster<T> cluster, MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(@NonNull Cluster<T> cluster, @NonNull MarkerOptions markerOptions) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         markerOptions.icon(getDescriptorForCluster(cluster));
     }
@@ -837,7 +839,8 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @return a BitmapDescriptor for the marker icon for the given cluster that contains a rough
      * count of the number of items.
      */
-    protected BitmapDescriptor getDescriptorForCluster(Cluster<T> cluster) {
+    @NonNull
+    protected BitmapDescriptor getDescriptorForCluster(@NonNull Cluster<T> cluster) {
         int bucket = getBucket(cluster);
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
@@ -854,7 +857,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param cluster the cluster that was just added to the map
      * @param marker the marker representing the cluster that was just added to the map
      */
-    protected void onClusterRendered(Cluster<T> cluster, Marker marker) {
+    protected void onClusterRendered(@NonNull Cluster<T> cluster, @NonNull Marker marker) {
     }
 
     /**
@@ -874,7 +877,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param cluster cluster being updated
      * @param marker cached marker that contains a potentially previous state of the cluster
      */
-    protected void onClusterUpdated(Cluster<T> cluster, Marker marker) {
+    protected void onClusterUpdated(@NonNull Cluster<T> cluster, @NonNull Marker marker) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         marker.setIcon(getDescriptorForCluster(cluster));
     }
@@ -885,7 +888,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * @param clusterItem the item that was just added to the map
      * @param marker the marker representing the item that was just added to the map
      */
-    protected void onClusterItemRendered(T clusterItem, Marker marker) {
+    protected void onClusterItemRendered(@NonNull T clusterItem, @NonNull Marker marker) {
     }
 
     /**
