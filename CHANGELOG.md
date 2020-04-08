@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.0.2...HEAD)
+#### [Unreleased](https://github.com/googlemaps/android-maps-utils/compare/1.1.0...HEAD)
+
+> 08 April 2020
+
+#### [1.1.0](https://github.com/googlemaps/android-maps-utils/compare/1.0.2...1.1.0)
+
+### Bug Fixes
+
+* NPE on onClusterItemUpdated. ([#675](https://github.com/googlemaps/android-maps-utils/issues/675)) ([9f7b32c](https://github.com/googlemaps/android-maps-utils/commit/9f7b32cf11b3cb65550ce4ceb5da7a6752f43749))
+
+### Features
+
+* Supporting both StrokeJointType and StrokePattern in GeoJsonPolygonStyle ([#684](https://github.com/googlemaps/android-maps-utils/issues/684)) ([c449bc9](https://github.com/googlemaps/android-maps-utils/commit/c449bc990b7aae5103780f665c121e3bf36e94bf)), closes [#683](https://github.com/googlemaps/android-maps-utils/issues/683)
 
 #### [1.0.2](https://github.com/googlemaps/android-maps-utils/compare/1.0.1...1.0.2)
 
