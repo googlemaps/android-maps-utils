@@ -32,14 +32,14 @@ jobs:
 
     - name: Publish build
       run: |
-        echo "Decrypting secret key ring file."
-        gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.GPG_SECRING_DECRYPTION_PASSPHASE }} \
-        --output $GITHUB_WORKSPACE/release.gpg $GITHUB_WORKSPACE/release.gpg.gpg
+        echo "Creating .gpg key"
+        cat ${{ secrets.SYNCED_GPG_KEY_ARMOR }} > ./release.asc
+        gpg --quiet --output ./release.gpg --dearmor ./release.asc
 
         echo "Creating build"
         ./gradlew build publish --warn --stacktrace \
         -PsonatypeUsername=${{ secrets.SYNCED_SONATYPE_USERNAME }} \
         -PsonatypePassword=${{ secrets.SYNCED_SONATYPE_PASSWORD }} \
-        -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
-        -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }} \
-        -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg
+        -Psigning.keyId=${{ secrets.SYNCED_GPG_KEY_ID }} \
+        -Psigning.password=${{ secrets.SYNCED_GPG_KEY_PASSWORD }} \
+        -Psigning.secretKeyRingFile=./release.gpg
