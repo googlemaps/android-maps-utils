@@ -16,6 +16,9 @@
 
 package com.google.maps.android.clustering;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -26,15 +29,15 @@ public interface ClusterItem {
     /**
      * The position of this marker. This must always return the same value.
      */
-    LatLng getPosition();
+    @NonNull LatLng getPosition();
 
     /**
      * The title of this marker.
      */
-    String getTitle();
+    @Nullable String getTitle();
 
     /**
      * The description of this marker.
      */
-    String getSnippet();
+    @Nullable String getSnippet();
 }
