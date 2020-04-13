@@ -1,0 +1,23 @@
+branches:
+  - master
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - - "@google/semantic-release-replace-plugin"
+    - replacements:
+        - files:
+            - "./gradle-mvn-push.gradle"
+          from: "version '.*'"
+          to: "version '${nextRelease.version}'"
+
+        - files:
+            - "README.md"
+          from: ":[0-9].[0-9].[0-9]"
+          to: ":${nextRelease.version}"
+  - - "@semantic-release/git"
+    - assets:
+        - "./gradle-mvn-push.gradle"
+        - "*.md"
+  - "@semantic-release/github"
+options:
+  debug: true
