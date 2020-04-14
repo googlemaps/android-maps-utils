@@ -363,6 +363,16 @@ public class ClusterManager<T extends ClusterItem> implements
      * Called when an individual ClusterItem is clicked.
      */
     public interface OnClusterItemClickListener<T extends ClusterItem> {
+
+        /**
+         * Called when {@code item} is clicked.
+         *
+         * @param item the item clicked
+         *
+         * @return true if the listener consumed the event (i.e. the default behavior should not
+         * occur), false otherwise (i.e. the default behavior should occur).  The default behavior
+         * is for the camera to move to the marker and an info window to appear.
+         */
         boolean onClusterItemClick(T item);
     }
 
