@@ -44,7 +44,7 @@ dependencies {
 
 ## Migration Guide
 
-Improvements made in version [1.0.0]() of the library to support multiple layers on the map, caused breaking changes to versions prior to it. This section outlines those changes and how you can migrate to 1.x.x from a previous 0.x version.
+Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map, caused breaking changes to versions prior to it. This section outlines those changes and how you can migrate to 1.x.x from a previous 0.x version.
 
 ### Adding Click Events
 
