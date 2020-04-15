@@ -42,6 +42,46 @@ dependencies {
 }
 ```
 
+## Migration Guide
+
+Improvements made in version [1.0.0]() of the library to support multiple layers on the map, caused breaking changes to versions prior to it. This section outlines those changes and how you can migrate to 1.x.x from a previous 0.x version.
+
+### Adding Click Events
+
+Handling click events are handled on the layer specific object. In each layer, the click handlers are passed to the marker, ground overlay, polyline, or polygon `Collection` object.
+
+_New_
+```java
+// Clustering
+ClusterManager<ClusterItem> clusterManager = // Initialize ClusterManager
+clusterManager.setOnClusterItemClickListener(item -> {
+    // Listen for clicks on a cluster item here
+    return false;
+});
+clusterManager.setOnClusterClickListener(item -> {
+    // Listen for clicks on a cluster here
+    return false;
+});
+
+// GeoJson
+GeoJsonLayer geoJsonLayer = // Initialize GeoJsonLayer
+geoJsonLayer.setOnFeatureClickListener(feature -> {
+    // Listen for clicks here
+});
+
+// KML
+KmlLayer kmlLayer = // Initialize KmlLayer
+kmlLayer.setOnFeatureClickListener(feature -> {
+    // Listen for clicks here
+});
+```
+
+### Adding a Custom Info Window
+_TODO_
+
+### Adding a Marker Drag Listener
+_TODO_
+
 ## Support
 
 Encounter an issue while using this library?
