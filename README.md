@@ -46,11 +46,11 @@ dependencies {
 
 Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map, caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
 
+
 ### Adding Click Events
 
-Handling click events are handled on the layer specific object. Internally in each layer, the click handlers are passed to the marker, ground overlay, polyline, or polygon `Collection` object.
+Click events originate in the layer-specific object that added the marker/ground overlay/polyline/polygon. Internally in each layer, the click handlers are passed to the marker, ground overlay, polyline, or polygon `Collection` object.
 
-_New_
 ```java
 // Clustering
 ClusterManager<ClusterItem> clusterManager = // Initialize ClusterManager
@@ -75,6 +75,34 @@ kmlLayer.setOnFeatureClickListener(feature -> {
     // Listen for clicks on KML features here
 });
 ```
+
+#### Using Manager Objects
+
+If you use one of Manager objects in the package `com.google.maps.android` (e.g. `GroundOverlayManager`, `MarkerManager`, etc.), say from adding a KML or GeoJson layer, you will have to rely on the Collection specific to add add object to the map rather than adding that object directly to `GoogleMap`. This is because each Manager sets itself as a click listener so that it can manager click events coming from multiple layers.
+
+For example, if you have additional `GroundOverlay` objects:
+
+_New_
+
+```java
+GroundOverlayManager groundOverlayManager = // Initialize 
+
+// Create a new collection first
+GroundOverlayManager.Collection groundOverlayCollection = groundOverlayManager.newCollection();
+
+// Add a new ground overlay
+GroundOverlayOptions options = // ...
+groundOverlayCollection.addGroundOverlay(options);
+```
+
+_Old_
+
+```java
+GroundOverlayOptions options = // ...
+googleMap.addGroundOverlay(options);
+```
+
+This same pattern applies for `Marker`, `Circle`, `Polyline`, and `Polygon`.
 
 ### Adding a Custom Info Window
 _TODO_
