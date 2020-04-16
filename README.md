@@ -105,10 +105,60 @@ googleMap.addGroundOverlay(options);
 This same pattern applies for `Marker`, `Circle`, `Polyline`, and `Polygon`.
 
 ### Adding a Custom Info Window
-_TODO_
+If you use `MarkerManager`, adding a `InfoWindowAdapter` and/or an `OnInfoWindowClickListener` should be done on the `MarkerManager.Collection` object.
+
+_New_
+```java
+CustomInfoWindowAdapter adapter = // ...
+OnInfoWindowClickListener listener = // ...
+
+// Create a new Collection from a MarkerManager and add markers to it
+MarkerManager markerManager = // ...
+MarkerManager.Collection collection = markerManager.newCollection();
+
+// Set InfoWindowAdapter and OnInfoWindowClickListener
+collection.setInfoWindowAdapter(apdapter);
+collection.setOnInfoWindowClickListener(listener);
+
+// Alternatively, if you are using clustering
+ClusterManager clusterManager = // ...
+ManagerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(apdapter);
+markerCollection.setOnInfoWindowClickListener(listener);
+```
+
+_Old_
+```java
+CustomInfoWindowAdapter adapter = // ...
+OnInfoWindowClickListener listener = // ...
+googleMap.setInfoWindowAdapter(apdapter);
+googleMap.setOnInfoWindowClickListener(listener);
+```
 
 ### Adding a Marker Drag Listener
-_TODO_
+
+If you use `MarkerManager`, adding a `OnMarkerDragListener` should be done on the `MarkerManager.Collection` object.
+
+_New_
+```java
+// Create a new Collection from a MarkerManager and add markers to it
+MarkerManager markerManager = // ...
+MarkerManager.Collection collection = markerManager.newCollection();
+
+// Set OnMarkerDragListener
+GoogleMap.OnMarkerDragListener listener = // ...
+collection.setOnMarkerDragListener(listener);
+
+// Alternatively, if you are using clustering
+ClusterManager clusterManager = // ...
+ManagerManager.Collection markerCollection = clusterManager.getMarkerCollection();
+markerCollection.setOnMarkerDragListener(listener);
+```
+
+_Old_
+```java
+GoogleMap.OnMarkerDragListener listener = // ...
+googleMap.setOnMarkerDragListener(listener);
+```
 
 ## Support
 
