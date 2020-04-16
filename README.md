@@ -42,6 +42,134 @@ dependencies {
 }
 ```
 
+## Migration Guide
+
+Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
+
+
+### Adding Click Events
+
+Click events originate in the layer-specific object that added the marker/ground overlay/polyline/polygon. In each layer, the click handlers are passed to the marker, ground overlay, polyline, or polygon `Collection` object.
+
+```java
+// Clustering
+ClusterManager<ClusterItem> clusterManager = // Initialize ClusterManager
+clusterManager.setOnClusterItemClickListener(item -> {
+    // Listen for clicks on a cluster item here
+    return false;
+});
+clusterManager.setOnClusterClickListener(item -> {
+    // Listen for clicks on a cluster here
+    return false;
+});
+
+// GeoJson
+GeoJsonLayer geoJsonLayer = // Initialize GeoJsonLayer
+geoJsonLayer.setOnFeatureClickListener(feature -> {
+    // Listen for clicks on GeoJson features here
+});
+
+// KML
+KmlLayer kmlLayer = // Initialize KmlLayer
+kmlLayer.setOnFeatureClickListener(feature -> {
+    // Listen for clicks on KML features here
+});
+```
+
+#### Using Manager Objects
+
+If you use one of Manager objects in the package `com.google.maps.android` (e.g. `GroundOverlayManager`, `MarkerManager`, etc.), say from adding a KML or GeoJson layer, you will have to rely on the Collection specific to add add object to the map rather than adding that object directly to `GoogleMap`. This is because each Manager sets itself as a click listener so that it can manager click events coming from multiple layers.
+
+For example, if you have additional `GroundOverlay` objects:
+
+_New_
+
+```java
+GroundOverlayManager groundOverlayManager = // Initialize 
+
+// Create a new collection first
+GroundOverlayManager.Collection groundOverlayCollection = groundOverlayManager.newCollection();
+
+// Add a new ground overlay
+GroundOverlayOptions options = // ...
+groundOverlayCollection.addGroundOverlay(options);
+```
+
+_Old_
+
+```java
+GroundOverlayOptions options = // ...
+googleMap.addGroundOverlay(options);
+```
+
+This same pattern applies for `Marker`, `Circle`, `Polyline`, and `Polygon`.
+
+### Adding a Custom Info Window
+If you use `MarkerManager`, adding an `InfoWindowAdapter` and/or an `OnInfoWindowClickListener` should be done on the `MarkerManager.Collection` object.
+
+_New_
+```java
+CustomInfoWindowAdapter adapter = // ...
+OnInfoWindowClickListener listener = // ...
+
+// Create a new Collection from a MarkerManager
+MarkerManager markerManager = // ...
+MarkerManager.Collection collection = markerManager.newCollection();
+
+// Set InfoWindowAdapter and OnInfoWindowClickListener
+collection.setInfoWindowAdapter(apdapter);
+collection.setOnInfoWindowClickListener(listener);
+
+// Alternatively, if you are using clustering
+ClusterManager<ClusterItem> clusterManager = // ...
+ManagerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(apdapter);
+markerCollection.setOnInfoWindowClickListener(listener);
+```
+
+_Old_
+```java
+CustomInfoWindowAdapter adapter = // ...
+OnInfoWindowClickListener listener = // ...
+googleMap.setInfoWindowAdapter(apdapter);
+googleMap.setOnInfoWindowClickListener(listener);
+```
+
+### Adding a Marker Drag Listener
+
+If you use `MarkerManager`, adding an `OnMarkerDragListener` should be done on the `MarkerManager.Collection` object.
+
+_New_
+```java
+// Create a new Collection from a MarkerManager
+MarkerManager markerManager = // ...
+MarkerManager.Collection collection = markerManager.newCollection();
+
+// Add markers to collection
+MarkerOptions markerOptions = // ...
+collection.addMarker(markerOptions);
+// ...
+
+// Set OnMarkerDragListener
+GoogleMap.OnMarkerDragListener listener = // ...
+collection.setOnMarkerDragListener(listener);
+
+// Alternatively, if you are using clustering
+ClusterManager<ClusterItem> clusterManager = // ...
+ManagerManager.Collection markerCollection = clusterManager.getMarkerCollection();
+markerCollection.setOnMarkerDragListener(listener);
+```
+
+_Old_
+```java
+// Add markers
+MarkerOptions markerOptions = // ...
+googleMap.addMarker(makerOptions);
+
+// Add listener
+GoogleMap.OnMarkerDragListener listener = // ...
+googleMap.setOnMarkerDragListener(listener);
+```
+
 ## Support
 
 Encounter an issue while using this library?
