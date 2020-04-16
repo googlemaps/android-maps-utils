@@ -33,7 +33,7 @@ jobs:
     - name: Publish build
       run: |
         echo "Creating .gpg key"
-        cat ${{ secrets.SYNCED_GPG_KEY_ARMOR }} > ./release.asc
+        echo ${{ secrets.SYNCED_GPG_KEY_ARMOR }} > ./release.asc
         gpg --quiet --output ./release.gpg --dearmor ./release.asc
 
         echo "Creating build"
