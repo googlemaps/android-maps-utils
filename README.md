@@ -44,12 +44,12 @@ dependencies {
 
 ## Migration Guide
 
-Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map, caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
+Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
 
 
 ### Adding Click Events
 
-Click events originate in the layer-specific object that added the marker/ground overlay/polyline/polygon. Internally in each layer, the click handlers are passed to the marker, ground overlay, polyline, or polygon `Collection` object.
+Click events originate in the layer-specific object that added the marker/ground overlay/polyline/polygon. In each layer, the click handlers are passed to the marker, ground overlay, polyline, or polygon `Collection` object.
 
 ```java
 // Clustering
@@ -105,14 +105,14 @@ googleMap.addGroundOverlay(options);
 This same pattern applies for `Marker`, `Circle`, `Polyline`, and `Polygon`.
 
 ### Adding a Custom Info Window
-If you use `MarkerManager`, adding a `InfoWindowAdapter` and/or an `OnInfoWindowClickListener` should be done on the `MarkerManager.Collection` object.
+If you use `MarkerManager`, adding an `InfoWindowAdapter` and/or an `OnInfoWindowClickListener` should be done on the `MarkerManager.Collection` object.
 
 _New_
 ```java
 CustomInfoWindowAdapter adapter = // ...
 OnInfoWindowClickListener listener = // ...
 
-// Create a new Collection from a MarkerManager and add markers to it
+// Create a new Collection from a MarkerManager
 MarkerManager markerManager = // ...
 MarkerManager.Collection collection = markerManager.newCollection();
 
@@ -121,7 +121,7 @@ collection.setInfoWindowAdapter(apdapter);
 collection.setOnInfoWindowClickListener(listener);
 
 // Alternatively, if you are using clustering
-ClusterManager clusterManager = // ...
+ClusterManager<ClusterItem> clusterManager = // ...
 ManagerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(apdapter);
 markerCollection.setOnInfoWindowClickListener(listener);
 ```
@@ -136,26 +136,36 @@ googleMap.setOnInfoWindowClickListener(listener);
 
 ### Adding a Marker Drag Listener
 
-If you use `MarkerManager`, adding a `OnMarkerDragListener` should be done on the `MarkerManager.Collection` object.
+If you use `MarkerManager`, adding an `OnMarkerDragListener` should be done on the `MarkerManager.Collection` object.
 
 _New_
 ```java
-// Create a new Collection from a MarkerManager and add markers to it
+// Create a new Collection from a MarkerManager
 MarkerManager markerManager = // ...
 MarkerManager.Collection collection = markerManager.newCollection();
+
+// Add markers to collection
+MarkerOptions markerOptions = // ...
+collection.addMarker(markerOptions);
+// ...
 
 // Set OnMarkerDragListener
 GoogleMap.OnMarkerDragListener listener = // ...
 collection.setOnMarkerDragListener(listener);
 
 // Alternatively, if you are using clustering
-ClusterManager clusterManager = // ...
+ClusterManager<ClusterItem> clusterManager = // ...
 ManagerManager.Collection markerCollection = clusterManager.getMarkerCollection();
 markerCollection.setOnMarkerDragListener(listener);
 ```
 
 _Old_
 ```java
+// Add markers
+MarkerOptions markerOptions = // ...
+googleMap.addMarker(makerOptions);
+
+// Add listener
 GoogleMap.OnMarkerDragListener listener = // ...
 googleMap.setOnMarkerDragListener(listener);
 ```
