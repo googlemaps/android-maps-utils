@@ -117,12 +117,12 @@ MarkerManager markerManager = // ...
 MarkerManager.Collection collection = markerManager.newCollection();
 
 // Set InfoWindowAdapter and OnInfoWindowClickListener
-collection.setInfoWindowAdapter(apdapter);
+collection.setInfoWindowAdapter(adapter);
 collection.setOnInfoWindowClickListener(listener);
 
 // Alternatively, if you are using clustering
 ClusterManager<ClusterItem> clusterManager = // ...
-ManagerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(apdapter);
+MarkerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(adapter);
 markerCollection.setOnInfoWindowClickListener(listener);
 ```
 
@@ -130,7 +130,7 @@ _Old_
 ```java
 CustomInfoWindowAdapter adapter = // ...
 OnInfoWindowClickListener listener = // ...
-googleMap.setInfoWindowAdapter(apdapter);
+googleMap.setOnInfoWindowAdapter(adapter);
 googleMap.setOnInfoWindowClickListener(listener);
 ```
 
@@ -155,7 +155,7 @@ collection.setOnMarkerDragListener(listener);
 
 // Alternatively, if you are using clustering
 ClusterManager<ClusterItem> clusterManager = // ...
-ManagerManager.Collection markerCollection = clusterManager.getMarkerCollection();
+MarkerManager.Collection markerCollection = clusterManager.getMarkerCollection();
 markerCollection.setOnMarkerDragListener(listener);
 ```
 
