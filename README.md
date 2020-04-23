@@ -130,7 +130,7 @@ _Old_
 ```java
 CustomInfoWindowAdapter adapter = // ...
 OnInfoWindowClickListener listener = // ...
-googleMap.setOnInfoWindowAdapter(adapter);
+googleMap.setInfoWindowAdapter(adapter);
 googleMap.setOnInfoWindowClickListener(listener);
 ```
 
