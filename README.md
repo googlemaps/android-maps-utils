@@ -42,6 +42,19 @@ dependencies {
 }
 ```
 
+## Demo App
+
+<img src="https://developers.google.com/maps/documentation/android-sdk/images/utility-markercluster.png" width="150" align=right>
+
+This repository includes a [demo app](demo) that illustrates the use of this library.
+
+To run the demo app, you'll have to:
+
+1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
+1. Create a file in the `demo` directory called `secure.properties` (this file should *NOT* be under version control to protect your API key)
+1. Add a single line to `demo/secure.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
+1. Build and run
+
 ## Migration Guide
 
 Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.

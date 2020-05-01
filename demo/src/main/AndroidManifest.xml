@@ -32,9 +32,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!--
+        To add your Maps API key to this project:
+            1. Create a file demo/secure.properties
+            2. Add this line, where YOUR_API_KEY is your API key:
+                MAPS_API_KEY=YOUR_API_KEY
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDCa5WRSMk3CrNSf3y5xbyQTvp1_zwuTtE" />
+            android:value="@string/maps_api_key" />
 
         <activity
             android:name=".MainActivity"
