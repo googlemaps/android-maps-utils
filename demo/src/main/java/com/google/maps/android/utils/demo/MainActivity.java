@@ -22,18 +22,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewGroup mListView;
 
-    //Comment to see if I can push to the repository
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        if (getString(R.string.maps_api_key).isEmpty()) {
+            Toast.makeText(this, "Add your own API key in demo/secure.properties as MAPS_API_KEY=YOUR_API_KEY", Toast.LENGTH_LONG).show();
+        }
 
         mListView = findViewById(R.id.list);
 
