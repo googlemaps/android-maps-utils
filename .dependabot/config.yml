@@ -1,0 +1,13 @@
+version: 1
+update_configs:
+    - package_manager: "java:gradle"
+      directory: "./library/"
+      update_schedule: "daily"
+      commit_message:
+          prefix: "chore(deps)"
+
+    - package_manager: "java:gradle"
+      directory: "./demo/"
+      update_schedule: "daily"
+      commit_message:
+          prefix: "chore(deps)"
