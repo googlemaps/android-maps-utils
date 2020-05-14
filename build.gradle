@@ -29,6 +29,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -51,5 +54,33 @@ subprojects {
                 project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
             }
         }
+    }
+}
+
+/**
+ * This task will copy all of the source code in the `library` module into the `library-v3` module
+ * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
+ */
+task copyGmsToV3BetaSourceCode(type: Copy) {
+    group 'Custom'
+    description 'Generates source code for Maps SDK for Android V3 BETA Utilities'
+    from 'library/src/main/java'
+    into 'library-v3/src/main/java'
+    filter { line ->
+        line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+    }
+}
+
+/**
+ * This task will copy all of the tests in the `library` module into the `library-v3` module
+ * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
+ */
+task copyGmsToV3BetaTests(type: Copy) {
+    group 'Custom'
+    description 'Generates tests for Maps SDK for Android V3 BETA Utilities'
+    from 'library/src/test'
+    into 'library-v3/src/test'
+    filter { line ->
+        line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
     }
 }

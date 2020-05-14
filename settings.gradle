@@ -16,3 +16,4 @@
 
 include 'library'
 include 'demo'
+include ':library-v3'

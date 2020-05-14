@@ -60,6 +60,8 @@ android {
 dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
+
+    // TODO: Add shared dependencies with `library-v3` to root build.gradle
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.robolectric:robolectric:4.3.1'
     testImplementation 'net.sf.kxml:kxml2:2.3.0'
@@ -81,3 +83,8 @@ if (System.getenv("JITPACK")) {
 } else {
     apply from: '../gradle-mvn-push.gradle'
 }
+
+preBuild.dependsOn(
+    rootProject.tasks.copyGmsToV3BetaSourceCode,
+    rootProject.tasks.copyGmsToV3BetaTests
+)
