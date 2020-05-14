@@ -72,6 +72,17 @@ task copyGmsToV3BetaSourceCode(type: Copy) {
 }
 
 /**
+ * This task will copy all of the source code in the `library` module into the `library-v3` module
+ * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
+ */
+task copyGmsToV3BetaResources(type: Copy) {
+    group 'Custom'
+    description 'Generates resources for Maps SDK for Android V3 BETA Utilities'
+    from 'library/src/main/res'
+    into 'library-v3/src/main/res'
+}
+
+/**
  * This task will copy all of the tests in the `library` module into the `library-v3` module
  * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
  */

@@ -70,5 +70,6 @@ if (System.getenv("JITPACK")) {
 
 preBuild.dependsOn(
     rootProject.tasks.copyGmsToV3BetaSourceCode,
+    rootProject.tasks.copyGmsToV3BetaResources,
     rootProject.tasks.copyGmsToV3BetaTests
 )
