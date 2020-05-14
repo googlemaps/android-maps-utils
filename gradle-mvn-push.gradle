@@ -17,8 +17,18 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
+
+ext.projectArtifactId = { project ->
+    if (project.name == 'library') {
+        return 'android-maps-utils'
+    } else if (project.name == 'library-v3') {
+        return 'android-maps-utils-v3'
+    } else {
+        return null
+    }
+}
+
 
 task javadoc(type: Javadoc) {
     failOnError false

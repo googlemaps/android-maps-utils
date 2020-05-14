@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
-
 android {
     dexOptions {
         javaMaxHeapSize "2g"
@@ -60,28 +57,15 @@ android {
 dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-
-    // TODO: Add shared dependencies with `library-v3` to root build.gradle
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.robolectric:robolectric:4.3.1'
     testImplementation 'net.sf.kxml:kxml2:2.3.0'
-}
-
-jacoco {
-    toolVersion = "0.8.5"
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
 }
 
 task instrumentTest(dependsOn: connectedCheck)
 
 if (System.getenv("JITPACK")) {
     apply plugin: 'maven'
-} else {
-    apply from: '../gradle-mvn-push.gradle'
 }
 
 preBuild.dependsOn(

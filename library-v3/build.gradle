@@ -6,8 +6,6 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu. 
  */
 
-apply plugin: 'com.android.library'
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
