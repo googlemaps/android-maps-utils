@@ -68,8 +68,4 @@ if (System.getenv("JITPACK")) {
     apply plugin: 'maven'
 }
 
-preBuild.dependsOn(
-    rootProject.tasks.copyGmsToV3BetaSourceCode,
-    rootProject.tasks.copyGmsToV3BetaResources,
-    rootProject.tasks.copyGmsToV3BetaTests
-)
+preBuild.dependsOn(rootProject.tasks.copyGmsToV3Beta)
