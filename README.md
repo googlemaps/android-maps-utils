@@ -41,7 +41,7 @@ dependencies {
     // Utilities for Maps SDK for Android
     implementation 'com.google.maps.android:android-maps-utils:1.2.1'
 
-    // Utilities for Maps SDK for Android V3 BETA
+    // Alternately - Utilities for Maps SDK for Android V3 BETA
     implementation 'com.google.maps.android:android-maps-utils-v3:1.2.1'
 }
 ```
