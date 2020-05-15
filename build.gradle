@@ -64,6 +64,7 @@ subprojects {
 task copyGmsToV3Beta(type: Copy) {
     group 'Custom'
     description 'Generates source code for Maps SDK for Android V3 BETA Utilities'
+    into 'library-v3/src'
 
     from('library/src/main/java') {
         filter { line ->
@@ -82,26 +83,7 @@ task copyGmsToV3Beta(type: Copy) {
         }
         into 'test'
     }
-    into 'library-v3/src'
 }
-
-///**
-// * This task will copy all of the source code in the `library` module into the `library-v3` module
-// * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
-// */
-//task copyGmsToV3BetaResources(type: Copy) {
-//    group 'Custom'
-//    description 'Generates resources for Maps SDK for Android V3 BETA Utilities'
-//}
-//
-///**
-// * This task will copy all of the tests in the `library` module into the `library-v3` module
-// * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
-// */
-//task copyGmsToV3BetaTests(type: Copy) {
-//    group 'Custom'
-//    description 'Generates tests for Maps SDK for Android V3 BETA Utilities'
-//}
 
 ext.projectArtifactId = { project ->
     if (project.name == 'library') {
