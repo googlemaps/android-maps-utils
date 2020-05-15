@@ -504,7 +504,7 @@ public class PolyUtil {
 //        return computeDistanceBetween(p, su);
 
         // "Along-track" distance formula from https://www.movable-type.co.uk/scripts/latlong.html
-        double a13 = computeDistanceBetween(start, p);
+        double a13 = computeDistanceBetween(start, p) / EARTH_RADIUS;
         double b13 = toRadians(computeHeading(start, p));
         double b12 = toRadians(computeHeading(start, end));
 
@@ -514,13 +514,7 @@ public class PolyUtil {
 
         double alongTrackDistance = Math.acos(Math.cos(a13) / Math.cos(distance / EARTH_RADIUS)) * EARTH_RADIUS;
 
-        if (alongTrackDistance <= 0) {
-            return computeDistanceBetween(p, start);
-        }
-        if (alongTrackDistance >= 1) {
-            return computeDistanceBetween(p, end);
-        }
-        return distance;
+        return Math.abs(distance);
 
 //        double aat = Math.acos(Math.cos(a13) / Math.abs(Math.cos(axt)));
 //
