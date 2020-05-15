@@ -22,9 +22,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static com.google.maps.android.SphericalUtil.*;
-import static java.lang.Math.*;
-import static com.google.maps.android.MathUtil.*;
+import static com.google.maps.android.MathUtil.EARTH_RADIUS;
+import static com.google.maps.android.MathUtil.clamp;
+import static com.google.maps.android.MathUtil.hav;
+import static com.google.maps.android.MathUtil.havDistance;
+import static com.google.maps.android.MathUtil.havFromSin;
+import static com.google.maps.android.MathUtil.inverseMercator;
+import static com.google.maps.android.MathUtil.mercator;
+import static com.google.maps.android.MathUtil.sinFromHav;
+import static com.google.maps.android.MathUtil.sinSumFromHav;
+import static com.google.maps.android.MathUtil.wrap;
+import static com.google.maps.android.SphericalUtil.computeDistanceBetween;
+import static com.google.maps.android.SphericalUtil.computeHeading;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.tan;
+import static java.lang.Math.toRadians;
 
 public class PolyUtil {
 
@@ -466,25 +483,48 @@ public class PolyUtil {
             return computeDistanceBetween(end, p);
         }
 
-        final double s0lat = toRadians(p.latitude);
-        final double s0lng = toRadians(p.longitude);
-        final double s1lat = toRadians(start.latitude);
-        final double s1lng = toRadians(start.longitude);
-        final double s2lat = toRadians(end.latitude);
-        final double s2lng = toRadians(end.longitude);
+//        final double s0lat = toRadians(p.latitude);
+//        final double s0lng = toRadians(p.longitude);
+//        final double s1lat = toRadians(start.latitude);
+//        final double s1lng = toRadians(start.longitude);
+//        final double s2lat = toRadians(end.latitude);
+//        final double s2lng = toRadians(end.longitude);
+//
+//        double s2s1lat = s2lat - s1lat;
+//        double s2s1lng = s2lng - s1lng;
+//        final double u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * s2s1lng)
+//                / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
+//        if (u <= 0) {
+//            return computeDistanceBetween(p, start);
+//        }
+//        if (u >= 1) {
+//            return computeDistanceBetween(p, end);
+//        }
+//        LatLng su = new LatLng(start.latitude + u * (end.latitude - start.latitude), start.longitude + u * (end.longitude - start.longitude));
+//        return computeDistanceBetween(p, su);
 
-        double s2s1lat = s2lat - s1lat;
-        double s2s1lng = s2lng - s1lng;
-        final double u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * s2s1lng)
-                / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
-        if (u <= 0) {
+        // "Along-track" distance formula from https://www.movable-type.co.uk/scripts/latlong.html
+        double a13 = computeDistanceBetween(start, p);
+        double b13 = toRadians(computeHeading(start, p));
+        double b12 = toRadians(computeHeading(start, end));
+
+        double axt = Math.asin(Math.sin(a13) * Math.sin(b13 - b12));
+
+        double distance = axt * EARTH_RADIUS;
+
+        double alongTrackDistance = Math.acos(Math.cos(a13) / Math.cos(distance / EARTH_RADIUS)) * EARTH_RADIUS;
+
+        if (alongTrackDistance <= 0) {
             return computeDistanceBetween(p, start);
         }
-        if (u >= 1) {
+        if (alongTrackDistance >= 1) {
             return computeDistanceBetween(p, end);
         }
-        LatLng su = new LatLng(start.latitude + u * (end.latitude - start.latitude), start.longitude + u * (end.longitude - start.longitude));
-        return computeDistanceBetween(p, su);
+        return distance;
+
+//        double aat = Math.acos(Math.cos(a13) / Math.abs(Math.cos(axt)));
+//
+//        return aat*Math.sign(Math.cos(b12-b13)) * R;
     }
 
     /**
