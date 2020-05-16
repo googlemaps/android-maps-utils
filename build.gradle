@@ -75,6 +75,12 @@ task copyGmsToV3Beta(type: Copy) {
 
     from('library/src/main/res') {
         into 'main/res'
+        exclude '**/*.xml'
+    }
+
+    from('library/src/main/res') {
+        into 'main/res'
+        include '**/*.xml'
 
         // Although the files within library/src/main/res do not reference classes under the gms
         // package name, package name replacement is still applied to resources to future-proof
