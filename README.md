@@ -39,10 +39,10 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ```groovy
 dependencies {
     // Utilities for Maps SDK for Android
-    implementation 'com.google.maps.android:android-maps-utils:1.2.1'
+    implementation 'com.google.maps.android:android-maps-utils:1.3.0'
 
     // Alternately - Utilities for Maps SDK for Android V3 BETA
-    implementation 'com.google.maps.android:android-maps-utils-v3:1.2.1'
+    implementation 'com.google.maps.android:android-maps-utils-v3:1.3.0'
 }
 ```
 
