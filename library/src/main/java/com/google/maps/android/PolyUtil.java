@@ -503,7 +503,7 @@ public class PolyUtil {
 //        LatLng su = new LatLng(start.latitude + u * (end.latitude - start.latitude), start.longitude + u * (end.longitude - start.longitude));
 //        return computeDistanceBetween(p, su);
 
-        // "Along-track" distance formula from https://www.movable-type.co.uk/scripts/latlong.html
+        // "Cross-track distance" distance formula from https://www.movable-type.co.uk/scripts/latlong.html
         double d13 = computeDistanceBetween(start, p) / EARTH_RADIUS;
         double b13 = toRadians(computeHeading(start, p));
         double b12 = toRadians(computeHeading(start, end));
