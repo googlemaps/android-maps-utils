@@ -29,6 +29,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -51,5 +54,171 @@ subprojects {
                 project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
             }
         }
+    }
+}
+
+/**
+ * This task will copy all of the source code in the `library` module into the `library-v3` module
+ * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
+ */
+task copyGmsToV3Beta(type: Copy) {
+    group 'Custom'
+    description 'Generates source code for Maps SDK for Android V3 BETA Utilities'
+    into 'library-v3/src'
+
+    from('library/src/main/java') {
+        filter { line ->
+            line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+        }
+        into 'main/java'
+    }
+
+    from('library/src/main/res') {
+        into 'main/res'
+        exclude '**/*.xml'
+    }
+
+    from('library/src/main/res') {
+        into 'main/res'
+        include '**/*.xml'
+
+        // Although the files within library/src/main/res do not reference classes under the gms
+        // package name, package name replacement is still applied to resources to future-proof
+        // this should it change.
+        filter { line ->
+            line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+        }
+    }
+
+    from('library/src/test') {
+        filter { line ->
+            line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+        }
+        into 'test'
+    }
+}
+
+ext.projectArtifactId = { project ->
+    if (project.name == 'library') {
+        return 'android-maps-utils'
+    } else if (project.name == 'library-v3') {
+        return 'android-maps-utils-v3'
+    } else {
+        return null
+    }
+}
+
+allprojects {
+    group = 'com.google.maps.android'
+    version = '1.2.1'
+    project.ext.artifactId = rootProject.ext.projectArtifactId(project)
+}
+
+/**
+ * Publishing and signing info
+ */
+subprojects { project ->
+    if (project.ext.artifactId == null) return
+
+    apply plugin: 'com.android.library'
+    apply plugin: 'jacoco-android'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+
+    // Code coverage
+    jacoco {
+        toolVersion = "0.8.5"
+    }
+
+    tasks.withType(Test) {
+        jacoco.includeNoLocationClasses = true
+        jacoco.excludes = ['jdk.internal.*']
+    }
+
+    task javadoc(type: Javadoc) {
+        failOnError false
+        source = android.sourceSets.main.java.srcDirs
+    }
+
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    publishing {
+        publications {
+            aar(MavenPublication) {
+                groupId project.group
+                artifactId project.ext.artifactId
+                version project.version
+
+                pom {
+                    name = project.ext.artifactId
+                    description = 'Handy extensions to the Google Maps Android API.'
+                    url = "https://github.com/googlemaps/android-maps-ktx"
+
+                    scm {
+                        url = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                        connection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                        developerConnection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution = 'repo'
+                        }
+                    }
+
+                    organization {
+                        name = 'Google Inc'
+                        url = 'http://developers.google.com/maps'
+                    }
+
+                    developers {
+                        developer {
+                            name = 'Google Inc.'
+                        }
+                    }
+                }
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    project.configurations.api.allDependencies.each { dependency ->
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dependency.group)
+                        dependencyNode.appendNode('artifactId', dependency.name)
+                        dependencyNode.appendNode('version', dependency.version)
+                    }
+                }
+
+                afterEvaluate {
+                    artifact "$buildDir/outputs/aar/$project.name-release.aar"
+                    artifact sourcesJar
+                    artifact javadocJar
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "mavencentral"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username sonatypeUsername
+                    password sonatypePassword
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.aar
     }
 }
