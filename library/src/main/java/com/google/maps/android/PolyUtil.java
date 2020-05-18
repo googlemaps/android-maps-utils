@@ -504,17 +504,17 @@ public class PolyUtil {
 //        return computeDistanceBetween(p, su);
 
         // "Cross-track distance" distance formula from https://www.movable-type.co.uk/scripts/latlong.html
-        double d13 = computeDistanceBetween(start, p) / EARTH_RADIUS;
-        double b13 = toRadians(computeHeading(start, p));
-        double b12 = toRadians(computeHeading(start, end));
+        double distanceStartP = computeDistanceBetween(start, p) / EARTH_RADIUS;
+        double bearingStartP = toRadians(computeHeading(start, p));
+        double bearingStartEnd = toRadians(computeHeading(start, end));
 
-        double axt = Math.asin(Math.sin(d13) * Math.sin(b13 - b12));
+        double axt = Math.asin(Math.sin(distanceStartP) * Math.sin(bearingStartP - bearingStartEnd));
 
         // Distance from P to great-circle path defined by start and end points
         double crossTrackDistance = axt * EARTH_RADIUS;
 
         //  Distance from the start point to the closest point on the path to P
-        double alongTrackDistance = Math.acos(Math.cos(d13) / Math.cos(crossTrackDistance / EARTH_RADIUS)) * EARTH_RADIUS;
+        double alongTrackDistance = Math.acos(Math.cos(distanceStartP) / Math.cos(crossTrackDistance / EARTH_RADIUS)) * EARTH_RADIUS;
 
         return Math.abs(crossTrackDistance);
     }
