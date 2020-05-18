@@ -496,6 +496,9 @@ public class PolyUtilTest {
 //        distance = PolyUtil.distanceToLine(p, startLine, endLine);
 //        assertEquals(95.0, distance, 1e-6);
 
+//        If I change the point slightly, like let's say
+//        LatLng(13.384605534374716, 52.49860503682293) it will return the correct result of about 98-99m
+
         // QGIS tests - https://github.com/qgis/QGIS/blob/0df50ca979da86f5b8b8ec0eea2f8b67b8e8e63a/python/plugins/processing/tests/testdata/qgis_algorithm_tests2.yaml
         // QGIS test data - https://github.com/qgis/QGIS/blob/b3d2619976a69d7fb67b884492da491dfaba287c/python/plugins/processing/tests/testdata/expected/hub_distance_lines.gml
     }
