@@ -503,6 +503,11 @@ public class PolyUtil {
 //        LatLng su = new LatLng(start.latitude + u * (end.latitude - start.latitude), start.longitude + u * (end.longitude - start.longitude));
 //        return computeDistanceBetween(p, su);
 
+        // ORIGINAL ALGORITHM END
+//        LatLng sa = new LatLng(p.latitude - start.latitude, p.longitude - start.longitude);
+//        LatLng sb = new LatLng(u * (end.latitude - start.latitude), u * (end.longitude - start.longitude));
+//        return computeDistanceBetween(sa, sb);
+
         // "Cross-track distance" distance formula from https://www.movable-type.co.uk/scripts/latlong.html
         double distanceStartP = computeDistanceBetween(start, p) / EARTH_RADIUS;
         double bearingStartP = toRadians(computeHeading(start, p));

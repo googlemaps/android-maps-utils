@@ -487,6 +487,17 @@ public class PolyUtilTest {
 
         distance = PolyUtil.distanceToLine(p, startLine, endLine);
         assertEquals(5.5594433, distance, 1e-6);
+
+        // Example data given in https://github.com/googlemaps/android-maps-utils/issues/519
+//        startLine = new LatLng(13.383257, 52.498945);
+//        endLine = new LatLng(13.383194, 52.498748);
+//        p = new LatLng(13.384526409208775, 52.498523596997146);
+//
+//        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+//        assertEquals(95.0, distance, 1e-6);
+
+        // QGIS tests - https://github.com/qgis/QGIS/blob/0df50ca979da86f5b8b8ec0eea2f8b67b8e8e63a/python/plugins/processing/tests/testdata/qgis_algorithm_tests2.yaml
+        // QGIS test data - https://github.com/qgis/QGIS/blob/b3d2619976a69d7fb67b884492da491dfaba287c/python/plugins/processing/tests/testdata/expected/hub_distance_lines.gml
     }
 
     @Test
