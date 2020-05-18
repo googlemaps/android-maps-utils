@@ -367,7 +367,7 @@ public class PolyUtilTest {
         copy = new ArrayList<>(oval);
         tolerance = 10; // meters
         List<LatLng> simplifiedOval = PolyUtil.simplify(oval, tolerance);
-        assertEquals(13, simplifiedOval.size());
+        assertEquals(11, simplifiedOval.size());
         assertEndPoints(oval, simplifiedOval);
         assertSimplifiedPointsFromLine(oval, simplifiedOval);
         assertLineLength(oval, simplifiedOval);
@@ -382,7 +382,7 @@ public class PolyUtilTest {
         copy = new ArrayList<>(oval);
         tolerance = 10; // meters
         simplifiedOval = PolyUtil.simplify(oval, tolerance);
-        assertEquals(13, simplifiedOval.size());
+        assertEquals(10, simplifiedOval.size());
         assertEndPoints(oval, simplifiedOval);
         assertSimplifiedPointsFromLine(oval, simplifiedOval);
         assertLineLength(oval, simplifiedOval);
@@ -486,7 +486,7 @@ public class PolyUtilTest {
         p = new LatLng(49.3210674, 12.0978238);
 
         distance = PolyUtil.distanceToLine(p, startLine, endLine);
-        assertEquals(5.55, distance, 1e-6);
+        assertEquals(5.5594433, distance, 1e-6);
     }
 
     @Test
