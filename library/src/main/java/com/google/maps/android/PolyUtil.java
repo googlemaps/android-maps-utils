@@ -483,6 +483,7 @@ public class PolyUtil {
             return computeDistanceBetween(end, p);
         }
 
+        // Implementation of http://paulbourke.net/geometry/pointlineplane/ or http://geomalgorithms.com/a02-_lines.html
 //        final double s0lat = toRadians(p.latitude);
 //        final double s0lng = toRadians(p.longitude);
 //        final double s1lat = toRadians(start.latitude);
