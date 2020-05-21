@@ -522,6 +522,8 @@ public class PolyUtil {
         //  Distance from the start point to the closest point on the path to P
         double alongTrackDistance = Math.acos(Math.cos(distanceStartP) / Math.cos(crossTrackDistance / EARTH_RADIUS)) * EARTH_RADIUS;
 
+        // to compute points known distance from a great circle - http://www.edwilliams.org/avform.htm#XTE (also different cross and along track error formulas)
+
         return Math.abs(crossTrackDistance);
     }
 
