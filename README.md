@@ -200,10 +200,10 @@ clusterManager.cluster();
 ```
 
 To make custom clustering work properly (i.e, if you're extending `DefaultClusterRenderer`), you must override two additional methods in v1:
-*  `onClusterItemUpdated()` - should be the same* `onBeforeClusterItemRendered()` method
+*  `onClusterItemUpdated()` - should be the same* as your `onBeforeClusterItemRendered()` method
 *  `onClusterUpdated()` - should be the same* as your `onBeforeClusterRendered()` method
 
-**Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions` - but they can be very close*
+**Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions`*
 
 See the [`CustomMarkerClusteringDemoActivity`](demo/src/main/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
 
@@ -220,13 +220,6 @@ _New_
                     .title(person.name);
         }
         
-        @Override
-        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
-            // Draw multiple people.
-            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-            markerOptions.icon(getClusterIcon(cluster));
-        }
-
         /**
          * New in v1 
          */
@@ -237,6 +230,13 @@ _New_
             marker.setTitle(person.name);
         }
         
+        @Override
+        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            markerOptions.icon(getClusterIcon(cluster));
+        }
+       
         /**
          * New in v1 
          */
