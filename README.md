@@ -199,7 +199,7 @@ clusterManager.addItems(items);
 clusterManager.cluster();
 ```
 
-To make custom clustering work properly (i.e, if you're extending `DefaultClusterRenderer`), you must override two additional methods in v1:
+If you're using custom clustering (i.e, if you're extending `DefaultClusterRenderer`), you must override two additional methods in v1:
 *  `onClusterItemUpdated()` - should be the same* as your `onBeforeClusterItemRendered()` method
 *  `onClusterUpdated()` - should be the same* as your `onBeforeClusterRendered()` method
 
