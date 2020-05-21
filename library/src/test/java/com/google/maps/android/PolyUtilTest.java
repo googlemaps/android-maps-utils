@@ -479,7 +479,7 @@ public class PolyUtilTest {
         LatLng p = new LatLng(28.05342, -82.41594);
 
         double distance = PolyUtil.distanceToLine(p, startLine, endLine);
-        assertEquals(37.945969, distance, 1e-6);
+        assertEquals(37.94596795917082, distance, 1e-6);
 
         startLine = new LatLng(49.321045, 12.097749);
         endLine = new LatLng(49.321016, 12.097795);
