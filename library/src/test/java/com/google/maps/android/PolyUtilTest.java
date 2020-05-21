@@ -501,6 +501,14 @@ public class PolyUtilTest {
 
         // QGIS tests - https://github.com/qgis/QGIS/blob/0df50ca979da86f5b8b8ec0eea2f8b67b8e8e63a/python/plugins/processing/tests/testdata/qgis_algorithm_tests2.yaml
         // QGIS test data - https://github.com/qgis/QGIS/blob/b3d2619976a69d7fb67b884492da491dfaba287c/python/plugins/processing/tests/testdata/expected/hub_distance_lines.gml
+
+        // Example data from https://www.movable-type.co.uk/scripts/test/geodesy-test.html
+        // Cross Track distance - LatLon(53.2611, -0.7972).crossTrackDistanceTo(new LatLon(53.3206, -1.7297), new LatLon(53.1887, 0.1334)).toFixed(1).should.equal('-307.5')
+        // Along track distance - new LatLon(53.2611, -0.7972).alongTrackDistanceTo(new LatLon(53.3206, -1.7297), new LatLon(53.1887, 0.1334)).toFixed().should.equal('62331')
+        // Nearest point on segment1 - new LatLon(51.0, 1.9).nearestPointOnSegment(new LatLon(51.0, 1.0), new LatLon(51.0, 2.0)).toString().should.equal('51.0004°N, 001.9000°E')
+        // Nearest point on segment2 - new LatLon(51.0, 2.1).nearestPointOnSegment(new LatLon(51.0, 1.0), new LatLon(51.0, 2.0)).toString().should.equal('51.0000°N, 002.0000°E')
+        // Nearest point on segment antip - new LatLon(10, -140).nearestPointOnSegment(new LatLon(0, 20), new LatLon(0, 40)).toString().should.equal('00.0000°N, 020.0000°E')
+        // More at https://github.com/chrisveness/geodesy/blob/master/test/latlon-nvector-spherical-tests.js#L183
     }
 
     @Test
