@@ -187,6 +187,91 @@ GoogleMap.OnMarkerDragListener listener = // ...
 googleMap.setOnMarkerDragListener(listener);
 ```
 
+### Clustering
+
+[A bug](https://github.com/googlemaps/android-maps-utils/issues/90) was fixed in v1 to properly clear and re-add markers via the `ClusterManager`.
+
+For example, this didn't work pre-v1, but works for v1 and later:
+
+```java
+clusterManager.clearItems();
+clusterManager.addItems(items);
+clusterManager.cluster();
+```
+
+To make custom clustering work properly (i.e, if you're extending `DefaultClusterRenderer`), you must override two additional methods in v1:
+*  `onClusterItemUpdated()` - should be the same* `onBeforeClusterItemRendered()` method
+*  `onClusterUpdated()` - should be the same* as your `onBeforeClusterRendered()` method
+
+**Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions` - but they can be very close*
+
+See the [`CustomMarkerClusteringDemoActivity`](demo/src/main/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
+
+_New_
+
+```java
+    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+        ...     
+        @Override
+        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+            // Draw a single person - show their profile photo and set the info window to show their name
+            markerOptions
+                    .icon(getItemIcon(person))
+                    .title(person.name);
+        }
+        
+        @Override
+        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            markerOptions.icon(getClusterIcon(cluster));
+        }
+
+        /**
+         * New in v1 
+         */
+        @Override
+        protected void onClusterItemUpdated(Person person, Marker marker) {
+            // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
+            marker.setIcon(getItemIcon(person));
+            marker.setTitle(person.name);
+        }
+        
+        /**
+         * New in v1 
+         */
+        @Override
+        protected void onClusterUpdated(Cluster<Person> cluster, Marker marker) {
+            // Same implementation as onBeforeClusterRendered() (to update cached markers)
+            marker.setIcon(getClusterIcon(cluster));
+        }
+        ...
+    }
+```
+
+_Old_
+
+```java
+    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+        ...       
+        @Override
+        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+            // Draw a single person - show their profile photo and set the info window to show their name
+            markerOptions
+                    .icon(getItemIcon(person))
+                    .title(person.name);
+        }
+        
+        @Override
+        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            markerOptions.icon(getClusterIcon(cluster));
+        }
+        ...
+    }
+```
+
 ## Support
 
 Encounter an issue while using this library?
