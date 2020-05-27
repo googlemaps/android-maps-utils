@@ -160,7 +160,7 @@ subprojects { project ->
                 pom {
                     name = project.ext.artifactId
                     description = 'Handy extensions to the Google Maps Android API.'
-                    url = "https://github.com/googlemaps/android-maps-ktx"
+                    url = 'https://github.com/googlemaps/android-maps-utils'
 
                     scm {
                         url = 'scm:git@github.com:googlemaps/android-maps-utils.git'
