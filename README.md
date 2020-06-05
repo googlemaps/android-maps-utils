@@ -139,7 +139,8 @@ collection.setOnInfoWindowClickListener(listener);
 
 // Alternatively, if you are using clustering
 ClusterManager<ClusterItem> clusterManager = // ...
-MarkerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(adapter);
+MarkerManager.Collection markerCollection = clusterManager.getMarkerCollection();
+markerCollection.setInfoWindowAdapter(adapter);
 markerCollection.setOnInfoWindowClickListener(listener);
 ```
 

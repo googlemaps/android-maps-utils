@@ -16,10 +16,15 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 
@@ -42,6 +47,32 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
 
         mClusterManager = new ClusterManager<>(this, getMap());
         getMap().setOnCameraIdleListener(mClusterManager);
+
+        // Add a custom InfoWindowAdapter by setting it to the MarkerManager.Collection object from
+        // ClusterManager rather than from GoogleMap.setInfoWindowAdapter
+        mClusterManager.getMarkerCollection().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                final LayoutInflater inflater = LayoutInflater.from(ClusteringDemoActivity.this);
+                final View view = inflater.inflate(R.layout.custom_info_window, null);
+                final TextView textView = view.findViewById(R.id.textViewTitle);
+                String text = (marker.getTitle() != null) ? marker.getTitle() : "Cluster Item";
+                textView.setText(text);
+                return view;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
+        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(ClusteringDemoActivity.this,
+                        "Info window clicked.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         try {
             readItems();
