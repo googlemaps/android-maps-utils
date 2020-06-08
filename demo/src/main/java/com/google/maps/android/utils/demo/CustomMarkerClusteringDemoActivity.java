@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -64,7 +66,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
             View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile, null);
             mClusterIconGenerator.setContentView(multiProfile);
-            mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
+            mClusterImageView = multiProfile.findViewById(R.id.image);
 
             mImageView = new ImageView(getApplicationContext());
             mDimension = (int) getResources().getDimension(R.dimen.custom_profile_image);
@@ -75,7 +77,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(@NonNull Person person, MarkerOptions markerOptions) {
             // Draw a single person - show their profile photo and set the info window to show their name
             markerOptions
                     .icon(getItemIcon(person))
@@ -83,7 +85,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onClusterItemUpdated(Person person, Marker marker) {
+        protected void onClusterItemUpdated(@NonNull Person person, Marker marker) {
             // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
             marker.setIcon(getItemIcon(person));
             marker.setTitle(person.name);
@@ -103,14 +105,14 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(@NonNull Cluster<Person> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             markerOptions.icon(getClusterIcon(cluster));
         }
 
         @Override
-        protected void onClusterUpdated(Cluster<Person> cluster, Marker marker) {
+        protected void onClusterUpdated(@NonNull Cluster<Person> cluster, Marker marker) {
             // Same implementation as onBeforeClusterRendered() (to update cached markers)
             marker.setIcon(getClusterIcon(cluster));
         }
@@ -123,7 +125,8 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
          * @return a BitmapDescriptor representing a cluster
          */
         private BitmapDescriptor getClusterIcon(Cluster<Person> cluster) {
-            List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
+            List<Drawable> profilePhotos;
+            profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
 
@@ -198,7 +201,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
         }
 
-        mClusterManager = new ClusterManager<Person>(this, getMap());
+        mClusterManager = new ClusterManager<>(this, getMap());
         mClusterManager.setRenderer(new PersonRenderer());
         getMap().setOnCameraIdleListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);

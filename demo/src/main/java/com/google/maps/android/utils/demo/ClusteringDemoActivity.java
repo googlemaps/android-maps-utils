@@ -66,13 +66,10 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
                 return null;
             }
         });
-        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
+        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(marker ->
                 Toast.makeText(ClusteringDemoActivity.this,
-                        "Info window clicked.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                "Info window clicked.",
+                     Toast.LENGTH_SHORT).show());
 
         try {
             readItems();
