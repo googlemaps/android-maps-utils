@@ -125,8 +125,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
          * @return a BitmapDescriptor representing a cluster
          */
         private BitmapDescriptor getClusterIcon(Cluster<Person> cluster) {
-            List<Drawable> profilePhotos;
-            profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
+List<Drawable> profilePhotos = new ArrayList<>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
 
