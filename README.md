@@ -95,7 +95,7 @@ kmlLayer.setOnFeatureClickListener(feature -> {
 
 #### Using Manager Objects
 
-If you use one of Manager objects in the package `com.google.maps.android` (e.g. `GroundOverlayManager`, `MarkerManager`, etc.), say from adding a KML or GeoJson layer, you will have to rely on the Collection specific to add add object to the map rather than adding that object directly to `GoogleMap`. This is because each Manager sets itself as a click listener so that it can manager click events coming from multiple layers.
+If you use one of Manager objects in the package `com.google.maps.android` (e.g. `GroundOverlayManager`, `MarkerManager`, etc.), say from adding a KML layer, GeoJson layer, or Clustering, you will have to rely on the Collection specific to add add object to the map rather than adding that object directly to `GoogleMap`. This is because each Manager sets itself as a click listener so that it can manager click events coming from multiple layers.
 
 For example, if you have additional `GroundOverlay` objects:
 
