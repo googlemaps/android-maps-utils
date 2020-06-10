@@ -16,18 +16,19 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.graphics.Color;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.collections.GroundOverlayManager;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.collections.PolygonManager;
 import com.google.maps.android.collections.PolylineManager;
-import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
@@ -37,10 +38,6 @@ import com.google.maps.android.utils.demo.model.MyItem;
 
 import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParserException;
-
-import android.graphics.Color;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,15 +84,10 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                 f.setLineStringStyle(geoJsonLineStringStyle);
             }
             geoJsonLineLayer.addLayerToMap();
-            geoJsonLineLayer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
-                @Override
-                public void onFeatureClick(Feature feature) {
+            geoJsonLineLayer.setOnFeatureClickListener((GeoJsonLayer.GeoJsonOnFeatureClickListener) feature ->
                     Toast.makeText(MultiLayerDemoActivity.this,
                             "GeoJSON polyline clicked: " + feature.getProperty("title"),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-            });
+                            Toast.LENGTH_SHORT).show());
 
             // GeoJSON polygon
             GeoJsonLayer geoJsonPolygonLayer = new GeoJsonLayer(getMap(), R.raw.south_london_square_geojson, this, markerManager, polygonManager, polylineManager, groundOverlayManager);
@@ -106,15 +98,10 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                 f.setPolygonStyle(geoJsonPolygonStyle);
             }
             geoJsonPolygonLayer.addLayerToMap();
-            geoJsonPolygonLayer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
-                @Override
-                public void onFeatureClick(Feature feature) {
+            geoJsonPolygonLayer.setOnFeatureClickListener((GeoJsonLayer.GeoJsonOnFeatureClickListener) feature ->
                     Toast.makeText(MultiLayerDemoActivity.this,
-                            "GeoJSON polygon clicked: " + feature.getProperty("title"),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-            });
+                    "GeoJSON polygon clicked: " + feature.getProperty("title"),
+                    Toast.LENGTH_SHORT).show());
         } catch (IOException e) {
             Log.e(TAG, "GeoJSON file could not be read");
         } catch (JSONException e) {
@@ -129,27 +116,17 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
             // [END maps_multilayer_demo_init4]
             // [START maps_multilayer_demo_init6]
             kmlPolylineLayer.addLayerToMap();
-            kmlPolylineLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
-                @Override
-                public void onFeatureClick(Feature feature) {
-                    Toast.makeText(MultiLayerDemoActivity.this,
-                            "KML polyline clicked: " + feature.getProperty("name"),
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+            kmlPolylineLayer.setOnFeatureClickListener(feature -> Toast.makeText(MultiLayerDemoActivity.this,
+                    "KML polyline clicked: " + feature.getProperty("name"),
+                    Toast.LENGTH_SHORT).show());
             // [END maps_multilayer_demo_init6]
 
             // KML Polygon
             KmlLayer kmlPolygonLayer = new KmlLayer(getMap(), R.raw.south_london_square_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
             kmlPolygonLayer.addLayerToMap();
-            kmlPolygonLayer.setOnFeatureClickListener(new KmlLayer.OnFeatureClickListener() {
-                @Override
-                public void onFeatureClick(Feature feature) {
-                    Toast.makeText(MultiLayerDemoActivity.this,
-                            "KML polygon clicked: " + feature.getProperty("name"),
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+            kmlPolygonLayer.setOnFeatureClickListener(feature -> Toast.makeText(MultiLayerDemoActivity.this,
+                    "KML polygon clicked: " + feature.getProperty("name"),
+                    Toast.LENGTH_SHORT).show());
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -160,19 +137,16 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         // [START maps_multilayer_demo_init5]
         MarkerManager.Collection markerCollection = markerManager.newCollection();
         markerCollection.addMarker(new MarkerOptions()
-                .position(new LatLng( 51.150000, -0.150032))
+                .position(new LatLng(51.150000, -0.150032))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 .title("Unclustered marker"));
         // [END maps_multilayer_demo_init5]
         // [START maps_multilayer_demo_init7]
-        markerCollection.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(MultiLayerDemoActivity.this,
-                        "Marker clicked: " + marker.getTitle(),
-                        Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        markerCollection.setOnMarkerClickListener(marker -> {
+            Toast.makeText(MultiLayerDemoActivity.this,
+                    "Marker clicked: " + marker.getTitle(),
+                    Toast.LENGTH_SHORT).show();
+            return false;
         });
         // [END maps_multilayer_demo_init7]
     }

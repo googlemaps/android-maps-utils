@@ -44,7 +44,7 @@ public class TileProviderAndProjectionDemo extends BaseDemoActivity {
     }
 
     private class PointTileOverlay implements TileProvider {
-        private List<Point> mPoints = new ArrayList<Point>();
+        private List<Point> mPoints = new ArrayList<>();
         private int mTileSize = 256;
         private SphericalMercatorProjection mProjection = new SphericalMercatorProjection(mTileSize);
         private int mScale = 2;

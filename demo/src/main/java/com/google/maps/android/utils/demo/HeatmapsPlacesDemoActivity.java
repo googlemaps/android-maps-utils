@@ -19,7 +19,6 @@ package com.google.maps.android.utils.demo;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -27,7 +26,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -139,16 +137,13 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     @Override
     protected void startDemo(boolean isRestore) {
         EditText editText = findViewById(R.id.input_text);
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_GO) {
-                    submit(null);
-                    handled = true;
-                }
-                return handled;
+        editText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                submit(null);
+                handled = true;
             }
+            return handled;
         });
 
         mCheckboxLayout = findViewById(R.id.checkboxes);
@@ -202,11 +197,11 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * of LatLng objects.
      */
     private Collection<LatLng> getPoints(String keyword) {
-        HashMap<String, LatLng> results = new HashMap<String, LatLng>();
+        HashMap<String, LatLng> results = new HashMap<>();
 
         // Calculate four equidistant points around Sydney to use as search centers
         //   so that four searches can be done.
-        ArrayList<LatLng> searchCenters = new ArrayList<LatLng>(4);
+        ArrayList<LatLng> searchCenters = new ArrayList<>(4);
         for (int heading = 45; heading < 360; heading += 90) {
             searchCenters.add(SphericalUtil.computeOffset(SYDNEY, SEARCH_RADIUS / 2, heading));
         }
@@ -290,15 +285,12 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         checkBox.setText(keyword);
         checkBox.setTextColor(HEATMAP_COLORS[mOverlaysRendered]);
         checkBox.setChecked(true);
-        checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CheckBox c = (CheckBox) view;
-                // Text is the keyword
-                TileOverlay overlay = mOverlays.get(keyword);
-                if (overlay != null) {
-                    overlay.setVisible(c.isChecked());
-                }
+        checkBox.setOnClickListener(view -> {
+            CheckBox c = (CheckBox) view;
+            // Text is the keyword
+            TileOverlay overlay = mOverlays.get(keyword);
+            if (overlay != null) {
+                overlay.setVisible(c.isChecked());
             }
         });
         mCheckboxLayout.addView(checkBox);
@@ -322,7 +314,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 if (mOverlays.size() < MAX_CHECKBOXES) {
                     makeCheckBox(keyword);
                     HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                            .data(new ArrayList<LatLng>(points))
+                            .data(new ArrayList<>(points))
                             .gradient(makeGradient(HEATMAP_COLORS[mOverlaysRendered]))
                             .build();
                     TileOverlay overlay = getMap().addTileOverlay(new TileOverlayOptions().tileProvider(provider));
@@ -330,11 +322,11 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 }
                 mOverlaysRendered++;
                 if (mOverlaysRendered == mOverlaysInput) {
-                    ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+                    ProgressBar progressBar = findViewById(R.id.progress_bar);
                     progressBar.setVisibility(View.GONE);
                 }
             } else {
-                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+                ProgressBar progressBar = findViewById(R.id.progress_bar);
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(HeatmapsPlacesDemoActivity.this, "No results for this query :(", Toast.LENGTH_SHORT).show();
             }
