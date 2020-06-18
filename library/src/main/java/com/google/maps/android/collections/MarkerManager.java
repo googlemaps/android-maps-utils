@@ -33,7 +33,8 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
         GoogleMap.OnInfoWindowClickListener,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMarkerDragListener,
-        GoogleMap.InfoWindowAdapter {
+        GoogleMap.InfoWindowAdapter,
+        GoogleMap.OnInfoWindowLongClickListener {
 
     public MarkerManager(GoogleMap map) {
         super(map);
@@ -43,6 +44,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     void setListenersOnUiThread() {
         if (mMap != null) {
             mMap.setOnInfoWindowClickListener(this);
+            mMap.setOnInfoWindowLongClickListener(this);
             mMap.setOnMarkerClickListener(this);
             mMap.setOnMarkerDragListener(this);
             mMap.setInfoWindowAdapter(this);
@@ -76,6 +78,14 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowClickListener != null) {
             collection.mInfoWindowClickListener.onInfoWindowClick(marker);
+        }
+    }
+
+    @Override
+    public void onInfoWindowLongClick(Marker marker) {
+        Collection collection = mAllObjects.get(marker);
+        if (collection != null && collection.mInfoWindowLongClickListener != null) {
+            collection.mInfoWindowLongClickListener.onInfoWindowLongClick(marker);
         }
     }
 
@@ -119,6 +129,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
     public class Collection extends MapObjectManager.Collection {
         private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
+        private GoogleMap.OnInfoWindowLongClickListener mInfoWindowLongClickListener;
         private GoogleMap.OnMarkerClickListener mMarkerClickListener;
         private GoogleMap.OnMarkerDragListener mMarkerDragListener;
         private GoogleMap.InfoWindowAdapter mInfoWindowAdapter;
@@ -166,6 +177,10 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
         public void setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener infoWindowClickListener) {
             mInfoWindowClickListener = infoWindowClickListener;
+        }
+
+        public void setOnInfoWindowLongClickListener(GoogleMap.OnInfoWindowLongClickListener infoWindowLongClickListener) {
+            mInfoWindowLongClickListener = infoWindowLongClickListener;
         }
 
         public void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener markerClickListener) {
