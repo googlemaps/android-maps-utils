@@ -123,8 +123,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     private ClusterManager.OnClusterClickListener<T> mClickListener;
     private ClusterManager.OnClusterInfoWindowClickListener<T> mInfoWindowClickListener;
+    private ClusterManager.OnClusterInfoWindowLongClickListener<T> mInfoWindowLongClickListener;
     private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
     private ClusterManager.OnClusterItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
+    private ClusterManager.OnClusterItemInfoWindowLongClickListener<T> mItemInfoWindowLongClickListener;
 
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
@@ -155,6 +157,15 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             }
         });
 
+        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
+            @Override
+            public void onInfoWindowLongClick(Marker marker) {
+                if (mItemInfoWindowLongClickListener != null) {
+                    mItemInfoWindowLongClickListener.onClusterItemInfoWindowLongClick(mMarkerCache.get(marker));
+                }
+            }
+        });
+
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -170,14 +181,25 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 }
             }
         });
+
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
+            @Override
+            public void onInfoWindowLongClick(Marker marker) {
+                if (mInfoWindowLongClickListener != null) {
+                    mInfoWindowLongClickListener.onClusterInfoWindowLongClick(mClusterMarkerCache.get(marker));
+                }
+            }
+        });
     }
 
     @Override
     public void onRemove() {
         mClusterManager.getMarkerCollection().setOnMarkerClickListener(null);
         mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(null);
+        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(null);
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(null);
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(null);
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(null);
     }
 
     private LayerDrawable makeClusterBackground() {
@@ -481,6 +503,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     }
 
     @Override
+    public void setOnClusterInfoWindowLongClickListener(ClusterManager.OnClusterInfoWindowLongClickListener<T> listener) {
+        mInfoWindowLongClickListener = listener;
+    }
+
+    @Override
     public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
         mItemClickListener = listener;
     }
@@ -488,6 +515,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     @Override
     public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener) {
         mItemInfoWindowClickListener = listener;
+    }
+
+    @Override
+    public void setOnClusterItemInfoWindowLongClickListener(ClusterManager.OnClusterItemInfoWindowLongClickListener<T> listener) {
+        mItemInfoWindowLongClickListener = listener;
     }
 
     @Override

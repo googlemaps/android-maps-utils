@@ -38,9 +38,13 @@ public interface ClusterRenderer<T extends ClusterItem> {
 
     void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<T> listener);
 
+    void setOnClusterInfoWindowLongClickListener(ClusterManager.OnClusterInfoWindowLongClickListener<T> listener);
+
     void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
 
     void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener);
+
+    void setOnClusterItemInfoWindowLongClickListener(ClusterManager.OnClusterItemInfoWindowLongClickListener<T> listener);
 
     /**
      * Called to set animation on or off
