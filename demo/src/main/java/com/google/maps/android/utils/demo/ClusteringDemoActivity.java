@@ -70,6 +70,10 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
                 Toast.makeText(ClusteringDemoActivity.this,
                 "Info window clicked.",
                      Toast.LENGTH_SHORT).show());
+        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(marker ->
+                Toast.makeText(ClusteringDemoActivity.this,
+                        "Info window long pressed.",
+                        Toast.LENGTH_SHORT).show());
 
         try {
             readItems();
