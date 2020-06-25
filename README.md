@@ -32,16 +32,16 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ## Requirements
 
 * Android API level 15+
-* Maps SDK via Google Play Services (this library is not yet compatible with the [Maps SDK v3.0 BETA] library)
+* Maps SDK via Google Play Services OR [Maps SDK v3 BETA] library
 
 ## Installation
 
 ```groovy
 dependencies {
-    // Utilities for Maps SDK for Android
+    // Utilities for Maps SDK for Android (requires Google Play Services) 
     implementation 'com.google.maps.android:android-maps-utils:2.0.0'
 
-    // Alternately - Utilities for Maps SDK for Android V3 BETA
+    // Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
     implementation 'com.google.maps.android:android-maps-utils-v3:2.0.0'
 }
 ```
@@ -285,7 +285,7 @@ You can also reach us on our [Discord channel].
 For more information, check out the detailed guide on the
 [Google Developers site][devsite-guide].
 
-[Maps SDK v3.0 BETA]: https://developers.google.com/maps/documentation/android-sdk/v3-client-migration
+[Maps SDK v3 BETA]: https://developers.google.com/maps/documentation/android-sdk/v3-client-migration
 [file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
 [pull request]: https://github.com/googlemaps/android-maps-utils/compare
 [code of conduct]: CODE_OF_CONDUCT.md
