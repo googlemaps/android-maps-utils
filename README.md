@@ -32,13 +32,13 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ## Requirements
 
 * Android API level 15+
-* Maps SDK v2 via Google Play Services OR [Maps SDK v3 BETA] library
+* Maps SDK via Google Play Services OR [Maps SDK v3 BETA] library
 
 ## Installation
 
 ```groovy
 dependencies {
-    // Utilities for Maps SDK v2 for Android (requires Google Play Services) 
+    // Utilities for Maps SDK for Android (requires Google Play Services) 
     implementation 'com.google.maps.android:android-maps-utils:2.0.0'
 
     // Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
