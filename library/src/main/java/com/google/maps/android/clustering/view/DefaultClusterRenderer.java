@@ -256,10 +256,28 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return BUCKETS[BUCKETS.length - 1];
     }
 
+    /**
+     * Gets the minimum cluster size used to render clusters. For example, if "4" is returned,
+     * then for any clusters of size 3 or less the items will be rendered as individual markers
+     * instead of as a single cluster marker.
+     *
+     * @return the minimum cluster size used to render clusters. For example, if "4" is returned,
+     * then for any clusters of size 3 or less the items will be rendered as individual markers
+     * instead of as a single cluster marker.
+     */
     public int getMinClusterSize() {
         return mMinClusterSize;
     }
 
+    /**
+     * Sets the minimum cluster size used to render clusters. For example, if "4" is provided,
+     * then for any clusters of size 3 or less the items will be rendered as individual markers
+     * instead of as a single cluster marker.
+     *
+     * @param minClusterSize the minimum cluster size used to render clusters. For example, if "4"
+     *                       is provided, then for any clusters of size 3 or less the items will be
+     *                       rendered as individual markers instead of as a single cluster marker.
+     */
     public void setMinClusterSize(int minClusterSize) {
         mMinClusterSize = minClusterSize;
     }
@@ -328,9 +346,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Determine whether the cluster should be rendered as individual markers or a cluster.
+     * @param cluster cluster to examine for rendering
+     * @return true if the provided cluster should be rendered as a single marker on the map, false
+     * if the items within this cluster should be rendered as individual markers instead.
      */
     protected boolean shouldRenderAsCluster(@NonNull Cluster<T> cluster) {
-        return cluster.getSize() > mMinClusterSize;
+        return cluster.getSize() >= mMinClusterSize;
     }
 
     /**
