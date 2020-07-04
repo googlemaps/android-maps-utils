@@ -334,7 +334,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             });
             renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
-            // It seems this cannot use a thread pool due to thread locking issues (#660)
             mExecutor.execute(renderTask);
         }
 

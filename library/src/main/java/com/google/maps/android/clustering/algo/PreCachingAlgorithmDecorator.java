@@ -104,11 +104,9 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> extends Abstrac
         Set<? extends Cluster<T>> results = getClustersInternal(discreteZoom);
         // TODO: Check if requests are already in-flight.
         if (mCache.get(discreteZoom + 1) == null) {
-            // It seems this cannot use a thread pool due to thread locking issues (#660)
             mExecutor.execute(new PrecacheRunnable(discreteZoom + 1));
         }
         if (mCache.get(discreteZoom - 1) == null) {
-            // It seems this cannot use a thread pool due to thread locking issues (#660)
             mExecutor.execute(new PrecacheRunnable(discreteZoom - 1));
         }
         return results;
