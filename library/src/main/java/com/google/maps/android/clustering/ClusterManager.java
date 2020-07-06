@@ -123,7 +123,7 @@ public class ClusterManager<T extends ClusterItem> implements
     public void setAlgorithm(ScreenBasedAlgorithm<T> algorithm) {
         algorithm.lock();
         try {
-            Algorithm<T> oldAlgorithm = getAlgorithm();
+            final Algorithm<T> oldAlgorithm = getAlgorithm();
             mAlgorithm = algorithm;
 
             if (oldAlgorithm != null) {
@@ -162,7 +162,7 @@ public class ClusterManager<T extends ClusterItem> implements
      * {@link #cluster()} for the map to be cleared.
      */
     public void clearItems() {
-        Algorithm<T> algorithm = getAlgorithm();
+        final Algorithm<T> algorithm = getAlgorithm();
         algorithm.lock();
         try {
             algorithm.clearItems();
@@ -178,7 +178,7 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean addItems(Collection<T> items) {
-        Algorithm<T> algorithm = getAlgorithm();
+        final Algorithm<T> algorithm = getAlgorithm();
         algorithm.lock();
         try {
             return algorithm.addItems(items);
@@ -194,7 +194,7 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean addItem(T myItem) {
-        Algorithm<T> algorithm = getAlgorithm();
+        final Algorithm<T> algorithm = getAlgorithm();
         algorithm.lock();
         try {
             return algorithm.addItem(myItem);
@@ -210,7 +210,7 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean removeItems(Collection<T> items) {
-        Algorithm<T> algorithm = getAlgorithm();
+        final Algorithm<T> algorithm = getAlgorithm();
         algorithm.lock();
         try {
             return algorithm.removeItems(items);
@@ -226,7 +226,7 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the item was removed from the cluster manager as a result of this call
      */
     public boolean removeItem(T item) {
-        Algorithm<T> algorithm = getAlgorithm();
+        final Algorithm<T> algorithm = getAlgorithm();
         algorithm.lock();
         try {
             return algorithm.removeItem(item);
@@ -243,7 +243,7 @@ public class ClusterManager<T extends ClusterItem> implements
      * contained within the cluster manager and the cluster manager contents are unchanged
      */
     public boolean updateItem(T item) {
-        Algorithm<T> algorithm = getAlgorithm();
+        final Algorithm<T> algorithm = getAlgorithm();
         algorithm.lock();
         try {
             return algorithm.updateItem(item);
@@ -306,7 +306,7 @@ public class ClusterManager<T extends ClusterItem> implements
     private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
         @Override
         protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
-            Algorithm<T> algorithm = getAlgorithm();
+            final Algorithm<T> algorithm = getAlgorithm();
             algorithm.lock();
             try {
                 return algorithm.getClusters(zoom[0]);
