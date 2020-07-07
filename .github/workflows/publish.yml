@@ -42,7 +42,7 @@ jobs:
         sed -i -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
         sed -i -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
         sed -i -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
-        ./gradlew build publish --warn --stacktrace
+        ./gradlew build publish --verbose --stacktrace
       env:
         GPG_KEY_ARMOR: "${{ secrets.SYNCED_GPG_KEY_ARMOR }}"
         GPG_KEY_ID: ${{ secrets.SYNCED_GPG_KEY_ID }}
