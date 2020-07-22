@@ -1,0 +1,4 @@
+/build
+src/main/java/*
+src/main/res/*
+src/test/*

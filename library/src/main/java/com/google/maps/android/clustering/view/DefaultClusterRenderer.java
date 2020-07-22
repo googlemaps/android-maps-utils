@@ -66,6 +66,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -79,6 +81,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
     private boolean mAnimate;
+    private final Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -123,8 +126,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     private ClusterManager.OnClusterClickListener<T> mClickListener;
     private ClusterManager.OnClusterInfoWindowClickListener<T> mInfoWindowClickListener;
+    private ClusterManager.OnClusterInfoWindowLongClickListener<T> mInfoWindowLongClickListener;
     private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
     private ClusterManager.OnClusterItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
+    private ClusterManager.OnClusterItemInfoWindowLongClickListener<T> mItemInfoWindowLongClickListener;
 
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
@@ -155,6 +160,15 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             }
         });
 
+        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
+            @Override
+            public void onInfoWindowLongClick(Marker marker) {
+                if (mItemInfoWindowLongClickListener != null) {
+                    mItemInfoWindowLongClickListener.onClusterItemInfoWindowLongClick(mMarkerCache.get(marker));
+                }
+            }
+        });
+
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -170,14 +184,25 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 }
             }
         });
+
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
+            @Override
+            public void onInfoWindowLongClick(Marker marker) {
+                if (mInfoWindowLongClickListener != null) {
+                    mInfoWindowLongClickListener.onClusterInfoWindowLongClick(mClusterMarkerCache.get(marker));
+                }
+            }
+        });
     }
 
     @Override
     public void onRemove() {
         mClusterManager.getMarkerCollection().setOnMarkerClickListener(null);
         mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(null);
+        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(null);
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(null);
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(null);
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(null);
     }
 
     private LayerDrawable makeClusterBackground() {
@@ -234,10 +259,28 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return BUCKETS[BUCKETS.length - 1];
     }
 
+    /**
+     * Gets the minimum cluster size used to render clusters. For example, if "4" is returned,
+     * then for any clusters of size 3 or less the items will be rendered as individual markers
+     * instead of as a single cluster marker.
+     *
+     * @return the minimum cluster size used to render clusters. For example, if "4" is returned,
+     * then for any clusters of size 3 or less the items will be rendered as individual markers
+     * instead of as a single cluster marker.
+     */
     public int getMinClusterSize() {
         return mMinClusterSize;
     }
 
+    /**
+     * Sets the minimum cluster size used to render clusters. For example, if "4" is provided,
+     * then for any clusters of size 3 or less the items will be rendered as individual markers
+     * instead of as a single cluster marker.
+     *
+     * @param minClusterSize the minimum cluster size used to render clusters. For example, if "4"
+     *                       is provided, then for any clusters of size 3 or less the items will be
+     *                       rendered as individual markers instead of as a single cluster marker.
+     */
     public void setMinClusterSize(int minClusterSize) {
         mMinClusterSize = minClusterSize;
     }
@@ -291,8 +334,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             });
             renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
-            // It seems this cannot use a thread pool due to thread locking issues (#660)
-            new Thread(renderTask).start();
+            mExecutor.execute(renderTask);
         }
 
         public void queue(Set<? extends Cluster<T>> clusters) {
@@ -306,9 +348,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Determine whether the cluster should be rendered as individual markers or a cluster.
+     * @param cluster cluster to examine for rendering
+     * @return true if the provided cluster should be rendered as a single marker on the map, false
+     * if the items within this cluster should be rendered as individual markers instead.
      */
     protected boolean shouldRenderAsCluster(@NonNull Cluster<T> cluster) {
-        return cluster.getSize() > mMinClusterSize;
+        return cluster.getSize() >= mMinClusterSize;
     }
 
     /**
@@ -481,6 +526,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     }
 
     @Override
+    public void setOnClusterInfoWindowLongClickListener(ClusterManager.OnClusterInfoWindowLongClickListener<T> listener) {
+        mInfoWindowLongClickListener = listener;
+    }
+
+    @Override
     public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener) {
         mItemClickListener = listener;
     }
@@ -488,6 +538,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     @Override
     public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener) {
         mItemInfoWindowClickListener = listener;
+    }
+
+    @Override
+    public void setOnClusterItemInfoWindowLongClickListener(ClusterManager.OnClusterItemInfoWindowLongClickListener<T> listener) {
+        mItemInfoWindowLongClickListener = listener;
     }
 
     @Override

@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
-
 android {
     dexOptions {
         javaMaxHeapSize "2g"
@@ -65,19 +62,10 @@ dependencies {
     testImplementation 'net.sf.kxml:kxml2:2.3.0'
 }
 
-jacoco {
-    toolVersion = "0.8.5"
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
-}
-
 task instrumentTest(dependsOn: connectedCheck)
 
 if (System.getenv("JITPACK")) {
     apply plugin: 'maven'
-} else {
-    apply from: '../gradle-mvn-push.gradle'
 }
+
+preBuild.dependsOn(rootProject.tasks.copyGmsToV3Beta)

@@ -21,7 +21,7 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -45,11 +45,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 // [START maps_android_utils_install_snippet]
 dependencies {
-    implementation 'com.google.maps.android:android-maps-utils:1.2.1'
+    implementation 'com.google.maps.android:android-maps-utils:2.0.3'
     // [START_EXCLUDE silent]
     // implementation project(':library')
     implementation 'com.google.android.gms:play-services-maps:17.0.0'

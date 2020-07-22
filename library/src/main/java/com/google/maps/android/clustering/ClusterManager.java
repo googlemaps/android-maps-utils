@@ -16,6 +16,9 @@
 
 package com.google.maps.android.clustering;
 
+import android.content.Context;
+import android.os.AsyncTask;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
@@ -27,9 +30,6 @@ import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.collections.MarkerManager;
-
-import android.content.Context;
-import android.os.AsyncTask;
 
 import java.util.Collection;
 import java.util.Set;
@@ -61,7 +61,9 @@ public class ClusterManager<T extends ClusterItem> implements
 
     private OnClusterItemClickListener<T> mOnClusterItemClickListener;
     private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
+    private OnClusterInfoWindowLongClickListener<T> mOnClusterInfoWindowLongClickListener;
     private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
+    private OnClusterItemInfoWindowLongClickListener<T> mOnClusterItemInfoWindowLongClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
 
     public ClusterManager(Context context, GoogleMap map) {
@@ -103,8 +105,10 @@ public class ClusterManager<T extends ClusterItem> implements
         mRenderer.onAdd();
         mRenderer.setOnClusterClickListener(mOnClusterClickListener);
         mRenderer.setOnClusterInfoWindowClickListener(mOnClusterInfoWindowClickListener);
+        mRenderer.setOnClusterInfoWindowLongClickListener(mOnClusterInfoWindowLongClickListener);
         mRenderer.setOnClusterItemClickListener(mOnClusterItemClickListener);
         mRenderer.setOnClusterItemInfoWindowClickListener(mOnClusterItemInfoWindowClickListener);
+        mRenderer.setOnClusterItemInfoWindowLongClickListener(mOnClusterItemInfoWindowLongClickListener);
         cluster();
     }
 
@@ -119,11 +123,17 @@ public class ClusterManager<T extends ClusterItem> implements
     public void setAlgorithm(ScreenBasedAlgorithm<T> algorithm) {
         algorithm.lock();
         try {
-            if (mAlgorithm != null) {
-                algorithm.addItems(mAlgorithm.getItems());
-            }
-
+            final Algorithm<T> oldAlgorithm = getAlgorithm();
             mAlgorithm = algorithm;
+
+            if (oldAlgorithm != null) {
+                oldAlgorithm.lock();
+                try {
+                    algorithm.addItems(oldAlgorithm.getItems());
+                } finally {
+                    oldAlgorithm.unlock();
+                }
+            }
         } finally {
             algorithm.unlock();
         }
@@ -152,11 +162,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * {@link #cluster()} for the map to be cleared.
      */
     public void clearItems() {
-        mAlgorithm.lock();
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
         try {
-            mAlgorithm.clearItems();
+            algorithm.clearItems();
         } finally {
-            mAlgorithm.unlock();
+            algorithm.unlock();
         }
     }
 
@@ -167,11 +178,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean addItems(Collection<T> items) {
-        mAlgorithm.lock();
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
         try {
-            return mAlgorithm.addItems(items);
+            return algorithm.addItems(items);
         } finally {
-            mAlgorithm.unlock();
+            algorithm.unlock();
         }
     }
 
@@ -182,11 +194,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean addItem(T myItem) {
-        mAlgorithm.lock();
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
         try {
-            return mAlgorithm.addItem(myItem);
+            return algorithm.addItem(myItem);
         } finally {
-            mAlgorithm.unlock();
+            algorithm.unlock();
         }
     }
 
@@ -197,11 +210,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the cluster manager contents changed as a result of the call
      */
     public boolean removeItems(Collection<T> items) {
-        mAlgorithm.lock();
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
         try {
-            return mAlgorithm.removeItems(items);
+            return algorithm.removeItems(items);
         } finally {
-            mAlgorithm.unlock();
+            algorithm.unlock();
         }
     }
 
@@ -212,11 +226,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * @return true if the item was removed from the cluster manager as a result of this call
      */
     public boolean removeItem(T item) {
-        mAlgorithm.lock();
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
         try {
-            return mAlgorithm.removeItem(item);
+            return algorithm.removeItem(item);
         } finally {
-            mAlgorithm.unlock();
+            algorithm.unlock();
         }
     }
 
@@ -228,11 +243,12 @@ public class ClusterManager<T extends ClusterItem> implements
      * contained within the cluster manager and the cluster manager contents are unchanged
      */
     public boolean updateItem(T item) {
-        mAlgorithm.lock();
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
         try {
-            return mAlgorithm.updateItem(item);
+            return algorithm.updateItem(item);
         } finally {
-            mAlgorithm.unlock();
+            algorithm.unlock();
         }
     }
 
@@ -290,11 +306,12 @@ public class ClusterManager<T extends ClusterItem> implements
     private class ClusterTask extends AsyncTask<Float, Void, Set<? extends Cluster<T>>> {
         @Override
         protected Set<? extends Cluster<T>> doInBackground(Float... zoom) {
-            mAlgorithm.lock();
+            final Algorithm<T> algorithm = getAlgorithm();
+            algorithm.lock();
             try {
-                return mAlgorithm.getClusters(zoom[0]);
+                return algorithm.getClusters(zoom[0]);
             } finally {
-                mAlgorithm.unlock();
+                algorithm.unlock();
             }
         }
 
@@ -314,12 +331,21 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
-     * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
+     * Sets a callback that's invoked when a Cluster info window is tapped. Note: For this listener to function,
      * the ClusterManager must be added as a info window click listener to the map.
      */
     public void setOnClusterInfoWindowClickListener(OnClusterInfoWindowClickListener<T> listener) {
         mOnClusterInfoWindowClickListener = listener;
         mRenderer.setOnClusterInfoWindowClickListener(listener);
+    }
+
+    /**
+     * Sets a callback that's invoked when a Cluster info window is long-pressed. Note: For this listener to function,
+     * the ClusterManager must be added as a info window click listener to the map.
+     */
+    public void setOnClusterInfoWindowLongClickListener(OnClusterInfoWindowLongClickListener<T> listener) {
+        mOnClusterInfoWindowLongClickListener = listener;
+        mRenderer.setOnClusterInfoWindowLongClickListener(listener);
     }
 
     /**
@@ -341,6 +367,15 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
+     * Sets a callback that's invoked when an individual ClusterItem's Info Window is long-pressed. Note: For this
+     * listener to function, the ClusterManager must be added as a info window click listener to the map.
+     */
+    public void setOnClusterItemInfoWindowLongClickListener(OnClusterItemInfoWindowLongClickListener<T> listener) {
+        mOnClusterItemInfoWindowLongClickListener = listener;
+        mRenderer.setOnClusterItemInfoWindowLongClickListener(listener);
+    }
+
+    /**
      * Called when a Cluster is clicked.
      */
     public interface OnClusterClickListener<T extends ClusterItem> {
@@ -357,6 +392,13 @@ public class ClusterManager<T extends ClusterItem> implements
      */
     public interface OnClusterInfoWindowClickListener<T extends ClusterItem> {
         void onClusterInfoWindowClick(Cluster<T> cluster);
+    }
+
+    /**
+     * Called when a Cluster's Info Window is long clicked.
+     */
+    public interface OnClusterInfoWindowLongClickListener<T extends ClusterItem> {
+        void onClusterInfoWindowLongClick(Cluster<T> cluster);
     }
 
     /**
@@ -381,5 +423,12 @@ public class ClusterManager<T extends ClusterItem> implements
      */
     public interface OnClusterItemInfoWindowClickListener<T extends ClusterItem> {
         void onClusterItemInfoWindowClick(T item);
+    }
+
+    /**
+     * Called when an individual ClusterItem's Info Window is long clicked.
+     */
+    public interface OnClusterItemInfoWindowLongClickListener<T extends ClusterItem> {
+        void onClusterItemInfoWindowLongClick(T item);
     }
 }

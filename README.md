@@ -32,13 +32,17 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ## Requirements
 
 * Android API level 15+
-* Maps SDK via Google Play Services (this library is not yet compatible with the [Maps SDK v3.0 BETA] library)
+* Maps SDK via Google Play Services OR [Maps SDK v3 BETA] library
 
 ## Installation
 
 ```groovy
 dependencies {
-    implementation 'com.google.maps.android:android-maps-utils:1.2.1'
+    // Utilities for Maps SDK for Android (requires Google Play Services) 
+    implementation 'com.google.maps.android:android-maps-utils:2.0.3'
+
+    // Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
+    implementation 'com.google.maps.android:android-maps-utils-v3:2.0.3'
 }
 ```
 
@@ -66,7 +70,7 @@ Click events originate in the layer-specific object that added the marker/ground
 
 ```java
 // Clustering
-ClusterManager<ClusterItem> clusterManager = // Initialize ClusterManager
+ClusterManager<ClusterItem> clusterManager = // Initialize ClusterManager - if you're using multiple maps features, use the constructor that passes in Manager objects (see next section)
 clusterManager.setOnClusterItemClickListener(item -> {
     // Listen for clicks on a cluster item here
     return false;
@@ -77,13 +81,13 @@ clusterManager.setOnClusterClickListener(item -> {
 });
 
 // GeoJson
-GeoJsonLayer geoJsonLayer = // Initialize GeoJsonLayer
+GeoJsonLayer geoJsonLayer = // Initialize GeoJsonLayer - if you're using multiple maps features, use the constructor that passes in Manager objects (see next section)
 geoJsonLayer.setOnFeatureClickListener(feature -> {
     // Listen for clicks on GeoJson features here
 });
 
 // KML
-KmlLayer kmlLayer = // Initialize KmlLayer
+KmlLayer kmlLayer = // Initialize KmlLayer - if you're using multiple maps features, use the constructor that passes in Manager objects (see next section)
 kmlLayer.setOnFeatureClickListener(feature -> {
     // Listen for clicks on KML features here
 });
@@ -91,7 +95,7 @@ kmlLayer.setOnFeatureClickListener(feature -> {
 
 #### Using Manager Objects
 
-If you use one of Manager objects in the package `com.google.maps.android` (e.g. `GroundOverlayManager`, `MarkerManager`, etc.), say from adding a KML or GeoJson layer, you will have to rely on the Collection specific to add add object to the map rather than adding that object directly to `GoogleMap`. This is because each Manager sets itself as a click listener so that it can manager click events coming from multiple layers.
+If you use one of Manager objects in the package `com.google.maps.android` (e.g. `GroundOverlayManager`, `MarkerManager`, etc.), say from adding a KML layer, GeoJson layer, or Clustering, you will have to rely on the Collection specific to add add object to the map rather than adding that object directly to `GoogleMap`. This is because each Manager sets itself as a click listener so that it can manager click events coming from multiple layers.
 
 For example, if you have additional `GroundOverlay` objects:
 
@@ -135,7 +139,8 @@ collection.setOnInfoWindowClickListener(listener);
 
 // Alternatively, if you are using clustering
 ClusterManager<ClusterItem> clusterManager = // ...
-MarkerManager.Collection markerCollection = markerCollection.setInfoWindowAdapter(adapter);
+MarkerManager.Collection markerCollection = clusterManager.getMarkerCollection();
+markerCollection.setInfoWindowAdapter(adapter);
 markerCollection.setOnInfoWindowClickListener(listener);
 ```
 
@@ -183,6 +188,91 @@ GoogleMap.OnMarkerDragListener listener = // ...
 googleMap.setOnMarkerDragListener(listener);
 ```
 
+### Clustering
+
+[A bug](https://github.com/googlemaps/android-maps-utils/issues/90) was fixed in v1 to properly clear and re-add markers via the `ClusterManager`.
+
+For example, this didn't work pre-v1, but works for v1 and later:
+
+```java
+clusterManager.clearItems();
+clusterManager.addItems(items);
+clusterManager.cluster();
+```
+
+If you're using custom clustering (i.e, if you're extending `DefaultClusterRenderer`), you must override two additional methods in v1:
+*  `onClusterItemUpdated()` - should be the same* as your `onBeforeClusterItemRendered()` method
+*  `onClusterUpdated()` - should be the same* as your `onBeforeClusterRendered()` method
+
+**Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions`*
+
+See the [`CustomMarkerClusteringDemoActivity`](demo/src/main/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
+
+_New_
+
+```java
+    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+        ...     
+        @Override
+        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+            // Draw a single person - show their profile photo and set the info window to show their name
+            markerOptions
+                    .icon(getItemIcon(person))
+                    .title(person.name);
+        }
+        
+        /**
+         * New in v1 
+         */
+        @Override
+        protected void onClusterItemUpdated(Person person, Marker marker) {
+            // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
+            marker.setIcon(getItemIcon(person));
+            marker.setTitle(person.name);
+        }
+        
+        @Override
+        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            markerOptions.icon(getClusterIcon(cluster));
+        }
+       
+        /**
+         * New in v1 
+         */
+        @Override
+        protected void onClusterUpdated(Cluster<Person> cluster, Marker marker) {
+            // Same implementation as onBeforeClusterRendered() (to update cached markers)
+            marker.setIcon(getClusterIcon(cluster));
+        }
+        ...
+    }
+```
+
+_Old_
+
+```java
+    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+        ...       
+        @Override
+        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+            // Draw a single person - show their profile photo and set the info window to show their name
+            markerOptions
+                    .icon(getItemIcon(person))
+                    .title(person.name);
+        }
+        
+        @Override
+        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+            // Draw multiple people.
+            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+            markerOptions.icon(getClusterIcon(cluster));
+        }
+        ...
+    }
+```
+
 ## Support
 
 Encounter an issue while using this library?
@@ -195,7 +285,7 @@ You can also reach us on our [Discord channel].
 For more information, check out the detailed guide on the
 [Google Developers site][devsite-guide].
 
-[Maps SDK v3.0 BETA]: https://developers.google.com/maps/documentation/android-sdk/v3-client-migration
+[Maps SDK v3 BETA]: https://developers.google.com/maps/documentation/android-sdk/v3-client-migration
 [file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
 [pull request]: https://github.com/googlemaps/android-maps-utils/compare
 [code of conduct]: CODE_OF_CONDUCT.md
