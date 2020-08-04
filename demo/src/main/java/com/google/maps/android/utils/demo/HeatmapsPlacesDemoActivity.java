@@ -19,6 +19,7 @@ package com.google.maps.android.utils.demo;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -59,6 +60,8 @@ import java.util.Hashtable;
  */
 public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
+    private final String TAG = "HeatmapPlacesDemo";
+
     private final LatLng SYDNEY = new LatLng(-33.873651, 151.2058896);
 
     /**
@@ -69,7 +72,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * The options required for the radar search.
      */
-    private static final String TYPE_RADAR_SEARCH = "/radarsearch";
+    private static final String TYPE_NEARBY_SEARCH = "/nearbysearch";
     private static final String OUT_JSON = "/json";
 
     /**
@@ -194,7 +197,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      *
      * @param keyword A string to use as a search term for the radar search
      * @return Returns the search results from radar search as a collection
-     * of LatLng objects.
+     * of LatLng objects, or null if there was an error calling the API
      */
     private Collection<LatLng> getPoints(String keyword) {
         HashMap<String, LatLng> results = new HashMap<>();
@@ -208,6 +211,10 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
         for (int j = 0; j < 4; j++) {
             String jsonResults = getJsonPlaces(keyword, searchCenters.get(j));
+            if (jsonResults == null) {
+                // Error calling Places API
+                return null;
+            }
             try {
                 // Create a JSON object hierarchy from the results
                 JSONObject jsonObj = new JSONObject(jsonResults);
@@ -215,16 +222,17 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
 
                 // Extract the Place descriptions from the results
                 for (int i = 0; i < pointsJsonArray.length(); i++) {
-                    if (!results.containsKey(pointsJsonArray.getJSONObject(i).getString("id"))) {
+                    if (!results.containsKey(pointsJsonArray.getJSONObject(i).getString("place_id"))) {
                         JSONObject location = pointsJsonArray.getJSONObject(i)
                                 .getJSONObject("geometry").getJSONObject("location");
-                        results.put(pointsJsonArray.getJSONObject(i).getString("id"),
+                        results.put(pointsJsonArray.getJSONObject(i).getString("place_id"),
                                 new LatLng(location.getDouble("lat"),
                                         location.getDouble("lng")));
                     }
                 }
             } catch (JSONException e) {
-                Toast.makeText(this, "Cannot process JSON results", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error parsing JSON:" + e);
+                runOnUiThread(() -> Toast.makeText(this, "Cannot process JSON results", Toast.LENGTH_SHORT).show());
             }
         }
         return results.values();
@@ -242,13 +250,14 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         StringBuilder jsonResults = new StringBuilder();
         try {
             URL url = new URL(
-                    PLACES_API_BASE + TYPE_RADAR_SEARCH + OUT_JSON
-                    + "?location=" + location.latitude + "," + location.longitude
-                    + "&radius=" + (SEARCH_RADIUS / 2)
-                    + "&sensor=false"
-                    + "&key=" + API_KEY
-                    + "&keyword=" + keyword.replace(" ", "%20")
+                    PLACES_API_BASE + TYPE_NEARBY_SEARCH + OUT_JSON
+                            + "?location=" + location.latitude + "," + location.longitude
+                            + "&radius=" + (SEARCH_RADIUS / 2)
+                            + "&sensor=false"
+                            + "&key=" + API_KEY
+                            + "&keyword=" + keyword.replace(" ", "%20")
             );
+            Log.d(TAG, "URL: " + url);
             conn = (HttpURLConnection) url.openConnection();
             InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
@@ -259,10 +268,10 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Toast.makeText(this, "Error processing Places API URL", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(this, "Error processing Places API URL", Toast.LENGTH_SHORT).show());
             return null;
         } catch (IOException e) {
-            Toast.makeText(this, "Error connecting to Places API", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(this, "Error connecting to Places API", Toast.LENGTH_SHORT).show());
             return null;
         } finally {
             if (conn != null) {
@@ -302,10 +311,21 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      */
     private class MakeOverlayTask extends AsyncTask<String, Integer, PointsKeywords> {
         protected PointsKeywords doInBackground(String... keyword) {
-            return new PointsKeywords(getPoints(keyword[0]), keyword[0]);
+            Collection<LatLng> points = getPoints(keyword[0]);
+            if (points != null) {
+                return new PointsKeywords(points, keyword[0]);
+            } else {
+                return null;
+            }
         }
 
         protected void onPostExecute(PointsKeywords pointsKeywords) {
+            ProgressBar progressBar = findViewById(R.id.progress_bar);
+            if (pointsKeywords == null) {
+                // Error calling Places API
+                progressBar.setVisibility(View.GONE);
+                return;
+            }
             Collection<LatLng> points = pointsKeywords.points;
             String keyword = pointsKeywords.keyword;
 
@@ -322,11 +342,9 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
                 }
                 mOverlaysRendered++;
                 if (mOverlaysRendered == mOverlaysInput) {
-                    ProgressBar progressBar = findViewById(R.id.progress_bar);
                     progressBar.setVisibility(View.GONE);
                 }
             } else {
-                ProgressBar progressBar = findViewById(R.id.progress_bar);
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(HeatmapsPlacesDemoActivity.this, "No results for this query :(", Toast.LENGTH_SHORT).show();
             }
