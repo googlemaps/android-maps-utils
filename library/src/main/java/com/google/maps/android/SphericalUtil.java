@@ -191,10 +191,10 @@ public class SphericalUtil {
         LatLng prev = null;
         for (LatLng point : path) {
             if (prev != null) {
-                double prevLat = toRadians(prev.getLat());
-                double prevLng = toRadians(prev.getLng());
-                double lat = toRadians(point.getLat());
-                double lng = toRadians(point.getLng());
+                double prevLat = toRadians(prev.latitude);
+                double prevLng = toRadians(prev.longitude);
+                double lat = toRadians(point.latitude);
+                double lng = toRadians(point.longitude);
                 length += distanceRadians(prevLat, prevLng, lat, lng);
             }
             prev = point;
