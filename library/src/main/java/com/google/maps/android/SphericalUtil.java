@@ -188,15 +188,16 @@ public class SphericalUtil {
             return 0;
         }
         double length = 0;
-        LatLng prev = path.get(0);
-        double prevLat = toRadians(prev.latitude);
-        double prevLng = toRadians(prev.longitude);
+        LatLng prev = null;
         for (LatLng point : path) {
-            double lat = toRadians(point.latitude);
-            double lng = toRadians(point.longitude);
-            length += distanceRadians(prevLat, prevLng, lat, lng);
-            prevLat = lat;
-            prevLng = lng;
+            if (prev != null) {
+                double prevLat = toRadians(prev.latitude);
+                double prevLng = toRadians(prev.longitude);
+                double lat = toRadians(point.latitude);
+                double lng = toRadians(point.longitude);
+                length += distanceRadians(prevLat, prevLng, lat, lng);
+            }
+            prev = point;
         }
         return length * EARTH_RADIUS;
     }
