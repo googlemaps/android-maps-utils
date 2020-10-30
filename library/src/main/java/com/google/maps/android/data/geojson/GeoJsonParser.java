@@ -105,7 +105,7 @@ public class GeoJsonParser {
      *
      * @param geoJsonFile GeoJSON file to parse
      */
-    /* package */ GeoJsonParser(JSONObject geoJsonFile) {
+    public GeoJsonParser(JSONObject geoJsonFile) {
         mGeoJsonFile = geoJsonFile;
         mGeoJsonFeatures = new ArrayList<>();
         mBoundingBox = null;
@@ -169,7 +169,10 @@ public class GeoJsonParser {
 
     /**
      * Parses a single GeoJSON geometry object containing a coordinates array or a geometries array
-     * if it has type GeometryCollection
+     * if it has type GeometryCollection. FeatureCollections, styles, bounding boxes, and properties
+     * are not processed by this method. If you want to parse GeoJSON including FeatureCollections,
+     * styles, bounding boxes, and properties into an array of {@link GeoJsonFeature}s then
+     * instantiate {@link GeoJsonParser} and call {@link GeoJsonParser#getFeatures()}.
      *
      * @param geoJsonGeometry geometry object to parse
      * @return Geometry object
@@ -503,7 +506,7 @@ public class GeoJsonParser {
      *
      * @return array of GeoJsonFeatures
      */
-    /* package */ ArrayList<GeoJsonFeature> getFeatures() {
+    public ArrayList<GeoJsonFeature> getFeatures() {
         return mGeoJsonFeatures;
     }
 
@@ -515,7 +518,7 @@ public class GeoJsonParser {
      * @return LatLngBounds object containing bounding box of FeatureCollection, null if no bounding
      * box
      */
-    /* package */ LatLngBounds getBoundingBox() {
+    public LatLngBounds getBoundingBox() {
         return mBoundingBox;
     }
 
