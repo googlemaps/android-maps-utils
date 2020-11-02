@@ -130,7 +130,7 @@ subprojects { project ->
 
     // Code coverage
     jacoco {
-        toolVersion = "0.2"
+        toolVersion = "0.8.4"
     }
 
     tasks.withType(Test) {
