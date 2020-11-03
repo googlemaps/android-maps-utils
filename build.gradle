@@ -18,10 +18,13 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.hiya:jacoco-android:0.2'
     }
 }
 
@@ -121,13 +124,13 @@ subprojects { project ->
     if (project.ext.artifactId == null) return
 
     apply plugin: 'com.android.library'
-    apply plugin: 'jacoco-android'
+    apply plugin: 'com.hiya.jacoco-android'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
     // Code coverage
     jacoco {
-        toolVersion = "0.8.5"
+        toolVersion = "0.8.4"
     }
 
     tasks.withType(Test) {
