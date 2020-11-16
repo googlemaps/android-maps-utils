@@ -1,0 +1,30 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'com.android.lint'
+
+lintOptions {
+    htmlReport true
+    htmlOutput file("lint-report.html")
+    textReport true
+    absolutePaths false
+    ignoreTestSources true
+}
+
+dependencies {
+    compileOnly "com.android.tools.lint:lint-api:27.2.0-alpha16"
+    compileOnly "com.android.tools.lint:lint-checks:27.2.0-alpha16"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
+    testImplementation "junit:junit:4.13.1"
+    testImplementation "com.android.tools.lint:lint:27.2.0-alpha16"
+    testImplementation "com.android.tools.lint:lint-tests:27.2.0-alpha16"
+    testImplementation "com.android.tools:testutils:27.2.0-alpha16"
+}
+
+jar {
+    manifest {
+        attributes("Lint-Registry-v2": "com.google.maps.android.lint.checks.MapsUtilsIssueRegistry")
+    }
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
