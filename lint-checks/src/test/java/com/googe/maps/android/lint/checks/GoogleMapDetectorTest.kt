@@ -50,7 +50,9 @@ class GoogleMapDetectorTest : LintDetectorTest() {
             java(GOOGLE_MAP_STUB).indented())
             .run()
             .expect("""
-                    src/test/pkg/TestClass.java:9: Warning: Potential custom info window collision. [GoogleMapUtilsInfoWindowOverride]
+                    src/test/pkg/TestClass.java:9: Warning: Using this method may override behaviors set by the Maps SDK for Android Utility 
+                    Library. If you are not using clustering, GeoJson, or KML, you can safely suppress
+                    this warning, otherwise, refer to the utility library's migration guide." [PotentialBehaviorOverride]
                             map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                             ^
                     0 errors, 1 warnings
@@ -63,7 +65,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
     }
 
     override fun getIssues(): List<Issue> {
-        return listOf(GoogleMapDetector.INFO_WINDOW_OVERRIDE)
+        return listOf(GoogleMapDetector.POTENTIAL_BEHAVIOR_OVERRIDE)
     }
 
     companion object {

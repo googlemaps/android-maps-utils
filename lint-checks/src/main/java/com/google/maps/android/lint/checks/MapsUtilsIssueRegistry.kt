@@ -22,7 +22,7 @@ import com.android.tools.lint.detector.api.Issue
 class MapsUtilsIssueRegistry : IssueRegistry() {
 
     override val issues: List<Issue> =
-        listOf(GoogleMapDetector.INFO_WINDOW_OVERRIDE)
+        listOf(GoogleMapDetector.POTENTIAL_BEHAVIOR_OVERRIDE)
 
     override val api: Int =
         CURRENT_API
