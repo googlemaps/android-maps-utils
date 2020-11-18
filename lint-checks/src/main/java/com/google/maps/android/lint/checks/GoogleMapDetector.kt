@@ -29,24 +29,34 @@ import org.jetbrains.uast.UCallExpression
 @Suppress("UnstableApiUsage")
 class GoogleMapDetector : Detector(), SourceCodeScanner  {
     override fun getApplicableMethodNames(): List<String>? =
-        listOf("setInfoWindowAdapter")
+        listOf(
+            "setInfoWindowAdapter",
+            "setOnInfoWindowClickListener",
+            "setOnInfoWindowLongClickListener",
+            "setOnMarkerClickListener",
+            "setOnMarkerDragListener",
+        )
 
     override fun visitMethodCall(context: JavaContext, node: UCallExpression, method: PsiMethod) {
         val evaluator = context.evaluator
         if (!evaluator.isMemberInClass(method, "com.google.android.gms.maps.GoogleMap")) {
             return
         }
-        context.report(POTENTIAL_BEHAVIOR_OVERRIDE, node, context.getLocation(node), POTENTIAL_BEHAVIOR_OVERRIDE.getBriefDescription(TextFormat.TEXT))
+        context.report(
+            issue = POTENTIAL_BEHAVIOR_OVERRIDE,
+            scope = node,
+            location = context.getLocation(node),
+            message = POTENTIAL_BEHAVIOR_OVERRIDE.getBriefDescription(TextFormat.TEXT)
+        )
     }
 
     companion object {
         val POTENTIAL_BEHAVIOR_OVERRIDE = Issue.create(
             id = "PotentialBehaviorOverride",
-            briefDescription = """
-                Using this method may override behaviors set by the Maps SDK for Android Utility 
-                Library. If you are not using clustering, GeoJson, or KML, you can safely suppress
-                this warning, otherwise, refer to the utility library's migration guide."
-            """.trimIndent(),
+            briefDescription = "Using this method may override behaviors set by the Maps SDK for " +
+                "Android Utility Library. If you are not using clustering, GeoJson, or KML, you " +
+                "can safely suppress this warning, otherwise, refer to the utility " +
+                "library's migration guide.",
             explanation = """
                 This lint warns for potential behavior override while using clustering, GeoJson, or
                 KML since these features use this method in their internal implementations. As such,

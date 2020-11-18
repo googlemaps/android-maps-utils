@@ -54,9 +54,9 @@ android {
 
 // [START maps_android_utils_install_snippet]
 dependencies {
-    implementation 'com.google.maps.android:android-maps-utils:2.1.0'
-    // [START_EXCLUDE silent]
-    // implementation project(':library')
+//    implementation 'com.google.maps.android:android-maps-utils:2.1.0'
+    // [START_ECLUDE silent]
+     implementation project(':library')
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
