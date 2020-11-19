@@ -74,7 +74,7 @@ class GoogleMapDetector : Detector(), SourceCodeScanner  {
                 collection.setInfoWindowAdapter(...);
                 ```
                 
-                Refer to the migration guide for more info: https://github.com/googlemaps/android-maps-utils#migration-guide
+                Refer to the migration guide for more info: https://bit.ly/3kTpQmY
             """,
             category = Category.CORRECTNESS,
             priority = 6,

@@ -27,6 +27,6 @@ class MapsUtilsIssueRegistry : IssueRegistry() {
     override val api: Int =
         CURRENT_API
 
-    override val minApi: Int
-        get() = 1
+//    override val minApi: Int
+//        get() = 6
 }

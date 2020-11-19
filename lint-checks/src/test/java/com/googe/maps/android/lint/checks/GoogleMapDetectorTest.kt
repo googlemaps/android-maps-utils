@@ -24,8 +24,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
 
     fun testSetOnMarkerDragListener() {
         lint().files(
-            testFile(
-                """
+            testFile("""
                         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                             @Override 
                             public void onMarkerDragStart(Marker marker) {
@@ -39,70 +38,55 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                             public void onMarkerDragEnd(Marker marker) {
                             }
                       });
-            """
-            ),
+            """),
             java(GOOGLE_MAP_STUB).indented()
-        )
-            .run()
-            .expect(expectedText("map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {"))
+        ).run().expect(expectedText("map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {"))
     }
 
     fun testSetOnMarkerClickListener() {
         lint().files(
-            testFile(
-                """
+            testFile("""
                         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override 
                             public boolean onMarkerClick(Marker marker) {
                                 return false;
                             }
                       });
-            """
-            ),
+            """),
             java(GOOGLE_MAP_STUB).indented()
-        )
-            .run()
-            .expect(expectedText("map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {"))
+        ).run().expect(expectedText("map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {"))
     }
 
     fun testSetOnInfoWindowLongClickListener() {
         lint().files(
-            testFile(
-                """
+            testFile("""
                         map.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
                             @Override 
                             public void onInfoWindowLongClick(Marker marker) {
                             }
                       });
-            """
-            ),
+            """),
             java(GOOGLE_MAP_STUB).indented()
-        )
-            .run()
-            .expect(expectedText("map.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {"))
+        ).run().expect(expectedText("map.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {"))
     }
 
     fun testSetOnInfoWindowClickListener() {
         lint().files(
-            testFile(
-                """
+            testFile("""
                         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                             @Override 
                             public void onInfoWindowClick(Marker marker) {
                             }
                       });
-            """
-            ),
+            """),
             java(GOOGLE_MAP_STUB).indented()
-        )
-            .run()
-            .expect(expectedText("map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {"))
+        ).run().expect(expectedText("map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {"))
     }
 
     fun testSetInfoWindowAdapter() {
         lint().files(
             testFile(
-                """
+            """
                         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                             @Override 
                             public View getInfoWindow(Marker marker) {
@@ -114,12 +98,9 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                                 return null;
                             }
                       });
-            """
-            ),
+            """),
             java(GOOGLE_MAP_STUB).indented()
-        )
-            .run()
-            .expect(expectedText("map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {"))
+        ).run().expect(expectedText("map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {"))
     }
 
     private fun expectedText(text: String): String =
@@ -131,8 +112,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
         """
 
     private fun testFile(containing: String): TestFile {
-        return java(
-            """
+        return java("""
                 package test.pkg;
                 
                 import com.google.android.gms.maps.GoogleMap;
