@@ -17,6 +17,7 @@ package com.googe.maps.android.lint.checks
 import com.android.tools.lint.checks.infrastructure.LintDetectorTest
 import com.android.tools.lint.detector.api.Detector
 import com.android.tools.lint.detector.api.Issue
+import com.android.tools.lint.detector.api.TextFormat
 import com.google.maps.android.lint.checks.GoogleMapDetector
 
 @Suppress("UnstableApiUsage")
@@ -105,7 +106,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
 
     private fun expectedText(text: String): String =
         """
-        src/test/pkg/TestClass.java:10: Warning: Using this method may override behaviors set by the Maps SDK for Android Utility Library. If you are not using clustering, GeoJson, or KML, you can safely suppress this warning, otherwise, refer to the utility library's migration guide. [PotentialBehaviorOverride]
+        src/test/pkg/TestClass.java:10: Warning: ${GoogleMapDetector.POTENTIAL_BEHAVIOR_OVERRIDE.getBriefDescription(TextFormat.TEXT)} [${GoogleMapDetector.POTENTIAL_BEHAVIOR_OVERRIDE.id}]
                 $text
                 ^
         0 errors, 1 warnings

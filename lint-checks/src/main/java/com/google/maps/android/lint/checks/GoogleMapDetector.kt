@@ -51,12 +51,14 @@ class GoogleMapDetector : Detector(), SourceCodeScanner  {
     }
 
     companion object {
+        private val migrationGuideUrl = "https://bit.ly/3kTpQmY"
+
         val POTENTIAL_BEHAVIOR_OVERRIDE = Issue.create(
             id = "PotentialBehaviorOverride",
             briefDescription = "Using this method may override behaviors set by the Maps SDK for " +
                 "Android Utility Library. If you are not using clustering, GeoJson, or KML, you " +
                 "can safely suppress this warning, otherwise, refer to the utility " +
-                "library's migration guide.",
+                "library's migration guide: $migrationGuideUrl",
             explanation = """
                 This lint warns for potential behavior override while using clustering, GeoJson, or
                 KML since these features use this method in their internal implementations. As such,
@@ -74,7 +76,7 @@ class GoogleMapDetector : Detector(), SourceCodeScanner  {
                 collection.setInfoWindowAdapter(...);
                 ```
                 
-                Refer to the migration guide for more info: https://bit.ly/3kTpQmY
+                Refer to the migration guide for more info: $migrationGuideUrl
             """,
             category = Category.CORRECTNESS,
             priority = 6,
