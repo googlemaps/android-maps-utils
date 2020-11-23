@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-include 'library'
 include 'demo'
-include ':library-v3'
+include 'library'
+include 'library-v3'
+include 'lint-checks'
