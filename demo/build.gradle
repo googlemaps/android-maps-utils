@@ -114,11 +114,11 @@ task generateV3Layout(type: Copy) {
 task startGmsDemo(type: Exec) {
     dependsOn 'installGmsDebug'
     def adb = new File("${System.env.ANDROID_HOME}", "platform-tools${File.separator}adb")
-    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.gms/.MainActivity"
+    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.gms/com.google.maps.android.utils.demo.MainActivity"
 }
 
 task startV3Demo(type: Exec) {
     dependsOn 'installV3Debug'
     def adb = new File("${System.env.ANDROID_HOME}", "platform-tools${File.separator}adb")
-    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.v3/.MainActivity"
+    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.v3/com.google.maps.android.utils.demo.MainActivity"
 }
