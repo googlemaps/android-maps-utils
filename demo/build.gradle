@@ -97,7 +97,7 @@ task generateV3(type: Copy) {
     filter { line ->
         line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
     }
-    filter(ConcatFilter, prepend: file('../V3_FILE_HEADER'))
+    filter(ConcatFilter, prepend: file('V3_FILE_HEADER'))
 }
 
 task generateV3Layout(type: Copy) {
