@@ -57,26 +57,20 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         }
 
         // Shared object managers - used to support multiple layer types on the map simultaneously
-        // [START maps_multilayer_demo_init1]
         MarkerManager markerManager = new MarkerManager(getMap());
         GroundOverlayManager groundOverlayManager = new GroundOverlayManager(getMap());
         PolygonManager polygonManager = new PolygonManager(getMap());
         PolylineManager polylineManager = new PolylineManager(getMap());
-        // [END maps_multilayer_demo_init1]
 
         // Add clustering
-        // [START maps_multilayer_demo_init2]
         ClusterManager<MyItem> clusterManager = new ClusterManager<>(this, getMap(), markerManager);
-        // [END maps_multilayer_demo_init2]
         getMap().setOnCameraIdleListener(clusterManager);
         addClusterItems(clusterManager);
 
         // Add GeoJSON from resource
         try {
             // GeoJSON polyline
-            // [START maps_multilayer_demo_init3]
             GeoJsonLayer geoJsonLineLayer = new GeoJsonLayer(getMap(), R.raw.south_london_line_geojson, this, markerManager, polygonManager, polylineManager, groundOverlayManager);
-            // [END maps_multilayer_demo_init3]
             // Make the line red
             GeoJsonLineStringStyle geoJsonLineStringStyle = new GeoJsonLineStringStyle();
             geoJsonLineStringStyle.setColor(Color.RED);
@@ -111,15 +105,11 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         // Add KMLs from resources
         try {
             // KML Polyline
-            // [START maps_multilayer_demo_init4]
             KmlLayer kmlPolylineLayer = new KmlLayer(getMap(), R.raw.south_london_line_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
-            // [END maps_multilayer_demo_init4]
-            // [START maps_multilayer_demo_init6]
             kmlPolylineLayer.addLayerToMap();
             kmlPolylineLayer.setOnFeatureClickListener(feature -> Toast.makeText(MultiLayerDemoActivity.this,
                     "KML polyline clicked: " + feature.getProperty("name"),
                     Toast.LENGTH_SHORT).show());
-            // [END maps_multilayer_demo_init6]
 
             // KML Polygon
             KmlLayer kmlPolygonLayer = new KmlLayer(getMap(), R.raw.south_london_square_kml, this, markerManager, polygonManager, polylineManager, groundOverlayManager, null);
@@ -134,21 +124,17 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         }
 
         // Unclustered marker - instead of adding to the map directly, use the MarkerManager
-        // [START maps_multilayer_demo_init5]
         MarkerManager.Collection markerCollection = markerManager.newCollection();
         markerCollection.addMarker(new MarkerOptions()
                 .position(new LatLng(51.150000, -0.150032))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 .title("Unclustered marker"));
-        // [END maps_multilayer_demo_init5]
-        // [START maps_multilayer_demo_init7]
         markerCollection.setOnMarkerClickListener(marker -> {
             Toast.makeText(MultiLayerDemoActivity.this,
                     "Marker clicked: " + marker.getTitle(),
                     Toast.LENGTH_SHORT).show();
             return false;
         });
-        // [END maps_multilayer_demo_init7]
     }
 
     private void addClusterItems(ClusterManager clusterManager) {
