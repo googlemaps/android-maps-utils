@@ -16,9 +16,20 @@ import org.apache.tools.ant.filters.ConcatFilter
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'com.google.secrets_gradle_plugin' version '0.4'
+}
 
 android {
+    signingConfigs {
+        tesing {
+            storeFile file('/Users/chrisarriola/Desktop/testingkeystore')
+            storePassword 'testing'
+            keyAlias 'testing'
+            keyPassword 'testing'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
@@ -27,24 +38,13 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
-        // Read the API key from demo/secure.properties into R.string.maps_api_key
-        def secureProps = new Properties()
-        if (file("secure.properties").exists()) {
-            file("secure.properties")?.withInputStream { secureProps.load(it) }
-        }
-        resValue "string", "maps_api_key", (secureProps.getProperty("MAPS_API_KEY") ?: "")
-
-        // To add your Maps API key to this project:
-        // 1. Create a file demo/secure.properties
-        // 2. Add this line, where YOUR_API_KEY is your API key:
-        //        MAPS_API_KEY=YOUR_API_KEY
     }
 
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.tesing
         }
     }
     flavorDimensions "version"
@@ -121,4 +121,12 @@ task startV3Demo(type: Exec) {
     dependsOn 'installV3Debug'
     def adb = new File("${System.env.ANDROID_HOME}", "platform-tools${File.separator}adb")
     commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.v3/com.google.maps.android.utils.demo.MainActivity"
+}
+
+secrets {
+    // To add your Maps API key to this project:
+    // 1. Open the file local.properties found under the root project
+    // 2. Add this line, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
+    defaultPropertiesFileName 'local.defaults.properties'
 }
