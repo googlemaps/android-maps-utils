@@ -22,14 +22,6 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        tesing {
-            storeFile file('/Users/chrisarriola/Desktop/testingkeystore')
-            storePassword 'testing'
-            keyAlias 'testing'
-            keyPassword 'testing'
-        }
-    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
@@ -44,7 +36,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.tesing
         }
     }
     flavorDimensions "version"
