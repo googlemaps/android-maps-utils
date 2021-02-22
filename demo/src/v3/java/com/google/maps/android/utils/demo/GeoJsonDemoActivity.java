@@ -23,6 +23,7 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,10 +32,16 @@ import com.google.android.libraries.maps.CameraUpdateFactory;
 import com.google.android.libraries.maps.model.BitmapDescriptor;
 import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 import com.google.android.libraries.maps.model.LatLng;
+import com.google.android.libraries.maps.model.Polygon;
+import com.google.android.libraries.maps.model.PolygonOptions;
+import com.google.maps.android.data.DataPolygon;
 import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.Geometry;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonMultiPolygon;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
+import com.google.maps.android.data.geojson.GeoJsonPolygon;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +51,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeoJsonDemoActivity extends BaseDemoActivity {
 
@@ -163,9 +172,51 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             }
         }
     }
+    void addToMap(GeoJsonLayer layer) {
+        for (GeoJsonFeature feature : layer.getFeatures()) {
+            if (feature.hasGeometry()) {
+                Geometry geometry = feature.getGeometry();
+                if (geometry.getGeometryType().equals("MultiPolygon")) {
+                    Log.d(mLogTag,"Adding multipolygon");
+                    GeoJsonMultiPolygon multiPolygon= (GeoJsonMultiPolygon)geometry;
+                    ArrayList<Polygon> polygons = new ArrayList<>();
+                    for (GeoJsonPolygon geoJsonPolygon : multiPolygon.getPolygons()) {
+                        //polygons.add(addPolygonToMap(polygonStyle.toPolygonOptions(), geoJsonPolygon));
+                        DataPolygon polygon = (DataPolygon)geoJsonPolygon;
+                        PolygonOptions polygonOptions=new PolygonOptions()
+                                .strokeColor(Color.BLACK)
+                                //.addAll(pgo)
+                                .fillColor(Color.argb(20, 0, 255, 0))
+                                .zIndex(1)
+                                //.clickable(true) // not clickable since takes clicks anywhere
+                                .strokeWidth(8);
 
+                        // First array of coordinates are the outline
+                        polygonOptions.addAll(polygon.getOuterBoundaryCoordinates());
+                        // Following arrays are holes
+                        List<List<LatLng>> innerBoundaries = polygon.getInnerBoundaryCoordinates();
+                        for (List<LatLng> innerBoundary : innerBoundaries) {
+                            polygonOptions.addHole(innerBoundary);
+                        }
+                        Log.d(mLogTag,"Add multipolygon to map");
+                        getMap().addPolygon(polygonOptions);
+                        Log.d(mLogTag,"Add multipolygon to map done");
+                    }
+
+
+                }
+            }
+
+        }
+    }
     private void addGeoJsonLayerToMap(GeoJsonLayer layer) {
+        boolean simpleAdd=true;
+        if (simpleAdd==true) {
+            addToMap(layer);
+            return;
+        }
         addColorsToMarkers(layer);
+
         layer.addLayerToMap();
         // Demonstrate receiving features via GeoJsonLayer clicks.
         layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
@@ -177,5 +228,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             }
 
         });
+
+
     }
 }
