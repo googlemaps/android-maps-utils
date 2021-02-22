@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
-        if (getString(R.string.maps_api_key).isEmpty()) {
+        String key = getString(R.string.maps_api_key);
+        if (key.isEmpty()) {
             Toast.makeText(this, "Add your own API key in demo/secure.properties as MAPS_API_KEY=YOUR_API_KEY", Toast.LENGTH_LONG).show();
         }
 

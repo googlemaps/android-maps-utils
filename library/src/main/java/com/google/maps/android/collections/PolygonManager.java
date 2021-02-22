@@ -16,6 +16,8 @@
 
 package com.google.maps.android.collections;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -59,13 +61,17 @@ public class PolygonManager extends MapObjectManager<Polygon, PolygonManager.Col
     }
 
     public class Collection extends MapObjectManager.Collection {
+        private final String TAG= Collection.class.getSimpleName();
         private GoogleMap.OnPolygonClickListener mPolygonClickListener;
 
         public Collection() {
         }
 
         public Polygon addPolygon(PolygonOptions opts) {
+            Log.d(TAG,"adding polygon");
             Polygon polygon = mMap.addPolygon(opts);
+            Log.d(TAG,"polygon added");
+
             super.add(polygon);
             return polygon;
         }

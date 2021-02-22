@@ -67,9 +67,9 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
             getMap().moveCamera(CameraUpdateFactory.newLatLng(new LatLng(31.4118,-103.5355)));
         }
         // Download the GeoJSON file.
-        retrieveFileFromUrl();
+        //retrieveFileFromUrl();
         // Alternate approach of loading a local GeoJSON file.
-        //retrieveFileFromResource();
+        retrieveFileFromResource();
     }
 
     private void retrieveFileFromUrl() {
@@ -78,8 +78,11 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
 
     private void retrieveFileFromResource() {
         try {
-            GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.earthquakes_with_usa, this);
+            Log.d(mLogTag,"Creating layer");
+            GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.large, this);
+            Log.d(mLogTag,"Creating layer done");
             addGeoJsonLayerToMap(layer);
+            Log.d(mLogTag,"Added to map");
         } catch (IOException e) {
             Log.e(mLogTag, "GeoJSON file could not be read");
         } catch (JSONException e) {

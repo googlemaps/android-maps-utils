@@ -57,6 +57,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -81,7 +82,7 @@ import androidx.fragment.app.FragmentManager;
  * {@link com.google.maps.android.data.geojson.GeoJsonRenderer GeoJsonRenderer}
  */
 public class Renderer {
-
+    private static final String TAG=Renderer.class.getSimpleName();
     private static final int MARKER_ICON_SIZE = 32;
 
     private static final Object FEATURE_NOT_ON_MAP = null;
@@ -1080,10 +1081,12 @@ public class Renderer {
      */
     private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle polygonStyle,
                                                     GeoJsonMultiPolygon multiPolygon) {
+        Log.d(TAG, "addMultiPolygonToMap");
         ArrayList<Polygon> polygons = new ArrayList<>();
         for (GeoJsonPolygon geoJsonPolygon : multiPolygon.getPolygons()) {
             polygons.add(addPolygonToMap(polygonStyle.toPolygonOptions(), geoJsonPolygon));
         }
+        Log.d(TAG, "addMultiPolygonToMap done");
         return polygons;
     }
 
