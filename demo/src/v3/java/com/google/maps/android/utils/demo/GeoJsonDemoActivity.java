@@ -198,11 +198,12 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                         for (List<LatLng> innerBoundary : innerBoundaries) {
                             polygonOptions.addHole(innerBoundary);
                         }
-                        Log.d(mLogTag,"Add multipolygon to map");
+                        Log.d(mLogTag,"Add polygon to map");
                         getMap().addPolygon(polygonOptions);
-                        Log.d(mLogTag,"Add multipolygon to map done");
-                    }
+                        Log.d(mLogTag,"Add polygon to map done");
 
+                    }
+                    Log.d(mLogTag,"Adding multipolygon done");
 
                 }
             }
