@@ -15,7 +15,7 @@
 name: Release
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   release:
     runs-on: ubuntu-latest
