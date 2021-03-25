@@ -78,7 +78,7 @@ dependencies {
 
     // GMS
     gmsImplementation 'com.google.android.gms:play-services-maps:17.0.0'
-    gmsImplementation 'com.google.maps.android:android-maps-utils:2.2.0'
+    gmsImplementation 'com.google.maps.android:android-maps-utils:2.2.2'
 
     // V3
     v3Implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
