@@ -40,8 +40,8 @@ jobs:
         GPG_KEY_ARMOR: "${{ secrets.SYNCED_GPG_KEY_ARMOR }}"
         GPG_KEY_ID: ${{ secrets.SYNCED_GPG_KEY_ID }}
         GPG_PASSWORD: ${{ secrets.SYNCED_GPG_KEY_PASSWORD }}
-        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SYNCED_SONATYPE_PASSWORD }}
+        SONATYPE_USERNAME: ${{ secrets.SYNCED_SONATYPE_USERNAME }}
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v2
       with:
