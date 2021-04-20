@@ -47,6 +47,9 @@ android {
     }
     testOptions {
         animationsDisabled true
+        unitTests.all {
+            systemProperty 'robolectric.dependency.repo.url', 'https://repo1.maven.org/maven2'
+        }
         unitTests {
             includeAndroidResources = true
             returnDefaultValues = true
