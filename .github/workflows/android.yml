@@ -19,4 +19,4 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./gradlew test check jacocoTestReport -x lint --stacktrace
+      run: ./gradlew build jacocoTestReport -x lint --stacktrace
