@@ -1,5 +1,6 @@
 branches:
   - main
+  - chris/fix/858
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
