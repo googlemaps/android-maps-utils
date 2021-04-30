@@ -82,7 +82,7 @@ dependencies {
 
     // V3
     v3Implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
-    v3Implementation 'com.google.maps.android:android-maps-utils-v3:2.2.2'
+    v3Implementation 'com.google.maps.android:android-maps-utils-v3:2.2.3'
     v3Implementation 'androidx.multidex:multidex:2.0.1'
     // [END_EXCLUDE]
 }
