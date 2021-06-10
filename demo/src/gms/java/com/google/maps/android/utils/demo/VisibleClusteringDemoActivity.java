@@ -38,13 +38,15 @@ public class VisibleClusteringDemoActivity extends BaseDemoActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
+        int widthDp = (int) (metrics.widthPixels / metrics.density);
+        int heightDp = (int) (metrics.heightPixels / metrics.density);
+
         if (!isRestore) {
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
         }
 
         mClusterManager = new ClusterManager<>(this, getMap());
-        mClusterManager.setAlgorithm(new NonHierarchicalViewBasedAlgorithm<MyItem>(
-                metrics.widthPixels, metrics.heightPixels));
+        mClusterManager.setAlgorithm(new NonHierarchicalViewBasedAlgorithm<>(widthDp, heightDp));
 
         getMap().setOnCameraIdleListener(mClusterManager);
 
