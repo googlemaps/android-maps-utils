@@ -39,10 +39,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 /**
  * Improve build server performance by allowing disabling of pre-dexing
  * (see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
@@ -122,107 +118,112 @@ allprojects {
  * Publishing and signing info
  */
 subprojects { project ->
-    if (project.ext.artifactId == null) return
+    project.plugins.withId('com.android.library') {
+        if (project.ext.artifactId == null) return
 
-    apply plugin: 'com.android.library'
-    apply plugin: 'com.hiya.jacoco-android'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
+        // FIXME > Failed to apply plugin [id 'com.hiya.jacoco-android']
+        //   > You must apply the Android plugin or the Android library plugin before using the jacoco-android plugin
+        //apply plugin: 'com.hiya.jacoco-android'
+        apply plugin: 'maven-publish'
+        apply plugin: 'signing'
 
-    // Code coverage
-    jacoco {
-        toolVersion = "0.8.4"
-    }
+        // Code coverage
+//        jacoco {
+//            toolVersion = "0.8.4"
+//        }
+//
+//        tasks.withType(Test) {
+//            jacoco.includeNoLocationClasses = true
+//            jacoco.excludes = ['jdk.internal.*']
+//        }
 
-    tasks.withType(Test) {
-        jacoco.includeNoLocationClasses = true
-        jacoco.excludes = ['jdk.internal.*']
-    }
+        task javadoc(type: Javadoc) {
+            failOnError false
+            source = android.sourceSets.main.java.srcDirs
+        }
 
-    task javadoc(type: Javadoc) {
-        failOnError false
-        source = android.sourceSets.main.java.srcDirs
-    }
+        task sourcesJar(type: Jar) {
+            from android.sourceSets.main.java.srcDirs
+            classifier = 'sources'
+        }
 
-    task sourcesJar(type: Jar) {
-        from android.sourceSets.main.java.srcDirs
-        classifier = 'sources'
-    }
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
+        publishing {
+            publications {
+                aar(MavenPublication) {
+                    groupId project.group
+                    artifactId project.ext.artifactId
+                    version project.version
 
-    publishing {
-        publications {
-            aar(MavenPublication) {
-                groupId project.group
-                artifactId project.ext.artifactId
-                version project.version
+                    pom {
+                        name = project.ext.artifactId
+                        description = 'Handy extensions to the Google Maps Android API.'
+                        url = 'https://github.com/googlemaps/android-maps-utils'
 
-                pom {
-                    name = project.ext.artifactId
-                    description = 'Handy extensions to the Google Maps Android API.'
-                    url = 'https://github.com/googlemaps/android-maps-utils'
+                        scm {
+                            url = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                            connection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                            developerConnection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
+                        }
 
-                    scm {
-                        url = 'scm:git@github.com:googlemaps/android-maps-utils.git'
-                        connection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
-                        developerConnection = 'scm:git@github.com:googlemaps/android-maps-utils.git'
-                    }
+                        licenses {
+                            license {
+                                name = 'The Apache Software License, Version 2.0'
+                                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                distribution = 'repo'
+                            }
+                        }
 
-                    licenses {
-                        license {
-                            name = 'The Apache Software License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution = 'repo'
+                        organization {
+                            name = 'Google Inc'
+                            url = 'http://developers.google.com/maps'
+                        }
+
+                        developers {
+                            developer {
+                                name = 'Google Inc.'
+                            }
                         }
                     }
 
-                    organization {
-                        name = 'Google Inc'
-                        url = 'http://developers.google.com/maps'
-                    }
-
-                    developers {
-                        developer {
-                            name = 'Google Inc.'
+                    pom.withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+                        project.configurations.api.allDependencies.each { dependency ->
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', dependency.group)
+                            dependencyNode.appendNode('artifactId', dependency.name)
+                            dependencyNode.appendNode('version', dependency.version)
                         }
                     }
-                }
 
-                pom.withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
-                    project.configurations.api.allDependencies.each { dependency ->
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dependency.group)
-                        dependencyNode.appendNode('artifactId', dependency.name)
-                        dependencyNode.appendNode('version', dependency.version)
+                    afterEvaluate {
+                        artifact "$buildDir/outputs/aar/$project.name-release.aar"
+                        artifact sourcesJar
+                        artifact javadocJar
                     }
                 }
+            }
 
-                afterEvaluate {
-                    artifact "$buildDir/outputs/aar/$project.name-release.aar"
-                    artifact sourcesJar
-                    artifact javadocJar
+            repositories {
+                maven {
+                    name = "mavencentral"
+                    url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                    credentials {
+                        username sonatypeUsername
+                        password sonatypePassword
+                    }
                 }
             }
         }
 
-        repositories {
-            maven {
-                name = "mavencentral"
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username sonatypeUsername
-                    password sonatypePassword
-                }
-            }
-        }
-    }
-
-    signing {
-        sign publishing.publications.aar
+        // FIXME - Failed to apply plugin [id 'com.android.library']
+        //   > Cannot add task 'signAarPublication' as a task with that name already exists.
+//        signing {
+//            sign publishing.publications.aar
+//        }
     }
 }
