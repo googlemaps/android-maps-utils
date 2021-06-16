@@ -53,7 +53,11 @@ public class ClusteringViewModelDemoActivity extends BaseDemoActivity {
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        mViewModel.getAlgorithm().updateViewSize(metrics.widthPixels, metrics.heightPixels);
+
+        int widthDp = (int) (metrics.widthPixels / metrics.density);
+        int heightDp = (int) (metrics.heightPixels / metrics.density);
+
+        mViewModel.getAlgorithm().updateViewSize(widthDp, heightDp);
 
         mClusterManager = new ClusterManager<>(this, getMap());
         mClusterManager.setAlgorithm(mViewModel.getAlgorithm());
