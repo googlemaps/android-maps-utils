@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright 2020 Google Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,20 +32,18 @@
             android:layout_height="50dp"
             android:hint="@string/input_text"
             android:imeOptions="actionGo"
-            android:imeActionLabel="@string/button_send" />
-
+            android:imeActionLabel="@string/button_send"/>
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="gone" />
-
+            android:visibility="gone"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Go"
-            android:onClick="submit" />
+            android:onClick="submit"/>
     </LinearLayout>
 
     <fragment
@@ -52,18 +51,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:name="com.google.android.libraries.maps.SupportMapFragment" />
+        android:name="com.google.android.libraries.maps.SupportMapFragment"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:id="@+id/checkboxes"></LinearLayout>
+            android:id="@+id/checkboxes">
+        </LinearLayout>
     </HorizontalScrollView>
 
 </LinearLayout>
