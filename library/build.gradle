@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'kotlin-android'
 
 android {
     dexOptions {
         javaMaxHeapSize "2g"
     }
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         consumerProguardFiles 'consumer-rules.pro'
@@ -61,6 +62,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.5.1'
     testImplementation 'net.sf.kxml:kxml2:2.3.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 task instrumentTest(dependsOn: connectedCheck)
