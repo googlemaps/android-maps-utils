@@ -34,13 +34,13 @@
 
         <!--
         To add your Maps API key to this project:
-            1. Create a file demo/secure.properties
+            1. Open the file local.properties under the root project
             2. Add this line, where YOUR_API_KEY is your API key:
                 MAPS_API_KEY=YOUR_API_KEY
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/maps_api_key" />
+            android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".MainActivity"
