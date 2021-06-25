@@ -19,8 +19,8 @@ import org.apache.tools.ant.filters.ConcatFilter
 plugins {
     id 'com.android.application'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'kotlin-android'
 }
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 30
