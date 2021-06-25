@@ -77,9 +77,8 @@ dependencies {
     v3Implementation 'com.android.volley:volley:1.2.0' // TODO - Remove this after Maps SDK v3 beta includes Volley versions on Maven Central
     v3Implementation 'com.google.maps.android:android-maps-utils-v3:2.2.4'
     v3Implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]
@@ -125,7 +124,4 @@ secrets {
     // 2. Add this line, where YOUR_API_KEY is your API key:
     //        MAPS_API_KEY=YOUR_API_KEY
     defaultPropertiesFileName 'local.defaults.properties'
-}
-repositories {
-    mavenCentral()
 }
