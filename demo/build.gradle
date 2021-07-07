@@ -19,15 +19,16 @@ import org.apache.tools.ant.filters.ConcatFilter
 plugins {
     id 'com.android.application'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'kotlin-android'
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
@@ -57,6 +58,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 // [START maps_android_utils_install_snippet]
@@ -76,6 +81,8 @@ dependencies {
     v3Implementation 'com.android.volley:volley:1.2.0' // TODO - Remove this after Maps SDK v3 beta includes Volley versions on Maven Central
     v3Implementation 'com.google.maps.android:android-maps-utils-v3:2.2.4'
     v3Implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]
