@@ -44,10 +44,6 @@ android {
         timeOutInMs 10 * 60 * 1000  // 10 minutes
         installOptions "-d", "-t"
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
