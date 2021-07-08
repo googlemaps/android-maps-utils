@@ -24,7 +24,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 16

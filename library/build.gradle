@@ -22,7 +22,7 @@ android {
         javaMaxHeapSize "2g"
     }
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 30
