@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
     private final LatLng mCenter;
-    private final List<T> mItems = new ArrayList<T>();
+    private final Collection<T> mItems = new LinkedHashSet<>();
 
     public StaticCluster(LatLng center) {
         mCenter = center;
