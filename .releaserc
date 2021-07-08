@@ -7,7 +7,7 @@ plugins:
     - replacements:
         - files:
             - "./build.gradle"
-          from: "version = '.*'"
+          from: "\bversion = '.*'"
           to: "version = '${nextRelease.version}'"
 
         - files:
