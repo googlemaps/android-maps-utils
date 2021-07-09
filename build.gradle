@@ -116,7 +116,7 @@ ext.projectArtifactId = { project ->
 
 allprojects {
     group = 'com.google.maps.android'
-    version = '2.2.4'
+    version = '2.2.5'
     project.ext.artifactId = rootProject.ext.projectArtifactId(project)
 }
 
