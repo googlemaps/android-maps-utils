@@ -22,7 +22,7 @@ android {
         javaMaxHeapSize "2g"
     }
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 30
@@ -43,10 +43,6 @@ android {
     adbOptions {
         timeOutInMs 10 * 60 * 1000  // 10 minutes
         installOptions "-d", "-t"
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"

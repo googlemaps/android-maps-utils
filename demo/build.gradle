@@ -24,7 +24,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 16
@@ -52,11 +52,6 @@ android {
             versionNameSuffix "-v3"
             multiDexEnabled true
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
