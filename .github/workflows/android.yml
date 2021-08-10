@@ -18,7 +18,7 @@ jobs:
     - name: set up JDK 1.8
       uses: actions/setup-java@v2.2.0
       with:
-        java-version: '1.8'
+        java-version: '8'
         distribution: 'adopt'
     - name: Build with Gradle
       run: ./gradlew build jacocoTestReport -x lint --stacktrace
