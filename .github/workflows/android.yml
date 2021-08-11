@@ -15,10 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: gradle/wrapper-validation-action@v1.0.4
-    - name: set up JDK 1.8
+    - name: set up JDK 11
       uses: actions/setup-java@v2.2.0
       with:
-        java-version: '8'
+        java-version: '11'
         distribution: 'adopt'
     - name: Build with Gradle
       run: ./gradlew build jacocoTestReport -x lint --stacktrace
