@@ -15,6 +15,7 @@
 package com.googe.maps.android.lint.checks
 
 import com.android.tools.lint.checks.infrastructure.LintDetectorTest
+import com.android.tools.lint.checks.infrastructure.TestFile
 import com.android.tools.lint.detector.api.Detector
 import com.android.tools.lint.detector.api.Issue
 import com.android.tools.lint.detector.api.TextFormat
@@ -142,7 +143,6 @@ class GoogleMapDetectorTest : LintDetectorTest() {
         package com.google.android.gms.maps;
         
         import android.view.View;
-        import com.google.android.gms.maps.model.Marker;
         
         public class GoogleMap {
            public final void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter adapter) {
