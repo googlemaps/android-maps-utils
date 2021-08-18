@@ -18,9 +18,6 @@ plugins {
 }
 
 android {
-    dexOptions {
-        javaMaxHeapSize "2g"
-    }
     compileSdkVersion 30
 
     defaultConfig {
