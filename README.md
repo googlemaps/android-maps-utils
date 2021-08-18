@@ -32,7 +32,7 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ## Requirements
 
 * Android API level 15+
-* Maps SDK via Google Play Services OR [Maps SDK v3 BETA] library
+* Maps SDK via Google Play Services ~OR (Deprecated) [Maps SDK v3 BETA] library~
 
 ## Installation
 
@@ -41,10 +41,12 @@ dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services) 
     implementation 'com.google.maps.android:android-maps-utils:2.2.5'
 
-    // Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
+    // (Deprecated) Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
     implementation 'com.google.maps.android:android-maps-utils-v3:2.2.5'
 }
 ```
+
+_**Note**: The Beta version of the SDK is deprecated and scheduled for decommissioning. A future version of the SDK will provide similar support for Beta features. See the [release notes](https://developers.devsite.corp.google.com/maps/documentation/android-sdk/releases#2021-08-18) for more information._
 
 ## Demo App
 
