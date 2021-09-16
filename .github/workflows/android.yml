@@ -21,4 +21,4 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Gradle
-      run: ./gradlew build jacocoTestReport -x lint --stacktrace
+      run: ./gradlew build jacocoTestReport --stacktrace
