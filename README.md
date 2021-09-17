@@ -46,7 +46,7 @@ dependencies {
 }
 ```
 
-_**Note**: The Beta version of the SDK is deprecated and scheduled for decommissioning. A future version of the SDK will provide similar support for Beta features. See the [release notes](https://developers.devsite.corp.google.com/maps/documentation/android-sdk/releases#2021-08-18) for more information._
+_**Note**: The Beta version of the SDK is deprecated and scheduled for decommissioning. A future version of the SDK will provide similar support for Beta features. See the [release notes](https://developers.google.com/maps/documentation/android-sdk/releases#2021-08-18) for more information._
 
 ## Demo App
 
