@@ -63,13 +63,13 @@ android {
 dependencies {
 
     // [START_EXCLUDE silent]
-    // implementation project(':library')
+    gmsImplementation project(':library')
     implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // GMS
     gmsImplementation 'com.google.android.gms:play-services-maps:17.0.1'
-    gmsImplementation 'com.google.maps.android:android-maps-utils:2.2.6'
+    //gmsImplementation 'com.google.maps.android:android-maps-utils:2.2.6'
 
     // V3
     v3Implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'

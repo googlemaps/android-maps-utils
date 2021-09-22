@@ -16,6 +16,7 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -196,15 +198,24 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
     @Override
     protected void startDemo(boolean isRestore) {
+        //point camera to desired location
         if (!isRestore) {
-            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.550931, 74.115642), 9.5f));
         }
 
         mClusterManager = new ClusterManager<>(this, getMap());
-        mClusterManager.setRenderer(new PersonRenderer());
+        //set max distance to form a single cluster country wise on max zoom out
+        mClusterManager.getAlgorithm().setMaxDistanceBetweenClusteredItems(300);
+
+        //initialise renderer
+        ZoomBasedRenderer renderer = new ZoomBasedRenderer(this,getMap(),mClusterManager);
+        mClusterManager.setRenderer(renderer);
         getMap().setOnCameraIdleListener(mClusterManager);
-        getMap().setOnMarkerClickListener(mClusterManager);
-        getMap().setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.getMarkerCollection().setOnMarkerClickListener(mClusterManager);
+        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(mClusterManager);
+
+        //set camera listener inside renderer
+        getMap().setOnCameraMoveListener(renderer);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
@@ -215,32 +226,8 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
     }
 
     private void addItems() {
-        // http://www.flickr.com/photos/sdasmarchives/5036248203/
-        mClusterManager.addItem(new Person(position(), "Walter", R.drawable.walter));
-
-        // http://www.flickr.com/photos/usnationalarchives/4726917149/
-        mClusterManager.addItem(new Person(position(), "Gran", R.drawable.gran));
-
-        // http://www.flickr.com/photos/nypl/3111525394/
-        mClusterManager.addItem(new Person(position(), "Ruth", R.drawable.ruth));
-
-        // http://www.flickr.com/photos/smithsonian/2887433330/
-        mClusterManager.addItem(new Person(position(), "Stefan", R.drawable.stefan));
-
-        // http://www.flickr.com/photos/library_of_congress/2179915182/
-        mClusterManager.addItem(new Person(position(), "Mechanic", R.drawable.mechanic));
-
-        // http://www.flickr.com/photos/nationalmediamuseum/7893552556/
-        mClusterManager.addItem(new Person(position(), "Yeats", R.drawable.yeats));
-
-        // http://www.flickr.com/photos/sdasmarchives/5036231225/
-        mClusterManager.addItem(new Person(position(), "John", R.drawable.john));
-
-        // http://www.flickr.com/photos/anmm_thecommons/7694202096/
-        mClusterManager.addItem(new Person(position(), "Trevor the Turtle", R.drawable.turtle));
-
-        // http://www.flickr.com/photos/usnationalarchives/4726892651/
-        mClusterManager.addItem(new Person(position(), "Teach", R.drawable.teacher));
+        mClusterManager.addItem(new Person(new LatLng(18.528146, 73.797726), "Loc1", R.drawable.walter));
+        mClusterManager.addItem(new Person(new LatLng(18.545723, 73.917202), "Loc2", R.drawable.gran));
     }
 
     private LatLng position() {
@@ -249,5 +236,24 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
     private double random(double min, double max) {
         return mRandom.nextDouble() * (max - min) + min;
+    }
+
+    private class ZoomBasedRenderer extends DefaultClusterRenderer<Person> implements GoogleMap.OnCameraMoveListener{
+        private Float mapZoomLevel = 15f;
+        public ZoomBasedRenderer(Context context, GoogleMap map, ClusterManager<Person> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        public void onCameraMove() {
+            //map zoom level gets updated here on camera change
+            mapZoomLevel =  getMap().getCameraPosition().zoom;
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(@NonNull Cluster<Person> cluster) {
+            // cluster when mapZoomLevel is less than 12f. Else show as marker
+            return mapZoomLevel < 12f;
+        }
     }
 }
