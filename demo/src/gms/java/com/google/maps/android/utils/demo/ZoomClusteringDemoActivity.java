@@ -29,7 +29,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.utils.demo.model.MyItem;
 
 import java.util.Set;
@@ -71,49 +70,41 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
 
     @Override
     public boolean onClusterItemClick(MyItem item) {
-        // Does nothing, but you could go into the user's profile page, for example.
+        // Does nothing, but you could go into a user's profile page, for example.
         return false;
     }
 
     @Override
     public void onClusterItemInfoWindowClick(MyItem item) {
-        // Does nothing, but you could go into the user's profile page, for example.
+        // Does nothing, but you could go into a user's profile page, for example.
     }
 
     @Override
     protected void startDemo(boolean isRestore) {
         if (!isRestore) {
-            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.550931, 74.115642), 9.5f));
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.528146, 73.797726), 9.5f));
         }
 
-        // Shared object manager - used to support multiple layers if needed (e.g., if we want to add our own non-clustered items)
-        MarkerManager markerManager = new MarkerManager(getMap());
-
-        ClusterManager<MyItem> clusterManager = new ClusterManager<>(this, getMap(), markerManager);
-        clusterManager.getAlgorithm().setMaxDistanceBetweenClusteredItems(300);
+        ClusterManager<MyItem> clusterManager = new ClusterManager<>(this, getMap());
+        getMap().setOnCameraIdleListener(clusterManager);
 
         // Initialize renderer
         ZoomBasedRenderer renderer = new ZoomBasedRenderer(this, getMap(), clusterManager);
         clusterManager.setRenderer(renderer);
 
-        getMap().setOnCameraIdleListener(clusterManager);
-        clusterManager.getMarkerCollection().setOnMarkerClickListener(clusterManager);
-        clusterManager.getMarkerCollection().setOnInfoWindowClickListener(clusterManager);
-
-        // Set camera listener inside renderer
+        // Set click listeners
         clusterManager.setOnClusterClickListener(this);
         clusterManager.setOnClusterInfoWindowClickListener(this);
         clusterManager.setOnClusterItemClickListener(this);
         clusterManager.setOnClusterItemInfoWindowClickListener(this);
 
+        // Add items
         clusterManager.addItem(new MyItem(18.528146, 73.797726, "Loc1", "1st location"));
         clusterManager.addItem(new MyItem(18.545723, 73.917202, "Loc2", "2nd location"));
-
-        clusterManager.cluster();
     }
 
     private class ZoomBasedRenderer extends DefaultClusterRenderer<MyItem> implements GoogleMap.OnCameraIdleListener {
-        private Float mapZoomLevel = 15f;
+        private Float zoom = 15f;
         private Float oldZoom;
         private static final float ZOOM_THRESHOLD = 12f;
 
@@ -122,15 +113,15 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
         }
 
         /**
-         * The ClusterManager will call the onCameraIdle() implementation of any Renderer *before*
-         * clustering and rendering takes place. This allows us to capture metrics that may be
-         * useful for clustering, such as the zoom level.
+         * The {@link ClusterManager} will call the {@link this.onCameraIdle()} implementation of
+         * any Renderer <i>before</i> clustering and rendering takes place. This allows us to
+         * capture metrics that may be useful for clustering, such as the zoom level.
          */
         @Override
         public void onCameraIdle() {
             // Remember the previous zoom level, capture the new zoom level.
-            oldZoom = mapZoomLevel;
-            mapZoomLevel = getMap().getCameraPosition().zoom;
+            oldZoom = zoom;
+            zoom = getMap().getCameraPosition().zoom;
         }
 
         /**
@@ -147,8 +138,8 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
          */
         @Override
         protected boolean shouldRenderAsCluster(@NonNull Cluster<MyItem> cluster) {
-            // Show cluster when mapZoomLevel is less than the threshold, otherwise show as marker
-            return mapZoomLevel < ZOOM_THRESHOLD;
+            // Show cluster when zoom is less than the threshold, otherwise show as marker
+            return zoom < ZOOM_THRESHOLD;
         }
 
         /**
@@ -162,6 +153,10 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
          * the clusters themselves did not change</i>. In this case, we need to override this method
          * to implement this new optimization behavior.
          *
+         * Note that always returning true from this method could potentially have negative
+         * performance implications as clusters will be re-rendered on each pass even if they don't
+         * change.
+         *
          * @param oldClusters The clusters from the previous iteration of the clustering algorithm
          * @param newClusters The clusters from the current iteration of the clustering algorithm
          * @return true if the new clusters should be rendered on the map, and false if they should
@@ -169,7 +164,7 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
          */
         @Override
         protected boolean shouldRender(@NonNull Set<? extends Cluster<MyItem>> oldClusters, @NonNull Set<? extends Cluster<MyItem>> newClusters) {
-            if (crossedZoomThreshold(oldZoom, mapZoomLevel)) {
+            if (crossedZoomThreshold(oldZoom, zoom)) {
                 // Render when the zoom level crosses the threshold, even if the clusters don't change
                 return true;
             } else {
