@@ -34,7 +34,8 @@ import com.google.maps.android.utils.demo.model.MyItem;
 import java.util.Set;
 
 /**
- * Demonstrates heavy customisation of the look of rendered clusters.
+ * Demonstrates how to force re-rendering of clusters even when the contents don't change. For
+ * example, when changing zoom levels.
  */
 public class ZoomClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<MyItem>, ClusterManager.OnClusterInfoWindowClickListener<MyItem>, ClusterManager.OnClusterItemClickListener<MyItem>, ClusterManager.OnClusterItemInfoWindowClickListener<MyItem> {
 
