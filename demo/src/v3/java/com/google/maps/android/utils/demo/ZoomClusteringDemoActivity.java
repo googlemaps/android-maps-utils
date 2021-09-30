@@ -106,7 +106,7 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
         clusterManager.setOnClusterItemClickListener(this);
         clusterManager.setOnClusterItemInfoWindowClickListener(this);
 
-        String snippet = "This item wouldn't have changed to a marker if we didn't override shouldRenderAsCluster() and shouldRender()";
+        String snippet = "This item wouldn't have changed to a marker if we didn't override shouldRenderAsCluster() AND shouldRender()";
 
         // Add items
         clusterManager.addItem(new MyItem(18.528146, 73.797726, "Loc1", snippet));
