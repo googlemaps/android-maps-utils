@@ -99,9 +99,11 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
         clusterManager.setOnClusterItemClickListener(this);
         clusterManager.setOnClusterItemInfoWindowClickListener(this);
 
+        String snippet = "This item wouldn't have changed to a marker if we didn't override shouldRenderAsCluster() and shouldRender()";
+
         // Add items
-        clusterManager.addItem(new MyItem(18.528146, 73.797726, "Loc1", "1st location"));
-        clusterManager.addItem(new MyItem(18.545723, 73.917202, "Loc2", "2nd location"));
+        clusterManager.addItem(new MyItem(18.528146, 73.797726, "Loc1", snippet));
+        clusterManager.addItem(new MyItem(18.545723, 73.917202, "Loc2", snippet));
     }
 
     private class ZoomBasedRenderer extends DefaultClusterRenderer<MyItem> implements GoogleMap.OnCameraIdleListener {
@@ -139,7 +141,7 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
          */
         @Override
         protected boolean shouldRenderAsCluster(@NonNull Cluster<MyItem> cluster) {
-            // Show cluster when zoom is less than the threshold, otherwise show as marker
+            // Show as cluster when zoom is less than the threshold, otherwise show as marker
             return zoom < ZOOM_THRESHOLD;
         }
 
