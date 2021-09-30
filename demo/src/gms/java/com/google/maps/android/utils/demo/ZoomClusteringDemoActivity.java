@@ -117,8 +117,9 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
 
         /**
          * The {@link ClusterManager} will call the {@link this.onCameraIdle()} implementation of
-         * any Renderer <i>before</i> clustering and rendering takes place. This allows us to
-         * capture metrics that may be useful for clustering, such as the zoom level.
+         * any Renderer that implements {@link GoogleMap.OnCameraIdleListener} <i>before</i>
+         * clustering and rendering takes place. This allows us to capture metrics that may be
+         * useful for clustering, such as the zoom level.
          */
         @Override
         public void onCameraIdle() {
