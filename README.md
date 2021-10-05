@@ -1,4 +1,4 @@
-![Build Status](https://github.com/googlemaps/android-maps-utils/actions/workflows/android.yml/badge.svg?branch=main)
+![Build Status](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml/badge.svg?branch=main)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
 ![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
 [![Discord](https://img.shields.io/discord/676948200904589322)](https://discord.gg/hYsWbmk)
