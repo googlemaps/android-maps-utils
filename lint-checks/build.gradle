@@ -11,7 +11,7 @@ lintOptions {
 }
 
 dependencies {
-    compileOnly "com.android.tools.lint:lint-api:30.0.2"
+    compileOnly "com.android.tools.lint:lint-api:30.0.3"
     compileOnly "com.android.tools.lint:lint-checks:30.0.2"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testImplementation "junit:junit:4.13.2"
