@@ -68,14 +68,12 @@ dependencies {
 
     // GMS
     gmsImplementation 'com.google.android.gms:play-services-maps:17.0.1'
-    gmsImplementation 'com.google.maps.android:android-maps-utils:2.2.6'
-    // gmsImplementation project(':library') // Uncomment this and comment above line to use the library project code instead of artifact
+    gmsImplementation project(':library')
 
     // V3
     v3Implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
     v3Implementation 'com.android.volley:volley:1.2.1' // TODO - Remove this after Maps SDK v3 beta includes Volley versions on Maven Central
-    v3Implementation 'com.google.maps.android:android-maps-utils-v3:2.2.6'
-    // v3Implementation project(':library') // Uncomment this and comment above line to use the library project code instead of artifact
+    v3Implementation project(':library')
     v3Implementation 'androidx.multidex:multidex:2.0.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
