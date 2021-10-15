@@ -430,7 +430,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         @SuppressLint("NewApi")
         public void run() {
-            if (!shouldRender(DefaultClusterRenderer.this.mClusters, clusters)) {
+            if (!shouldRender(immutableOf(DefaultClusterRenderer.this.mClusters), immutableOf(clusters))) {
                 mCallback.run();
                 return;
             }
@@ -573,6 +573,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     @Override
     public void setAnimation(boolean animate) {
         mAnimate = animate;
+    }
+
+    private Set<? extends Cluster<T>> immutableOf(Set<? extends Cluster<T>> clusters) {
+        return clusters != null ? Collections.unmodifiableSet(clusters) : Collections.emptySet();
     }
 
     private static double distanceSquared(Point a, Point b) {
