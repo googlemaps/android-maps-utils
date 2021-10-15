@@ -366,7 +366,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * a certain zoom level and as a marker below a certain zoom level (even if the contents of the
      * clusters themselves did not change). In this case, you could check the zoom level in an
      * implementation of this method and if that zoom level threshold is crossed return true, else
-     * {@code return !newClusters.equals(oldClusters)}.
+     * {@code return super.shouldRender(oldClusters, newClusters)}.
      *
      * Note that always returning true from this method could potentially have negative performance
      * implications as clusters will be re-rendered on each pass even if they don't change.
