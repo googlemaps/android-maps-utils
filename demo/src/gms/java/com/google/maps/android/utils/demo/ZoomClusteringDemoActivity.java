@@ -172,8 +172,8 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
                 // Render when the zoom level crosses the threshold, even if the clusters don't change
                 return true;
             } else {
-                // If clusters didn't change, skip render for optimization
-                return !newClusters.equals(oldClusters);
+                // If clusters didn't change, skip render for optimization using default super implementation
+                return super.shouldRender(oldClusters, newClusters);
             }
         }
 
