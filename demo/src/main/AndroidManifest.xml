@@ -59,6 +59,7 @@
         <activity android:name=".BigClusteringDemoActivity" />
         <activity android:name=".VisibleClusteringDemoActivity" />
         <activity android:name=".CustomMarkerClusteringDemoActivity" />
+        <activity android:name=".ZoomClusteringDemoActivity" />
         <activity android:name=".ClusteringViewModelDemoActivity"/>
         <activity android:name=".TileProviderAndProjectionDemo" />
         <activity android:name=".HeatmapsDemoActivity" />
