@@ -7,7 +7,6 @@ plugins:
     - replacements:
         - files:
             - "build.gradle"
-            - "build.gradle.kts"
           from: "\\bversion = '.*'"
           to: "version = '${nextRelease.version}'"
         - files:
@@ -20,7 +19,6 @@ plugins:
   - - "@semantic-release/git"
     - assets:
         - "build.gradle"
-        - "build.gradle.kts"
         - "*.md"
   - "@semantic-release/github"
 options:
