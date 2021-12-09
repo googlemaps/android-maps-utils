@@ -11,12 +11,12 @@ lintOptions {
 }
 
 dependencies {
-    compileOnly "com.android.tools.lint:lint-api:30.0.3"
+    compileOnly "com.android.tools.lint:lint-api:30.0.4"
     compileOnly "com.android.tools.lint:lint-checks:30.0.3"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.android.tools.lint:lint:30.0.3"
-    testImplementation "com.android.tools.lint:lint-tests:30.0.3"
+    testImplementation "com.android.tools.lint:lint-tests:30.0.4"
     testImplementation "com.android.tools:testutils:30.0.3"
 }
 
