@@ -19,9 +19,9 @@ on:
   repository_dispatch:
     types: [test]
   push:
-    branches: ['*']
+    branches-ignore: ['gh-pages']
   pull_request:
-    branches: ['*']
+    branches-ignore: ['gh-pages']
   workflow_dispatch:
 
 jobs:
