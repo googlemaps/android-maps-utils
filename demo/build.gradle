@@ -61,7 +61,7 @@ android {
 
 // [START maps_android_utils_install_snippet]
 dependencies {
-    implementation 'com.google.maps.android:android-maps-utils:2.2.3'
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
 
     // [START_EXCLUDE silent]
     implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
