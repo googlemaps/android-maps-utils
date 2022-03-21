@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ConcatFilter
+
 /**
  * Copyright 2020 Google Inc.
  *
@@ -14,58 +16,101 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'kotlin-android'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-        // Read the API key from demo/secure.properties into R.string.maps_api_key
-        def secureProps = new Properties()
-        if (file("secure.properties").exists()) {
-            file("secure.properties")?.withInputStream { secureProps.load(it) }
-        }
-        resValue "string", "maps_api_key", (secureProps.getProperty("MAPS_API_KEY") ?: "")
-
-        // To add your Maps API key to this project:
-        // 1. Create a file demo/secure.properties
-        // 2. Add this line, where YOUR_API_KEY is your API key:
-        //        MAPS_API_KEY=YOUR_API_KEY
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "version"
+    productFlavors {
+        gms {
+            dimension "version"
+            applicationIdSuffix ".gms"
+            versionNameSuffix "-gms"
+        }
+        v3 {
+            dimension "version"
+            applicationIdSuffix ".v3"
+            versionNameSuffix "-v3"
+            multiDexEnabled true
+        }
+    }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 // [START maps_android_utils_install_snippet]
 dependencies {
     implementation 'com.google.maps.android:android-maps-utils:2.2.3'
+
     // [START_EXCLUDE silent]
-    // implementation project(':library')
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]
 
-task startDemo(type: Exec) {
-    dependsOn 'installDebug'
+task generateV3(type: Copy) {
+    group "V3 Beta"
+    description "Copies source code from GMS to V3 BETA."
+
+    from 'src/gms/java'
+    into 'src/v3/java'
+    filter { line ->
+        line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+    }
+    filter(ConcatFilter, prepend: file('V3_FILE_HEADER'))
+}
+
+task generateV3Layout(type: Copy) {
+    group "V3 Beta"
+    description "Copies layout files from GMS to V3 BETA."
+
+    from 'src/gms/res/layout'
+    into 'src/v3/res/layout'
+    filter { line ->
+        line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+    }
+}
+
+task startGmsDemo(type: Exec) {
+    dependsOn 'installGmsDebug'
     def adb = new File("${System.env.ANDROID_HOME}", "platform-tools${File.separator}adb")
-    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo/.MainActivity"
+    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.gms/com.google.maps.android.utils.demo.MainActivity"
+}
+
+task startV3Demo(type: Exec) {
+    dependsOn 'installV3Debug'
+    def adb = new File("${System.env.ANDROID_HOME}", "platform-tools${File.separator}adb")
+    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.v3/com.google.maps.android.utils.demo.MainActivity"
+}
+
+secrets {
+    // To add your Maps API key to this project:
+    // 1. Open the file local.properties found under the root project
+    // 2. Add this line, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
+    defaultPropertiesFileName 'local.defaults.properties'
 }

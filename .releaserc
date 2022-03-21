@@ -1,22 +1,24 @@
 branches:
-  - master
+  - main
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
   - - "@google/semantic-release-replace-plugin"
     - replacements:
         - files:
-            - "./build.gradle"
-          from: "version = '.*'"
+            - "build.gradle"
+          from: "\\bversion = '.*'"
           to: "version = '${nextRelease.version}'"
-
         - files:
             - "README.md"
           from: ":[0-9].[0-9].[0-9]"
           to: ":${nextRelease.version}"
+  - - "@semantic-release/exec"
+    - prepareCmd: "./gradlew build --warn --stacktrace"
+      publishCmd: "./gradlew publish --warn --stacktrace"
   - - "@semantic-release/git"
     - assets:
-        - "./build.gradle"
+        - "build.gradle"
         - "*.md"
   - "@semantic-release/github"
 options:

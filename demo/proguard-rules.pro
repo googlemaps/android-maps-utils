@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Needed to avoid crash on minified app release with Maps SDK v3.1 beta (https://issuetracker.google.com/issues/148084488)
+-keep,allowoptimization class com.google.android.libraries.maps.** { *; }

@@ -417,14 +417,18 @@ public class KmlStyle extends Style {
      */
     private static PolygonOptions createPolygonOptions(PolygonOptions originalPolygonOption,
                                                        boolean isFill, boolean isOutline) {
+        float originalWidth = 0.0f;
         PolygonOptions polygonOptions = new PolygonOptions();
         if (isFill) {
             polygonOptions.fillColor(originalPolygonOption.getFillColor());
         }
+               
         if (isOutline) {
             polygonOptions.strokeColor(originalPolygonOption.getStrokeColor());
-            polygonOptions.strokeWidth(originalPolygonOption.getStrokeWidth());
+            originalWidth = originalPolygonOption.getStrokeWidth();
         }
+        polygonOptions.strokeWidth(originalWidth);
+        
         polygonOptions.clickable(originalPolygonOption.isClickable());
         return polygonOptions;
     }

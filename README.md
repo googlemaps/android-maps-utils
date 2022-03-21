@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/googlemaps/android-maps-utils.svg?branch=master)](https://travis-ci.org/googlemaps/android-maps-utils)
+![Build Status](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml/badge.svg?branch=main)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
 ![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
 [![Discord](https://img.shields.io/discord/676948200904589322)](https://discord.gg/hYsWbmk)
@@ -32,19 +32,21 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ## Requirements
 
 * Android API level 15+
-* Maps SDK via Google Play Services OR [Maps SDK v3 BETA] library
+* Maps SDK via Google Play Services ~OR (Deprecated) [Maps SDK v3 BETA] library~
 
 ## Installation
 
 ```groovy
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services) 
-    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
 
-    // Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
-    implementation 'com.google.maps.android:android-maps-utils-v3:2.2.0'
+    // (Deprecated) Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
+    implementation 'com.google.maps.android:android-maps-utils-v3:2.3.0'
 }
 ```
+
+_**Note**: The Beta version of the SDK is deprecated and scheduled for decommissioning. A future version of the SDK will provide similar support for Beta features. See the [release notes](https://developers.google.com/maps/documentation/android-sdk/releases#2021-08-18) for more information._
 
 ## Demo App
 
@@ -52,12 +54,14 @@ dependencies {
 
 This repository includes a [demo app](demo) that illustrates the use of this library.
 
+The version that depends on the Maps SDK for Android can be found under the `gms` Gradle product flavor, while version that depends on the Maps SDK V3 BETA can be found under the `v3` Gradle product flavor. The active product flavor can be modified through Android Studio’s [“Build Variants”](https://developer.android.com/studio/run#changing-variant) toolbar options.
+
 To run the demo app, you'll have to:
 
 1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
-1. Create a file in the `demo` directory called `secure.properties` (this file should *NOT* be under version control to protect your API key)
-1. Add a single line to `demo/secure.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
-1. Build and run
+1. Open the file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
+1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
+1. Build and run the `gmsDebug` variant for the Maps SDK for Android version, or `v3Debug` for the Maps SDK v3 BETA version
 
 ## Migration Guide
 
@@ -206,7 +210,7 @@ If you're using custom clustering (i.e, if you're extending `DefaultClusterRende
 
 **Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions`*
 
-See the [`CustomMarkerClusteringDemoActivity`](demo/src/main/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
+See the [`CustomMarkerClusteringDemoActivity`](demo/src/gms/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
 
 _New_
 

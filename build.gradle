@@ -15,24 +15,26 @@
  */
 
 buildscript {
+    ext.kotlin_version = '1.6.10'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath 'com.hiya:jacoco-android:0.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10"
+        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         flatDir {
             dirs 'libs'
         }
@@ -41,24 +43,6 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-/**
- * Improve build server performance by allowing disabling of pre-dexing
- * (see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
- */
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
-
-subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if (rootProject.ext.has('preDexLibs')) {
-            if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {
-                project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-            } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
-                project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-            }
-        }
-    }
 }
 
 /**
@@ -114,7 +98,7 @@ ext.projectArtifactId = { project ->
 
 allprojects {
     group = 'com.google.maps.android'
-    version = '2.2.0'
+    version = '2.3.0'
     project.ext.artifactId = rootProject.ext.projectArtifactId(project)
 }
 

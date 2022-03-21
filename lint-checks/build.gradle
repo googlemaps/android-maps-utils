@@ -11,13 +11,13 @@ lintOptions {
 }
 
 dependencies {
-    compileOnly "com.android.tools.lint:lint-api:27.1.1"
-    compileOnly "com.android.tools.lint:lint-checks:27.1.1"
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
-    testImplementation "junit:junit:4.13.1"
-    testImplementation "com.android.tools.lint:lint:27.1.1"
-    testImplementation "com.android.tools.lint:lint-tests:27.1.1"
-    testImplementation "com.android.tools:testutils:27.1.1"
+    compileOnly "com.android.tools.lint:lint-api:30.1.0"
+    compileOnly "com.android.tools.lint:lint-checks:30.1.1"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "com.android.tools.lint:lint:30.0.4"
+    testImplementation "com.android.tools.lint:lint-tests:30.1.2"
+    testImplementation "com.android.tools:testutils:30.1.1"
 }
 
 jar {
@@ -25,6 +25,3 @@ jar {
         attributes("Lint-Registry-v2": "com.google.maps.android.lint.checks.MapsUtilsIssueRegistry")
     }
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

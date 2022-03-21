@@ -43,6 +43,10 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
 
     private LatLng mMapCenter;
 
+    /**
+     * @param screenWidth  map width in dp
+     * @param screenHeight map height in dp
+     */
     public NonHierarchicalViewBasedAlgorithm(int screenWidth, int screenHeight) {
         mViewWidth = screenWidth;
         mViewHeight = screenHeight;
@@ -83,8 +87,8 @@ public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
      * Update view width and height in case map size was changed.
      * You need to recluster all the clusters, to update view state after view size changes.
      *
-     * @param width  map width
-     * @param height map height
+     * @param width  map width in dp
+     * @param height map height in dp
      */
     public void updateViewSize(int width, int height) {
         mViewWidth = width;
