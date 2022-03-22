@@ -23,12 +23,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
-        minSdkVersion 16
-        targetSdkVersion 30
+        minSdkVersion 19
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
 
     // [START_EXCLUDE silent]
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
