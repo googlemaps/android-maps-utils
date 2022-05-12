@@ -67,7 +67,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // GMS
-    gmsImplementation 'com.google.android.gms:play-services-maps:17.0.1'
+    gmsImplementation 'com.google.android.gms:play-services-maps:18.0.2'
     gmsImplementation project(':library')
 
     // V3
