@@ -81,6 +81,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
     private boolean mAnimate;
+    private long mAnimationDurationMs;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
@@ -134,6 +135,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         mMap = map;
         mAnimate = true;
+        mAnimationDurationMs = 300;
         mDensity = context.getResources().getDisplayMetrics().density;
         mIconGenerator = new IconGenerator(context);
         mIconGenerator.setContentView(makeSquareTextView(context));
@@ -573,6 +575,15 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     @Override
     public void setAnimation(boolean animate) {
         mAnimate = animate;
+    }
+
+    /**
+     * {@inheritDoc} The default duration is 300 milliseconds.
+     * @param animationDurationMs long: The length of the animation, in milliseconds. This value cannot be negative.
+     */
+    @Override
+    public void setAnimationDuration(long animationDurationMs) {
+        mAnimationDurationMs = animationDurationMs;
     }
 
     private Set<? extends Cluster<T>> immutableOf(Set<? extends Cluster<T>> clusters) {
@@ -1138,6 +1149,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         public void perform() {
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
             valueAnimator.setInterpolator(ANIMATION_INTERP);
+            valueAnimator.setDuration(mAnimationDurationMs);
             valueAnimator.addUpdateListener(this);
             valueAnimator.addListener(this);
             valueAnimator.start();

@@ -52,6 +52,11 @@ public interface ClusterRenderer<T extends ClusterItem> {
     void setAnimation(boolean animate);
 
     /**
+     * Sets the length of the animation in milliseconds.
+     */
+    void setAnimationDuration(long animationDurationMs);
+
+    /**
      * Called when the view is added.
      */
     void onAdd();
