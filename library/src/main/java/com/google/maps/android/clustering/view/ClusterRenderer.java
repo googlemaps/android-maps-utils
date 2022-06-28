@@ -52,7 +52,7 @@ public interface ClusterRenderer<T extends ClusterItem> {
     void setAnimation(boolean animate);
 
     /**
-     * Sets the length of the animation. The default duration is 300 milliseconds.
+     * Sets the length of the animation in milliseconds.
      */
     void setAnimationDuration(long animationDurationMs);
 
