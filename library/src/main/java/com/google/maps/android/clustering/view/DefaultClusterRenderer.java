@@ -81,7 +81,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final ClusterManager<T> mClusterManager;
     private final float mDensity;
     private boolean mAnimate;
-    private int mAnimationDuration;
+    private long mAnimationDuration;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
@@ -577,8 +577,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         mAnimate = animate;
     }
 
+    /**
+     * {@inheritDoc} The default duration is 300 milliseconds.
+     * @param animationDuration long: The length of the animation, in milliseconds. This value cannot be negative.
+     */
     @Override
-    public void setAnimationDuration(int animationDuration) {
+    public void setAnimationDuration(long animationDuration) {
         mAnimationDuration = animationDuration;
     }
 
