@@ -75,7 +75,7 @@ dependencies {
     v3Implementation 'com.android.volley:volley:1.2.1' // TODO - Remove this after Maps SDK v3 beta includes Volley versions on Maven Central
     v3Implementation project(':library-v3')
     v3Implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // [END_EXCLUDE]
 }
