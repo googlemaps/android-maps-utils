@@ -23,12 +23,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
@@ -57,13 +57,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace 'com.google.maps.android.utils.demo'
 }
 
 // [START maps_android_utils_install_snippet]
 dependencies {
 
     // [START_EXCLUDE silent]
-    implementation 'androidx.appcompat:appcompat:1.4.0-alpha03'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // GMS
@@ -75,7 +76,7 @@ dependencies {
     v3Implementation 'com.android.volley:volley:1.2.1' // TODO - Remove this after Maps SDK v3 beta includes Volley versions on Maven Central
     v3Implementation project(':library-v3')
     v3Implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // [END_EXCLUDE]
 }
