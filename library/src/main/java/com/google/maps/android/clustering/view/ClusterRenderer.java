@@ -65,4 +65,9 @@ public interface ClusterRenderer<T extends ClusterItem> {
      * Called when the view is removed.
      */
     void onRemove();
+
+    /**
+     * Called to determine the color of a Cluster.
+     */
+    int getColor(int clusterSize);
 }
