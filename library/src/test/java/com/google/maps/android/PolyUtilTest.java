@@ -486,7 +486,35 @@ public class PolyUtilTest {
         p = new LatLng(49.3210674, 12.0978238);
 
         distance = PolyUtil.distanceToLine(p, startLine, endLine);
-        assertEquals(5.5594433, distance, 1e-6);
+        assertEquals(5.559443879999753, distance, 1e-6);
+
+        startLine = new LatLng(48.125961, 11.548998);
+        endLine = new LatLng(48.125918, 11.549005);
+        p = new LatLng(48.125941, 11.549028);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(1.9733966358947437, distance, 1e-6);
+
+        startLine = new LatLng(78.924669, 11.925521);
+        endLine = new LatLng(78.924707, 11.929060);
+        p = new LatLng(78.923164, 11.924029);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(170.35662670453187, distance, 1e-6);
+
+        startLine = new LatLng(69.664036, 18.957124);
+        endLine = new LatLng(69.664029, 18.957109);
+        p = new LatLng(69.672901, 18.967911);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(1070.222749990837, distance, 1e-6);
+
+        startLine = new LatLng(-0.018200, 109.343282);
+        endLine = new LatLng(-0.017877, 109.343537);
+        p = new LatLng(0.058299, 109.408054);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(11100.157563150981, distance, 1e-6);
     }
 
     @Test
