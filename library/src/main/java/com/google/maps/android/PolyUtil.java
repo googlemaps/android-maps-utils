@@ -22,9 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static com.google.maps.android.SphericalUtil.*;
-import static java.lang.Math.*;
-import static com.google.maps.android.MathUtil.*;
+import static com.google.maps.android.MathUtil.EARTH_RADIUS;
+import static com.google.maps.android.MathUtil.clamp;
+import static com.google.maps.android.MathUtil.hav;
+import static com.google.maps.android.MathUtil.havDistance;
+import static com.google.maps.android.MathUtil.havFromSin;
+import static com.google.maps.android.MathUtil.inverseMercator;
+import static com.google.maps.android.MathUtil.mercator;
+import static com.google.maps.android.MathUtil.sinFromHav;
+import static com.google.maps.android.MathUtil.sinSumFromHav;
+import static com.google.maps.android.MathUtil.wrap;
+import static com.google.maps.android.SphericalUtil.computeDistanceBetween;
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.tan;
+import static java.lang.Math.toRadians;
 
 public class PolyUtil {
 
@@ -466,6 +482,7 @@ public class PolyUtil {
             return computeDistanceBetween(end, p);
         }
 
+        // Implementation of http://paulbourke.net/geometry/pointlineplane/ or http://geomalgorithms.com/a02-_lines.html
         final double s0lat = toRadians(p.latitude);
         final double s0lng = toRadians(p.longitude);
         final double s1lat = toRadians(start.latitude);
@@ -473,9 +490,10 @@ public class PolyUtil {
         final double s2lat = toRadians(end.latitude);
         final double s2lng = toRadians(end.longitude);
 
+        double lonCorrection = Math.cos(s1lat);
         double s2s1lat = s2lat - s1lat;
-        double s2s1lng = s2lng - s1lng;
-        final double u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * s2s1lng)
+        double s2s1lng = (s2lng - s1lng) * lonCorrection;
+        final double u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * lonCorrection * s2s1lng)
                 / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
         if (u <= 0) {
             return computeDistanceBetween(p, start);

@@ -23,7 +23,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class PolyUtilTest {
     private static final String TEST_LINE =
@@ -469,6 +472,17 @@ public class PolyUtilTest {
         assertTrue(PolyUtil.isClosedPolygon(poly));
     }
 
+    /**
+     * The following method checks whether {@link PolyUtil#distanceToLine(LatLng, LatLng, LatLng)  distanceToLine()} }
+     * is determining the distance between a point and a segment accurately.
+     *
+     * Currently there are tests for different orders of magnitude (i.e., 1X, 10X, 100X, 1000X), as well as a test
+     * where the segment and the point lie in different hemispheres.
+     *
+     * If further tests need to be added here, make sure that the distance has been verified with <a href="https://www.qgis.org/">QGIS</a>.
+     *
+     * @see <a href="https://www.qgis.org/">QGIS</a>
+     */
     @Test
     public void testDistanceToLine() {
         LatLng startLine = new LatLng(28.05359, -82.41632);
@@ -476,7 +490,42 @@ public class PolyUtilTest {
         LatLng p = new LatLng(28.05342, -82.41594);
 
         double distance = PolyUtil.distanceToLine(p, startLine, endLine);
-        assertEquals(37.947946, distance, 1e-6);
+        assertEquals(37.94596795917082, distance, 1e-6);
+
+        startLine = new LatLng(49.321045, 12.097749);
+        endLine = new LatLng(49.321016, 12.097795);
+        p = new LatLng(49.3210674, 12.0978238);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(5.559443879999753, distance, 1e-6);
+
+        startLine = new LatLng(48.125961, 11.548998);
+        endLine = new LatLng(48.125918, 11.549005);
+        p = new LatLng(48.125941, 11.549028);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(1.9733966358947437, distance, 1e-6);
+
+        startLine = new LatLng(78.924669, 11.925521);
+        endLine = new LatLng(78.924707, 11.929060);
+        p = new LatLng(78.923164, 11.924029);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(170.35662670453187, distance, 1e-6);
+
+        startLine = new LatLng(69.664036, 18.957124);
+        endLine = new LatLng(69.664029, 18.957109);
+        p = new LatLng(69.672901, 18.967911);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(1070.222749990837, distance, 1e-6);
+
+        startLine = new LatLng(-0.018200, 109.343282);
+        endLine = new LatLng(-0.017877, 109.343537);
+        p = new LatLng(0.058299, 109.408054);
+
+        distance = PolyUtil.distanceToLine(p, startLine, endLine);
+        assertEquals(11100.157563150981, distance, 1e-6);
     }
 
     @Test
