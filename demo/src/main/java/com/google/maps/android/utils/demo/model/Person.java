@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Person implements ClusterItem {
     public final String name;
@@ -45,6 +46,12 @@ public class Person implements ClusterItem {
 
     @Override
     public String getSnippet() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Float getZIndex() {
         return null;
     }
 }

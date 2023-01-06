@@ -881,6 +881,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         // Update marker position if the item changed position
         if (!marker.getPosition().equals(item.getPosition())) {
             marker.setPosition(item.getPosition());
+            if (item.getZIndex() != null) {
+                marker.setZIndex(item.getZIndex());
+            }
             changed = true;
         }
         if (changed && marker.isInfoWindowShown()) {
@@ -1042,6 +1045,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                             markerOptions.position(animateFrom);
                         } else {
                             markerOptions.position(item.getPosition());
+                            if (item.getZIndex() != null) {
+                                markerOptions.zIndex(item.getZIndex());
+                            }
                         }
                         onBeforeClusterItemRendered(item, markerOptions);
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
