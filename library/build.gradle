@@ -69,5 +69,3 @@ task instrumentTest(dependsOn: connectedCheck)
 if (System.getenv("JITPACK")) {
     apply plugin: 'maven'
 }
-
-preBuild.dependsOn(rootProject.tasks.copyGmsToV3Beta)

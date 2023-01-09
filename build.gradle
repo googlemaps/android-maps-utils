@@ -46,51 +46,26 @@ task clean(type: Delete) {
 }
 
 /**
- * This task will copy all of the source code in the `library` module into the `library-v3` module
- * and change its imports from the Maps SDK on Play Services to the Standalone V3 Beta Maps SDK.
+ * Improve build server performance by allowing disabling of pre-dexing
+ * (see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
  */
-task copyGmsToV3Beta(type: Copy) {
-    group 'Custom'
-    description 'Generates source code for Maps SDK for Android V3 BETA Utilities'
-    into 'library-v3/src'
+project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 
-    from('library/src/main/java') {
-        filter { line ->
-            line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
+subprojects {
+    project.plugins.whenPluginAdded { plugin ->
+        if (rootProject.ext.has('preDexLibs')) {
+            if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {
+                project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+            } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
+                project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+            }
         }
-        into 'main/java'
-    }
-
-    from('library/src/main/res') {
-        into 'main/res'
-        exclude '**/*.xml'
-    }
-
-    from('library/src/main/res') {
-        into 'main/res'
-        include '**/*.xml'
-
-        // Although the files within library/src/main/res do not reference classes under the gms
-        // package name, package name replacement is still applied to resources to future-proof
-        // this should it change.
-        filter { line ->
-            line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
-        }
-    }
-
-    from('library/src/test') {
-        filter { line ->
-            line.replace('com.google.android.gms.maps', 'com.google.android.libraries.maps')
-        }
-        into 'test'
     }
 }
 
 ext.projectArtifactId = { project ->
     if (project.name == 'library') {
         return 'android-maps-utils'
-    } else if (project.name == 'library-v3') {
-        return 'android-maps-utils-v3'
     } else {
         return null
     }

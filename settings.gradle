@@ -16,5 +16,4 @@
 
 include 'demo'
 include 'library'
-include 'library-v3'
 include 'lint-checks'
