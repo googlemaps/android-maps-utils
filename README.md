@@ -32,17 +32,14 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ## Requirements
 
 * Android API level 15+
-* Maps SDK via Google Play Services ~OR (Deprecated) [Maps SDK v3 BETA] library~
+* [Maps SDK for Android](https://developers.google.com/maps/documentation/android-sdk/config) via Google Play Services
 
 ## Installation
 
 ```groovy
 dependencies {
-    // Utilities for Maps SDK for Android (requires Google Play Services) 
+    // Utilities for Maps SDK for Android (requires Google Play Services)
     implementation 'com.google.maps.android:android-maps-utils:2.4.1'
-
-    // (Deprecated) Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
-    implementation 'com.google.maps.android:android-maps-utils-v3:2.4.1'
 }
 ```
 
@@ -54,14 +51,12 @@ _**Note**: The Beta version of the SDK is deprecated and scheduled for decommiss
 
 This repository includes a [demo app](demo) that illustrates the use of this library.
 
-The version that depends on the Maps SDK for Android can be found under the `gms` Gradle product flavor, while version that depends on the Maps SDK V3 BETA can be found under the `v3` Gradle product flavor. The active product flavor can be modified through Android Studio’s [“Build Variants”](https://developer.android.com/studio/run#changing-variant) toolbar options.
-
 To run the demo app, you'll have to:
 
 1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
 1. Open the file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
 1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
-1. Build and run the `gmsDebug` variant for the Maps SDK for Android version, or `v3Debug` for the Maps SDK v3 BETA version
+1. Build and run the `gmsDebug` variant for the Maps SDK for Android version
 
 ## Migration Guide
 
