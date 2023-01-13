@@ -31,7 +31,7 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 
 ## Requirements
 
-* Android API level 15+
+* Android API level 19+
 * [Maps SDK for Android](https://developers.google.com/maps/documentation/android-sdk/config) via Google Play Services
 
 ## Installation
