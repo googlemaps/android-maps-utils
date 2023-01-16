@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
+import androidx.annotation.NonNull;
+
 /**
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
  * removes GeoJsonFeature objects and redraws features when updated.
@@ -80,7 +82,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param feature feature to add to the map
      */
-    public void addFeature(GeoJsonFeature feature) {
+    public void addFeature(@NonNull GeoJsonFeature feature) {
         super.addFeature(feature);
         if (isLayerOnMap()) {
             feature.addObserver(this);
