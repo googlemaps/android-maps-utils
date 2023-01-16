@@ -21,6 +21,8 @@ import com.google.maps.android.data.DataPolygon;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a KML Polygon. Contains a single array of outer boundary coordinates and an array of
  * arrays for the inner boundary coordinates.
@@ -91,6 +93,7 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
         return mInnerBoundaryCoordinates;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");

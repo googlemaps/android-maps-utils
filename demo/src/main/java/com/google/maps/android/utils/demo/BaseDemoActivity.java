@@ -18,6 +18,7 @@ package com.google.maps.android.utils.demo;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -41,7 +42,7 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     }
 
     @Override
-    public void onMapReady(GoogleMap map) {
+    public void onMapReady(@NonNull GoogleMap map) {
         if (mMap != null) {
             return;
         }

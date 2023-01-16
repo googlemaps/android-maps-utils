@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package com.google.maps.android.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * An abstraction that shares the common properties of
@@ -78,6 +80,7 @@ public class MultiGeometry implements Geometry {
         geometryType = type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         String typeString = "Geometries=";

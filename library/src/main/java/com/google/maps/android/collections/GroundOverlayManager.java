@@ -53,7 +53,7 @@ public class GroundOverlayManager extends MapObjectManager<GroundOverlay, Ground
     }
 
     @Override
-    public void onGroundOverlayClick(GroundOverlay groundOverlay) {
+    public void onGroundOverlayClick(@NonNull GroundOverlay groundOverlay) {
         Collection collection = mAllObjects.get(groundOverlay);
         if (collection != null && collection.mGroundOverlayClickListener != null) {
             collection.mGroundOverlayClickListener.onGroundOverlayClick(groundOverlay);

@@ -21,6 +21,8 @@ import com.google.maps.android.data.MultiGeometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a KML MultiGeometry. Contains an array of Geometry objects.
  */
@@ -44,6 +46,7 @@ public class KmlMultiGeometry extends MultiGeometry {
         return new ArrayList<>(geometriesList);
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(getGeometryType()).append("{");

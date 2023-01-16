@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import com.google.maps.android.data.Style;
 
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * A class that allows for GeoJsonLineString objects to be styled and for these styles to be
@@ -191,6 +193,7 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
         return polylineOptions;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("LineStringStyle{");

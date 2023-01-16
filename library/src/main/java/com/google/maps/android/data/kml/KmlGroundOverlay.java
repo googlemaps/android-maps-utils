@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a KML Ground Overlay
  */
@@ -115,6 +117,7 @@ public class KmlGroundOverlay {
         return mGroundOverlayOptions;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("GroundOverlay").append("{");

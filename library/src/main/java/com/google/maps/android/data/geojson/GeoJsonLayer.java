@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
 
 /**
  * A class that allows the developer to import GeoJSON data, style it and interact with the
@@ -210,6 +212,7 @@ public class GeoJsonLayer extends Layer {
         return mBoundingBox;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Collection{");

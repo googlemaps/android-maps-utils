@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package com.google.maps.android.collections;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+
+import androidx.annotation.NonNull;
 
 /**
  * Keeps track of collections of polygons on the map. Delegates all Polygon-related events to each
@@ -51,7 +53,7 @@ public class PolygonManager extends MapObjectManager<Polygon, PolygonManager.Col
     }
 
     @Override
-    public void onPolygonClick(Polygon polygon) {
+    public void onPolygonClick(@NonNull Polygon polygon) {
         Collection collection = mAllObjects.get(polygon);
         if (collection != null && collection.mPolygonClickListener != null) {
             collection.mPolygonClickListener.onPolygonClick(polygon);

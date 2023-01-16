@@ -23,6 +23,8 @@ import com.google.maps.android.data.Geometry;
 
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a placemark which is either a {@link com.google.maps.android.data.kml.KmlPoint},
  * {@link
@@ -104,6 +106,7 @@ public class KmlPlacemark extends Feature {
         return mInlineStyle.getPolylineOptions();
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Placemark").append("{");

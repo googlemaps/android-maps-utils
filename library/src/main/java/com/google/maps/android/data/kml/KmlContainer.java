@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.GroundOverlay;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a KML Document or Folder.
  */
@@ -200,6 +202,7 @@ public class KmlContainer {
         return mGroundOverlays.keySet();
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Container").append("{");
