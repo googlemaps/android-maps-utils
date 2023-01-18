@@ -39,7 +39,7 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ```groovy
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
-    implementation 'com.google.maps.android:android-maps-utils:3.1.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.1.1'
 }
 ```
 
