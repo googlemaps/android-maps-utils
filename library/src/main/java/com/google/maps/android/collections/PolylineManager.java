@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 /**
  * Keeps track of collections of polylines on the map. Delegates all Polyline-related events to each
  * collection's individually managed listeners.
- * <p/>
+ * <p>
  * All polyline operations (adds and removes) should occur via its collection class. That is, don't
  * add a polyline via a collection, then remove it via Polyline.remove()
  */

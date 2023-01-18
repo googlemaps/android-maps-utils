@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
 
 /**
  * RotationLayout rotates the contents of the layout by multiples of 90 degrees.
- * <p/>
+ * <p>
  * May not work with padding.
  */
 public class RotationLayout extends FrameLayout {

@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 /**
  * Keeps track of collections of ground overlays on the map. Delegates all GroundOverlay-related events to each
  * collection's individually managed listeners.
- * <p/>
+ * <p>
  * All ground overlay operations (adds and removes) should occur via its collection class. That is, don't
  * add a ground overlay via a collection, then remove it via GroundOverlay.remove()
  */

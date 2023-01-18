@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 /**
  * Keeps track of collections of polygons on the map. Delegates all Polygon-related events to each
  * collection's individually managed listeners.
- * <p/>
+ * <p>
  * All polygon operations (adds and removes) should occur via its collection class. That is, don't
  * add a polygon via a collection, then remove it via Polygon.remove()
  */
