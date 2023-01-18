@@ -35,14 +35,14 @@ import java.util.Set;
 /**
  * A simple clustering algorithm with O(nlog n) performance. Resulting clusters are not
  * hierarchical.
- * <p/>
+ * <p>
  * High level algorithm:<br>
  * 1. Iterate over items in the order they were added (candidate clusters).<br>
  * 2. Create a cluster with the center of the item. <br>
  * 3. Add all items that are within a certain distance to the cluster. <br>
  * 4. Move any items out of an existing cluster if they are closer to another cluster. <br>
  * 5. Remove those items from the list of candidate clusters.
- * <p/>
+ * <p>
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
 public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm<T> {

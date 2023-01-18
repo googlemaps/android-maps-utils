@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,9 +80,22 @@ subprojects { project ->
         jacoco.excludes = ['jdk.internal.*']
     }
 
-    task javadoc(type: Javadoc) {
-        failOnError false
+    task javadoc( type: Javadoc) {
+        options.memberLevel = JavadocMemberLevel.PUBLIC
+        options.encoding = "utf-8"
+        failOnError = false
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
         source = android.sourceSets.main.java.srcDirs
+        doFirst {
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        }
+        android.libraryVariants.all { variant ->
+            if (variant.name == 'release') {
+                owner.classpath += variant.javaCompileProvider.get().classpath
+            }
+        }
+        options.addStringOption('-ignore-source-errors', '-quiet')
     }
 
     task sourcesJar(type: Jar) {
