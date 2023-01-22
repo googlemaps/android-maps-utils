@@ -409,7 +409,7 @@ public class PolyUtil {
         dists[0] = 1;
         dists[n - 1] = 1;
         double maxDist;
-        double dist = 0.0;
+        double dist;
         int[] current;
 
         if (n > 2) {
@@ -513,7 +513,7 @@ public class PolyUtil {
 
         // For speed we preallocate to an upper bound on the final length, then
         // truncate the array before returning.
-        final List<LatLng> path = new ArrayList<LatLng>();
+        final List<LatLng> path = new ArrayList<>();
         int index = 0;
         int lat = 0;
         int lng = 0;
@@ -538,7 +538,7 @@ public class PolyUtil {
             } while (b >= 0x1f);
             lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
 
-            path.add(new LatLng(lat * 1e-5, lng * 1e-5));
+            path.add(new LatLng(lat * 1e-7, lng * 1e-7));
         }
 
         return path;
@@ -554,8 +554,8 @@ public class PolyUtil {
         final StringBuffer result = new StringBuffer();
 
         for (final LatLng point : path) {
-            long lat = Math.round(point.latitude * 1e5);
-            long lng = Math.round(point.longitude * 1e5);
+            long lat = Math.round(point.latitude * 1e7);
+            long lng = Math.round(point.longitude * 1e7);
 
             long dLat = lat - lastLat;
             long dLng = lng - lastLng;
