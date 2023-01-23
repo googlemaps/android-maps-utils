@@ -30,6 +30,8 @@ import com.google.maps.android.SphericalUtil;
 
 import java.util.Arrays;
 
+import androidx.annotation.NonNull;
+
 public class DistanceDemoActivity extends BaseDemoActivity implements GoogleMap.OnMarkerDragListener {
     private TextView mTextView;
     private Marker mMarkerA;
@@ -81,18 +83,18 @@ public class DistanceDemoActivity extends BaseDemoActivity implements GoogleMap.
     }
 
     @Override
-    public void onMarkerDragEnd(Marker marker) {
+    public void onMarkerDragEnd(@NonNull Marker marker) {
         showDistance();
         updatePolyline();
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
+    public void onMarkerDragStart(@NonNull Marker marker) {
 
     }
 
     @Override
-    public void onMarkerDrag(Marker marker) {
+    public void onMarkerDrag(@NonNull Marker marker) {
         showDistance();
         updatePolyline();
     }

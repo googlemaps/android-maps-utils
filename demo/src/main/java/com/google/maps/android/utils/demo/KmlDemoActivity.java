@@ -32,7 +32,6 @@ import com.google.maps.android.collections.GroundOverlayManager;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.collections.PolygonManager;
 import com.google.maps.android.collections.PolylineManager;
-import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Renderer;
 import com.google.maps.android.data.kml.KmlContainer;
 import com.google.maps.android.data.kml.KmlLayer;

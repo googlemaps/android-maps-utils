@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.data.Style;
 
 import java.util.Arrays;
+
+import androidx.annotation.NonNull;
 
 /**
  * A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated
@@ -308,6 +310,7 @@ public class GeoJsonPointStyle extends Style implements GeoJsonStyle {
         return markerOptions;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PointStyle{");

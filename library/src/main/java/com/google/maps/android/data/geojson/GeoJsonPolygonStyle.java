@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import com.google.maps.android.data.Style;
 
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * A class that allows for GeoJsonPolygon objects to be styled and for these styles to be
@@ -230,6 +232,7 @@ public class GeoJsonPolygonStyle extends Style implements GeoJsonStyle {
         return polygonOptions;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("PolygonStyle{");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import com.google.maps.android.data.MultiGeometry;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Represents a KML MultiGeometry. Contains an array of Geometry objects.
@@ -44,6 +46,7 @@ public class KmlMultiGeometry extends MultiGeometry {
         return new ArrayList<>(geometriesList);
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
