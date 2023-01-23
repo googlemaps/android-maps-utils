@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
@@ -236,6 +237,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return Color.HSVToColor(new float[]{
                 hue, 1f, .6f
         });
+    }
+
+    @StyleRes
+    @Override
+    public int getClusterTextAppearance(int clusterSize) {
+        return R.style.amu_ClusterIcon_TextAppearance; // Default value
     }
 
     @NonNull protected String getClusterText(int bucket) {
@@ -941,6 +948,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
             mColoredCircleBackground.getPaint().setColor(getColor(bucket));
+            mIconGenerator.setTextAppearance(getClusterTextAppearance(bucket));
             descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
