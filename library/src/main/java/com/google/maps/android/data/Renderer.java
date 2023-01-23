@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,6 @@ import com.google.maps.android.data.kml.KmlUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,10 +69,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * An abstraction that shares the common properties of
@@ -1153,11 +1150,11 @@ public class Renderer {
     private void createInfoWindow() {
         mMarkers.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
-            public View getInfoWindow(Marker arg0) {
+            public View getInfoWindow(@NonNull Marker arg0) {
                 return null;
             }
 
-            public View getInfoContents(Marker arg0) {
+            public View getInfoContents(@NonNull Marker arg0) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
@@ -1183,43 +1180,34 @@ public class Renderer {
      */
     void setOnFeatureClickListener(final Layer.OnFeatureClickListener listener) {
 
-        mPolygons.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
-            @Override
-            public void onPolygonClick(Polygon polygon) {
-                if (getFeature(polygon) != null) {
-                    listener.onFeatureClick(getFeature(polygon));
-                } else if (getContainerFeature(polygon) != null) {
-                    listener.onFeatureClick(getContainerFeature(polygon));
-                } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
-                }
+        mPolygons.setOnPolygonClickListener(polygon -> {
+            if (getFeature(polygon) != null) {
+                listener.onFeatureClick(getFeature(polygon));
+            } else if (getContainerFeature(polygon) != null) {
+                listener.onFeatureClick(getContainerFeature(polygon));
+            } else {
+                listener.onFeatureClick(getFeature(multiObjectHandler(polygon)));
             }
         });
 
-        mMarkers.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                if (getFeature(marker) != null) {
-                    listener.onFeatureClick(getFeature(marker));
-                }  else if (getContainerFeature(marker) != null) {
-                    listener.onFeatureClick(getContainerFeature(marker));
-                } else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
-                }
-                return false;
+        mMarkers.setOnMarkerClickListener(marker -> {
+            if (getFeature(marker) != null) {
+                listener.onFeatureClick(getFeature(marker));
+            }  else if (getContainerFeature(marker) != null) {
+                listener.onFeatureClick(getContainerFeature(marker));
+            } else {
+                listener.onFeatureClick(getFeature(multiObjectHandler(marker)));
             }
+            return false;
         });
 
-        mPolylines.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-            @Override
-            public void onPolylineClick(Polyline polyline) {
-                if (getFeature(polyline) != null) {
-                    listener.onFeatureClick(getFeature(polyline));
-                } else if (getContainerFeature(polyline) != null) {
-                    listener.onFeatureClick(getContainerFeature(polyline));
-                }  else {
-                    listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
-                }
+        mPolylines.setOnPolylineClickListener(polyline -> {
+            if (getFeature(polyline) != null) {
+                listener.onFeatureClick(getFeature(polyline));
+            } else if (getContainerFeature(polyline) != null) {
+                listener.onFeatureClick(getContainerFeature(polyline));
+            }  else {
+                listener.onFeatureClick(getFeature(multiObjectHandler(polyline)));
             }
         });
     }

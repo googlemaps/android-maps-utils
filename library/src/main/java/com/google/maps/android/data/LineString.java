@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package com.google.maps.android.data;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * An abstraction that shares the common properties of
@@ -61,6 +63,7 @@ public class LineString implements Geometry<List<LatLng>> {
         return mCoordinates;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");

@@ -77,7 +77,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(@NonNull Person person, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(@NonNull Person person, @NonNull MarkerOptions markerOptions) {
             // Draw a single person - show their profile photo and set the info window to show their name
             markerOptions
                     .icon(getItemIcon(person))
@@ -85,7 +85,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onClusterItemUpdated(@NonNull Person person, Marker marker) {
+        protected void onClusterItemUpdated(@NonNull Person person, @NonNull Marker marker) {
             // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
             marker.setIcon(getItemIcon(person));
             marker.setTitle(person.name);
@@ -105,7 +105,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterRendered(@NonNull Cluster<Person> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(@NonNull Cluster<Person> cluster, @NonNull MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             markerOptions.icon(getClusterIcon(cluster));
@@ -145,7 +145,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         }
 
         @Override
-        protected boolean shouldRenderAsCluster(Cluster cluster) {
+        protected boolean shouldRenderAsCluster(@NonNull Cluster cluster) {
             // Always render clusters.
             return cluster.getSize() > 1;
         }

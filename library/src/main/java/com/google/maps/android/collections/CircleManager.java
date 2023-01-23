@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class CircleManager extends MapObjectManager<Circle, CircleManager.Collec
     }
 
     @Override
-    public void onCircleClick(Circle circle) {
+    public void onCircleClick(@NonNull Circle circle) {
         Collection collection = mAllObjects.get(circle);
         if (collection != null && collection.mCircleClickListener != null) {
             collection.mCircleClickListener.onCircleClick(circle);

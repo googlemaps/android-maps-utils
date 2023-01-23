@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import com.google.android.gms.maps.model.GroundOverlay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
 
 /**
  * Represents a KML Document or Folder.
@@ -200,6 +202,7 @@ public class KmlContainer {
         return mGroundOverlays.keySet();
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Container").append("{");

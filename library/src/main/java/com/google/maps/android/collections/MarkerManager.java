@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import androidx.annotation.NonNull;
 
 /**
  * Keeps track of collections of markers on the map. Delegates all Marker-related events to each
@@ -56,7 +58,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public View getInfoWindow(Marker marker) {
+    public View getInfoWindow(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowAdapter != null) {
             return collection.mInfoWindowAdapter.getInfoWindow(marker);
@@ -65,7 +67,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public View getInfoContents(Marker marker) {
+    public View getInfoContents(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowAdapter != null) {
             return collection.mInfoWindowAdapter.getInfoContents(marker);
@@ -74,7 +76,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void onInfoWindowClick(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowClickListener != null) {
             collection.mInfoWindowClickListener.onInfoWindowClick(marker);
@@ -82,7 +84,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public void onInfoWindowLongClick(Marker marker) {
+    public void onInfoWindowLongClick(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowLongClickListener != null) {
             collection.mInfoWindowLongClickListener.onInfoWindowLongClick(marker);
@@ -90,7 +92,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public boolean onMarkerClick(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerClickListener != null) {
             return collection.mMarkerClickListener.onMarkerClick(marker);
@@ -99,7 +101,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
+    public void onMarkerDragStart(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerDragListener != null) {
             collection.mMarkerDragListener.onMarkerDragStart(marker);
@@ -107,7 +109,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public void onMarkerDrag(Marker marker) {
+    public void onMarkerDrag(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerDragListener != null) {
             collection.mMarkerDragListener.onMarkerDrag(marker);
@@ -115,7 +117,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public void onMarkerDragEnd(Marker marker) {
+    public void onMarkerDragEnd(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerDragListener != null) {
             collection.mMarkerDragListener.onMarkerDragEnd(marker);
