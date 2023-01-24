@@ -101,7 +101,6 @@ public class IconGenerator {
         r.eraseColor(Color.TRANSPARENT);
 
         Canvas canvas = new Canvas(r);
-
         switch (mRotation) {
             case 0:
                 // do nothing
