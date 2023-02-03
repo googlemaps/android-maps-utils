@@ -36,13 +36,13 @@ public class AnimationUtil {
      * @param marker        marker to animate
      * @param finalPosition the final position of the marker after the animation
      */
-    private static void animateMarkerTo(final Marker marker, final LatLng finalPosition) {
+     public static void animateMarkerTo(final Marker marker, final LatLng finalPosition) {
         final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Linear();
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
-        final float durationInMs = 3000;
+        final float durationInMs = 2000;
 
         handler.post(new Runnable() {
             long elapsed;
