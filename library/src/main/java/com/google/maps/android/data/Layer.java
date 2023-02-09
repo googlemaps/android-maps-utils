@@ -25,7 +25,6 @@ import com.google.maps.android.data.kml.KmlContainer;
 import com.google.maps.android.data.kml.KmlGroundOverlay;
 import com.google.maps.android.data.kml.KmlRenderer;
 
-
 /**
  * An abstraction that shares the common properties of
  * {@link com.google.maps.android.data.kml.KmlLayer KmlLayer} and

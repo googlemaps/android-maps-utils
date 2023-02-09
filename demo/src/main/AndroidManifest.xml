@@ -67,6 +67,7 @@
         <activity android:name=".GeoJsonDemoActivity" />
         <activity android:name=".KmlDemoActivity" />
         <activity android:name=".MultiLayerDemoActivity" />
+        <activity android:name=".AnimationUtilDemoActivity" />
 
     </application>
 
