@@ -43,7 +43,7 @@ Written guides for using the utilities are published in
 ```groovy
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
-    implementation 'com.google.maps.android:android-maps-utils:3.3.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.4.0'
 }
 ```
 
