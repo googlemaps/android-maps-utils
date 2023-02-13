@@ -25,3 +25,8 @@ jar {
         attributes("Lint-Registry-v2": "com.google.maps.android.lint.checks.MapsUtilsIssueRegistry")
     }
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
