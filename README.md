@@ -58,7 +58,7 @@ To run the demo app, you'll have to:
 1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
 1. Open the file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
 1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
-1. Build and run the `gmsDebug` variant for the Maps SDK for Android version
+1. Build and run the `debug` variant for the Maps SDK for Android version
 
 <details>
   <summary><strong>Migration Guide from v0.x to 1.0</strong></summary>
