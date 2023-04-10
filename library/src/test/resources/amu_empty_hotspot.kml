@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml>
-    <Style x="20" y="2" xunits="pixels" yunits="pixels" id="shp_centerpoint">
+    <Style id="emptyHotspot">
       <IconStyle>
         <scale>0.8</scale>
         <Icon>
@@ -13,9 +13,22 @@
         <color>FFFFFFFF</color>
       </LabelStyle>
     </Style>
+    <Style id="validHotspot">
+      <IconStyle>
+        <scale>0.8</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon57.png</href>
+        </Icon>
+        <hotSpot x="0.5234" y="0.5062" xunits="fraction" yunits="fraction"/>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1</scale>
+        <color>FFFFFFFF</color>
+      </LabelStyle>
+    </Style>
       <Placemark>
         <name>60A</name>
-        <description>Test</description>
+        <description>Empty Hotspot</description>
         <visibility>1</visibility>
         <Point>
           <extrude>0</extrude>
@@ -23,6 +36,18 @@
           <altitudeMode>0</altitudeMode>
           <coordinates>-111.957935372607,44.0811954480368,0</coordinates>
         </Point>
-        <styleUrl>#shp_centerpoint</styleUrl>
+        <styleUrl>#emptyHotspot</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>60B</name>
+        <description>Valid Hotspot</description>
+        <visibility>1</visibility>
+        <Point>
+          <extrude>0</extrude>
+          <tessellate>1</tessellate>
+          <altitudeMode>0</altitudeMode>
+          <coordinates>-112.057935372607,44.1811954480368,0</coordinates>
+        </Point>
+        <styleUrl>#validHotspot</styleUrl>
       </Placemark>
 </kml>
