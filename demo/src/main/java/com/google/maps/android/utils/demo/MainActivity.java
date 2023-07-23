@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("KML Layer Overlay", KmlDemoActivity.class);
         addDemo("Multi Layer", MultiLayerDemoActivity.class);
         addDemo("AnimationUtil sample", AnimationUtilDemoActivity.class);
+        addDemo("Street View Demo", StreetViewDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
