@@ -11,7 +11,7 @@ plugins:
           to: "version = '${nextRelease.version}'"
         - files:
             - "README.md"
-          from: ":[0-9].[0-9].[0-9]"
+          from: ":([0-9]+).([0-9]+).([0-9]+)"
           to: ":${nextRelease.version}"
   - - "@semantic-release/exec"
     - prepareCmd: "./gradlew build --warn --stacktrace"
