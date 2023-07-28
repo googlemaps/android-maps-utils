@@ -45,15 +45,20 @@ jobs:
         GPG_PASSWORD: ${{ secrets.SYNCED_GPG_KEY_PASSWORD }}
         SONATYPE_PASSWORD: ${{ secrets.SYNCED_SONATYPE_PASSWORD }}
         SONATYPE_USERNAME: ${{ secrets.SYNCED_SONATYPE_USERNAME }}
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
     - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v3
+      uses: cycjimmy/semantic-release-action@v3.4.1
       with:
         extra_plugins: |
-          "@semantic-release/commit-analyzer"
-          "@semantic-release/release-notes-generator"
-          "@google/semantic-release-replace-plugin"
-          "@semantic-release/exec"
-          "@semantic-release/git
-          "@semantic-release/github
+          "@semantic-release/commit-analyzer@8.0.1"
+          "@semantic-release/release-notes-generator@9.0.3"
+          "@google/semantic-release-replace-plugin@1.2.0"
+          "@semantic-release/exec@5.0.0"
+          "@semantic-release/git@9.0.1"
+          "@semantic-release/github@7.2.3"
       env:
         GH_TOKEN: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}

@@ -23,6 +23,7 @@ on:
   pull_request:
     branches-ignore: ['gh-pages']
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   test:
