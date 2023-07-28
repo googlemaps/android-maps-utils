@@ -21,6 +21,7 @@ range of applications using the [Google Maps SDK for Android][android-site].
   computeArea
 - **KML** — displays KML data
 - **GeoJSON** — displays and styles GeoJSON data
+- **StreetView Utility** — checks if a given StreetView location exists
 
 <p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
 
