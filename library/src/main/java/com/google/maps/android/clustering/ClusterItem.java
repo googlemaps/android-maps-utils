@@ -40,4 +40,9 @@ public interface ClusterItem {
      * The description of this marker.
      */
     @Nullable String getSnippet();
+
+    /**
+     * The z-index of this marker.
+     */
+    @Nullable Float getZIndex();
 }

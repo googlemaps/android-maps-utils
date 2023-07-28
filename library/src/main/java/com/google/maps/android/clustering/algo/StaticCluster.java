@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.LinkedHashSet;
 import java.util.Collection;
-import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * A cluster whose center is determined upon creation.
@@ -58,6 +59,7 @@ public class StaticCluster<T extends ClusterItem> implements Cluster<T> {
         return mItems.size();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "StaticCluster{" +

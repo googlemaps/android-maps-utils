@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import com.google.maps.android.data.DataPolygon;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Represents a KML Polygon. Contains a single array of outer boundary coordinates and an array of
@@ -91,6 +93,7 @@ public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
         return mInnerBoundaryCoordinates;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");

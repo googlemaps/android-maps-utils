@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
+import androidx.annotation.NonNull;
 
 /**
  * A GeoJsonFeature has a geometry, bounding box, id and set of properties. Styles are also stored
@@ -227,6 +229,7 @@ public class GeoJsonFeature extends Feature implements Observer {
         return mBoundingBox;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Feature{");

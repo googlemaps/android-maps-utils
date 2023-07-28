@@ -36,9 +36,11 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import androidx.annotation.NonNull;
+
 /**
  * Groups many items on a map based on zoom level.
- * <p/>
+ * <p>
  * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraIdleListener}</li>
  * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
@@ -291,12 +293,12 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public boolean onMarkerClick(@NonNull Marker marker) {
         return getMarkerManager().onMarkerClick(marker);
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void onInfoWindowClick(@NonNull Marker marker) {
         getMarkerManager().onInfoWindowClick(marker);
     }
 

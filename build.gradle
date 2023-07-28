@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2022 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,24 +45,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-/**
- * Improve build server performance by allowing disabling of pre-dexing
- * (see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
- */
-project.ext.preDexLibs = !project.hasProperty('disablePreDex')
-
-subprojects {
-    project.plugins.whenPluginAdded { plugin ->
-        if (rootProject.ext.has('preDexLibs')) {
-            if ("com.android.build.gradle.AppPlugin" == plugin.class.name) {
-                project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-            } else if ("com.android.build.gradle.LibraryPlugin" == plugin.class.name) {
-                project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
-            }
-        }
-    }
-}
-
 ext.projectArtifactId = { project ->
     if (project.name == 'library') {
         return 'android-maps-utils'
@@ -73,7 +55,7 @@ ext.projectArtifactId = { project ->
 
 allprojects {
     group = 'com.google.maps.android'
-    version = '2.4.1'
+    version = '3.4.0'
     project.ext.artifactId = rootProject.ext.projectArtifactId(project)
 }
 
@@ -98,9 +80,22 @@ subprojects { project ->
         jacoco.excludes = ['jdk.internal.*']
     }
 
-    task javadoc(type: Javadoc) {
-        failOnError false
+    task javadoc( type: Javadoc) {
+        options.memberLevel = JavadocMemberLevel.PUBLIC
+        options.encoding = "utf-8"
+        failOnError = false
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
         source = android.sourceSets.main.java.srcDirs
+        doFirst {
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        }
+        android.libraryVariants.all { variant ->
+            if (variant.name == 'release') {
+                owner.classpath += variant.javaCompileProvider.get().classpath
+            }
+        }
+        options.addStringOption('-ignore-source-errors', '-quiet')
     }
 
     task sourcesJar(type: Jar) {

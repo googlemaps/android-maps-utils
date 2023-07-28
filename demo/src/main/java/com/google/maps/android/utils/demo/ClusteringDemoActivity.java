@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 /**
  * Simple activity demonstrating ClusterManager.
  */
@@ -52,7 +54,7 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
         // ClusterManager rather than from GoogleMap.setInfoWindowAdapter
         mClusterManager.getMarkerCollection().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
-            public View getInfoWindow(Marker marker) {
+            public View getInfoWindow(@NonNull Marker marker) {
                 final LayoutInflater inflater = LayoutInflater.from(ClusteringDemoActivity.this);
                 final View view = inflater.inflate(R.layout.custom_info_window, null);
                 final TextView textView = view.findViewById(R.id.textViewTitle);
@@ -62,14 +64,18 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
             }
 
             @Override
-            public View getInfoContents(Marker marker) {
+            public View getInfoContents(@NonNull Marker marker) {
                 return null;
             }
         });
-        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(marker ->
+        mClusterManager.setOnClusterItemInfoWindowLongClickListener(marker ->
                 Toast.makeText(ClusteringDemoActivity.this,
                 "Info window clicked.",
                      Toast.LENGTH_SHORT).show());
+        mClusterManager.setOnClusterItemInfoWindowLongClickListener(marker ->
+                Toast.makeText(ClusteringDemoActivity.this,
+                        "Info window long pressed.",
+                        Toast.LENGTH_SHORT).show());
 
         try {
             readItems();

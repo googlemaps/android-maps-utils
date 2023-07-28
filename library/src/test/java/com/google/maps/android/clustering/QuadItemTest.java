@@ -17,6 +17,7 @@
 package com.google.maps.android.clustering;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -36,7 +37,7 @@ public class QuadItemTest {
     @Test
     public void testAddRemoveUpdateClear() {
         ClusterItem item_1_5 = new TestingItem("title1", 0.1, 0.5);
-        ClusterItem item_2_3 = new TestingItem("title2", 0.2, 0.3);
+        TestingItem item_2_3 = new TestingItem("title2", 0.2, 0.3);
 
         NonHierarchicalDistanceBasedAlgorithm<ClusterItem> algo =
                 new NonHierarchicalDistanceBasedAlgorithm<>();
@@ -53,7 +54,7 @@ public class QuadItemTest {
         assertTrue(algo.getItems().contains(item_2_3));
 
         // Update the item still in the algorithm
-        ((TestingItem) item_2_3).setTitle("newTitle");
+        item_2_3.setTitle("newTitle");
         assertTrue(algo.updateItem(item_2_3));
 
         // Try to remove the item that was already removed
@@ -100,7 +101,7 @@ public class QuadItemTest {
         }
     }
 
-    private class TestingItem implements ClusterItem {
+    private static class TestingItem implements ClusterItem {
         private final LatLng mPosition;
         private String mTitle;
 
@@ -127,6 +128,12 @@ public class QuadItemTest {
 
         @Override
         public String getSnippet() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public Float getZIndex() {
             return null;
         }
 

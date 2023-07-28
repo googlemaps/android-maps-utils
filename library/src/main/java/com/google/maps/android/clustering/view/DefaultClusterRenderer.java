@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
@@ -148,51 +149,38 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     public void onAdd() {
         mClusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
+            public boolean onMarkerClick(@NonNull Marker marker) {
                 return mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker));
             }
         });
 
         mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
+            public void onInfoWindowClick(@NonNull Marker marker) {
                 if (mItemInfoWindowClickListener != null) {
                     mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
                 }
             }
         });
 
-        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
-            @Override
-            public void onInfoWindowLongClick(Marker marker) {
-                if (mItemInfoWindowLongClickListener != null) {
-                    mItemInfoWindowLongClickListener.onClusterItemInfoWindowLongClick(mMarkerCache.get(marker));
-                }
+        mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(marker -> {
+            if (mItemInfoWindowLongClickListener != null) {
+                mItemInfoWindowLongClickListener.onClusterItemInfoWindowLongClick(mMarkerCache.get(marker));
             }
         });
 
-        mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                return mClickListener != null && mClickListener.onClusterClick(mClusterMarkerCache.get(marker));
+        mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(
+                marker -> mClickListener != null && mClickListener.onClusterClick(mClusterMarkerCache.get(marker)));
+
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(marker -> {
+            if (mInfoWindowClickListener != null) {
+                mInfoWindowClickListener.onClusterInfoWindowClick(mClusterMarkerCache.get(marker));
             }
         });
 
-        mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                if (mInfoWindowClickListener != null) {
-                    mInfoWindowClickListener.onClusterInfoWindowClick(mClusterMarkerCache.get(marker));
-                }
-            }
-        });
-
-        mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
-            @Override
-            public void onInfoWindowLongClick(Marker marker) {
-                if (mInfoWindowLongClickListener != null) {
-                    mInfoWindowLongClickListener.onClusterInfoWindowLongClick(mClusterMarkerCache.get(marker));
-                }
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(marker -> {
+            if (mInfoWindowLongClickListener != null) {
+                mInfoWindowLongClickListener.onClusterInfoWindowLongClick(mClusterMarkerCache.get(marker));
             }
         });
     }
@@ -227,7 +215,8 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return squareTextView;
     }
 
-    protected int getColor(int clusterSize) {
+    @Override
+    public int getColor(int clusterSize) {
         final float hueRange = 220;
         final float sizeRange = 300;
         final float size = Math.min(clusterSize, sizeRange);
@@ -237,7 +226,14 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         });
     }
 
-    @NonNull protected String getClusterText(int bucket) {
+    @StyleRes
+    @Override
+    public int getClusterTextAppearance(int clusterSize) {
+        return R.style.amu_ClusterIcon_TextAppearance; // Default value
+    }
+
+    @NonNull 
+    protected String getClusterText(int bucket) {
         if (bucket < BUCKETS[0]) {
             return String.valueOf(bucket);
         }
@@ -328,12 +324,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 mViewModificationInProgress = true;
             }
 
-            renderTask.setCallback(new Runnable() {
-                @Override
-                public void run() {
-                    sendEmptyMessage(TASK_FINISHED);
-                }
-            });
+            renderTask.setCallback(() -> sendEmptyMessage(TASK_FINISHED));
             renderTask.setProjection(projection);
             renderTask.setMapZoom(mMap.getCameraPosition().zoom);
             mExecutor.execute(renderTask);
@@ -350,6 +341,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * Determine whether the cluster should be rendered as individual markers or a cluster.
+     *
      * @param cluster cluster to examine for rendering
      * @return true if the provided cluster should be rendered as a single marker on the map, false
      * if the items within this cluster should be rendered as individual markers instead.
@@ -362,22 +354,22 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Determines if the new clusters should be rendered on the map, given the old clusters. This
      * method is primarily for optimization of performance, and the default implementation simply
      * checks if the new clusters are equal to the old clusters, and if so, it returns false.
-     *
+     * <p>
      * However, there are cases where you may want to re-render the clusters even if they didn't
      * change. For example, if you want a cluster with one item to render as a cluster above
      * a certain zoom level and as a marker below a certain zoom level (even if the contents of the
      * clusters themselves did not change). In this case, you could check the zoom level in an
      * implementation of this method and if that zoom level threshold is crossed return true, else
      * {@code return super.shouldRender(oldClusters, newClusters)}.
-     *
+     * <p>
      * Note that always returning true from this method could potentially have negative performance
      * implications as clusters will be re-rendered on each pass even if they don't change.
      *
      * @param oldClusters The clusters from the previous iteration of the clustering algorithm
      * @param newClusters The clusters from the current iteration of the clustering algorithm
      * @return true if the new clusters should be rendered on the map, and false if they should not. This
-     *      method is primarily for optimization of performance, and the default implementation simply
-     *      checks if the new clusters are equal to the old clusters, and if so, it returns false.
+     * method is primarily for optimization of performance, and the default implementation simply
+     * checks if the new clusters are equal to the old clusters, and if so, it returns false.
      */
     protected boolean shouldRender(@NonNull Set<? extends Cluster<T>> oldClusters, @NonNull Set<? extends Cluster<T>> newClusters) {
         return !newClusters.equals(oldClusters);
@@ -579,6 +571,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     /**
      * {@inheritDoc} The default duration is 300 milliseconds.
+     *
      * @param animationDurationMs long: The length of the animation, in milliseconds. This value cannot be negative.
      */
     @Override
@@ -691,7 +684,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
@@ -737,7 +729,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         /**
          * Perform the next task. Prioritise any on-screen work.
          */
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void performNextTask() {
             if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
                 removeMarker(mOnScreenRemoveMarkerTasks.poll());
@@ -835,7 +826,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * sets the marker and snippet text based on the respective item text if they are both
      * available, otherwise it will set the title if available, and if not it will set the marker
      * title to the item snippet text if that is available.
-     *
+     * <p>
      * The first time {@link ClusterManager#cluster()} is invoked on a set of items
      * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will be called and
      * {@link #onClusterItemUpdated(ClusterItem, Marker)} will not be called.
@@ -843,7 +834,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * invoked again, then {@link #onClusterItemUpdated(ClusterItem, Marker)} will be called and
      * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will not be called.
      *
-     * @param item item to be rendered
+     * @param item          item to be rendered
      * @param markerOptions the markerOptions representing the provided item
      */
     protected void onBeforeClusterItemRendered(@NonNull T item, @NonNull MarkerOptions markerOptions) {
@@ -864,7 +855,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Note that the contents of the item may not have changed since the cached marker was created -
      * implementations of this method are responsible for checking if something changed (if that
      * matters to the implementation).
-     *
+     * <p>
      * The first time {@link ClusterManager#cluster()} is invoked on a set of items
      * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will be called and
      * {@link #onClusterItemUpdated(ClusterItem, Marker)} will not be called.
@@ -872,7 +863,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * invoked again, then {@link #onClusterItemUpdated(ClusterItem, Marker)} will be called and
      * {@link #onBeforeClusterItemRendered(ClusterItem, MarkerOptions)} will not be called.
      *
-     * @param item item being updated
+     * @param item   item being updated
      * @param marker cached marker that contains a potentially previous state of the item.
      */
     protected void onClusterItemUpdated(@NonNull T item, @NonNull Marker marker) {
@@ -897,6 +888,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         // Update marker position if the item changed position
         if (!marker.getPosition().equals(item.getPosition())) {
             marker.setPosition(item.getPosition());
+            if (item.getZIndex() != null) {
+                marker.setZIndex(item.getZIndex());
+            }
             changed = true;
         }
         if (changed && marker.isInfoWindowShown()) {
@@ -908,7 +902,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     /**
      * Called before the marker for a Cluster is added to the map.
      * The default implementation draws a circle with a rough count of the number of items.
-     *
+     * <p>
      * The first time {@link ClusterManager#cluster()} is invoked on a set of items
      * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will be called and
      * {@link #onClusterUpdated(Cluster, Marker)} will not be called. If an item is removed and
@@ -916,7 +910,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * again, then {@link #onClusterUpdated(Cluster, Marker)} will be called and
      * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will not be called.
      *
-     * @param cluster cluster to be rendered
+     * @param cluster       cluster to be rendered
      * @param markerOptions markerOptions representing the provided cluster
      */
     protected void onBeforeClusterRendered(@NonNull Cluster<T> cluster, @NonNull MarkerOptions markerOptions) {
@@ -940,6 +934,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         BitmapDescriptor descriptor = mIcons.get(bucket);
         if (descriptor == null) {
             mColoredCircleBackground.getPaint().setColor(getColor(bucket));
+            mIconGenerator.setTextAppearance(getClusterTextAppearance(bucket));
             descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)));
             mIcons.put(bucket, descriptor);
         }
@@ -950,7 +945,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Called after the marker for a Cluster has been added to the map.
      *
      * @param cluster the cluster that was just added to the map
-     * @param marker the marker representing the cluster that was just added to the map
+     * @param marker  the marker representing the cluster that was just added to the map
      */
     protected void onClusterRendered(@NonNull Cluster<T> cluster, @NonNull Marker marker) {
     }
@@ -961,7 +956,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * circle with a rough count of the number of items. Note that the contents of the cluster may
      * not have changed since the cached marker was created - implementations of this method are
      * responsible for checking if something changed (if that matters to the implementation).
-     *
+     * <p>
      * The first time {@link ClusterManager#cluster()} is invoked on a set of items
      * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will be called and
      * {@link #onClusterUpdated(Cluster, Marker)} will not be called. If an item is removed and
@@ -970,7 +965,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * {@link #onBeforeClusterRendered(Cluster, MarkerOptions)} will not be called.
      *
      * @param cluster cluster being updated
-     * @param marker cached marker that contains a potentially previous state of the cluster
+     * @param marker  cached marker that contains a potentially previous state of the cluster
      */
     protected void onClusterUpdated(@NonNull Cluster<T> cluster, @NonNull Marker marker) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
@@ -981,7 +976,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Called after the marker for a ClusterItem has been added to the map.
      *
      * @param clusterItem the item that was just added to the map
-     * @param marker the marker representing the item that was just added to the map
+     * @param marker      the marker representing the item that was just added to the map
      */
     protected void onClusterItemRendered(@NonNull T clusterItem, @NonNull Marker marker) {
     }
@@ -1058,6 +1053,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                             markerOptions.position(animateFrom);
                         } else {
                             markerOptions.position(item.getPosition());
+                            if (item.getZIndex() != null) {
+                                markerOptions.zIndex(item.getZIndex());
+                            }
                         }
                         onBeforeClusterItemRendered(item, markerOptions);
                         marker = mClusterManager.getMarkerCollection().addMarker(markerOptions);
@@ -1130,7 +1128,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
      * Animates a markerWithPosition from one position to another. TODO: improve performance for
      * slow devices (e.g. Nexus S).
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     private class AnimationTask extends AnimatorListenerAdapter implements ValueAnimator.AnimatorUpdateListener {
         private final MarkerWithPosition markerWithPosition;
         private final Marker marker;

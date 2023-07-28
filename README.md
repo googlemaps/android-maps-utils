@@ -9,9 +9,10 @@
 ## Description
 
 This open-source library contains utilities that are useful for a wide
-range of applications using the [Google Maps Android API][android-site].
+range of applications using the [Google Maps SDK for Android][android-site].
 
 - **Marker clustering** — handles the display of a large number of points
+- **Marker animation** - animates a marker from one position to another
 - **Heat maps** — display a large number of points as a heat map
 - **IconGenerator** — display text on your Markers
 - **Poly decoding and encoding** — compact encoding for paths,
@@ -27,7 +28,10 @@ You can also find Kotlin extensions for this library [here][android-maps-ktx].
 
 ## Developer Documentation
 
-You can view the generated [reference docs][javadoc] for a full list of classes and their methods.
+The generated [reference docs][javadoc] for a full list of classes and their methods.
+
+Written guides for using the utilities are published in
+[Google Maps Platform documentation][devsite-guide].
 
 ## Requirements
 
@@ -39,11 +43,9 @@ You can view the generated [reference docs][javadoc] for a full list of classes 
 ```groovy
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
-    implementation 'com.google.maps.android:android-maps-utils:2.4.1'
+    implementation 'com.google.maps.android:android-maps-utils:3.4.0'
 }
 ```
-
-_**Note**: The Beta version of the SDK is deprecated and scheduled for decommissioning. A future version of the SDK will provide similar support for Beta features. See the [release notes](https://developers.google.com/maps/documentation/android-sdk/releases#2021-08-18) for more information._
 
 ## Demo App
 
@@ -56,9 +58,12 @@ To run the demo app, you'll have to:
 1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
 1. Open the file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
 1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
-1. Build and run the `gmsDebug` variant for the Maps SDK for Android version
+1. Build and run the `debug` variant for the Maps SDK for Android version
 
-## Migration Guide
+<details>
+  <summary><strong>Migration Guide from v0.x to 1.0</strong></summary>
+
+## Migration Guide from v0.x to 1.0
 
 Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
 
@@ -101,7 +106,7 @@ For example, if you have additional `GroundOverlay` objects:
 _New_
 
 ```java
-GroundOverlayManager groundOverlayManager = // Initialize 
+GroundOverlayManager groundOverlayManager = // Initialize
 
 // Create a new collection first
 GroundOverlayManager.Collection groundOverlayCollection = groundOverlayManager.newCollection();
@@ -211,7 +216,7 @@ _New_
 
 ```java
     private class PersonRenderer extends DefaultClusterRenderer<Person> {
-        ...     
+        ...
         @Override
         protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
             // Draw a single person - show their profile photo and set the info window to show their name
@@ -219,9 +224,9 @@ _New_
                     .icon(getItemIcon(person))
                     .title(person.name);
         }
-        
+
         /**
-         * New in v1 
+         * New in v1
          */
         @Override
         protected void onClusterItemUpdated(Person person, Marker marker) {
@@ -229,16 +234,16 @@ _New_
             marker.setIcon(getItemIcon(person));
             marker.setTitle(person.name);
         }
-        
+
         @Override
         protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             markerOptions.icon(getClusterIcon(cluster));
         }
-       
+
         /**
-         * New in v1 
+         * New in v1
          */
         @Override
         protected void onClusterUpdated(Cluster<Person> cluster, Marker marker) {
@@ -253,7 +258,7 @@ _Old_
 
 ```java
     private class PersonRenderer extends DefaultClusterRenderer<Person> {
-        ...       
+        ...
         @Override
         protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
             // Draw a single person - show their profile photo and set the info window to show their name
@@ -261,7 +266,7 @@ _Old_
                     .icon(getItemIcon(person))
                     .title(person.name);
         }
-        
+
         @Override
         protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
@@ -271,6 +276,8 @@ _Old_
         ...
     }
 ```
+
+</details>
 
 ## Support
 
@@ -284,12 +291,11 @@ You can also reach us on our [Discord channel].
 For more information, check out the detailed guide on the
 [Google Developers site][devsite-guide].
 
-[Maps SDK v3 BETA]: https://developers.google.com/maps/documentation/android-sdk/v3-client-migration
 [file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
 [pull request]: https://github.com/googlemaps/android-maps-utils/compare
 [code of conduct]: CODE_OF_CONDUCT.md
 [Discord channel]: https://discord.gg/hYsWbmk
-[android-site]: https://developer.android.com/training/maps/index.html
-[devsite-guide]: https://developers.google.com/maps/documentation/android-api/utility/
+[android-site]: https://developers.google.com/maps/documentation/android-sdk
+[devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
 [javadoc]: https://www.javadoc.io/doc/com.google.maps.android/android-maps-utils/latest/index.html
 [android-maps-ktx]: https://github.com/googlemaps/android-maps-ktx

@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("GeoJSON Layer", GeoJsonDemoActivity.class);
         addDemo("KML Layer Overlay", KmlDemoActivity.class);
         addDemo("Multi Layer", MultiLayerDemoActivity.class);
+        addDemo("AnimationUtil sample", AnimationUtilDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {

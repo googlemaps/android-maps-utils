@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package com.google.maps.android.utils.demo.model;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class Person implements ClusterItem {
     public final String name;
     public final int profilePhoto;
@@ -30,6 +33,7 @@ public class Person implements ClusterItem {
         mPosition = position;
     }
 
+    @NonNull
     @Override
     public LatLng getPosition() {
         return mPosition;
@@ -42,6 +46,12 @@ public class Person implements ClusterItem {
 
     @Override
     public String getSnippet() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Float getZIndex() {
         return null;
     }
 }

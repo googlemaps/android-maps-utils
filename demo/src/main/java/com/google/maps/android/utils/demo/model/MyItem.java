@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,13 @@ package com.google.maps.android.utils.demo.model;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import androidx.annotation.NonNull;
+
 public class MyItem implements ClusterItem {
     private final LatLng mPosition;
     private String mTitle;
     private String mSnippet;
+    private Float zIndex;
 
     public MyItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
@@ -36,6 +39,7 @@ public class MyItem implements ClusterItem {
         mSnippet = snippet;
     }
 
+    @NonNull
     @Override
     public LatLng getPosition() {
         return mPosition;
@@ -46,6 +50,11 @@ public class MyItem implements ClusterItem {
 
     @Override
     public String getSnippet() { return mSnippet; }
+
+    @Override
+    public Float getZIndex() {
+        return zIndex;
+    }
 
     /**
      * Set the title of the marker
@@ -61,5 +70,13 @@ public class MyItem implements ClusterItem {
      */
     public void setSnippet(String snippet) {
         mSnippet = snippet;
+    }
+
+    /**
+     * Set the z-index of the marker
+     * @param zIndex float to be set as z-index
+     */
+    public void setZIndex(Float zIndex) {
+        this.zIndex = zIndex;
     }
 }

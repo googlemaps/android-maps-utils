@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.Geometry;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 /**
  * Represents a placemark which is either a {@link com.google.maps.android.data.kml.KmlPoint},
@@ -104,6 +106,7 @@ public class KmlPlacemark extends Feature {
         return mInlineStyle.getPolylineOptions();
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Placemark").append("{");

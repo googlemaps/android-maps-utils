@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import com.google.maps.android.data.Renderer;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
+import androidx.annotation.NonNull;
 
 /**
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
@@ -80,7 +82,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      *
      * @param feature feature to add to the map
      */
-    public void addFeature(GeoJsonFeature feature) {
+    public void addFeature(@NonNull GeoJsonFeature feature) {
         super.addFeature(feature);
         if (isLayerOnMap()) {
             feature.addObserver(this);
