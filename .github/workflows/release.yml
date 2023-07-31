@@ -46,7 +46,7 @@ jobs:
         SONATYPE_PASSWORD: ${{ secrets.SYNCED_SONATYPE_PASSWORD }}
         SONATYPE_USERNAME: ${{ secrets.SYNCED_SONATYPE_USERNAME }}
 
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
         node-version: '14'
 
