@@ -39,7 +39,7 @@ class StreetViewUtils {
          * @param apiKey Maps API Key
          * @return A boolean value specifying if the location is available on Street View or not.
          */
-        suspend fun fetchStreetViewData(latLng: LatLng, apiKey: String): Boolean {
+        suspend fun fetchStreetViewData(latLng: LatLng, apiKey: String): Status {
             val urlString =
                 "https://maps.googleapis.com/maps/api/streetview/metadata?location=${latLng.latitude},${latLng.longitude}&key=$apiKey"
 
@@ -56,9 +56,7 @@ class StreetViewUtils {
                         val responseString = bufferedReader.use { it.readText() }
                         bufferedReader.close()
                         inputStream.close()
-
-                        val response: ResponseStreetView = deserializeResponse(responseString)
-                        response.status == Status.OK
+                        deserializeResponse(responseString).status
                     } else {
                         throw IOException("HTTP Error: $responseCode")
                     }

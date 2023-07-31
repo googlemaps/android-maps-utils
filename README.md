@@ -290,6 +290,20 @@ _Old_
 
 </details>
 
+## Usage guide
+
+The full documentation can be found here [Google Maps Platform documentation][devsite-guide].
+
+For a quick snippet on the StreetViewUtil class, keep reading.
+
+The StreetViewUtil class provides functionality to check whether a location is supported in StreetView. To call it, use the following snippet:
+
+```kotlin
+StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
+```
+
+`fetchStreetViewData` will return `NOT_FOUND`, `OK` or `ZERO_RESULTS`, depending on the response.
+
 ## Support
 
 Encounter an issue while using this library?
