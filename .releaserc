@@ -1,5 +1,6 @@
 branches:
-  - main, devsite
+  - main
+  - devsite
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
