@@ -39,10 +39,12 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:3.4.0'
 
     // Optionally add the Kotlin Extensions (KTX) for full Kotlin language support
-    // See the latest version at https://github.com/googlemaps/android-maps-ktx
-  
+    // See latest version at https://github.com/googlemaps/android-maps-ktx
+    // implementation 'com.google.maps.android:maps-utils-ktx:<latest-version>'
+
     // Make sure to also include the latest version of the Maps SDK for Android
     // See latest version at https://goo.gle/android-maps-sdk-version
+    // implementation 'com.google.android.gms:play-services-maps:<latest-version>'
 }
 ```
 
