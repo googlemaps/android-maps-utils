@@ -1,5 +1,5 @@
 branches:
-  - main
+  - main, devsite
 plugins:
   - "@semantic-release/commit-analyzer"
   - "@semantic-release/release-notes-generator"
@@ -9,6 +9,10 @@ plugins:
             - "build.gradle"
           from: "\\bversion = '.*'"
           to: "version = '${nextRelease.version}'"
+        - files:
+            - "build.gradle"
+          from: "com.google.maps.android:android-maps-utils:([0-9]+).([0-9]+).([0-9]+)"
+          to: "com.google.maps.android:android-maps-utils:${nextRelease.version}'"
         - files:
             - "README.md"
           from: ":([0-9]+).([0-9]+).([0-9]+)"

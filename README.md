@@ -26,13 +26,6 @@ range of applications using the [Google Maps SDK for Android][android-site].
 
 You can also find Kotlin extensions for this library [here][android-maps-ktx].
 
-## Developer Documentation
-
-The generated [reference docs][javadoc] for a full list of classes and their methods.
-
-Written guides for using the utilities are published in
-[Google Maps Platform documentation][devsite-guide].
-
 ## Requirements
 
 * Android API level 19+
@@ -44,6 +37,14 @@ Written guides for using the utilities are published in
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
     implementation 'com.google.maps.android:android-maps-utils:3.4.0'
+
+    // Optionally add the Kotlin Extensions (KTX) for full Kotlin language support
+    // See latest version at https://github.com/googlemaps/android-maps-ktx
+    // implementation 'com.google.maps.android:maps-utils-ktx:<latest-version>'
+
+    // Make sure to also include the latest version of the Maps SDK for Android
+    // See latest version at https://goo.gle/android-maps-sdk-version
+    // implementation 'com.google.android.gms:play-services-maps:<latest-version>'
 }
 ```
 
@@ -60,13 +61,22 @@ To run the demo app, you'll have to:
 1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
 1. Build and run the `debug` variant for the Maps SDK for Android version
 
+## Documentation
+
+See the generated [reference docs][javadoc] for a full list of classes and their methods.
+
+Written guides for using the utilities are published in
+[Google Maps Platform documentation][devsite-guide].
+
 <details>
   <summary><strong>Migration Guide from v0.x to 1.0</strong></summary>
 
-## Migration Guide from v0.x to 1.0
+### Migration Guide from v0.x to 1.0
 
 Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
 
+
+## Usage
 
 ### Adding Click Events
 
@@ -286,7 +296,7 @@ Encounter an issue while using this library?
 If you find a bug or have a feature request, please [file an issue].
 Or, if you'd like to contribute, send us a [pull request] and refer to our [code of conduct].
 
-You can also reach us on our [Discord channel].
+You can also discuss this library on our [Discord server].
 
 For more information, check out the detailed guide on the
 [Google Developers site][devsite-guide].
