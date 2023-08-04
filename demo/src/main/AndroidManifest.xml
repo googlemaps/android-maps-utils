@@ -68,6 +68,7 @@
         <activity android:name=".KmlDemoActivity" />
         <activity android:name=".MultiLayerDemoActivity" />
         <activity android:name=".AnimationUtilDemoActivity" />
+        <activity android:name=".StreetViewDemoActivity" />
 
     </application>
 

@@ -21,6 +21,7 @@ range of applications using the [Google Maps SDK for Android][android-site].
   computeArea
 - **KML** — displays KML data
 - **GeoJSON** — displays and styles GeoJSON data
+- **StreetView Utility** — checks if a given StreetView location exists
 
 <p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
 
@@ -288,6 +289,20 @@ _Old_
 ```
 
 </details>
+
+## Usage guide
+
+The full documentation can be found here [Google Maps Platform documentation][devsite-guide].
+
+For a quick snippet on the StreetViewUtil class, keep reading.
+
+The StreetViewUtil class provides functionality to check whether a location is supported in StreetView. To call it, use the following snippet:
+
+```kotlin
+StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
+```
+
+`fetchStreetViewData` will return `NOT_FOUND`, `OK` or `ZERO_RESULTS`, depending on the response.
 
 ## Support
 
