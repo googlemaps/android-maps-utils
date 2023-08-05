@@ -16,6 +16,7 @@
 
 package com.google.maps.android.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -26,6 +27,7 @@ import android.widget.TextView;
  * not, depending on the Inspection Settings. It's not really an error, just a warning.
  *
  */
+@SuppressLint("AppCompatCustomView")
 public class SquareTextView extends TextView {
     private int mOffsetTop = 0;
     private int mOffsetLeft = 0;
