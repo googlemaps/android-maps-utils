@@ -11,21 +11,21 @@
 This open-source library contains utilities that are useful for a wide
 range of applications using the [Google Maps SDK for Android][android-site].
 
-- **Marker clustering** — handles the display of a large number of points
 - **Marker animation** - animates a marker from one position to another
-- **Heat maps** — display a large number of points as a heat map
-- **IconGenerator** — display text on your Markers
-- **Poly decoding and encoding** — compact encoding for paths,
+- **Marker clustering** — handles the display of a large number of points
+- **Marker icons** — display text on your Markers
+- **Heatmaps** — display a large number of points as a heat map
+- **Import KML** — displays KML data on the map
+- **Import GeoJSON** — displays and styles GeoJSON data on the map
+- **Polyline encoding and decoding** — compact encoding for paths,
   interoperability with Maps API web services
 - **Spherical geometry** — for example: computeDistance, computeHeading,
   computeArea
-- **KML** — displays KML data
-- **GeoJSON** — displays and styles GeoJSON data
-- **StreetView Utility** — checks if a given StreetView location exists
+- **Street View metadata** — checks if a Street View panorama exists at a given location
+
+You can also find Kotlin extensions for this library in [Maps Android KTX][android-maps-ktx].
 
 <p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
-
-You can also find Kotlin extensions for this library [here][android-maps-ktx].
 
 ## Requirements
 
@@ -53,31 +53,78 @@ dependencies {
 
 <img src="https://developers.google.com/maps/documentation/android-sdk/images/utility-markercluster.png" width="150" align=right>
 
-This repository includes a [demo app](demo) that illustrates the use of this library.
+This repository includes a [sample app](demo) that illustrates the use of this library.
 
 To run the demo app, you'll have to:
 
 1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
-1. Open the file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
+1. Add a file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
 1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
 1. Build and run the `debug` variant for the Maps SDK for Android version
 
 ## Documentation
 
-See the generated [reference docs][javadoc] for a full list of classes and their methods.
+See the generated javadoc [reference documentation][javadoc] for a full list of classes and their methods.
 
-Written guides for using the utilities are published in
+## Usage
+
+Full guides for using the utilities are published in
 [Google Maps Platform documentation][devsite-guide].
 
 <details>
-  <summary><strong>Migration Guide from v0.x to 1.0</strong></summary>
+  <summary>Marker utilities</summary>
 
-### Migration Guide from v0.x to 1.0
+### Marker utilities
+
+- Marker animation [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/ui/AnimationUtil.java), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/AnimationUtilDemoActivity.java)
+- Marker clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/clustering), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering)
+- Marker icons [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/ui/IconGenerator.java), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/IconGeneratorDemoActivity.java)
+
+</details>
+
+<details>
+  <summary>Data visualization utilities</summary>
+
+### Data visualization utilities
+
+- Display heat maps [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/heatmaps), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/heatmap)
+- Import GeoJSON [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/data/geojson), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/geojson)
+- Import KML [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/data/kml), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/kml)
+
+</details>
+
+<details>
+  <summary>Polyline and spherical geometry utilities</summary>
+
+### Additional utilities
+
+- Polyline encoding and decoding [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/PolyUtil.java), [encoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolySimplifyDemoActivity.java), [decoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolyDecodeDemoActivity.java)
+- Spherical geometry [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/SphericalUtil.java), [compute distance sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/DistanceDemoActivity.java)
+
+</details>
+
+<details>
+  <summary>Street View metadata utility</summary>
+
+### Street View metadata utility
+
+The StreetViewUtil class provides functionality to check whether a location is supported in StreetView. You can avoid errors when [adding a Street View panorama](https://developers.google.com/maps/documentation/android-sdk/streetview) to an Android app by calling this metadata utility and only adding a Street View panorama if the response is `OK`.
+
+```kotlin
+StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
+```
+
+`fetchStreetViewData` will return `NOT_FOUND`, `OK` or `ZERO_RESULTS`, depending on the response.
+
+</details>
+
+<details>
+  <summary>Migration Guide from v0.x to 1.0</summary>
+
+### Migrating from v0.x to 1.0
 
 Improvements made in version [1.0.0](https://github.com/googlemaps/android-maps-utils/releases/tag/1.0.0) of the library to support multiple layers on the map caused breaking changes to versions prior to it. These changes also modify behaviors that are documented in the [Maps SDK for Android Maps documentation](https://developers.google.com/maps/documentation/android-sdk/intro) site. This section outlines all those changes and how you can migrate to use this library since version 1.0.0.
 
-
-## Usage
 
 ### Adding Click Events
 
@@ -290,36 +337,24 @@ _Old_
 
 </details>
 
-## Usage guide
+## Contributing
 
-The full documentation can be found here [Google Maps Platform documentation][devsite-guide].
-
-For a quick snippet on the StreetViewUtil class, keep reading.
-
-The StreetViewUtil class provides functionality to check whether a location is supported in StreetView. To call it, use the following snippet:
-
-```kotlin
-StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
-```
-
-`fetchStreetViewData` will return `NOT_FOUND`, `OK` or `ZERO_RESULTS`, depending on the response.
+Contributions are welcome and encouraged! See the [contributing guide](CONTRIBUTING.md) for more info.
 
 ## Support
 
-Encounter an issue while using this library?
+This library is offered via an open source [license](LICENSE). It is not governed by the Google Maps Platform [Technical Support Services Guidelines](https://cloud.google.com/maps-platform/terms/tssg?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), the [SLA](https://cloud.google.com/maps-platform/terms/sla?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), or the [Deprecation Policy](https://cloud.google.com/maps-platform/terms?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) (however, any Google Maps Platform services used by the library remain subject to the Google Maps Platform Terms of Service).
 
-If you find a bug or have a feature request, please [file an issue].
-Or, if you'd like to contribute, send us a [pull request] and refer to our [code of conduct].
+This library adheres to [semantic versioning](https://semver.org/) to indicate when backwards-incompatible changes are introduced.
 
-You can also discuss this library on our [Discord server].
+If you find a bug, or have a feature request, please [file an issue] on GitHub.
 
-For more information, check out the detailed guide on the
-[Google Developers site][devsite-guide].
+If you would like to get answers to technical questions from other Google Maps Platform developers, ask through one of our [developer community channels](https://developers.google.com/maps/developer-community?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) including the Google Maps Platform [Discord server].
 
 [file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
 [pull request]: https://github.com/googlemaps/android-maps-utils/compare
 [code of conduct]: CODE_OF_CONDUCT.md
-[Discord channel]: https://discord.gg/hYsWbmk
+[Discord server]: https://discord.gg/hYsWbmk
 [android-site]: https://developers.google.com/maps/documentation/android-sdk
 [devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
 [javadoc]: https://www.javadoc.io/doc/com.google.maps.android/android-maps-utils/latest/index.html
