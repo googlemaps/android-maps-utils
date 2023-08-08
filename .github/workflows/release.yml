@@ -26,7 +26,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
-    - uses: gradle/wrapper-validation-action@v1.0.4
+    - uses: gradle/wrapper-validation-action@v1.1.0
     - name: Create .gpg key
       run: |
         echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
