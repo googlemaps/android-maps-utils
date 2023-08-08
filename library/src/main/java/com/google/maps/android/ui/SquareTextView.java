@@ -16,13 +16,19 @@
 
 package com.google.maps.android.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
-import androidx.appcompat.widget.AppCompatTextView;
-
-public class SquareTextView extends AppCompatTextView {
+/**
+ * This class is extending from TextView to avoid introducing App Compat dependencies. Android Studio might show an error here or
+ * not, depending on the Inspection Settings. It's not really an error, just a warning.
+ *
+ */
+@SuppressLint("AppCompatCustomView")
+public class SquareTextView extends TextView {
     private int mOffsetTop = 0;
     private int mOffsetLeft = 0;
 
