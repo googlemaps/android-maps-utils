@@ -451,7 +451,7 @@ public class KmlRenderer extends Renderer {
             if (groundOverlayUrl != null && groundOverlay.getLatLngBox() != null) {
                 // Can't draw overlay if url and coordinates are missing
                 if (getCachedGroundOverlayImage(groundOverlayUrl) != null) {
-                    addGroundOverlayToMap(groundOverlayUrl, getGroundOverlayMap(), true);
+                    addGroundOverlayToMap(groundOverlayUrl, groundOverlays, true);
                 } else {
                     mGroundOverlayUrls.add(groundOverlayUrl);
                 }
