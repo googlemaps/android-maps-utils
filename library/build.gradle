@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  */
 plugins {
     id 'kotlin-android'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdkVersion 33
 
     defaultConfig {
+        compileSdk 33
         minSdkVersion 19
         targetSdkVersion 33
         versionCode 1
@@ -64,7 +63,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'net.sf.kxml:kxml2:2.3.0'
-    testImplementation "io.mockk:mockk:1.13.4"
+    testImplementation "io.mockk:mockk:1.13.6"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 

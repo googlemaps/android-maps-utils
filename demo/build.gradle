@@ -21,9 +21,9 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
 
     defaultConfig {
+        compileSdk 33
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 19
         targetSdkVersion 33
@@ -64,12 +64,6 @@ dependencies {
 }
 // [END maps_android_utils_install_snippet]
 
-
-task startGmsDemo(type: Exec) {
-    dependsOn 'installGmsDebug'
-    def adb = new File("${System.env.ANDROID_HOME}", "platform-tools${File.separator}adb")
-    commandLine adb, "shell", "am", "start", "-n", "com.google.maps.android.utils.demo.gms/com.google.maps.android.utils.demo.MainActivity"
-}
 
 secrets {
     // To add your Maps API key to this project:
