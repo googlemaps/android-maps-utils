@@ -232,7 +232,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         return R.style.amu_ClusterIcon_TextAppearance; // Default value
     }
 
-    @NonNull 
+    @NonNull
     protected String getClusterText(int bucket) {
         if (bucket < BUCKETS[0]) {
             return String.valueOf(bucket);
@@ -1169,6 +1169,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
         @Override
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            if (to == null || from == null || marker == null) {
+              return;
+            }
+
             float fraction = valueAnimator.getAnimatedFraction();
             double lat = (to.latitude - from.latitude) * fraction + from.latitude;
             double lngDelta = to.longitude - from.longitude;
