@@ -51,7 +51,7 @@ jobs:
         node-version: '14'
 
     - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v3.4.1
+      uses: cycjimmy/semantic-release-action@v4.0.0
       with:
         extra_plugins: |
           "@semantic-release/commit-analyzer@8.0.1"
