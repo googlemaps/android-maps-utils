@@ -20,9 +20,9 @@ plugins {
 android {
 
     defaultConfig {
-        compileSdk 33
+        compileSdk 34
         minSdkVersion 19
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         consumerProguardFiles 'consumer-rules.pro'
