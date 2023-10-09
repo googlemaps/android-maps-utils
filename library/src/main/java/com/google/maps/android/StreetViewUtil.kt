@@ -82,5 +82,6 @@ data class ResponseStreetView(val status: Status)
 enum class Status {
     OK,
     ZERO_RESULTS,
-    NOT_FOUND
+    NOT_FOUND,
+    REQUEST_DENIED
 }
