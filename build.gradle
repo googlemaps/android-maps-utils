@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath 'com.hiya:jacoco-android:0.2'
+        classpath 'com.android.tools.build:gradle:8.1.2'
+        classpath 'com.mxalbert.gradle:jacoco-android:0.2.1'
         classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -41,7 +41,7 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 
@@ -66,7 +66,7 @@ subprojects { project ->
     if (project.ext.artifactId == null) return
 
     apply plugin: 'com.android.library'
-    apply plugin: 'com.hiya.jacoco-android'
+    apply plugin: 'com.mxalbert.gradle.jacoco-android'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
@@ -75,12 +75,12 @@ subprojects { project ->
         toolVersion = "0.8.4"
     }
 
-    tasks.withType(Test) {
+    tasks.withType(Test).configureEach {
         jacoco.includeNoLocationClasses = true
         jacoco.excludes = ['jdk.internal.*']
     }
 
-    task javadoc( type: Javadoc) {
+    tasks.register('javadoc', Javadoc) {
         options.memberLevel = JavadocMemberLevel.PUBLIC
         options.encoding = "utf-8"
         failOnError = false
@@ -98,13 +98,14 @@ subprojects { project ->
         options.addStringOption('-ignore-source-errors', '-quiet')
     }
 
-    task sourcesJar(type: Jar) {
+    tasks.register('sourcesJar', Jar) {
         from android.sourceSets.main.java.srcDirs
-        classifier = 'sources'
+        archiveClassifier  = 'sources'
     }
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
+    tasks.register('javadocJar', Jar) {
+        dependsOn javadoc
+        archiveClassifier  = 'javadoc'
         from javadoc.destinationDir
     }
 
