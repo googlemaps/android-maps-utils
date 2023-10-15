@@ -432,6 +432,11 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      */
     private static LatLngAlt convertToLatLngAlt(String coordinateString, String separator) {
         String[] coordinate = coordinateString.split(separator);
+
+        if(coordinate.length < 2){
+            throw new IllegalArgumentException("It is wrong coordinate.");
+        }
+
         double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
         double lon = Double.parseDouble(coordinate[LONGITUDE_INDEX]);
         Double alt = (coordinate.length > 2) ? Double.parseDouble(coordinate[ALTITUDE_INDEX]) : null;
