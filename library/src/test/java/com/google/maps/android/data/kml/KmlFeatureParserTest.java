@@ -15,6 +15,13 @@
  */
 package com.google.maps.android.data.kml;
 
+import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.Geometry;
 
 import org.junit.Test;
@@ -100,5 +107,24 @@ public class KmlFeatureParserTest {
         List<Geometry> subObjects = (ArrayList<Geometry>) objects.get(2).getGeometryObject();
         assertEquals(subObjects.get(0).getGeometryType(), "Point");
         assertEquals(subObjects.get(1).getGeometryType(), "LineString");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWrongCoordinates() throws Exception {
+        XmlPullParser xmlPullParser = createParser("amu_wrong_coordinate.kml");
+        KmlFeatureParser.createPlacemark(xmlPullParser);
+    }
+
+
+    @Test
+    public void testSuitableCoordinates() throws Exception {
+        XmlPullParser xmlPullParser = createParser("amu_basic_folder.kml");
+        KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
+        assertEquals(feature.getProperty("name"), "Pin on a mountaintop");
+        assertEquals(feature.getGeometry().getGeometryType(), "Point");
+        KmlPoint kmlPoint = (KmlPoint) feature.getGeometry().getGeometryObject();
+        LatLng latLng = kmlPoint.getGeometryObject();
+        assertEquals(latLng.latitude, -43.60505741890396, 0.001);
+        assertEquals(latLng.longitude, 170.1435558771009, 0.001);
     }
 }
