@@ -18,7 +18,7 @@ dependencies {
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.android.tools.lint:lint:31.1.2"
     testImplementation "com.android.tools.lint:lint-tests:31.1.2"
-    testImplementation "com.android.tools:testutils:31.1.0"
+    testImplementation "com.android.tools:testutils:31.1.2"
 }
 
 jar {
