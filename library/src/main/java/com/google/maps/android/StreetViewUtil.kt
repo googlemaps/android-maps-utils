@@ -37,7 +37,8 @@ class StreetViewUtils {
          *
          * @param latLng Location to check
          * @param apiKey Maps API Key
-         * @return A boolean value specifying if the location is available on Street View or not.
+         * @return A Status value specifying if the location is available on Street View or not, or
+         * whether the used key is a right one.
          */
         suspend fun fetchStreetViewData(latLng: LatLng, apiKey: String): Status {
             val urlString =
