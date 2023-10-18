@@ -32,12 +32,6 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 @RunWith(RobolectricTestRunner.class)
 public class KmlFeatureParserTest {
 
@@ -110,11 +104,16 @@ public class KmlFeatureParserTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testWrongCoordinates() throws Exception {
-        XmlPullParser xmlPullParser = createParser("amu_wrong_coordinate.kml");
+    public void testWrongNotExistCoordinates() throws Exception {
+        XmlPullParser xmlPullParser = createParser("amu_wrong_not_exist_coordinates.kml");
         KmlFeatureParser.createPlacemark(xmlPullParser);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testWrongNotExistLatitude() throws Exception {
+        XmlPullParser xmlPullParser = createParser("amu_wrong_not_exist_latitude_coordinates.kml");
+        KmlFeatureParser.createPlacemark(xmlPullParser);
+    }
 
     @Test
     public void testSuitableCoordinates() throws Exception {
