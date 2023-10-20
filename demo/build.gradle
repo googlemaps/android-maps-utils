@@ -48,7 +48,7 @@ android {
 dependencies {
 
     // [START_EXCLUDE silent]
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation project(':library')
 
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha01'
