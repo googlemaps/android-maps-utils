@@ -114,7 +114,7 @@ The StreetViewUtil class provides functionality to check whether a location is s
 StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
 ```
 
-`fetchStreetViewData` will return `NOT_FOUND`, `OK` or `ZERO_RESULTS`, depending on the response.
+`fetchStreetViewData` will return `NOT_FOUND`, `OK`, `ZERO_RESULTS` or `REQUEST_DENIED`, depending on the response.
 
 </details>
 
