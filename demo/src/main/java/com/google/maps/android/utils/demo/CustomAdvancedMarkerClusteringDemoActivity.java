@@ -67,10 +67,6 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
 
     }
 
-    /**
-     * Draws profile photos inside markers (using IconGenerator). When there are multiple people in the cluster, draw
-     * multiple photos (using MultiDrawable).
-     */
     private class AdvancedMarkerRenderer extends DefaultAdvancedMarkersClusterRenderer<Person> {
 
         public AdvancedMarkerRenderer() {
