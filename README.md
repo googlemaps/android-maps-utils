@@ -357,5 +357,5 @@ If you would like to get answers to technical questions from other Google Maps P
 [Discord server]: https://discord.gg/hYsWbmk
 [android-site]: https://developers.google.com/maps/documentation/android-sdk
 [devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
-[javadoc]: https://www.javadoc.io/doc/com.google.maps.android/android-maps-utils/latest/index.html
+[javadoc]: https://googlemaps.github.io/android-maps-utils/
 [android-maps-ktx]: https://github.com/googlemaps/android-maps-ktx
