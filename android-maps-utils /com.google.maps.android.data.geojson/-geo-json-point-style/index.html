@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>GeoJsonPointStyle</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            android-maps-utils 
+                    </a>
+            </div>
+            <div class="library-version">
+3.6.1            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":library:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="android-maps-utils ::com.google.maps.android.data.geojson/GeoJsonPointStyle///PointingToDeclaration//-1887420133">
+  <div class="breadcrumbs"><a href="../../../index.html">android-maps-utils </a><span class="delimiter">/</span><a href="../index.html">com.google.maps.android.data.geojson</a><span class="delimiter">/</span><span class="current">GeoJsonPointStyle</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Geo</span><wbr></wbr><span>Json</span><wbr></wbr><span>Point</span><wbr></wbr><span><span>Style</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">GeoJsonPointStyle</a> : <a href="../../com.google.maps.android.data/-style/index.html">Style</a>, <span data-unresolved-link="com.google.maps.android.data.geojson/GeoJsonStyle///PointingToDeclaration/">GeoJsonStyle</span></div><p class="paragraph">A class that allows for GeoJsonPoint objects to be styled and for these styles to be translated into a MarkerOptions object. {@see * <a href="https://developer.android.com/reference/com/google/android/gms/maps/model/MarkerOptions.html"> * MarkerOptions docs</a> for more details about the options.}</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="454671012%2FConstructors%2F-1887420133" anchor-label="GeoJsonPointStyle" id="454671012%2FConstructors%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-geo-json-point-style.html"><span>Geo</span><wbr></wbr><span>Json</span><wbr></wbr><span>Point</span><wbr></wbr><span><span>Style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="454671012%2FConstructors%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Creates a new PointStyle object</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1327303963%2FFunctions%2F-1887420133" anchor-label="addObserver" id="1327303963%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#1327303963%2FFunctions%2F-1887420133"><span>add</span><wbr></wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1327303963%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#1327303963%2FFunctions%2F-1887420133"><span class="token function">addObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">o<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Observer.html">Observer</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1847442980%2FFunctions%2F-1887420133" anchor-label="countObservers" id="1847442980%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#1847442980%2FFunctions%2F-1887420133"><span>count</span><wbr></wbr><span><span>Observers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1847442980%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#1847442980%2FFunctions%2F-1887420133"><span class="token function">countObservers</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-901008741%2FFunctions%2F-1887420133" anchor-label="deleteObserver" id="-901008741%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-901008741%2FFunctions%2F-1887420133"><span>delete</span><wbr></wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-901008741%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-901008741%2FFunctions%2F-1887420133"><span class="token function">deleteObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">o<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Observer.html">Observer</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1347726090%2FFunctions%2F-1887420133" anchor-label="deleteObservers" id="-1347726090%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-1347726090%2FFunctions%2F-1887420133"><span>delete</span><wbr></wbr><span><span>Observers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1347726090%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-1347726090%2FFunctions%2F-1887420133"><span class="token function">deleteObservers</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="674812852%2FFunctions%2F-1887420133" anchor-label="getAlpha" id="674812852%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-alpha.html"><span>get</span><wbr></wbr><span><span>Alpha</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="674812852%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-alpha.html"><span class="token function">getAlpha</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the alpha of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2073427502%2FFunctions%2F-1887420133" anchor-label="getAnchorU" id="-2073427502%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-anchor-u.html"><span>get</span><wbr></wbr><span>Anchor</span><wbr></wbr><span><span>U</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2073427502%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-anchor-u.html"><span class="token function">getAnchorU</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the Anchor U coordinate of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2042407695%2FFunctions%2F-1887420133" anchor-label="getAnchorV" id="-2042407695%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-anchor-v.html"><span>get</span><wbr></wbr><span>Anchor</span><wbr></wbr><span><span>V</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2042407695%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-anchor-v.html"><span class="token function">getAnchorV</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the Anchor V coordinate of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-24436420%2FFunctions%2F-1887420133" anchor-label="getGeometryType" id="-24436420%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-geometry-type.html"><span>get</span><wbr></wbr><span>Geometry</span><wbr></wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-24436420%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-geometry-type.html"><span class="token function">getGeometryType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token operator">&gt;</span></div><div class="brief ">Gets the type of geometries this style can be applied to</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1815826641%2FFunctions%2F-1887420133" anchor-label="getIcon" id="-1815826641%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-icon.html"><span>get</span><wbr></wbr><span><span>Icon</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1815826641%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-icon.html"><span class="token function">getIcon</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/BitmapDescriptor///PointingToDeclaration/">BitmapDescriptor</span></div><div class="brief ">Gets a bitmap image for the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-981476880%2FFunctions%2F-1887420133" anchor-label="getInfoWindowAnchorU" id="-981476880%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-info-window-anchor-u.html"><span>get</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Anchor</span><wbr></wbr><span><span>U</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-981476880%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-info-window-anchor-u.html"><span class="token function">getInfoWindowAnchorU</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the info window anchor U coordinate of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-950457073%2FFunctions%2F-1887420133" anchor-label="getInfoWindowAnchorV" id="-950457073%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-info-window-anchor-v.html"><span>get</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Anchor</span><wbr></wbr><span><span>V</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-950457073%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-info-window-anchor-v.html"><span class="token function">getInfoWindowAnchorV</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the info window anchor V coordinate of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-928711094%2FFunctions%2F-1887420133" anchor-label="getRotation" id="-928711094%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-rotation.html"><span>get</span><wbr></wbr><span><span>Rotation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-928711094%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-rotation.html"><span class="token function">getRotation</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the rotation of the GeoJsonPoint in degrees clockwise about the marker's anchor point</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1487018091%2FFunctions%2F-1887420133" anchor-label="getSnippet" id="-1487018091%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-snippet.html"><span>get</span><wbr></wbr><span><span>Snippet</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1487018091%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-snippet.html"><span class="token function">getSnippet</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a></div><div class="brief ">Gets the snippet of the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1762103290%2FFunctions%2F-1887420133" anchor-label="getTitle" id="1762103290%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-title.html"><span>get</span><wbr></wbr><span><span>Title</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1762103290%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-title.html"><span class="token function">getTitle</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a></div><div class="brief ">Gets the title of the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="133946704%2FFunctions%2F-1887420133" anchor-label="getZIndex" id="133946704%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-z-index.html"><span>get</span><wbr></wbr><span><span>ZIndex</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="133946704%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-z-index.html"><span class="token function">getZIndex</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></div><div class="brief ">Gets the z index of the GeoJsonLineString</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-141137032%2FFunctions%2F-1887420133" anchor-label="hasChanged" id="-141137032%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-141137032%2FFunctions%2F-1887420133"><span>has</span><wbr></wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-141137032%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-141137032%2FFunctions%2F-1887420133"><span class="token function">hasChanged</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1269122405%2FFunctions%2F-1887420133" anchor-label="isDraggable" id="-1269122405%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-draggable.html"><span>is</span><wbr></wbr><span><span>Draggable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1269122405%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="is-draggable.html"><span class="token function">isDraggable</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Gets whether the GeoJsonPoint is draggable</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="446279609%2FFunctions%2F-1887420133" anchor-label="isFlat" id="446279609%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-flat.html"><span>is</span><wbr></wbr><span><span>Flat</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="446279609%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="is-flat.html"><span class="token function">isFlat</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Gets whether the GeoJsonPoint is flat</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2109941226%2FFunctions%2F-1887420133" anchor-label="isVisible" id="-2109941226%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-visible.html"><span>is</span><wbr></wbr><span><span>Visible</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2109941226%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="is-visible.html"><span class="token function">isVisible</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Gets whether the GeoJsonPoint is visible</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-141656300%2FFunctions%2F-1887420133" anchor-label="notifyObservers" id="-141656300%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-141656300%2FFunctions%2F-1887420133"><span>notify</span><wbr></wbr><span><span>Observers</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-141656300%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data.kml/-kml-style/index.html#-141656300%2FFunctions%2F-1887420133"><span class="token function">notifyObservers</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="461125606%2FFunctions%2F-1887420133" anchor-label="setAlpha" id="461125606%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-alpha.html"><span>set</span><wbr></wbr><span><span>Alpha</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="461125606%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-alpha.html"><span class="token function">setAlpha</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">alpha<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the alpha of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="263288358%2FFunctions%2F-1887420133" anchor-label="setAnchor" id="263288358%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-anchor.html"><span>set</span><wbr></wbr><span><span>Anchor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="263288358%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-anchor.html"><span class="token function">setAnchor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">anchorU<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">anchorV<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the Anchor U and V coordinates of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1943660279%2FFunctions%2F-1887420133" anchor-label="setDraggable" id="-1943660279%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-draggable.html"><span>set</span><wbr></wbr><span><span>Draggable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1943660279%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-draggable.html"><span class="token function">setDraggable</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">draggable<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the GeoJsonPoint to be draggable</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-727686121%2FFunctions%2F-1887420133" anchor-label="setFlat" id="-727686121%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-flat.html"><span>set</span><wbr></wbr><span><span>Flat</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-727686121%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-flat.html"><span class="token function">setFlat</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">flat<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the GeoJsonPoint to be flat</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1376391601%2FFunctions%2F-1887420133" anchor-label="setIcon" id="1376391601%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-icon.html"><span>set</span><wbr></wbr><span><span>Icon</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1376391601%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-icon.html"><span class="token function">setIcon</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bitmap<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/BitmapDescriptor///PointingToDeclaration/">BitmapDescriptor</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a bitmap image for the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-728686140%2FFunctions%2F-1887420133" anchor-label="setInfoWindowAnchor" id="-728686140%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-info-window-anchor.html"><span>set</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span><span>Anchor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-728686140%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-info-window-anchor.html"><span class="token function">setInfoWindowAnchor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">infoWindowAnchorU<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">infoWindowAnchorV<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the info window anchor U and V coordinates of the GeoJsonPoint.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="875302973%2FFunctions%2F-1887420133" anchor-label="setLineStringWidth" id="875302973%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data/-style/set-line-string-width.html"><span>set</span><wbr></wbr><span>Line</span><wbr></wbr><span>String</span><wbr></wbr><span><span>Width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="875302973%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data/-style/set-line-string-width.html"><span class="token function">setLineStringWidth</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the width of the LineString in screen pixels</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-848428872%2FFunctions%2F-1887420133" anchor-label="setMarkerHotSpot" id="-848428872%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data/-style/set-marker-hot-spot.html"><span>set</span><wbr></wbr><span>Marker</span><wbr></wbr><span>Hot</span><wbr></wbr><span><span>Spot</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-848428872%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data/-style/set-marker-hot-spot.html"><span class="token function">setMarkerHotSpot</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">x<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">y<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token punctuation">, </span></span><span class="parameter ">xUnits<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">yUnits<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the hotspot / anchor point of a marker</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1132445998%2FFunctions%2F-1887420133" anchor-label="setMarkerRotation" id="1132445998%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data/-style/set-marker-rotation.html"><span>set</span><wbr></wbr><span>Marker</span><wbr></wbr><span><span>Rotation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1132445998%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data/-style/set-marker-rotation.html"><span class="token function">setMarkerRotation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rotation<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the rotation / heading of the Point in degrees clockwise about the marker's anchor</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1719098903%2FFunctions%2F-1887420133" anchor-label="setPolygonFillColor" id="-1719098903%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data/-style/set-polygon-fill-color.html"><span>set</span><wbr></wbr><span>Polygon</span><wbr></wbr><span>Fill</span><wbr></wbr><span><span>Color</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1719098903%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data/-style/set-polygon-fill-color.html"><span class="token function">setPolygonFillColor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fillColor<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the fill color of the Polygon as a 32-bit ARGB color</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1182705494%2FFunctions%2F-1887420133" anchor-label="setPolygonStrokeWidth" id="-1182705494%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.google.maps.android.data/-style/set-polygon-stroke-width.html"><span>set</span><wbr></wbr><span>Polygon</span><wbr></wbr><span>Stroke</span><wbr></wbr><span><span>Width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1182705494%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.google.maps.android.data/-style/set-polygon-stroke-width.html"><span class="token function">setPolygonStrokeWidth</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">strokeWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the stroke width of the Polygon in screen pixels</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1850480728%2FFunctions%2F-1887420133" anchor-label="setRotation" id="-1850480728%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-rotation.html"><span>set</span><wbr></wbr><span><span>Rotation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1850480728%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-rotation.html"><span class="token function">setRotation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">rotation<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the rotation of the GeoJsonPoint in degrees clockwise about the marker's anchor point</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1082250084%2FFunctions%2F-1887420133" anchor-label="setSnippet" id="-1082250084%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-snippet.html"><span>set</span><wbr></wbr><span><span>Snippet</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1082250084%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-snippet.html"><span class="token function">setSnippet</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">snippet<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the snippet of the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="734674433%2FFunctions%2F-1887420133" anchor-label="setTitle" id="734674433%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-title.html"><span>set</span><wbr></wbr><span><span>Title</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="734674433%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-title.html"><span class="token function">setTitle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">title<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the title of the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1601594450%2FFunctions%2F-1887420133" anchor-label="setVisible" id="-1601594450%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-visible.html"><span>set</span><wbr></wbr><span><span>Visible</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1601594450%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-visible.html"><span class="token function">setVisible</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">visible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets whether the GeoJsonPoint is visible</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-543748254%2FFunctions%2F-1887420133" anchor-label="setZIndex" id="-543748254%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-z-index.html"><span>set</span><wbr></wbr><span><span>ZIndex</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-543748254%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-z-index.html"><span class="token function">setZIndex</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">zIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the z index of the GeoJsonLineString</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-36526571%2FFunctions%2F-1887420133" anchor-label="toMarkerOptions" id="-36526571%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-marker-options.html"><span>to</span><wbr></wbr><span>Marker</span><wbr></wbr><span><span>Options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-36526571%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="to-marker-options.html"><span class="token function">toMarkerOptions</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/MarkerOptions///PointingToDeclaration/">MarkerOptions</span></div><div class="brief ">Gets a new MarkerOptions object containing styles for the GeoJsonPoint</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="328908144%2FFunctions%2F-1887420133" anchor-label="toString" id="328908144%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-string.html"><span>to</span><wbr></wbr><span><span>String</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="328908144%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/NonNull.html"><span class="token annotation builtin">NonNull</span></a></div></div><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="to-string.html"><span class="token function">toString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
