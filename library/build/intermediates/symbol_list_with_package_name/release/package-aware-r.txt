@@ -1,0 +1,12 @@
+com.google.maps.android
+drawable amu_bubble_mask
+drawable amu_bubble_shadow
+id amu_text
+id webview
+id window
+layout amu_info_window
+layout amu_text_bubble
+layout amu_webview
+style amu_Bubble_TextAppearance_Dark
+style amu_Bubble_TextAppearance_Light
+style amu_ClusterIcon_TextAppearance

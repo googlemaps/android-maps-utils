@@ -1,0 +1,24 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:2:1-10:12
+INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:2:1-10:12
+	package
+		INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:4:5-9:19
+meta-data#com.google.android.gms.version
+ADDED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:5:9-7:69
+	android:value
+		ADDED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:7:13-66
+	android:name
+		ADDED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:6:13-58
+uses-sdk
+INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml
+INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml

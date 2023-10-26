@@ -1,0 +1,17 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.google.maps.android" >
+4
+5    <uses-sdk android:minSdkVersion="19" />
+6    <!-- https://groups.google.com/group/adt-dev/browse_thread/thread/c059c0380998092b/6720093fb40fdaf9 -->
+7    <application>
+7-->/home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:4:5-9:19
+8        <meta-data
+8-->/home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:5:9-7:69
+9            android:name="com.google.android.gms.version"
+9-->/home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:6:13-58
+10            android:value="@integer/google_play_services_version" />
+10-->/home/runner/work/android-maps-utils/android-maps-utils/library/src/main/AndroidManifest.xml:7:13-66
+11    </application>
+12
+13</manifest>
