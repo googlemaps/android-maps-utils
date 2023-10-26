@@ -18,6 +18,10 @@ plugins {
     id 'org.jetbrains.dokka'
 }
 
+dokkaHtml {
+    moduleName.set("android-maps-utils ")
+}
+
 android {
 
     defaultConfig {
