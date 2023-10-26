@@ -156,7 +156,7 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
          * certain zoom level and as a marker below a certain zoom level <i>even if the contents of
          * the clusters themselves did not change</i>. In this case, we need to override this method
          * to implement this new optimization behavior.
-         *
+         * <p>
          * Note that always returning true from this method could potentially have negative
          * performance implications as clusters will be re-rendered on each pass even if they don't
          * change.

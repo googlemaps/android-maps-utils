@@ -140,9 +140,7 @@ public class KmlDemoActivity extends BaseDemoActivity {
         protected KmlLayer doInBackground(String... strings) {
             try {
                 return new KmlLayer(mMap, mResourceId, KmlDemoActivity.this);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (XmlPullParserException | IOException e) {
                 e.printStackTrace();
             }
             return null;
