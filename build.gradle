@@ -28,8 +28,10 @@ buildscript {
         classpath 'com.mxalbert.gradle:jacoco-android:0.2.1'
         classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.9.0"
     }
 }
+
 
 allprojects {
     repositories {
@@ -104,9 +106,9 @@ subprojects { project ->
     }
 
     tasks.register('javadocJar', Jar) {
-        dependsOn javadoc
+        dependsOn dokkaHtml
         archiveClassifier  = 'javadoc'
-        from javadoc.destinationDir
+        from dokkaHtml.outputDirectory
     }
 
     publishing {
