@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    // We are adding api() for Play Services, so it propagates to the demo module.
+    // We are adding api() for the Maps SDK for Android, so it propagates to the app-level modules.
     api  'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'androidx.appcompat:appcompat:1.6.1'
