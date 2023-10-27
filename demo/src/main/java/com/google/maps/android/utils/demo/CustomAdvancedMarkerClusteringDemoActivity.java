@@ -64,7 +64,6 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
             default:
                 break;
         }
-
     }
 
     private class AdvancedMarkerRenderer extends DefaultAdvancedMarkersClusterRenderer<Person> {
@@ -79,7 +78,6 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
             markerOptions
                     .icon(BitmapDescriptorFactory.fromPinConfig(getPinConfig().build()))
                     .title(person.name);
-
         }
 
         @Override
