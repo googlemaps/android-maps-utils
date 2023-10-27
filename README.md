@@ -37,7 +37,7 @@ You can also find Kotlin extensions for this library in [Maps Android KTX][andro
 ```groovy
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
-    implementation 'com.google.maps.android:android-maps-utils:3.6.1'
+    implementation 'com.google.maps.android:android-maps-utils:3.7.0'
 
     // Optionally add the Kotlin Extensions (KTX) for full Kotlin language support
     // See latest version at https://github.com/googlemaps/android-maps-ktx
