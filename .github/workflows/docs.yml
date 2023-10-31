@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Gradle Wrapper Validation
-      uses: gradle/wrapper-validation-action@v1.0.4
+      uses: gradle/wrapper-validation-action@v1.1.0
 
     - name: Set up JDK 17
       uses: actions/setup-java@v2.3.1
