@@ -35,14 +35,26 @@ class StreetViewUtils {
         /**
          * This function will check whether a location is available on StreetView or not.
          *
-         * @param latLng Location to check
-         * @param apiKey Maps API Key
+         * @param latLng The `LatLng` object representing the location for which you want to fetch Street View data.
+         * @param apiKey The API key for Google Maps services.
+         * @param source The source of the Street View panorama. It is optional parameter and default value is `Source.DEFAULT`
+         *   - `Source.DEFAULT`: Use the default Street View source.
+         *   - `Source.OUTDOOR`: Use the outdoor Street View source.
          * @return A Status value specifying if the location is available on Street View or not,
          * whether the used key is a right one, or any other error.
          */
-        suspend fun fetchStreetViewData(latLng: LatLng, apiKey: String): Status {
-            val urlString =
-                "https://maps.googleapis.com/maps/api/streetview/metadata?location=${latLng.latitude},${latLng.longitude}&key=$apiKey"
+        suspend fun fetchStreetViewData(
+            latLng: LatLng,
+            apiKey: String,
+            source: Source = Source.DEFAULT
+        ): Status {
+
+            val urlString = buildString {
+                append("https://maps.googleapis.com/maps/api/streetview/metadata")
+                append("?location=${latLng.latitude},${latLng.longitude}")
+                append("&key=$apiKey")
+                append("&source=${source.value}")
+            }
 
             return withContext(Dispatchers.IO) {
                 try {
@@ -72,7 +84,6 @@ class StreetViewUtils {
             val jsonObject = JSONObject(responseString)
             val statusString = jsonObject.optString("status")
             val status = Status.valueOf(statusString)
-
             return ResponseStreetView(status)
         }
     }
@@ -88,4 +99,9 @@ enum class Status {
     OVER_QUERY_LIMIT,
     INVALID_REQUEST,
     UNKNOWN_ERROR
+}
+
+enum class Source(var value: String) {
+    DEFAULT("default"),
+    OUTDOOR("outdoor");
 }

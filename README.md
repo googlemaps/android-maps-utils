@@ -110,10 +110,12 @@ Full guides for using the utilities are published in
 The StreetViewUtil class provides functionality to check whether a location is supported in StreetView. You can avoid errors when [adding a Street View panorama](https://developers.google.com/maps/documentation/android-sdk/streetview) to an Android app by calling this metadata utility and only adding a Street View panorama if the response is `OK`.
 
 ```kotlin
-StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
+StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY,Source.DEFAULT)
 ```
 
 `fetchStreetViewData` will return `NOT_FOUND`, `OK`, `ZERO_RESULTS` or `REQUEST_DENIED`, depending on the response.
+
+By default, the `Source` is set to `Source.DEFAULT`, but you can also specify `Source.OUTDOOR` to request outdoor Street View panoramas.
 
 </details>
 
