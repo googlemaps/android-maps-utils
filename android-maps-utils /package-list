@@ -728,6 +728,13 @@ $dokka.location:com.google.maps.android/PolyUtil/simplify/#java.util.List<com.go
 $dokka.location:com.google.maps.android/ResponseStreetView///PointingToDeclaration/android-maps-utils /com.google.maps.android/-response-street-view/index.html
 $dokka.location:com.google.maps.android/ResponseStreetView/ResponseStreetView/#com.google.maps.android.Status/PointingToDeclaration/android-maps-utils /com.google.maps.android/-response-street-view/-response-street-view.html
 $dokka.location:com.google.maps.android/ResponseStreetView/status/#/PointingToDeclaration/android-maps-utils /com.google.maps.android/-response-street-view/status.html
+$dokka.location:com.google.maps.android/Source.DEFAULT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}android-maps-utils /com.google.maps.android/-source/-d-e-f-a-u-l-t/index.html
+$dokka.location:com.google.maps.android/Source.OUTDOOR///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}android-maps-utils /com.google.maps.android/-source/-o-u-t-d-o-o-r/index.html
+$dokka.location:com.google.maps.android/Source///PointingToDeclaration/android-maps-utils /com.google.maps.android/-source/index.html
+$dokka.location:com.google.maps.android/Source/entries/#/PointingToDeclaration/android-maps-utils /com.google.maps.android/-source/entries.html
+$dokka.location:com.google.maps.android/Source/value/#/PointingToDeclaration/android-maps-utils /com.google.maps.android/-source/value.html
+$dokka.location:com.google.maps.android/Source/valueOf/#kotlin.String/PointingToDeclaration/android-maps-utils /com.google.maps.android/-source/value-of.html
+$dokka.location:com.google.maps.android/Source/values/#/PointingToDeclaration/android-maps-utils /com.google.maps.android/-source/values.html
 $dokka.location:com.google.maps.android/SphericalUtil///PointingToDeclaration/android-maps-utils /com.google.maps.android/-spherical-util/index.html
 $dokka.location:com.google.maps.android/SphericalUtil/computeArea/#java.util.List<com.google.android.gms.maps.model.LatLng>/PointingToDeclaration/android-maps-utils /com.google.maps.android/-spherical-util/compute-area.html
 $dokka.location:com.google.maps.android/SphericalUtil/computeDistanceBetween/#com.google.android.gms.maps.model.LatLng#com.google.android.gms.maps.model.LatLng/PointingToDeclaration/android-maps-utils /com.google.maps.android/-spherical-util/compute-distance-between.html
@@ -749,7 +756,7 @@ $dokka.location:com.google.maps.android/Status/entries/#/PointingToDeclaration/
 $dokka.location:com.google.maps.android/Status/valueOf/#kotlin.String/PointingToDeclaration/android-maps-utils /com.google.maps.android/-status/value-of.html
 $dokka.location:com.google.maps.android/Status/values/#/PointingToDeclaration/android-maps-utils /com.google.maps.android/-status/values.html
 $dokka.location:com.google.maps.android/StreetViewUtils.Companion///PointingToDeclaration/android-maps-utils /com.google.maps.android/-street-view-utils/-companion/index.html
-$dokka.location:com.google.maps.android/StreetViewUtils.Companion/fetchStreetViewData/#com.google.android.gms.maps.model.LatLng#kotlin.String/PointingToDeclaration/android-maps-utils /com.google.maps.android/-street-view-utils/-companion/fetch-street-view-data.html
+$dokka.location:com.google.maps.android/StreetViewUtils.Companion/fetchStreetViewData/#com.google.android.gms.maps.model.LatLng#kotlin.String#com.google.maps.android.Source/PointingToDeclaration/android-maps-utils /com.google.maps.android/-street-view-utils/-companion/fetch-street-view-data.html
 $dokka.location:com.google.maps.android/StreetViewUtils///PointingToDeclaration/android-maps-utils /com.google.maps.android/-street-view-utils/index.html
 $dokka.location:com.google.maps.android/StreetViewUtils/StreetViewUtils/#/PointingToDeclaration/android-maps-utils /com.google.maps.android/-street-view-utils/-street-view-utils.html
 com.google.maps.android
