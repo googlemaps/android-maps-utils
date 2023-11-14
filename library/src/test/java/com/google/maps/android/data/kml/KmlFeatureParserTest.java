@@ -121,8 +121,7 @@ public class KmlFeatureParserTest {
         KmlPlacemark feature = KmlFeatureParser.createPlacemark(xmlPullParser);
         assertEquals(feature.getProperty("name"), "Pin on a mountaintop");
         assertEquals(feature.getGeometry().getGeometryType(), "Point");
-        KmlPoint kmlPoint = (KmlPoint) feature.getGeometry().getGeometryObject();
-        LatLng latLng = kmlPoint.getGeometryObject();
+        LatLng latLng = (LatLng) feature.getGeometry().getGeometryObject();
         assertEquals(latLng.latitude, -43.60505741890396, 0.001);
         assertEquals(latLng.longitude, 170.1435558771009, 0.001);
     }
