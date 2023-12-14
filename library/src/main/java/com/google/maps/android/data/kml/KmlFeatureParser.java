@@ -434,7 +434,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         String[] coordinate = coordinateString.split(separator);
 
         if (coordinate.length < 2) {
-            throw new IllegalArgumentException("It is wrong coordinate, latitude and longitude should be set");
+            throw new IllegalArgumentException("Wrong coordinate, latitude and longitude must be set");
         }
 
         double lat = Double.parseDouble(coordinate[LATITUDE_INDEX]);
