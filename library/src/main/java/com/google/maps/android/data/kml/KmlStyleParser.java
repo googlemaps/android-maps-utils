@@ -24,10 +24,13 @@ import java.util.HashMap;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
+import android.util.Log;
+
 /**
  * Parses the styles of a given KML file into a KmlStyle object
  */
 /* package */ class KmlStyleParser {
+    private static final String LOG_TAG = "KmlStyleParser";
 
     private final static String STYLE_TAG = "styleUrl";
 
@@ -184,18 +187,24 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param style Style object to apply hotspot properties to
      */
-    private static void setIconHotSpot(XmlPullParser parser, KmlStyle style)
-            throws XmlPullParserException {
-        if (parser.isEmptyElementTag()) {
-            return;
-        }
+    private static void setIconHotSpot(XmlPullParser parser, KmlStyle style) {
         float xValue, yValue;
         String xUnits, yUnits;
-        xValue = Float.parseFloat(parser.getAttributeValue(null, "x"));
-        yValue = Float.parseFloat(parser.getAttributeValue(null, "y"));
-        xUnits = parser.getAttributeValue(null, "xunits");
-        yUnits = parser.getAttributeValue(null, "yunits");
-        style.setHotSpot(xValue, yValue, xUnits, yUnits);
+
+        try {
+            xValue = Float.parseFloat(parser.getAttributeValue(null, "x"));
+            yValue = Float.parseFloat(parser.getAttributeValue(null, "y"));
+            xUnits = parser.getAttributeValue(null, "xunits");
+            yUnits = parser.getAttributeValue(null, "yunits");
+            style.setHotSpot(xValue, yValue, xUnits, yUnits);
+        }
+        catch(NullPointerException e) {
+            Log.w(LOG_TAG,
+                    "Missing 'x' or 'y' attributes in hotSpot for style with id: " + style.getStyleId());
+        }
+        catch(NumberFormatException e) {
+            Log.w(LOG_TAG, "Invalid number in 'x' or 'y' attributes in hotSpot for style with id: " + style.getStyleId());
+        }
     }
 
     /**

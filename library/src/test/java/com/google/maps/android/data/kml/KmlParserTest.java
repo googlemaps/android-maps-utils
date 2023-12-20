@@ -60,7 +60,15 @@ public class KmlParserTest {
         KmlParser mParser = new KmlParser(parser);
         mParser.parseKml();
         assertNotNull(mParser.getPlacemarks());
-        assertEquals(1, mParser.getPlacemarks().size());
+        assertEquals(2, mParser.getPlacemarks().size());
+        HashMap<String, KmlStyle> styles = mParser.getStyles();
+        assertEquals(3, styles.size());
+        KmlStyle validStyle = styles.get("#validHotspot");
+        assertNotNull(validStyle);
+        double hotspotX = validStyle.getMarkerOptions().getAnchorU();
+        double hotspotY = validStyle.getMarkerOptions().getAnchorV();
+        assertEquals(0.5234, hotspotX, 0.0001);
+        assertEquals(0.5062, hotspotY, 0.0001);
     }
 
     @Test

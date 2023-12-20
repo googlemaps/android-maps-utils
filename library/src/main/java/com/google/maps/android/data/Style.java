@@ -16,6 +16,8 @@
 
 package com.google.maps.android.data;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -30,6 +32,7 @@ import java.util.Observable;
  * and {@link com.google.maps.android.data.geojson.GeoJsonPolygonStyle GeoJsonPolygonStyle}
  */
 public abstract class Style extends Observable {
+    private static final String LOG_TAG = "Style";
 
     protected MarkerOptions mMarkerOptions;
 
@@ -82,8 +85,14 @@ public abstract class Style extends Observable {
         if (xUnits.equals("fraction")) {
             xAnchor = x;
         }
+        else {
+            Log.w(LOG_TAG, "Hotspot xUnits other than \"fraction\" are not supported.");
+        }
         if (yUnits.equals("fraction")) {
             yAnchor = y;
+        }
+        else {
+            Log.w(LOG_TAG, "Hotspot yUnits other than \"fraction\" are not supported.");
         }
 
         mMarkerOptions.anchor(xAnchor, yAnchor);
