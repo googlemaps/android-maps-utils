@@ -69,7 +69,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.11.1'
     testImplementation 'net.sf.kxml:kxml2:2.3.0'
-    testImplementation "io.mockk:mockk:1.13.6"
+    testImplementation "io.mockk:mockk:1.13.9"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
