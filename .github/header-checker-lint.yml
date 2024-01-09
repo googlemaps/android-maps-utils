@@ -32,3 +32,4 @@ sourceFileExtensions:
   - 'kt'
   - 'kts'
   - 'xml'
+  - 'gradle'
