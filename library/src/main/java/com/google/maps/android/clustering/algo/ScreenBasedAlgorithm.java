@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
- * This algorithm uses map position for clustering, and should be reclustered on map movement
+ * This abstract interface provides two methods: one to determine if the map should recluster when
+ * the map moves ({@link  #shouldReclusterOnMapMovement()}), and another method to determine the
+ * behavior when the camera moves ({@link  #onCameraChange(CameraPosition)} ()})
  *
- * @param <T>
+ * @param <T> The {@link ClusterItem} type
  */
 
 public interface ScreenBasedAlgorithm<T extends ClusterItem> extends Algorithm<T> {
