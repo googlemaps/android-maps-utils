@@ -31,7 +31,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - uses: gradle/wrapper-validation-action@v1.1.0
+    - uses: gradle/wrapper-validation-action@v2.0.0
     - name: Create .gpg key
       run: |
         echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
