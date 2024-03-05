@@ -10,3 +10,4 @@ library/gen
 project.properties
 .DS_Store
 .java-version
+secrets.properties
