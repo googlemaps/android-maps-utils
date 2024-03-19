@@ -115,7 +115,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * Stores the TileOverlay corresponding to each of the keywords that have been searched for.
      */
-    private Hashtable<String, TileOverlay> mOverlays = new Hashtable<String, TileOverlay>();
+    private Hashtable<String, TileOverlay> mOverlays = new Hashtable<>();
 
     /**
      * A layout containing checkboxes for each of the heatmaps rendered.

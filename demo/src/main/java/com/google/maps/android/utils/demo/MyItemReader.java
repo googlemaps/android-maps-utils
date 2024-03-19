@@ -37,7 +37,7 @@ public class MyItemReader {
     private static final String REGEX_INPUT_BOUNDARY_BEGINNING = "\\A";
 
     public List<MyItem> read(InputStream inputStream) throws JSONException {
-        List<MyItem> items = new ArrayList<MyItem>();
+        List<MyItem> items = new ArrayList<>();
         String json = new Scanner(inputStream).useDelimiter(REGEX_INPUT_BOUNDARY_BEGINNING).next();
         JSONArray array = new JSONArray(json);
         for (int i = 0; i < array.length(); i++) {

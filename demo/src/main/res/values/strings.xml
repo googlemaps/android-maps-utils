@@ -33,4 +33,6 @@
     <string name="button_radius">Radius</string>
     <string name="button_gradient">Gradient</string>
     <string name="button_opacity">Opacity</string>
+    <string name="location_1_is_supported_in_streetview">Location 1 is supported in StreetView: %1$s</string>
+    <string name="go">Go</string>
 </resources>
