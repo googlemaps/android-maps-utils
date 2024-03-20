@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,15 @@ import java.util.Set;
 import androidx.collection.LongSparseArray;
 
 /**
- * Groups markers into a grid.
+ * Groups markers into a grid for clustering. This algorithm organizes items into a two-dimensional grid,
+ * facilitating the formation of clusters based on proximity within each grid cell. The grid size determines
+ * the spatial granularity of clustering, and clusters are created by aggregating items within the same grid cell.
+ * <p>
+ * The effectiveness of clustering is influenced by the specified grid size, which determines the spatial resolution of the grid.
+ * Smaller grid sizes result in more localized clusters, whereas larger grid sizes lead to broader clusters covering larger areas.
+ * <p>
+ *
+ * @param <T> The type of {@link ClusterItem} to be clustered.
  */
 public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm<T> {
     private static final int DEFAULT_GRID_SIZE = 100;
