@@ -17,7 +17,7 @@ dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.android.tools.lint:lint:31.3.1"
-    testImplementation "com.android.tools.lint:lint-tests:31.3.1"
+    testImplementation "com.android.tools.lint:lint-tests:31.3.2"
     testImplementation "com.android.tools:testutils:31.3.1"
 }
 
