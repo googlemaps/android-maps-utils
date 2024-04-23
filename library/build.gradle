@@ -47,7 +47,7 @@ android {
         installOptions "-d", "-t"
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     testOptions {
         animationsDisabled true
