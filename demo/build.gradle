@@ -50,10 +50,10 @@ dependencies {
     // [START_EXCLUDE silent]
     implementation project(':library')
 
-    implementation 'androidx.appcompat:appcompat:1.7.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.7.0-rc01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
