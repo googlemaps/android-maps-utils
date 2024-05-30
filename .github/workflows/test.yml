@@ -28,7 +28,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    permissions:
+      pull-requests: write
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout Repo
@@ -57,3 +58,4 @@ jobs:
         min-coverage-changed-files: 60
         title: Code Coverage
         debug-mode: false
+        update-comment: true
