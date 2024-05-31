@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,10 @@ android {
         installOptions "-d", "-t"
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+    }
+    kotlin {
+        jvmToolchain(17)
     }
     testOptions {
         animationsDisabled true
@@ -73,7 +76,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
-task instrumentTest(dependsOn: connectedCheck)
+tasks.register('instrumentTest') { dependsOn connectedCheck }
 
 if (System.getenv("JITPACK")) {
     apply plugin: 'maven'

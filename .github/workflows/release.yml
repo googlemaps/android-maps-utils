@@ -27,11 +27,11 @@ jobs:
       with:
         token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
     - name: Set up JDK 17
-      uses: actions/setup-java@v4.1.0
+      uses: actions/setup-java@v4.2.1
       with:
         java-version: '17'
         distribution: 'temurin'
-    - uses: gradle/wrapper-validation-action@v1.1.0
+    - uses: gradle/wrapper-validation-action@v3.3.1
     - name: Create .gpg key
       run: |
         echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
