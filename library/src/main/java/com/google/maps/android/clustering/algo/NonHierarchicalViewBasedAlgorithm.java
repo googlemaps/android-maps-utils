@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * This algorithm works the same way as {@link NonHierarchicalDistanceBasedAlgorithm} but works, only in
- * visible area. It requires to be reclustered on camera movement because clustering is done only for visible area.
+ * Algorithm that can be used for managing large numbers of items (>1000 markers). This algorithm works the same way as {@link NonHierarchicalDistanceBasedAlgorithm}
+ * but works, only in visible area. It requires {@link  #shouldReclusterOnMapMovement()} to be true in order to re-render clustering
+ * when camera movement changes the visible area.
  *
- * @param <T>
+ * @param <T> The {@link ClusterItem} type
  */
 public class NonHierarchicalViewBasedAlgorithm<T extends ClusterItem>
         extends NonHierarchicalDistanceBasedAlgorithm<T> implements ScreenBasedAlgorithm<T> {
