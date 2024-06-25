@@ -172,8 +172,8 @@ subprojects { project ->
                 name = "mavencentral"
                 url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                 credentials {
-                    username sonatypeUsername
-                    password sonatypePassword
+                    username sonatypeToken
+                    password sonatypeTokenPassword
                 }
             }
         }

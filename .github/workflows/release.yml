@@ -38,9 +38,9 @@ jobs:
         gpg --quiet --output $GITHUB_WORKSPACE/release.gpg --dearmor ./release.asc
 
         echo "Build and publish"
-        sed -i -e "s,sonatypeUsername=,sonatypeUsername=$SONATYPE_USERNAME,g" gradle.properties
-        SONATYPE_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_PASSWORD" | sed -e 's/[\/&]/\\&/g')
-        sed -i -e "s,sonatypePassword=,sonatypePassword=$SONATYPE_PASSWORD_ESCAPED,g" gradle.properties
+        sed -i -e "s,sonatypeToken=,sonatypeToken=SONATYPE_TOKEN_USERNAME,g" gradle.properties
+        SONATYPE_TOKEN_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_TOKEN_PASSWORD" | sed -e 's/[\/&]/\\&/g')
+        sed -i -e "s,sonatypeTokenPassword=,sonatypeTokenPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
         sed -i -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
         sed -i -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
         sed -i -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
@@ -48,8 +48,8 @@ jobs:
         GPG_KEY_ARMOR: "${{ secrets.SYNCED_GPG_KEY_ARMOR }}"
         GPG_KEY_ID: ${{ secrets.SYNCED_GPG_KEY_ID }}
         GPG_PASSWORD: ${{ secrets.SYNCED_GPG_KEY_PASSWORD }}
-        SONATYPE_PASSWORD: ${{ secrets.SYNCED_SONATYPE_PASSWORD }}
-        SONATYPE_USERNAME: ${{ secrets.SYNCED_SONATYPE_USERNAME }}
+        SONATYPE_TOKEN_PASSWORD: ${{ secrets.SYNCED_SONATYPE_TOKEN_PASSWORD }}
+        SONATYPE_TOKEN_USERNAME: ${{ secrets.SYNCED_SONATYPE_TOKEN_USERNAME }}
 
     - uses: actions/setup-node@v2
       with:
