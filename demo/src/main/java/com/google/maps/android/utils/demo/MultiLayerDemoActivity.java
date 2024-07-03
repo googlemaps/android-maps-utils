@@ -117,9 +117,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
             kmlPolygonLayer.setOnFeatureClickListener(feature -> Toast.makeText(MultiLayerDemoActivity.this,
                     "KML polygon clicked: " + feature.getProperty("name"),
                     Toast.LENGTH_SHORT).show());
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
 
