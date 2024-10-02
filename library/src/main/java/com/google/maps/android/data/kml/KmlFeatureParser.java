@@ -125,6 +125,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         LatLngBounds latLonBox;
         HashMap<String, String> properties = new HashMap<String, String>();
         HashMap<String, Double> compassPoints = new HashMap<String, Double>();
+        ArrayList<LatLng> latLonQuad = null;
 
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals("GroundOverlay"))) {
@@ -143,14 +144,79 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                     properties.put(parser.getName(), parser.nextText());
                 } else if (parser.getName().matches(COMPASS_REGEX)) {
                     compassPoints.put(parser.getName(), Double.parseDouble(parser.nextText()));
+                } else if (parser.getName().equals("LatLonQuad")) {
+                    latLonQuad = getLatLonQuad(parser);
                 }
             }
             eventType = parser.next();
+        }
+
+        if (compassPoints.isEmpty() && latLonQuad != null && latLonQuad.size() >= 4) {
+            //read coordinates from quad
+            LatLng sw = latLonQuad.get(0);
+            LatLng se = latLonQuad.get(1);
+            LatLng ne = latLonQuad.get(2);
+            LatLng nw = latLonQuad.get(3);
+
+            //calculate rotation from coordinates
+            double nRot = 90 - bearing(nw, ne);
+            double sRot = 270 - bearing(se, sw);
+
+            rotation = -(float)((nRot + sRot) / 2.0);
+
+            //this is an approximation that rectifies the quad in order to make it rectangular
+            double n = (ne.latitude + nw.latitude) / 2.0;
+            double s = (se.latitude + sw.latitude) / 2.0;
+            double e = (ne.longitude + se.longitude) / 2.0;
+            double w = (nw.longitude + sw.longitude) / 2.0;
+
+            compassPoints.put("north", n);
+            compassPoints.put("south", s);
+            compassPoints.put("east", e);
+            compassPoints.put("west", w);
         }
         latLonBox = createLatLngBounds(compassPoints.get("north"), compassPoints.get("south"),
                 compassPoints.get("east"), compassPoints.get("west"));
         return new KmlGroundOverlay(imageUrl, latLonBox, drawOrder, visibility, properties,
                 rotation);
+    }
+
+    private static ArrayList<LatLng> getLatLonQuad(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
+        ArrayList<LatLng> latLonQuad = null;
+        int eventType = parser.getEventType();
+        while (!(eventType == END_TAG && parser.getName().equals("LatLonQuad"))) {
+            if (eventType == START_TAG) {
+                if (parser.getName().equals("coordinates")) {
+                    latLonQuad = convertToLatLngArray(parser.nextText());
+                }
+            }
+            eventType = parser.next();
+        }
+        return latLonQuad;
+    }
+
+    private static double bearing(LatLng from, LatLng to) {
+        // formula:	θ =	atan2(sin(Δlong).cos(lat2), cos(lat1).sin(lat2) − sin(lat1).cos(lat2).cos(Δlong))
+        // source: http://www.movable-type.co.uk/scripts/latlong.html
+
+	    double lat1 = Math.toRadians(from.latitude);
+        double lon1 = Math.toRadians(from.longitude);
+        double lat2 = Math.toRadians(to.latitude);
+        double lon2 = Math.toRadians(to.longitude);
+        double dLon = lon2 - lon1;
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+        double res = Math.toDegrees(Math.atan2(y, x));
+
+        // Since atan2 returns values in the range [-M_PI, +M_PI] (that is, [-180°, +180°]),
+        // we need to normalise the result in the range [0°, 360°]
+        if (res < 0) {
+            res += 360;
+        }
+
+        return res;
     }
 
     private static float getRotation(XmlPullParser parser)
