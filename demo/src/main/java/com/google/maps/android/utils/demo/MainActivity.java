@@ -16,6 +16,8 @@
 
 package com.google.maps.android.utils.demo;
 
+import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.hasMapsApiKey;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,11 +34,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-        if (BuildConfig.MAPS_API_KEY.isEmpty()) {
-            Toast.makeText(this, "Add your own API key in local.properties as MAPS_API_KEY=YOUR_API_KEY", Toast.LENGTH_LONG).show();
+        if (!hasMapsApiKey(this)) {
+            Toast.makeText(this, R.string.bad_maps_api_key, Toast.LENGTH_LONG).show();
+            finish();
         }
+
+        setContentView(R.layout.main);
 
         mListView = findViewById(R.id.list);
 

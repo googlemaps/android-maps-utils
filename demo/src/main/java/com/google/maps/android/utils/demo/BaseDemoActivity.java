@@ -16,7 +16,10 @@
 
 package com.google.maps.android.utils.demo;
 
+import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.hasMapsApiKey;
+
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -36,6 +39,12 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!hasMapsApiKey(this)) {
+            Toast.makeText(this, R.string.bad_maps_api_key, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
         mIsRestore = savedInstanceState != null;
         setContentView(getLayoutId());
         setUpMap();

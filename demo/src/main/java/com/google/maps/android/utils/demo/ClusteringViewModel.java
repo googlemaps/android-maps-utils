@@ -30,7 +30,7 @@ import java.util.List;
 
 public class ClusteringViewModel extends ViewModel {
 
-    private NonHierarchicalViewBasedAlgorithm<MyItem> mAlgorithm = new NonHierarchicalViewBasedAlgorithm<>(0, 0);
+    private final NonHierarchicalViewBasedAlgorithm<MyItem> mAlgorithm = new NonHierarchicalViewBasedAlgorithm<>(0, 0);
 
     NonHierarchicalViewBasedAlgorithm<MyItem> getAlgorithm() {
         return mAlgorithm;
