@@ -19,7 +19,7 @@ package com.google.maps.android.utils.demo
 import org.junit.Test
 import com.google.common.truth.Truth.assertThat
 
-class AipKeyValidatorTest {
+class ApiKeyValidatorTest {
 
     @Test
     fun testValidKey() {
