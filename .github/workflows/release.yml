@@ -38,7 +38,7 @@ jobs:
         gpg --quiet --output $GITHUB_WORKSPACE/release.gpg --dearmor ./release.asc
 
         echo "Build and publish"
-        sed -i -e "s,sonatypeToken=,sonatypeToken=SONATYPE_TOKEN_USERNAME,g" gradle.properties
+        sed -i -e "s,sonatypeToken=,sonatypeToken=$SONATYPE_TOKEN_USERNAME,g" gradle.properties
         SONATYPE_TOKEN_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_TOKEN_PASSWORD" | sed -e 's/[\/&]/\\&/g')
         sed -i -e "s,sonatypeTokenPassword=,sonatypeTokenPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
         sed -i -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
