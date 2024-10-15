@@ -24,7 +24,7 @@ dokkaHtml {
 
 android {
     lintOptions {
-        sarifOutput = file("$buildDir/reports/lint-results.sarif")
+        sarifOutput = file("$layout.buildDirectory/reports/lint-results.sarif")
     }
     defaultConfig {
         compileSdk 34
