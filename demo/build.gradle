@@ -21,6 +21,9 @@ plugins {
 }
 
 android {
+    lintOptions {
+        sarifOutput = file("$buildDir/reports/lint-results.sarif")
+    }
 
     defaultConfig {
         compileSdk 34
