@@ -16,7 +16,7 @@
 -->
 
 <!-- Note that the item mapId is required for Advanced Markers to work -->
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     android:id="@+id/map"
     map:mapId="mapId"
