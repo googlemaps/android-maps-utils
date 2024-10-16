@@ -16,6 +16,7 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.annotation.SuppressLint;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class DistanceDemoActivity extends BaseDemoActivity implements GoogleMap.
         showDistance();
     }
 
+    @SuppressLint("SetTextI18n")
     private void showDistance() {
         double distance = SphericalUtil.computeDistanceBetween(mMarkerA.getPosition(), mMarkerB.getPosition());
         mTextView.setText("The markers are " + formatNumber(distance) + " apart.");

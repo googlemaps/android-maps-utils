@@ -21,7 +21,6 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.RawRes;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.collections.GroundOverlayManager;

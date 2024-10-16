@@ -29,7 +29,6 @@ import com.google.maps.android.utils.demo.model.MyItem;
 import org.json.JSONException;
 
 public class ClusteringViewModelDemoActivity extends BaseDemoActivity {
-    private ClusterManager<MyItem> mClusterManager;
     private ClusteringViewModel mViewModel;
 
     @Override
@@ -59,7 +58,7 @@ public class ClusteringViewModelDemoActivity extends BaseDemoActivity {
 
         mViewModel.getAlgorithm().updateViewSize(widthDp, heightDp);
 
-        mClusterManager = new ClusterManager<>(this, getMap());
+        ClusterManager<MyItem> mClusterManager = new ClusterManager<>(this, getMap());
         mClusterManager.setAlgorithm(mViewModel.getAlgorithm());
 
         getMap().setOnCameraIdleListener(mClusterManager);
