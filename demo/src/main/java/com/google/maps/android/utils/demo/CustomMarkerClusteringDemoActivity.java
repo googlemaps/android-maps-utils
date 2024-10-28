@@ -48,7 +48,7 @@ import java.util.Random;
  */
 public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
     private ClusterManager<Person> mClusterManager;
-    private Random mRandom = new Random(1984);
+    private final Random mRandom = new Random(1984);
 
     /**
      * Draws profile photos inside markers (using IconGenerator).

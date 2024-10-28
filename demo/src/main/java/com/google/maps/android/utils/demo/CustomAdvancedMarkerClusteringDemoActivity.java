@@ -16,8 +16,10 @@
 
 package com.google.maps.android.utils.demo;
 
+import java.util.Objects;
 import java.util.Random;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -94,6 +96,7 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
             return pinConfigBuilder;
         }
 
+        @SuppressLint("SetTextI18n")
         private View addTextAsMarker(int size) {
             TextView textView = new TextView(getApplicationContext());
             textView.setText("I am a cluster of size " + size);
@@ -143,7 +146,7 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
         try {
             getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("MapsDemo", Objects.requireNonNull(e.getMessage()));
         }
 
         return true;

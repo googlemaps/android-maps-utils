@@ -16,6 +16,7 @@
 
 package com.google.maps.android.utils.demo
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.widget.TextView
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 
 class StreetViewDemoActivity : Activity() {
 
+    @SuppressLint("SetTextI18n")
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
