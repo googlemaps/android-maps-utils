@@ -15,7 +15,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = '2.0.0'
+    ext.kotlin_version = '2.0.21'
     repositories {
         google()
         mavenCentral()
@@ -24,11 +24,11 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.0'
-        classpath 'com.mxalbert.gradle:jacoco-android:0.2.1'
-        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
+        classpath libs.gradle
+        classpath libs.jacoco.android
+        classpath libs.secrets.gradle.plugin
+        classpath libs.kotlin.gradle.plugin
+        classpath libs.dokka.gradle.plugin
     }
 }
 

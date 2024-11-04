@@ -11,14 +11,15 @@ lintOptions {
 }
 
 dependencies {
-    compileOnly "com.android.tools.lint:lint-api:31.4.1"
-    compileOnly "com.android.tools.lint:lint-checks:31.4.1"
-   // compileOnly "com.android.tools.lint:manifest-merger:31.1.0"
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    testImplementation "junit:junit:4.13.2"
-    testImplementation "com.android.tools.lint:lint:31.4.1"
-    testImplementation "com.android.tools.lint:lint-tests:31.4.1"
-    testImplementation "com.android.tools:testutils:31.4.1"
+    compileOnly(libs.lint.api)
+    compileOnly(libs.lint.checks)
+    // Uncomment if manifest-merger is needed:
+    // compileOnly(libs.manifest.merger)
+    compileOnly(libs.kotlin.stdlib.jdk8)
+    testImplementation(libs.junit)
+    testImplementation(libs.lint)
+    testImplementation(libs.lint.tests)
+    testImplementation(libs.testutils)
 }
 
 jar {
