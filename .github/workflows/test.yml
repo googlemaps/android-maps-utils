@@ -46,16 +46,3 @@ jobs:
 
     - name: Build modules
       run: ./gradlew build jacocoTestDebugUnitTestReport --stacktrace
-
-    - name: Jacoco Report to PR
-      id: jacoco
-      uses: madrapps/jacoco-report@v1.7.1
-      with:
-        paths: |
-          ${{ github.workspace }}/library/build/jacoco/jacoco.xml
-        token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
-        min-coverage-overall: 26
-        min-coverage-changed-files: 60
-        title: Code Coverage
-        debug-mode: false
-        update-comment: true
