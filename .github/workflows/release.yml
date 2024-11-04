@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
     - name: Set up JDK 17
@@ -56,7 +56,7 @@ jobs:
         node-version: '14'
 
     - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v3.4.1
+      uses: cycjimmy/semantic-release-action@v4.1.1
       with:
         extra_plugins: |
           "@semantic-release/commit-analyzer@8.0.1"

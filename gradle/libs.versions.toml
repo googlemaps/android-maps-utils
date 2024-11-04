@@ -1,0 +1,43 @@
+[versions]
+appcompat = "1.7.0"
+dokka-gradle-plugin = "1.9.20"
+gradle = "8.7.2"
+jacoco-android = "0.2.1"
+lifecycle-extensions = "2.2.0"
+lifecycle-viewmodel-ktx = "2.8.7"
+kotlin = "2.0.21"
+kotlinx-coroutines = "1.9.0"
+junit = "4.13.2"
+secrets-gradle-plugin = "2.0.1"
+truth = "1.4.2"
+play-services-maps = "19.0.0"
+core-ktx = "1.15.0"
+robolectric = "4.12.2"
+kxml2 = "2.3.0"
+mockk = "1.13.11"
+lint = "31.7.2"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycle-extensions" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
+kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+junit = { module = "junit:junit", version.ref = "junit" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+kxml2 = { module = "net.sf.kxml:kxml2", version.ref = "kxml2" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }
+lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint" }
+lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
+lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
+testutils = { module = "com.android.tools:testutils", version.ref = "lint" }

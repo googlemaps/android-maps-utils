@@ -26,10 +26,10 @@ android {
     }
 
     defaultConfig {
-        compileSdk 34
+        compileSdk 35
         applicationId "com.google.maps.android.utils.demo"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
     }
@@ -56,16 +56,15 @@ dependencies {
     // [START_EXCLUDE silent]
     implementation project(':library')
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation(libs.appcompat)
+    implementation(libs.lifecycle.extensions)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.kotlin.stdlib.jdk8)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("com.google.truth:truth:1.4.2")
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]
