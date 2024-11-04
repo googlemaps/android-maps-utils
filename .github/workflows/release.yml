@@ -31,7 +31,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - uses: gradle/wrapper-validation-action@v3.3.1
+    - uses: gradle/actions/wrapper-validation@v4
     - name: Create .gpg key
       run: |
         echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
@@ -56,7 +56,7 @@ jobs:
         node-version: '14'
 
     - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v3.4.1
+      uses: cycjimmy/semantic-release-action@v4.1.1
       with:
         extra_plugins: |
           "@semantic-release/commit-analyzer@8.0.1"
