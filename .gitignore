@@ -13,6 +13,8 @@
 # OS-specific
 .DS_Store
 
+_site
+
 # Build directories
 /build
 /captures
