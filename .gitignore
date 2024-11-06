@@ -1,2 +1,35 @@
+# IntelliJ / Android Studio files
+*.iml
+.idea
+.gradle
+.local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+# OS-specific
 .DS_Store
+
 _site
+
+# Build directories
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Environment-specific
+local.properties
+.java-version
+secrets.properties
+
+# Eclipse-specific files
+.classpath
+.project
+project.properties
+
+library/bin
+library/gen
