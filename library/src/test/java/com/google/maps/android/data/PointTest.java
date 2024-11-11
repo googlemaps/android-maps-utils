@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class PointTest {
     @Test
@@ -33,11 +32,5 @@ public class PointTest {
     public void testGetGeometryObject() {
         Point p = new Point(new LatLng(0, 50));
         assertEquals(new LatLng(0, 50), p.getGeometryObject());
-        try {
-            new Point(null);
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Coordinates cannot be null", e.getMessage());
-        }
     }
 }

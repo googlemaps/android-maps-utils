@@ -26,8 +26,11 @@ import java.util.List;
 
 import static com.google.maps.android.MathUtil.EARTH_RADIUS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import javax.annotation.Nullable;
 
 public class SphericalUtilTest {
     // The vertices of an octahedron, for testing
@@ -41,7 +44,9 @@ public class SphericalUtilTest {
     /**
      * Tests for approximate equality.
      */
-    private static void expectLatLngApproxEquals(LatLng actual, LatLng expected) {
+    private static void expectLatLngApproxEquals(@Nullable LatLng actual, @Nullable LatLng expected) {
+        assertNotNull(actual);
+        assertNotNull(expected);
         assertEquals(actual.latitude, expected.latitude, 1e-6);
         // Account for the convergence of longitude lines at the poles
         double cosLat = Math.cos(Math.toRadians(actual.latitude));
@@ -295,7 +300,7 @@ public class SphericalUtilTest {
         List<LatLng> latLngs;
 
         assertEquals(SphericalUtil.computeLength(Collections.<LatLng>emptyList()), 0, 1e-6);
-        assertEquals(SphericalUtil.computeLength(Arrays.asList(new LatLng(0, 0))), 0, 1e-6);
+        assertEquals(SphericalUtil.computeLength(List.of(new LatLng(0, 0))), 0, 1e-6);
 
         latLngs = Arrays.asList(new LatLng(0, 0), new LatLng(0.1, 0.1));
         assertEquals(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.maps.android.geometry
 
-package com.google.maps.android.projection;
-
-/**
- * @deprecated since 0.2. Use {@link com.google.maps.android.geometry.Point} instead.
- */
-@Deprecated
-public class Point extends com.google.maps.android.geometry.Point {
-    public Point(double x, double y) {
-        super(x, y);
-    }
-}
+data class Point(@JvmField val x: Double, @JvmField val y: Double)

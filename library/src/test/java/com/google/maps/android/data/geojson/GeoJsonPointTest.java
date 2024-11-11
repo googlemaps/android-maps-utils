@@ -15,6 +15,8 @@
  */
 package com.google.maps.android.data.geojson;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
@@ -36,8 +38,8 @@ public class GeoJsonPointTest {
         try {
             new GeoJsonPoint(null);
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Coordinates cannot be null", e.getMessage());
+        } catch (NullPointerException e) {
+            assertThat(e.getMessage()).contains("Parameter specified as non-null is null");
         }
     }
 
