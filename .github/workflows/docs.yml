@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -60,7 +60,9 @@ jobs:
         commit-message: 'docs: Update docs'
         author: googlemaps-bot <googlemaps-bot@google.com>
         committer: googlemaps-bot <googlemaps-bot@google.com>
-        labels: docs
+        labels: |
+          docs
+          automerge
         title: 'docs: Update docs'
         body: |
             Updated GitHub pages with latest from `./gradlew dokkaHtml`.
