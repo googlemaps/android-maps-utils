@@ -14,7 +14,7 @@ play-services-maps = "19.0.0"
 core-ktx = "1.15.0"
 robolectric = "4.12.2"
 kxml2 = "2.3.0"
-mockk = "1.13.11"
+mockk = "1.13.13"
 lint = "31.7.2"
 
 [libraries]
