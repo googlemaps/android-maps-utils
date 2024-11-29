@@ -269,7 +269,7 @@ If you're using custom clustering (i.e, if you're extending `DefaultClusterRende
 
 **Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions`*
 
-See the [`CustomMarkerClusteringDemoActivity`](demo/src/gms/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
+See the [`CustomMarkerClusteringDemoActivity`](demo/src/main/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
 
 _New_
 
