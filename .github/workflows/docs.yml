@@ -39,6 +39,10 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Install Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
 
     # Run dokka and create tar
     - name: Generate documentation
