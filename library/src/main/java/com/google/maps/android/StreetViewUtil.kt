@@ -64,11 +64,9 @@ class StreetViewUtils {
 
                     val responseCode = connection.responseCode
                     if (responseCode == HttpURLConnection.HTTP_OK) {
-                        val inputStream = connection.inputStream
-                        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-                        val responseString = bufferedReader.use { it.readText() }
-                        bufferedReader.close()
-                        inputStream.close()
+                        val responseString = connection.inputStream.use { inputStream ->
+                            BufferedReader(InputStreamReader(inputStream)).use { it.readText() }
+                        }
                         deserializeResponse(responseString).status
                     } else {
                         throw IOException("HTTP Error: $responseCode")

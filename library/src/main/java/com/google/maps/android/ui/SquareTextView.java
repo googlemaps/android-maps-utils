@@ -62,7 +62,7 @@ public class SquareTextView extends TextView {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.translate(mOffsetLeft / 2, mOffsetTop / 2);
+        canvas.translate((float) mOffsetLeft / 2, (float) mOffsetTop / 2);
         super.draw(canvas);
     }
 }

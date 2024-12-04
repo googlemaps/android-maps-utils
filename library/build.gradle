@@ -76,6 +76,7 @@ dependencies {
     testImplementation(libs.kxml2)
     testImplementation(libs.mockk)
     implementation(libs.kotlin.stdlib.jdk8)
+    testImplementation(libs.truth)
 }
 
 tasks.register('instrumentTest') { dependsOn connectedCheck }

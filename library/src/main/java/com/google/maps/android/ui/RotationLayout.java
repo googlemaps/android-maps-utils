@@ -21,6 +21,8 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+
 /**
  * RotationLayout rotates the contents of the layout by multiples of 90 degrees.
  * <p>
@@ -60,7 +62,7 @@ public class RotationLayout extends FrameLayout {
 
 
     @Override
-    public void dispatchDraw(Canvas canvas) {
+    public void dispatchDraw(@NonNull Canvas canvas) {
         if (mRotation == 0) {
             super.dispatchDraw(canvas);
             return;
