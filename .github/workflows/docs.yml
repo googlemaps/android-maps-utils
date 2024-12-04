@@ -50,6 +50,8 @@ jobs:
 
         echo "Unpacking tar into gh-pages branch"
         git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+        go install github.com/google/addlicense@latest
+        addlicense .
         cd $GITHUB_WORKSPACE && git checkout gh-pages && tar xvf ~/android-maps-utils-docs.tar
 
     # Commit changes and create a PR
