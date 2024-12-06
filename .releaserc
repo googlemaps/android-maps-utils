@@ -7,11 +7,11 @@ plugins:
   - - "@google/semantic-release-replace-plugin"
     - replacements:
         - files:
-            - "build.gradle"
+            - "build.gradle.kts"
           from: "\\bversion = '.*'"
           to: "version = '${nextRelease.version}'"
         - files:
-            - "build.gradle"
+            - "build.gradle.kts"
           from: "com.google.maps.android:android-maps-utils:([0-9]+).([0-9]+).([0-9]+)"
           to: "com.google.maps.android:android-maps-utils:${nextRelease.version}'"
         - files:
@@ -23,7 +23,7 @@ plugins:
       publishCmd: "./gradlew publish --warn --stacktrace"
   - - "@semantic-release/git"
     - assets:
-        - "build.gradle"
+        - "build.gradle.kts"
         - "*.md"
   - "@semantic-release/github"
 options:

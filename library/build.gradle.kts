@@ -14,39 +14,35 @@
  * limitations under the License.
  */
 plugins {
-    id 'kotlin-android'
-    id 'org.jetbrains.dokka'
-}
-
-dokkaHtml {
-    moduleName.set("android-maps-utils ")
+    id("kotlin-android")
+    id("org.jetbrains.dokka")
+    id("android.maps.utils.PublishingConventionPlugin")
 }
 
 android {
-    lintOptions {
+    lint {
         sarifOutput = file("$buildDir/reports/lint-results.sarif")
     }
     defaultConfig {
-        compileSdk 35
-        minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 1
-        versionName "1.0"
-        consumerProguardFiles 'consumer-rules.pro'
-        // This enables us to tell when we're running unit tests on Travis (#573)
-        buildConfigField("String", "TRAVIS", "\"" + System.getenv('TRAVIS') + "\"")
+        compileSdk = 35
+        minSdk = 21
+        targetSdk = 35
+        consumerProguardFiles("consumer-rules.pro")
+        buildConfigField("String", "TRAVIS", "\"${System.getenv("TRAVIS")}\"")
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
-    resourcePrefix 'amu_'
-    // This enables long timeouts required on slow environments, e.g. Travis
+    resourcePrefix = "amu_"
     adbOptions {
-        timeOutInMs 10 * 60 * 1000  // 10 minutes
-        installOptions "-d", "-t"
+        timeOutInMs = 10 * 60 * 1000 // 10 minutes
+        installOptions("-d", "-t")
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -55,22 +51,19 @@ android {
         jvmToolchain(17)
     }
     testOptions {
-        animationsDisabled true
-        unitTests {
-            includeAndroidResources = true
-            returnDefaultValues = true
-        }
+        animationsDisabled = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.isReturnDefaultValues = true
     }
-    namespace 'com.google.maps.android'
+    namespace = "com.google.maps.android"
 }
 
 dependencies {
-    // We are adding api() for the Maps SDK for Android, so it propagates to the app-level modules.
     api(libs.play.services.maps)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
-    lintPublish project(':lint-checks')
+    lintPublish(project(":lint-checks"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.kxml2)
@@ -78,8 +71,10 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
 }
 
-tasks.register('instrumentTest') { dependsOn connectedCheck }
+tasks.register("instrumentTest") {
+    dependsOn("connectedCheck")
+}
 
-if (System.getenv("JITPACK")) {
-    apply plugin: 'maven'
+if (System.getenv("JITPACK") != null) {
+    apply(plugin = "maven")
 }
