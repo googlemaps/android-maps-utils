@@ -16,7 +16,7 @@ robolectric = "4.12.2"
 kxml2 = "2.3.0"
 mockk = "1.13.11"
 lint = "31.7.3"
-org-jacoco-core = "0.8.11"
+org-jacoco-core = "0.8.12"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
