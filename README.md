@@ -33,7 +33,9 @@ You can also find Kotlin extensions for this library in [Maps Android KTX][andro
 ## Requirements
 
 * Android API level 21+
-- An [API key][api-key]
+* [Sign up with Google Maps Platform]
+* A Google Maps Platform [project] with the **Maps SDK for Android** enabled
+* An [API key] associated with the project above
 
 ## Installation
 
@@ -56,24 +58,21 @@ dependencies {
 
 This repository includes a [sample app](demo) that illustrates the use of this library.
 
-To run the demo app, you'll have to:
-
-1. [Sign up for Google Maps Platform ][gmp-start]
-1. [Get a Maps API key][api-key]
+To run the demo app, ensure you've met the requirements above then:
+1. Clone the repository
 1. Add a file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
-1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
+1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained earlier
 1. Build and run the `debug` variant for the Maps SDK for Android version
 
 ## Documentation
 
 See the [documentation] for a full list of classes and their methods.
 
+Full guides for using the utilities are published in
+[Google Maps Platform documentation](https://developers.google.com/maps/documentation/android-sdk/utility).
+
 ## Usage
 
-Full guides for using the utilities are published in
-[Google Maps Platform documentation][devsite-guide].
-
-<details>
   <summary>Marker utilities</summary>
 
 ### Marker utilities
@@ -362,8 +361,7 @@ If you find a bug, or have a feature request, please [file an issue] on GitHub. 
 
 You can also discuss this library on our [Discord server].
 
-[api-key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
-[devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
+[API key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
 [gmp-start]: https://console.cloud.google.com/google/maps-apis/start
 [maps-sdk]: https://developers.google.com/maps/documentation/android-sdk
 [documentation]: https://googlemaps.github.io/android-maps-utils
@@ -376,8 +374,10 @@ You can also discuss this library on our [Discord server].
 [Discord server]: https://discord.gg/hYsWbmk
 [file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
 [license]: LICENSE
+[project]: https://developers.google.com/maps/documentation/android-sdk/cloud-setup
 [pull request]: https://github.com/googlemaps/android-maps-utils/compare
 [semantic versioning]: https://semver.org
+[Sign up with Google Maps Platform]: https://console.cloud.google.com/google/maps-apis/start
 [similar inquiry]: https://github.com/googlemaps/android-maps-utils/issues
 [SLA]: https://cloud.google.com/maps-platform/terms/sla
 [Technical Support Services Guidelines]: https://cloud.google.com/maps-platform/terms/tssg
