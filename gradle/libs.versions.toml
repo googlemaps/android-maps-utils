@@ -16,6 +16,7 @@ robolectric = "4.12.2"
 kxml2 = "2.3.0"
 mockk = "1.13.13"
 lint = "31.7.3"
+org-jacoco-core = "0.8.11"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -41,3 +42,4 @@ lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "li
 lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
 testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 Google Inc.
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,32 @@
  */
 
 plugins {
-    id 'com.android.application'
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-    id 'kotlin-android'
+    id("com.android.application")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("kotlin-android")
 }
 
 android {
-    lintOptions {
+    lint {
         sarifOutput = file("$buildDir/reports/lint-results.sarif")
     }
 
     defaultConfig {
-        compileSdk 35
-        applicationId "com.google.maps.android.utils.demo"
-        minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 1
-        versionName "1.0"
+        compileSdk = 35
+        applicationId = "com.google.maps.android.utils.demo"
+        minSdk = 21
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -47,14 +50,13 @@ android {
     kotlin {
         jvmToolchain(17)
     }
-    namespace 'com.google.maps.android.utils.demo'
+    namespace = "com.google.maps.android.utils.demo"
 }
 
 // [START maps_android_utils_install_snippet]
 dependencies {
-
     // [START_EXCLUDE silent]
-    implementation project(':library')
+    implementation(project(":library"))
 
     implementation(libs.appcompat)
     implementation(libs.lifecycle.extensions)
@@ -69,12 +71,11 @@ dependencies {
 }
 // [END maps_android_utils_install_snippet]
 
-
 secrets {
     // To add your Maps API key to this project:
     // 1. Create a file ./secrets.properties
     // 2. Add this line, where YOUR_API_KEY is your API key:
     //        MAPS_API_KEY=YOUR_API_KEY
-    defaultPropertiesFileName 'local.defaults.properties'
-    propertiesFileName 'secrets.properties'
+    defaultPropertiesFileName ="local.defaults.properties"
+    propertiesFileName = "secrets.properties"
 }
