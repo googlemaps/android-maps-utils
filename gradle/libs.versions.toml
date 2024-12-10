@@ -8,6 +8,7 @@ lifecycle-viewmodel-ktx = "2.8.7"
 kotlin = "2.0.21"
 kotlinx-coroutines = "1.9.0"
 junit = "4.13.2"
+mockito-core = "5.14.2"
 secrets-gradle-plugin = "2.0.1"
 truth = "1.4.4"
 play-services-maps = "19.0.0"
@@ -30,6 +31,7 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
