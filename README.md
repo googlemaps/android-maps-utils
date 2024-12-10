@@ -1,15 +1,18 @@
-![Build Status](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml/badge.svg?branch=main)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
+[![Maven Central](https://img.shields.io/maven-central/v/com.google.maps.android/android-maps-utils)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
+![Tests/Build Status](https://github.com/googlemaps/android-maps-utils/workflows/Test/badge.svg)
+![Release](https://github.com/googlemaps/android-maps-utils/workflows/Release/badge.svg)
+![Stable](https://img.shields.io/badge/stability-stable-green)
+
 ![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
-[![Discord](https://img.shields.io/discord/676948200904589322)](https://discord.gg/hYsWbmk)
-![Apache-2.0](https://img.shields.io/badge/license-Apache-blue)
+[![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
+[![GitHub License](https://img.shields.io/github/license/googlemaps/android-maps-utils?color=blue)](LICENSE)
 
 # Maps SDK for Android Utility Library
 
 ## Description
 
 This open-source library contains utilities that are useful for a wide
-range of applications using the [Google Maps SDK for Android][android-site].
+range of applications using the [Google Maps SDK for Android][maps-sdk].
 
 - **Marker animation** - animates a marker from one position to another
 - **Marker clustering** — handles the display of a large number of points
@@ -30,7 +33,9 @@ You can also find Kotlin extensions for this library in [Maps Android KTX][andro
 ## Requirements
 
 * Android API level 21+
-- An [API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
+* [Sign up with Google Maps Platform]
+* A Google Maps Platform [project] with the **Maps SDK for Android** enabled
+* An [API key] associated with the project above
 
 ## Installation
 
@@ -47,29 +52,27 @@ dependencies {
 }
 ```
 
-## Demo App
+## Sample App
 
 <img src="https://developers.google.com/maps/documentation/android-sdk/images/utility-markercluster.png" width="150" align=right>
 
 This repository includes a [sample app](demo) that illustrates the use of this library.
 
-To run the demo app, you'll have to:
-
-1. [Get a Maps API key](https://developers.google.com/maps/documentation/android-sdk/get-api-key)
+To run the demo app, ensure you've met the requirements above then:
+1. Clone the repository
 1. Add a file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
-1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained in the first step
+1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained earlier
 1. Build and run the `debug` variant for the Maps SDK for Android version
 
 ## Documentation
 
-See the [reference documentation][dokka] for a full list of classes and their methods.
+See the [documentation] for a full list of classes and their methods.
+
+Full guides for using the utilities are published in
+[Google Maps Platform documentation](https://developers.google.com/maps/documentation/android-sdk/utility).
 
 ## Usage
 
-Full guides for using the utilities are published in
-[Google Maps Platform documentation][devsite-guide].
-
-<details>
   <summary>Marker utilities</summary>
 
 ### Marker utilities
@@ -340,23 +343,43 @@ _Old_
 
 ## Contributing
 
-Contributions are welcome and encouraged! See the [contributing guide](CONTRIBUTING.md) for more info.
+Contributions are welcome and encouraged! If you'd like to contribute, send us a [pull request] and refer to our [code of conduct] and [contributing guide].
+
+## Terms of Service
+
+This library uses Google Maps Platform services. Use of Google Maps Platform services through this library is subject to the Google Maps Platform [Terms of Service].
+
+This library is not a Google Maps Platform Core Service. Therefore, the Google Maps Platform Terms of Service (e.g. Technical Support Services, Service Level Agreements, and Deprecation Policy) do not apply to the code in this library.
 
 ## Support
 
-This library is offered via an open source [license](LICENSE). It is not governed by the Google Maps Platform [Technical Support Services Guidelines](https://cloud.google.com/maps-platform/terms/tssg?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), the [SLA](https://cloud.google.com/maps-platform/terms/sla?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components), or the [Deprecation Policy](https://cloud.google.com/maps-platform/terms?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) (however, any Google Maps Platform services used by the library remain subject to the Google Maps Platform Terms of Service).
+This library is offered via an open source [license]. It is not governed by the Google Maps Platform Support [Technical Support Services Guidelines, the SLA, or the [Deprecation Policy]. However, any Google Maps Platform services used by the library remain subject to the Google Maps Platform Terms of Service.
 
-This library adheres to [semantic versioning](https://semver.org/) to indicate when backwards-incompatible changes are introduced.
+This library adheres to [semantic versioning] to indicate when backwards-incompatible changes are introduced. Accordingly, while the library is in version 0.x, backwards-incompatible changes may be introduced at any time.
 
-If you find a bug, or have a feature request, please [file an issue] on GitHub.
+If you find a bug, or have a feature request, please [file an issue] on GitHub. If you would like to get answers to technical questions from other Google Maps Platform developers, ask through one of our [developer community channels]. If you'd like to contribute, please check the [contributing guide].
 
-If you would like to get answers to technical questions from other Google Maps Platform developers, ask through one of our [developer community channels](https://developers.google.com/maps/developer-community?utm_source=github&utm_medium=documentation&utm_campaign=&utm_content=web_components) including the Google Maps Platform [Discord server].
+You can also discuss this library on our [Discord server].
 
-[file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
-[pull request]: https://github.com/googlemaps/android-maps-utils/compare
-[code of conduct]: CODE_OF_CONDUCT.md
-[Discord server]: https://discord.gg/hYsWbmk
-[android-site]: https://developers.google.com/maps/documentation/android-sdk
-[devsite-guide]: https://developers.google.com/maps/documentation/android-sdk/utility
-[dokka]: https://googlemaps.github.io/android-maps-utils/
+[API key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
+[gmp-start]: https://console.cloud.google.com/google/maps-apis/start
+[maps-sdk]: https://developers.google.com/maps/documentation/android-sdk
+[documentation]: https://googlemaps.github.io/android-maps-utils
 [android-maps-ktx]: https://github.com/googlemaps/android-maps-ktx
+
+[code of conduct]: CODE_OF_CONDUCT.md
+[contributing guide]: CONTRIBUTING.md
+[Deprecation Policy]: https://cloud.google.com/maps-platform/terms
+[developer community channels]: https://developers.google.com/maps/developer-community
+[Discord server]: https://discord.gg/hYsWbmk
+[file an issue]: https://github.com/googlemaps/android-maps-utils/issues/new/choose
+[license]: LICENSE
+[project]: https://developers.google.com/maps/documentation/android-sdk/cloud-setup
+[pull request]: https://github.com/googlemaps/android-maps-utils/compare
+[semantic versioning]: https://semver.org
+[Sign up with Google Maps Platform]: https://console.cloud.google.com/google/maps-apis/start
+[similar inquiry]: https://github.com/googlemaps/android-maps-utils/issues
+[SLA]: https://cloud.google.com/maps-platform/terms/sla
+[Technical Support Services Guidelines]: https://cloud.google.com/maps-platform/terms/tssg
+[Terms of Service]: https://cloud.google.com/maps-platform/terms
+
