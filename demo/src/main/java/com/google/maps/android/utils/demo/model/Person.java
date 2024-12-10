@@ -22,6 +22,9 @@ import com.google.maps.android.clustering.ClusterItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
+
 public class Person implements ClusterItem {
     public final String name;
     public final int profilePhoto;
@@ -53,5 +56,19 @@ public class Person implements ClusterItem {
     @Override
     public Float getZIndex() {
         return null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
+
+    // If we use the diff() operation, we need to implement an equals operation, to determine what
+    // makes each ClusterItem unique (which is probably not the position)
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj != null && getClass() != obj.getClass()) return false;
+        Person myObj = (Person) obj;
+        return this.name.equals(myObj.name);
     }
 }
