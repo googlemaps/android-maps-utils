@@ -18,6 +18,7 @@ package com.google.maps.android.clustering;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -37,6 +38,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Groups many items on a map based on zoom level.
@@ -200,6 +202,31 @@ public class ClusterManager<T extends ClusterItem> implements
         algorithm.lock();
         try {
             return algorithm.addItem(myItem);
+        } finally {
+            algorithm.unlock();
+        }
+    }
+
+    public void diff(@Nullable Collection<T> add, @Nullable Collection<T> remove, @Nullable Collection<T> modify) {
+        final Algorithm<T> algorithm = getAlgorithm();
+        algorithm.lock();
+        try {
+            // Add items
+            if (add != null) {
+                for (T item : add) {
+                    algorithm.addItem(item);
+                }
+            }
+
+            // Remove items
+            algorithm.removeItems(remove);
+
+            // Modify items
+            if (modify != null) {
+                for (T item : modify) {
+                    updateItem(item);
+                }
+            }
         } finally {
             algorithm.unlock();
         }
