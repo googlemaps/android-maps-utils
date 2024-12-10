@@ -455,7 +455,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
                         Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                         existingClustersOnScreen.add(point);
-                        Log.d("ClusterTest","We added one point to the existingClustersOnScreen");
                     }
                 }
             }
@@ -470,14 +469,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     Point closest = findClosestCluster(existingClustersOnScreen, point);
                     if (closest != null) {
                         LatLng animateFrom = mSphericalMercatorProjection.toLatLng(closest);
-                        Log.d("ClusterTest","We added one markerModifier");
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateFrom));
                     } else {
-                        Log.d("ALARM", "from not found");
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null));
                     }
                 } else {
-                    Log.d("ALARM", "from not found2");
                     markerModifier.add(onScreen, new CreateMarkerTask(c, newMarkers, null));
                 }
             }
@@ -498,7 +494,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
                         Point p = mSphericalMercatorProjection.toPoint(c.getPosition());
-                        Log.d("ClusterTest","We are going to add a new cluster on the screen, located at " + c.getPosition().toString());
                         newClustersOnScreen.add(p);
                     }
                 }
@@ -514,14 +509,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     final Point closest = findClosestCluster(newClustersOnScreen, point);
                     if (closest != null) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
-                        Log.d("ClusterTest","We are going to remove an item from the screen (anim) located at " + marker.position.toString());
                         markerModifier.animateThenRemove(marker, marker.position, animateTo);
                     } else {
-                        Log.d("ClusterTest","We are going to remove an item from the screen (no anim) located at " + marker.position.toString());
                         markerModifier.remove(true, marker.marker);
                     }
                 } else {
-                    Log.d("ClusterTest","We are going to remove an item from the screen (no anim2) located at " + marker.position.toString());
                     markerModifier.remove(onScreen, marker.marker);
                 }
             }

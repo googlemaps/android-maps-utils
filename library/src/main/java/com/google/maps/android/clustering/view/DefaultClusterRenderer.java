@@ -145,19 +145,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
     @Override
     public void onAdd() {
-        mClusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                return mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker));
-            }
-        });
+        mClusterManager.getMarkerCollection().setOnMarkerClickListener(marker -> mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker)));
 
-        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(@NonNull Marker marker) {
-                if (mItemInfoWindowClickListener != null) {
-                    mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
-                }
+        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(marker -> {
+            if (mItemInfoWindowClickListener != null) {
+                mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
             }
         });
 
@@ -1168,7 +1160,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         @Override
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             if (to == null || from == null || marker == null) {
-              return;
+                return;
             }
 
             float fraction = valueAnimator.getAnimatedFraction();

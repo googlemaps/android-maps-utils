@@ -219,7 +219,9 @@ public class ClusterManager<T extends ClusterItem> implements
             }
 
             // Remove items
-            algorithm.removeItems(remove);
+            if (remove != null) {
+                algorithm.removeItems(remove);
+            }
 
             // Modify items
             if (modify != null) {

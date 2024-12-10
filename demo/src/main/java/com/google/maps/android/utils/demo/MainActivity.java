@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("Clustering", ClusteringDemoActivity.class);
         addDemo("Advanced Markers Clustering Example", CustomAdvancedMarkerClusteringDemoActivity.class);
         addDemo("Clustering: Custom Look", CustomMarkerClusteringDemoActivity.class);
+        addDemo("Clustering: Diff", ClusteringDiffDemoActivity.class);
         addDemo("Clustering: 2K markers", BigClusteringDemoActivity.class);
         addDemo("Clustering: 20K only visible markers", VisibleClusteringDemoActivity.class);
         addDemo("Clustering: ViewModel", ClusteringViewModelDemoActivity.class);

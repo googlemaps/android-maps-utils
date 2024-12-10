@@ -16,6 +16,7 @@
 
 package com.google.maps.android.utils.demo;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -70,6 +72,7 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
      * Draws profile photos inside markers (using IconGenerator).
      * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
      */
+    @SuppressLint("InflateParams")
     private class PersonRenderer extends ClusterRendererMultipleItems<Person> {
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
@@ -90,13 +93,6 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
             int padding = (int) getResources().getDimension(R.dimen.custom_profile_padding);
             mImageView.setPadding(padding, padding, padding, padding);
             mIconGenerator.setContentView(mImageView);
-        }
-
-        public void setUpdateMarker(Person person) {
-            Marker marker = getMarker(person);
-            if (marker != null) {
-                marker.setIcon(getItemIcon(person));
-            }
         }
 
         @Override
@@ -155,8 +151,10 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
             for (Person p : cluster.getItems()) {
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
-                Drawable drawable = getResources().getDrawable(p.profilePhoto);
-                drawable.setBounds(0, 0, width, height);
+                Drawable drawable = ResourcesCompat.getDrawable(getBaseContext().getResources(), p.profilePhoto, null);
+                if (drawable != null) {
+                    drawable.setBounds(0, 0, width, height);
+                }
                 profilePhotos.add(drawable);
             }
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
