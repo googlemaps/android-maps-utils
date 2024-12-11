@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.google.maps.android/android-maps-utils)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
-![Tests/Build Status](https://github.com/googlemaps/android-maps-utils/workflows/Test/badge.svg)
+![Tests/Build Status](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml/badge.svg?branch=main)
 ![Release](https://github.com/googlemaps/android-maps-utils/workflows/Release/badge.svg)
 ![Stable](https://img.shields.io/badge/stability-stable-green)
 
