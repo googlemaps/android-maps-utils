@@ -92,6 +92,9 @@
             android:name=".CustomAdvancedMarkerClusteringDemoActivity"
             android:exported="true" />
         <activity
+            android:name=".ClusteringDiffDemoActivity"
+            android:exported="true" />
+        <activity
             android:name=".ZoomClusteringDemoActivity"
             android:exported="true" />
         <activity
