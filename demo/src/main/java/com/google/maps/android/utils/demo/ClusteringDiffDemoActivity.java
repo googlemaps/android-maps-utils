@@ -268,7 +268,7 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
         mClusterManager.updateItem(this.itemtoUpdate);
 
         //We could also call the diff() method to add, remove and update at once.
-        mClusterManager.diff(null, null, new ArrayList<>(Collections.singleton(this.itemtoUpdate)));
+        // mClusterManager.diff(null, null, new ArrayList<>(Collections.singleton(this.itemtoUpdate)));
         mClusterManager.setAnimation(true);
 
         // Cluster needs to be called, to force an update of the cluster.
