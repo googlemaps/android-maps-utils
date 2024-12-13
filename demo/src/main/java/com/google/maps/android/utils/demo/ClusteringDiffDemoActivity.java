@@ -131,7 +131,7 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
         }
 
         @Override
-        protected void onClusterUpdated(@NonNull Cluster<Person> cluster, Marker marker) {
+        protected void onClusterUpdated(@NonNull Cluster<Person> cluster, @NonNull Marker marker) {
             // Same implementation as onBeforeClusterRendered() (to update cached markers)
             marker.setIcon(getClusterIcon(cluster));
         }

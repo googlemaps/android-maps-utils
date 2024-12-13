@@ -31,7 +31,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -92,7 +91,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
      * Markers that are currently on the map.
      */
     private Set<MarkerWithPosition> mMarkers = Collections.newSetFromMap(
-            new ConcurrentHashMap<MarkerWithPosition, Boolean>());
+            new ConcurrentHashMap<>());
 
     /**
      * Icons for each bucket.
@@ -147,19 +146,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
     @Override
     public void onAdd() {
-        mClusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                return mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker));
-            }
-        });
+        mClusterManager.getMarkerCollection().setOnMarkerClickListener(marker -> mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker)));
 
-        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(@NonNull Marker marker) {
-                if (mItemInfoWindowClickListener != null) {
-                    mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
-                }
+        mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(marker -> {
+            if (mItemInfoWindowClickListener != null) {
+                mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
             }
         });
 
@@ -351,31 +342,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     }
 
     /**
-     * Determines if the new clusters should be rendered on the map, given the old clusters. This
-     * method is primarily for optimization of performance, and the default implementation simply
-     * checks if the new clusters are equal to the old clusters, and if so, it returns false.
-     * <p>
-     * However, there are cases where you may want to re-render the clusters even if they didn't
-     * change. For example, if you want a cluster with one item to render as a cluster above
-     * a certain zoom level and as a marker below a certain zoom level (even if the contents of the
-     * clusters themselves did not change). In this case, you could check the zoom level in an
-     * implementation of this method and if that zoom level threshold is crossed return true, else
-     * {@code return super.shouldRender(oldClusters, newClusters)}.
-     * <p>
-     * Note that always returning true from this method could potentially have negative performance
-     * implications as clusters will be re-rendered on each pass even if they don't change.
-     *
-     * @param oldClusters The clusters from the previous iteration of the clustering algorithm
-     * @param newClusters The clusters from the current iteration of the clustering algorithm
-     * @return true if the new clusters should be rendered on the map, and false if they should not. This
-     * method is primarily for optimization of performance, and the default implementation simply
-     * checks if the new clusters are equal to the old clusters, and if so, it returns false.
-     */
-    protected boolean shouldRender(@NonNull Set<? extends Cluster<T>> oldClusters, @NonNull Set<? extends Cluster<T>> newClusters) {
-        return true;
-    }
-
-    /**
      * Transforms the current view (represented by DefaultClusterRenderer.mClusters and DefaultClusterRenderer.mZoom) to a
      * new zoom level and set of clusters.
      * <p/>
@@ -424,10 +390,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
         @SuppressLint("NewApi")
         public void run() {
-            if (!shouldRender(immutableOf(ClusterRendererMultipleItems.this.mClusters), immutableOf(clusters))) {
-                mCallback.run();
-                return;
-            }
 
             final MarkerModifier markerModifier = new MarkerModifier();
 
@@ -576,10 +538,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     @Override
     public void setAnimationDuration(long animationDurationMs) {
         mAnimationDurationMs = animationDurationMs;
-    }
-
-    private Set<? extends Cluster<T>> immutableOf(Set<? extends Cluster<T>> clusters) {
-        return clusters != null ? Collections.unmodifiableSet(clusters) : Collections.emptySet();
     }
 
     private static double distanceSquared(Point a, Point b) {
