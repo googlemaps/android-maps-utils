@@ -19,7 +19,6 @@ package com.google.maps.android.utils.demo;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,28 +44,39 @@ import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.utils.demo.model.Person;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Demonstrates how to apply a diff to the current Cluster
  */
 public class ClusteringDiffDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
     private ClusterManager<Person> mClusterManager;
-    private final Random mRandom = new Random(1984);
-    private Person itemtoUpdate = new Person(position(), "Teach", R.drawable.teacher);
+    private Person itemtoUpdate = new Person(ENFIELD, "Teach", R.drawable.teacher);
 
-    private final Random random = new Random();
-    private final Handler handler = new Handler();
+    private static final LatLng ENFIELD = new LatLng(51.6524, -0.0838);
+    private static final LatLng ILFORD = new LatLng(51.5590, -0.0815);
 
-    @Override
+    private static final LatLng LONDON = new LatLng(51.5074, -0.1278);
+    LatLng midpoint = getMidpoint();
+    private int currentLocationIndex = 0;
 
-    public void onMapReady(@NonNull GoogleMap map) {
-        super.onMapReady(map);
-        startRandomCalls();
+    protected int getLayoutId() {
+        return R.layout.map_with_floating_button;
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap map) {
+        super.onMapReady(map);
+        findViewById(R.id.fab_rotate_location).setOnClickListener(v -> rotateLocation());
+        getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(midpoint, 12));
+    }
+
+
+    private LatLng getMidpoint() {
+        double latitude = (ClusteringDiffDemoActivity.ENFIELD.latitude + ClusteringDiffDemoActivity.ILFORD.latitude + ClusteringDiffDemoActivity.LONDON.latitude) / 3;
+        double longitude = (ClusteringDiffDemoActivity.ENFIELD.longitude + ClusteringDiffDemoActivity.ILFORD.longitude + ClusteringDiffDemoActivity.LONDON.longitude) / 3;
+        return new LatLng(latitude, longitude);
+    }
 
     /**
      * Draws profile photos inside markers (using IconGenerator).
@@ -167,24 +177,10 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
 
         @Override
         protected boolean shouldRenderAsCluster(@NonNull Cluster<Person> cluster) {
-            // Always render clusters.
-            return cluster.getSize() >= 1;
+            return cluster.getSize() >= 2;
         }
     }
 
-    private void startRandomCalls() {
-        // Initial call to the random  update.
-        callUpdateRandom();
-    }
-
-    private void callUpdateRandom() {
-        // Generate a random delay between 1 and 5 seconds
-        int delay = random.nextInt(5000) + 1000; // Random delay in milliseconds (1000ms to 5000ms)
-
-        // Post the next call with the random delay
-        handler.postDelayed(this::callUpdateRandom, delay);
-        updateRandom();
-    }
 
     @Override
     public boolean onClusterClick(Cluster<Person> cluster) {
@@ -250,36 +246,52 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
     }
 
     private void addItems() {
+        // Marker in Enfield
+        mClusterManager.addItem(new Person(ENFIELD, "John", R.drawable.john));
 
-        // http://www.flickr.com/photos/sdasmarchives/5036231225/
-        mClusterManager.addItem(new Person(position(), "John", R.drawable.john));
-
-
-        // http://www.flickr.com/photos/usnationalarchives/4726892651/
-        itemtoUpdate = new Person(position(), "Teach", R.drawable.teacher);
+        // Marker in the center of London
+        itemtoUpdate = new Person(LONDON, "Teach", R.drawable.teacher);
         mClusterManager.addItem(itemtoUpdate);
     }
 
+    private void rotateLocation() {
+        // Update the current index to cycle through locations (0 = Enfield, 1 = Olford, 2 = London)
+        currentLocationIndex = (currentLocationIndex + 1) % 3;
 
-    private void updateRandom() {
-        itemtoUpdate = new Person(position(), "Teach", R.drawable.teacher);
-        Log.d("ClusterTest", "We start updating the item. New position: " + itemtoUpdate.getPosition().toString());
 
-        mClusterManager.updateItem(this.itemtoUpdate);
+        LatLng newLocation = switch (currentLocationIndex) {
+            case 0 -> ENFIELD;
+            case 1 -> ILFORD;
+            default -> LONDON;
+        };
 
-        //We could also call the diff() method to add, remove and update at once.
-        // mClusterManager.diff(null, null, new ArrayList<>(Collections.singleton(this.itemtoUpdate)));
-        mClusterManager.setAnimation(true);
+        String cityName = getCityName(newLocation);
 
-        // Cluster needs to be called, to force an update of the cluster.
-        mClusterManager.cluster();
+        Log.d("ClusterTest", "Item rotated to: " + newLocation.toString() + ", City: " + cityName);
+
+        if (itemtoUpdate != null) {
+            itemtoUpdate = new Person(newLocation, "Teach", R.drawable.teacher);
+            mClusterManager.updateItem(itemtoUpdate); // Update the marker
+            mClusterManager.cluster();
+        }
     }
 
-    private LatLng position() {
-        return new LatLng(random(51.6723432, 51.38494009999999), random(0.148271, -0.3514683));
+    // Method to map LatLng to city name
+    private String getCityName(LatLng location) {
+        if (areLocationsEqual(location, ENFIELD)) {
+            return "Enfield";
+        } else if (areLocationsEqual(location, ILFORD)) {
+            return "Ilford";
+        } else if (areLocationsEqual(location, LONDON)) {
+            return "London";
+        } else {
+            return "Unknown City"; // Default case if location is not recognized
+        }
     }
 
-    private double random(double min, double max) {
-        return mRandom.nextDouble() * (max - min) + min;
+    // Method to compare LatLng objects with a tolerance
+    private boolean areLocationsEqual(LatLng loc1, LatLng loc2) {
+        return Math.abs(loc1.latitude - loc2.latitude) < 1E-5 &&
+                Math.abs(loc1.longitude - loc2.longitude) < 1E-5;
     }
 }
