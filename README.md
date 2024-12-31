@@ -1,11 +1,12 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.google.maps.android/android-maps-utils)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
-![Tests/Build Status](https://github.com/googlemaps/android-maps-utils/workflows/Test/badge.svg)
 ![Release](https://github.com/googlemaps/android-maps-utils/workflows/Release/badge.svg)
 ![Stable](https://img.shields.io/badge/stability-stable-green)
+[![Tests/Build](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml/badge.svg)](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml)
 
-![GitHub contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
+![Contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
+[![License](https://img.shields.io/github/license/googlemaps/android-maps-utils?color=blue)][license]
+[![StackOverflow](https://img.shields.io/stackexchange/stackoverflow/t/google-maps?color=orange&label=google-maps&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/google-maps)
 [![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
-[![GitHub License](https://img.shields.io/github/license/googlemaps/android-maps-utils?color=blue)](LICENSE)
 
 # Maps SDK for Android Utility Library
 
@@ -35,7 +36,7 @@ You can also find Kotlin extensions for this library in [Maps Android KTX][andro
 * Android API level 21+
 * [Sign up with Google Maps Platform]
 * A Google Maps Platform [project] with the **Maps SDK for Android** enabled
-* An [API key] associated with the project above
+- An [API key] associated with the project above ... follow the [API key instructions] if you're new to the process
 
 ## Installation
 
@@ -362,12 +363,12 @@ If you find a bug, or have a feature request, please [file an issue] on GitHub. 
 You can also discuss this library on our [Discord server].
 
 [API key]: https://developers.google.com/maps/documentation/android-sdk/get-api-key
-[gmp-start]: https://console.cloud.google.com/google/maps-apis/start
+[API key instructions]: https://developers.google.com/maps/documentation/android-sdk/config#step_3_add_your_api_key_to_the_project
 [maps-sdk]: https://developers.google.com/maps/documentation/android-sdk
 [documentation]: https://googlemaps.github.io/android-maps-utils
 [android-maps-ktx]: https://github.com/googlemaps/android-maps-ktx
 
-[code of conduct]: CODE_OF_CONDUCT.md
+[code of conduct]: ?tab=coc-ov-file#readme
 [contributing guide]: CONTRIBUTING.md
 [Deprecation Policy]: https://cloud.google.com/maps-platform/terms
 [developer community channels]: https://developers.google.com/maps/developer-community
