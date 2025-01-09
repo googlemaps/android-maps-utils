@@ -45,7 +45,7 @@ dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
     // You do not need to add a separate dependency for the Maps SDK for Android
     // since this library builds in the compatible version of the Maps SDK.
-    implementation 'com.google.maps.android:android-maps-utils:3.9.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.10.1'
 
     // Optionally add the Kotlin Extensions (KTX) for full Kotlin language support
     // See latest version at https://github.com/googlemaps/android-maps-ktx
@@ -273,7 +273,7 @@ If you're using custom clustering (i.e, if you're extending `DefaultClusterRende
 
 **Note that these methods can't be identical, as you need to use a `Marker` instead of `MarkerOptions`*
 
-See the [`CustomMarkerClusteringDemoActivity`](demo/src/gms/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
+See the [`CustomMarkerClusteringDemoActivity`](demo/src/main/java/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java) in the demo app for a complete example.
 
 _New_
 
