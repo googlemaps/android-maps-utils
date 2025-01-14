@@ -31,7 +31,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
-import android.util.Pair;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -60,6 +59,7 @@ import com.google.maps.android.ui.SquareTextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +84,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     private boolean mAnimate;
     private long mAnimationDurationMs;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
+    private final Queue<AnimationTask> ongoingAnimations = new LinkedList<>();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -576,6 +577,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         private final Queue<Marker> mOnScreenRemoveMarkerTasks = new LinkedList<>();
         private final Queue<AnimationTask> mAnimationTasks = new LinkedList<>();
 
+
         /**
          * Whether the idle listener has been added to the UI thread's MessageQueue.
          */
@@ -627,7 +629,18 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            mAnimationTasks.add(new AnimationTask(marker, from, to));
+            AnimationTask task = new AnimationTask(marker, from, to);
+
+            for (AnimationTask existingTask : ongoingAnimations) {
+                if (existingTask.marker.getId().equals(task.marker.getId())) {
+                    System.out.println("RemovingRemoving");
+                    existingTask.cancel();
+                    break;
+                }
+            }
+
+            mAnimationTasks.add(task);
+            ongoingAnimations.add(task);
             lock.unlock();
         }
 
@@ -1104,6 +1117,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         private final LatLng to;
         private boolean mRemoveOnComplete;
         private MarkerManager mMarkerManager;
+        private ValueAnimator valueAnimator;
 
         private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
             this.markerWithPosition = markerWithPosition;
@@ -1113,12 +1127,16 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         }
 
         public void perform() {
-            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
             valueAnimator.setInterpolator(ANIMATION_INTERP);
             valueAnimator.setDuration(mAnimationDurationMs);
             valueAnimator.addUpdateListener(this);
             valueAnimator.addListener(this);
             valueAnimator.start();
+        }
+
+        public void cancel() {
+            valueAnimator.cancel();
         }
 
         @Override
@@ -1129,6 +1147,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 mMarkerManager.remove(marker);
             }
             markerWithPosition.position = to;
+
+            // Remove the task from the queue
+            ongoingAnimations.remove(this);
         }
 
         public void removeOnAnimationComplete(MarkerManager markerManager) {
@@ -1141,7 +1162,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
             if (to == null || from == null || marker == null) {
                 return;
             }
-
             float fraction = valueAnimator.getAnimatedFraction();
             double lat = (to.latitude - from.latitude) * fraction + from.latitude;
             double lngDelta = to.longitude - from.longitude;
