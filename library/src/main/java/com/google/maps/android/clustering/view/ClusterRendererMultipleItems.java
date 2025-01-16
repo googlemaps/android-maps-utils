@@ -124,7 +124,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
      */
     private float mZoom;
 
-    private final ViewModifier mViewModifier = new ViewModifier();
+    private final ViewModifier mViewModifier = new ViewModifier(Looper.getMainLooper());
 
     private ClusterManager.OnClusterClickListener<T> mClickListener;
     private ClusterManager.OnClusterInfoWindowClickListener<T> mInfoWindowClickListener;
@@ -278,6 +278,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
      */
     @SuppressLint("HandlerLeak")
     private class ViewModifier extends Handler {
+        public ViewModifier(Looper looper) {
+            super(looper);
+        }
         private static final int RUN_TASK = 0;
         private static final int TASK_FINISHED = 1;
         private boolean mViewModificationInProgress = false;
@@ -448,7 +451,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 }
             }
 
-            // Remove the old markers, animating them into clusters if zooming out.
             for (final MarkerWithPosition marker : markersToRemove) {
                 boolean onScreen = visibleBounds.contains(marker.position);
                 if (onScreen && mAnimate) {
@@ -466,7 +468,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                                     break;
                                 }
                             }
+
                         }
+                        // Remove it because it will join a cluster
                         markerModifier.animateThenRemove(marker, marker.position, foundItem.getPosition());
                     } else {
                         markerModifier.remove(true, marker.marker);
@@ -633,7 +637,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
             for (AnimationTask existingTask : ongoingAnimations) {
                 if (existingTask.marker.getId().equals(task.marker.getId())) {
-                    System.out.println("RemovingRemoving");
                     existingTask.cancel();
                     break;
                 }
@@ -655,6 +658,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
+            for (AnimationTask existingTask : ongoingAnimations) {
+                if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
+                    existingTask.cancel();
+                    break;
+                }
+            }
+
+            ongoingAnimations.add(animationTask);
             animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
             mAnimationTasks.add(animationTask);
             lock.unlock();
@@ -1136,7 +1147,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         }
 
         public void cancel() {
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                new Handler(Looper.getMainLooper()).post(this::cancel);
+                return;
+            }
+            markerWithPosition.position = to;
+            mRemoveOnComplete = false;
             valueAnimator.cancel();
+            ongoingAnimations.remove(this);
         }
 
         @Override
@@ -1173,6 +1191,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
             double lng = lngDelta * fraction + from.longitude;
             LatLng position = new LatLng(lat, lng);
             marker.setPosition(position);
+            markerWithPosition.position = position;
         }
     }
 }
