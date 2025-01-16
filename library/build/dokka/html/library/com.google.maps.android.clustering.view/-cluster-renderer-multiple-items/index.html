@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2025 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ClusterRendererMultipleItems</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            library
+                    </a>
+            </div>
+            <div class="library-version">
+3.9.0            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":library:dokkaHtml/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="library::com.google.maps.android.clustering.view/ClusterRendererMultipleItems///PointingToDeclaration//-1887420133">
+  <div class="breadcrumbs"><a href="../../../index.html">library</a><span class="delimiter">/</span><a href="../index.html">com.google.maps.android.clustering.view</a><span class="delimiter">/</span><span class="current">ClusterRendererMultipleItems</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Cluster</span><wbr></wbr><span>Renderer</span><wbr></wbr><span>Multiple</span><wbr></wbr><span><span>Items</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">ClusterRendererMultipleItems</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator"> : </span><a href="../../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span> : <a href="../-cluster-renderer/index.html">ClusterRenderer</a><span class="token operator">&lt;</span><a href="../-cluster-renderer/index.html">T</a><span class="token operator">&gt; </span></div><p class="paragraph">The default view for a ClusterManager. Markers are animated in and out of clusters.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="745072462%2FConstructors%2F-1887420133" anchor-label="ClusterRendererMultipleItems" id="745072462%2FConstructors%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-cluster-renderer-multiple-items.html"><span>Cluster</span><wbr></wbr><span>Renderer</span><wbr></wbr><span>Multiple</span><wbr></wbr><span><span>Items</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="745072462%2FConstructors%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">map<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps/GoogleMap///PointingToDeclaration/">GoogleMap</span><span class="token punctuation">, </span></span><span class="parameter ">clusterManager<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/index.html">ClusterManager</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1126696161%2FFunctions%2F-1887420133" anchor-label="getCluster" id="1126696161%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-cluster.html"><span>get</span><wbr></wbr><span><span>Cluster</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1126696161%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-cluster.html"><span class="token function">getCluster</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">marker<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster/index.html">Cluster</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief ">Get the Cluster from a marker</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2057626866%2FFunctions%2F-1887420133" anchor-label="getClusterItem" id="-2057626866%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-cluster-item.html"><span>get</span><wbr></wbr><span>Cluster</span><wbr></wbr><span><span>Item</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2057626866%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-cluster-item.html"><span class="token function">getClusterItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">marker<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief ">Get the ClusterItem from a marker</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1075861269%2FFunctions%2F-1887420133" anchor-label="getClusterTextAppearance" id="1075861269%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-cluster-text-appearance.html"><span>get</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Text</span><wbr></wbr><span><span>Appearance</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1075861269%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StyleRes.html"><span class="token annotation builtin">StyleRes</span></a></div></div><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-cluster-text-appearance.html"><span class="token function">getClusterTextAppearance</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">clusterSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief ">Called to determine the text appearance of a cluster.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1390088301%2FFunctions%2F-1887420133" anchor-label="getColor" id="1390088301%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-color.html"><span>get</span><wbr></wbr><span><span>Color</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1390088301%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-color.html"><span class="token function">getColor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">clusterSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief ">Called to determine the color of a Cluster.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1155495762%2FFunctions%2F-1887420133" anchor-label="getMarker" id="1155495762%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-marker.html"><span>get</span><wbr></wbr><span><span>Marker</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1155495762%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-marker.html"><span class="token function">getMarker</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">clusterItem<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></div><div class="brief ">Get the marker from a ClusterItem</div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-marker.html"><span class="token function">getMarker</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">cluster<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster/index.html">Cluster</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></div><div class="brief ">Get the marker from a Cluster</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1683627240%2FFunctions%2F-1887420133" anchor-label="getMinClusterSize" id="1683627240%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-min-cluster-size.html"><span>get</span><wbr></wbr><span>Min</span><wbr></wbr><span>Cluster</span><wbr></wbr><span><span>Size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1683627240%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-min-cluster-size.html"><span class="token function">getMinClusterSize</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief ">Gets the minimum cluster size used to render clusters.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="32558949%2FFunctions%2F-1887420133" anchor-label="onAdd" id="32558949%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-add.html"><span>on</span><wbr></wbr><span><span>Add</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="32558949%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-add.html"><span class="token function">onAdd</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Called when the view is added.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="545335279%2FFunctions%2F-1887420133" anchor-label="onClustersChanged" id="545335279%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-clusters-changed.html"><span>on</span><wbr></wbr><span>Clusters</span><wbr></wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="545335279%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-clusters-changed.html"><span class="token function">onClustersChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">clusters<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Set.html">Set</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="../../com.google.maps.android.clustering/-cluster/index.html">Cluster</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Called when the view needs to be updated because new clusters need to be displayed.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1683640848%2FFunctions%2F-1887420133" anchor-label="onRemove" id="-1683640848%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-remove.html"><span>on</span><wbr></wbr><span><span>Remove</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1683640848%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-remove.html"><span class="token function">onRemove</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Called when the view is removed.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1662173911%2FFunctions%2F-1887420133" anchor-label="setAnimation" id="-1662173911%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-animation.html"><span>set</span><wbr></wbr><span><span>Animation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1662173911%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-animation.html"><span class="token function">setAnimation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">animate<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Called to set animation on or off</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="977319585%2FFunctions%2F-1887420133" anchor-label="setAnimationDuration" id="977319585%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-animation-duration.html"><span>set</span><wbr></wbr><span>Animation</span><wbr></wbr><span><span>Duration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="977319585%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-animation-duration.html"><span class="token function">setAnimationDuration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">animationDurationMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the length of the animation in milliseconds.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1045620457%2FFunctions%2F-1887420133" anchor-label="setMinClusterSize" id="-1045620457%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-min-cluster-size.html"><span>set</span><wbr></wbr><span>Min</span><wbr></wbr><span>Cluster</span><wbr></wbr><span><span>Size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1045620457%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-min-cluster-size.html"><span class="token function">setMinClusterSize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">minClusterSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets the minimum cluster size used to render clusters.</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-572006724%2FFunctions%2F-1887420133" anchor-label="setOnClusterClickListener" id="-572006724%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-cluster-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-572006724%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-click-listener.html"><span class="token function">setOnClusterClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/-on-cluster-click-listener/index.html">ClusterManager.OnClusterClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2008992512%2FFunctions%2F-1887420133" anchor-label="setOnClusterInfoWindowClickListener" id="2008992512%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-cluster-info-window-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2008992512%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-info-window-click-listener.html"><span class="token function">setOnClusterInfoWindowClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/-on-cluster-info-window-click-listener/index.html">ClusterManager.OnClusterInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1742728904%2FFunctions%2F-1887420133" anchor-label="setOnClusterInfoWindowLongClickListener" id="1742728904%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-cluster-info-window-long-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Long</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1742728904%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-info-window-long-click-listener.html"><span class="token function">setOnClusterInfoWindowLongClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/-on-cluster-info-window-long-click-listener/index.html">ClusterManager.OnClusterInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1133304362%2FFunctions%2F-1887420133" anchor-label="setOnClusterItemClickListener" id="-1133304362%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-cluster-item-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1133304362%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-click-listener.html"><span class="token function">setOnClusterItemClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/-on-cluster-item-click-listener/index.html">ClusterManager.OnClusterItemClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1243354202%2FFunctions%2F-1887420133" anchor-label="setOnClusterItemInfoWindowClickListener" id="1243354202%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-cluster-item-info-window-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1243354202%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-info-window-click-listener.html"><span class="token function">setOnClusterItemInfoWindowClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/-on-cluster-item-info-window-click-listener/index.html">ClusterManager.OnClusterItemInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1371064994%2FFunctions%2F-1887420133" anchor-label="setOnClusterItemInfoWindowLongClickListener" id="1371064994%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-cluster-item-info-window-long-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Long</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1371064994%2FFunctions%2F-1887420133"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-info-window-long-click-listener.html"><span class="token function">setOnClusterItemInfoWindowLongClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../com.google.maps.android.clustering/-cluster-manager/-on-cluster-item-info-window-long-click-listener/index.html">ClusterManager.OnClusterItemInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
