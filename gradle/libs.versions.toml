@@ -8,15 +8,17 @@ lifecycle-viewmodel-ktx = "2.8.7"
 kotlin = "2.0.21"
 kotlinx-coroutines = "1.9.0"
 junit = "4.13.2"
+mockito-core = "5.14.2"
 secrets-gradle-plugin = "2.0.1"
 truth = "1.4.4"
 play-services-maps = "19.0.0"
 core-ktx = "1.15.0"
 robolectric = "4.12.2"
 kxml2 = "2.3.0"
-mockk = "1.13.11"
+mockk = "1.13.13"
 lint = "31.7.3"
 org-jacoco-core = "0.8.12"
+material = "1.12.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -30,6 +32,7 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
@@ -43,3 +46,4 @@ lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
 testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
