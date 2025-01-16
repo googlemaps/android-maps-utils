@@ -46,18 +46,32 @@ import com.google.maps.android.utils.demo.model.Person;
 import java.util.ArrayList;
 import java.util.List;
 
+enum City {
+    ENFIELD(new LatLng(51.6524, -0.0838), "Enfield"),
+    ILFORD(new LatLng(51.5590, -0.0815), "Ilford"),
+    LONDON(new LatLng(51.5074, -0.1278), "London");
+
+    public final LatLng latLng;
+    public final String label;
+
+    City(LatLng latLng, String label) {
+        this.latLng = latLng;
+        this.label = label;
+    }
+}
+
 /**
  * Demonstrates how to apply a diff to the current Cluster
  */
-public class ClusteringDiffDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
+public class ClusteringDiffDemoActivity extends BaseDemoActivity
+        implements ClusterManager.OnClusterClickListener<Person>,
+        ClusterManager.OnClusterInfoWindowClickListener<Person>,
+        ClusterManager.OnClusterItemClickListener<Person>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
+
+    private final LatLng midpoint = getMidpoint();
     private ClusterManager<Person> mClusterManager;
-    private Person itemtoUpdate = new Person(ENFIELD, "Teach", R.drawable.teacher);
-
-    private static final LatLng ENFIELD = new LatLng(51.6524, -0.0838);
-    private static final LatLng ILFORD = new LatLng(51.5590, -0.0815);
-
-    private static final LatLng LONDON = new LatLng(51.5074, -0.1278);
-    LatLng midpoint = getMidpoint();
+    private Person itemToUpdate = new Person(City.ENFIELD.latLng, "Teach", R.drawable.teacher);
     private int currentLocationIndex = 0;
 
     protected int getLayoutId() {
@@ -71,11 +85,108 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
         getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(midpoint, 12));
     }
 
-
     private LatLng getMidpoint() {
-        double latitude = (ClusteringDiffDemoActivity.ENFIELD.latitude + ClusteringDiffDemoActivity.ILFORD.latitude + ClusteringDiffDemoActivity.LONDON.latitude) / 3;
-        double longitude = (ClusteringDiffDemoActivity.ENFIELD.longitude + ClusteringDiffDemoActivity.ILFORD.longitude + ClusteringDiffDemoActivity.LONDON.longitude) / 3;
-        return new LatLng(latitude, longitude);
+        double latitude = 0.0;
+        double longitude = 0.0;
+
+        for (City city: City.values()) {
+            latitude += city.latLng.latitude;
+            longitude += city.latLng.longitude;
+        }
+
+        int numCities = City.values().length;
+
+        return new LatLng(latitude / numCities, longitude / numCities);
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<Person> cluster) {
+        // Show a toast with some info when the cluster is clicked.
+        String firstName = cluster.getItems().iterator().next().name;
+        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+
+        // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
+        // inside of bounds, then animate to center of the bounds.
+
+        // Create the builder to collect all essential cluster items for the bounds.
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (ClusterItem item : cluster.getItems()) {
+            builder.include(item.getPosition());
+        }
+        // Get the LatLngBounds
+        final LatLngBounds bounds = builder.build();
+
+        // Animate camera to the bounds
+        try {
+            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<Person> cluster) {
+        // Does nothing, but you could go to a list of the users.
+    }
+
+    @Override
+    public boolean onClusterItemClick(Person item) {
+        // Does nothing, but you could go into the user's profile page, for example.
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(Person item) {
+        // Does nothing, but you could go into the user's profile page, for example.
+    }
+
+    @Override
+    protected void startDemo(boolean isRestore) {
+        if (!isRestore) {
+            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 6));
+        }
+
+        mClusterManager = new ClusterManager<>(this, getMap());
+        mClusterManager.setRenderer(new PersonRenderer());
+        getMap().setOnCameraIdleListener(mClusterManager);
+        getMap().setOnMarkerClickListener(mClusterManager);
+        getMap().setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+        addItems();
+        mClusterManager.cluster();
+    }
+
+    private void addItems() {
+        // Marker in Enfield
+        mClusterManager.addItem(new Person(City.ENFIELD.latLng, "John", R.drawable.john));
+
+        // Marker in the center of London
+        itemToUpdate = new Person(City.LONDON.latLng, "Teach", R.drawable.teacher);
+        mClusterManager.addItem(itemToUpdate);
+    }
+
+    private void rotateLocation() {
+        // Update the current index to cycle through locations (0 = Enfield, 1 = Olford, 2 = London)
+        currentLocationIndex = (currentLocationIndex + 1) % City.values().length;
+
+        City nextCity = City.values()[currentLocationIndex];
+
+        LatLng newLocation = nextCity.latLng;
+        String cityName = nextCity.label;
+
+        Log.d("ClusterTest", "Item rotated to: " + newLocation.toString() + ", City: " + cityName);
+
+        if (itemToUpdate != null) {
+            itemToUpdate = new Person(newLocation, "Teach", R.drawable.teacher);
+            mClusterManager.updateItem(itemToUpdate); // Update the marker
+            mClusterManager.cluster();
+        }
     }
 
     /**
@@ -108,9 +219,7 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
         @Override
         protected void onBeforeClusterItemRendered(@NonNull Person person, @NonNull MarkerOptions markerOptions) {
             // Draw a single person - show their profile photo and set the info window to show their name
-            markerOptions
-                    .icon(getItemIcon(person))
-                    .title(person.name);
+            markerOptions.icon(getItemIcon(person)).title(person.name);
         }
 
         @Override
@@ -179,119 +288,5 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity implements Clus
         protected boolean shouldRenderAsCluster(@NonNull Cluster<Person> cluster) {
             return cluster.getSize() >= 2;
         }
-    }
-
-
-    @Override
-    public boolean onClusterClick(Cluster<Person> cluster) {
-        // Show a toast with some info when the cluster is clicked.
-        String firstName = cluster.getItems().iterator().next().name;
-        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
-
-        // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
-        // inside of bounds, then animate to center of the bounds.
-
-        // Create the builder to collect all essential cluster items for the bounds.
-        LatLngBounds.Builder builder = LatLngBounds.builder();
-        for (ClusterItem item : cluster.getItems()) {
-            builder.include(item.getPosition());
-        }
-        // Get the LatLngBounds
-        final LatLngBounds bounds = builder.build();
-
-        // Animate camera to the bounds
-        try {
-            getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onClusterInfoWindowClick(Cluster<Person> cluster) {
-        // Does nothing, but you could go to a list of the users.
-    }
-
-    @Override
-    public boolean onClusterItemClick(Person item) {
-        // Does nothing, but you could go into the user's profile page, for example.
-        return false;
-    }
-
-    @Override
-    public void onClusterItemInfoWindowClick(Person item) {
-        // Does nothing, but you could go into the user's profile page, for example.
-    }
-
-    @Override
-    protected void startDemo(boolean isRestore) {
-        if (!isRestore) {
-            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 6));
-        }
-
-        mClusterManager = new ClusterManager<>(this, getMap());
-        mClusterManager.setRenderer(new PersonRenderer());
-        getMap().setOnCameraIdleListener(mClusterManager);
-        getMap().setOnMarkerClickListener(mClusterManager);
-        getMap().setOnInfoWindowClickListener(mClusterManager);
-        mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setOnClusterInfoWindowClickListener(this);
-        mClusterManager.setOnClusterItemClickListener(this);
-        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
-
-        addItems();
-        mClusterManager.cluster();
-    }
-
-    private void addItems() {
-        // Marker in Enfield
-        mClusterManager.addItem(new Person(ENFIELD, "John", R.drawable.john));
-
-        // Marker in the center of London
-        itemtoUpdate = new Person(LONDON, "Teach", R.drawable.teacher);
-        mClusterManager.addItem(itemtoUpdate);
-    }
-
-    private void rotateLocation() {
-        // Update the current index to cycle through locations (0 = Enfield, 1 = Olford, 2 = London)
-        currentLocationIndex = (currentLocationIndex + 1) % 3;
-
-
-        LatLng newLocation = switch (currentLocationIndex) {
-            case 0 -> ENFIELD;
-            case 1 -> ILFORD;
-            default -> LONDON;
-        };
-
-        String cityName = getCityName(newLocation);
-
-        Log.d("ClusterTest", "Item rotated to: " + newLocation.toString() + ", City: " + cityName);
-
-        if (itemtoUpdate != null) {
-            itemtoUpdate = new Person(newLocation, "Teach", R.drawable.teacher);
-            mClusterManager.updateItem(itemtoUpdate); // Update the marker
-            mClusterManager.cluster();
-        }
-    }
-
-    // Method to map LatLng to city name
-    private String getCityName(LatLng location) {
-        if (areLocationsEqual(location, ENFIELD)) {
-            return "Enfield";
-        } else if (areLocationsEqual(location, ILFORD)) {
-            return "Ilford";
-        } else if (areLocationsEqual(location, LONDON)) {
-            return "London";
-        } else {
-            return "Unknown City"; // Default case if location is not recognized
-        }
-    }
-
-    // Method to compare LatLng objects with a tolerance
-    private boolean areLocationsEqual(LatLng loc1, LatLng loc2) {
-        return Math.abs(loc1.latitude - loc2.latitude) < 1E-5 &&
-                Math.abs(loc1.longitude - loc2.longitude) < 1E-5;
     }
 }
