@@ -8,8 +8,8 @@ plugins:
     - replacements:
         - files:
             - "build.gradle.kts"
-          from: "\\bversion = '.*'"
-          to: "version = '${nextRelease.version}'"
+          from: "\\bversion = \".*\""
+          to: "version = \"${nextRelease.version}\""
         - files:
             - "build.gradle.kts"
           from: "com.google.maps.android:android-maps-utils:([0-9]+).([0-9]+).([0-9]+)"
