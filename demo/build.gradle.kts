@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.material)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
