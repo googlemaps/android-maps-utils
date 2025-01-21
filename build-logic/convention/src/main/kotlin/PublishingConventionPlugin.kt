@@ -71,6 +71,12 @@ class PublishingConventionPlugin : Plugin<Project> {
         extensions.configure<PublishingExtension> {
             publications {
                 create<MavenPublication>("aar") {
+                    artifactId = if (project.name == "library") {
+                        "android-maps-utils"
+                    } else {
+                        null
+                    }
+
                     afterEvaluate {
                         from(components["release"])
                     }
@@ -104,9 +110,13 @@ class PublishingConventionPlugin : Plugin<Project> {
             }
             repositories {
                 maven {
-                    val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-                    url = if (project.version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                    val releasesRepoUrl =
+                        uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                    val snapshotsRepoUrl =
+                        uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                    url = if (project.version.toString()
+                            .endsWith("SNAPSHOT")
+                    ) snapshotsRepoUrl else releasesRepoUrl
                     credentials {
                         username = project.findProperty("sonatypeToken") as String?
                         password = project.findProperty("sonatypeTokenPassword") as String?
