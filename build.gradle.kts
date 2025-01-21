@@ -35,13 +35,7 @@ tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
 
-
 allprojects {
     group = "com.google.maps.android"
     version = "3.10.0"
-    val projectArtifactId = if (project.name == "library") {
-        "android-maps-utils"
-    } else {
-        null
-    }
 }
