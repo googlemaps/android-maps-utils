@@ -543,6 +543,13 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         mAnimationDurationMs = animationDurationMs;
     }
 
+    @Override
+    public void stopAnimation() {
+        for (AnimationTask animation : ongoingAnimations) {
+            animation.cancel();
+        }
+    }
+
     private static double distanceSquared(Point a, Point b) {
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
