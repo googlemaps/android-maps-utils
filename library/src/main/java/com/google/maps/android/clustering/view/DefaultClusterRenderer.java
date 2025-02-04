@@ -82,7 +82,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private boolean mAnimate;
     private long mAnimationDurationMs;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
-    private final Queue<AnimationTask> ongoingAnimations = new LinkedList<>();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -663,17 +662,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            AnimationTask task = new AnimationTask(marker, from, to);
-
-            for (AnimationTask existingTask : ongoingAnimations) {
-                if (existingTask.marker.getId().equals(task.marker.getId())) {
-                    existingTask.cancel();
-                    break;
-                }
-            }
-
-            mAnimationTasks.add(task);
-            ongoingAnimations.add(task);
+            mAnimationTasks.add(new AnimationTask(marker, from, to));
             lock.unlock();
         }
 
@@ -688,14 +677,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
-            for (AnimationTask existingTask : ongoingAnimations) {
-                if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
-                    existingTask.cancel();
-                    break;
-                }
-            }
-
-            ongoingAnimations.add(animationTask);
             animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
             mAnimationTasks.add(animationTask);
             lock.unlock();
@@ -1144,7 +1125,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         private final LatLng to;
         private boolean mRemoveOnComplete;
         private MarkerManager mMarkerManager;
-        private ValueAnimator valueAnimator;
 
         private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
             this.markerWithPosition = markerWithPosition;
@@ -1154,25 +1134,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         }
 
         public void perform() {
-            valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
             valueAnimator.setInterpolator(ANIMATION_INTERP);
             valueAnimator.setDuration(mAnimationDurationMs);
             valueAnimator.addUpdateListener(this);
             valueAnimator.addListener(this);
             valueAnimator.start();
         }
-
-        public void cancel() {
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-                new Handler(Looper.getMainLooper()).post(this::cancel);
-                return;
-            }
-            markerWithPosition.position = to;
-            mRemoveOnComplete = false;
-            valueAnimator.cancel();
-            ongoingAnimations.remove(this);
-        }
-
 
         @Override
         public void onAnimationEnd(Animator animation) {
@@ -1182,9 +1150,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
                 mMarkerManager.remove(marker);
             }
             markerWithPosition.position = to;
-
-            // Remove the task from the queue
-            ongoingAnimations.remove(this);
         }
 
         public void removeOnAnimationComplete(MarkerManager markerManager) {
