@@ -570,13 +570,6 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         mAnimationDurationMs = animationDurationMs;
     }
 
-    @Override
-    public void stopAnimation() {
-        for (AnimationTask animation : ongoingAnimations) {
-            animation.cancel();
-        }
-    }
-
     private Set<? extends Cluster<T>> immutableOf(Set<? extends Cluster<T>> clusters) {
         return clusters != null ? Collections.unmodifiableSet(clusters) : Collections.emptySet();
     }

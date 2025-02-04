@@ -569,13 +569,6 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
         mAnimate = animate;
     }
 
-    @Override
-    public void stopAnimation() {
-        for (AnimationTask animation : ongoingAnimations) {
-            animation.cancel();
-        }
-    }
-
     /**
      * {@inheritDoc} The default duration is 300 milliseconds.
      *
@@ -679,17 +672,7 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            AnimationTask task = new AnimationTask(marker, from, to);
-
-            for (AnimationTask existingTask : ongoingAnimations) {
-                if (existingTask.marker.getId().equals(task.marker.getId())) {
-                    existingTask.cancel();
-                    break;
-                }
-            }
-
-            mAnimationTasks.add(task);
-            ongoingAnimations.add(task);
+            mAnimationTasks.add(new AnimationTask(marker, from, to));
             lock.unlock();
         }
 
@@ -704,14 +687,6 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to);
-            for (AnimationTask existingTask : ongoingAnimations) {
-                if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
-                    existingTask.cancel();
-                    break;
-                }
-            }
-
-            ongoingAnimations.add(animationTask);
             animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
             mAnimationTasks.add(animationTask);
             lock.unlock();

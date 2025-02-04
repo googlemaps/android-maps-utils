@@ -542,8 +542,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     public void setAnimationDuration(long animationDurationMs) {
         mAnimationDurationMs = animationDurationMs;
     }
-
-    @Override
+    
     public void stopAnimation() {
         for (AnimationTask animation : ongoingAnimations) {
             animation.cancel();

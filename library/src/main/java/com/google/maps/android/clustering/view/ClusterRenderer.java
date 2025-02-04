@@ -59,11 +59,6 @@ public interface ClusterRenderer<T extends ClusterItem> {
     void setAnimationDuration(long animationDurationMs);
 
     /**
-     * Stops all animations
-     */
-    void stopAnimation();
-
-    /**
      * Called when the view is added.
      */
     void onAdd();
