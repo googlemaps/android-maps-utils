@@ -1156,8 +1156,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             mMarkerManager = markerManager;
             mRemoveOnComplete = true;
         }
-
-
+        
         @Override
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             if (to == null || from == null || marker == null) {
