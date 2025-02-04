@@ -1135,7 +1135,6 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
         private final LatLng to;
         private boolean mRemoveOnComplete;
         private MarkerManager mMarkerManager;
-        private ValueAnimator valueAnimator;
 
         private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
             this.markerWithPosition = markerWithPosition;
@@ -1144,18 +1143,8 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
             this.to = to;
         }
 
-        public void cancel() {
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-                new Handler(Looper.getMainLooper()).post(this::cancel);
-                return;
-            }
-            markerWithPosition.position = to;
-            mRemoveOnComplete = false;
-            valueAnimator.cancel();
-        }
-
         public void perform() {
-            valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
             valueAnimator.setInterpolator(ANIMATION_INTERP);
             valueAnimator.setDuration(mAnimationDurationMs);
             valueAnimator.addUpdateListener(this);
@@ -1171,7 +1160,6 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
                 mMarkerManager.remove(marker);
             }
             markerWithPosition.position = to;
-            valueAnimator.cancel();
         }
 
         public void removeOnAnimationComplete(MarkerManager markerManager) {
