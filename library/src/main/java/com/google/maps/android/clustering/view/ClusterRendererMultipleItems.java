@@ -33,10 +33,15 @@ import android.os.Message;
 import android.os.MessageQueue;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
@@ -59,7 +64,6 @@ import com.google.maps.android.ui.SquareTextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -85,9 +89,54 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     private long mAnimationDurationMs;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final Queue<AnimationTask> ongoingAnimations = new LinkedList<>();
+    private static TimeInterpolator animationInterp = new DecelerateInterpolator();
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
+
+    enum AnimationType {
+        LINEAR,
+        EASE_IN,
+        EASE_OUT,
+        EASE_IN_OUT,
+        FAST_OUT_SLOW_IN,
+        BOUNCE,
+        ACCELERATE,
+        DECELERATE
+    }
+
+    void setAnimationType(AnimationType type) {
+        switch (type) {
+            case LINEAR:
+                animationInterp = new LinearInterpolator();
+                break;
+            case EASE_IN:
+                animationInterp = new AccelerateInterpolator();
+                break;
+            case EASE_OUT:
+                animationInterp = new DecelerateInterpolator();
+                break;
+            case EASE_IN_OUT:
+                animationInterp = new AccelerateDecelerateInterpolator();
+                break;
+            case FAST_OUT_SLOW_IN:
+                animationInterp = new FastOutSlowInInterpolator();
+                break;
+            case BOUNCE:
+                animationInterp = new BounceInterpolator();
+                break;
+            case ACCELERATE:
+                animationInterp = new AccelerateInterpolator();
+                break;
+            case DECELERATE:
+                animationInterp = new DecelerateInterpolator();
+                break;
+            default:
+                animationInterp = new LinearInterpolator();
+                break;
+        }
+    }
+
 
     /**
      * Markers that are currently on the map.
@@ -281,6 +330,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         public ViewModifier(Looper looper) {
             super(looper);
         }
+
         private static final int RUN_TASK = 0;
         private static final int TASK_FINISHED = 1;
         private boolean mViewModificationInProgress = false;
@@ -1121,7 +1171,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         }
     }
 
-    private static final TimeInterpolator ANIMATION_INTERP = new DecelerateInterpolator();
 
     /**
      * Animates a markerWithPosition from one position to another. TODO: improve performance for
@@ -1145,7 +1194,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
         public void perform() {
             valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-            valueAnimator.setInterpolator(ANIMATION_INTERP);
+            valueAnimator.setInterpolator(animationInterp);
             valueAnimator.setDuration(mAnimationDurationMs);
             valueAnimator.addUpdateListener(this);
             valueAnimator.addListener(this);
