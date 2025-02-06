@@ -1114,6 +1114,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     } else {
                         markerWithPosition = new MarkerWithPosition<>(marker, item);
                         markerModifier.animate(markerWithPosition, marker.getPosition(), item.getPosition());
+                        onClusterItemUpdated(item, marker);
                     }
                     onClusterItemRendered(item, marker);
                     newMarkers.add(markerWithPosition);
