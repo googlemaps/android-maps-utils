@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -1114,7 +1115,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     } else {
                         markerWithPosition = new MarkerWithPosition<>(marker, item);
                         markerModifier.animate(markerWithPosition, marker.getPosition(), item.getPosition());
-                        onClusterItemUpdated(item, marker);
+                        if (!markerWithPosition.position.equals(item.getPosition())) {
+                            onClusterItemUpdated(item, marker);
+                        }
                     }
                     onClusterItemRendered(item, marker);
                     newMarkers.add(markerWithPosition);
