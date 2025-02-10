@@ -45,7 +45,7 @@ dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
     // You do not need to add a separate dependency for the Maps SDK for Android
     // since this library builds in the compatible version of the Maps SDK.
-    implementation 'com.google.maps.android:android-maps-utils:3.11.0'
+    implementation 'com.google.maps.android:android-maps-utils:3.11.1'
 
     // Optionally add the Kotlin Extensions (KTX) for full Kotlin language support
     // See latest version at https://github.com/googlemaps/android-maps-ktx
