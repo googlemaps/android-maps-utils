@@ -20,7 +20,7 @@ plugins:
           to: ":${nextRelease.version}"
   - - "@semantic-release/exec"
     - prepareCmd: "./gradlew build --warn --stacktrace"
-      publishCmd: "./gradlew publish --warn --stacktrace"
+      publishCmd: "./gradlew publish --warn --stacktrace --debug --info"
   - - "@semantic-release/git"
     - assets:
         - "build.gradle.kts"
