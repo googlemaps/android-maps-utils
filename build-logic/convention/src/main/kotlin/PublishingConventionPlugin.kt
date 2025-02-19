@@ -24,7 +24,6 @@ import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.plugins.signing.SigningExtension
-import org.gradle.api.publish.maven.*
 
 class PublishingConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -76,7 +75,8 @@ class PublishingConventionPlugin : Plugin<Project> {
                     } else {
                         null
                     }
-
+                    groupId = project.group.toString()
+                    version = project.version.toString()
                     afterEvaluate {
                         from(components["release"])
                     }
@@ -104,6 +104,15 @@ class PublishingConventionPlugin : Plugin<Project> {
                             developer {
                                 name.set("Google Inc.")
                             }
+                        }
+                    }
+                    pom.withXml {
+                        val dependenciesNode = asNode().appendNode("dependencies")
+                        configurations.getByName("api").allDependencies.forEach { dependency ->
+                            val dependencyNode = dependenciesNode.appendNode("dependency")
+                            dependencyNode.appendNode("groupId", dependency.group)
+                            dependencyNode.appendNode("artifactId", dependency.name)
+                            dependencyNode.appendNode("version", dependency.version)
                         }
                     }
                 }
