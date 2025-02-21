@@ -94,7 +94,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
 
-    enum AnimationType {
+    public enum AnimationType {
         LINEAR,
         EASE_IN,
         EASE_OUT,
@@ -105,7 +105,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         DECELERATE
     }
 
-    void setAnimationType(AnimationType type) {
+    public void setAnimationType(AnimationType type) {
         switch (type) {
             case LINEAR:
                 animationInterp = new LinearInterpolator();
