@@ -16,7 +16,7 @@ core-ktx = "1.15.0"
 robolectric = "4.14.1"
 kxml2 = "2.3.0"
 mockk = "1.13.16"
-lint = "31.8.0"
+lint = "31.8.2"
 org-jacoco-core = "0.8.12"
 material = "1.12.0"
 
