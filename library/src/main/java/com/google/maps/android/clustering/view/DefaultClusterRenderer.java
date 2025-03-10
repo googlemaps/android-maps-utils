@@ -836,6 +836,9 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         } else if (item.getSnippet() != null) {
             markerOptions.title(item.getSnippet());
         }
+        if (item.getZIndex() != null) {
+            markerOptions.zIndex(item.getZIndex());
+        }
     }
 
     /**
@@ -906,6 +909,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected void onBeforeClusterRendered(@NonNull Cluster<T> cluster, @NonNull MarkerOptions markerOptions) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         markerOptions.icon(getDescriptorForCluster(cluster));
+        ArrayList<T> items = new ArrayList<>(cluster.getItems());
+        if (!items.isEmpty()) {
+            Float zIndex = items.get(0).getZIndex();
+            if (zIndex != null) {
+                markerOptions.zIndex(zIndex);
+            }
+        }
     }
 
     /**
