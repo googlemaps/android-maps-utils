@@ -720,7 +720,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 AnimationTask existingTask = iterator.next();
                 if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
                     existingTask.cancel();
-                    iterator.remove();
                     break;
                 }
             }
