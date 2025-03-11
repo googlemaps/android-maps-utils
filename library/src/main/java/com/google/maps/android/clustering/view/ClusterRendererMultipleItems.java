@@ -715,9 +715,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
             AnimationTask animationTask = new AnimationTask(marker, from, to, lock);
-            Iterator<AnimationTask> iterator = ongoingAnimations.iterator();
-            while (iterator.hasNext()) {
-                AnimationTask existingTask = iterator.next();
+            for (AnimationTask existingTask : ongoingAnimations) {
                 if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
                     existingTask.cancel();
                     break;
