@@ -1190,7 +1190,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
         private final Lock lock;
 
-        private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to, Lock lock)  {
+        private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to, Lock lock) {
             this.markerWithPosition = markerWithPosition;
             this.marker = markerWithPosition.marker;
             this.from = from;
@@ -1212,12 +1212,15 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 new Handler(Looper.getMainLooper()).post(this::cancel);
                 return;
             }
-            markerWithPosition.position = to;
-            mRemoveOnComplete = false;
-            valueAnimator.cancel();
-            lock.lock();
-            ongoingAnimations.remove(this);
-            lock.unlock();
+            try {
+                markerWithPosition.position = to;
+                mRemoveOnComplete = false;
+                valueAnimator.cancel();
+                lock.lock();
+                ongoingAnimations.remove(this);
+            } finally {
+                lock.unlock();
+            }
         }
 
         @Override
@@ -1230,7 +1233,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
             markerWithPosition.position = to;
 
             // Remove the task from the queue
+            lock.lock();
             ongoingAnimations.remove(this);
+            lock.unlock();
         }
 
         public void removeOnAnimationComplete(MarkerManager markerManager) {
