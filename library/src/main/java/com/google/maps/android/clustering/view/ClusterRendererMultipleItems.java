@@ -689,7 +689,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            AnimationTask task = new AnimationTask(marker, from, to);
+            AnimationTask task = new AnimationTask(marker, from, to, lock);
 
             for (AnimationTask existingTask : ongoingAnimations) {
                 if (existingTask.marker.getId().equals(task.marker.getId())) {
@@ -713,7 +713,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          */
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            AnimationTask animationTask = new AnimationTask(marker, from, to);
+            AnimationTask animationTask = new AnimationTask(marker, from, to, lock);
             for (AnimationTask existingTask : ongoingAnimations) {
                 if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
                     existingTask.cancel();
@@ -1188,11 +1188,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         private MarkerManager mMarkerManager;
         private ValueAnimator valueAnimator;
 
-        private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to) {
+        private final Lock lock;
+
+        private AnimationTask(MarkerWithPosition markerWithPosition, LatLng from, LatLng to, Lock lock) {
             this.markerWithPosition = markerWithPosition;
             this.marker = markerWithPosition.marker;
             this.from = from;
             this.to = to;
+            this.lock = lock;
         }
 
         public void perform() {
@@ -1209,10 +1212,15 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 new Handler(Looper.getMainLooper()).post(this::cancel);
                 return;
             }
-            markerWithPosition.position = to;
-            mRemoveOnComplete = false;
-            valueAnimator.cancel();
-            ongoingAnimations.remove(this);
+            try {
+                markerWithPosition.position = to;
+                mRemoveOnComplete = false;
+                valueAnimator.cancel();
+                lock.lock();
+                ongoingAnimations.remove(this);
+            } finally {
+                lock.unlock();
+            }
         }
 
         @Override
@@ -1225,7 +1233,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
             markerWithPosition.position = to;
 
             // Remove the task from the queue
+            lock.lock();
             ongoingAnimations.remove(this);
+            lock.unlock();
         }
 
         public void removeOnAnimationComplete(MarkerManager markerManager) {
