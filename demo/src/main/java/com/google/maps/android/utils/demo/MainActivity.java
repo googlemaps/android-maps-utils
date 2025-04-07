@@ -16,15 +16,12 @@
 
 package com.google.maps.android.utils.demo;
 
-import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.hasMapsApiKey;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,11 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (!hasMapsApiKey(this)) {
-            Toast.makeText(this, R.string.bad_maps_api_key, Toast.LENGTH_LONG).show();
-            finish();
-        }
 
         setContentView(R.layout.main);
 
