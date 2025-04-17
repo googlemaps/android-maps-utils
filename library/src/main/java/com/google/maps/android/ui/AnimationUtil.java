@@ -29,7 +29,7 @@ import com.google.android.gms.maps.model.Marker;
  * <p>
  */
 public class AnimationUtil {
-    
+
     /**
      * Animates a marker from it's current position to the provided finalPosition
      *
@@ -85,7 +85,7 @@ public class AnimationUtil {
     }
 
     /**
-     * For other LatLngInterpolator interpolators, see https://gist.github.com/broady/6314689
+     * For other LatLngInterpolator interpolators, see <a href="https://gist.github.com/broady/6314689">link here</a>
      */
     interface LatLngInterpolator {
 
