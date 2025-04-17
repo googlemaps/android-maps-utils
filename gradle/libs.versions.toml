@@ -26,6 +26,7 @@ dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", vers
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycle-extensions" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }

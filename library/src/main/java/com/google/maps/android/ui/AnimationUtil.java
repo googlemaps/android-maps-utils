@@ -29,20 +29,35 @@ import com.google.android.gms.maps.model.Marker;
  * <p>
  */
 public class AnimationUtil {
-    
+
     /**
      * Animates a marker from it's current position to the provided finalPosition
      *
      * @param marker        marker to animate
      * @param finalPosition the final position of the marker after the animation
      */
-     public static void animateMarkerTo(final Marker marker, final LatLng finalPosition) {
+    public static void animateMarkerTo(final Marker marker, final LatLng finalPosition) {
+        animateMarkerTo(marker, finalPosition, 2000); // delegate to new version
+    }
+
+
+    /**
+     * Animates a marker from its current position to the provided finalPosition.
+     *
+     * @param marker        marker to animate
+     * @param finalPosition the final position of the marker after the animation
+     * @param durationInMs  the duration of the animation in milliseconds
+     */
+    public static void animateMarkerTo(
+            final Marker marker,
+            final LatLng finalPosition,
+            final long durationInMs
+    ) {
         final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.Linear();
         final LatLng startPosition = marker.getPosition();
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
-        final float durationInMs = 2000;
 
         handler.post(new Runnable() {
             long elapsed;
@@ -55,7 +70,7 @@ public class AnimationUtil {
             public void run() {
                 // Calculate progress using interpolator
                 elapsed = SystemClock.uptimeMillis() - start;
-                t = elapsed / durationInMs;
+                t = elapsed / (float) durationInMs;
                 v = interpolator.getInterpolation(t);
 
                 marker.setPosition(latLngInterpolator.interpolate(v, startPosition, finalPosition));
@@ -70,7 +85,7 @@ public class AnimationUtil {
     }
 
     /**
-     * For other LatLngInterpolator interpolators, see https://gist.github.com/broady/6314689
+     * For other LatLngInterpolator interpolators, see <a href="https://gist.github.com/broady/6314689">link here</a>
      */
     interface LatLngInterpolator {
 
