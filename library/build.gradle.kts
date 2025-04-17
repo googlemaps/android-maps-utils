@@ -68,7 +68,10 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.kxml2)
     testImplementation(libs.mockk)
+    testImplementation (libs.kotlin.test)
     implementation(libs.kotlin.stdlib.jdk8)
+
+
 }
 
 tasks.register("instrumentTest") {
