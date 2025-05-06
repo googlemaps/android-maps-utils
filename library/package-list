@@ -707,6 +707,7 @@ $dokka.location:com.google.maps.android.quadtree/PointQuadTree/search/#com.googl
 $dokka.location:com.google.maps.android.ui////PointingToDeclaration/library/com.google.maps.android.ui/index.html
 $dokka.location:com.google.maps.android.ui/AnimationUtil///PointingToDeclaration/library/com.google.maps.android.ui/-animation-util/index.html
 $dokka.location:com.google.maps.android.ui/AnimationUtil/AnimationUtil/#/PointingToDeclaration/library/com.google.maps.android.ui/-animation-util/-animation-util.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil/animateMarkerTo/#com.google.android.gms.maps.model.Marker#com.google.android.gms.maps.model.LatLng#long/PointingToDeclaration/library/com.google.maps.android.ui/-animation-util/animate-marker-to.html
 $dokka.location:com.google.maps.android.ui/AnimationUtil/animateMarkerTo/#com.google.android.gms.maps.model.Marker#com.google.android.gms.maps.model.LatLng/PointingToDeclaration/library/com.google.maps.android.ui/-animation-util/animate-marker-to.html
 $dokka.location:com.google.maps.android.ui/BubbleIconFactory///PointingToDeclaration/library/com.google.maps.android.ui/-bubble-icon-factory/index.html
 $dokka.location:com.google.maps.android.ui/BubbleIconFactory/BubbleIconFactory/#/PointingToDeclaration/library/com.google.maps.android.ui/-bubble-icon-factory/-bubble-icon-factory.html
