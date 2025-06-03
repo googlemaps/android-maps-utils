@@ -44,7 +44,7 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
 
     private int mGridSize = DEFAULT_GRID_SIZE;
 
-    private final Set<T> mItems = Collections.synchronizedSet(new HashSet<T>());
+    private final Set<T> mItems = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Adds an item to the algorithm
@@ -126,8 +126,8 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
         long numCells = (long) Math.ceil(256 * Math.pow(2, zoom) / mGridSize);
         SphericalMercatorProjection proj = new SphericalMercatorProjection(numCells);
 
-        HashSet<Cluster<T>> clusters = new HashSet<Cluster<T>>();
-        LongSparseArray<StaticCluster<T>> sparseArray = new LongSparseArray<StaticCluster<T>>();
+        HashSet<Cluster<T>> clusters = new HashSet<>();
+        LongSparseArray<StaticCluster<T>> sparseArray = new LongSparseArray<>();
 
         synchronized (mItems) {
             for (T item : mItems) {
@@ -137,7 +137,7 @@ public class GridBasedAlgorithm<T extends ClusterItem> extends AbstractAlgorithm
 
                 StaticCluster<T> cluster = sparseArray.get(coord);
                 if (cluster == null) {
-                    cluster = new StaticCluster<T>(proj.toLatLng(new Point(Math.floor(p.x) + .5, Math.floor(p.y) + .5)));
+                    cluster = new StaticCluster<>(proj.toLatLng(new Point(Math.floor(p.x) + .5, Math.floor(p.y) + .5)));
                     sparseArray.put(coord, cluster);
                     clusters.add(cluster);
                 }
