@@ -28,7 +28,7 @@ public class CentroidNonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem
      * @param items the collection of cluster items to compute the centroid for
      * @return the centroid {@link LatLng} of the items
      */
-    private LatLng computeCentroid(Collection<T> items) {
+    protected LatLng computeCentroid(Collection<T> items) {
         double latSum = 0;
         double lngSum = 0;
         int count = 0;
