@@ -52,6 +52,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.R;
+import com.google.maps.android.RendererLogger;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
@@ -107,10 +108,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
     public void setAnimationType(AnimationType type) {
         switch (type) {
-            case LINEAR:
-                animationInterp = new LinearInterpolator();
-                break;
-            case EASE_IN:
+            case EASE_IN, ACCELERATE:
                 animationInterp = new AccelerateInterpolator();
                 break;
             case EASE_OUT:
@@ -124,9 +122,6 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 break;
             case BOUNCE:
                 animationInterp = new BounceInterpolator();
-                break;
-            case ACCELERATE:
-                animationInterp = new AccelerateInterpolator();
                 break;
             case DECELERATE:
                 animationInterp = new DecelerateInterpolator();
@@ -196,34 +191,46 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
     @Override
     public void onAdd() {
-        mClusterManager.getMarkerCollection().setOnMarkerClickListener(marker -> mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker)));
+        RendererLogger.d("ClusterRenderer", "Setting up MarkerCollection listeners");
+
+        mClusterManager.getMarkerCollection().setOnMarkerClickListener(marker -> {
+            RendererLogger.d("ClusterRenderer", "Marker clicked: " + marker);
+            return mItemClickListener != null && mItemClickListener.onClusterItemClick(mMarkerCache.get(marker));
+        });
 
         mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(marker -> {
+            RendererLogger.d("ClusterRenderer", "Info window clicked for marker: " + marker);
             if (mItemInfoWindowClickListener != null) {
                 mItemInfoWindowClickListener.onClusterItemInfoWindowClick(mMarkerCache.get(marker));
             }
         });
 
         mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(marker -> {
+            RendererLogger.d("ClusterRenderer", "Info window long-clicked for marker: " + marker);
             if (mItemInfoWindowLongClickListener != null) {
                 mItemInfoWindowLongClickListener.onClusterItemInfoWindowLongClick(mMarkerCache.get(marker));
             }
         });
 
+        RendererLogger.d("ClusterRenderer", "Setting up ClusterMarkerCollection listeners");
+
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(marker -> mClickListener != null && mClickListener.onClusterClick(mClusterMarkerCache.get(marker)));
 
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(marker -> {
+            RendererLogger.d("ClusterRenderer", "Info window clicked for cluster marker: " + marker);
             if (mInfoWindowClickListener != null) {
                 mInfoWindowClickListener.onClusterInfoWindowClick(mClusterMarkerCache.get(marker));
             }
         });
 
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(marker -> {
+            RendererLogger.d("ClusterRenderer", "Info window long-clicked for cluster marker: " + marker);
             if (mInfoWindowLongClickListener != null) {
                 mInfoWindowLongClickListener.onClusterInfoWindowLongClick(mClusterMarkerCache.get(marker));
             }
         });
     }
+
 
     @Override
     public void onRemove() {
@@ -268,6 +275,19 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     @Override
     public int getClusterTextAppearance(int clusterSize) {
         return R.style.amu_ClusterIcon_TextAppearance; // Default value
+    }
+
+    /**
+     * Enables or disables logging for the cluster renderer.
+     *
+     * <p>When enabled, the renderer will log internal operations such as cluster rendering,
+     * marker updates, and other debug information. This is useful for development and debugging,
+     * but should typically be disabled in production builds.</p>
+     *
+     * @param enabled {@code true} to enable logging; {@code false} to disable it.
+     */
+    public void setLoggingEnabled(boolean enabled) {
+        RendererLogger.setEnabled(enabled);
     }
 
     @NonNull
@@ -447,8 +467,9 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
             try {
                 visibleBounds = mProjection.getVisibleRegion().latLngBounds;
+                RendererLogger.d("ClusterRenderer", "Visible bounds calculated: " + visibleBounds);
             } catch (Exception e) {
-                e.printStackTrace();
+                RendererLogger.e("ClusterRenderer", "Error getting visible bounds, defaulting to (0,0)");
                 visibleBounds = LatLngBounds.builder().include(new LatLng(0, 0)).build();
             }
 
@@ -462,6 +483,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                         existingClustersOnScreen.add(point);
                     }
                 }
+                RendererLogger.d("ClusterRenderer", "Existing clusters on screen found: " + existingClustersOnScreen.size());
             }
 
             // Create the new markers and animate them to their new positions.
@@ -474,20 +496,25 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     if (closest != null) {
                         LatLng animateFrom = mSphericalMercatorProjection.toLatLng(closest);
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, animateFrom));
+                        RendererLogger.d("ClusterRenderer", "Animating cluster from closest cluster: " + c.getPosition());
                     } else {
                         markerModifier.add(true, new CreateMarkerTask(c, newMarkers, null));
+                        RendererLogger.d("ClusterRenderer", "Animating cluster without closest point: " + c.getPosition());
                     }
 
                 } else {
                     markerModifier.add(onScreen, new CreateMarkerTask(c, newMarkers, null));
+                    RendererLogger.d("ClusterRenderer", "Adding cluster without animation: " + c.getPosition());
                 }
             }
 
             // Wait for all markers to be added.
             markerModifier.waitUntilFree();
+            RendererLogger.d("ClusterRenderer", "All new markers added, count: " + newMarkers.size());
 
             // Don't remove any markers that were just added. This is basically anything that had a hit in the MarkerCache.
             markersToRemove.removeAll(newMarkers);
+            RendererLogger.d("ClusterRenderer", "Markers to remove after filtering new markers: " + markersToRemove.size());
 
             // Find all of the new clusters that were added on-screen. These are candidates for markers to animate from.
             List<Point> newClustersOnScreen = null;
@@ -499,6 +526,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                         newClustersOnScreen.add(p);
                     }
                 }
+                RendererLogger.d("ClusterRenderer", "New clusters on screen found: " + newClustersOnScreen.size());
             }
 
             for (final MarkerWithPosition marker : markersToRemove) {
@@ -509,6 +537,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     if (closest != null) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
                         markerModifier.animateThenRemove(marker, marker.position, animateTo);
+                        RendererLogger.d("ClusterRenderer", "Animating then removing marker at position: " + marker.position);
                     } else if (mClusterMarkerCache.mCache.keySet().iterator().hasNext() && mClusterMarkerCache.mCache.keySet().iterator().next().getItems().contains(marker.clusterItem)) {
                         T foundItem = null;
                         for (Cluster<T> cluster : mClusterMarkerCache.mCache.keySet()) {
@@ -518,20 +547,23 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                                     break;
                                 }
                             }
-
                         }
                         // Remove it because it will join a cluster
                         markerModifier.animateThenRemove(marker, marker.position, foundItem.getPosition());
+                        RendererLogger.d("ClusterRenderer", "Animating then removing marker joining cluster at position: " + marker.position);
                     } else {
                         markerModifier.remove(true, marker.marker);
+                        RendererLogger.d("ClusterRenderer", "Removing marker without animation at position: " + marker.position);
                     }
                 } else {
                     markerModifier.remove(onScreen, marker.marker);
+                    RendererLogger.d("ClusterRenderer", "Removing marker (onScreen=" + onScreen + ") at position: " + marker.position);
                 }
             }
 
             // Wait until all marker removal operations are completed.
             markerModifier.waitUntilFree();
+            RendererLogger.d("ClusterRenderer", "All marker removal operations completed.");
 
             mMarkers = newMarkers;
             ClusterRendererMultipleItems.this.mClusters = clusters;
@@ -539,6 +571,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
             // Run the callback once everything is done.
             mCallback.run();
+            RendererLogger.d("ClusterRenderer", "Cluster update callback executed.");
         }
     }
 
@@ -1076,13 +1109,16 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         private void perform(MarkerModifier markerModifier) {
             // Don't show small clusters. Render the markers inside, instead.
             if (!shouldRenderAsCluster(cluster)) {
+                RendererLogger.d("ClusterRenderer", "Rendering individual cluster items, count: " + cluster.getItems().size());
                 for (T item : cluster.getItems()) {
                     Marker marker = mMarkerCache.get(item);
                     MarkerWithPosition<T> markerWithPosition;
                     LatLng currentLocation = item.getPosition();
                     if (marker == null) {
+                        RendererLogger.d("ClusterRenderer", "Creating new marker for cluster item at position: " + currentLocation);
                         MarkerOptions markerOptions = new MarkerOptions();
                         if (animateFrom != null) {
+                            RendererLogger.d("ClusterRenderer", "Animating from position: " + animateFrom);
                             markerOptions.position(animateFrom);
                         } else if (mClusterMarkerCache.mCache.keySet().iterator().hasNext() && mClusterMarkerCache.mCache.keySet().iterator().next().getItems().contains(item)) {
                             T foundItem = null;
@@ -1095,6 +1131,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                                 }
                             }
                             currentLocation = foundItem.getPosition();
+                            RendererLogger.d("ClusterRenderer", "Found item in cache for animation at position: " + currentLocation);
                             markerOptions.position(currentLocation);
                         } else {
                             markerOptions.position(item.getPosition());
@@ -1108,13 +1145,17 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                         mMarkerCache.put(item, marker);
                         if (animateFrom != null) {
                             markerModifier.animate(markerWithPosition, animateFrom, item.getPosition());
+                            RendererLogger.d("ClusterRenderer", "Animating marker from " + animateFrom + " to " + item.getPosition());
                         } else if (currentLocation != null) {
                             markerModifier.animate(markerWithPosition, currentLocation, item.getPosition());
+                            RendererLogger.d("ClusterRenderer", "Animating marker from " + currentLocation + " to " + item.getPosition());
                         }
                     } else {
                         markerWithPosition = new MarkerWithPosition<>(marker, item);
                         markerModifier.animate(markerWithPosition, marker.getPosition(), item.getPosition());
+                        RendererLogger.d("ClusterRenderer", "Animating existing marker from " + marker.getPosition() + " to " + item.getPosition());
                         if (!markerWithPosition.position.equals(item.getPosition())) {
+                            RendererLogger.d("ClusterRenderer", "Updating cluster item marker position");
                             onClusterItemUpdated(item, marker);
                         }
                     }
@@ -1125,9 +1166,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
             }
 
             // Handle cluster markers
+            RendererLogger.d("ClusterRenderer", "Rendering cluster marker at position: " + cluster.getPosition());
             Marker marker = mClusterMarkerCache.get(cluster);
             MarkerWithPosition markerWithPosition;
             if (marker == null) {
+                RendererLogger.d("ClusterRenderer", "Creating new cluster marker");
                 MarkerOptions markerOptions = new MarkerOptions().position(animateFrom == null ? cluster.getPosition() : animateFrom);
                 onBeforeClusterRendered(cluster, markerOptions);
                 marker = mClusterManager.getClusterMarkerCollection().addMarker(markerOptions);
@@ -1135,9 +1178,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 markerWithPosition = new MarkerWithPosition(marker, null);
                 if (animateFrom != null) {
                     markerModifier.animate(markerWithPosition, animateFrom, cluster.getPosition());
+                    RendererLogger.d("ClusterRenderer", "Animating cluster marker from " + animateFrom + " to " + cluster.getPosition());
                 }
             } else {
                 markerWithPosition = new MarkerWithPosition(marker, null);
+                RendererLogger.d("ClusterRenderer", "Updating existing cluster marker");
                 onClusterUpdated(cluster, marker);
             }
             onClusterRendered(cluster, marker);
