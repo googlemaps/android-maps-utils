@@ -19,6 +19,7 @@ mockk = "1.14.2"
 lint = "31.10.1"
 org-jacoco-core = "0.8.13"
 material = "1.12.0"
+play-services-location = "21.3.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -48,3 +49,4 @@ lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint
 testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }

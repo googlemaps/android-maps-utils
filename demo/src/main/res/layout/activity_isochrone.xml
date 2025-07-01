@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp">
+
+        <Button
+            android:id="@+id/btnBicycling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BICYCLING"
+            android:textAllCaps="false"
+            android:alpha="1" />
+
+        <Button
+            android:id="@+id/btnDriving"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DRIVING"
+            android:textAllCaps="false"
+            android:layout_marginStart="8dp"
+            android:alpha="0.5" />
+
+        <Button
+            android:id="@+id/btnWalking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WALKING"
+            android:textAllCaps="false"
+            android:layout_marginStart="8dp"
+            android:alpha="0.5" />
+
+    </LinearLayout>
+
+</FrameLayout>
