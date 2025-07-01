@@ -19,12 +19,11 @@ package com.google.maps.android.utils.demo;
 import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.getMapsApiKey;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -33,6 +32,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,7 +68,7 @@ public class IsochroneMapActivity extends AppCompatActivity implements OnMapRead
 
         progressBar = new ProgressBar(this);
         progressBar.setIndeterminate(true);
-        progressBar.setVisibility(android.view.View.GONE);
+        progressBar.setVisibility(View.GONE);
 
         FrameLayout.LayoutParams mapParams = new FrameLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT,
@@ -117,6 +117,15 @@ public class IsochroneMapActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void getLocationAndDraw() {
+        // Permission check to satisfy lint and prevent security exceptions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(TAG, "Location permission not granted");
+            return;
+        }
+
+        IsochroneMapProvider.UiThreadExecutor uiThreadExecutor = this::runOnUiThread;
+
         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
                 LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
@@ -124,28 +133,33 @@ public class IsochroneMapActivity extends AppCompatActivity implements OnMapRead
 
                 if (isochroneMapProvider == null) {
                     String apiKey = getMapsApiKey(this);
-                    isochroneMapProvider = new IsochroneMapProvider(map, apiKey, new IsochroneMapProvider.LoadingListener() {
-                        @Override
-                        public void onLoadingStarted() {
-                            runOnUiThread(() -> progressBar.setVisibility(android.view.View.VISIBLE));
-                        }
+                    isochroneMapProvider = new IsochroneMapProvider(
+                            map,
+                            apiKey,
+                            new IsochroneMapProvider.LoadingListener() {
+                                @Override
+                                public void onLoadingStarted() {
+                                    runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
+                                }
 
-                        @Override
-                        public void onLoadingFinished() {
-                            runOnUiThread(() -> progressBar.setVisibility(android.view.View.GONE));
-                        }
-                    }, IsochroneMapProvider.TransportMode.BICYCLING);
-                    isochroneMapProvider.setUiThreadExecutor(this::runOnUiThread);
+                                @Override
+                                public void onLoadingFinished() {
+                                    runOnUiThread(() -> progressBar.setVisibility(View.GONE));
+                                }
+                            },
+                            IsochroneMapProvider.TransportMode.BICYCLING,
+                            uiThreadExecutor,
+                            null  // Use default fetcher
+                    );
                 }
 
-                isochroneMapProvider.drawIsochrones(origin, new int[]{2,4,6,9}, IsochroneMapProvider.ColorSchema.GREEN_RED);
+                isochroneMapProvider.drawIsochrones(origin, new int[]{2, 4, 6, 9}, IsochroneMapProvider.ColorSchema.GREEN_RED);
 
             } else {
                 Log.e(TAG, "Location is null");
             }
         });
     }
-
 
     // MapView lifecycle methods
     @Override protected void onResume() { super.onResume(); mapView.onResume(); }

@@ -50,12 +50,15 @@ public class IsochroneMapProviderTest {
     public void testComputeIsochroneReturnsPoints() {
         when(mockTravelTimeFetcher.fetchTravelTime(any(LatLng.class), any(LatLng.class))).thenReturn(60);
 
+        // For testing, just run directly
         IsochroneMapProvider provider = new IsochroneMapProvider(
                 mockMap,
-                "dummy-api-key",
+                "FAKE_API_KEY",
                 mockLoadingListener,
                 IsochroneMapProvider.TransportMode.BICYCLING,
-                mockTravelTimeFetcher);
+                Runnable::run,
+                null // or a mock TravelTimeFetcher if needed
+        );
 
         LatLng origin = new LatLng(0, 0);
         List<LatLng> polygon = provider.computeIsochrone(origin, 10);
@@ -68,12 +71,15 @@ public class IsochroneMapProviderTest {
     public void testDrawIsochronesCallsLoadingListener() throws InterruptedException {
         when(mockTravelTimeFetcher.fetchTravelTime(any(LatLng.class), any(LatLng.class))).thenReturn(60);
 
+        // For testing, just run directly
         IsochroneMapProvider provider = new IsochroneMapProvider(
                 mockMap,
-                "dummy-api-key",
+                "FAKE_API_KEY",
                 mockLoadingListener,
                 IsochroneMapProvider.TransportMode.BICYCLING,
-                mockTravelTimeFetcher);
+                Runnable::run,
+                null
+        );
 
         CountDownLatch latch = new CountDownLatch(1);
 
@@ -83,7 +89,7 @@ public class IsochroneMapProviderTest {
         }).when(mockLoadingListener).onLoadingFinished();
 
         // Run UI tasks immediately (synchronously)
-        provider.setUiThreadExecutor(Runnable::run);
+
 
         provider.drawIsochrones(new LatLng(0, 0), new int[]{5, 10}, IsochroneMapProvider.ColorSchema.GREEN_RED);
 
@@ -101,12 +107,13 @@ public class IsochroneMapProviderTest {
 
         IsochroneMapProvider provider = new IsochroneMapProvider(
                 mockMap,
-                "dummy-api-key",
+                "FAKE_API_KEY",
                 mockLoadingListener,
                 IsochroneMapProvider.TransportMode.BICYCLING,
-                mockTravelTimeFetcher);
+                Runnable::run,
+                null
+        );
 
-        provider.setUiThreadExecutor(Runnable::run);
 
         Polygon mockPolygon = mock(Polygon.class);
         when(mockMap.addPolygon(any(PolygonOptions.class))).thenReturn(mockPolygon);
@@ -115,7 +122,6 @@ public class IsochroneMapProviderTest {
 
         provider.drawIsochrones(new LatLng(0, 0), new int[]{10, 5}, IsochroneMapProvider.ColorSchema.GREEN_RED);
 
-        // Wait for async completion
         Thread.sleep(1000);
 
         verify(mockMap, times(2)).addPolygon(captor.capture());

@@ -1,21 +1,6 @@
-/*
- * Copyright 2025 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.maps.android.isochrone;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -29,7 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,10 +61,6 @@ public class IsochroneMapProvider {
         }
     }
 
-    public interface TravelTimeFetcher {
-        int fetchTravelTime(LatLng origin, LatLng dest);
-    }
-
     private static class IsochronePolygon {
         int duration;
         List<LatLng> points;
@@ -94,7 +74,7 @@ public class IsochroneMapProvider {
     }
 
     private static final String TAG = "IsochroneMapProvider";
-    public static final int SLICES = 36;
+    private static final int SLICES = 36;
     private static final int MAX_CYCLES = 10;
     private static final double EPSILON = 1e-5;
     private static final double METERS_PER_DEGREE = 111000.0;
@@ -106,17 +86,73 @@ public class IsochroneMapProvider {
     private TransportMode transportMode;
     private final TravelTimeFetcher travelTimeFetcher;
 
-    public IsochroneMapProvider(
-            GoogleMap map,
-            String apiKey,
-            LoadingListener loadingListener,
-            TransportMode transportMode,
-            TravelTimeFetcher travelTimeFetcher) {
+    public interface TravelTimeFetcher {
+        int fetchTravelTime(LatLng origin, LatLng dest);
+    }
+
+    private final UiThreadExecutor uiThreadExecutor;
+
+    public interface UiThreadExecutor {
+        void execute(Runnable runnable);
+    }
+
+    private final TravelTimeFetcher DEFAULT_TRAVEL_TIME_FETCHER = new TravelTimeFetcher() {
+        @Override
+        public int fetchTravelTime(LatLng origin, LatLng dest) {
+            try {
+                @SuppressLint("DefaultLocale") String urlString = String.format(
+                        "https://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&mode=%s&key=%s",
+                        origin.latitude, origin.longitude,
+                        dest.latitude, dest.longitude,
+                        transportMode.getModeName(),
+                        apiKey);
+
+                HttpURLConnection connection = (HttpURLConnection) new URL(urlString).openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+
+                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+                StringBuilder responseBuilder = new StringBuilder();
+                int c;
+                while ((c = reader.read()) != -1) {
+                    responseBuilder.append((char) c);
+                }
+                reader.close();
+
+                JSONObject json = new JSONObject(responseBuilder.toString());
+                return json.getJSONArray("routes")
+                        .getJSONObject(0)
+                        .getJSONArray("legs")
+                        .getJSONObject(0)
+                        .getJSONObject("duration")
+                        .getInt("value");
+            } catch (Exception e) {
+                Log.e(TAG, "Error fetching travel time", e);
+                return -1;
+            }
+        }
+    };
+
+    public IsochroneMapProvider(GoogleMap map,
+                                String apiKey,
+                                LoadingListener loadingListener,
+                                TransportMode transportMode) {
+        this(map, apiKey, loadingListener, transportMode, null, null);
+    }
+
+    public IsochroneMapProvider(GoogleMap map,
+                                String apiKey,
+                                LoadingListener loadingListener,
+                                TransportMode transportMode,
+                                UiThreadExecutor uiThreadExecutor,
+                                TravelTimeFetcher travelTimeFetcher) {
         this.map = map;
         this.apiKey = apiKey;
         this.loadingListener = loadingListener;
         this.transportMode = transportMode;
-        this.travelTimeFetcher = travelTimeFetcher;
+        this.uiThreadExecutor = uiThreadExecutor;
+        this.travelTimeFetcher = travelTimeFetcher != null ? travelTimeFetcher : DEFAULT_TRAVEL_TIME_FETCHER;
     }
 
     public void setTransportMode(TransportMode transportMode) {
@@ -126,6 +162,7 @@ public class IsochroneMapProvider {
     public void drawIsochrones(LatLng origin, int[] durationsInMinutes, ColorSchema schema) {
         int[] sortedDurations = durationsInMinutes.clone();
         java.util.Arrays.sort(sortedDurations);
+        reverseArray(sortedDurations);
 
         if (loadingListener != null) {
             loadingListener.onLoadingStarted();
@@ -136,7 +173,7 @@ public class IsochroneMapProvider {
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
         for (int i = 0; i < sortedDurations.length; i++) {
-            final int durationIndex = i;
+            final int durationIndex = sortedDurations.length - 1 - i; // reverse index
             final int minutes = sortedDurations[i];
             final int baseColor = (durationIndex < colors.length) ? colors[durationIndex] : colors[colors.length - 1];
 
@@ -155,37 +192,12 @@ public class IsochroneMapProvider {
                 while (!executor.isTerminated()) {
                     Thread.sleep(100);
                 }
-
-                // Sort polygons descending to draw outer first (API 21 compatible)
-                Collections.sort(polygons, new Comparator<IsochronePolygon>() {
-                    @Override
-                    public int compare(IsochronePolygon a, IsochronePolygon b) {
-                        return Integer.compare(b.duration, a.duration);
-                    }
-                });
+                Collections.sort(polygons, (a, b) -> Integer.compare(b.duration, a.duration));
 
                 runOnUiThread(() -> {
-                    List<List<LatLng>> holes = new ArrayList<>();
-
-                    for (int i = 0; i < polygons.size(); i++) {
-                        IsochronePolygon poly = polygons.get(i);
-
-                        PolygonOptions options = new PolygonOptions()
-                                .addAll(poly.points)
-                                .strokeColor(poly.baseColor | 0xFF000000)
-                                .fillColor((poly.baseColor & 0x00FFFFFF) | (0x33 << 24));
-
-                        if (!holes.isEmpty()) {
-                            for (List<LatLng> hole : holes) {
-                                options.addHole(hole);
-                            }
-                        }
-
-                        map.addPolygon(options);
-
-                        holes.add(poly.points);
+                    for (IsochronePolygon poly : polygons) {
+                        drawPolygon(poly.points, poly.baseColor);
                     }
-
                     if (loadingListener != null) {
                         loadingListener.onLoadingFinished();
                     }
@@ -196,7 +208,7 @@ public class IsochroneMapProvider {
         }).start();
     }
 
-    public List<LatLng> computeIsochrone(LatLng origin, int minutes) {
+     List<LatLng> computeIsochrone(LatLng origin, int minutes) {
         final List<LatLng> points = Collections.synchronizedList(new ArrayList<>());
         final int maxTravelTimeSec = minutes * 60;
 
@@ -214,17 +226,14 @@ public class IsochroneMapProvider {
                         double latOffset = midRadius * Math.cos(angleRad);
                         double lngOffset = midRadius * Math.sin(angleRad) / Math.cos(Math.toRadians(origin.latitude));
                         LatLng dest = new LatLng(origin.latitude + latOffset, origin.longitude + lngOffset);
-
                         int travelTime = travelTimeFetcher.fetchTravelTime(origin, dest);
                         if (travelTime < 0) break;
-
                         if (travelTime <= maxTravelTimeSec) {
                             bestRadius = midRadius;
                             minRadius = midRadius;
                         } else {
                             maxRadius = midRadius;
                         }
-
                         if ((maxRadius - minRadius) < EPSILON) break;
                     }
 
@@ -254,6 +263,15 @@ public class IsochroneMapProvider {
         return new ArrayList<>();
     }
 
+    private void drawPolygon(List<LatLng> points, int baseColor) {
+        int fillColor = (baseColor & 0x00FFFFFF) | (0x33 << 24);
+        int strokeColor = baseColor | 0xFF000000;
+        map.addPolygon(new PolygonOptions()
+                .addAll(points)
+                .strokeColor(strokeColor)
+                .fillColor(fillColor));
+    }
+
     private List<LatLng> chaikinSmoothing(List<LatLng> input, int iterations) {
         List<LatLng> output = new ArrayList<>(input);
         for (int iter = 0; iter < iterations; iter++) {
@@ -261,14 +279,8 @@ public class IsochroneMapProvider {
             for (int i = 0; i < output.size() - 1; i++) {
                 LatLng p0 = output.get(i);
                 LatLng p1 = output.get(i + 1);
-
-                LatLng Q = new LatLng(
-                        0.75 * p0.latitude + 0.25 * p1.latitude,
-                        0.75 * p0.longitude + 0.25 * p1.longitude);
-                LatLng R = new LatLng(
-                        0.25 * p0.latitude + 0.75 * p1.latitude,
-                        0.25 * p0.longitude + 0.75 * p1.longitude);
-
+                LatLng Q = new LatLng(0.75 * p0.latitude + 0.25 * p1.latitude, 0.75 * p0.longitude + 0.25 * p1.longitude);
+                LatLng R = new LatLng(0.25 * p0.latitude + 0.75 * p1.latitude, 0.25 * p0.longitude + 0.75 * p1.longitude);
                 newPoints.add(Q);
                 newPoints.add(R);
             }
@@ -278,77 +290,22 @@ public class IsochroneMapProvider {
         return output;
     }
 
-    public interface UiThreadExecutor {
-        void execute(Runnable runnable);
-    }
-
-    private UiThreadExecutor uiThreadExecutor;
-
-    public void setUiThreadExecutor(UiThreadExecutor executor) {
-        this.uiThreadExecutor = executor;
-    }
-
     private void runOnUiThread(Runnable runnable) {
         if (uiThreadExecutor != null) {
             uiThreadExecutor.execute(runnable);
         } else {
-            Log.e(TAG, "UI thread executor not set!");
+            Log.e(TAG, "UI thread executor not set! Cannot run UI code.");
         }
     }
 
-    public static class GoogleDirectionsTravelTimeFetcher implements TravelTimeFetcher {
-        private final String apiKey;
-        private final TransportMode mode;
-
-        public GoogleDirectionsTravelTimeFetcher(String apiKey, TransportMode mode) {
-            this.apiKey = apiKey;
-            this.mode = mode;
-        }
-
-        @Override
-        public int fetchTravelTime(LatLng origin, LatLng dest) {
-            String urlString = String.format(
-                    "https://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&mode=%s&key=%s",
-                    origin.latitude, origin.longitude, dest.latitude, dest.longitude, mode.getModeName(), apiKey);
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL(urlString);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(5000);
-                connection.setReadTimeout(5000);
-
-                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-                StringBuilder responseBuilder = new StringBuilder();
-                int c;
-                while ((c = reader.read()) != -1) {
-                    responseBuilder.append((char) c);
-                }
-                reader.close();
-
-                JSONObject json = new JSONObject(responseBuilder.toString());
-                return json.getJSONArray("routes")
-                        .getJSONObject(0)
-                        .getJSONArray("legs")
-                        .getJSONObject(0)
-                        .getJSONObject("duration")
-                        .getInt("value");
-
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting travel time", e);
-                return -1;
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-        }
-    }
-
-    public static class ImmediateExecutor implements UiThreadExecutor {
-        @Override
-        public void execute(Runnable runnable) {
-            runnable.run();
+    private void reverseArray(int[] array) {
+        int left = 0, right = array.length - 1;
+        while (left < right) {
+            int temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            left++;
+            right--;
         }
     }
 }
