@@ -58,7 +58,7 @@ internal fun keyHasValidFormat(apiKey: String): Boolean {
  * @param context The context to retrieve the API key from.
  * @return The API key if found, `null` otherwise.
  */
-private fun getMapsApiKey(context: Context): String? {
+fun getMapsApiKey(context: Context): String? {
     try {
         val bundle = context.packageManager
             .getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
