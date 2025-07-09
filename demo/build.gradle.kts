@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.material)
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)

@@ -68,6 +68,9 @@
             android:name=".PolyDecodeDemoActivity"
             android:exported="true" />
         <activity
+            android:name=".IsochroneMapActivity"
+            android:exported="true" />
+        <activity
             android:name=".PolySimplifyDemoActivity"
             android:exported="true" />
         <activity
