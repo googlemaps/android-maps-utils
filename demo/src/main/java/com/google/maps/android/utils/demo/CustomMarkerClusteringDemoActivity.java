@@ -39,8 +39,10 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.utils.demo.model.Person;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -109,12 +111,14 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             markerOptions.icon(getClusterIcon(cluster));
+            markerOptions.title(getLocalizedNumber(cluster.getSize()));
         }
 
         @Override
         protected void onClusterUpdated(@NonNull Cluster<Person> cluster, Marker marker) {
             // Same implementation as onBeforeClusterRendered() (to update cached markers)
             marker.setIcon(getClusterIcon(cluster));
+            marker.setTitle(getLocalizedNumber(cluster.getSize()));
         }
 
         /**
@@ -249,5 +253,10 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
     private double random(double min, double max) {
         return mRandom.nextDouble() * (max - min) + min;
+    }
+
+    private String getLocalizedNumber(int number) {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+        return numberFormat.format(number);
     }
 }
