@@ -1,7 +1,7 @@
 [versions]
 appcompat = "1.7.1"
 dokka-gradle-plugin = "2.0.0"
-gradle = "8.10.1"
+gradle = "8.11.1"
 jacoco-android = "0.2.1"
 lifecycle-extensions = "2.2.0"
 lifecycle-viewmodel-ktx = "2.9.1"
