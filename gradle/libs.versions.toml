@@ -21,6 +21,7 @@ mockk = "1.14.5"
 lint = "31.12.0"
 org-jacoco-core = "0.8.13"
 material = "1.12.0"
+gradleMavenPublishPlugin = "0.34.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -50,3 +51,4 @@ lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint
 testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
