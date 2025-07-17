@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.gradle)
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.org.jacoco.core)
+    implementation(libs.gradle.maven.publish.plugin)
 }
 
 gradlePlugin {
