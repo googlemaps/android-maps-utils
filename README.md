@@ -1,9 +1,9 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.google.maps.android/android-maps-utils)](https://maven-badges.herokuapp.com/maven-central/com.google.maps.android/android-maps-utils)
 ![Release](https://github.com/googlemaps/android-maps-utils/workflows/Release/badge.svg)
 ![Stable](https://img.shields.io/badge/stability-stable-green)
-[![Tests/Build](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml/badge.svg)](https://github.com/googlemaps/android-maps-utils/actions/workflows/test.yml)
+[![vg)](m)
+# Maps SDK for Android Utility Library
 
-![Contributors](https://img.shields.io/github/contributors/googlemaps/android-maps-utils?color=green)
 [![License](https://img.shields.io/github/license/googlemaps/android-maps-utils?color=blue)][license]
 [![StackOverflow](https://img.shields.io/stackexchange/stackoverflow/t/google-maps?color=orange&label=google-maps&logo=stackoverflow)](https://stackoverflow.com/questions/tagged/google-maps)
 [![Discord](https://img.shields.io/discord/676948200904589322?color=6A7EC2&logo=discord&logoColor=ffffff)][Discord server]
