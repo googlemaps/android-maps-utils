@@ -26,10 +26,10 @@ android {
     }
 
     defaultConfig {
-        compileSdk = 35
+        compileSdk = libs.versions.compileSdk.get().toInt()
         applicationId = "com.google.maps.android.utils.demo"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
