@@ -24,9 +24,9 @@ android {
         sarifOutput = file("$buildDir/reports/lint-results.sarif")
     }
     defaultConfig {
-        compileSdk = 35
+        compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = 21
-        targetSdk = 35
+        targetSdk = libs.versions.targetSdk.get().toInt()
         consumerProguardFiles("consumer-rules.pro")
         buildConfigField("String", "TRAVIS", "\"${System.getenv("TRAVIS")}\"")
     }
