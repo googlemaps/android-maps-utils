@@ -19,7 +19,6 @@ package com.google.maps.android.clustering.algo;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Bounds;
-import com.google.maps.android.geometry.Point;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,31 +120,5 @@ public class ContinuousZoomEuclideanAlgorithm<T extends ClusterItem>
             }
         }
         return results;
-    }
-
-    /**
-     * Calculates the squared Euclidean distance between two points.
-     *
-     * @param a the first point
-     * @param b the second point
-     * @return the squared Euclidean distance between {@code a} and {@code b}
-     */
-    private double distanceSquared(Point a, Point b) {
-        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-    }
-
-    /**
-     * Creates a square bounding box centered at a point with the specified span.
-     *
-     * @param p the center point
-     * @param span the total width/height of the bounding box
-     * @return the {@link Bounds} object representing the search area
-     */
-    private Bounds createBoundsFromSpan(Point p, double span) {
-        double halfSpan = span / 2;
-        return new Bounds(
-                p.x - halfSpan, p.x + halfSpan,
-                p.y - halfSpan, p.y + halfSpan
-        );
     }
 }
