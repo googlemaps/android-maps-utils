@@ -54,7 +54,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final Collection<QuadItem<T>> mItems = new LinkedHashSet<>();
+    protected final Collection<QuadItem<T>> mItems = new LinkedHashSet<>();
 
     /**
      * Any modifications should be synchronized on mQuadTree.

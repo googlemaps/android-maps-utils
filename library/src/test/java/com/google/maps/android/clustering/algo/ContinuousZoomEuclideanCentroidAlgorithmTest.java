@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo;
 
 import androidx.annotation.NonNull;
@@ -31,7 +30,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ContinuousZoomEuclideanAlgorithmTest {
+public class ContinuousZoomEuclideanCentroidAlgorithmTest {
 
     static class TestClusterItem implements ClusterItem {
         private final LatLng position;
@@ -64,8 +63,8 @@ public class ContinuousZoomEuclideanAlgorithmTest {
 
     @Test
     public void testContinuousZoomMergesClosePairAtLowZoomAndSeparatesAtHighZoom() {
-        ContinuousZoomEuclideanAlgorithm<TestClusterItem> algo =
-                new ContinuousZoomEuclideanAlgorithm<>();
+        ContinuousZoomEuclideanCentroidAlgorithm<TestClusterItem> algo =
+                new ContinuousZoomEuclideanCentroidAlgorithm<>();
 
         Collection<TestClusterItem> items = Arrays.asList(
                 new TestClusterItem(10.0, 10.0),
@@ -83,10 +82,36 @@ public class ContinuousZoomEuclideanAlgorithmTest {
         Set<? extends Cluster<TestClusterItem>> lowZoom = algo.getClusters(5.0f);
         assertTrue(lowZoom.size() < 3);
 
-        // And specifically, we expect one cluster of size 2 and one singleton
+        // Specifically, we expect one cluster of size 2 and one singleton
         boolean hasClusterOfTwo = lowZoom.stream().anyMatch(c -> c.getItems().size() == 2);
         boolean hasClusterOfOne = lowZoom.stream().anyMatch(c -> c.getItems().size() == 1);
         assertTrue(hasClusterOfTwo);
         assertTrue(hasClusterOfOne);
+    }
+
+    @Test
+    public void testClusterPositionsAreCentroids() {
+        ContinuousZoomEuclideanCentroidAlgorithm<TestClusterItem> algo =
+                new ContinuousZoomEuclideanCentroidAlgorithm<>();
+
+        Collection<TestClusterItem> items = Arrays.asList(
+                new TestClusterItem(0.0, 0.0),
+                new TestClusterItem(0.0, 2.0),
+                new TestClusterItem(2.0, 0.0)
+        );
+
+        algo.addItems(items);
+
+        Set<? extends Cluster<TestClusterItem>> clusters = algo.getClusters(1.0f);
+
+        // Expect all items clustered into one
+        assertEquals(1, clusters.size());
+
+        Cluster<TestClusterItem> cluster = clusters.iterator().next();
+
+        // The centroid should be approximately (0.6667, 0.6667)
+        LatLng centroid = cluster.getPosition();
+        assertEquals(0.6667, centroid.latitude, 0.0001);
+        assertEquals(0.6667, centroid.longitude, 0.0001);
     }
 }
