@@ -66,10 +66,7 @@ public class ContinuousZoomEuclideanAlgorithmTest {
     public void testContinuousZoomMergesClosePairAtLowZoomAndSeparatesAtHighZoom() {
         ContinuousZoomEuclideanAlgorithm<TestClusterItem> algo =
                 new ContinuousZoomEuclideanAlgorithm<>();
-
-        // Optional: customize threshold if your defaults differ
-        // algo.setMaxDistanceBetweenClusteredItems(100);
-
+        
         Collection<TestClusterItem> items = Arrays.asList(
                 new TestClusterItem(10.0, 10.0),
                 new TestClusterItem(10.0001, 10.0001), // very close to the first
