@@ -1,12 +1,12 @@
 /*
  * Copyright 2020 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ import java.util.HashMap;
 /**
  * Parses a given KML file into KmlStyle, KmlPlacemark, KmlGroundOverlay and KmlContainer objects
  */
-/* package */ class KmlParser {
+public class KmlParser {
 
     private final static String STYLE = "Style";
 
@@ -66,7 +66,7 @@ import java.util.HashMap;
      *
      * @param parser parser containing the KML file to parse
      */
-    /* package */ KmlParser(XmlPullParser parser) {
+    public KmlParser(XmlPullParser parser) {
         mParser = parser;
         mPlacemarks = new HashMap<>();
         mContainers = new ArrayList<>();
@@ -78,7 +78,7 @@ import java.util.HashMap;
     /**
      * Parses the KML file and stores the created KmlStyle and KmlPlacemark
      */
-    /* package */ void parseKml() throws XmlPullParserException, IOException {
+    public void parseKml() throws XmlPullParserException, IOException {
         int eventType = mParser.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
@@ -112,35 +112,35 @@ import java.util.HashMap;
     /**
      * @return List of styles created by the parser
      */
-    /* package */ HashMap<String, KmlStyle> getStyles() {
+    public HashMap<String, KmlStyle> getStyles() {
         return mStyles;
     }
 
     /**
      * @return A list of Kml Placemark objects
      */
-    /* package */ HashMap<KmlPlacemark, Object> getPlacemarks() {
+    public HashMap<KmlPlacemark, Object> getPlacemarks() {
         return mPlacemarks;
     }
 
     /**
      * @return A list of Kml Style Maps
      */
-    /* package */ HashMap<String, String> getStyleMaps() {
+    public HashMap<String, String> getStyleMaps() {
         return mStyleMaps;
     }
 
     /**
      * @return A list of Kml Folders
      */
-    /* package */ ArrayList<KmlContainer> getContainers() {
+    public ArrayList<KmlContainer> getContainers() {
         return mContainers;
     }
 
     /**
      * @return A list of Ground Overlays
      */
-    /* package */ HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlays() {
+    public HashMap<KmlGroundOverlay, GroundOverlay> getGroundOverlays() {
         return mGroundOverlays;
     }
 
@@ -149,8 +149,7 @@ import java.util.HashMap;
      *
      * @param parser XmlPullParser
      */
-    /*package*/
-    static void skip(XmlPullParser parser)
+    public static void skip(XmlPullParser parser)
             throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             throw new IllegalStateException();
