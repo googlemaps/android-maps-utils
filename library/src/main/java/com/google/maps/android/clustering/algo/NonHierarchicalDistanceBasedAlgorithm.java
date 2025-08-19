@@ -24,6 +24,7 @@ import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.quadtree.PointQuadTree;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,12 +54,12 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final Collection<QuadItem<T>> mItems = new LinkedHashSet<>();
+    protected final Collection<QuadItem<T>> mItems = new LinkedHashSet<>();
 
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
-    private final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<>(0, 1, 0, 1);
+    protected final PointQuadTree<QuadItem<T>> mQuadTree = new PointQuadTree<>(0, 1, 0, 1);
 
     private static final SphericalMercatorProjection PROJECTION = new SphericalMercatorProjection(1);
 
@@ -246,11 +247,25 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
         return mMaxDistance;
     }
 
-    private double distanceSquared(Point a, Point b) {
+    /**
+     * Calculates the squared Euclidean distance between two points.
+     *
+     * @param a the first point
+     * @param b the second point
+     * @return the squared Euclidean distance between {@code a} and {@code b}
+     */
+    protected double distanceSquared(Point a, Point b) {
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
 
-    private Bounds createBoundsFromSpan(Point p, double span) {
+    /**
+     * Creates a square bounding box centered at a point with the specified span.
+     *
+     * @param p the center point
+     * @param span the total width/height of the bounding box
+     * @return the {@link Bounds} object representing the search area
+     */
+    protected Bounds createBoundsFromSpan(Point p, double span) {
         // TODO: Use a span that takes into account the visual size of the marker, not just its
         // LatLng.
         double halfSpan = span / 2;
@@ -260,7 +275,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> extend
     }
 
     protected static class QuadItem<T extends ClusterItem> implements PointQuadTree.Item, Cluster<T> {
-        private final T mClusterItem;
+        protected final T mClusterItem;
         private final Point mPoint;
         private final LatLng mPosition;
         private Set<T> singletonSet;
