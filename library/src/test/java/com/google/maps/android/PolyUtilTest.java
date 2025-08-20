@@ -572,10 +572,10 @@ public class PolyUtilTest {
     /**
      * The following method checks whether {@link PolyUtil#distanceToLine(LatLng, LatLng, LatLng)  distanceToLine()} }
      * is determining the distance between a point and a segment accurately.
-     *
+     * <p>
      * Currently there are tests for different orders of magnitude (i.e., 1X, 10X, 100X, 1000X), as well as a test
      * where the segment and the point lie in different hemispheres.
-     *
+     * <p>
      * If further tests need to be added here, make sure that the distance has been verified with <a href="https://www.qgis.org/">QGIS</a>.
      *
      * @see <a href="https://www.qgis.org/">QGIS</a>

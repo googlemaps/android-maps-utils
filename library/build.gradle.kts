@@ -69,7 +69,7 @@ dependencies {
     testImplementation(libs.kxml2)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlin.test)
-    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation(libs.truth)
     implementation(libs.kotlin.stdlib.jdk8)
 }
 
