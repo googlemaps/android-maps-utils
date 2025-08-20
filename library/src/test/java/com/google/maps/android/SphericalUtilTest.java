@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@ package com.google.maps.android;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.maps.android.MathUtil.EARTH_RADIUS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class SphericalUtilTest {
     // The vertices of an octahedron, for testing
@@ -42,10 +42,10 @@ public class SphericalUtilTest {
      * Tests for approximate equality.
      */
     private static void expectLatLngApproxEquals(LatLng actual, LatLng expected) {
-        assertEquals(actual.latitude, expected.latitude, 1e-6);
+        assertThat(actual.latitude).isWithin(1e-6).of(expected.latitude);
         // Account for the convergence of longitude lines at the poles
         double cosLat = Math.cos(Math.toRadians(actual.latitude));
-        assertEquals(cosLat * actual.longitude, cosLat * expected.longitude, 1e-6);
+        assertThat(cosLat * actual.longitude).isWithin(1e-6).of(cosLat * expected.longitude);
     }
 
     private static double computeSignedTriangleArea(LatLng a, LatLng b, LatLng c) {
@@ -64,95 +64,83 @@ public class SphericalUtilTest {
     @Test
     public void testAngles() {
         // Same vertex
-        assertEquals(SphericalUtil.computeAngleBetween(up, up), 0, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(down, down), 0, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(left, left), 0, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(right, right), 0, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(front, front), 0, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(back, back), 0, 1e-6);
+        assertThat(SphericalUtil.computeAngleBetween(up, up)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeAngleBetween(down, down)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeAngleBetween(left, left)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeAngleBetween(right, right)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeAngleBetween(front, front)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeAngleBetween(back, back)).isWithin(1e-6).of(0);
 
         // Adjacent vertices
-        assertEquals(SphericalUtil.computeAngleBetween(up, front), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(up, right), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(up, back), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(up, left), Math.PI / 2, 1e-6);
+        assertThat(SphericalUtil.computeAngleBetween(up, front)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(up, right)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(up, back)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(up, left)).isWithin(1e-6).of(Math.PI / 2);
 
-        assertEquals(SphericalUtil.computeAngleBetween(down, front), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(down, right), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(down, back), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(down, left), Math.PI / 2, 1e-6);
+        assertThat(SphericalUtil.computeAngleBetween(down, front)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(down, right)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(down, back)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(down, left)).isWithin(1e-6).of(Math.PI / 2);
 
-        assertEquals(SphericalUtil.computeAngleBetween(back, up), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(back, right), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(back, down), Math.PI / 2, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(back, left), Math.PI / 2, 1e-6);
+        assertThat(SphericalUtil.computeAngleBetween(back, up)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(back, right)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(back, down)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(SphericalUtil.computeAngleBetween(back, left)).isWithin(1e-6).of(Math.PI / 2);
 
         // Opposite vertices
-        assertEquals(SphericalUtil.computeAngleBetween(up, down), Math.PI, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(front, back), Math.PI, 1e-6);
-        assertEquals(SphericalUtil.computeAngleBetween(left, right), Math.PI, 1e-6);
+        assertThat(SphericalUtil.computeAngleBetween(up, down)).isWithin(1e-6).of(Math.PI);
+        assertThat(SphericalUtil.computeAngleBetween(front, back)).isWithin(1e-6).of(Math.PI);
+        assertThat(SphericalUtil.computeAngleBetween(left, right)).isWithin(1e-6).of(Math.PI);
     }
 
     @Test
     public void testDistances() {
-        assertEquals(SphericalUtil.computeDistanceBetween(up, down), Math.PI * EARTH_RADIUS, 1e-6);
+        assertThat(SphericalUtil.computeDistanceBetween(up, down)).isWithin(1e-6).of(Math.PI * EARTH_RADIUS);
     }
 
     @Test
     public void testHeadings() {
         // Opposing vertices for which there is a result
-        assertEquals(SphericalUtil.computeHeading(up, down), -180, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(down, up), 0, 1e-6);
+        assertThat(SphericalUtil.computeHeading(up, down)).isWithin(1e-6).of(-180);
+        assertThat(SphericalUtil.computeHeading(down, up)).isWithin(1e-6).of(0);
 
         // Adjacent vertices for which there is a result
-        assertEquals(SphericalUtil.computeHeading(front, up), 0, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(right, up), 0, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(back, up), 0, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(down, up), 0, 1e-6);
+        assertThat(SphericalUtil.computeHeading(front, up)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeHeading(right, up)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeHeading(back, up)).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeHeading(down, up)).isWithin(1e-6).of(0);
 
-        assertEquals(SphericalUtil.computeHeading(front, down), -180, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(right, down), -180, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(back, down), -180, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(left, down), -180, 1e-6);
+        assertThat(SphericalUtil.computeHeading(front, down)).isWithin(1e-6).of(-180);
+        assertThat(SphericalUtil.computeHeading(right, down)).isWithin(1e-6).of(-180);
+        assertThat(SphericalUtil.computeHeading(back, down)).isWithin(1e-6).of(-180);
+        assertThat(SphericalUtil.computeHeading(left, down)).isWithin(1e-6).of(-180);
 
-        assertEquals(SphericalUtil.computeHeading(right, front), -90, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(left, front), 90, 1e-6);
+        assertThat(SphericalUtil.computeHeading(right, front)).isWithin(1e-6).of(-90);
+        assertThat(SphericalUtil.computeHeading(left, front)).isWithin(1e-6).of(90);
 
-        assertEquals(SphericalUtil.computeHeading(front, right), 90, 1e-6);
-        assertEquals(SphericalUtil.computeHeading(back, right), -90, 1e-6);
+        assertThat(SphericalUtil.computeHeading(front, right)).isWithin(1e-6).of(90);
+        assertThat(SphericalUtil.computeHeading(back, right)).isWithin(1e-6).of(-90);
     }
 
     @Test
     public void testComputeOffset() {
         // From front
         expectLatLngApproxEquals(front, SphericalUtil.computeOffset(front, 0, 0));
-        expectLatLngApproxEquals(
-                up, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, 0));
-        expectLatLngApproxEquals(
-                down, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, 180));
-        expectLatLngApproxEquals(
-                left, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, -90));
-        expectLatLngApproxEquals(
-                right, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, 90));
-        expectLatLngApproxEquals(
-                back, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS, 0));
-        expectLatLngApproxEquals(
-                back, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS, 90));
+        expectLatLngApproxEquals(up, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, 0));
+        expectLatLngApproxEquals(down, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, 180));
+        expectLatLngApproxEquals(left, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, -90));
+        expectLatLngApproxEquals(right, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS / 2, 90));
+        expectLatLngApproxEquals(back, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS, 0));
+        expectLatLngApproxEquals(back, SphericalUtil.computeOffset(front, Math.PI * EARTH_RADIUS, 90));
 
         // From left
         expectLatLngApproxEquals(left, SphericalUtil.computeOffset(left, 0, 0));
-        expectLatLngApproxEquals(
-                up, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, 0));
-        expectLatLngApproxEquals(
-                down, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, 180));
-        expectLatLngApproxEquals(
-                front, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, 90));
-        expectLatLngApproxEquals(
-                back, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, -90));
-        expectLatLngApproxEquals(
-                right, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS, 0));
-        expectLatLngApproxEquals(
-                right, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS, 90));
+        expectLatLngApproxEquals(up, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, 0));
+        expectLatLngApproxEquals(down, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, 180));
+        expectLatLngApproxEquals(front, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, 90));
+        expectLatLngApproxEquals(back, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS / 2, -90));
+        expectLatLngApproxEquals(right, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS, 0));
+        expectLatLngApproxEquals(right, SphericalUtil.computeOffset(left, Math.PI * EARTH_RADIUS, 90));
 
         // NOTE(appleton): Heading is undefined at the poles, so we do not test
         // from up/down.
@@ -160,37 +148,19 @@ public class SphericalUtilTest {
 
     @Test
     public void testComputeOffsetOrigin() {
-        expectLatLngApproxEquals(front, SphericalUtil.computeOffsetOrigin(front, 0, 0));
+        expectLatLngApproxEquals(front, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(front, 0, 0)));
 
-        expectLatLngApproxEquals(
-                front,
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(0, 45), Math.PI * EARTH_RADIUS / 4, 90));
-        expectLatLngApproxEquals(
-                front,
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(0, -45), Math.PI * EARTH_RADIUS / 4, -90));
-        expectLatLngApproxEquals(
-                front,
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(45, 0), Math.PI * EARTH_RADIUS / 4, 0));
-        expectLatLngApproxEquals(
-                front,
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(-45, 0), Math.PI * EARTH_RADIUS / 4, 180));
-        /*expectLatLngApproxEquals(
-        front, SphericalUtil.computeOffsetOrigin(new LatLng(-45, 0),
-        Math.PI / 4, 180, 1)); */
+        expectLatLngApproxEquals(front, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(new LatLng(0, 45), Math.PI * EARTH_RADIUS / 4, 90)));
+        expectLatLngApproxEquals(front, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(new LatLng(0, -45), Math.PI * EARTH_RADIUS / 4, -90)));
+        expectLatLngApproxEquals(front, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(new LatLng(45, 0), Math.PI * EARTH_RADIUS / 4, 0)));
+        expectLatLngApproxEquals(front, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(new LatLng(-45, 0), Math.PI * EARTH_RADIUS / 4, 180)));
+
         // Situations with no solution, should return null.
         //
         // First 'over' the pole.
-        assertNull(
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(80, 0), Math.PI * EARTH_RADIUS / 4, 180));
+        assertThat(SphericalUtil.computeOffsetOrigin(new LatLng(80, 0), Math.PI * EARTH_RADIUS / 4, 180)).isNull();
         // Second a distance that doesn't fit on the earth.
-        assertNull(
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(80, 0), Math.PI * EARTH_RADIUS / 4, 90));
+        assertThat(SphericalUtil.computeOffsetOrigin(new LatLng(80, 0), Math.PI * EARTH_RADIUS / 4, 90)).isNull();
     }
 
     @Test
@@ -203,37 +173,33 @@ public class SphericalUtilTest {
         // Some semi-random values to demonstrate going forward and backward yields
         // the same location.
         end = SphericalUtil.computeOffset(start, distance, heading);
-        expectLatLngApproxEquals(start, SphericalUtil.computeOffsetOrigin(end, distance, heading));
+        expectLatLngApproxEquals(start, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(end, distance, heading)));
 
         heading = -37;
         end = SphericalUtil.computeOffset(start, distance, heading);
-        expectLatLngApproxEquals(start, SphericalUtil.computeOffsetOrigin(end, distance, heading));
+        expectLatLngApproxEquals(start, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(end, distance, heading)));
 
         distance = 3.8e+7;
         end = SphericalUtil.computeOffset(start, distance, heading);
-        expectLatLngApproxEquals(start, SphericalUtil.computeOffsetOrigin(end, distance, heading));
+        expectLatLngApproxEquals(start, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(end, distance, heading)));
 
         start = new LatLng(-21, -73);
         end = SphericalUtil.computeOffset(start, distance, heading);
-        expectLatLngApproxEquals(start, SphericalUtil.computeOffsetOrigin(end, distance, heading));
+        expectLatLngApproxEquals(start, Objects.requireNonNull(SphericalUtil.computeOffsetOrigin(end, distance, heading)));
 
         // computeOffsetOrigin with multiple solutions, all we care about is that
         // going from there yields the requested result.
         //
         // First, for this particular situation the latitude is completely arbitrary.
-        start =
-                SphericalUtil.computeOffsetOrigin(
-                        new LatLng(0, 90), Math.PI * EARTH_RADIUS / 2, 90);
-        expectLatLngApproxEquals(
-                new LatLng(0, 90),
-                SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 2, 90));
+        start = SphericalUtil.computeOffsetOrigin(new LatLng(0, 90), Math.PI * EARTH_RADIUS / 2, 90);
+        Assert.assertNotNull(start);
+        expectLatLngApproxEquals(new LatLng(0, 90), SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 2, 90));
 
         // Second, for this particular situation the longitude is completely
         // arbitrary.
         start = SphericalUtil.computeOffsetOrigin(new LatLng(90, 0), Math.PI * EARTH_RADIUS / 4, 0);
-        expectLatLngApproxEquals(
-                new LatLng(90, 0),
-                SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
+        Assert.assertNotNull(start);
+        expectLatLngApproxEquals(new LatLng(90, 0), SphericalUtil.computeOffset(start, Math.PI * EARTH_RADIUS / 4, 0));
     }
 
     @Test
@@ -246,35 +212,24 @@ public class SphericalUtilTest {
         // Between front and up
         expectLatLngApproxEquals(new LatLng(1, 0), SphericalUtil.interpolate(front, up, 1 / 90.0));
         expectLatLngApproxEquals(new LatLng(1, 0), SphericalUtil.interpolate(up, front, 89 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(89, 0), SphericalUtil.interpolate(front, up, 89 / 90.0));
+        expectLatLngApproxEquals(new LatLng(89, 0), SphericalUtil.interpolate(front, up, 89 / 90.0));
         expectLatLngApproxEquals(new LatLng(89, 0), SphericalUtil.interpolate(up, front, 1 / 90.0));
 
         // Between front and down
-        expectLatLngApproxEquals(
-                new LatLng(-1, 0), SphericalUtil.interpolate(front, down, 1 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(-1, 0), SphericalUtil.interpolate(down, front, 89 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(-89, 0), SphericalUtil.interpolate(front, down, 89 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(-89, 0), SphericalUtil.interpolate(down, front, 1 / 90.0));
+        expectLatLngApproxEquals(new LatLng(-1, 0), SphericalUtil.interpolate(front, down, 1 / 90.0));
+        expectLatLngApproxEquals(new LatLng(-1, 0), SphericalUtil.interpolate(down, front, 89 / 90.0));
+        expectLatLngApproxEquals(new LatLng(-89, 0), SphericalUtil.interpolate(front, down, 89 / 90.0));
+        expectLatLngApproxEquals(new LatLng(-89, 0), SphericalUtil.interpolate(down, front, 1 / 90.0));
 
         // Between left and back
-        expectLatLngApproxEquals(
-                new LatLng(0, -91), SphericalUtil.interpolate(left, back, 1 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(0, -91), SphericalUtil.interpolate(back, left, 89 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(0, -179), SphericalUtil.interpolate(left, back, 89 / 90.0));
-        expectLatLngApproxEquals(
-                new LatLng(0, -179), SphericalUtil.interpolate(back, left, 1 / 90.0));
+        expectLatLngApproxEquals(new LatLng(0, -91), SphericalUtil.interpolate(left, back, 1 / 90.0));
+        expectLatLngApproxEquals(new LatLng(0, -91), SphericalUtil.interpolate(back, left, 89 / 90.0));
+        expectLatLngApproxEquals(new LatLng(0, -179), SphericalUtil.interpolate(left, back, 89 / 90.0));
+        expectLatLngApproxEquals(new LatLng(0, -179), SphericalUtil.interpolate(back, left, 1 / 90.0));
 
         // geodesic crosses pole
-        expectLatLngApproxEquals(
-                up, SphericalUtil.interpolate(new LatLng(45, 0), new LatLng(45, 180), 1 / 2.0));
-        expectLatLngApproxEquals(
-                down, SphericalUtil.interpolate(new LatLng(-45, 0), new LatLng(-45, 180), 1 / 2.0));
+        expectLatLngApproxEquals(up, SphericalUtil.interpolate(new LatLng(45, 0), new LatLng(45, 180), 1 / 2.0));
+        expectLatLngApproxEquals(down, SphericalUtil.interpolate(new LatLng(-45, 0), new LatLng(-45, 180), 1 / 2.0));
 
         // boundary values for fraction, between left and back
         expectLatLngApproxEquals(left, SphericalUtil.interpolate(left, back, 0));
@@ -282,91 +237,66 @@ public class SphericalUtilTest {
 
         // two nearby points, separated by ~4m, for which the Slerp algorithm is not stable and we
         // have to fall back to linear interpolation.
-        expectLatLngApproxEquals(
-                new LatLng(-37.756872, 175.325252),
-                SphericalUtil.interpolate(
-                        new LatLng(-37.756891, 175.325262),
-                        new LatLng(-37.756853, 175.325242),
-                        0.5));
+        expectLatLngApproxEquals(new LatLng(-37.756872, 175.325252), SphericalUtil.interpolate(new LatLng(-37.756891, 175.325262), new LatLng(-37.756853, 175.325242), 0.5));
     }
 
     @Test
     public void testComputeLength() {
         List<LatLng> latLngs;
 
-        assertEquals(SphericalUtil.computeLength(Collections.<LatLng>emptyList()), 0, 1e-6);
-        assertEquals(SphericalUtil.computeLength(Arrays.asList(new LatLng(0, 0))), 0, 1e-6);
+        assertThat(SphericalUtil.computeLength(Collections.emptyList())).isWithin(1e-6).of(0);
+        assertThat(SphericalUtil.computeLength(List.of(new LatLng(0, 0)))).isWithin(1e-6).of(0);
 
         latLngs = Arrays.asList(new LatLng(0, 0), new LatLng(0.1, 0.1));
-        assertEquals(
-                SphericalUtil.computeLength(latLngs),
-                Math.toRadians(0.1) * Math.sqrt(2) * EARTH_RADIUS,
-                1);
+        assertThat(SphericalUtil.computeLength(latLngs)).isWithin(1).of(Math.toRadians(0.1) * Math.sqrt(2) * EARTH_RADIUS);
 
         latLngs = Arrays.asList(new LatLng(0, 0), new LatLng(90, 0), new LatLng(0, 90));
-        assertEquals(SphericalUtil.computeLength(latLngs), Math.PI * EARTH_RADIUS, 1e-6);
+        assertThat(SphericalUtil.computeLength(latLngs)).isWithin(1e-6).of(Math.PI * EARTH_RADIUS);
     }
 
     @Test
     public void testIsCCW() {
         // One face of the octahedron
-        assertEquals(1, isCCW(right, up, front));
-        assertEquals(1, isCCW(up, front, right));
-        assertEquals(1, isCCW(front, right, up));
-        assertEquals(-1, isCCW(front, up, right));
-        assertEquals(-1, isCCW(up, right, front));
-        assertEquals(-1, isCCW(right, front, up));
+        assertThat(isCCW(right, up, front)).isEqualTo(1);
+        assertThat(isCCW(up, front, right)).isEqualTo(1);
+        assertThat(isCCW(front, right, up)).isEqualTo(1);
+        assertThat(isCCW(front, up, right)).isEqualTo(-1);
+        assertThat(isCCW(up, right, front)).isEqualTo(-1);
+        assertThat(isCCW(right, front, up)).isEqualTo(-1);
     }
 
     @Test
     public void testComputeTriangleArea() {
-        assertEquals(computeTriangleArea(right, up, front), Math.PI / 2, 1e-6);
-        assertEquals(computeTriangleArea(front, up, right), Math.PI / 2, 1e-6);
+        assertThat(computeTriangleArea(right, up, front)).isWithin(1e-6).of(Math.PI / 2);
+        assertThat(computeTriangleArea(front, up, right)).isWithin(1e-6).of(Math.PI / 2);
 
         // computeArea returns area of zero on small polys
-        double area =
-                computeTriangleArea(
-                        new LatLng(0, 0),
-                        new LatLng(0, Math.toDegrees(1E-6)),
-                        new LatLng(Math.toDegrees(1E-6), 0));
+        double area = computeTriangleArea(new LatLng(0, 0), new LatLng(0, Math.toDegrees(1E-6)), new LatLng(Math.toDegrees(1E-6), 0));
         double expectedArea = 1E-12 / 2;
 
-        assertTrue(Math.abs(expectedArea - area) < 1e-20);
+        assertThat(Math.abs(expectedArea - area)).isLessThan(1e-20);
     }
 
     @Test
     public void testComputeSignedTriangleArea() {
-        assertEquals(
-                computeSignedTriangleArea(
-                        new LatLng(0, 0), new LatLng(0, 0.1), new LatLng(0.1, 0.1)),
-                Math.toRadians(0.1) * Math.toRadians(0.1) / 2,
-                1e-6);
+        assertThat(computeSignedTriangleArea(new LatLng(0, 0), new LatLng(0, 0.1), new LatLng(0.1, 0.1))).isWithin(1e-6).of(Math.toRadians(0.1) * Math.toRadians(0.1) / 2);
 
-        assertEquals(computeSignedTriangleArea(right, up, front), Math.PI / 2, 1e-6);
+        assertThat(computeSignedTriangleArea(right, up, front)).isWithin(1e-6).of(Math.PI / 2);
 
-        assertEquals(computeSignedTriangleArea(front, up, right), -Math.PI / 2, 1e-6);
+        assertThat(computeSignedTriangleArea(front, up, right)).isWithin(1e-6).of(-Math.PI / 2);
     }
 
     @Test
     public void testComputeArea() {
-        assertEquals(
-                SphericalUtil.computeArea(Arrays.asList(right, up, front, down, right)),
-                Math.PI * EARTH_RADIUS * EARTH_RADIUS,
-                .4);
+        assertThat(SphericalUtil.computeArea(Arrays.asList(right, up, front, down, right))).isWithin(.4).of(Math.PI * EARTH_RADIUS * EARTH_RADIUS);
 
-        assertEquals(
-                SphericalUtil.computeArea(Arrays.asList(right, down, front, up, right)),
-                Math.PI * EARTH_RADIUS * EARTH_RADIUS,
-                .4);
+        assertThat(SphericalUtil.computeArea(Arrays.asList(right, down, front, up, right))).isWithin(.4).of(Math.PI * EARTH_RADIUS * EARTH_RADIUS);
     }
 
     @Test
     public void testComputeSignedArea() {
         List<LatLng> path = Arrays.asList(right, up, front, down, right);
         List<LatLng> pathReversed = Arrays.asList(right, down, front, up, right);
-        assertEquals(
-                -SphericalUtil.computeSignedArea(path),
-                SphericalUtil.computeSignedArea(pathReversed),
-                0);
+        assertThat(-SphericalUtil.computeSignedArea(path)).isWithin(0).of(SphericalUtil.computeSignedArea(pathReversed));
     }
 }
