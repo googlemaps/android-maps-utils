@@ -56,11 +56,13 @@ import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -906,6 +908,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected void onBeforeClusterRendered(@NonNull Cluster<T> cluster, @NonNull MarkerOptions markerOptions) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         markerOptions.icon(getDescriptorForCluster(cluster));
+        markerOptions.title(getLocalizedNumber(cluster.getSize()));
     }
 
     /**
@@ -960,6 +963,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     protected void onClusterUpdated(@NonNull Cluster<T> cluster, @NonNull Marker marker) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         marker.setIcon(getDescriptorForCluster(cluster));
+        marker.setTitle(getLocalizedNumber(cluster.getSize()));
     }
 
     /**
@@ -1175,5 +1179,10 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
             LatLng position = new LatLng(lat, lng);
             marker.setPosition(position);
         }
+    }
+
+    private String getLocalizedNumber(int number) {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+        return numberFormat.format(number);
     }
 }
