@@ -68,7 +68,8 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.kxml2)
     testImplementation(libs.mockk)
-    testImplementation (libs.kotlin.test)
+    testImplementation(libs.kotlin.test)
+    testImplementation("com.google.truth:truth:1.1.3")
     implementation(libs.kotlin.stdlib.jdk8)
 }
 
