@@ -34,7 +34,7 @@ object MathUtil {
      * The earth's radius, in meters.
      * Mean radius as defined by IUGG.
      */
-    const val EARTH_RADIUS = 6371009.0
+    const val EARTH_RADIUS = 6_371_009.0
 
     /**
      * Restrict x to the range [low, high].
