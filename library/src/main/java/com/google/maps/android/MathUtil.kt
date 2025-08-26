@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,34 @@
  * limitations under the License.
  */
 
-package com.google.maps.android;
+package com.google.maps.android
 
-import static java.lang.Math.*;
+import kotlin.math.PI
+import kotlin.math.asin
+import kotlin.math.atan
+import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.ln
+import kotlin.math.sin
+import kotlin.math.sqrt
+import kotlin.math.tan
 
 /**
  * Utility functions that are used my both PolyUtil and SphericalUtil.
  */
-class MathUtil {
+object MathUtil {
     /**
      * The earth's radius, in meters.
      * Mean radius as defined by IUGG.
      */
-    static final double EARTH_RADIUS = 6371009;
+    const val EARTH_RADIUS = 6_371_009.0
 
     /**
      * Restrict x to the range [low, high].
      */
-    static double clamp(double x, double low, double high) {
-        return x < low ? low : (x > high ? high : x);
+    @JvmStatic
+    fun clamp(x: Double, low: Double, high: Double): Double {
+        return if (x < low) low else if (x > high) high else x
     }
 
     /**
@@ -42,8 +51,9 @@ class MathUtil {
      * @param min The minimum.
      * @param max The maximum.
      */
-    static double wrap(double n, double min, double max) {
-        return (n >= min && n < max) ? n : (mod(n - min, max - min) + min);
+    @JvmStatic
+    fun wrap(n: Double, min: Double, max: Double): Double {
+        return if (n >= min && n < max) n else mod(n - min, max - min) + min
     }
 
     /**
@@ -52,32 +62,42 @@ class MathUtil {
      * @param x The operand.
      * @param m The modulus.
      */
-    static double mod(double x, double m) {
-        return ((x % m) + m) % m;
+    @JvmStatic
+    fun mod(x: Double, m: Double): Double {
+        return (x % m + m) % m
     }
 
     /**
      * Returns mercator Y corresponding to latitude.
      * See http://en.wikipedia.org/wiki/Mercator_projection .
      */
-    static double mercator(double lat) {
-        return log(tan(lat * 0.5 + PI / 4));
+    @JvmStatic
+    fun mercator(lat: Double): Double {
+        if (lat > Math.PI / 2 - 1e-9) {
+            return Double.POSITIVE_INFINITY
+        }
+        if (lat < -Math.PI / 2 + 1e-9) {
+            return Double.NEGATIVE_INFINITY
+        }
+        return ln(tan(lat * 0.5 + PI / 4))
     }
 
     /**
      * Returns latitude from mercator Y.
      */
-    static double inverseMercator(double y) {
-        return 2 * atan(exp(y)) - PI / 2;
+    @JvmStatic
+    fun inverseMercator(y: Double): Double {
+        return 2 * atan(exp(y)) - PI / 2
     }
 
     /**
      * Returns haversine(angle-in-radians).
      * hav(x) == (1 - cos(x)) / 2 == sin(x / 2)^2.
      */
-    static double hav(double x) {
-        double sinHalf = sin(x * 0.5);
-        return sinHalf * sinHalf;
+    @JvmStatic
+    fun hav(x: Double): Double {
+        val sinHalf = sin(x * 0.5)
+        return sinHalf * sinHalf
     }
 
     /**
@@ -85,32 +105,37 @@ class MathUtil {
      * arcHav(x) == acos(1 - 2 * x) == 2 * asin(sqrt(x)).
      * The argument must be in [0, 1], and the result is positive.
      */
-    static double arcHav(double x) {
-        return 2 * asin(sqrt(x));
+    @JvmStatic
+    fun arcHav(x: Double): Double {
+        return 2 * asin(sqrt(x))
     }
 
     // Given h==hav(x), returns sin(abs(x)).
-    static double sinFromHav(double h) {
-        return 2 * sqrt(h * (1 - h));
+    @JvmStatic
+    fun sinFromHav(h: Double): Double {
+        return 2 * sqrt(h * (1 - h))
     }
 
     // Returns hav(asin(x)).
-    static double havFromSin(double x) {
-        double x2 = x * x;
-        return x2 / (1 + sqrt(1 - x2)) * .5;
+    @JvmStatic
+    fun havFromSin(x: Double): Double {
+        val x2 = x * x
+        return x2 / (1 + sqrt(1 - x2)) * .5
     }
 
     // Returns sin(arcHav(x) + arcHav(y)).
-    static double sinSumFromHav(double x, double y) {
-        double a = sqrt(x * (1 - x));
-        double b = sqrt(y * (1 - y));
-        return 2 * (a + b - 2 * (a * y + b * x));
+    @JvmStatic
+    fun sinSumFromHav(x: Double, y: Double): Double {
+        val a = sqrt(x * (1 - x))
+        val b = sqrt(y * (1 - y))
+        return 2 * (a + b - 2 * (a * y + b * x))
     }
 
     /**
      * Returns hav() of distance from (lat1, lng1) to (lat2, lng2) on the unit sphere.
      */
-    static double havDistance(double lat1, double lat2, double dLng) {
-        return hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2);
+    @JvmStatic
+    fun havDistance(lat1: Double, lat2: Double, dLng: Double): Double {
+        return hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2)
     }
 }
