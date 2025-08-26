@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2025 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,32 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.geometry;
+package com.google.maps.android.geometry
 
-import androidx.annotation.NonNull;
-
-public class Point {
-    public final double x;
-    public final double y;
-
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
+open class Point(@JvmField val x: Double, @JvmField val y: Double) {
+    override fun toString(): String {
+        return "Point(x=$x, y=$y)"
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Point
+
+        if (x != other.x) return false
+        if (y != other.y) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x.hashCode()
+        result = 31 * result + y.hashCode()
+        return result
+    }
+
+    fun copy(x: Double = this.x, y: Double = this.y): Point {
+        return Point(x, y)
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2025 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,48 +14,40 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.geometry;
+package com.google.maps.android.geometry
 
 /**
  * Represents an area in the cartesian plane.
  */
-public class Bounds {
-    public final double minX;
-    public final double minY;
+class Bounds(
+    @JvmField val minX: Double,
+    @JvmField val maxX: Double,
+    @JvmField val minY: Double,
+    @JvmField val maxY: Double
+) {
+    @JvmField
+    val midX: Double = (minX + maxX) / 2
 
-    public final double maxX;
-    public final double maxY;
+    @JvmField
+    val midY: Double = (minY + maxY) / 2
 
-    public final double midX;
-    public final double midY;
-
-    public Bounds(double minX, double maxX, double minY, double maxY) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
-
-        midX = (minX + maxX) / 2;
-        midY = (minY + maxY) / 2;
+    fun contains(x: Double, y: Double): Boolean {
+        return minX <= x && x <= maxX && minY <= y && y <= maxY
     }
 
-    public boolean contains(double x, double y) {
-        return minX <= x && x <= maxX && minY <= y && y <= maxY;
+    fun contains(point: Point): Boolean {
+        return contains(point.x, point.y)
     }
 
-    public boolean contains(Point point) {
-        return contains(point.x, point.y);
+    fun intersects(minX: Double, maxX: Double, minY: Double, maxY: Double): Boolean {
+        return minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY
     }
 
-    public boolean intersects(double minX, double maxX, double minY, double maxY) {
-        return minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY;
+    fun intersects(bounds: Bounds): Boolean {
+        return intersects(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY)
     }
 
-    public boolean intersects(Bounds bounds) {
-        return intersects(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY);
-    }
-
-    public boolean contains(Bounds bounds) {
-        return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY;
+    fun contains(bounds: Bounds): Boolean {
+        return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY
     }
 }
