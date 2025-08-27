@@ -28,6 +28,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import java.util.Objects;
+
 public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private boolean mIsRestore;
@@ -60,7 +62,7 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     }
 
     private void setUpMap() {
-        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        ((SupportMapFragment) Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.map))).getMapAsync(this);
     }
 
     /**
