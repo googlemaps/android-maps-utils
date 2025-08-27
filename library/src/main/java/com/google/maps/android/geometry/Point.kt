@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2023 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.geometry;
+package com.google.maps.android.geometry
 
-import androidx.annotation.NonNull;
-
-public class Point {
-    public final double x;
-    public final double y;
-
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
-    }
-}
+open class Point(@JvmField val x: Double, @JvmField val y: Double)
