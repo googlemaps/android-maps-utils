@@ -107,31 +107,24 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     }
 
     public void setAnimationType(AnimationType type) {
-        switch (type) {
-            case EASE_IN, ACCELERATE:
-                animationInterp = new AccelerateInterpolator();
-                break;
-            case EASE_OUT:
-                animationInterp = new DecelerateInterpolator();
-                break;
-            case EASE_IN_OUT:
-                animationInterp = new AccelerateDecelerateInterpolator();
-                break;
-            case FAST_OUT_SLOW_IN:
-                animationInterp = new FastOutSlowInInterpolator();
-                break;
-            case BOUNCE:
-                animationInterp = new BounceInterpolator();
-                break;
-            case DECELERATE:
-                animationInterp = new DecelerateInterpolator();
-                break;
-            default:
-                animationInterp = new LinearInterpolator();
-                break;
-        }
+        animationInterp = switch (type) {
+            case LINEAR -> new LinearInterpolator();
+            case EASE_IN, ACCELERATE -> new AccelerateInterpolator();
+            case EASE_OUT, DECELERATE -> new DecelerateInterpolator();
+            case EASE_IN_OUT -> new AccelerateDecelerateInterpolator();
+            case FAST_OUT_SLOW_IN -> new FastOutSlowInInterpolator();
+            case BOUNCE -> new BounceInterpolator();
+        };
     }
 
+    /**
+     * Sets the interpolator for the animation.
+     *
+     * @param interpolator the interpolator to use for the animation.
+     */
+    public void setAnimationInterpolator(TimeInterpolator interpolator) {
+        animationInterp = interpolator;
+    }
 
     /**
      * Markers that are currently on the map.
@@ -459,6 +452,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         }
 
         @SuppressLint("NewApi")
+        @Override
         public void run() {
             final MarkerModifier markerModifier = new MarkerModifier();
             final float zoom = mMapZoom;
@@ -676,6 +670,15 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          */
         private boolean mListenerAdded;
 
+        private void withLock(Runnable runnable) {
+            lock.lock();
+            try {
+                runnable.run();
+            } finally {
+                lock.unlock();
+            }
+        }
+
         private MarkerModifier() {
             super(Looper.getMainLooper());
         }
@@ -686,14 +689,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param priority whether this operation should have priority.
          */
         public void add(boolean priority, CreateMarkerTask c) {
-            lock.lock();
-            sendEmptyMessage(BLANK);
-            if (priority) {
-                mOnScreenCreateMarkerTasks.add(c);
-            } else {
-                mCreateMarkerTasks.add(c);
-            }
-            lock.unlock();
+            withLock(() -> {
+                sendEmptyMessage(BLANK);
+                if (priority) {
+                    mOnScreenCreateMarkerTasks.add(c);
+                } else {
+                    mCreateMarkerTasks.add(c);
+                }
+            });
         }
 
         /**
@@ -703,14 +706,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param m        the markerWithPosition to remove.
          */
         public void remove(boolean priority, Marker m) {
-            lock.lock();
-            sendEmptyMessage(BLANK);
-            if (priority) {
-                mOnScreenRemoveMarkerTasks.add(m);
-            } else {
-                mRemoveMarkerTasks.add(m);
-            }
-            lock.unlock();
+            withLock(() -> {
+                sendEmptyMessage(BLANK);
+                if (priority) {
+                    mOnScreenRemoveMarkerTasks.add(m);
+                } else {
+                    mRemoveMarkerTasks.add(m);
+                }
+            });
         }
 
         /**
@@ -721,19 +724,19 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param to     the position to animate to.
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
-            lock.lock();
-            AnimationTask task = new AnimationTask(marker, from, to, lock);
+            withLock(() -> {
+                AnimationTask task = new AnimationTask(marker, from, to, lock);
 
-            for (AnimationTask existingTask : ongoingAnimations) {
-                if (existingTask.marker.getId().equals(task.marker.getId())) {
-                    existingTask.cancel();
-                    break;
+                for (AnimationTask existingTask : ongoingAnimations) {
+                    if (existingTask.marker.getId().equals(task.marker.getId())) {
+                        existingTask.cancel();
+                        break;
+                    }
                 }
-            }
 
-            mAnimationTasks.add(task);
-            ongoingAnimations.add(task);
-            lock.unlock();
+                mAnimationTasks.add(task);
+                ongoingAnimations.add(task);
+            });
         }
 
         /**
@@ -745,19 +748,19 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param to     the position to animate to.
          */
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
-            lock.lock();
-            AnimationTask animationTask = new AnimationTask(marker, from, to, lock);
-            for (AnimationTask existingTask : ongoingAnimations) {
-                if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
-                    existingTask.cancel();
-                    break;
+            withLock(() -> {
+                AnimationTask animationTask = new AnimationTask(marker, from, to, lock);
+                for (AnimationTask existingTask : ongoingAnimations) {
+                    if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
+                        existingTask.cancel();
+                        break;
+                    }
                 }
-            }
 
-            ongoingAnimations.add(animationTask);
-            animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
-            mAnimationTasks.add(animationTask);
-            lock.unlock();
+                ongoingAnimations.add(animationTask);
+                animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
+                mAnimationTasks.add(animationTask);
+            });
         }
 
         @Override
@@ -821,9 +824,13 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @return true if there is still work to be processed.
          */
         public boolean isBusy() {
+            lock.lock();
             try {
-                lock.lock();
-                return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() && mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() && mAnimationTasks.isEmpty());
+                return !(mCreateMarkerTasks.isEmpty()
+                        && mOnScreenCreateMarkerTasks.isEmpty()
+                        && mOnScreenRemoveMarkerTasks.isEmpty()
+                        && mRemoveMarkerTasks.isEmpty()
+                        && mAnimationTasks.isEmpty());
             } finally {
                 lock.unlock();
             }
@@ -1257,11 +1264,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 new Handler(Looper.getMainLooper()).post(this::cancel);
                 return;
             }
+            lock.lock();
             try {
                 markerWithPosition.position = to;
                 mRemoveOnComplete = false;
                 valueAnimator.cancel();
-                lock.lock();
                 ongoingAnimations.remove(this);
             } finally {
                 lock.unlock();
@@ -1279,8 +1286,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
             // Remove the task from the queue
             lock.lock();
-            ongoingAnimations.remove(this);
-            lock.unlock();
+            try {
+                ongoingAnimations.remove(this);
+            } finally {
+                lock.unlock();
+            }
         }
 
         public void removeOnAnimationComplete(MarkerManager markerManager) {
