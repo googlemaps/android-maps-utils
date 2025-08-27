@@ -19,6 +19,7 @@ package com.google.maps.android.utils.demo;
 import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.hasMapsApiKey;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.Objects;
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -49,6 +55,30 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
 
         mIsRestore = savedInstanceState != null;
         setContentView(getLayoutId());
+        // This tells the system that the app will handle drawing behind the system bars.
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        // This is the root view of my layout.
+        // Make sure to replace R.id.root_layout with the actual ID of your root view.
+        final View rootView = findViewById(android.R.id.content);
+
+        // Add a listener to handle window insets.
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (view, windowInsets) -> {
+            final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            // Apply the insets as padding to the view.
+            // This will push the content down from behind the status bar and up from
+            // behind the navigation bar.
+            view.setPadding(
+                insets.left,
+                insets.top,
+                insets.right,
+                insets.bottom
+            );
+
+            // Return CONSUMED to signal that we've handled the insets.
+            return WindowInsetsCompat.CONSUMED;
+        });
         setUpMap();
     }
 
