@@ -13,13 +13,11 @@
 # limitations under the License.
 
 # A workflow that runs tests on every new pull request
-name: Run unit tests
+name: Report tests results
 
 on:
   repository_dispatch:
     types: [test]
-  push:
-    branches-ignore: ['gh-pages']
   pull_request:
     branches-ignore: ['gh-pages']
   workflow_dispatch:
