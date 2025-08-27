@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.projection;
+package com.google.maps.android.projection
 
 /**
- * @deprecated since 0.2. Use {@link com.google.maps.android.geometry.Point} instead.
+ * @deprecated since 0.2. Use [com.google.maps.android.geometry.Point] instead.
  */
-@Deprecated
-public class Point extends com.google.maps.android.geometry.Point {
-    public Point(double x, double y) {
-        super(x, y);
-    }
-}
+@Deprecated("since 0.2. Use com.google.maps.android.geometry.Point instead.", ReplaceWith("com.google.maps.android.geometry.Point(x, y)"))
+public class Point(x: Double, y: Double) : com.google.maps.android.geometry.Point(x, y)
