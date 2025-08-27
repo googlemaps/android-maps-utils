@@ -117,6 +117,11 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         };
     }
 
+    /**
+     * Sets the interpolator for the animation.
+     *
+     * @param interpolator the interpolator to use for the animation.
+     */
     public void setAnimationInterpolator(TimeInterpolator interpolator) {
         animationInterp = interpolator;
     }
@@ -665,6 +670,15 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          */
         private boolean mListenerAdded;
 
+        private void withLock(Runnable runnable) {
+            lock.lock();
+            try {
+                runnable.run();
+            } finally {
+                lock.unlock();
+            }
+        }
+
         private MarkerModifier() {
             super(Looper.getMainLooper());
         }
@@ -675,17 +689,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param priority whether this operation should have priority.
          */
         public void add(boolean priority, CreateMarkerTask c) {
-            lock.lock();
-            try {
+            withLock(() -> {
                 sendEmptyMessage(BLANK);
                 if (priority) {
                     mOnScreenCreateMarkerTasks.add(c);
                 } else {
                     mCreateMarkerTasks.add(c);
                 }
-            } finally {
-                lock.unlock();
-            }
+            });
         }
 
         /**
@@ -695,17 +706,14 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param m        the markerWithPosition to remove.
          */
         public void remove(boolean priority, Marker m) {
-            lock.lock();
-            try {
+            withLock(() -> {
                 sendEmptyMessage(BLANK);
                 if (priority) {
                     mOnScreenRemoveMarkerTasks.add(m);
                 } else {
                     mRemoveMarkerTasks.add(m);
                 }
-            } finally {
-                lock.unlock();
-            }
+            });
         }
 
         /**
@@ -716,8 +724,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param to     the position to animate to.
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
-            lock.lock();
-            try {
+            withLock(() -> {
                 AnimationTask task = new AnimationTask(marker, from, to, lock);
 
                 for (AnimationTask existingTask : ongoingAnimations) {
@@ -729,9 +736,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
 
                 mAnimationTasks.add(task);
                 ongoingAnimations.add(task);
-            } finally {
-                lock.unlock();
-            }
+            });
         }
 
         /**
@@ -743,8 +748,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
          * @param to     the position to animate to.
          */
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
-            lock.lock();
-            try {
+            withLock(() -> {
                 AnimationTask animationTask = new AnimationTask(marker, from, to, lock);
                 for (AnimationTask existingTask : ongoingAnimations) {
                     if (existingTask.marker.getId().equals(animationTask.marker.getId())) {
@@ -756,9 +760,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                 ongoingAnimations.add(animationTask);
                 animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
                 mAnimationTasks.add(animationTask);
-            } finally {
-                lock.unlock();
-            }
+            });
         }
 
         @Override
