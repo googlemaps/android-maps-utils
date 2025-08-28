@@ -79,13 +79,20 @@ class Gradient @JvmOverloads constructor(
     }
 
     /**
-     * Generates the color map to use with a provided gradient.
+     * Generates a color map array from the gradient's colors and start points. This map is a key
+     * component for rendering the heatmap, where each color corresponds to a different intensity
+     * level.
      *
-     * @param opacity Overall opacity of entire image: every individual alpha value will be
-     * multiplied by this opacity.
-     * @return the generated color map based on the gradient
+     * The process involves interpolating between the specified colors in the HSV color space to create
+     * a smooth transition.
+     *
+     * @param opacity The overall opacity of the entire color map. Each color's alpha value will be
+     * multiplied by this factor. The default value is 0.7, chosen for consistency with the
+     * default opacity of [HeatmapTileProvider].
+     * @return An integer array representing the color map, where each element is a color integer.
      */
-    fun generateColorMap(opacity: Double): IntArray {
+    @JvmOverloads
+    fun generateColorMap(opacity: Double = 0.7): IntArray {
         val colorIntervals = generateColorIntervals()
         val colorMap = IntArray(colorMapSize)
         var interval = colorIntervals[0]
