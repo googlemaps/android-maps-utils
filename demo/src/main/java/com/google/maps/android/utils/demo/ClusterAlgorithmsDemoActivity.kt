@@ -24,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.algo.AbstractAlgorithm
 import com.google.maps.android.clustering.algo.CentroidNonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.ContinuousZoomEuclideanCentroidAlgorithm
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm
@@ -46,14 +47,11 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
     }
 
     override fun startDemo(isRestore: Boolean) {
-        // The MapView is needed for the NonHierarchicalViewBasedAlgorithm.
-        mapView = findViewById(R.id.map)
 
         if (!isRestore) {
             map.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    LatLng(51.503186, -0.126446),
-                    10f
+                    LatLng(51.503186, -0.126446), 10f
                 )
             )
         }
@@ -66,18 +64,13 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
     private fun setupSpinner() {
         val spinner: Spinner = findViewById(R.id.algorithm_spinner)
         val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.clustering_algorithms,
-            android.R.layout.simple_spinner_item
+            this, R.array.clustering_algorithms, android.R.layout.simple_spinner_item
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 setupClusterer(position)
             }
@@ -94,59 +87,40 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
     private fun setupClusterer(algorithmPosition: Int) {
         // 1. Clear the map and previous cluster manager
         map.clear()
-        clusterManager = null
 
         // 2. Initialize a new ClusterManager, using getMap() from BaseDemoActivity
         clusterManager = ClusterManager(this, map)
 
         // 3. Set the desired algorithm based on the spinner position
-        when (algorithmPosition) {
-            1 -> {
-                clusterManager?.algorithm = GridBasedAlgorithm()
-            }
-
-            2 -> {
-                clusterManager?.algorithm = NonHierarchicalDistanceBasedAlgorithm()
-            }
-
-            3 -> {
-                clusterManager?.algorithm = CentroidNonHierarchicalDistanceBasedAlgorithm()
-            }
-
-            4 -> {
-                clusterManager?.algorithm = NonHierarchicalViewBasedAlgorithm(
-                    mapView.width, mapView.height
-                )
-            }
-
-            5 -> {
-                clusterManager?.algorithm = ContinuousZoomEuclideanCentroidAlgorithm()
-            }
-
-            else -> { // Default
-
-            }
+        clusterManager?.algorithm = when (algorithmPosition) {
+            1 -> GridBasedAlgorithm()
+            2 -> NonHierarchicalDistanceBasedAlgorithm()
+            3 -> CentroidNonHierarchicalDistanceBasedAlgorithm()
+            4 -> NonHierarchicalViewBasedAlgorithm(mapView.width, mapView.height)
+            5 -> ContinuousZoomEuclideanCentroidAlgorithm()
+            else -> error("Unsupported algorithm position: $algorithmPosition")
         }
 
         // 4. Point the map's listeners to the ClusterManager
         map.setOnCameraIdleListener(clusterManager)
         map.setOnMarkerClickListener(clusterManager)
 
-        // 5. Add cluster items to the manager
-        addItems()
+        // 5. Generate and add cluster items to the manager
+        val items = generateItems()
+        clusterManager?.addItems(items)
 
         // 6. Trigger the initial clustering
         clusterManager?.cluster()
     }
 
-    private fun addItems() {
+    private fun generateItems(): List<MyItem> {
         val items = mutableListOf<MyItem>()
         // Add 100 random items in the map region
-        for (i in 0..99) {
+        for (i in 0 until 100) {
             val lat = 51.5145 + (Random.nextDouble() - 0.5) / 2.0
             val lng = -0.1245 + (Random.nextDouble() - 0.5) / 2.0
             items.add(MyItem(lat, lng, "Marker #$i", "Snippet for marker #$i"))
         }
-        clusterManager?.addItems(items)
+        return items
     }
 }
