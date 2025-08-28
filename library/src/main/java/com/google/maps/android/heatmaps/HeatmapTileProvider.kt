@@ -138,7 +138,7 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @return A new HeatmapTileProvider.
          */
         fun build(): HeatmapTileProvider {
-            check(this.weightedData?.isNotEmpty() == true) { "No input data: you must use either .data or .weightedData before building." }
+            require(this.weightedData?.isNotEmpty() == true) { "No input data: you must use either .data or .weightedData before building." }
             return HeatmapTileProvider(this)
         }
     }
