@@ -36,8 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mListView = findViewById(R.id.list);
 
-        addDemo("Clustering", ClusteringDemoActivity.class);
         addDemo("Advanced Markers Clustering Example", CustomAdvancedMarkerClusteringDemoActivity.class);
+        addDemo("Cluster Algorithms", ClusterAlgorithmsDemoActivity.class);
+        addDemo("Clustering", ClusteringDemoActivity.class);
         addDemo("Clustering: Custom Look", CustomMarkerClusteringDemoActivity.class);
         addDemo("Clustering: Diff", ClusteringDiffDemoActivity.class);
         addDemo("Clustering: 2K markers", BigClusteringDemoActivity.class);
