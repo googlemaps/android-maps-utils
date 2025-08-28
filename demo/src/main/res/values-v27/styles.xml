@@ -29,6 +29,12 @@
           the system bars.
         -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <!--
+          On API 27+, this allows the app to render in the display cutout area.
+          'shortEdges' is a good default.
+        -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
 </resources>

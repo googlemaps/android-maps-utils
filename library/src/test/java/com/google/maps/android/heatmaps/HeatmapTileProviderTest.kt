@@ -46,7 +46,7 @@ class HeatmapTileProviderTest {
         try {
             HeatmapTileProvider.Builder().build()
             fail("Should have thrown IllegalStateException")
-        } catch (e: IllegalStateException) {
+        } catch (_: IllegalArgumentException) {
             // success
         }
     }
@@ -56,7 +56,7 @@ class HeatmapTileProviderTest {
         try {
             HeatmapTileProvider.Builder().data(emptyList())
             fail("Should have thrown IllegalArgumentException")
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // success
         }
     }
@@ -74,13 +74,13 @@ class HeatmapTileProviderTest {
         try {
             HeatmapTileProvider.Builder().data(data).radius(0)
             fail("Should have thrown IllegalArgumentException")
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // success
         }
         try {
             HeatmapTileProvider.Builder().data(data).radius(100)
             fail("Should have thrown IllegalArgumentException")
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // success
         }
     }
@@ -98,13 +98,13 @@ class HeatmapTileProviderTest {
         try {
             HeatmapTileProvider.Builder().data(data).opacity(-1.0)
             fail("Should have thrown IllegalArgumentException")
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // success
         }
         try {
             HeatmapTileProvider.Builder().data(data).opacity(2.0)
             fail("Should have thrown IllegalArgumentException")
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // success
         }
     }
