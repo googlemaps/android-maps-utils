@@ -19,6 +19,7 @@ package com.google.maps.android.utils.demo;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -63,6 +64,9 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     private final String TAG = "HeatmapPlacesDemo";
 
     private final LatLng SYDNEY = new LatLng(-33.873651, 151.2058896);
+    private final LatLng BOULDER = new LatLng(40.0216437819216, -105.25471683073081);
+
+    private final LatLng FOCUS = BOULDER;
 
     /**
      * The base URL for the radar search request.
@@ -78,27 +82,28 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * Places API server key.
      */
-    private static final String API_KEY = "YOUR_KEY_HERE"; // TODO place your own here!
+    private static final String API_KEY = BuildConfig.PLACES_API_KEY;
 
     /**
      * The colors to be used for the different heatmap layers.
      */
     private static final int[] HEATMAP_COLORS = {
-        HeatmapColors.RED.color,
-        HeatmapColors.BLUE.color,
-        HeatmapColors.GREEN.color,
-        HeatmapColors.PINK.color,
-        HeatmapColors.GREY.color
+            HeatmapColors.RED.color,
+            HeatmapColors.BLUE.color,
+            HeatmapColors.GREEN.color,
+            HeatmapColors.PINK.color,
+            HeatmapColors.GREY.color
     };
 
     public enum HeatmapColors {
-        RED (Color.rgb(238, 44, 44)),
-        BLUE (Color.rgb(60, 80, 255)),
-        GREEN (Color.rgb(20, 170, 50)),
-        PINK (Color.rgb(255, 80, 255)),
-        GREY (Color.rgb(100, 100, 100));
+        RED(Color.rgb(238, 44, 44)),
+        BLUE(Color.rgb(60, 80, 255)),
+        GREEN(Color.rgb(20, 170, 50)),
+        PINK(Color.rgb(255, 80, 255)),
+        GREY(Color.rgb(100, 100, 100));
 
         private final int color;
+
         HeatmapColors(int color) {
             this.color = color;
         }
@@ -115,7 +120,7 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     /**
      * Stores the TileOverlay corresponding to each of the keywords that have been searched for.
      */
-    private Hashtable<String, TileOverlay> mOverlays = new Hashtable<String, TileOverlay>();
+    private final Hashtable<String, TileOverlay> mOverlays = new Hashtable<String, TileOverlay>();
 
     /**
      * A layout containing checkboxes for each of the heatmaps rendered.
@@ -131,6 +136,19 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * The number of overlays that have been inputted so far.
      */
     private int mOverlaysInput = 0;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if ("YOUR_API_KEY".equals(API_KEY)) {
+            Toast.makeText(
+                    this,
+                    "Please sign up for a Places API key and add it to HeatmapsPlacesDemoActivity.API_KEY",
+                    Toast.LENGTH_LONG
+            ).show();
+            finish();
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -152,11 +170,11 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
         mCheckboxLayout = findViewById(R.id.checkboxes);
         GoogleMap map = getMap();
         if (!isRestore) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(SYDNEY, 11));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(FOCUS, 11));
         }
-        // Add a circle around Sydney to roughly encompass the results
+        // Add a circle around FOCUS to roughly encompass the results
         map.addCircle(new CircleOptions()
-                .center(SYDNEY)
+                .center(FOCUS)
                 .radius(SEARCH_RADIUS * 1.2)
                 .strokeColor(Color.RED)
                 .strokeWidth(4));
@@ -167,18 +185,13 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
      * Called when a search query is submitted
      */
     public void submit(View view) {
-        if ("YOUR_KEY_HERE".equals(API_KEY)) {
-            Toast.makeText(this, "Please sign up for a Places API key and add it to HeatmapsPlacesDemoActivity.API_KEY",
-                Toast.LENGTH_LONG).show();
-            return;
-        }
         EditText editText = findViewById(R.id.input_text);
         String keyword = editText.getText().toString();
         if (mOverlays.contains(keyword)) {
             Toast.makeText(this, "This keyword has already been inputted :(", Toast.LENGTH_SHORT).show();
         } else if (mOverlaysRendered == MAX_CHECKBOXES) {
             Toast.makeText(this, "You can only input " + MAX_CHECKBOXES + " keywords. :(", Toast.LENGTH_SHORT).show();
-        } else if (keyword.length() != 0) {
+        } else if (!keyword.isEmpty()) {
             mOverlaysInput++;
             ProgressBar progressBar = findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.VISIBLE);
@@ -202,11 +215,11 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     private Collection<LatLng> getPoints(String keyword) {
         HashMap<String, LatLng> results = new HashMap<>();
 
-        // Calculate four equidistant points around Sydney to use as search centers
+        // Calculate four equidistant points around FOCUS to use as search centers
         //   so that four searches can be done.
         ArrayList<LatLng> searchCenters = new ArrayList<>(4);
         for (int heading = 45; heading < 360; heading += 90) {
-            searchCenters.add(SphericalUtil.computeOffset(SYDNEY, SEARCH_RADIUS / 2, heading));
+            searchCenters.add(SphericalUtil.computeOffset(FOCUS, (double) SEARCH_RADIUS / 2, heading));
         }
 
         for (int j = 0; j < 4; j++) {
