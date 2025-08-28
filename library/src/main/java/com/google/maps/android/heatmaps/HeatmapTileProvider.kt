@@ -55,7 +55,7 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         // Don't compute anything till data is set
         kernel = generateKernel(radius, radius / 3.0)
         setGradient(gradient)
-        setWeightedData(data)
+        updateData(data)
     }
 
     /**
@@ -143,7 +143,21 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         }
     }
 
+    @Deprecated("Use updateData(Collection<WeightedLatLng>) instead.", ReplaceWith("updateData(data)"))
     fun setWeightedData(data: Collection<WeightedLatLng>) {
+        updateData(data)
+    }
+
+    /**
+     * Refreshes the heatmap with a new collection of weighted data points.
+     *
+     * This is an expensive operation. It involves rebuilding the quadtree index and recalculating
+     * the bounds and maximum intensity values for the new dataset. This method should be used when
+     * the underlying data for the heatmap has changed.
+     *
+     * @param data The new collection of [WeightedLatLng] points.
+     */
+    fun updateData(data: Collection<WeightedLatLng>) {
         this.data = data
         require(this.data.isNotEmpty()) { "No input points." }
         this.bounds = getBounds(this.data)
@@ -154,8 +168,22 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         this.maxIntensity = getMaxIntensities(this.radius)
     }
 
+    @Deprecated("Use updateLatLngs(Collection<LatLng>) instead.", ReplaceWith("updateLatLngs(latLngs)"))
     fun setData(latLngs: Collection<LatLng>) {
-        setWeightedData(wrapData(latLngs))
+        updateLatLngs(latLngs)
+    }
+
+    /**
+     * Refreshes the heatmap with a new collection of unweighted data points.
+     * Each point is assigned a default weight of 1.0.
+     *
+     * This is a convenience method that wraps the data in [WeightedLatLng] objects before
+     * calling [updateData].
+     *
+     * @param latLngs The new collection of [LatLng] points.
+     */
+    fun updateLatLngs(latLngs: Collection<LatLng>) {
+        updateData(wrapData(latLngs))
     }
 
     fun setGradient(gradient: Gradient) {
@@ -176,7 +204,7 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
 
     fun setMaxIntensity(intensity: Double) {
         this.customMaxIntensity = intensity
-        setWeightedData(this.data)
+        updateData(this.data)
     }
 
     override fun getTile(x: Int, y: Int, zoom: Int): Tile {
