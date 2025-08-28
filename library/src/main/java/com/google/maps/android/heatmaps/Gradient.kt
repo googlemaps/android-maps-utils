@@ -87,12 +87,11 @@ class Gradient @JvmOverloads constructor(
      * a smooth transition.
      *
      * @param opacity The overall opacity of the entire color map. Each color's alpha value will be
-     * multiplied by this factor. The default value is 0.7, chosen for consistency with the
-     * default opacity of [HeatmapTileProvider].
+     * multiplied by this factor. The default value is [HeatmapTileProvider.DEFAULT_OPACITY].
      * @return An integer array representing the color map, where each element is a color integer.
      */
     @JvmOverloads
-    fun generateColorMap(opacity: Double = 0.7): IntArray {
+    fun generateColorMap(opacity: Double = HeatmapTileProvider.DEFAULT_OPACITY): IntArray {
         val colorIntervals = generateColorIntervals()
         val colorMap = IntArray(colorMapSize)
         var interval = colorIntervals[0]
