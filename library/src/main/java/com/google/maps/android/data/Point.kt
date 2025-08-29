@@ -35,12 +35,12 @@ open class Point(coordinates: LatLng) : Geometry<LatLng> {
     /**
      * Gets the type of geometry
      */
-    override fun getGeometryType(): String = "Point"
+    override val geometryType: String = "Point"
 
     /**
      * Gets the geometry object
      */
-    override fun getGeometryObject(): LatLng = _coordinates
+    override val geometryObject: LatLng = _coordinates
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -35,12 +35,12 @@ open class LineString(coordinates: List<LatLng>) : Geometry<List<LatLng>> {
     /**
      * Gets the type of geometry
      */
-    override fun getGeometryType(): String = "LineString"
+    override val geometryType: String = "LineString"
 
     /**
      * Gets the geometry object
      */
-    override fun getGeometryObject(): List<LatLng> = _coordinates
+    override val geometryObject: List<LatLng> = _coordinates
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
