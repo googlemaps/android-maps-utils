@@ -23,16 +23,16 @@ import java.lang.reflect.InvocationTargetException
 
 class PointTest {
     @Test
-    fun `getGeometryType returns correct type`() {
+    fun `geometryType returns correct type`() {
         val point = Point(LatLng(0.0, 50.0))
-        assertThat(point.getGeometryType()).isEqualTo("Point")
+        assertThat(point.geometryType).isEqualTo("Point")
     }
 
     @Test
-    fun `getGeometryObject returns correct coordinates`() {
+    fun `geometryObject returns correct coordinates`() {
         val coordinates = LatLng(0.0, 50.0)
         val point = Point(coordinates)
-        assertThat(point.getGeometryObject()).isEqualTo(coordinates)
+        assertThat(point.geometryObject).isEqualTo(coordinates)
         assertThat(point.coordinates).isEqualTo(coordinates)
     }
 

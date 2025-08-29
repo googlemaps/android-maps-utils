@@ -35,13 +35,13 @@ class LineStringTest {
     }
 
     @Test
-    fun `getType returns correct type`() {
+    fun `geometryType returns correct type`() {
         val lineString = createSimpleLineString()
-        assertThat(lineString.getGeometryType()).isEqualTo("LineString")
+        assertThat(lineString.geometryType).isEqualTo("LineString")
     }
 
     @Test
-    fun `getGeometryObject returns correct coordinates`() {
+    fun `geometryObject returns correct coordinates`() {
         val lineString = createSimpleLineString()
         val expectedCoordinates = listOf(
             LatLng(90.0, 60.0),
@@ -51,7 +51,7 @@ class LineStringTest {
             LatLng(90.0, 54.0),
             LatLng(86.0, 56.0)
         )
-        assertThat(lineString.getGeometryObject()).containsExactlyElementsIn(expectedCoordinates).inOrder()
+        assertThat(lineString.geometryObject).containsExactlyElementsIn(expectedCoordinates).inOrder()
     }
 
     @Test
