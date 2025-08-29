@@ -31,18 +31,14 @@ public class GeoJsonGeometryCollection extends MultiGeometry {
      */
     public GeoJsonGeometryCollection(List<Geometry> geometries) {
         super(geometries);
-        setGeometryType("GeometryCollection");
     }
 
-    /**
-     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
-     * specification.
-     *
-     * @return type of geometry
-     */
-    public String getType() {
-        return getGeometryType();
+    @Override
+    public String getGeometryType() {
+        return "GeometryCollection";
     }
+
+    
 
     /**
      * Gets the stored Geometry objects

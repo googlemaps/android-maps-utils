@@ -44,7 +44,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Document class allows for users to input their KML data and output it onto the map
  */
-public class KmlLayer extends Layer {
+public class KmlLayer extends Layer<KmlPlacemark> {
 
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
@@ -227,7 +227,7 @@ public class KmlLayer extends Layer {
      * @return iterable of KmlPlacemark objects
      */
     public Iterable<KmlPlacemark> getPlacemarks() {
-        return (Iterable<KmlPlacemark>) getFeatures();
+        return getFeatures();
     }
 
     /**

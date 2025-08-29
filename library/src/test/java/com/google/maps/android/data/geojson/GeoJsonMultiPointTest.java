@@ -35,7 +35,7 @@ public class GeoJsonMultiPointTest {
         points.add(new GeoJsonPoint(new LatLng(5, 5)));
         points.add(new GeoJsonPoint(new LatLng(10, 10)));
         mp = new GeoJsonMultiPoint(points);
-        assertEquals("MultiPoint", mp.getType());
+        assertEquals("MultiPoint", mp.getGeometryType());
     }
 
     @Test
@@ -48,14 +48,15 @@ public class GeoJsonMultiPointTest {
         assertEquals(points, mp.getPoints());
 
         points = new ArrayList<>();
-        mp = new GeoJsonMultiPoint(points);
+        mp = new GeoJsonMultiPoint(new ArrayList<GeoJsonPoint>());
         assertEquals(new ArrayList<GeoJsonPoint>(), mp.getPoints());
 
         try {
             mp = new GeoJsonMultiPoint(null);
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Geometries cannot be null", e.getMessage());
+        } catch (NullPointerException e) {
+            // Expected, as the underlying MultiGeometry class is now in Kotlin
+            // with a non-null constructor parameter.
         }
     }
 }

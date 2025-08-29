@@ -50,8 +50,9 @@ public class GeoJsonLineStringTest {
         try {
             ls = new GeoJsonLineString(null);
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Coordinates cannot be null", e.getMessage());
+        } catch (NullPointerException e) {
+            // Expected, as the underlying LineString class is now in Kotlin
+            // with a non-null constructor parameter.
         }
     }
 

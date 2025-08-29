@@ -57,8 +57,9 @@ public class KmlMultiGeometryTest {
         try {
             new KmlMultiGeometry(null);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Geometries cannot be null", e.getMessage());
+        } catch (NullPointerException e) {
+            // Expected, as the underlying MultiGeometry class is now in Kotlin
+            // with a non-null constructor parameter.
         }
     }
 }
