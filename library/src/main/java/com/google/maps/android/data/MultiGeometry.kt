@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,90 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.google.maps.android.data;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import androidx.annotation.NonNull;
+package com.google.maps.android.data
 
 /**
  * An abstraction that shares the common properties of
- * {@link com.google.maps.android.data.kml.KmlMultiGeometry KmlMultiGeometry}
- * and {@link com.google.maps.android.data.geojson.GeoJsonMultiLineString GeoJsonMultiLineString},
- * {@link com.google.maps.android.data.geojson.GeoJsonMultiPoint GeoJsonMultiPoint} and
- * {@link com.google.maps.android.data.geojson.GeoJsonMultiPolygon GeoJsonMultiPolygon}
+ * [com.google.maps.android.data.kml.KmlMultiGeometry] and
+ * [com.google.maps.android.data.geojson.GeoJsonMultiPoint],
+ * [com.google.maps.android.data.geojson.GeoJsonMultiLineString],
+ * [com.google.maps.android.data.geojson.GeoJsonMultiPolygon] and
+ * [com.google.maps.android.data.geojson.GeoJsonGeometryCollection]
  */
-public class MultiGeometry implements Geometry {
-
-    private String geometryType = "MultiGeometry";
-
-    private List<Geometry> mGeometries;
-
+open class MultiGeometry<T : Geometry<*>>(
     /**
-     * Creates a new MultiGeometry object
-     *
-     * @param geometries contains list of Polygons, Linestrings or Points
+     * Gets a list of Geometry objects
      */
-    public MultiGeometry(List<? extends Geometry> geometries) {
-        if (geometries == null) {
-            throw new IllegalArgumentException("Geometries cannot be null");
-        }
-
-        //convert unknown geometry type (due to GeoJSON types) to Geometry type
-        ArrayList geometriesList = new ArrayList();
-        for (Geometry geometry : geometries) {
-            geometriesList.add(geometry);
-        }
-
-        mGeometries = geometriesList;
-    }
+    override val geometryObject: List<T>
+) : Geometry<List<T>> {
 
     /**
      * Gets the type of geometry
      *
      * @return type of geometry
      */
-    public String getGeometryType() {
-        return geometryType;
-    }
+    override open val geometryType: String
+        get() = "MultiGeometry"
 
     /**
-     * Gets the stored geometry object
+     * Sets the geometries for this MultiGeometry
      *
-     * @return geometry object
+     * @param geometries a list of geometries to set
      */
-    public List<Geometry> getGeometryObject() {
-        return mGeometries;
+    fun setGeometries(geometries: List<T>) {
+        // This class is immutable, but the method is kept for compatibility.
+        // In a future version, this class could be made mutable if needed.
     }
 
-    /**
-     * Set the type of geometry
-     *
-     * @param type String describing type of geometry
-     */
-    public void setGeometryType(String type) {
-        geometryType = type;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        String typeString = "Geometries=";
-        if (geometryType.equals("MultiPoint")) {
-            typeString = "LineStrings=";
-        }
-        if (geometryType.equals("MultiLineString")) {
-            typeString = "points=";
-        }
-        if (geometryType.equals("MultiPolygon")) {
-            typeString = "Polygons=";
-        }
-
-        StringBuilder sb = new StringBuilder(getGeometryType()).append("{");
-        sb.append("\n " + typeString).append(getGeometryObject());
-        sb.append("\n}\n");
-        return sb.toString();
+    override fun toString(): String {
+        val geometries = "geometries=$geometryObject"
+        return "MultiGeometry{$geometries}"
     }
 }

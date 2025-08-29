@@ -32,18 +32,14 @@ public class GeoJsonMultiLineString extends MultiGeometry {
      */
     public GeoJsonMultiLineString(List<GeoJsonLineString> geoJsonLineStrings) {
         super(geoJsonLineStrings);
-        setGeometryType("MultiLineString");
     }
 
-    /**
-     * Gets the type of geometry. The type of geometry conforms to the GeoJSON 'type'
-     * specification.
-     *
-     * @return type of geometry
-     */
-    public String getType() {
-        return getGeometryType();
+    @Override
+    public String getGeometryType() {
+        return "MultiLineString";
     }
+
+    
 
     /**
      * Gets a list of GeoJsonLineStrings
