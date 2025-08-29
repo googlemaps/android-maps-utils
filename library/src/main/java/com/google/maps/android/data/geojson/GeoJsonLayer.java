@@ -50,7 +50,7 @@ import androidx.annotation.NonNull;
  * To remove the rendered data from the layer
  * {@code layer.removeLayerFromMap();}
  */
-public class GeoJsonLayer extends Layer {
+public class GeoJsonLayer extends Layer<GeoJsonFeature> {
 
     private LatLngBounds mBoundingBox;
 
@@ -172,8 +172,9 @@ public class GeoJsonLayer extends Layer {
      *
      * @return iterable of Feature elements
      */
+    @Override
     public Iterable<GeoJsonFeature> getFeatures() {
-        return (Iterable<GeoJsonFeature>) super.getFeatures();
+        return super.getFeatures();
     }
 
     /**
