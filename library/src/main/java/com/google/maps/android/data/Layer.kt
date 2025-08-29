@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,59 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.maps.android.data
 
-package com.google.maps.android.data;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
-import com.google.maps.android.data.geojson.GeoJsonPointStyle;
-import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
-import com.google.maps.android.data.geojson.GeoJsonRenderer;
-import com.google.maps.android.data.kml.KmlContainer;
-import com.google.maps.android.data.kml.KmlGroundOverlay;
-import com.google.maps.android.data.kml.KmlRenderer;
+import com.google.android.gms.maps.GoogleMap
+import com.google.maps.android.data.geojson.GeoJsonLineStringStyle
+import com.google.maps.android.data.geojson.GeoJsonPointStyle
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
+import com.google.maps.android.data.geojson.GeoJsonRenderer
+import com.google.maps.android.data.kml.KmlContainer
+import com.google.maps.android.data.kml.KmlGroundOverlay
+import com.google.maps.android.data.kml.KmlRenderer
 
 /**
  * An abstraction that shares the common properties of
- * {@link com.google.maps.android.data.kml.KmlLayer KmlLayer} and
- * {@link com.google.maps.android.data.geojson.GeoJsonLayer GeoJsonLayer}
+ * [com.google.maps.android.data.kml.KmlLayer] and
+ * [com.google.maps.android.data.geojson.GeoJsonLayer]
  */
-public abstract class Layer {
-
-    private Renderer mRenderer;
+abstract class Layer<T : Feature> {
+    @JvmField
+    protected var renderer: Renderer<T>? = null
 
     /**
      * Adds the KML data to the map
      */
-    protected void addKMLToMap() {
-        if (mRenderer instanceof KmlRenderer) {
-            ((KmlRenderer) mRenderer).addLayerToMap();
-        } else {
-            throw new UnsupportedOperationException("Stored renderer is not a KmlRenderer");
-        }
+    protected fun addKMLToMap() {
+        val kmlRenderer = renderer as? KmlRenderer
+            ?: throw UnsupportedOperationException("Stored renderer is not a KmlRenderer")
+        kmlRenderer.addLayerToMap()
     }
 
     /**
      * Adds GeoJson data to the map
      */
-    protected void addGeoJsonToMap() {
-        if (mRenderer instanceof GeoJsonRenderer) {
-            ((GeoJsonRenderer) mRenderer).addLayerToMap();
-        } else {
-            throw new UnsupportedOperationException("Stored renderer is not a GeoJsonRenderer");
-        }
+    protected fun addGeoJsonToMap() {
+        val geoJsonRenderer = renderer as? GeoJsonRenderer
+            ?: throw UnsupportedOperationException("Stored renderer is not a GeoJsonRenderer")
+        geoJsonRenderer.addLayerToMap()
     }
 
-    public abstract void addLayerToMap();
+    abstract fun addLayerToMap()
 
     /**
      * Removes all the data from the map and clears all the stored placemarks
      */
-    public void removeLayerFromMap() {
-        if (mRenderer instanceof GeoJsonRenderer) {
-            ((GeoJsonRenderer) mRenderer).removeLayerFromMap();
-        } else if (mRenderer instanceof KmlRenderer) {
-            ((KmlRenderer) mRenderer).removeLayerFromMap();
+    fun removeLayerFromMap() {
+        when (val r = renderer) {
+            is GeoJsonRenderer -> r.removeLayerFromMap()
+            is KmlRenderer -> r.removeLayerFromMap()
         }
     }
 
@@ -73,22 +67,22 @@ public abstract class Layer {
      * Sets a single click listener for the entire GoogleMap object, that will be called
      * with the corresponding Feature object when an object on the map (Polygon,
      * Marker, Polyline) is clicked.
-     * <p>
+     *
      * If getFeature() returns null this means that either the object is inside a KMLContainer,
      * or the object is a MultiPolygon, MultiLineString or MultiPoint and must
      * be handled differently.
      *
      * @param listener Listener providing the onFeatureClick method to call.
      */
-    public void setOnFeatureClickListener(final OnFeatureClickListener listener) {
-        mRenderer.setOnFeatureClickListener(listener);
+    fun setOnFeatureClickListener(listener: OnFeatureClickListener) {
+        renderer?.setOnFeatureClickListener(listener)
     }
 
     /**
      * Callback interface for when a map object is clicked.
      */
-    public interface OnFeatureClickListener {
-        void onFeatureClick(Feature feature);
+    fun interface OnFeatureClickListener {
+        fun onFeatureClick(feature: Feature)
     }
 
     /**
@@ -96,8 +90,8 @@ public abstract class Layer {
      *
      * @param renderer the new Renderer object that belongs to this Layer
      */
-    protected void storeRenderer(Renderer renderer) {
-        mRenderer = renderer;
+    protected fun storeRenderer(renderer: Renderer<T>) {
+        this.renderer = renderer
     }
 
     /**
@@ -105,9 +99,10 @@ public abstract class Layer {
      *
      * @return iterable of Feature elements
      */
-    public Iterable<? extends Feature> getFeatures() {
-        return mRenderer.getFeatures();
+    open fun getFeatures(): Iterable<T> {
+        return renderer?.features ?: emptyList()
     }
+
 
     /**
      * Retrieves a corresponding Feature instance for the given Object
@@ -117,12 +112,12 @@ public abstract class Layer {
      * @param mapObject Object
      * @return Feature for the given object
      */
-    public Feature getFeature(Object mapObject) {
-        return mRenderer.getFeature(mapObject);
+    fun getFeature(mapObject: Any): T? {
+        return renderer?.getFeature(mapObject) as T?
     }
 
-    public Feature getContainerFeature(Object mapObject) {
-        return mRenderer.getContainerFeature(mapObject);
+    fun getContainerFeature(mapObject: Any): T? {
+        return renderer?.getContainerFeature(mapObject) as T?
     }
 
     /**
@@ -130,20 +125,15 @@ public abstract class Layer {
      *
      * @return true if there are features on the layer, false otherwise
      */
-    protected boolean hasFeatures() {
-        return mRenderer.hasFeatures();
-    }
+    protected open fun hasFeatures(): Boolean = renderer?.hasFeatures() ?: false
 
     /**
      * Checks if the layer contains any KmlContainers
      *
      * @return true if there is at least 1 container within the KmlLayer, false otherwise
      */
-    protected boolean hasContainers() {
-        if (mRenderer instanceof KmlRenderer) {
-            return ((KmlRenderer) mRenderer).hasNestedContainers();
-        }
-        return false;
+    protected open fun hasContainers(): Boolean {
+        return (renderer as? KmlRenderer)?.hasNestedContainers() ?: false
     }
 
     /**
@@ -151,23 +141,18 @@ public abstract class Layer {
      *
      * @return iterable of KmlContainerInterface objects
      */
-    protected Iterable<KmlContainer> getContainers() {
-        if (mRenderer instanceof KmlRenderer) {
-            return ((KmlRenderer) mRenderer).getNestedContainers();
-        }
-        return null;
+    protected open fun getContainers(): Iterable<KmlContainer>? {
+        return (renderer as? KmlRenderer)?.nestedContainers
     }
+
 
     /**
      * Gets an iterable of KmlGroundOverlay objects
      *
      * @return iterable of KmlGroundOverlay objects
      */
-    protected Iterable<KmlGroundOverlay> getGroundOverlays() {
-        if (mRenderer instanceof KmlRenderer) {
-            return ((KmlRenderer) mRenderer).getGroundOverlays();
-        }
-        return null;
+    protected open fun getGroundOverlays(): Iterable<KmlGroundOverlay>? {
+        return (renderer as? KmlRenderer)?.groundOverlays
     }
 
     /**
@@ -175,9 +160,8 @@ public abstract class Layer {
      *
      * @return map on which the layer is rendered
      */
-    public GoogleMap getMap() {
-        return mRenderer.getMap();
-    }
+    val map: GoogleMap?
+        get() = renderer?.map
 
     /**
      * Renders the layer on the given map. The layer on the current map is removed and
@@ -185,8 +169,8 @@ public abstract class Layer {
      *
      * @param map to render the layer on, if null the layer is cleared from the current map
      */
-    public void setMap(GoogleMap map) {
-        mRenderer.setMap(map);
+    fun setMap(map: GoogleMap?) {
+        renderer?.map = map
     }
 
     /**
@@ -194,17 +178,16 @@ public abstract class Layer {
      *
      * @return true if the layer is on the map, false otherwise
      */
-    public boolean isLayerOnMap() {
-        return mRenderer.isLayerOnMap();
-    }
+    val isLayerOnMap: Boolean
+        get() = renderer?.isLayerOnMap ?: false
 
     /**
      * Adds a provided feature to the map
      *
      * @param feature feature to add to map
      */
-    protected void addFeature(Feature feature) {
-        mRenderer.addFeature(feature);
+    protected open fun addFeature(feature: T) {
+        renderer?.addFeature(feature)
     }
 
     /**
@@ -212,8 +195,8 @@ public abstract class Layer {
      *
      * @param feature feature to be removed
      */
-    protected void removeFeature(Feature feature) {
-        mRenderer.removeFeature(feature);
+    protected open fun removeFeature(feature: T) {
+        renderer?.removeFeature(feature)
     }
 
     /**
@@ -222,9 +205,8 @@ public abstract class Layer {
      *
      * @return default style used to render GeoJsonPoints
      */
-    public GeoJsonPointStyle getDefaultPointStyle() {
-        return mRenderer.getDefaultPointStyle();
-    }
+    val defaultPointStyle: GeoJsonPointStyle?
+        get() = renderer?.defaultPointStyle
 
     /**
      * Gets the default style used to render GeoJsonLineStrings. Any changes to this style will be
@@ -232,9 +214,8 @@ public abstract class Layer {
      *
      * @return default style used to render GeoJsonLineStrings
      */
-    public GeoJsonLineStringStyle getDefaultLineStringStyle() {
-        return mRenderer.getDefaultLineStringStyle();
-    }
+    val defaultLineStringStyle: GeoJsonLineStringStyle?
+        get() = renderer?.defaultLineStringStyle
 
     /**
      * Gets the default style used to render GeoJsonPolygons. Any changes to this style will be
@@ -242,7 +223,6 @@ public abstract class Layer {
      *
      * @return default style used to render GeoJsonPolygons
      */
-    public GeoJsonPolygonStyle getDefaultPolygonStyle() {
-        return mRenderer.getDefaultPolygonStyle();
-    }
+    val defaultPolygonStyle: GeoJsonPolygonStyle?
+        get() = renderer?.defaultPolygonStyle
 }

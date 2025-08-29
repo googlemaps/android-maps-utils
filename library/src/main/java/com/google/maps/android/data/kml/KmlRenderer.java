@@ -55,7 +55,7 @@ import java.util.Set;
  * Renders all visible KmlPlacemark and KmlGroundOverlay objects onto the GoogleMap as Marker,
  * Polyline, Polygon, GroundOverlay objects. Also removes objects from the map.
  */
-public class KmlRenderer extends Renderer {
+public class KmlRenderer extends Renderer<KmlPlacemark> {
 
     private static final String LOG_TAG = "KmlRenderer";
 
@@ -85,7 +85,7 @@ public class KmlRenderer extends Renderer {
      *
      * @param placemarks placemarks to remove
      */
-    private void removePlacemarks(HashMap<? extends Feature, Object> placemarks) {
+    private void removePlacemarks(HashMap<KmlPlacemark, Object> placemarks) {
         // Remove map object from the map
         removeFeatures(placemarks);
     }
@@ -254,8 +254,8 @@ public class KmlRenderer extends Renderer {
      *
      * @param placemarks
      */
-    private void addPlacemarksToMap(HashMap<? extends Feature, Object> placemarks) {
-        for (Feature kmlPlacemark : placemarks.keySet()) {
+    private void addPlacemarksToMap(HashMap<KmlPlacemark, Object> placemarks) {
+        for (KmlPlacemark kmlPlacemark : placemarks.keySet()) {
             addFeature(kmlPlacemark);
         }
     }
@@ -327,7 +327,7 @@ public class KmlRenderer extends Renderer {
      * @param placemarks map of placemark to features
      */
     private void addIconToMarkers(String iconUrl, HashMap<KmlPlacemark, Object> placemarks) {
-        for (Feature placemark : placemarks.keySet()) {
+        for (KmlPlacemark placemark : placemarks.keySet()) {
             KmlStyle urlStyle = getStylesRenderer().get(placemark.getId());
             KmlStyle inlineStyle = ((KmlPlacemark) placemark).getInlineStyle();
             Geometry geometry = placemark.getGeometry();
@@ -558,7 +558,7 @@ public class KmlRenderer extends Renderer {
             } else {
                 cacheBitmap(mIconUrl, bitmap);
                 if (isLayerOnMap()) {
-                    addIconToMarkers(mIconUrl, (HashMap<KmlPlacemark, Object>) getAllFeatures());
+                    addIconToMarkers(mIconUrl, getAllFeatures());
                     addContainerGroupIconsToMarkers(mIconUrl, mContainers);
                 }
             }

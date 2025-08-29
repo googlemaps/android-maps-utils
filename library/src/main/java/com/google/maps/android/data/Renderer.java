@@ -77,7 +77,7 @@ import androidx.annotation.Nullable;
  * {@link com.google.maps.android.data.kml.KmlRenderer KmlRenderer} and
  * {@link com.google.maps.android.data.geojson.GeoJsonRenderer GeoJsonRenderer}
  */
-public class Renderer {
+public class Renderer<T extends Feature> {
 
     private static final int MARKER_ICON_SIZE = 32;
 
@@ -87,7 +87,7 @@ public class Renderer {
 
     private GoogleMap mMap;
 
-    private final BiMultiMap<Feature> mFeatures = new BiMultiMap<>();
+    private final BiMultiMap<T> mFeatures = new BiMultiMap<>();
 
     private HashMap<String, KmlStyle> mStyles;
 
@@ -156,7 +156,7 @@ public class Renderer {
      * @param polylineManager polyline manager to create polyline collection from
      * @param groundOverlayManager ground overlay manager to create ground overlay collection from
      */
-    public Renderer(GoogleMap map, HashMap<? extends Feature, Object> features, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
+    public Renderer(GoogleMap map, HashMap<T, Object> features, MarkerManager markerManager, PolygonManager polygonManager, PolylineManager polylineManager, GroundOverlayManager groundOverlayManager) {
         this(map, null, new GeoJsonPointStyle(), new GeoJsonLineStringStyle(), new GeoJsonPolygonStyle(), null, markerManager, polygonManager, polylineManager, groundOverlayManager);
         mFeatures.putAll(features);
         mImagesCache = null;
@@ -274,7 +274,7 @@ public class Renderer {
      *
      * @return set containing Features
      */
-    public Set<Feature> getFeatures() {
+    public Set<T> getFeatures() {
         return mFeatures.keySet();
     }
 
@@ -284,7 +284,7 @@ public class Renderer {
      * @param mapObject Marker, Polyline or Polygon
      * @return Feature for the given map object
      */
-    Feature getFeature(Object mapObject) {
+    T getFeature(Object mapObject) {
         return mFeatures.getKey(mapObject);
     }
 
@@ -310,7 +310,7 @@ public class Renderer {
      *
      * @return mFeatures hashmap
      */
-    protected HashMap<? extends Feature, Object> getAllFeatures() {
+    protected HashMap<T, Object> getAllFeatures() {
         return mFeatures;
     }
 
@@ -482,7 +482,7 @@ public class Renderer {
      * @param feature Feature to be added onto the map
      * @param object  Corresponding map object to this feature
      */
-    protected void putFeatures(Feature feature, Object object) {
+    protected void putFeatures(T feature, Object object) {
         mFeatures.put(feature, object);
     }
 
@@ -610,7 +610,7 @@ public class Renderer {
      *
      * @param feature feature to remove from map
      */
-    protected void removeFeature(Feature feature) {
+    protected void removeFeature(T feature) {
         // Check if given feature is stored
         if (mFeatures.containsKey(feature)) {
             removeFromMap(mFeatures.remove(feature));
@@ -652,7 +652,7 @@ public class Renderer {
      */
     protected void storeData(HashMap<String, KmlStyle> styles,
                              HashMap<String, String> styleMaps,
-                             HashMap<KmlPlacemark, Object> features,
+                             HashMap<T, Object> features,
                              ArrayList<KmlContainer> folders,
                              HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays) {
         mStyles = styles;
@@ -667,7 +667,7 @@ public class Renderer {
      *
      * @param feature feature to add to the map
      */
-    protected void addFeature(Feature feature) {
+    protected void addFeature(T feature) {
         Object mapObject = FEATURE_NOT_ON_MAP;
         if (feature instanceof GeoJsonFeature) {
             setFeatureDefaultStyles((GeoJsonFeature) feature);
