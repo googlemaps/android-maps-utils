@@ -36,8 +36,9 @@ public class GeoJsonPointTest {
         try {
             new GeoJsonPoint(null);
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Coordinates cannot be null", e.getMessage());
+        } catch (NullPointerException e) {
+            // Expected, as the underlying Point class is now in Kotlin
+            // with a non-null constructor parameter.
         }
     }
 
