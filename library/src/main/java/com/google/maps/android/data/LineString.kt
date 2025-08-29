@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,63 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.maps.android.data
 
-package com.google.maps.android.data;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
-
-import androidx.annotation.NonNull;
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * An abstraction that shares the common properties of
- * {@link com.google.maps.android.data.kml.KmlLineString KmlLineString} and
- * {@link com.google.maps.android.data.geojson.GeoJsonLineString GeoJsonLineString}
+ * [com.google.maps.android.data.kml.KmlLineString] and
+ * [com.google.maps.android.data.geojson.GeoJsonLineString]
  */
-public class LineString implements Geometry<List<LatLng>> {
+open class LineString(coordinates: List<LatLng>) : Geometry<List<LatLng>> {
 
-    private static final String GEOMETRY_TYPE = "LineString";
-
-    private final List<LatLng> mCoordinates;
-
-    /**
-     * Creates a new LineString object
-     *
-     * @param coordinates array of coordinates
-     */
-    public LineString(List<LatLng> coordinates) {
-        if (coordinates == null) {
-            throw new IllegalArgumentException("Coordinates cannot be null");
-        }
-        mCoordinates = coordinates;
-    }
-
-    /**
-     * Gets the type of geometry
-     *
-     * @return type of geometry
-     */
-    public String getGeometryType() {
-        return GEOMETRY_TYPE;
-    }
+    private val _coordinates: List<LatLng> = coordinates
 
     /**
      * Gets the coordinates of the LineString
-     *
-     * @return coordinates of the LineString
      */
-    public List<LatLng> getGeometryObject() {
-        return mCoordinates;
+    open val coordinates: List<LatLng>
+        get() = _coordinates
+
+    /**
+     * Gets the type of geometry
+     */
+    override fun getGeometryType(): String = "LineString"
+
+    /**
+     * Gets the geometry object
+     */
+    override fun getGeometryObject(): List<LatLng> = _coordinates
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LineString
+
+        return _coordinates == other._coordinates
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(GEOMETRY_TYPE).append("{");
-        sb.append("\n coordinates=").append(mCoordinates);
-        sb.append("\n}\n");
-        return sb.toString();
+    override fun hashCode(): Int {
+        return _coordinates.hashCode()
     }
 
+    override fun toString(): String {
+        return "LineString(coordinates=$_coordinates)"
+    }
 }
