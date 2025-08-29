@@ -27,7 +27,6 @@ sourceFileExtensions:
   - 'ts'
   - 'js'
   - 'java'
-  - 'html'
   - 'txt'
   - 'kt'
   - 'kts'
