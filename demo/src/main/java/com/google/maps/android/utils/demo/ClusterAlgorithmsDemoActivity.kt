@@ -16,15 +16,16 @@
 
 package com.google.maps.android.utils.demo
 
+import android.os.Build
+import android.util.DisplayMetrics
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.algo.AbstractAlgorithm
 import com.google.maps.android.clustering.algo.CentroidNonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.ContinuousZoomEuclideanCentroidAlgorithm
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm
@@ -40,7 +41,6 @@ import kotlin.random.Random
 class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
 
     private var clusterManager: ClusterManager<MyItem>? = null
-    private lateinit var mapView: MapView
 
     override fun getLayoutId(): Int {
         return R.layout.activity_cluster_algorithms_demo
@@ -85,6 +85,28 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
      * Sets up the ClusterManager with the chosen algorithm and populates it with items.
      */
     private fun setupClusterer(algorithmPosition: Int) {
+
+        val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        val metrics = DisplayMetrics()
+        val width: Int
+        val height: Int
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // For devices with Android 11 (API 30) and above
+            val windowMetrics = windowManager.currentWindowMetrics
+            width = windowMetrics.bounds.width()
+            height = windowMetrics.bounds.height()
+            metrics.density = resources.displayMetrics.density
+        } else {
+            // For devices below Android 11
+            windowManager.defaultDisplay.getMetrics(metrics)
+            width = metrics.widthPixels
+            height = metrics.heightPixels
+        }
+
+        val widthDp = (width / metrics.density).toInt()
+        val heightDp = (height / metrics.density).toInt()
+
         // 1. Clear the map and previous cluster manager
         map.clear()
 
@@ -96,9 +118,11 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
             1 -> GridBasedAlgorithm()
             2 -> NonHierarchicalDistanceBasedAlgorithm()
             3 -> CentroidNonHierarchicalDistanceBasedAlgorithm()
-            4 -> NonHierarchicalViewBasedAlgorithm(mapView.width, mapView.height)
+            4 -> NonHierarchicalViewBasedAlgorithm(widthDp, heightDp)
             5 -> ContinuousZoomEuclideanCentroidAlgorithm()
-            else -> error("Unsupported algorithm position: $algorithmPosition")
+            else -> {
+                GridBasedAlgorithm()
+            }
         }
 
         // 4. Point the map's listeners to the ClusterManager
