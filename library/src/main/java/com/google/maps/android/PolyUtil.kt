@@ -27,7 +27,7 @@ import com.google.maps.android.MathUtil.sinFromHav
 import com.google.maps.android.MathUtil.sinSumFromHav
 import com.google.maps.android.MathUtil.wrap
 import com.google.maps.android.SphericalUtil.computeDistanceBetween
-import java.util.Stack
+import kotlin.collections.ArrayDeque
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
@@ -300,65 +300,93 @@ object PolyUtil {
      * @return a simplified poly produced by the Douglas-Peucker algorithm
      */
     @JvmStatic
-    fun simplify(poly: MutableList<LatLng>, tolerance: Double): List<LatLng> {
-        val n = poly.size
-        require(n >= 1) { "Polyline must have at least 1 point" }
+    fun simplify(poly: List<LatLng>, tolerance: Double): List<LatLng> {
+        require(poly.isNotEmpty()) { "Polyline must have at least 1 point" }
         require(tolerance > 0) { "Tolerance must be greater than zero" }
 
-        val closedPolygon = isClosedPolygon(poly)
-        var lastPoint: LatLng? = null
-
-        // Check if the provided poly is a closed polygon
-        if (closedPolygon) {
-            // Add a small offset to the last point for Douglas-Peucker on polygons (see #201)
-            val OFFSET = 0.00000000001
-            lastPoint = poly.last()
-            poly.removeAt(poly.size - 1)
-            poly.add(LatLng(lastPoint.latitude + OFFSET, lastPoint.longitude + OFFSET))
+        // The simplification process is handled by the Douglas-Peucker algorithm,
+        // which is implemented in a separate private function for clarity.
+        // Before we can apply the algorithm, we need to handle a special case for closed polygons.
+        val workingPoly = if (isClosedPolygon(poly)) {
+            // For closed polygons, the Douglas-Peucker algorithm needs to "see" the connection
+            // between the last and first points. A common trick to achieve this is to temporarily
+            // open the polygon and add a point that is very close to the last point. This ensures
+            // that the simplification process takes the closing segment into account.
+            val lastPoint = poly.last()
+            val offset = 0.00000000001
+            poly.toMutableList().apply {
+                removeAt(size - 1)
+                add(LatLng(lastPoint.latitude + offset, lastPoint.longitude + offset))
+            }
+        } else {
+            poly
         }
 
-        var maxIdx = 0
-        val stack = Stack<IntArray>()
-        val dists = DoubleArray(n)
-        dists[0] = 1.0
-        dists[n - 1] = 1.0
-        var maxDist: Double
-        var dist: Double
-        var current: IntArray
+        // The douglasPeucker function returns a boolean array indicating which points to keep.
+        val keepPoint = douglasPeucker(workingPoly, tolerance)
 
+        // We then filter the original, unmodified polyline based on the results of the
+        // simplification algorithm. This ensures that the original points are preserved in the
+        // final output.
+        return poly.filterIndexed { index, _ -> keepPoint[index] }
+    }
+
+    /**
+     * Implements the Douglas-Peucker algorithm for simplifying a polyline.
+     *
+     * The algorithm works by recursively dividing the polyline into smaller segments and finding
+     * the point that is farthest from the line segment connecting the start and end points.
+     * If this point is farther than the specified tolerance, it is kept, and the algorithm is
+     * applied recursively to the two new segments.
+     *
+     * @param poly The polyline to be simplified.
+     * @param tolerance The tolerance in meters.
+     * @return A boolean array where `true` indicates that the point at the corresponding index
+     * should be kept in the simplified polyline.
+     */
+    private fun douglasPeucker(poly: List<LatLng>, tolerance: Double): BooleanArray {
+        val n = poly.size
+        // We start with a boolean array that will mark the points to keep.
+        // Initially, only the first and last points are marked for keeping.
+        val keepPoint = BooleanArray(n) { false }
+        keepPoint[0] = true
+        keepPoint[n - 1] = true
+
+        // The algorithm is only needed if the polyline has more than 2 points.
         if (n > 2) {
-            val stackVal = intArrayOf(0, n - 1)
-            stack.push(stackVal)
+            // We use a stack (implemented with ArrayDeque for efficiency) to manage the
+            // segments that we need to process. Initially, this contains the entire polyline.
+            val stack = ArrayDeque<Pair<Int, Int>>()
+            stack.addLast(0 to n - 1)
+
+            // We process segments from the stack until it's empty.
             while (stack.isNotEmpty()) {
-                current = stack.pop()
-                maxDist = 0.0
-                for (idx in current[0] + 1 until current[1]) {
-                    dist = distanceToLine(poly[idx], poly[current[0]], poly[current[1]])
+                val (start, end) = stack.removeLast()
+                var maxDist = 0.0
+                var maxIdx = 0
+
+                // For the current segment, we find the point that is farthest from the line
+                // connecting the start and end points.
+                for (idx in start + 1 until end) {
+                    val dist = distanceToLine(poly[idx], poly[start], poly[end])
                     if (dist > maxDist) {
                         maxDist = dist
                         maxIdx = idx
                     }
                 }
+
+                // If the farthest point is farther than the tolerance, we mark it to be kept.
+                // We then push two new segments onto the stack to be processed recursively:
+                // one from the start to the farthest point, and one from the farthest point to the end.
                 if (maxDist > tolerance) {
-                    dists[maxIdx] = maxDist
-                    val stackValCurMax = intArrayOf(current[0], maxIdx)
-                    stack.push(stackValCurMax)
-                    val stackValMaxCur = intArrayOf(maxIdx, current[1])
-                    stack.push(stackValMaxCur)
+                    keepPoint[maxIdx] = true
+                    stack.addLast(start to maxIdx)
+                    stack.addLast(maxIdx to end)
                 }
             }
         }
 
-        if (closedPolygon) {
-            // Replace last point w/ offset with the original last point to re-close the polygon
-            poly.removeAt(poly.size - 1)
-            if (lastPoint != null) {
-                poly.add(lastPoint)
-            }
-        }
-
-        // Generate the simplified line
-        return poly.filterIndexed { idx, _ -> dists[idx] != 0.0 }
+        return keepPoint
     }
 
     /**
