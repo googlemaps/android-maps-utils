@@ -323,12 +323,12 @@ object PolyUtil {
         }
 
         // The douglasPeucker function returns a boolean array indicating which points to keep.
-        val keepPoint = douglasPeucker(workingPoly, tolerance)
+        val pointsToKeep = douglasPeucker(workingPoly, tolerance)
 
         // We then filter the original, unmodified polyline based on the results of the
         // simplification algorithm. This ensures that the original points are preserved in the
         // final output.
-        return poly.filterIndexed { index, _ -> keepPoint[index] }
+        return poly.filterIndexed { index, _ -> pointsToKeep[index] }
     }
 
     /**
