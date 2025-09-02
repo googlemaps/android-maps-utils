@@ -66,6 +66,10 @@ class PublishingConventionPlugin : Plugin<Project> {
             publishToMavenCentral()
             signAllPublications()
 
+            coordinates(
+                artifactId = "android-maps-utils",
+            )
+
             pom {
                 name.set("android-maps-utils")
                 description.set("Handy extensions to the Google Maps Android API.")
