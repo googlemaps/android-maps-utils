@@ -34,4 +34,5 @@
     <string name="button_gradient">Gradient</string>
     <string name="button_opacity">Opacity</string>
     <string name="bad_maps_api_key">Invalid or missing Google Maps API key</string>
+    <string name="percentage_format">%1$d%%</string>
 </resources>
