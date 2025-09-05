@@ -32,9 +32,6 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 
-private fun Double.toRadians() = this * (PI / 180.0)
-private fun Double.toDegrees() = this * (180.0 / PI)
-
 object SphericalUtil {
     /**
      * Returns the heading from one LatLng to another LatLng. Headings are
@@ -51,7 +48,8 @@ object SphericalUtil {
 
         // Breaking the formula down into Y and X components for atan2().
         val y = sin(deltaLngRad) * cos(toLatRad)
-        val x = cos(fromLatRad) * sin(toLatRad) - sin(fromLatRad) * cos(toLatRad) * cos(deltaLngRad)
+        val x = cos(fromLatRad) * sin(toLatRad) -
+                sin(fromLatRad) * cos(toLatRad) * cos(deltaLngRad)
 
         val headingRad = atan2(y, x)
 
@@ -68,23 +66,26 @@ object SphericalUtil {
      */
     @JvmStatic
     fun computeOffset(from: LatLng, distance: Double, heading: Double): LatLng {
-        var distance = distance
-        var heading = heading
-        distance /= EARTH_RADIUS
-        heading = Math.toRadians(heading)
-        // http://williams.best.vwh.net/avform.htm#LL
-        val fromLat = Math.toRadians(from.latitude)
-        val fromLng = Math.toRadians(from.longitude)
-        val cosDistance = cos(distance)
-        val sinDistance = sin(distance)
-        val sinFromLat = sin(fromLat)
-        val cosFromLat = cos(fromLat)
-        val sinLat = cosDistance * sinFromLat + sinDistance * cosFromLat * cos(heading)
-        val dLng = atan2(
-            sinDistance * cosFromLat * sin(heading),
-            cosDistance - sinFromLat * sinLat
-        )
-        return LatLng(Math.toDegrees(asin(sinLat)), Math.toDegrees(fromLng + dLng))
+        val distanceRad = distance / EARTH_RADIUS
+        val headingRad = heading.toRadians()
+
+        val (fromLatRad, fromLngRad) = from.toRadians()
+
+        val cosDistance = cos(distanceRad)
+        val sinDistance = sin(distanceRad)
+        val sinFromLat = sin(fromLatRad)
+        val cosFromLat = cos(fromLatRad)
+
+        val sinToLat = cosDistance * sinFromLat + sinDistance * cosFromLat * cos(headingRad)
+        val toLatRad = asin(sinToLat)
+
+        val y = sin(headingRad) * sinDistance * cosFromLat
+        val x = cosDistance - sinFromLat * sinToLat
+        val dLngRad = atan2(y, x)
+
+        val toLngRad = fromLngRad + dLngRad
+
+        return LatLng(toLatRad.toDegrees(), toLngRad.toDegrees())
     }
 
     /**
@@ -99,15 +100,13 @@ object SphericalUtil {
      */
     @JvmStatic
     fun computeOffsetOrigin(to: LatLng, distance: Double, heading: Double): LatLng? {
-        var distance = distance
-        var heading = heading
-        heading = Math.toRadians(heading)
-        distance /= EARTH_RADIUS
+        val headingRad = heading.toRadians()
+        val distanceRad = distance / EARTH_RADIUS
         // http://lists.maptools.org/pipermail/proj/2008-October/003939.html
-        val n1 = cos(distance)
-        val n2 = sin(distance) * cos(heading)
-        val n3 = sin(distance) * sin(heading)
-        val n4 = sin(Math.toRadians(to.latitude))
+        val n1 = cos(distanceRad)
+        val n2 = sin(distanceRad) * cos(headingRad)
+        val n3 = sin(distanceRad) * sin(headingRad)
+        val n4 = sin(to.latitude.toRadians())
         // There are two solutions for b. b = n2 * n4 +/- sqrt(), one solution results
         // in the latitude outside the [-90, 90] range. We first try one solution and
         // back off to the other if we are outside that range.
@@ -130,9 +129,9 @@ object SphericalUtil {
             // No solution which would make sense in LatLng-space.
             return null
         }
-        val fromLngRadians = Math.toRadians(to.longitude) -
+        val fromLngRadians = to.longitude.toRadians() -
                 atan2(n3, n1 * cos(fromLatRadians) - n2 * sin(fromLatRadians))
-        return LatLng(Math.toDegrees(fromLatRadians), Math.toDegrees(fromLngRadians))
+        return LatLng(fromLatRadians.toDegrees(), fromLngRadians.toDegrees())
     }
 
     /**
@@ -147,17 +146,17 @@ object SphericalUtil {
     @JvmStatic
     fun interpolate(from: LatLng, to: LatLng, fraction: Double): LatLng {
         // http://en.wikipedia.org/wiki/Slerp
-        val fromLat = Math.toRadians(from.latitude)
-        val fromLng = Math.toRadians(from.longitude)
-        val toLat = Math.toRadians(to.latitude)
-        val toLng = Math.toRadians(to.longitude)
-        val cosFromLat = cos(fromLat)
-        val cosToLat = cos(toLat)
+        val (fromLatRad, fromLngRad) = from.toRadians()
+        val (toLatRad, toLngRad) = to.toRadians()
+
+        val cosFromLat = cos(fromLatRad)
+        val cosToLat = cos(toLatRad)
 
         // Computes Spherical interpolation coefficients.
         val angle = computeAngleBetween(from, to)
         val sinAngle = sin(angle)
         if (sinAngle < 1E-6) {
+            // Fall back to linear interpolation for very small angles.
             return LatLng(
                 from.latitude + fraction * (to.latitude - from.latitude),
                 from.longitude + fraction * (to.longitude - from.longitude)
@@ -167,14 +166,15 @@ object SphericalUtil {
         val b = sin(fraction * angle) / sinAngle
 
         // Converts from polar to vector and interpolate.
-        val x = a * cosFromLat * cos(fromLng) + b * cosToLat * cos(toLng)
-        val y = a * cosFromLat * sin(fromLng) + b * cosToLat * sin(toLng)
-        val z = a * sin(fromLat) + b * sin(toLat)
+        val x = a * cosFromLat * cos(fromLngRad) + b * cosToLat * cos(toLngRad)
+        val y = a * cosFromLat * sin(fromLngRad) + b * cosToLat * sin(toLngRad)
+        val z = a * sin(fromLatRad) + b * sin(toLatRad)
 
         // Converts interpolated vector back to polar.
-        val lat = atan2(z, sqrt(x * x + y * y))
-        val lng = atan2(y, x)
-        return LatLng(Math.toDegrees(lat), Math.toDegrees(lng))
+        val latRad = atan2(z, sqrt(x * x + y * y))
+        val lngRad = atan2(y, x)
+
+        return LatLng(latRad.toDegrees(), lngRad.toDegrees())
     }
 
     /**
@@ -184,7 +184,7 @@ object SphericalUtil {
         arcHav(havDistance(lat1, lat2, lng1 - lng2))
 
     /**
-     * Returns the angle between two LatLngs, in radians. This is the same as the distance
+     * Returns the angle between two [LatLng]s, in radians. This is the same as the distance
      * on the unit sphere.
      */
     @JvmStatic
@@ -194,10 +194,11 @@ object SphericalUtil {
     )
 
     /**
-     * Returns the distance between two LatLngs, in meters.
+     * Returns the distance between two [LatLng]s, in meters.
      */
     @JvmStatic
-    fun computeDistanceBetween(from: LatLng, to: LatLng) = computeAngleBetween(from, to) * EARTH_RADIUS
+    fun computeDistanceBetween(from: LatLng, to: LatLng) =
+        computeAngleBetween(from, to) * EARTH_RADIUS
 
     /**
      * Returns the length of the given path, in meters, on Earth.
@@ -207,19 +208,16 @@ object SphericalUtil {
         if (path.size < 2) {
             return 0.0
         }
-        var length = 0.0
-        var prev: LatLng? = null
-        for (point in path) {
-            if (prev != null) {
-                val prevLat = Math.toRadians(prev.latitude)
-                val prevLng = Math.toRadians(prev.longitude)
-                val lat = Math.toRadians(point.latitude)
-                val lng = Math.toRadians(point.longitude)
-                length += distanceRadians(prevLat, prevLng, lat, lng)
-            }
-            prev = point
+
+        // Using zipWithNext() is a more functional and idiomatic way to handle
+        // adjacent pairs in a collection. We then sum the distances between each pair.
+        val totalDistance = path.zipWithNext().sumOf { (prev, point) ->
+            val (prevLatRad, prevLngRad) = prev.toRadians()
+            val (latRad, lngRad) = point.toRadians()
+            distanceRadians(prevLatRad, prevLngRad, latRad, lngRad)
         }
-        return length * EARTH_RADIUS
+
+        return totalDistance * EARTH_RADIUS
     }
 
     /**
@@ -242,31 +240,33 @@ object SphericalUtil {
     @JvmStatic
     fun computeSignedArea(path: Polygon) = computeSignedArea(path, EARTH_RADIUS)
 
+
     /**
      * Returns the signed area of a closed path on a sphere of given radius.
      * The computed area uses the same units as the radius squared.
      * Used by SphericalUtilTest.
      */
     @JvmStatic
-    fun computeSignedArea(path: Polygon, radius: Double): Double {
-        val size = path.size
-        if (size < 3) {
+    fun computeSignedArea(path: List<LatLng>, radius: Double): Double {
+        if (path.size < 3) {
             return 0.0
         }
-        var total = 0.0
-        val prev = path[size - 1]
-        var prevTanLat = tan((PI / 2 - prev.latitude.toRadians()) / 2)
-        var prevLng = prev.longitude.toRadians()
+
+        // Create a closed path by appending the first point at the end.
+        val closedPath = path + path.first()
+
         // For each edge, accumulate the signed area of the triangle formed by the North Pole
         // and that edge ("polar triangle").
-        for (point in path) {
+        // `zipWithNext` creates pairs of consecutive vertices, representing the edges of the polygon.
+        val totalArea = closedPath.zipWithNext { prev, point ->
+            val prevTanLat = tan((PI / 2 - prev.latitude.toRadians()) / 2)
             val tanLat = tan((PI / 2 - point.latitude.toRadians()) / 2)
+            val prevLng = prev.longitude.toRadians()
             val lng = point.longitude.toRadians()
-            total += polarTriangleArea(tanLat, lng, prevTanLat, prevLng)
-            prevTanLat = tanLat
-            prevLng = lng
-        }
-        return total * (radius * radius)
+            polarTriangleArea(tanLat, lng, prevTanLat, prevLng)
+        }.sum()
+
+        return totalArea * (radius * radius)
     }
 
     /**
@@ -282,3 +282,11 @@ object SphericalUtil {
         return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng))
     }
 }
+
+/**
+ * Helper extension function to convert a LatLng to a pair of radians.
+ */
+private fun LatLng.toRadians() = Pair(latitude.toRadians(), longitude.toRadians())
+
+private fun Double.toRadians() = this * (PI / 180.0)
+private fun Double.toDegrees() = this * (180.0 / PI)
