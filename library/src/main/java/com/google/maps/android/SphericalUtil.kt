@@ -284,4 +284,59 @@ object SphericalUtil {
         val t = tan1 * tan2
         return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng))
     }
+
+    /**
+     * Returns the point on a polyline that is a given percentage of the total length of the
+     * polyline.
+     *
+     * @param polyline the polyline
+     * @param percentage the percentage of the total length of the polyline to find the point for
+     * @return the `LatLng` of the point on the polyline, or `null` if the polyline is empty or
+     * the percentage is outside the range [0, 1]
+     */
+    @JvmStatic
+    fun getPointOnPolyline(polyline: List<LatLng>, percentage: Double): LatLng? {
+        return getPolylinePrefix(polyline, percentage).lastOrNull()
+    }
+
+    /**
+     * Returns a new polyline that is a prefix of the original polyline, representing a given
+     * percentage of the original polyline's length.
+     *
+     * Note: The returned polyline should be displayed on the map with `geodesic` set to `true`
+     * to ensure it follows the same spherical path as the calculation.
+     *
+     * @param polyline the original polyline
+     * @param percentage the percentage of the original polyline's length to include in the prefix
+     * @return a new polyline representing the prefix, or an empty list if the original polyline
+     * is empty or the percentage is outside the range [0, 1]
+     */
+    @JvmStatic
+    fun getPolylinePrefix(polyline: List<LatLng>, percentage: Double): List<LatLng> {
+        if (polyline.isEmpty() || percentage !in 0.0..1.0) {
+            return emptyList()
+        }
+        when (percentage) {
+            0.0 -> return listOf(polyline.first())
+            1.0 -> return polyline.toList() // Return a defensive copy
+        }
+
+        val targetDistance = computeLength(polyline) * percentage
+
+        return buildList {
+            add(polyline.first())
+            var accumulatedDistance = 0.0
+
+            for ((p1, p2) in polyline.zipWithNext()) {
+                val segmentLength = computeDistanceBetween(p1, p2)
+                if (accumulatedDistance + segmentLength >= targetDistance) {
+                    val fraction = (targetDistance - accumulatedDistance) / segmentLength
+                    add(interpolate(p1, p2, fraction))
+                    return@buildList // We're done, so exit the builder
+                }
+                add(p2)
+                accumulatedDistance += segmentLength
+            }
+        }
+    }
 }
