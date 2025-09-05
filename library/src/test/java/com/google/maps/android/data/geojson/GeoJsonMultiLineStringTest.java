@@ -39,7 +39,7 @@ public class GeoJsonMultiLineStringTest {
                 new GeoJsonLineString(
                         new ArrayList<>(Arrays.asList(new LatLng(80, 10), new LatLng(-54, 12.7)))));
         mls = new GeoJsonMultiLineString(lineStrings);
-        assertEquals("MultiLineString", mls.getType());
+        assertEquals("MultiLineString", mls.getGeometryType());
     }
 
     @Test
@@ -55,14 +55,15 @@ public class GeoJsonMultiLineStringTest {
         assertEquals(lineStrings, mls.getLineStrings());
 
         lineStrings = new ArrayList<>();
-        mls = new GeoJsonMultiLineString(lineStrings);
+        mls = new GeoJsonMultiLineString(new ArrayList<GeoJsonLineString>());
         assertEquals(new ArrayList<GeoJsonLineString>(), mls.getLineStrings());
 
         try {
             mls = new GeoJsonMultiLineString(null);
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Geometries cannot be null", e.getMessage());
+        } catch (NullPointerException e) {
+            // Expected, as the underlying MultiGeometry class is now in Kotlin
+            // with a non-null constructor parameter.
         }
     }
 }

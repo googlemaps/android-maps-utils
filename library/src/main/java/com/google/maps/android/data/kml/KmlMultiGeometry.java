@@ -36,6 +36,11 @@ public class KmlMultiGeometry extends MultiGeometry {
         super(geometries);
     }
 
+    @Override
+    public String getGeometryType() {
+        return "MultiGeometry";
+    }
+
     /**
      * Gets an ArrayList of Geometry objects
      *
