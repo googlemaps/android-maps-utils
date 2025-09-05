@@ -252,19 +252,18 @@ object SphericalUtil {
             return 0.0
         }
 
-        // Create a closed path by appending the first point at the end.
-        val closedPath = path + path.first()
+        // This local function to keep the logic clean
+        fun polarArea(p1: LatLng, p2: LatLng): Double {
+            val tanLat1 = tan((PI / 2 - p1.latitude.toRadians()) / 2)
+            val tanLat2 = tan((PI / 2 - p2.latitude.toRadians()) / 2)
+            val lng1 = p1.longitude.toRadians()
+            val lng2 = p2.longitude.toRadians()
+            return polarTriangleArea(tanLat1, lng2, tanLat2, lng1)
+        }
 
-        // For each edge, accumulate the signed area of the triangle formed by the North Pole
-        // and that edge ("polar triangle").
-        // `zipWithNext` creates pairs of consecutive vertices, representing the edges of the polygon.
-        val totalArea = closedPath.zipWithNext { prev, point ->
-            val prevTanLat = tan((PI / 2 - prev.latitude.toRadians()) / 2)
-            val tanLat = tan((PI / 2 - point.latitude.toRadians()) / 2)
-            val prevLng = prev.longitude.toRadians()
-            val lng = point.longitude.toRadians()
-            polarTriangleArea(tanLat, lng, prevTanLat, prevLng)
-        }.sum()
+        // Use a sequence to avoid creating intermediate lists
+        val totalArea = (path.asSequence().zipWithNext() + (path.last() to path.first()))
+            .sumOf { (p1, p2) -> polarArea(p1, p2) }
 
         return totalArea * (radius * radius)
     }
