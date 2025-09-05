@@ -17,6 +17,8 @@
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.data.Polygon
+import com.google.maps.android.data.Polyline
 import com.google.maps.android.MathUtil.EARTH_RADIUS
 import com.google.maps.android.MathUtil.arcHav
 import com.google.maps.android.MathUtil.havDistance
@@ -202,7 +204,7 @@ object SphericalUtil {
      * Returns the length of the given path, in meters, on Earth.
      */
     @JvmStatic
-    fun computeLength(path: List<LatLng>): Double {
+    fun computeLength(path: Polyline): Double {
         if (path.size < 2) {
             return 0.0
         }
@@ -228,7 +230,7 @@ object SphericalUtil {
      * @return The path's area in square meters.
      */
     @JvmStatic
-    fun computeArea(path: List<LatLng>): Double {
+    fun computeArea(path: Polygon): Double {
         return abs(computeSignedArea(path))
     }
 
@@ -241,7 +243,7 @@ object SphericalUtil {
      * @return The loop's area in square meters.
      */
     @JvmStatic
-    fun computeSignedArea(path: List<LatLng>): Double {
+    fun computeSignedArea(path: Polygon): Double {
         return computeSignedArea(path, EARTH_RADIUS)
     }
 
@@ -251,7 +253,7 @@ object SphericalUtil {
      * Used by SphericalUtilTest.
      */
     @JvmStatic
-    fun computeSignedArea(path: List<LatLng>, radius: Double): Double {
+    fun computeSignedArea(path: Polygon, radius: Double): Double {
         val size = path.size
         if (size < 3) {
             return 0.0

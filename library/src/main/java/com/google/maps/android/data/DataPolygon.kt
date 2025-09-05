@@ -28,10 +28,10 @@ interface DataPolygon<T> : Geometry<T> {
     /**
      * Gets an array of outer boundary coordinates
      */
-    val outerBoundaryCoordinates: List<LatLng>
+    val outerBoundaryCoordinates: Polygon
 
     /**
      * Gets an array of arrays of inner boundary coordinates
      */
-    val innerBoundaryCoordinates: List<List<LatLng>>
+    val innerBoundaryCoordinates: List<Polygon>
 }

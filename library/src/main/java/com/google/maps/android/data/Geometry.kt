@@ -15,6 +15,18 @@
  */
 package com.google.maps.android.data
 
+import com.google.android.gms.maps.model.LatLng
+
+/**
+ * A Polyline is a list of LatLngs where each LatLng is a vertex of the line.
+ */
+typealias Polyline = List<LatLng>
+
+/**
+ * A Polygon is a list of LatLngs where each LatLng is a vertex of the polygon.
+ */
+typealias Polygon = List<LatLng>
+
 /**
  * An abstraction that represents a Geometry object
  *

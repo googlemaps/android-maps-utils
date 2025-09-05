@@ -17,6 +17,8 @@
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.data.Polygon
+import com.google.maps.android.data.Polyline
 import com.google.maps.android.MathUtil.clamp
 import com.google.maps.android.MathUtil.hav
 import com.google.maps.android.MathUtil.havDistance
@@ -62,7 +64,7 @@ object PolyUtil {
      * @return `true` if the point is inside the polygon, `false` otherwise.
      */
     @JvmStatic
-    fun containsLocation(point: LatLng, polygon: List<LatLng>, geodesic: Boolean): Boolean {
+    fun containsLocation(point: LatLng, polygon: Polygon, geodesic: Boolean): Boolean {
         return containsLocation(point.latitude, point.longitude, polygon, geodesic)
     }
 
@@ -74,7 +76,7 @@ object PolyUtil {
     fun containsLocation(
         latitude: Double,
         longitude: Double,
-        polygon: List<LatLng>,
+        polygon: Polygon,
         geodesic: Boolean
     ): Boolean {
         if (polygon.isEmpty()) {
@@ -122,7 +124,7 @@ object PolyUtil {
     @JvmOverloads
     fun isLocationOnEdge(
         point: LatLng,
-        polygon: List<LatLng>,
+        polygon: Polygon,
         geodesic: Boolean,
         tolerance: Double = DEFAULT_TOLERANCE
     ): Boolean {
@@ -145,7 +147,7 @@ object PolyUtil {
     @JvmOverloads
     fun isLocationOnPath(
         point: LatLng,
-        polyline: List<LatLng>,
+        polyline: Polyline,
         geodesic: Boolean,
         tolerance: Double = DEFAULT_TOLERANCE
     ): Boolean {
@@ -154,12 +156,12 @@ object PolyUtil {
 
     private fun isLocationOnEdgeOrPath(
         point: LatLng,
-        poly: List<LatLng>,
+        polyline: Polyline,
         closed: Boolean,
         geodesic: Boolean,
         toleranceEarth: Double
     ): Boolean {
-        val idx = locationIndexOnEdgeOrPath(point, poly, closed, geodesic, toleranceEarth)
+        val idx = locationIndexOnEdgeOrPath(point, polyline, closed, geodesic, toleranceEarth)
 
         return (idx >= 0)
     }
@@ -183,7 +185,7 @@ object PolyUtil {
     @JvmOverloads
     fun locationIndexOnPath(
         point: LatLng,
-        poly: List<LatLng>,
+        poly: Polyline,
         geodesic: Boolean,
         tolerance: Double = DEFAULT_TOLERANCE
     ): Int {
@@ -209,7 +211,7 @@ object PolyUtil {
     @JvmStatic
     fun locationIndexOnEdgeOrPath(
         point: LatLng,
-        poly: List<LatLng>,
+        poly: Polyline,
         closed: Boolean,
         geodesic: Boolean,
         toleranceEarth: Double
@@ -299,8 +301,8 @@ object PolyUtil {
      * simplified poly.
      * @return a simplified poly produced by the Douglas-Peucker algorithm
      */
-    @JvmStatic
-    fun simplify(poly: List<LatLng>, tolerance: Double): List<LatLng> {
+        @JvmStatic
+    fun simplify(poly: Polyline, tolerance: Double): Polyline {
         require(poly.isNotEmpty()) { "Polyline must have at least 1 point" }
         require(tolerance > 0) { "Tolerance must be greater than zero" }
 
@@ -339,13 +341,13 @@ object PolyUtil {
      * If this point is farther than the specified tolerance, it is kept, and the algorithm is
      * applied recursively to the two new segments.
      *
-     * @param poly The polyline to be simplified.
+     * @param polyline The polyline to be simplified.
      * @param tolerance The tolerance in meters.
      * @return A boolean array where `true` indicates that the point at the corresponding index
      * should be kept in the simplified polyline.
      */
-    private fun douglasPeucker(poly: List<LatLng>, tolerance: Double): BooleanArray {
-        val n = poly.size
+    private fun douglasPeucker(polyline: Polyline, tolerance: Double): BooleanArray {
+        val n = polyline.size
         // We start with a boolean array that will mark the points to keep.
         // Initially, only the first and last points are marked for keeping.
         val keepPoint = BooleanArray(n) { false }
@@ -368,7 +370,7 @@ object PolyUtil {
                 // For the current segment, we find the point that is farthest from the line
                 // connecting the start and end points.
                 for (idx in start + 1 until end) {
-                    val dist = distanceToLine(poly[idx], poly[start], poly[end])
+                    val dist = distanceToLine(polyline[idx], polyline[start], polyline[end])
                     if (dist > maxDist) {
                         maxDist = dist
                         maxIdx = idx
@@ -393,13 +395,13 @@ object PolyUtil {
      * Returns true if the provided list of points is a closed polygon (i.e., the first and last
      * points are the same), and false if it is not
      *
-     * @param poly polyline or polygon
+     * @param polyline polyline or polygon
      * @return true if the provided list of points is a closed polygon (i.e., the first and last
      * points are the same), and false if it is not
      */
     @JvmStatic
-    fun isClosedPolygon(poly: List<LatLng>): Boolean {
-        return poly.isNotEmpty() && poly.first() == poly.last()
+    fun isClosedPolygon(polyline: Polyline): Boolean {
+        return polyline.isNotEmpty() && polyline.first() == polyline.last()
     }
 
     /**
@@ -447,7 +449,7 @@ object PolyUtil {
      * Decodes an encoded path string into a sequence of LatLngs.
      */
     @JvmStatic
-    fun decode(encodedPath: String): List<LatLng> {
+    fun decode(encodedPath: String): Polyline {
         val len = encodedPath.length
         val path = mutableListOf<LatLng>()
         var index = 0
@@ -484,7 +486,7 @@ object PolyUtil {
      * Encodes a sequence of LatLngs into an encoded path string.
      */
     @JvmStatic
-    fun encode(path: List<LatLng>): String {
+    fun encode(path: Polyline): String {
         var lastLat: Long = 0
         var lastLng: Long = 0
         val result = StringBuilder()

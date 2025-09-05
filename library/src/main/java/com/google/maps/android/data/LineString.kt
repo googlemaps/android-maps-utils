@@ -22,14 +22,14 @@ import com.google.android.gms.maps.model.LatLng
  * [com.google.maps.android.data.kml.KmlLineString] and
  * [com.google.maps.android.data.geojson.GeoJsonLineString]
  */
-open class LineString(coordinates: List<LatLng>) : Geometry<List<LatLng>> {
+open class LineString(coordinates: Polyline) : Geometry<Polyline> {
 
-    private val _coordinates: List<LatLng> = coordinates
+    private val _coordinates: Polyline = coordinates
 
     /**
      * Gets the coordinates of the LineString
      */
-    open val coordinates: List<LatLng>
+    open val coordinates: Polyline
         get() = _coordinates
 
     /**
@@ -40,7 +40,7 @@ open class LineString(coordinates: List<LatLng>) : Geometry<List<LatLng>> {
     /**
      * Gets the geometry object
      */
-    override val geometryObject: List<LatLng> = _coordinates
+    override val geometryObject: Polyline = _coordinates
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
