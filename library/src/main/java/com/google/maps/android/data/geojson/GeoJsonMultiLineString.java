@@ -39,8 +39,6 @@ public class GeoJsonMultiLineString extends MultiGeometry {
         return "MultiLineString";
     }
 
-    
-
     /**
      * Gets a list of GeoJsonLineStrings
      *

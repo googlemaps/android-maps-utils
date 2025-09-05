@@ -39,8 +39,6 @@ public class GeoJsonMultiPoint extends MultiGeometry {
         return "MultiPoint";
     }
 
-    
-
     /**
      * Gets a list of GeoJsonPoints
      *

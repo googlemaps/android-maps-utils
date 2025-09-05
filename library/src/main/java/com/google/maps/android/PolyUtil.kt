@@ -301,7 +301,7 @@ object PolyUtil {
      * simplified poly.
      * @return a simplified poly produced by the Douglas-Peucker algorithm
      */
-        @JvmStatic
+    @JvmStatic
     fun simplify(poly: Polyline, tolerance: Double): Polyline {
         require(poly.isNotEmpty()) { "Polyline must have at least 1 point" }
         require(tolerance > 0) { "Tolerance must be greater than zero" }

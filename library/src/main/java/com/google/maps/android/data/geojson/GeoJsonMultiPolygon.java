@@ -40,8 +40,6 @@ public class GeoJsonMultiPolygon extends MultiGeometry {
         return "MultiPolygon";
     }
 
-    
-
     /**
      * Gets a list of GeoJsonPolygons
      *

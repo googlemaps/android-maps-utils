@@ -38,8 +38,6 @@ public class GeoJsonGeometryCollection extends MultiGeometry {
         return "GeometryCollection";
     }
 
-    
-
     /**
      * Gets the stored Geometry objects
      *

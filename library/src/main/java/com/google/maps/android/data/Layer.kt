@@ -103,7 +103,6 @@ abstract class Layer<T : Feature> {
         return renderer?.features ?: emptyList()
     }
 
-
     /**
      * Retrieves a corresponding Feature instance for the given Object
      * Allows maps with multiple layers to determine which layer the Object
@@ -144,7 +143,6 @@ abstract class Layer<T : Feature> {
     protected open fun getContainers(): Iterable<KmlContainer>? {
         return (renderer as? KmlRenderer)?.nestedContainers
     }
-
 
     /**
      * Gets an iterable of KmlGroundOverlay objects

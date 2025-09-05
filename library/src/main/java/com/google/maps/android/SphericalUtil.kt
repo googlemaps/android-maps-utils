@@ -240,7 +240,6 @@ object SphericalUtil {
     @JvmStatic
     fun computeSignedArea(path: Polygon) = computeSignedArea(path, EARTH_RADIUS)
 
-
     /**
      * Returns the signed area of a closed path on a sphere of given radius.
      * The computed area uses the same units as the radius squared.
@@ -261,9 +260,12 @@ object SphericalUtil {
             return polarTriangleArea(tanLat1, lng2, tanLat2, lng1)
         }
 
+        // Create a sequence of edges, including the final edge that closes the polygon.
+        // Using a sequence avoids creating an intermediate list.
+        val edges = path.asSequence().zipWithNext() + (path.last() to path.first())
+
         // Use a sequence to avoid creating intermediate lists
-        val totalArea = (path.asSequence().zipWithNext() + (path.last() to path.first()))
-            .sumOf { (p1, p2) -> polarArea(p1, p2) }
+        val totalArea = edges.sumOf { (p1, p2) -> polarArea(p1, p2) }
 
         return totalArea * (radius * radius)
     }
