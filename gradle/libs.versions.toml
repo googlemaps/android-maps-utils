@@ -17,6 +17,7 @@ play-services-maps = "19.2.0"
 core-ktx = "1.16.0"
 robolectric = "4.15.1"
 kxml2 = "2.3.0"
+androidx-test-core = "1.5.0"
 mockk = "1.14.5"
 lint = "31.12.0"
 org-jacoco-core = "0.8.13"
@@ -43,6 +44,7 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 kxml2 = { module = "net.sf.kxml:kxml2", version.ref = "kxml2" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }
 lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint" }
