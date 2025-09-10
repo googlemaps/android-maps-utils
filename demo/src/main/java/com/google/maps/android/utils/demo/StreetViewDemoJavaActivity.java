@@ -45,13 +45,6 @@ import com.google.maps.android.StreetViewJavaHelper;
  */
 public class StreetViewDemoJavaActivity extends AppCompatActivity {
 
-    /**
-     * Called when the activity is first created.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}.  Otherwise it is null.
-     */
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
