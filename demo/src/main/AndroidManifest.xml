@@ -125,7 +125,7 @@
             android:name=".StreetViewDemoActivity"
             android:exported="true" />
         <activity
-            android:name=".StreetViewDemoActivityJava"
+            android:name=".StreetViewDemoJavaActivity"
             android:exported="true" />
         <activity
             android:name=".ClusterAlgorithmsDemoActivity"

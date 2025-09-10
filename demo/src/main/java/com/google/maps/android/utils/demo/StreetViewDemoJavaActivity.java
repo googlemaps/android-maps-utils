@@ -18,6 +18,7 @@ package com.google.maps.android.utils.demo;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +31,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.Status;
+import com.google.maps.android.StreetViewJavaHelper;
 
 /**
  * An activity that demonstrates how to use the Street View utility in Java to check for Street View
  * availability at different locations.
- *
+ * <p>
  * This activity performs the following actions:
  * 1. Sets up the layout to fit system windows.
  * 2. Checks if a valid Google Maps API key is present.
  * 3. Fetches Street View data for two predefined locations using asynchronous callbacks.
  * 4. Displays the results of the Street View data fetch on the screen.
  */
-public class StreetViewDemoActivityJava extends AppCompatActivity {
+public class StreetViewDemoJavaActivity extends AppCompatActivity {
 
     /**
      * Called when the activity is first created.
@@ -73,40 +75,36 @@ public class StreetViewDemoActivityJava extends AppCompatActivity {
         }
 
         // Fetches Street View data for the first location (expected to be supported).
-        StreetViewHelper.fetchStreetViewData(
+        StreetViewJavaHelper.fetchStreetViewData(
                 new LatLng(48.1425918, 11.5386121),
-                BuildConfig.MAPS_API_KEY, new StreetViewHelper.StreetViewCallback() {
+                BuildConfig.MAPS_API_KEY, new StreetViewJavaHelper.StreetViewCallback() {
                     @Override
                     public void onStreetViewResult(@NonNull Status status) {
                         // Updates the UI with the result on the UI thread.
-                        runOnUiThread(() -> {
-                            ((TextView) findViewById(R.id.textViewFirstLocation)).setText("Location 1 is supported in StreetView: " + status);
-                        });
+                        runOnUiThread(() -> ((TextView) findViewById(R.id.textViewFirstLocation)).setText("Location 1 is supported in StreetView: " + status));
                     }
 
                     @Override
                     public void onStreetViewError(@NonNull Exception e) {
                         // Handles the error by printing stack trace and showing a toast.
-                        e.printStackTrace();
-                        Toast.makeText(StreetViewDemoActivityJava.this, "Error fetching Street View data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.w("SVJDemo", "Error fetching Street View data: " + e.getMessage());
+                        Toast.makeText(StreetViewDemoJavaActivity.this, "Error fetching Street View data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
         // Fetches Street View data for the second location (expected to be unsupported).
-        StreetViewHelper.fetchStreetViewData(new LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY, new StreetViewHelper.StreetViewCallback() {
+        StreetViewJavaHelper.fetchStreetViewData(new LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY, new StreetViewJavaHelper.StreetViewCallback() {
             @Override
             public void onStreetViewResult(@NonNull Status status) {
                 // Updates the UI with the result on the UI thread.
-                runOnUiThread(() -> {
-                    ((TextView) findViewById(R.id.textViewSecondLocation)).setText("Location 2 is  supported in StreetView: " + status);
-                });
+                runOnUiThread(() -> ((TextView) findViewById(R.id.textViewSecondLocation)).setText("Location 2 is  supported in StreetView: " + status));
             }
 
             @Override
             public void onStreetViewError(@NonNull Exception e) {
                 // Handles the error by printing stack trace and showing a toast.
-                e.printStackTrace();
-                Toast.makeText(StreetViewDemoActivityJava.this, "Error fetching Street View data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.w("SVJDemo", "Error fetching Street View data: " + e.getMessage());
+                Toast.makeText(StreetViewDemoJavaActivity.this, "Error fetching Street View data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

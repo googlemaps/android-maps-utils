@@ -23,7 +23,10 @@ import android.os.Bundle;
 import java.util.regex.Pattern;
 
 /**
- * A utility class to validate the Maps API key.
+ * A utility class to validate the Maps API key. The purpose of this check is to ensure that a
+ * developer has set a valid-looking key. This is not a definitive check, and there is a
+ * possibility of a false negative. If you are sure your key is correct, you can remove this
+ * check.
  */
 class ApiKeyValidator {
     private static final String REGEX = "^AIza[0-9A-Za-z-_]{35}$";

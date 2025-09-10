@@ -69,9 +69,6 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]
