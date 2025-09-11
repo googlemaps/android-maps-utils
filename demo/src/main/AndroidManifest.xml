@@ -71,6 +71,9 @@
             android:name=".PolySimplifyDemoActivity"
             android:exported="true" />
         <activity
+            android:name=".PolylineProgressDemoActivity"
+            android:exported="true" />
+        <activity
             android:name=".IconGeneratorDemoActivity"
             android:exported="true" />
         <activity
