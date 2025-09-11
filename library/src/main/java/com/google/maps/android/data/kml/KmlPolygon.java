@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
  * Represents a KML Polygon. Contains a single array of outer boundary coordinates and an array of
  * arrays for the inner boundary coordinates.
  */
-public class KmlPolygon implements DataPolygon<ArrayList<ArrayList<LatLng>>> {
+public class KmlPolygon implements DataPolygon<List<List<LatLng>>> {
 
     public static final String GEOMETRY_TYPE = "Polygon";
 

@@ -54,7 +54,6 @@ public class GeoJsonFeature extends Feature implements Observer {
     public GeoJsonFeature(Geometry geometry, String id,
                           HashMap<String, String> properties, LatLngBounds boundingBox) {
         super(geometry, id, properties);
-        mId = id;
         mBoundingBox = boundingBox;
     }
 
@@ -238,7 +237,7 @@ public class GeoJsonFeature extends Feature implements Observer {
         sb.append(",\n point style=").append(mPointStyle);
         sb.append(",\n line string style=").append(mLineStringStyle);
         sb.append(",\n polygon style=").append(mPolygonStyle);
-        sb.append(",\n id=").append(mId);
+        sb.append(",\n id=").append(getId());
         sb.append(",\n properties=").append(getProperties());
         sb.append("\n}\n");
         return sb.toString();

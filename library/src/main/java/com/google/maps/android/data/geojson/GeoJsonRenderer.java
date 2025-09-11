@@ -33,7 +33,7 @@ import androidx.annotation.NonNull;
  * Renders GeoJsonFeature objects onto the GoogleMap as Marker, Polyline and Polygon objects. Also
  * removes GeoJsonFeature objects and redraws features when updated.
  */
-public class GeoJsonRenderer extends Renderer implements Observer {
+public class GeoJsonRenderer extends Renderer<GeoJsonFeature> implements Observer {
 
     private final static Object FEATURE_NOT_ON_MAP = null;
 
@@ -71,8 +71,8 @@ public class GeoJsonRenderer extends Renderer implements Observer {
     public void addLayerToMap() {
         if (!isLayerOnMap()) {
             setLayerVisibility(true);
-            for (Feature feature : super.getFeatures()) {
-                addFeature((GeoJsonFeature) feature);
+            for (GeoJsonFeature feature : super.getFeatures()) {
+                addFeature(feature);
             }
         }
     }
@@ -94,7 +94,7 @@ public class GeoJsonRenderer extends Renderer implements Observer {
      */
     public void removeLayerFromMap() {
         if (isLayerOnMap()) {
-            for (Feature feature : super.getFeatures()) {
+            for (GeoJsonFeature feature : super.getFeatures()) {
                 removeFromMap(super.getAllFeatures().get(feature));
                 feature.deleteObserver(this);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.maps.android.data
 
-package com.google.maps.android.data;
+import com.google.android.gms.maps.model.LatLng
+
+/**
+ * A Polyline is a list of LatLngs where each LatLng is a vertex of the line.
+ */
+typealias Polyline = List<LatLng>
+
+/**
+ * A Polygon is a list of LatLngs where each LatLng is a vertex of the polygon.
+ */
+typealias Polygon = List<LatLng>
 
 /**
  * An abstraction that represents a Geometry object
  *
- * @param <T> the type of Geometry object
+ * @param T the type of Geometry object
  */
-public interface Geometry<T> {
+interface Geometry<T> {
     /**
      * Gets the type of geometry
-     *
-     * @return type of geometry
      */
-    String getGeometryType();
+    val geometryType: String
 
     /**
      * Gets the stored KML Geometry object
-     *
-     * @return geometry object
      */
-    T getGeometryObject();
-
+    val geometryObject: T
 }
