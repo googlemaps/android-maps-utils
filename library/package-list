@@ -832,6 +832,11 @@ $dokka.location:com.google.maps.android/Status///PointingToDeclaration/library/
 $dokka.location:com.google.maps.android/Status/entries/#/PointingToDeclaration/library/com.google.maps.android/-status/entries.html
 $dokka.location:com.google.maps.android/Status/valueOf/#kotlin.String/PointingToDeclaration/library/com.google.maps.android/-status/value-of.html
 $dokka.location:com.google.maps.android/Status/values/#/PointingToDeclaration/library/com.google.maps.android/-status/values.html
+$dokka.location:com.google.maps.android/StreetViewJavaHelper.StreetViewCallback///PointingToDeclaration/library/com.google.maps.android/-street-view-java-helper/-street-view-callback/index.html
+$dokka.location:com.google.maps.android/StreetViewJavaHelper.StreetViewCallback/onStreetViewError/#java.lang.Exception/PointingToDeclaration/library/com.google.maps.android/-street-view-java-helper/-street-view-callback/on-street-view-error.html
+$dokka.location:com.google.maps.android/StreetViewJavaHelper.StreetViewCallback/onStreetViewResult/#com.google.maps.android.Status/PointingToDeclaration/library/com.google.maps.android/-street-view-java-helper/-street-view-callback/on-street-view-result.html
+$dokka.location:com.google.maps.android/StreetViewJavaHelper///PointingToDeclaration/library/com.google.maps.android/-street-view-java-helper/index.html
+$dokka.location:com.google.maps.android/StreetViewJavaHelper/fetchStreetViewData/#com.google.android.gms.maps.model.LatLng#kotlin.String#com.google.maps.android.StreetViewJavaHelper.StreetViewCallback/PointingToDeclaration/library/com.google.maps.android/-street-view-java-helper/fetch-street-view-data.html
 $dokka.location:com.google.maps.android/StreetViewUtils.Companion///PointingToDeclaration/library/com.google.maps.android/-street-view-utils/-companion/index.html
 $dokka.location:com.google.maps.android/StreetViewUtils.Companion/fetchStreetViewData/#com.google.android.gms.maps.model.LatLng#kotlin.String#com.google.maps.android.Source/PointingToDeclaration/library/com.google.maps.android/-street-view-utils/-companion/fetch-street-view-data.html
 $dokka.location:com.google.maps.android/StreetViewUtils///PointingToDeclaration/library/com.google.maps.android/-street-view-utils/index.html
