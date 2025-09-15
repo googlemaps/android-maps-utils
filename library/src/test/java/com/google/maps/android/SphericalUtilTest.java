@@ -299,4 +299,75 @@ public class SphericalUtilTest {
         List<LatLng> pathReversed = Arrays.asList(right, down, front, up, right);
         assertThat(-SphericalUtil.computeSignedArea(path)).isWithin(0).of(SphericalUtil.computeSignedArea(pathReversed));
     }
+
+    @Test
+    public void testGetPointOnPolyline() {
+        final LatLng a = new LatLng(0, 0);
+        final LatLng b = new LatLng(0, 10);
+        final LatLng c = new LatLng(10, 10);
+        final LatLng d = new LatLng(10, 0);
+        final List<LatLng> polyline = Arrays.asList(a, b, c, d);
+
+        // Test for null cases
+        Assert.assertNull(SphericalUtil.getPointOnPolyline(Collections.emptyList(), 0.5));
+        Assert.assertNull(SphericalUtil.getPointOnPolyline(polyline, -0.1));
+        Assert.assertNull(SphericalUtil.getPointOnPolyline(polyline, 1.1));
+
+        // Test for start and end points
+        expectLatLngApproxEquals(a, SphericalUtil.getPointOnPolyline(polyline, 0));
+        expectLatLngApproxEquals(d, SphericalUtil.getPointOnPolyline(polyline, 1));
+
+        // Test for a point in the middle of a segment
+        final LatLng midAB = new LatLng(0, 5);
+        final double totalLength = SphericalUtil.computeLength(polyline);
+        final double abLength = SphericalUtil.computeDistanceBetween(a, b);
+        expectLatLngApproxEquals(midAB, SphericalUtil.getPointOnPolyline(polyline, (abLength / 2) / totalLength));
+
+        // Test for a point on a vertex
+        final double aToCLength = SphericalUtil.computeLength(Arrays.asList(a, b, c));
+        expectLatLngApproxEquals(c, SphericalUtil.getPointOnPolyline(polyline, aToCLength / totalLength));
+    }
+
+    @Test
+    public void testGetPolylinePrefix() {
+        final LatLng a = new LatLng(0, 0);
+        final LatLng b = new LatLng(0, 10);
+        final LatLng c = new LatLng(10, 10);
+        final LatLng d = new LatLng(10, 0);
+        final List<LatLng> polyline = Arrays.asList(a, b, c, d);
+
+        // Test for empty list cases
+        Assert.assertTrue(SphericalUtil.getPolylinePrefix(Collections.emptyList(), 0.5).isEmpty());
+        Assert.assertTrue(SphericalUtil.getPolylinePrefix(polyline, -0.1).isEmpty());
+        Assert.assertTrue(SphericalUtil.getPolylinePrefix(polyline, 1.1).isEmpty());
+
+        // Test for 0%
+        List<LatLng> prefix0 = SphericalUtil.getPolylinePrefix(polyline, 0);
+        Assert.assertEquals(1, prefix0.size());
+        expectLatLngApproxEquals(a, prefix0.get(0));
+
+        // Test for 100%
+        List<LatLng> prefix100 = SphericalUtil.getPolylinePrefix(polyline, 1);
+        Assert.assertEquals(polyline.size(), prefix100.size());
+        for (int i = 0; i < polyline.size(); i++) {
+            expectLatLngApproxEquals(polyline.get(i), prefix100.get(i));
+        }
+
+        // Test for a prefix that ends in the middle of a segment
+        final LatLng midAB = new LatLng(0, 5);
+        final double totalLength = SphericalUtil.computeLength(polyline);
+        final double abLength = SphericalUtil.computeDistanceBetween(a, b);
+        List<LatLng> prefixMidAB = SphericalUtil.getPolylinePrefix(polyline, (abLength / 2) / totalLength);
+        Assert.assertEquals(2, prefixMidAB.size());
+        expectLatLngApproxEquals(a, prefixMidAB.get(0));
+        expectLatLngApproxEquals(midAB, prefixMidAB.get(1));
+
+        // Test for a prefix that ends on a vertex
+        final double aToCLength = SphericalUtil.computeLength(Arrays.asList(a, b, c));
+        List<LatLng> prefixC = SphericalUtil.getPolylinePrefix(polyline, aToCLength / totalLength);
+        Assert.assertEquals(3, prefixC.size());
+        expectLatLngApproxEquals(a, prefixC.get(0));
+        expectLatLngApproxEquals(b, prefixC.get(1));
+        expectLatLngApproxEquals(c, prefixC.get(2));
+    }
 }
