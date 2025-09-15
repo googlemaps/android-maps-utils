@@ -34,7 +34,8 @@
     <string name="button_gradient">Gradient</string>
     <string name="button_opacity">Opacity</string>
     <string name="bad_maps_api_key">The Google Maps API key looks invalid or is missing. If you are sure your key is correct, you can remove this check from the demo.</string>
+    <string name="percentage_format">%1$d%%</string>
+
     <!-- This should be set here or in secrets.properties. -->
     <string name="map_id">DEMO_MAP_ID</string>
-    <string name="percentage_format">%1$d%%</string>
 </resources>
