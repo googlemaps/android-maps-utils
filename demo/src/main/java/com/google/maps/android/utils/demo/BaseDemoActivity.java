@@ -26,10 +26,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-
-import java.util.Objects;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -79,7 +78,7 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
             // Return CONSUMED to signal that we've handled the insets.
             return WindowInsetsCompat.CONSUMED;
         });
-        setUpMap();
+        setUpMap(savedInstanceState);
     }
 
     @Override
@@ -91,8 +90,36 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
         startDemo(mIsRestore);
     }
 
-    private void setUpMap() {
-        ((SupportMapFragment) Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.map))).getMapAsync(this);
+    private void setUpMap(Bundle savedInstanceState) {
+        // 1. Get the Application instance and cast it
+        DemoApplication app = (DemoApplication) getApplication();
+
+        // 2. Call the getMapId() method
+        String mapId = app.getMapId();
+
+        if (mapId == null) {
+            finish();  // Note the main application will inform the user of the need for the map ID.
+            return;
+        }
+
+        // Create the map options
+        GoogleMapOptions mapOptions = new GoogleMapOptions();
+        mapOptions.mapId(mapId);
+
+        // Create a new SupportMapFragment instance
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance(mapOptions);
+
+        // Add the fragment to the container (R.id.map)
+        // Check savedInstanceState to prevent re-adding on rotation
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.map, mapFragment)
+                    .commit();
+        }
+
+        // Get the map
+        mapFragment.getMapAsync(this);
     }
 
     /**

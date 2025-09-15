@@ -78,21 +78,22 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
         protected void onBeforeClusterItemRendered(@NonNull Person person,
                                                    @NonNull AdvancedMarkerOptions markerOptions) {
             markerOptions
-                    .icon(BitmapDescriptorFactory.fromPinConfig(getPinConfig().build()))
+                    .icon(BitmapDescriptorFactory.fromPinConfig(getPinConfig(person).build()))
                     .title(person.name);
         }
 
         @Override
         protected void onClusterItemUpdated(@NonNull Person person, @NonNull Marker marker) {
             // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
-            marker.setIcon(BitmapDescriptorFactory.fromPinConfig(getPinConfig().build()));
+            marker.setIcon(BitmapDescriptorFactory.fromPinConfig(getPinConfig(person).build()));
             marker.setTitle(person.name);
         }
 
-        private PinConfig.Builder getPinConfig() {
+        private PinConfig.Builder getPinConfig(Person person) {
             PinConfig.Builder pinConfigBuilder = PinConfig.builder();
             pinConfigBuilder.setBackgroundColor(Color.MAGENTA);
             pinConfigBuilder.setBorderColor(getResources().getColor(R.color.colorPrimaryDark));
+            pinConfigBuilder.setGlyph(new PinConfig.Glyph(BitmapDescriptorFactory.fromResource(person.profilePhoto)));
             return pinConfigBuilder;
         }
 
