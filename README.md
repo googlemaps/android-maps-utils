@@ -67,7 +67,7 @@ To run the demo app, ensure you've met the requirements above then:
 
 ### Setting up the Map ID
 
-Some of the features in the demo app, such as Advanced Markers, require a Map ID. You can set the Map ID in one of the following ways:
+Some of the features in the demo app, such as Advanced Markers, require a Map ID. You can learn more about map IDs in the [official documentation](https://developers.google.com/maps/documentation/android-sdk/map-ids/mapid-over). You can set the Map ID in one of the following ways:
 
 1.  **`secrets.properties`:** Add a line to your `secrets.properties` file with your Map ID:
     ```
