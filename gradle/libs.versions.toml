@@ -1,6 +1,8 @@
 [versions]
 compileSdk = "36"
 targetSdk = "36"
+minimumSdk = "21"
+
 appcompat = "1.7.1"
 dokka-gradle-plugin = "2.0.0"
 gradle = "8.13.0"
