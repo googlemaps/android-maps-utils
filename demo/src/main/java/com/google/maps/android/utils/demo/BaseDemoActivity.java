@@ -97,17 +97,18 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
         // 2. Call the getMapId() method
         String mapId = app.getMapId();
 
-        if (mapId == null) {
-            finish();  // Note the main application will inform the user of the need for the map ID.
-            return;
-        }
-
-        // Create the map options
-        GoogleMapOptions mapOptions = new GoogleMapOptions();
-        mapOptions.mapId(mapId);
-
         // Create a new SupportMapFragment instance
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance(mapOptions);
+        SupportMapFragment mapFragment;
+
+        if (mapId == null) {
+            mapFragment = SupportMapFragment.newInstance();
+        } else {
+            // Create the map options
+            GoogleMapOptions mapOptions = new GoogleMapOptions();
+            mapOptions.mapId(mapId);
+            // Create a new SupportMapFragment instance
+            mapFragment = SupportMapFragment.newInstance(mapOptions);
+        }
 
         // Add the fragment to the container (R.id.map)
         // Check savedInstanceState to prevent re-adding on rotation
