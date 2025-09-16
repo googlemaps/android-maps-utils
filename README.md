@@ -65,6 +65,27 @@ To run the demo app, ensure you've met the requirements above then:
 1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained earlier
 1. Build and run the `debug` variant for the Maps SDK for Android version
 
+### Setting up the Map ID
+
+Some of the features in the demo app, such as Advanced Markers, require a Map ID. You can learn more about map IDs in the [official documentation](https://developers.google.com/maps/documentation/android-sdk/map-ids/mapid-over). You can set the Map ID in one of the following ways:
+
+1.  **`secrets.properties`:** Add a line to your `secrets.properties` file with your Map ID:
+    ```
+    MAP_ID=YOUR_MAP_ID
+    ```
+
+2.  **`strings.xml`:** Alternatively, you can set the Map ID in the `demo/src/main/res/values/strings.xml` file:
+    ```xml
+    <string name="map_id">YOUR_MAP_ID</string>
+    ```
+
+3.  **XML Layout Files:** You can also hardcode the Map ID directly in the XML layout files where a map is defined, by setting the `map:mapId` attribute:
+    ```xml
+    <androidx.fragment.app.FragmentContainerView
+        map:mapId="YOUR_MAP_ID" 
+        />
+    ```
+
 ## Documentation
 
 See the [documentation] for a full list of classes and their methods.
@@ -74,6 +95,7 @@ Full guides for using the utilities are published in
 
 ## Usage
 
+<details>
   <summary>Marker utilities</summary>
 
 ### Marker utilities
@@ -82,7 +104,6 @@ Full guides for using the utilities are published in
 - Marker clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/clustering), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering)
 - Advanced Markers clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/clustering), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/CustomAdvancedMarkerClusteringDemoActivity.java)
 - Marker icons [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/ui/IconGenerator.java), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/IconGeneratorDemoActivity.java)
-
 </details>
 
 <details>
