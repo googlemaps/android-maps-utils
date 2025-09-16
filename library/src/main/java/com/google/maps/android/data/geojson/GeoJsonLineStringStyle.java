@@ -151,12 +151,12 @@ public class GeoJsonLineStringStyle extends Style implements GeoJsonStyle {
         styleChanged();
     }
 
-    public void setStartCap(Cap cap) {
+    public void setStartCap(@NonNull Cap cap) {
         mPolylineOptions.startCap(cap);
         styleChanged();
     }
 
-    public void setEndCap(Cap cap) {
+    public void setEndCap(@NonNull Cap cap) {
         mPolylineOptions.endCap(cap);
         styleChanged();
     }
