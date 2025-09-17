@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /**
  * Copyright 2025 Google LLC
  *
@@ -22,7 +24,7 @@ plugins {
 
 android {
     lint {
-        sarifOutput = file("$buildDir/reports/lint-results.sarif")
+        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
     }
 
     defaultConfig {
@@ -48,12 +50,13 @@ android {
         viewBinding = true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
         jvmToolchain(17)
     }
+
     namespace = "com.google.maps.android.utils.demo"
 }
 
