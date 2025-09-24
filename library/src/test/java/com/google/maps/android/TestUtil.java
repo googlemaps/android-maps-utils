@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google Inc.
+ * Copyright 2025 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package com.google.maps.android;
 public class TestUtil {
 
     /**
-     * Returns true if execution is occurring on Travis CI, and false if it is not
-     * @return true if execution is occurring on Travis CI, and false if it is not
+     * Returns true if execution is occurring on GitHub Actions, and false otherwise.
+     * This is determined by checking the GITHUB_ACTIONS environment variable.
+     *
+     * @return true if running on GitHub Actions, false otherwise.
      */
-    public static boolean isRunningOnTravis() {
-        return BuildConfig.TRAVIS != null && BuildConfig.TRAVIS.equals("true");
+    public static boolean isRunningOnGitHub() {
+        return "true".equals(System.getenv("GITHUB_ACTIONS"));
     }
 }
