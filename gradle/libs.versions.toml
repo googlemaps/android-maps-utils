@@ -4,7 +4,7 @@ targetSdk = "36"
 minimumSdk = "21"
 
 appcompat = "1.7.1"
-dokka-gradle-plugin = "2.0.0"
+dokka-gradle-plugin = "2.1.0"
 gradle = "8.13.0"
 jacoco-android = "0.2.1"
 lifecycle-extensions = "2.2.0"
