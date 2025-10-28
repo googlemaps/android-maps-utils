@@ -787,6 +787,7 @@ $dokka.location:com.google.maps.android/MathUtil/sinFromHav/#kotlin.Double/Point
 $dokka.location:com.google.maps.android/MathUtil/sinSumFromHav/#kotlin.Double#kotlin.Double/PointingToDeclaration/library/com.google.maps.android/-math-util/sin-sum-from-hav.html
 $dokka.location:com.google.maps.android/MathUtil/wrap/#kotlin.Double#kotlin.Double#kotlin.Double/PointingToDeclaration/library/com.google.maps.android/-math-util/wrap.html
 $dokka.location:com.google.maps.android/PolyUtil///PointingToDeclaration/library/com.google.maps.android/-poly-util/index.html
+$dokka.location:com.google.maps.android/PolyUtil/DEFAULT_TOLERANCE/#/PointingToDeclaration/library/com.google.maps.android/-poly-util/-d-e-f-a-u-l-t_-t-o-l-e-r-a-n-c-e.html
 $dokka.location:com.google.maps.android/PolyUtil/containsLocation/#com.google.android.gms.maps.model.LatLng#kotlin.collections.List[com.google.android.gms.maps.model.LatLng]#kotlin.Boolean/PointingToDeclaration/library/com.google.maps.android/-poly-util/contains-location.html
 $dokka.location:com.google.maps.android/PolyUtil/containsLocation/#kotlin.Double#kotlin.Double#kotlin.collections.List[com.google.android.gms.maps.model.LatLng]#kotlin.Boolean/PointingToDeclaration/library/com.google.maps.android/-poly-util/contains-location.html
 $dokka.location:com.google.maps.android/PolyUtil/decode/#kotlin.String/PointingToDeclaration/library/com.google.maps.android/-poly-util/decode.html
