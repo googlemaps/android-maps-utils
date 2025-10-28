@@ -46,7 +46,7 @@ import kotlin.math.tan
  * using either geodesic (great circle) or rhumb (loxodromic) paths.
  */
 object PolyUtil {
-    private const val DEFAULT_TOLERANCE = 0.1 // meters
+    const val DEFAULT_TOLERANCE = 0.1 // meters
 
     /**
      * Computes whether the given point lies inside the specified polygon.
