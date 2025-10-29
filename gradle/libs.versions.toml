@@ -21,7 +21,7 @@ robolectric = "4.16"
 kxml2 = "2.3.0"
 mockk = "1.14.5"
 lint = "31.13.0"
-org-jacoco-core = "0.8.13"
+org-jacoco-core = "0.8.14"
 material = "1.13.0"
 gradleMavenPublishPlugin = "0.34.0"
 
