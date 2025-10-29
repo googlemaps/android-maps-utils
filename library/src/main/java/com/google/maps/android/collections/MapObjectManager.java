@@ -122,7 +122,7 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
         }
 
         protected java.util.Collection<O> getObjects() {
-            return Collections.unmodifiableCollection(mObjects);
+            return Collections.unmodifiableSet(mObjects);
         }
     }
 }
