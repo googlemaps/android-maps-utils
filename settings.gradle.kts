@@ -29,4 +29,4 @@ pluginManagement {
     }
 }
 
-include("demo", "library", "lint-checks")
+include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library")

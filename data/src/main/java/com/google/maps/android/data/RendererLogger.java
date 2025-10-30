@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.maps.android;
+package com.google.maps.android.data;
 
 import android.util.Log;
 

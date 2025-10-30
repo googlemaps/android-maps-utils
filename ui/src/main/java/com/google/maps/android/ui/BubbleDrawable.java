@@ -25,7 +25,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-import com.google.maps.android.R;
+import com.google.maps.android.ui.R;
 
 import androidx.core.content.ContextCompat;
 

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 /**
- * Copyright 2025 Google LLC
+ * Copyright 2024 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,39 +15,36 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 plugins {
-    id("com.android.application")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-android")
+    id("org.jetbrains.dokka")
+    id("android.maps.utils.PublishingConventionPlugin")
 }
 
 android {
     lint {
         sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
     }
-
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
-        applicationId = "com.google.maps.android.utils.demo"
-        minSdk = libs.versions.minimumSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 21
+        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
+        consumerProguardFiles("consumer-rules.pro")
     }
-
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+    resourcePrefix = "amu_"
 
-    buildFeatures {
-        viewBinding = true
+    installation {
+        timeOutInMs = 10 * 60 * 1000 // 10 minutes
+        installOptions("-d", "-t")
     }
 
     kotlin {
@@ -57,37 +54,41 @@ android {
         jvmToolchain(17)
     }
 
-    namespace = "com.google.maps.android.utils.demo"
+    testOptions {
+        animationsDisabled = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.isReturnDefaultValues = true
+    }
+    namespace = "com.google.maps.android.clustering"
 }
 
-// [START maps_android_utils_install_snippet]
 dependencies {
-    // [START_EXCLUDE silent]
-    implementation(project(":clustering"))
-    implementation(project(":heatmaps"))
     implementation(project(":ui"))
+    implementation(project(":library"))
     implementation(project(":data"))
-
-    implementation(libs.appcompat)
-    implementation(libs.lifecycle.extensions)
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.kotlin.stdlib.jdk8)
+    api(libs.play.services.maps)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.material)
+    implementation(libs.appcompat)
     implementation(libs.core.ktx)
-
+    lintPublish(project(":lint-checks"))
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kxml2)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlin.test)
     testImplementation(libs.truth)
-    // [END_EXCLUDE]
-}
-// [END maps_android_utils_install_snippet]
+    implementation(libs.kotlin.stdlib.jdk8)
 
-secrets {
-    // To add your Maps API key to this project:
-    // 1. Create a file ./secrets.properties
-    // 2. Add this line, where YOUR_API_KEY is your API key:
-    //        MAPS_API_KEY=YOUR_API_KEY
-    defaultPropertiesFileName ="local.defaults.properties"
-    propertiesFileName = "secrets.properties"
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.core)
+}
+
+tasks.register("instrumentTest") {
+    dependsOn("connectedCheck")
+}
+
+if (System.getenv("JITPACK") != null) {
+    apply(plugin = "maven")
 }

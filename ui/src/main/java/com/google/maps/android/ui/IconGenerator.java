@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.maps.android.R;
+import com.google.maps.android.ui.R;
 
 /**
  * IconGenerator generates icons that contain text (or custom content) within an info
