@@ -1154,13 +1154,16 @@ public class Renderer {
                 return null;
             }
 
+            @Override
             public View getInfoContents(@NonNull Marker arg0) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
-                TextView infoWindowText = view.findViewById(R.id.window);
-                if (arg0.getSnippet() != null) {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else if (arg0.getTitle() != null) {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
+                if (arg0.getTitle() != null) {
+                    TextView infoWindowText = view.findViewById(R.id.window);
+                    if (arg0.getSnippet() != null) {
+                        infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
+                    } else {
+                        infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
+                    }
                 }
                 return view;
             }
