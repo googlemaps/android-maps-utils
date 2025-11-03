@@ -1159,7 +1159,7 @@ public class Renderer {
                 TextView infoWindowText = view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else {
+                } else if (arg0.getTitle() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
                 }
                 return view;
