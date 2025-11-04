@@ -1156,21 +1156,21 @@ public class Renderer {
 
             @Override
             public View getInfoContents(@NonNull Marker marker) {
-                if (marker.getTitle() == null) {
+                String title = marker.getTitle();
+                if (title == null) {
                     return null;
                 }
 
                 View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = view.findViewById(R.id.window);
 
-                String title = marker.getTitle();
-                String snippet = marker.getSnippet();
+                StringBuilder infoText = new StringBuilder(title);
 
+                String snippet = marker.getSnippet();
                 if (snippet != null) {
-                    infoWindowText.setText(Html.fromHtml(title + "<br>" + snippet));
-                } else {
-                    infoWindowText.setText(Html.fromHtml(title));
+                    infoText.append("<br>").append(snippet);
                 }
+                infoWindowText.setText(Html.fromHtml(infoText.toString()));
 
                 return view;
             }
