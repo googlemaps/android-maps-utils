@@ -18,7 +18,6 @@
 package com.google.maps.android.utils.attibution
 
 import android.content.Context
-import android.util.Log
 import androidx.startup.Initializer
 import com.google.android.gms.maps.MapsApiSettings
 import com.google.maps.android.utils.meta.AttributionId
@@ -31,12 +30,8 @@ import kotlinx.coroutines.launch
  */
 internal class AttributionIdInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        Log.d(TAG, "Initializing AttributionId: ${AttributionId.VALUE}")
-
-        // 🚨 CRITICAL: Launch the potentially blocking call on the IO thread
+        // 🚨 CRITICAL: Launch the potentially blocking call on the IO dispatcher
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d(TAG, "Running MapsApiSettings.addInternalUsageAttributionId on background thread.")
-
             // This is now safely off the main thread
             MapsApiSettings.addInternalUsageAttributionId(
                 /* context = */ context,
@@ -47,9 +42,5 @@ internal class AttributionIdInitializer : Initializer<Unit> {
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
         return emptyList()
-    }
-
-    private companion object {
-        private val TAG = AttributionIdInitializer::class.java.simpleName
     }
 }
