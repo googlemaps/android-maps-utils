@@ -24,9 +24,11 @@ lint = "31.13.0"
 org-jacoco-core = "0.8.13"
 material = "1.13.0"
 gradleMavenPublishPlugin = "0.34.0"
+androidx-startup-runtime = "1.2.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup-runtime" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
