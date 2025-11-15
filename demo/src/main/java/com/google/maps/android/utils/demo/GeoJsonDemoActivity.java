@@ -108,7 +108,7 @@ public class GeoJsonDemoActivity extends BaseDemoActivity {
                 // Set options for the point style
                 pointStyle.setIcon(pointIcon);
                 pointStyle.setTitle("Magnitude of " + magnitude);
-                pointStyle.setSnippet("Earthquake occured " + feature.getProperty("place"));
+                pointStyle.setSnippet("Earthquake occurred " + feature.getProperty("place"));
 
                 // Assign the point style to the feature
                 feature.setPointStyle(pointStyle);
