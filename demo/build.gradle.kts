@@ -9,14 +9,21 @@ if (!secretsFile.exists()) {
         println("Warning: secrets.properties not found. Gradle sync may succeed, but building/running the demo app will fail.")
     } else {
         // Tasks that are allowed to run without a secrets.properties file.
-        val exemptTaskKeywords = listOf("clean", "test", "lint", "dependencies", "help", "wrapper")
-        val hasNonExemptTask = requestedTasks.any { task ->
-            exemptTaskKeywords.none { keyword ->
+        val buildTaskKeywords = listOf("build", "install", "assemble")
+        val isBuildTask = requestedTasks.any { task ->
+            buildTaskKeywords.any { keyword ->
                 task.contains(keyword, ignoreCase = true)
             }
         }
 
-        if (hasNonExemptTask) {
+        val testTaskKeywords = listOf("test", "report", "lint")
+        val isTestTask = requestedTasks.any { task ->
+            testTaskKeywords.any { keyword ->
+                task.contains(keyword, ignoreCase = true)
+            }
+        }
+
+        if (isBuildTask && !isTestTask) {
             throw GradleException("secrets.properties file not found. Please create a 'secrets.properties' file in the root project directory with the following content:\n" +
                     "\n" +
                     "MAPS_API_KEY=<YOUR_API_KEY>\n" +
@@ -28,9 +35,6 @@ if (!secretsFile.exists()) {
         }
     }
 }
-
-
-
 
 /**
  * Copyright 2025 Google LLC
