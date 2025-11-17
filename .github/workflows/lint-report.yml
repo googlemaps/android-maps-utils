@@ -33,6 +33,9 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Create dummy secrets.properties
+        run: echo "MAPS_API_KEY=dummy" > secrets.properties
+
       - name: Run Android Lint
         run: ./gradlew lint
 
