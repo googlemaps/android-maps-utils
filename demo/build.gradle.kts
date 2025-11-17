@@ -1,5 +1,14 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+val secretsFile = rootProject.file("secrets.properties")
+if (!secretsFile.exists()) {
+    throw GradleException("secrets.properties file not found. Please create a 'secrets.properties' file in the root project directory with the following content:\n" +
+            "\n" +
+            "MAPS_API_KEY=<YOUR_API_KEY>\n" +
+            "PLACES_API_KEY=<YOUR_API_KEY>  # Only needed for certain demos (e.g., HeatmapsPlacesDemoActivity.java)\n" +
+            "MAP_ID=<YOUR_MAP_ID>\n")
+}
+
 /**
  * Copyright 2025 Google LLC
  *
