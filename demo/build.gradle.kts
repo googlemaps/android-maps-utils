@@ -22,10 +22,11 @@ val isBuildTask = requestedTasks.any { task ->
 val secretsFile = rootProject.file("secrets.properties")
 if (!secretsFile.exists()) {
     if (isBuildTask) {
-        throw GradleException(
-            "secrets.properties file not found. This file is required to build the demo application. " +
-                    "Please create one in the root project directory with your MAPS_API_KEY."
-        )
+        throw GradleException("secrets.properties file not found. Please create a 'secrets.properties' file in the root project directory with the following content:\n" +
+                "\n" +
+                "MAPS_API_KEY=<YOUR_API_KEY>\n" +
+                "PLACES_API_KEY=<YOUR_API_KEY>  # Only needed for certain demos (e.g., HeatmapsPlacesDemoActivity.java)\n" +
+                "MAP_ID=<YOUR_MAP_ID>\n")
     } else {
         // For other tasks like 'test' or 'clean', we don't need the secrets,
         // but we can print a warning.
