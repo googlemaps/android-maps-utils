@@ -1,13 +1,40 @@
+import org.gradle.api.GradleException
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+// Only require secrets for build/install tasks
+val requestedTasks = gradle.startParameter.taskNames
+val isBuildTask = requestedTasks.any { task ->
+    // Check for generic tasks that imply building everything, including demo
+    val isGenericBuild = task.equals("build", ignoreCase = true) || task.equals("assemble", ignoreCase = true)
+
+    // Check for tasks that specifically target the demo project, e.g. `./gradlew :demo:assembleDebug`
+    val isDemoTargeted = task.contains(":demo", ignoreCase = true) &&
+        (
+            task.endsWith("assemble", ignoreCase = true) ||
+            task.endsWith("install", ignoreCase = true) ||
+            task.endsWith("run", ignoreCase = true) ||
+            task.endsWith("bundle", ignoreCase = true) ||
+            task.endsWith("build", ignoreCase = true)
+        )
+    isGenericBuild || isDemoTargeted
+}
 
 val secretsFile = rootProject.file("secrets.properties")
 if (!secretsFile.exists()) {
-    throw GradleException("secrets.properties file not found. Please create a 'secrets.properties' file in the root project directory with the following content:\n" +
-            "\n" +
-            "MAPS_API_KEY=<YOUR_API_KEY>\n" +
-            "PLACES_API_KEY=<YOUR_API_KEY>  # Only needed for certain demos (e.g., HeatmapsPlacesDemoActivity.java)\n" +
-            "MAP_ID=<YOUR_MAP_ID>\n")
+    if (isBuildTask) {
+        throw GradleException(
+            "secrets.properties file not found. This file is required to build the demo application. " +
+                    "Please create one in the root project directory with your MAPS_API_KEY."
+        )
+    } else {
+        // For other tasks like 'test' or 'clean', we don't need the secrets,
+        // but we can print a warning.
+        println("Warning: secrets.properties not found. You can run tests and lint, but you won't be able to build or run the demo app.")
+    }
 }
+
+
+
 
 /**
  * Copyright 2025 Google LLC
