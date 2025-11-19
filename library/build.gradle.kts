@@ -44,7 +44,7 @@ android {
 
     installation {
         timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions("-d", "-t")
+        installOptions += listOf("-d", "-t")
     }
 
     kotlin {
