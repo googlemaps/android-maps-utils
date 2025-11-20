@@ -19,7 +19,6 @@ plugins {
     id("kotlin-android")
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
-    id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
 }
 
 android {
@@ -68,8 +67,6 @@ dependencies {
     implementation(project(":ui"))
     api(libs.play.services.maps)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.serialization)
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
     lintPublish(project(":lint-checks"))

@@ -1,0 +1,127 @@
+/*
+ * Copyright 2020 Google Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.google.maps.android.data.kml;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.xmlpull.v1.XmlPullParser;
+
+import android.graphics.Color;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.google.maps.android.data.kml.KmlTestUtil.createParser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(RobolectricTestRunner.class)
+public class KmlParserTest {
+
+    @Test
+    public void testInlineStyle() throws Exception {
+        XmlPullParser parser = createParser("amu_inline_style.kml");
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(mParser.getPlacemarks().size(), 1);
+        for (KmlPlacemark placemark : mParser.getPlacemarks().keySet()) {
+            KmlStyle inlineStyle = placemark.getInlineStyle();
+            assertNotNull(inlineStyle);
+            assertEquals(inlineStyle.getPolylineOptions().getColor(), Color.parseColor("#000000"));
+            assertEquals(
+                    inlineStyle.getPolygonOptions().getFillColor(), Color.parseColor("#ffffff"));
+            assertEquals(
+                    inlineStyle.getPolylineOptions().getColor(),
+                    inlineStyle.getPolygonOptions().getStrokeColor());
+            assertEquals(placemark.getGeometry().getGeometryType(), "MultiGeometry");
+        }
+    }
+
+    @Test
+    public void testEmptyHotSpotStyle() throws Exception {
+        XmlPullParser parser = createParser("amu_empty_hotspot.kml");
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(2, mParser.getPlacemarks().size());
+        HashMap<String, KmlStyle> styles = mParser.getStyles();
+        assertEquals(3, styles.size());
+        KmlStyle validStyle = styles.get("#validHotspot");
+        assertNotNull(validStyle);
+        double hotspotX = validStyle.getMarkerOptions().getAnchorU();
+        double hotspotY = validStyle.getMarkerOptions().getAnchorV();
+        assertEquals(0.5234, hotspotX, 0.0001);
+        assertEquals(0.5062, hotspotY, 0.0001);
+    }
+
+    @Test
+    public void testPolyStyleBooleanNumeric() throws Exception {
+        XmlPullParser parser =
+                createParser("amu_poly_style_boolean_numeric.kml");
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(1, mParser.getContainers().size());
+        KmlContainer kmlContainer = mParser.getContainers().get(0);
+        assertTrue(kmlContainer.hasPlacemarks());
+
+        HashMap<String, KmlStyle> styles = kmlContainer.getStyles();
+        KmlStyle kmlStyle = styles.get("#fireadvisory");
+        assertNotNull(kmlStyle);
+        assertTrue(kmlStyle.hasFill());
+        assertFalse(kmlStyle.hasOutline());
+    }
+
+    @Test
+    public void testPolyStyleBooleanAlpha() throws Exception {
+        XmlPullParser parser =
+                createParser("amu_poly_style_boolean_alpha.kml");
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertNotNull(mParser.getPlacemarks());
+        assertEquals(1, mParser.getContainers().size());
+        KmlContainer kmlContainer = mParser.getContainers().get(0);
+        assertTrue(kmlContainer.hasPlacemarks());
+
+        Map<String, KmlStyle> styles = kmlContainer.getStyles();
+        KmlStyle kmlStyle = styles.get("#fireadvisory");
+        assertNotNull(kmlStyle);
+        assertTrue(kmlStyle.hasFill());
+        assertFalse(kmlStyle.hasOutline());
+    }
+
+    @Test
+    public void testContainerHeirarchy() throws Exception {
+        XmlPullParser parser = createParser("amu_document_nest.kml");
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertEquals(mParser.getContainers().get(0).getContainerId(), "hasId");
+        assertEquals(mParser.getContainers().size(), 1);
+        assertTrue(mParser.getContainers().get(0).hasContainers());
+    }
+
+    @Test
+    public void testPlacemarkParsing() throws Exception {
+        XmlPullParser parser = createParser("amu_unsupported.kml");
+        KmlParser mParser = new KmlParser(parser);
+        mParser.parseKml();
+        assertEquals(1, mParser.getPlacemarks().size());
+    }
+}
