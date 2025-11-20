@@ -75,7 +75,7 @@ class KmlParserTest {
             assertNotNull(point)
             with(point!!) {
                 assertEquals("-119.749531,33.715059,0", coordinates)
-                assertEquals(Coords(33.715059, -119.749531, 0.0), coords)
+                assertEquals(LatLngAlt(33.715059, -119.749531, 0.0), latLngAlt)
                 assertEquals(AltitudeMode.CLAMP_TO_SEA_FLOOR, altitudeMode)
             }
         }

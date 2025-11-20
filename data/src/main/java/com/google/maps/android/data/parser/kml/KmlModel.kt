@@ -39,20 +39,20 @@ enum class AltitudeMode {
 
 sealed interface KmlFeature
 
-data class Coords(
+data class LatLngAlt(
     val latitude: Double,
     val longitude: Double,
     val altitude: Double? = null,
 ) {
-    companion object {
-        fun fromString(input: String): Coords? {
+    companion object Companion {
+        fun fromString(input: String): LatLngAlt? {
             val parts = input.split(",").map { it.trim().toDouble() }
 
             if (parts.size < 2) {
                 return null
             }
 
-            return Coords(
+            return LatLngAlt(
                 latitude = parts[1],
                 longitude = parts[0],
                 altitude = parts.getOrNull(2)
@@ -192,7 +192,7 @@ data class Point(
     val altitudeMode: AltitudeMode? = null
 ) {
     @Transient
-    val coords = Coords.fromString(coordinates)
+    val latLngAlt = LatLngAlt.fromString(coordinates)
 }
 
 @Serializable
