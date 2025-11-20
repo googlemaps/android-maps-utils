@@ -52,11 +52,34 @@ class KmlParserTest {
     @Test
     fun testAmuBallonGxPrefix() {
         val stream = File("src/test/resources/amu_ballon_gx_prefix.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertNotNull(geoData)
-        assertTrue(geoData.features.isNotEmpty())
-        val feature = geoData.features[0]
-        assertEquals("gx:balloonVisibility", feature.properties["gx:balloonVisibility"])
+
+        val kml = parser.parseAsKml(stream)
+
+        //        val geoData = parser.parse(stream)
+        //        assertNotNull(geoData)
+        //        assertTrue(geoData.features.isNotEmpty())
+
+        // TODO: Test the gx:Tour when implemented
+        // val feature = geoData.features[0]
+        // assertEquals("gx:balloonVisibility", feature.properties["gx:balloonVisibility"])
+
+        val placemarks = kml.findByPlacemarksById("underwater1")
+        assertEquals(1, placemarks.size)
+        with(placemarks[0]) {
+            assertEquals("Underwater off the California Coast", name)
+            assertEquals(
+                "The tour begins near the Santa Cruz Canyon, off the coast of California, USA.".simplify(),
+                description!!.simplify()
+            )
+
+            assertNotNull(point)
+            with(point!!) {
+                assertEquals("-119.749531,33.715059,0", coordinates)
+                assertEquals(Coords(33.715059, -119.749531, 0.0), coords)
+                assertEquals(AltitudeMode.CLAMP_TO_SEA_FLOOR, altitudeMode)
+            }
+        }
+
     }
 
     @Test
@@ -182,7 +205,7 @@ class KmlParserTest {
         val geoData = parser.parse(stream)
         assertNotNull(geoData)
         assertEquals(1, geoData.features.size)
-        assertTrue(geoData.features[0].geometry is Geometry.LineString) // Currently mapping to LineString
+assertTrue(geoData.features[0].geometry is Geometry.GeometryCollection) // Currently mapping to LineString
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.google.maps.android.data.parser.kml
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import nl.adaptivity.xmlutil.serialization.XmlValue
@@ -15,6 +17,49 @@ import nl.adaptivity.xmlutil.serialization.XmlValue
  */
 
 private const val KML_NAMESPACE = "http://www.opengis.net/kml/2.2"
+
+@Serializable
+@XmlSerialName("altitudeMode", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+enum class AltitudeMode {
+    @SerialName("relativeToGround")
+    RELATIVE_TO_GROUND,
+
+    @SerialName("absolute")
+    ABSOLUTE,
+
+    @SerialName("relativeToSeaFloor")
+    RELATIVE_TO_SEA_FLOOR,
+
+    @SerialName("clampToGround")
+    CLAMP_TO_GROUND,
+
+    @SerialName("clampToSeaFloor")
+    CLAMP_TO_SEA_FLOOR;
+}
+
+sealed interface KmlFeature
+
+data class Coords(
+    val latitude: Double,
+    val longitude: Double,
+    val altitude: Double? = null,
+) {
+    companion object {
+        fun fromString(input: String): Coords? {
+            val parts = input.split(",").map { it.trim().toDouble() }
+
+            if (parts.size < 2) {
+                return null
+            }
+
+            return Coords(
+                latitude = parts[1],
+                longitude = parts[0],
+                altitude = parts.getOrNull(2)
+            )
+        }
+    }
+}
 
 @Serializable
 @XmlSerialName("kml", namespace = KML_NAMESPACE, prefix = "")
@@ -34,12 +79,18 @@ data class Kml(
     // Include Style and StyleMap to prevent parsing errors on files that contain them.
     @XmlElement(true)
     @XmlSerialName("Style", namespace = KML_NAMESPACE, prefix = "")
-    val style: com.google.maps.android.data.parser.kml.Style? = null,
+    val style: Style? = null,
 
     @XmlElement(true)
     @XmlSerialName("StyleMap", namespace = KML_NAMESPACE, prefix = "")
     val styleMap: StyleMap? = null
 )
+
+fun Kml.findByPlacemarksById(id: String): List<Placemark> {
+    return buildList {
+        document?.placemarks?.filter { it.id == id }?.let { addAll(it) }
+    }
+}
 
 @Serializable
 @XmlSerialName("Document", namespace = KML_NAMESPACE, prefix = "")
@@ -62,12 +113,12 @@ data class Document(
 
     @XmlElement(true)
     @XmlSerialName("Style", namespace = KML_NAMESPACE, prefix = "")
-    val styles: List<com.google.maps.android.data.parser.kml.Style> = emptyList(),
+    val styles: List<Style> = emptyList(),
 
     @XmlElement(true)
     @XmlSerialName("StyleMap", namespace = KML_NAMESPACE, prefix = "")
     val styleMaps: List<StyleMap> = emptyList()
-)
+) : KmlFeature
 
 @Serializable
 @XmlSerialName("Folder", namespace = KML_NAMESPACE, prefix = "")
@@ -87,7 +138,7 @@ data class Folder(
     @XmlElement(true)
     @XmlSerialName("Placemark", namespace = KML_NAMESPACE, prefix = "")
     val placemarks: List<Placemark> = emptyList()
-)
+) : KmlFeature
 
 @Serializable
 @XmlSerialName("Placemark", namespace = KML_NAMESPACE, prefix = "")
@@ -122,18 +173,27 @@ data class Placemark(
     @XmlSerialName("MultiGeometry", namespace = KML_NAMESPACE, prefix = "")
     val multiGeometry: MultiGeometry? = null,
 
+    @XmlSerialName("balloonVisibility", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+    val balloonVisibility: Int = 1,
+
     @XmlElement(true)
     @XmlSerialName("ExtendedData", namespace = KML_NAMESPACE, prefix = "")
     val extendedData: ExtendedData? = null
-)
+) : KmlFeature
 
 @Serializable
 @XmlSerialName("Point", namespace = KML_NAMESPACE, prefix = "")
 data class Point(
     @XmlElement(true)
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
-    val coordinates: String
-)
+    val coordinates: String,
+
+    @XmlSerialName("altitudeMode", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+    val altitudeMode: AltitudeMode? = null
+) {
+    @Transient
+    val coords = Coords.fromString(coordinates)
+}
 
 @Serializable
 @XmlSerialName("LineString", namespace = KML_NAMESPACE, prefix = "")
@@ -210,27 +270,37 @@ data class Data(
     val content: String = ""
 )
 
-// Stub classes to allow parsing of Style and StyleMap tags without failing
 @Serializable
 @XmlSerialName("Style", namespace = KML_NAMESPACE, prefix = "")
 data class Style(
     val id: String? = null,
+    @XmlElement(true) @XmlSerialName("LineStyle", namespace = KML_NAMESPACE, prefix = "") val lineStyle: LineStyle? = null,
     @XmlElement(true) @XmlSerialName("PolyStyle", namespace = KML_NAMESPACE, prefix = "") val polyStyle: PolyStyle? = null
-)
+) : KmlFeature
 
 @Serializable
 @XmlSerialName("StyleMap", namespace = KML_NAMESPACE, prefix = "")
 data class StyleMap(
     val id: String? = null,
     @XmlElement(true) @XmlSerialName("Pair", namespace = KML_NAMESPACE, prefix = "") val pairs: List<Pair> = emptyList()
+) : KmlFeature
+
+@Serializable
+@XmlSerialName("LineStyle")
+data class LineStyle(
+    @XmlSerialName("color")
+    val color: String? = null,
+
+    @XmlSerialName("width")
+    val width: Float? = null
 )
 
 @Serializable
 @XmlSerialName("PolyStyle", namespace = KML_NAMESPACE, prefix = "")
 data class PolyStyle(
     @XmlElement(true) @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "") val color: String? = null,
-    @XmlElement(true) @XmlSerialName("fill", namespace = KML_NAMESPACE, prefix = "") val fill: Int? = null,
-    @XmlElement(true) @XmlSerialName("outline", namespace = KML_NAMESPACE, prefix = "") val outline: Int? = null
+    @XmlElement(true) @XmlSerialName("fill", namespace = KML_NAMESPACE, prefix = "") val fill: String? = null,
+    @XmlElement(true) @XmlSerialName("outline", namespace = KML_NAMESPACE, prefix = "") val outline: String? = null
 )
 
 @Serializable
@@ -239,3 +309,13 @@ data class Pair(
     @XmlElement(true) @XmlSerialName("key", namespace = KML_NAMESPACE, prefix = "") val key: String? = null,
     @XmlElement(true) @XmlSerialName("styleUrl", namespace = KML_NAMESPACE, prefix = "") val styleUrl: String? = null
 )
+
+@Serializable
+@XmlSerialName("gx:BalloonVisibility", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+data class BalloonVisibility(
+    val value: Int = 1
+)
+
+internal fun String.stripWhitespace(): String = filter { !it.isWhitespace() }
+
+internal fun String.simplify(): String = this.stripWhitespace().lowercase()

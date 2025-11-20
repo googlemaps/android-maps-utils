@@ -18,21 +18,16 @@ class KmlParser : GeoFileParser {
     }
 
     override fun parse(inputStream: InputStream): GeoData {
+        return transformToGeoData(parseAsKml(inputStream))
+    }
+
+    fun parseAsKml(inputStream: InputStream): Kml {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
-        val sanitizedContent = sanitize(xmlContent)
-        val kml = xml.decodeFromString<Kml>(sanitizedContent)
-        return transformToGeoData(kml)
+        val kml = xml.decodeFromString<Kml>(xmlContent)
+        return kml
     }
 
-    /**
-     * Sanitizes KML content by removing problematic elements before parsing.
-     * - Removes `gx:` prefixes which are not standard and can break parsing.
-     */
-    private fun sanitize(kmlContent: String): String {
-        return kmlContent.replace(Regex("gx:"), "")
-    }
-
-    private fun transformToGeoData(kml: Kml): GeoData {
+    fun transformToGeoData(kml: Kml): GeoData {
         val features = mutableListOf<Feature>()
         kml.document?.let { features.addAll(transformContainer(it)) }
         kml.folder?.let { features.addAll(transformContainer(it)) }
@@ -65,6 +60,7 @@ class KmlParser : GeoFileParser {
         val properties = mutableMapOf<String, Any>()
         placemark.name?.let { properties["name"] = it.trim() }
         placemark.description?.let { properties["description"] = it.trim() }
+        placemark.balloonVisibility?.let { properties["gx:balloonVisibility"] = it }
         placemark.extendedData?.data?.forEach {
             val value = (it.value ?: it.content).trim()
             it.name?.let { name -> properties[name] = value }
