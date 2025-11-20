@@ -1,133 +1,145 @@
 package com.google.maps.android.data.parser.geojson
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import org.json.JSONArray
-import org.json.JSONObject
+import com.google.maps.android.data.parser.Feature
+import com.google.maps.android.data.parser.GeoData
+import com.google.maps.android.data.parser.GeoFileParser
+import com.google.maps.android.data.parser.Geometry
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import java.io.InputStream
 
-class GeoJsonParser(private val jsonObject: JSONObject) {
+class GeoJsonParser : GeoFileParser {
+    override fun parse(inputStream: InputStream): GeoData {
+        val json = inputStream.bufferedReader().use { it.readText() }
+        val jsonElement = Json.parseToJsonElement(json)
+        val features = mutableListOf<Feature>()
 
-    fun parse(): GeoJson {
-        return when (val type = jsonObject.getString("type")) {
-            "Feature" -> parseFeature(jsonObject)
-            "FeatureCollection" -> parseFeatureCollection(jsonObject)
-            "Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon", "GeometryCollection" -> parseGeometry(jsonObject)
-            else -> throw IllegalArgumentException("Unknown GeoJSON type: $type")
-        }
-    }
-
-    private fun parseFeature(jsonObject: JSONObject): GeoJson.Feature {
-        val geometry = if (jsonObject.has("geometry") && !jsonObject.isNull("geometry")) {
-            parseGeometry(jsonObject.getJSONObject("geometry"))
-        } else {
-            null
-        }
-        val properties = if (jsonObject.has("properties") && !jsonObject.isNull("properties")) {
-            parseProperties(jsonObject.getJSONObject("properties"))
-        } else {
-            emptyMap()
-        }
-        val id = if (jsonObject.has("id")) jsonObject.getString("id") else null
-        val boundingBox = if (jsonObject.has("bbox")) parseBoundingBox(jsonObject.getJSONArray("bbox")) else null
-        return GeoJson.Feature(geometry, properties, id, boundingBox)
-    }
-
-    private fun parseFeatureCollection(jsonObject: JSONObject): GeoJson.FeatureCollection {
-        val features = mutableListOf<GeoJson.Feature>()
-        val featuresArray = jsonObject.getJSONArray("features")
-        for (i in 0 until featuresArray.length()) {
-            features.add(parseFeature(featuresArray.getJSONObject(i)))
-        }
-        val boundingBox = if (jsonObject.has("bbox")) parseBoundingBox(jsonObject.getJSONArray("bbox")) else null
-        return GeoJson.FeatureCollection(features, boundingBox)
-    }
-
-    private fun parseGeometry(jsonObject: JSONObject): GeoJson {
-        return when (val type = jsonObject.getString("type")) {
-            "Point" -> parsePoint(jsonObject.getJSONArray("coordinates"))
-            "MultiPoint" -> parseMultiPoint(jsonObject.getJSONArray("coordinates"))
-            "LineString" -> parseLineString(jsonObject.getJSONArray("coordinates"))
-            "MultiLineString" -> parseMultiLineString(jsonObject.getJSONArray("coordinates"))
-            "Polygon" -> parsePolygon(jsonObject.getJSONArray("coordinates"))
-            "MultiPolygon" -> parseMultiPolygon(jsonObject.getJSONArray("coordinates"))
-            "GeometryCollection" -> parseGeometryCollection(jsonObject.getJSONArray("geometries"))
-            else -> throw IllegalArgumentException("Unknown GeoJSON geometry type: $type")
-        }
-    }
-
-    private fun parseProperties(jsonObject: JSONObject): Map<String, String?> {
-        val properties = mutableMapOf<String, String?>()
-        val keys = jsonObject.keys()
-        while (keys.hasNext()) {
-            val key = keys.next()
-            properties[key] = if (jsonObject.isNull(key)) null else jsonObject.getString(key)
-        }
-        return properties
-    }
-
-    private fun parseBoundingBox(jsonArray: JSONArray): LatLngBounds {
-        return LatLngBounds(
-            LatLng(jsonArray.getDouble(1), jsonArray.getDouble(0)),
-            LatLng(jsonArray.getDouble(3), jsonArray.getDouble(2))
-        )
-    }
-
-    private fun parsePoint(jsonArray: JSONArray): GeoJson.Point {
-        return GeoJson.Point(LatLng(jsonArray.getDouble(1), jsonArray.getDouble(0)))
-    }
-
-    private fun parseMultiPoint(jsonArray: JSONArray): GeoJson.MultiPoint {
-        val points = mutableListOf<GeoJson.Point>()
-        for (i in 0 until jsonArray.length()) {
-            points.add(parsePoint(jsonArray.getJSONArray(i)))
-        }
-        return GeoJson.MultiPoint(points)
-    }
-
-    private fun parseLineString(jsonArray: JSONArray): GeoJson.LineString {
-        val coordinates = mutableListOf<LatLng>()
-        for (i in 0 until jsonArray.length()) {
-            val coordinate = jsonArray.getJSONArray(i)
-            coordinates.add(LatLng(coordinate.getDouble(1), coordinate.getDouble(0)))
-        }
-        return GeoJson.LineString(coordinates)
-    }
-
-    private fun parseMultiLineString(jsonArray: JSONArray): GeoJson.MultiLineString {
-        val lineStrings = mutableListOf<GeoJson.LineString>()
-        for (i in 0 until jsonArray.length()) {
-            lineStrings.add(parseLineString(jsonArray.getJSONArray(i)))
-        }
-        return GeoJson.MultiLineString(lineStrings)
-    }
-
-    private fun parsePolygon(jsonArray: JSONArray): GeoJson.Polygon {
-        val coordinates = mutableListOf<List<LatLng>>()
-        for (i in 0 until jsonArray.length()) {
-            val lineString = jsonArray.getJSONArray(i)
-            val lineStringCoordinates = mutableListOf<LatLng>()
-            for (j in 0 until lineString.length()) {
-                val coordinate = lineString.getJSONArray(j)
-                lineStringCoordinates.add(LatLng(coordinate.getDouble(1), coordinate.getDouble(0)))
+        if (jsonElement.toString().startsWith("[")) {
+            // This is a flat array of coordinates, not a valid GeoJSON object
+            jsonElement.jsonArray.forEach {
+                val lat = it.jsonObject["lat"]?.jsonPrimitive?.content?.toDouble()
+                val lon = it.jsonObject["lng"]?.jsonPrimitive?.content?.toDouble()
+                if (lat != null && lon != null) {
+                    features.add(Feature(Geometry.Point(lat, lon, null)))
+                }
             }
-            coordinates.add(lineStringCoordinates)
+        } else {
+            when (jsonElement.jsonObject["type"]?.jsonPrimitive?.content) {
+                "FeatureCollection" -> {
+                    jsonElement.jsonObject["features"]?.jsonArray?.forEach { featureJson ->
+                        parseFeature(featureJson)?.let { features.add(it) }
+                    }
+                }
+                "Feature" -> {
+                    parseFeature(jsonElement)?.let { features.add(it) }
+                }
+            }
         }
-        return GeoJson.Polygon(coordinates)
-    }
 
-    private fun parseMultiPolygon(jsonArray: JSONArray): GeoJson.MultiPolygon {
-        val polygons = mutableListOf<GeoJson.Polygon>()
-        for (i in 0 until jsonArray.length()) {
-            polygons.add(parsePolygon(jsonArray.getJSONArray(i)))
-        }
-        return GeoJson.MultiPolygon(polygons)
+        return GeoData(features)
     }
+}
 
-    private fun parseGeometryCollection(jsonArray: JSONArray): GeoJson.GeometryCollection {
-        val geometries = mutableListOf<GeoJson>()
-        for (i in 0 until jsonArray.length()) {
-            geometries.add(parseGeometry(jsonArray.getJSONObject(i)))
-        }
-        return GeoJson.GeometryCollection(geometries)
+private fun parseFeature(json: JsonElement): Feature? {
+    val geometryJson = json.jsonObject["geometry"]
+    if (geometryJson == null || geometryJson.toString() == "null") {
+        return null
     }
+    val propertiesJson = json.jsonObject["properties"]?.jsonObject
+    val geometry = parseGeometry(geometryJson) ?: return null
+    val properties = propertiesJson?.let {
+        it.entries.associate { (key, value) -> key to value.jsonPrimitive.content }
+    } ?: emptyMap()
+    return Feature(geometry, properties)
+}
+
+private fun parseGeometry(json: JsonElement): Geometry? {
+    val type = json.jsonObject["type"]?.jsonPrimitive?.content ?: return null
+    val coordinates = json.jsonObject["coordinates"]?.jsonArray
+    val geometries = json.jsonObject["geometries"]?.jsonArray
+    return when (type) {
+        "Point" -> parsePoint(coordinates!!)
+        "LineString" -> parseLineString(coordinates!!)
+        "Polygon" -> parsePolygon(coordinates!!)
+        "MultiPoint" -> parseMultiPoint(coordinates!!)
+        "MultiLineString" -> parseMultiLineString(coordinates!!)
+        "MultiPolygon" -> parseMultiPolygon(coordinates!!)
+        "GeometryCollection" -> parseGeometryCollection(geometries!!)
+        else -> null
+    }
+}
+
+private fun parsePoint(coordinates: List<JsonElement>): Geometry.Point {
+    val lon = coordinates[0].jsonPrimitive.content.toDouble()
+    val lat = coordinates[1].jsonPrimitive.content.toDouble()
+    val alt = if (coordinates.size > 2) coordinates[2].jsonPrimitive.content.toDouble() else null
+    return Geometry.Point(lat, lon, alt)
+}
+
+private fun parseLineString(coordinates: List<JsonElement>): Geometry.LineString {
+    val points = coordinates.map {
+        parsePoint(it.jsonArray.toList())
+    }
+    return Geometry.LineString(points)
+}
+
+private fun parsePolygon(coordinates: List<JsonElement>): Geometry.Polygon {
+    val shell = coordinates[0].jsonArray.map {
+        parsePoint(it.jsonArray.toList())
+    }
+    val holes = if (coordinates.size > 1) {
+        coordinates.subList(1, coordinates.size).map {
+            it.jsonArray.map { point ->
+                parsePoint(point.jsonArray.toList())
+            }
+        }
+    } else {
+        emptyList()
+    }
+    return Geometry.Polygon(shell, holes)
+}
+
+private fun parseMultiPoint(coordinates: List<JsonElement>): Geometry.LineString {
+    val points = coordinates.map {
+        parsePoint(it.jsonArray.toList())
+    }
+    return Geometry.LineString(points)
+}
+
+private fun parseMultiLineString(coordinates: List<JsonElement>): Geometry.LineString {
+    val points = coordinates.flatMap {
+        it.jsonArray.map { point ->
+            parsePoint(point.jsonArray.toList())
+        }
+    }
+    return Geometry.LineString(points)
+}
+
+private fun parseMultiPolygon(coordinates: List<JsonElement>): Geometry.Polygon {
+    val shell = coordinates[0].jsonArray[0].jsonArray.map {
+        parsePoint(it.jsonArray.toList())
+    }
+    val holes = if (coordinates[0].jsonArray.size > 1) {
+        coordinates[0].jsonArray.subList(1, coordinates[0].jsonArray.size).map {
+            it.jsonArray.map { point ->
+                parsePoint(point.jsonArray.toList())
+            }
+        }
+    } else {
+        emptyList()
+    }
+    return Geometry.Polygon(shell, holes)
+}
+
+private fun parseGeometryCollection(geometries: List<JsonElement>): Geometry.GeometryCollection {
+    val parsedGeometries = mutableListOf<Geometry>()
+    geometries.forEach {
+        parseGeometry(it)?.let { geometry ->
+            parsedGeometries.add(geometry)
+        }
+    }
+    return Geometry.GeometryCollection(parsedGeometries)
 }

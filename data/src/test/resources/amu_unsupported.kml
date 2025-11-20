@@ -1,4 +1,6 @@
-<kml><NetworkLinkControl>
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<NetworkLinkControl>
 <Update>
 		<targetHref>weather.kml</targetHref>
 		<Change>
