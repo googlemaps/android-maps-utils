@@ -238,14 +238,12 @@ data class ExtendedData(
 @Serializable
 @XmlSerialName("Data", namespace = KML_NAMESPACE, prefix = "")
 data class Data(
+    @XmlSerialName("name")
     val name: String? = null, // name is an attribute
 
     @XmlElement(true)
     @XmlSerialName("value", namespace = KML_NAMESPACE, prefix = "")
     val value: String? = null,
-
-    @XmlValue
-    val content: String = ""
 )
 
 @Serializable

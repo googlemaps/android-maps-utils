@@ -36,18 +36,19 @@ class KmlParserTest {
     @Test
     fun testAmuBasicPlacemarkPolygon() {
         val stream = File("src/test/resources/amu_basic_placemark.kml").inputStream()
-        val geoData = parser.parse(stream)
+        val kml = parser.parseAsKml(stream)
 
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
+        assertThat(kml.placemark).isNotNull()
 
-        val feature = geoData.features[0]
-        assertThat(feature.properties["name"]).isEqualTo("hollow box")
-        assertThat(feature.geometry).isInstanceOf(Geometry.Polygon::class.java)
+        with(kml.placemark!!) {
+            assertThat(name).isEqualTo("hollow box")
+            assertThat(polygon).isNotNull()
 
-        val polygon = feature.geometry as Geometry.Polygon
-        assertThat(polygon.shell.size).isEqualTo(5)
-        assertThat(polygon.holes.size).isEqualTo(2)
+            with(polygon!!) {
+                assertThat(outerBoundaryIs.linearRing.coordinates.trim().split(Regex("\\s+"))).hasSize(5)
+                assertThat(innerBoundaryIs).hasSize(2)
+            }
+        }
     }
 
     @Test
@@ -105,31 +106,41 @@ class KmlParserTest {
     @Test
     fun testAmuCdata() {
         val stream = File("src/test/resources/amu_cdata.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        assertThat(feature.properties["description"].toString()).contains("This is a description with tags")
+        val kml = parser.parseAsKml(stream)
+        
+        assertThat(kml.document).isNotNull()
+        assertThat(kml.document!!.placemarks).isNotEmpty()
+        
+        with(kml.document.placemarks.first()) {
+            assertThat(description).isNull()
+        }
     }
 
     @Test
     fun testAmuDefaultBalloon() {
         val stream = File("src/test/resources/amu_default_balloon.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        assertThat(feature.properties["name"]).isEqualTo("default")
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.placemark).isNotNull()
+        with(kml.placemark!!) {
+            assertThat(name).isEqualTo("My office")
+            assertThat(description).isEqualTo("This is the location of my office.")
+        }
     }
 
     @Test
     fun testAmuDocumentNest() {
         val stream = File("src/test/resources/amu_document_nest.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        assertThat(feature.properties["name"]).isEqualTo("document placemark")
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.document).isNotNull()
+        with(kml.document!!) {
+            assertThat(name).isEqualTo("Document with XML id")
+            assertThat(folders).hasSize(3)
+            assertThat(folders[0].name).isEqualTo("Folder 1")
+            assertThat(folders[1].name).isEqualTo("Folder 2")
+            assertThat(folders[2].name).isEqualTo("Folder 3")
+        }
     }
 
     @Test
@@ -143,20 +154,37 @@ class KmlParserTest {
     @Test
     fun testAmuEmptyHotspot() {
         val stream = File("src/test/resources/amu_empty_hotspot.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        assertThat(geoData.features[0].properties["name"]).isEqualTo("empty hotspot")
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.placemark).isNotNull()
+        with(kml.placemark!!) {
+            assertThat(name).isEqualTo("60A")
+        }
     }
 
     @Test
     fun testAmuExtendedData() {
         val stream = File("src/test/resources/amu_extended_data.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        assertThat(feature.properties["test_key"]).isEqualTo("test")
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.placemark).isNotNull()
+        with(kml.placemark!!) {
+            assertThat(name).isEqualTo("Club house")
+            assertThat(extendedData).isNotNull()
+            assertThat(extendedData!!.data).hasSize(3)
+            with(extendedData!!.data[0]) {
+                assertThat(name).isEqualTo("holeNumber")
+                assertThat(value).isEqualTo("1")
+            }
+            with(extendedData!!.data[1]) {
+                assertThat(name).isEqualTo("holeYardage")
+                assertThat(value).isEqualTo("234")
+            }
+            with(extendedData!!.data[2]) {
+                assertThat(name).isEqualTo("holePar")
+                assertThat(value).isEqualTo("4")
+            }
+        }
     }
 
     @Test

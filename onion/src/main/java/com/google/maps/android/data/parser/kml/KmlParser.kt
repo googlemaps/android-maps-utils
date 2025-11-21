@@ -60,9 +60,9 @@ class KmlParser : GeoFileParser {
         val properties = mutableMapOf<String, Any>()
         placemark.name?.let { properties["name"] = it.trim() }
         placemark.description?.let { properties["description"] = it.trim() }
-        placemark.balloonVisibility?.let { properties["gx:balloonVisibility"] = it }
+        placemark.balloonVisibility.let { properties["gx:balloonVisibility"] = it }
         placemark.extendedData?.data?.forEach {
-            val value = (it.value ?: it.content).trim()
+            val value = it.value?.trim() ?: ""
             it.name?.let { name -> properties[name] = value }
         }
         return properties
