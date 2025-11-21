@@ -170,12 +170,32 @@ class KmlParserTest {
             assertThat(placemarks[1].styleUrl).isEqualTo("#validHotspot")
             assertThat(styles).hasSize(2)
 
-            with(styles[0]) {
+            val emptyHotspotStyle = styles.find { it.id == "emptyHotspot" }
+            assertThat(emptyHotspotStyle).isNotNull()
+            with(emptyHotspotStyle!!) {
                 assertThat(id).isEqualTo("emptyHotspot")
+                assertThat(iconStyle).isNotNull()
+                assertThat(iconStyle!!.hotSpot).isNotNull()
+                with(iconStyle.hotSpot!!) {
+                    assertThat(x).isEqualTo(0.5)
+                    assertThat(y).isEqualTo(1.0)
+                    assertThat(xunits).isEqualTo("fraction")
+                    assertThat(yunits).isEqualTo("fraction")
+                }
             }
 
-            with(styles[1]) {
+            val validHotspotStyle = styles.find { it.id == "validHotspot" }
+            assertThat(validHotspotStyle).isNotNull()
+            with(validHotspotStyle!!) {
                 assertThat(id).isEqualTo("validHotspot")
+                assertThat(iconStyle).isNotNull()
+                assertThat(iconStyle!!.hotSpot).isNotNull()
+                with(iconStyle.hotSpot!!) {
+                    assertThat(x).isEqualTo(0.5234)
+                    assertThat(y).isEqualTo(0.5062)
+                    assertThat(xunits).isEqualTo("fraction")
+                    assertThat(yunits).isEqualTo("fraction")
+                }
             }
         }
     }

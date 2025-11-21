@@ -307,9 +307,58 @@ data class Data(
 )
 
 @Serializable
+@XmlSerialName("IconStyle", namespace = KML_NAMESPACE, prefix = "")
+data class IconStyle(
+    @XmlElement(true)
+    @XmlSerialName("scale", namespace = KML_NAMESPACE, prefix = "")
+    val scale: Float = 1.0f,
+
+    @XmlElement(true)
+    @XmlSerialName("Icon", namespace = KML_NAMESPACE, prefix = "")
+    val icon: Icon? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("hotSpot", namespace = KML_NAMESPACE, prefix = "")
+    val hotSpot: HotSpot? = null
+)
+
+@Serializable
+@XmlSerialName("LabelStyle", namespace = KML_NAMESPACE, prefix = "")
+data class LabelStyle(
+    @XmlElement(true)
+    @XmlSerialName("scale", namespace = KML_NAMESPACE, prefix = "")
+    val scale: Float = 1.0f,
+
+    @XmlElement(true)
+    @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
+    val color: String? = null
+)
+
+@Serializable
+@XmlSerialName("hotSpot", namespace = KML_NAMESPACE, prefix = "")
+data class HotSpot(
+    @XmlSerialName("x")
+    val x: Double = 0.5,
+    @XmlSerialName("y")
+    val y: Double = 1.0,
+    @XmlSerialName("xunits")
+    val xunits: String = "fraction",
+    @XmlSerialName("yunits")
+    val yunits: String = "fraction"
+)
+
+@Serializable
 @XmlSerialName("Style", namespace = KML_NAMESPACE, prefix = "")
 data class Style(
     val id: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("IconStyle", namespace = KML_NAMESPACE, prefix = "")
+    val iconStyle: IconStyle? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("LabelStyle", namespace = KML_NAMESPACE, prefix = "")
+    val labelStyle: LabelStyle? = null,
 
     @XmlElement(true)
     @XmlSerialName("LineStyle", namespace = KML_NAMESPACE, prefix = "")
