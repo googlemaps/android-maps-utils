@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>ClusterManager</title>
     <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
-    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+        <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
@@ -25,20 +25,18 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
 <script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer="defer"></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
 </head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-            <a class="library-name--link" href="../../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+            <a class="library-name--link" href="../../../index.html" tabindex="1">
                     library
             </a>
         <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle"
@@ -46,11 +44,11 @@
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
         <div class="library-version" id="library-version">
-3.19.0        </div>
+3.19.1        </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active=""
-                        data-filter=":library:dokkaHtml/release">androidJvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true"
+                        data-filter=":library/main">androidJvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox"
                         data-role="dropdown-toggle"
@@ -59,16 +57,16 @@
                         aria-expanded="false"
                         aria-label="Toggle source sets"
                 ></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":library:dokkaHtml/release"
-                                       data-filter=":library:dokkaHtml/release"/>
+                                <input type="checkbox" class="checkbox--input" id=":library/main"
+                                       data-filter=":library/main"/>
                                 <span class="checkbox--icon"></span>
                                 androidJvm
                             </label>
@@ -76,7 +74,7 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button"
                     type="button">Switch theme
             </button>
@@ -84,48 +82,50 @@
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list"
-                        data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config='{"defaultSize": 280, "minSize": 200, "maxSize": 400}'>
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list"
+                    data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     library
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageIds="library::com.google.maps.android.clustering/ClusterManager///PointingToDeclaration//-1887420133">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="library::com.google.maps.android.clustering/ClusterManager///PointingToDeclaration//-2006881120">
   <div class="breadcrumbs"><a href="../../../index.html">library</a><span class="delimiter">/</span><a href="../index.html">com.google.maps.android.clustering</a><span class="delimiter">/</span><span class="current">ClusterManager</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Cluster</span><wbr></wbr><span><span>Manager</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">ClusterManager</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span> : <span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnCameraIdleListener///PointingToDeclaration/">GoogleMap.OnCameraIdleListener</span>, <span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnMarkerClickListener///PointingToDeclaration/">GoogleMap.OnMarkerClickListener</span>, <span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnInfoWindowClickListener///PointingToDeclaration/">GoogleMap.OnInfoWindowClickListener</span></div><p class="paragraph">Groups many items on a map based on zoom level. </p><p class="paragraph"> ClusterManager should be added to the map as an: </p><ul><li><span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnCameraIdleListener///PointingToDeclaration/">com.google.android.gms.maps.GoogleMap.OnCameraIdleListener</span></li><li><span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnMarkerClickListener///PointingToDeclaration/">com.google.android.gms.maps.GoogleMap.OnMarkerClickListener</span></li></ul></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">ClusterManager</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span> : <span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnCameraIdleListener///PointingToDeclaration/">GoogleMap.OnCameraIdleListener</span>, <span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnMarkerClickListener///PointingToDeclaration/">GoogleMap.OnMarkerClickListener</span>, <span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnInfoWindowClickListener///PointingToDeclaration/">GoogleMap.OnInfoWindowClickListener</span></div><p class="paragraph">Groups many items on a map based on zoom level. </p><p class="paragraph"> ClusterManager should be added to the map as an: </p><ul><li><span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnCameraIdleListener///PointingToDeclaration/">com.google.android.gms.maps.GoogleMap.OnCameraIdleListener</span></li><li><span data-unresolved-link="com.google.android.gms.maps/GoogleMap.OnMarkerClickListener///PointingToDeclaration/">com.google.android.gms.maps.GoogleMap.OnMarkerClickListener</span></li></ul></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-1344387255%2FConstructors%2F-1887420133" anchor-label="ClusterManager" id="-1344387255%2FConstructors%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="-1344387255%2FConstructors%2F-2006881120" anchor-label="ClusterManager" id="-1344387255%2FConstructors%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-cluster-manager.html"><span>Cluster</span><wbr></wbr><span><span>Manager</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1344387255%2FConstructors%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1344387255%2FConstructors%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">map<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps/GoogleMap///PointingToDeclaration/">GoogleMap</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">map<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps/GoogleMap///PointingToDeclaration/">GoogleMap</span><span class="token punctuation">, </span></span><span class="parameter ">markerManager<span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/index.html">MarkerManager</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">map<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps/GoogleMap///PointingToDeclaration/">GoogleMap</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">map<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps/GoogleMap///PointingToDeclaration/">GoogleMap</span><span class="token punctuation">, </span></span><span class="parameter ">markerManager<span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/index.html">MarkerManager</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -133,93 +133,93 @@
         </div>
       </div>
       <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="634609998%2FClasslikes%2F-1887420133" anchor-label="OnClusterClickListener" id="634609998%2FClasslikes%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="634609998%2FClasslikes%2F-2006881120" anchor-label="OnClusterClickListener" id="634609998%2FClasslikes%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-on-cluster-click-listener/index.html"><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="634609998%2FClasslikes%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="634609998%2FClasslikes%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-click-listener/index.html">OnClusterClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when a Cluster is clicked.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-click-listener/index.html">OnClusterClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when a Cluster is clicked.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1034273300%2FClasslikes%2F-1887420133" anchor-label="OnClusterInfoWindowClickListener" id="-1034273300%2FClasslikes%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1034273300%2FClasslikes%2F-2006881120" anchor-label="OnClusterInfoWindowClickListener" id="-1034273300%2FClasslikes%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-on-cluster-info-window-click-listener/index.html"><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1034273300%2FClasslikes%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1034273300%2FClasslikes%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-info-window-click-listener/index.html">OnClusterInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-info-window-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when a Cluster's Info Window is clicked.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-info-window-click-listener/index.html">OnClusterInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-info-window-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when a Cluster's Info Window is clicked.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1980395512%2FClasslikes%2F-1887420133" anchor-label="OnClusterInfoWindowLongClickListener" id="-1980395512%2FClasslikes%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1980395512%2FClasslikes%2F-2006881120" anchor-label="OnClusterInfoWindowLongClickListener" id="-1980395512%2FClasslikes%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-on-cluster-info-window-long-click-listener/index.html"><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Long</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1980395512%2FClasslikes%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1980395512%2FClasslikes%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-info-window-long-click-listener/index.html">OnClusterInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-info-window-long-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when a Cluster's Info Window is long clicked.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-info-window-long-click-listener/index.html">OnClusterInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-info-window-long-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when a Cluster's Info Window is long clicked.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-898384447%2FClasslikes%2F-1887420133" anchor-label="OnClusterItemClickListener" id="-898384447%2FClasslikes%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-898384447%2FClasslikes%2F-2006881120" anchor-label="OnClusterItemClickListener" id="-898384447%2FClasslikes%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-on-cluster-item-click-listener/index.html"><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-898384447%2FClasslikes%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-898384447%2FClasslikes%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-item-click-listener/index.html">OnClusterItemClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-item-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when an individual ClusterItem is clicked.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-item-click-listener/index.html">OnClusterItemClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-item-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when an individual ClusterItem is clicked.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="838067871%2FClasslikes%2F-1887420133" anchor-label="OnClusterItemInfoWindowClickListener" id="838067871%2FClasslikes%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="838067871%2FClasslikes%2F-2006881120" anchor-label="OnClusterItemInfoWindowClickListener" id="838067871%2FClasslikes%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-on-cluster-item-info-window-click-listener/index.html"><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="838067871%2FClasslikes%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="838067871%2FClasslikes%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-item-info-window-click-listener/index.html">OnClusterItemInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-item-info-window-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when an individual ClusterItem's Info Window is clicked.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-item-info-window-click-listener/index.html">OnClusterItemInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-item-info-window-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when an individual ClusterItem's Info Window is clicked.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-833247429%2FClasslikes%2F-1887420133" anchor-label="OnClusterItemInfoWindowLongClickListener" id="-833247429%2FClasslikes%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-833247429%2FClasslikes%2F-2006881120" anchor-label="OnClusterItemInfoWindowLongClickListener" id="-833247429%2FClasslikes%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-on-cluster-item-info-window-long-click-listener/index.html"><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Long</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-833247429%2FClasslikes%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-833247429%2FClasslikes%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-item-info-window-long-click-listener/index.html">OnClusterItemInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-item-info-window-long-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when an individual ClusterItem's Info Window is long clicked.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-on-cluster-item-info-window-long-click-listener/index.html">OnClusterItemInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="-on-cluster-item-info-window-long-click-listener/index.html">T</a><span class="token operator"> : </span><a href="../-cluster-item/index.html">ClusterItem</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief ">Called when an individual ClusterItem's Info Window is long clicked.</div></div></div>
                 </div>
               </div>
             </div>
@@ -227,378 +227,378 @@
         </div>
       </div>
       <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-262616798%2FFunctions%2F-1887420133" anchor-label="addItem" id="-262616798%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-262616798%2FFunctions%2F-2006881120" anchor-label="addItem" id="-262616798%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="add-item.html"><span>add</span><wbr></wbr><span><span>Item</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-262616798%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-262616798%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="add-item.html"><span class="token function">addItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">myItem<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Adds an item to a cluster.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="add-item.html"><span class="token function">addItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">myItem<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Adds an item to a cluster.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-769378145%2FFunctions%2F-1887420133" anchor-label="addItems" id="-769378145%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-769378145%2FFunctions%2F-2006881120" anchor-label="addItems" id="-769378145%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="add-items.html"><span>add</span><wbr></wbr><span><span>Items</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-769378145%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-769378145%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="add-items.html"><span class="token function">addItems</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">items<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Adds items to clusters.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="add-items.html"><span class="token function">addItems</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">items<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Adds items to clusters.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1885524441%2FFunctions%2F-1887420133" anchor-label="clearItems" id="-1885524441%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1885524441%2FFunctions%2F-2006881120" anchor-label="clearItems" id="-1885524441%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="clear-items.html"><span>clear</span><wbr></wbr><span><span>Items</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1885524441%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1885524441%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="clear-items.html"><span class="token function">clearItems</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Removes all items from the cluster manager.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="clear-items.html"><span class="token function">clearItems</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Removes all items from the cluster manager.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-154649690%2FFunctions%2F-1887420133" anchor-label="cluster" id="-154649690%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-154649690%2FFunctions%2F-2006881120" anchor-label="cluster" id="-154649690%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="cluster.html"><span><span>cluster</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-154649690%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-154649690%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="cluster.html"><span class="token function">cluster</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Force a re-cluster on the map.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="cluster.html"><span class="token function">cluster</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Force a re-cluster on the map.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-599860165%2FFunctions%2F-1887420133" anchor-label="diff" id="-599860165%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-599860165%2FFunctions%2F-2006881120" anchor-label="diff" id="-599860165%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="diff.html"><span><span>diff</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-599860165%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-599860165%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="diff.html"><span class="token function">diff</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation builtin">Nullable</span></a> </span>add<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation builtin">Nullable</span></a> </span>remove<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation builtin">Nullable</span></a> </span>modify<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="diff.html"><span class="token function">diff</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation builtin">Nullable</span></a> </span>add<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation builtin">Nullable</span></a> </span>remove<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation builtin">Nullable</span></a> </span>modify<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1193393823%2FFunctions%2F-1887420133" anchor-label="getAlgorithm" id="-1193393823%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1193393823%2FFunctions%2F-2006881120" anchor-label="getAlgorithm" id="-1193393823%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-algorithm.html"><span>get</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1193393823%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1193393823%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-algorithm.html"><span class="token function">getAlgorithm</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.clustering.algo/-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-algorithm.html"><span class="token function">getAlgorithm</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.clustering.algo/-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1673330014%2FFunctions%2F-1887420133" anchor-label="getClusterMarkerCollection" id="1673330014%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="1673330014%2FFunctions%2F-2006881120" anchor-label="getClusterMarkerCollection" id="1673330014%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-cluster-marker-collection.html"><span>get</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Marker</span><wbr></wbr><span><span>Collection</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1673330014%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1673330014%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-cluster-marker-collection.html"><span class="token function">getClusterMarkerCollection</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/-collection/index.html">MarkerManager.Collection</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-cluster-marker-collection.html"><span class="token function">getClusterMarkerCollection</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/-collection/index.html">MarkerManager.Collection</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2088958542%2FFunctions%2F-1887420133" anchor-label="getMarkerCollection" id="-2088958542%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-2088958542%2FFunctions%2F-2006881120" anchor-label="getMarkerCollection" id="-2088958542%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-marker-collection.html"><span>get</span><wbr></wbr><span>Marker</span><wbr></wbr><span><span>Collection</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2088958542%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2088958542%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-marker-collection.html"><span class="token function">getMarkerCollection</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/-collection/index.html">MarkerManager.Collection</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-marker-collection.html"><span class="token function">getMarkerCollection</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/-collection/index.html">MarkerManager.Collection</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1973631299%2FFunctions%2F-1887420133" anchor-label="getMarkerManager" id="-1973631299%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1973631299%2FFunctions%2F-2006881120" anchor-label="getMarkerManager" id="-1973631299%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-marker-manager.html"><span>get</span><wbr></wbr><span>Marker</span><wbr></wbr><span><span>Manager</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1973631299%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1973631299%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-marker-manager.html"><span class="token function">getMarkerManager</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/index.html">MarkerManager</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-marker-manager.html"><span class="token function">getMarkerManager</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.collections/-marker-manager/index.html">MarkerManager</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1746945337%2FFunctions%2F-1887420133" anchor-label="getRenderer" id="-1746945337%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1746945337%2FFunctions%2F-2006881120" anchor-label="getRenderer" id="-1746945337%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-renderer.html"><span>get</span><wbr></wbr><span><span>Renderer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1746945337%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1746945337%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-renderer.html"><span class="token function">getRenderer</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.clustering.view/-cluster-renderer/index.html">ClusterRenderer</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="get-renderer.html"><span class="token function">getRenderer</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.google.maps.android.clustering.view/-cluster-renderer/index.html">ClusterRenderer</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1594328030%2FFunctions%2F-1887420133" anchor-label="onCameraIdle" id="-1594328030%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1594328030%2FFunctions%2F-2006881120" anchor-label="onCameraIdle" id="-1594328030%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-camera-idle.html"><span>on</span><wbr></wbr><span>Camera</span><wbr></wbr><span><span>Idle</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1594328030%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1594328030%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-camera-idle.html"><span class="token function">onCameraIdle</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Might re-cluster.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-camera-idle.html"><span class="token function">onCameraIdle</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief ">Might re-cluster.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1900496185%2FFunctions%2F-1887420133" anchor-label="onInfoWindowClick" id="-1900496185%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1900496185%2FFunctions%2F-2006881120" anchor-label="onInfoWindowClick" id="-1900496185%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-info-window-click.html"><span>on</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span><span>Click</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1900496185%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1900496185%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-info-window-click.html"><span class="token function">onInfoWindowClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/NonNull.html"><span class="token annotation builtin">NonNull</span></a> </span>marker<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-info-window-click.html"><span class="token function">onInfoWindowClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/NonNull.html"><span class="token annotation builtin">NonNull</span></a> </span>marker<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1873137859%2FFunctions%2F-1887420133" anchor-label="onMarkerClick" id="1873137859%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="1873137859%2FFunctions%2F-2006881120" anchor-label="onMarkerClick" id="1873137859%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="on-marker-click.html"><span>on</span><wbr></wbr><span>Marker</span><wbr></wbr><span><span>Click</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1873137859%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1873137859%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-marker-click.html"><span class="token function">onMarkerClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/NonNull.html"><span class="token annotation builtin">NonNull</span></a> </span>marker<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="on-marker-click.html"><span class="token function">onMarkerClick</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/NonNull.html"><span class="token annotation builtin">NonNull</span></a> </span>marker<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/Marker///PointingToDeclaration/">Marker</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-222710485%2FFunctions%2F-1887420133" anchor-label="removeItem" id="-222710485%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-222710485%2FFunctions%2F-2006881120" anchor-label="removeItem" id="-222710485%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="remove-item.html"><span>remove</span><wbr></wbr><span><span>Item</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-222710485%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-222710485%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="remove-item.html"><span class="token function">removeItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">item<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Removes an item from clusters.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="remove-item.html"><span class="token function">removeItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">item<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Removes an item from clusters.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1871172214%2FFunctions%2F-1887420133" anchor-label="removeItems" id="1871172214%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="1871172214%2FFunctions%2F-2006881120" anchor-label="removeItems" id="1871172214%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="remove-items.html"><span>remove</span><wbr></wbr><span><span>Items</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1871172214%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1871172214%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="remove-items.html"><span class="token function">removeItems</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">items<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Removes items from clusters.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="remove-items.html"><span class="token function">removeItems</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">items<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Collection.html">Collection</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Removes items from clusters.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="353804897%2FFunctions%2F-1887420133" anchor-label="setAlgorithm" id="353804897%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="353804897%2FFunctions%2F-2006881120" anchor-label="setAlgorithm" id="353804897%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-algorithm.html"><span>set</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="353804897%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="353804897%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-algorithm.html"><span class="token function">setAlgorithm</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">algorithm<span class="token operator">: </span><a href="../../com.google.maps.android.clustering.algo/-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-algorithm.html"><span class="token function">setAlgorithm</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">algorithm<span class="token operator">: </span><a href="../../com.google.maps.android.clustering.algo/-screen-based-algorithm/index.html">ScreenBasedAlgorithm</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-algorithm.html"><span class="token function">setAlgorithm</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">algorithm<span class="token operator">: </span><a href="../../com.google.maps.android.clustering.algo/-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-algorithm.html"><span class="token function">setAlgorithm</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">algorithm<span class="token operator">: </span><a href="../../com.google.maps.android.clustering.algo/-screen-based-algorithm/index.html">ScreenBasedAlgorithm</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-295649502%2FFunctions%2F-1887420133" anchor-label="setAnimation" id="-295649502%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-295649502%2FFunctions%2F-2006881120" anchor-label="setAnimation" id="-295649502%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-animation.html"><span>set</span><wbr></wbr><span><span>Animation</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-295649502%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-295649502%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-animation.html"><span class="token function">setAnimation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">animate<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-animation.html"><span class="token function">setAnimation</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">animate<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="702461411%2FFunctions%2F-1887420133" anchor-label="setOnClusterClickListener" id="702461411%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="702461411%2FFunctions%2F-2006881120" anchor-label="setOnClusterClickListener" id="702461411%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-on-cluster-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702461411%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702461411%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-click-listener.html"><span class="token function">setOnClusterClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-click-listener/index.html">ClusterManager.OnClusterClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when a Cluster is tapped.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-click-listener.html"><span class="token function">setOnClusterClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-click-listener/index.html">ClusterManager.OnClusterClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when a Cluster is tapped.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1909356377%2FFunctions%2F-1887420133" anchor-label="setOnClusterInfoWindowClickListener" id="-1909356377%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1909356377%2FFunctions%2F-2006881120" anchor-label="setOnClusterInfoWindowClickListener" id="-1909356377%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-on-cluster-info-window-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1909356377%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1909356377%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-info-window-click-listener.html"><span class="token function">setOnClusterInfoWindowClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-info-window-click-listener/index.html">ClusterManager.OnClusterInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when a Cluster info window is tapped.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-info-window-click-listener.html"><span class="token function">setOnClusterInfoWindowClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-info-window-click-listener/index.html">ClusterManager.OnClusterInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when a Cluster info window is tapped.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="719983983%2FFunctions%2F-1887420133" anchor-label="setOnClusterInfoWindowLongClickListener" id="719983983%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="719983983%2FFunctions%2F-2006881120" anchor-label="setOnClusterInfoWindowLongClickListener" id="719983983%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-on-cluster-info-window-long-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Long</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="719983983%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="719983983%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-info-window-long-click-listener.html"><span class="token function">setOnClusterInfoWindowLongClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-info-window-long-click-listener/index.html">ClusterManager.OnClusterInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when a Cluster info window is long-pressed.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-info-window-long-click-listener.html"><span class="token function">setOnClusterInfoWindowLongClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-info-window-long-click-listener/index.html">ClusterManager.OnClusterInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when a Cluster info window is long-pressed.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1039145475%2FFunctions%2F-1887420133" anchor-label="setOnClusterItemClickListener" id="-1039145475%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1039145475%2FFunctions%2F-2006881120" anchor-label="setOnClusterItemClickListener" id="-1039145475%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-on-cluster-item-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1039145475%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1039145475%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-click-listener.html"><span class="token function">setOnClusterItemClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-item-click-listener/index.html">ClusterManager.OnClusterItemClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when an individual ClusterItem is tapped.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-click-listener.html"><span class="token function">setOnClusterItemClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-item-click-listener/index.html">ClusterManager.OnClusterItemClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when an individual ClusterItem is tapped.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="220609281%2FFunctions%2F-1887420133" anchor-label="setOnClusterItemInfoWindowClickListener" id="220609281%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="220609281%2FFunctions%2F-2006881120" anchor-label="setOnClusterItemInfoWindowClickListener" id="220609281%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-on-cluster-item-info-window-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="220609281%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="220609281%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-info-window-click-listener.html"><span class="token function">setOnClusterItemInfoWindowClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-item-info-window-click-listener/index.html">ClusterManager.OnClusterItemInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-info-window-click-listener.html"><span class="token function">setOnClusterItemInfoWindowClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-item-info-window-click-listener/index.html">ClusterManager.OnClusterItemInfoWindowClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1273059913%2FFunctions%2F-1887420133" anchor-label="setOnClusterItemInfoWindowLongClickListener" id="1273059913%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="1273059913%2FFunctions%2F-2006881120" anchor-label="setOnClusterItemInfoWindowLongClickListener" id="1273059913%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-on-cluster-item-info-window-long-click-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Cluster</span><wbr></wbr><span>Item</span><wbr></wbr><span>Info</span><wbr></wbr><span>Window</span><wbr></wbr><span>Long</span><wbr></wbr><span>Click</span><wbr></wbr><span><span>Listener</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1273059913%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1273059913%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-info-window-long-click-listener.html"><span class="token function">setOnClusterItemInfoWindowLongClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-item-info-window-long-click-listener/index.html">ClusterManager.OnClusterItemInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when an individual ClusterItem's Info Window is long-pressed.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-on-cluster-item-info-window-long-click-listener.html"><span class="token function">setOnClusterItemInfoWindowLongClickListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="-on-cluster-item-info-window-long-click-listener/index.html">ClusterManager.OnClusterItemInfoWindowLongClickListener</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief ">Sets a callback that's invoked when an individual ClusterItem's Info Window is long-pressed.</div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-498334431%2FFunctions%2F-1887420133" anchor-label="setRenderer" id="-498334431%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-498334431%2FFunctions%2F-2006881120" anchor-label="setRenderer" id="-498334431%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="set-renderer.html"><span>set</span><wbr></wbr><span><span>Renderer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-498334431%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-498334431%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-renderer.html"><span class="token function">setRenderer</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">renderer<span class="token operator">: </span><a href="../../com.google.maps.android.clustering.view/-cluster-renderer/index.html">ClusterRenderer</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="set-renderer.html"><span class="token function">setRenderer</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">renderer<span class="token operator">: </span><a href="../../com.google.maps.android.clustering.view/-cluster-renderer/index.html">ClusterRenderer</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1568870736%2FFunctions%2F-1887420133" anchor-label="updateItem" id="-1568870736%2FFunctions%2F-1887420133" data-filterable-set=":library:dokkaHtml/release"></a>
-          <div class="table-row" data-filterable-current=":library:dokkaHtml/release" data-filterable-set=":library:dokkaHtml/release">
+<a data-name="-1568870736%2FFunctions%2F-2006881120" anchor-label="updateItem" id="-1568870736%2FFunctions%2F-2006881120" data-filterable-set=":library/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":library/main" data-filterable-set=":library/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="update-item.html"><span>update</span><wbr></wbr><span><span>Item</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1568870736%2FFunctions%2F-1887420133"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1568870736%2FFunctions%2F-2006881120"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="update-item.html"><span class="token function">updateItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">item<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Updates an item in clusters.</div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="update-item.html"><span class="token function">updateItem</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">item<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief ">Updates an item in clusters.</div></div></div>
                 </div>
               </div>
             </div>
@@ -609,17 +609,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
