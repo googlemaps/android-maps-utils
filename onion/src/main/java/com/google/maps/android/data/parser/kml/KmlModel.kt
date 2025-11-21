@@ -241,10 +241,7 @@ data class LineString(
     val coordinates: String
 ) {
     @Transient
-    val points = coordinates
-        .lines()
-        .filter(String::isNotBlank)
-        .map { LatLngAlt.fromString(it) }
+    val points = coordinates.toPointList()
 }
 
 @Serializable
@@ -256,8 +253,18 @@ data class Polygon(
 
     @XmlElement(true)
     @XmlSerialName("innerBoundaryIs", namespace = KML_NAMESPACE, prefix = "")
-    val innerBoundaryIs: List<Boundary> = emptyList()
-)
+    val innerBoundaryIs: List<Boundary> = emptyList(),
+
+    @XmlElement(true)
+    @XmlSerialName("extrude", namespace = KML_NAMESPACE, prefix = "")
+    val extrudeString: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("altitudeMode", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+    val altitudeMode: AltitudeMode? = null
+) {
+    val extrude = extrudeString.asBoolean(false)
+}
 
 @Serializable
 data class Boundary(
@@ -409,12 +416,19 @@ data class PolyStyle(
 
     @XmlElement(true)
     @XmlSerialName("fill", namespace = KML_NAMESPACE, prefix = "")
-    val fill: String? = null,
+    val fillString: String? = null,
 
     @XmlElement(true)
     @XmlSerialName("outline", namespace = KML_NAMESPACE, prefix = "")
-    val outline: String? = null
-)
+    val outlineString: String? = null
+) {
+    @Transient
+    val fill: Boolean = fillString.asBoolean()
+
+    @Transient
+    val outline: Boolean = outlineString.asBoolean()
+
+}
 
 @Serializable
 @XmlSerialName("Pair", namespace = KML_NAMESPACE, prefix = "")
@@ -438,6 +452,12 @@ internal fun String.stripWhitespace(): String = filter { !it.isWhitespace() }
 
 internal fun String.simplify(): String = this.stripWhitespace().lowercase()
 
-internal fun String.toPointList() = lines()
+private val coordinatesSeparator = Regex("""\s+""")
+
+internal fun String.toPointList() = split(coordinatesSeparator)
     .filter(String::isNotBlank)
     .map { LatLngAlt.fromString(it) }
+
+internal fun String?.asBoolean(default: Boolean = true): Boolean {
+    return this?.let { (it.equals("true", ignoreCase = true) || it == "1") } ?: default
+}
