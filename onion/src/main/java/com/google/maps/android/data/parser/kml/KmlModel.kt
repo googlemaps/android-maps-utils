@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
-import nl.adaptivity.xmlutil.serialization.XmlValue
 
 /**
  * This file contains the data classes for serializing KML files.
@@ -17,9 +16,10 @@ import nl.adaptivity.xmlutil.serialization.XmlValue
  */
 
 private const val KML_NAMESPACE = "http://www.opengis.net/kml/2.2"
+private const val GOOGLE_KML_NAMESPACE = "http://www.google.com/kml/ext/2.2"
 
 @Serializable
-@XmlSerialName("altitudeMode", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+@XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
 enum class AltitudeMode {
     @SerialName("relativeToGround")
     RELATIVE_TO_GROUND,
@@ -80,6 +80,10 @@ data class GroundOverlay(
     val drawOrder: Int? = null,
 
     @XmlElement(true)
+    @XmlSerialName("visibility", namespace = KML_NAMESPACE, prefix = "")
+    private val visibilityString: String? = null,
+
+    @XmlElement(true)
     @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
     val color: String? = null,
 
@@ -90,14 +94,17 @@ data class GroundOverlay(
     @XmlElement(true)
     @XmlSerialName("LatLonBox", namespace = KML_NAMESPACE, prefix = "")
     val latLonBox: LatLonBox? = null
-)
+) {
+    @Transient
+    val visibility: Boolean = visibilityString.asBoolean()
+}
 
 @Serializable
 @XmlSerialName("Icon", namespace = KML_NAMESPACE, prefix = "")
 data class Icon(
     @XmlElement(true)
     @XmlSerialName("href", namespace = KML_NAMESPACE, prefix = "")
-    val href: String? = null
+    val href: String? = null,
 )
 
 @Serializable
@@ -117,7 +124,11 @@ data class LatLonBox(
 
     @XmlElement(true)
     @XmlSerialName("west", namespace = KML_NAMESPACE, prefix = "")
-    val west: Double
+    val west: Double,
+
+    @XmlElement(true)
+    @XmlSerialName("rotation", namespace = KML_NAMESPACE, prefix = "")
+    val rotation: Double? = null
 )
 
 fun Kml.findByPlacemarksById(id: String): List<Placemark> {
@@ -166,13 +177,24 @@ data class Folder(
     val description: String? = null,
 
     @XmlElement(true)
+    @XmlSerialName("visibility", namespace = KML_NAMESPACE, prefix = "")
+    private val visibilityString: String? = null,
+
+    @XmlElement(true)
     @XmlSerialName("Folder", namespace = KML_NAMESPACE, prefix = "")
     val folders: List<Folder> = emptyList(),
 
     @XmlElement(true)
     @XmlSerialName("Placemark", namespace = KML_NAMESPACE, prefix = "")
-    val placemarks: List<Placemark> = emptyList()
-) : KmlFeature
+    val placemarks: List<Placemark> = emptyList(),
+
+    @XmlElement(true)
+    @XmlSerialName("GroundOverlay", KML_NAMESPACE)
+    val groundOverlays: List<GroundOverlay> = emptyList()
+) : KmlFeature {
+    @Transient
+    val visibility: Boolean = visibilityString.asBoolean()
+}
 
 @Serializable
 @XmlSerialName("Placemark", namespace = KML_NAMESPACE, prefix = "")
@@ -207,7 +229,7 @@ data class Placemark(
     @XmlSerialName("MultiGeometry", namespace = KML_NAMESPACE, prefix = "")
     val multiGeometry: MultiGeometry? = null,
 
-    @XmlSerialName("balloonVisibility", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+    @XmlSerialName("balloonVisibility", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
     val balloonVisibility: Int = 1,
 
     @XmlElement(true)
@@ -226,7 +248,7 @@ data class Point(
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
     val coordinates: String,
 
-    @XmlSerialName("altitudeMode", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+    @XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
     val altitudeMode: AltitudeMode? = null
 ) {
     @Transient
@@ -260,7 +282,7 @@ data class Polygon(
     val extrudeString: String? = null,
 
     @XmlElement(true)
-    @XmlSerialName("altitudeMode", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+    @XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
     val altitudeMode: AltitudeMode? = null
 ) {
     val extrude = extrudeString.asBoolean(false)
@@ -443,7 +465,7 @@ data class Pair(
 )
 
 @Serializable
-@XmlSerialName("gx:BalloonVisibility", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
+@XmlSerialName("gx:BalloonVisibility", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
 data class BalloonVisibility(
     val value: Int = 1
 )

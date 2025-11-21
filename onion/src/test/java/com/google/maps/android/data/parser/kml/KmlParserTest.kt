@@ -1,7 +1,6 @@
 package com.google.maps.android.data.parser.kml
 
 import com.google.common.truth.Truth.assertThat
-import com.google.maps.android.data.parser.Geometry
 import com.google.maps.android.data.parser.kml.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -548,35 +547,85 @@ class KmlParserTest {
     @Test
     fun testAmuPolyStyleBooleanNumeric() {
         val stream = File("src/test/resources/amu_poly_style_boolean_numeric.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        // TODO: Assert style properties when implemented
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.document).isNotNull()
+        with(kml.document!!) {
+            assertThat(styles).hasSize(1)
+            val style = styles.find { it.id == "fireadvisory" }
+            assertThat(style).isNotNull()
+            with(style!!) {
+                assertThat(id).isEqualTo("fireadvisory")
+                assertThat(polyStyle).isNotNull()
+                with(polyStyle!!) {
+                    assertThat(fill).isTrue()
+                    assertThat(outline).isFalse()
+                    assertThat(color).isEqualTo("6400E9FF")
+                }
+            }
+            assertThat(placemarks).hasSize(1)
+            with(placemarks.first()) {
+                assertThat(styleUrl).isEqualTo("#fireadvisory")
+                assertThat(name).isEqualTo("Lamont County")
+            }
+        }
     }
 
+    /*
+     * Be tolerant of unrecognized tags.
+     */
     @Test
     fun testAmuUnknownFolder() {
         val stream = File("src/test/resources/amu_unknown_folder.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        assertThat(geoData.features[0].properties["name"]).isEqualTo("unknown placemark")
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.folder).isNotNull()
+        with(kml.folder!!) {
+            assertThat(name).isEqualTo("folder")
+            assertThat(placemarks).isEmpty()
+            assertThat(folders).isEmpty()
+        }
     }
 
     @Test
     fun testAmuUnsupported() {
         val stream = File("src/test/resources/amu_unsupported.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features).isEmpty() // Expecting nothing to be parsed from unsupported elements
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.placemark).isNotNull()
+        with(kml.placemark!!) {
+            assertThat(point).isNotNull()
+            assertThat(point!!.latLngAlt).isNear(LatLngAlt(13.0, 15.0, 0.0))
+        }
     }
 
     @Test
     fun testAmuVisibilityGroundOverlay() {
         val stream = File("src/test/resources/amu_visibility_ground_overlay.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features).isEmpty() // GroundOverlay not yet parsed as Feature
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.folder).isNotNull()
+        with(kml.folder!!) {
+            assertThat(visibility).isTrue()
+            assertThat(groundOverlays).hasSize(1)
+            with(groundOverlays.first()) {
+                assertThat(name).isEqualTo("GroundOverlay.kml")
+                assertThat(color).isEqualTo("7fffffff")
+                assertThat(drawOrder).isEqualTo(1)
+                assertThat(visibility).isTrue()
+                assertThat(icon).isNotNull()
+                assertThat(icon!!.href).isEqualTo("http://www.google.com/intl/en/images/logo.gif")
+                assertThat(latLonBox).isNear(
+                    LatLonBox(
+                        north = 37.83234,
+                        south = 37.832122,
+                        east = -122.373033,
+                        west = -122.373724,
+                        rotation = 45.0
+                    )
+                )
+            }
+        }
     }
 
     @Test
@@ -594,6 +643,4 @@ class KmlParserTest {
             parser.parse(stream)
         }
     }
-
-    // Add more specific tests for properties, styles, and geometry details as the parser evolves
 }
