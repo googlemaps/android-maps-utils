@@ -17,19 +17,20 @@ class KmlParserTest {
     @Test
     fun testAmuBasicPlacemarkPoint() {
         val stream = File("src/test/resources/amu_basic_placemark_point.kml").inputStream()
-        val geoData = parser.parse(stream)
+        val kml = parser.parseAsKml(stream)
 
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
+        assertThat(kml.document).isNotNull()
+        assertThat(kml.document!!.placemarks).isNotEmpty()
 
-        val feature = geoData.features[0]
-        assertThat(feature.properties["name"]).isEqualTo("placemark1")
-        assertThat(feature.properties["description"]).isEqualTo("basic placemark")
-        assertThat(feature.geometry).isInstanceOf(Geometry.Point::class.java)
+        with(kml.document.placemarks.first()) {
+            assertThat(name).isEqualTo("placemark1")
+            assertThat(description).isEqualTo("basic placemark")
+            assertThat(point).isNotNull()
 
-        val point = feature.geometry as Geometry.Point
-        assertThat(point.lat).isWithin(0.0).of(0.0)
-        assertThat(point.lon).isWithin(0.0).of(0.0)
+            with(point!!) {
+                assertThat(latLngAlt).isNear(LatLngAlt(0.0, 0.0, 0.0))
+            }
+        }
     }
 
     @Test
@@ -50,7 +51,7 @@ class KmlParserTest {
     }
 
     @Test
-    fun testAmuBallonGxPrefix() {
+    fun testAmuBalloonGxPrefix() {
         val stream = File("src/test/resources/amu_ballon_gx_prefix.kml").inputStream()
 
         val kml = parser.parseAsKml(stream)
