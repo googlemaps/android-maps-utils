@@ -19,7 +19,6 @@ class KmlParserTest {
         val stream = File("src/test/resources/amu_basic_placemark_point.kml").inputStream()
         val kml = parser.parseAsKml(stream)
 
-        assertThat(kml.document).isNotNull()
         assertThat(kml.document!!.placemarks).isNotEmpty()
 
         with(kml.document.placemarks.first()) {
@@ -53,17 +52,11 @@ class KmlParserTest {
 
     @Test
     fun testAmuBalloonGxPrefix() {
-        val stream = File("src/test/resources/amu_ballon_gx_prefix.kml").inputStream()
+        val stream = File("src/test/resources/amu_balloon_gx_prefix.kml").inputStream()
 
         val kml = parser.parseAsKml(stream)
 
-        //        val geoData = parser.parse(stream)
-        //        assertThat(geoData).isNotNull()
-        //        assertThat(geoData.features.isNotEmpty()).isTrue()
-
         // TODO: Test the gx:Tour when implemented
-        // val feature = geoData.features[0]
-        // assertThat(feature.properties["gx:balloonVisibility"]).isEqualTo("gx:balloonVisibility")
 
         val placemarks = kml.findByPlacemarksById("underwater1")
         assertThat(placemarks.size).isEqualTo(1)
@@ -108,7 +101,7 @@ class KmlParserTest {
         val stream = File("src/test/resources/amu_cdata.kml").inputStream()
         val kml = parser.parseAsKml(stream)
         
-        assertThat(kml.document).isNotNull()
+
         assertThat(kml.document!!.placemarks).isNotEmpty()
         
         with(kml.document.placemarks.first()) {
@@ -133,7 +126,6 @@ class KmlParserTest {
         val stream = File("src/test/resources/amu_document_nest.kml").inputStream()
         val kml = parser.parseAsKml(stream)
 
-        assertThat(kml.document).isNotNull()
         with(kml.document!!) {
             assertThat(name).isEqualTo("Document with XML id")
             assertThat(folders).hasSize(3)
@@ -146,19 +138,45 @@ class KmlParserTest {
     @Test
     fun testAmuDrawOrderGroundOverlay() {
         val stream = File("src/test/resources/amu_draw_order_ground_overlay.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features).isEmpty() // GroundOverlay not yet parsed as Feature
+
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.groundOverlay).isNotNull()
+        with(kml.groundOverlay!!) {
+            assertThat(name).isEqualTo("Ground overlay with draw order")
+            assertThat(icon?.href).isEqualTo("http://ge-map-overlays.appspot.com/images/blue-triangle.png")
+            assertThat(drawOrder).isEqualTo(99)
+            assertThat(latLonBox).isNear(
+                LatLonBox(
+                    north = 37.85,
+                    south = 37.82,
+                    east = -122.47,
+                    west = -122.51
+                )
+            )
+        }
     }
 
     @Test
     fun testAmuEmptyHotspot() {
-        val stream = File("src/test/resources/amu_empty_hotspot.kml").inputStream()
-        val kml = parser.parseAsKml(stream)
+        val inputStream = File("src/test/resources/amu_empty_hotspot.kml").inputStream()
+        val kml = parser.parseAsKml(inputStream)
 
-        assertThat(kml.placemark).isNotNull()
-        with(kml.placemark!!) {
-            assertThat(name).isEqualTo("60A")
+        assertThat(kml.document).isNotNull()
+
+        with(kml.document!!) {
+            assertThat(placemarks).hasSize(2)
+            assertThat(placemarks[0].styleUrl).isEqualTo("#emptyHotspot")
+            assertThat(placemarks[1].styleUrl).isEqualTo("#validHotspot")
+            assertThat(styles).hasSize(2)
+
+            with(styles[0]) {
+                assertThat(id).isEqualTo("emptyHotspot")
+            }
+
+            with(styles[1]) {
+                assertThat(id).isEqualTo("validHotspot")
+            }
         }
     }
 
@@ -196,13 +214,15 @@ class KmlParserTest {
         with(kml.groundOverlay!!) {
             assertThat(name).isEqualTo("Ground overlay with draw order")
             assertThat(color).isEqualTo("7f000000")
-            assertThat(latLonBox).isNotNull()
-            with(latLonBox!!) {
-                assertThat(north).isWithin(0.0).of(37.91904192681665)
-                assertThat(south).isWithin(0.0).of(37.46543388598137)
-                assertThat(east).isWithin(0.0).of(15.35832653742206)
-                assertThat(west).isWithin(0.0).of(14.60128369746704)
-            }
+            assertThat(drawOrder).isEqualTo(99)
+            assertThat(latLonBox).isNear(
+                LatLonBox(
+                    north = 37.91904192681665,
+                    south = 37.46543388598137,
+                    east = 15.35832653742206,
+                    west = 14.60128369746704
+                )
+            )
         }
     }
 
@@ -217,13 +237,14 @@ class KmlParserTest {
             assertThat(drawOrder).isEqualTo(88)
             assertThat(icon).isNotNull()
             assertThat(icon!!.href).isEqualTo("http://www.colorcombos.com/images/colors/FF00FF.png")
-            assertThat(latLonBox).isNotNull()
-            with(latLonBox!!) {
-                assertThat(north).isWithin(0.0).of(37.85)
-                assertThat(south).isWithin(0.0).of(37.82)
-                assertThat(east).isWithin(0.0).of(-122.47)
-                assertThat(west).isWithin(0.0).of(-122.51)
-            }
+            assertThat(latLonBox).isNear(
+                LatLonBox(
+                    north = 37.85,
+                    south = 37.82,
+                    east = -122.47,
+                    west = -122.51
+                )
+            )
         }
     }
 

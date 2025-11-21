@@ -23,8 +23,7 @@ class KmlParser : GeoFileParser {
 
     fun parseAsKml(inputStream: InputStream): Kml {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
-        val kml = xml.decodeFromString<Kml>(xmlContent)
-        return kml
+        return xml.decodeFromString<Kml>(xmlContent)
     }
 
     fun transformToGeoData(kml: Kml): GeoData {
