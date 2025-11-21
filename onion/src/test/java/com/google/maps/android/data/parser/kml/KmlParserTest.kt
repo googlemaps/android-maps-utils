@@ -289,10 +289,57 @@ class KmlParserTest {
     @Test
     fun testAmuMultiGeometryPlacemarks() {
         val stream = File("src/test/resources/amu_multigeometry_placemarks.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1) // KML MultiGeometry is one feature with complex geometry
-        assertThat(geoData.features[0].geometry).isInstanceOf(Geometry.GeometryCollection::class.java) // Currently mapping to LineString
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.placemark).isNotNull()
+
+        with(kml.placemark!!) {
+            assertThat(name).isEqualTo("Placemark Test")
+            assertThat(multiGeometry).isNotNull()
+            with(multiGeometry!!) {
+                assertThat(points).hasSize(1)
+                assertThat(points.first()).isNear(LatLngAlt(40.4308, -3.6726))
+                assertThat(lineStrings).hasSize(1)
+                with(lineStrings[0]) {
+                    assertThat(points).hasSize(2)
+                    assertThat(points[0]).isNear(LatLngAlt(40.4364, -3.6655))
+                    assertThat(points[1]).isNear(LatLngAlt(40.4308, -3.6726))
+                }
+                assertThat(polygons).hasSize(1)
+                with(polygons[0]) {
+                    with(outerBoundaryIs.linearRing) {
+                        assertThat(points).hasSize(5)
+                        assertThat(points).containsExactly(
+                            LatLngAlt(37.818844, -122.366278, 30.0),
+                            LatLngAlt(37.819267, -122.365248, 30.0),
+                            LatLngAlt(37.819861, -122.365640, 30.0),
+                            LatLngAlt(37.819429, -122.366669, 30.0),
+                            LatLngAlt(37.818844, -122.366278, 30.0)
+                        )
+                    }
+                    with(innerBoundaryIs[0].linearRing) {
+                        assertThat(points).hasSize(5)
+                        assertThat(points).containsExactly(
+                            LatLngAlt(37.818977, -122.366212, 30.0),
+                            LatLngAlt(37.819294, -122.365424, 30.0),
+                            LatLngAlt(37.819731, -122.365704, 30.0),
+                            LatLngAlt(37.819402, -122.366488, 30.0),
+                            LatLngAlt(37.818977, -122.366212, 30.0)
+                        )
+                    }
+                    with(innerBoundaryIs[1].linearRing) {
+                        assertThat(points).hasSize(5)
+                        assertThat(points).containsExactly(
+                            LatLngAlt(37.818977, -122.366212, 42.0),
+                            LatLngAlt(37.819294, -122.365424, 42.0),
+                            LatLngAlt(37.819731, -122.365704, 42.0),
+                            LatLngAlt(37.819402, -122.366488, 42.0),
+                            LatLngAlt(37.818977, -122.366212, 42.0)
+                        )
+                    }
+                }
+            }
+        }
     }
 
     @Test

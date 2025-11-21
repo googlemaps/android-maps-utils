@@ -239,7 +239,13 @@ data class LineString(
     @XmlElement(true)
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
     val coordinates: String
-)
+) {
+    @Transient
+    val points = coordinates
+        .lines()
+        .filter(String::isNotBlank)
+        .map { LatLngAlt.fromString(it) }
+}
 
 @Serializable
 @XmlSerialName("Polygon", namespace = KML_NAMESPACE, prefix = "")
@@ -265,7 +271,10 @@ data class LinearRing(
     @XmlElement(true)
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
     val coordinates: String
-)
+) {
+    @Transient
+    val points = coordinates.toPointList()
+}
 
 @Serializable
 @XmlSerialName("MultiGeometry", namespace = KML_NAMESPACE, prefix = "")
@@ -428,3 +437,7 @@ data class BalloonVisibility(
 internal fun String.stripWhitespace(): String = filter { !it.isWhitespace() }
 
 internal fun String.simplify(): String = this.stripWhitespace().lowercase()
+
+internal fun String.toPointList() = lines()
+    .filter(String::isNotBlank)
+    .map { LatLngAlt.fromString(it) }
