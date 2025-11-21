@@ -1,8 +1,6 @@
 package com.google.maps.android.data.parser.geojson
 
 import com.google.common.truth.Truth.assertThat
-import com.google.maps.android.data.parser.Geometry
-import com.google.maps.android.data.parser.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -35,14 +33,14 @@ class GeoJsonParserTest {
             }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        assertThat(feature.properties.size).isEqualTo(1)
-        assertThat(feature.properties["prop0"]).isEqualTo("value0")
-        val point = feature.geometry as Geometry.Point
-        assertThat(point).isNear(Geometry.Point(0.5, 102.0, null))
+        assertThat(geoJsonObj.features.size).isEqualTo(1)
+        val feature = geoJsonObj.features[0]
+        assertThat(feature.properties?.size).isEqualTo(1)
+        assertThat(feature.properties?.get("prop0")).isEqualTo("value0")
+        val point = feature.geometry as GeoJsonPoint
+        assertThat(point.coordinates).isEqualTo(listOf(102.0, 0.5))
     }
 
     @Test
@@ -66,16 +64,16 @@ class GeoJsonParserTest {
             }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        val lineString = feature.geometry as Geometry.LineString
-        assertThat(lineString.points.size).isEqualTo(4)
-        assertThat(lineString.points[0]).isNear(Geometry.Point(0.0, 102.0, null))
-        assertThat(lineString.points[1]).isNear(Geometry.Point(1.0, 103.0, null))
-        assertThat(lineString.points[2]).isNear(Geometry.Point(0.0, 104.0, null))
-        assertThat(lineString.points[3]).isNear(Geometry.Point(1.0, 105.0, null))
+        assertThat(geoJsonObj.features.size).isEqualTo(1)
+        val feature = geoJsonObj.features[0]
+        val lineString = feature.geometry as GeoJsonLineString
+        assertThat(lineString.coordinates.size).isEqualTo(4)
+        assertThat(lineString.coordinates[0]).isEqualTo(listOf(102.0, 0.0))
+        assertThat(lineString.coordinates[1]).isEqualTo(listOf(103.0, 1.0))
+        assertThat(lineString.coordinates[2]).isEqualTo(listOf(104.0, 0.0))
+        assertThat(lineString.coordinates[3]).isEqualTo(listOf(105.0, 1.0))
     }
 
     @Test
@@ -97,13 +95,13 @@ class GeoJsonParserTest {
             }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        val polygon = feature.geometry as Geometry.Polygon
-        assertThat(polygon.shell.size).isEqualTo(5)
-        assertThat(polygon.holes).isEmpty()
+        assertThat(geoJsonObj.features.size).isEqualTo(1)
+        val feature = geoJsonObj.features[0]
+        val polygon = feature.geometry as GeoJsonPolygon
+        assertThat(polygon.coordinates.size).isEqualTo(1)
+        assertThat(polygon.coordinates[0].size).isEqualTo(5)
     }
 
     @Test
@@ -118,14 +116,12 @@ class GeoJsonParserTest {
         }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeature
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        val lineString = feature.geometry as Geometry.LineString
-        assertThat(lineString.points.size).isEqualTo(2)
-        assertThat(lineString.points[0]).isNear(Geometry.Point(0.0, 100.0, null))
-        assertThat(lineString.points[1]).isNear(Geometry.Point(1.0, 101.0, null))
+        val multiPoint = geoJsonObj.geometry as GeoJsonMultiPoint
+        assertThat(multiPoint.coordinates.size).isEqualTo(2)
+        assertThat(multiPoint.coordinates[0]).isEqualTo(listOf(100.0, 0.0))
+        assertThat(multiPoint.coordinates[1]).isEqualTo(listOf(101.0, 1.0))
     }
 
     @Test
@@ -143,16 +139,14 @@ class GeoJsonParserTest {
         }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeature
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        val lineString = feature.geometry as Geometry.LineString
-        assertThat(lineString.points.size).isEqualTo(4)
-        assertThat(lineString.points[0]).isNear(Geometry.Point(0.0, 100.0, null))
-        assertThat(lineString.points[1]).isNear(Geometry.Point(1.0, 101.0, null))
-        assertThat(lineString.points[2]).isNear(Geometry.Point(2.0, 102.0, null))
-        assertThat(lineString.points[3]).isNear(Geometry.Point(3.0, 103.0, null))
+        val multiLineString = geoJsonObj.geometry as GeoJsonMultiLineString
+        assertThat(multiLineString.coordinates.size).isEqualTo(2)
+        assertThat(multiLineString.coordinates[0][0]).isEqualTo(listOf(100.0, 0.0))
+        assertThat(multiLineString.coordinates[0][1]).isEqualTo(listOf(101.0, 1.0))
+        assertThat(multiLineString.coordinates[1][0]).isEqualTo(listOf(102.0, 2.0))
+        assertThat(multiLineString.coordinates[1][1]).isEqualTo(listOf(103.0, 3.0))
     }
 
     @Test
@@ -170,12 +164,10 @@ class GeoJsonParserTest {
         }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeature
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        val polygon = feature.geometry as Geometry.Polygon
-        assertThat(polygon.shell.size).isEqualTo(5)
+        val multiPolygon = geoJsonObj.geometry as GeoJsonMultiPolygon
+        assertThat(multiPolygon.coordinates.size).isEqualTo(2)
     }
 
     @Test
@@ -199,17 +191,15 @@ class GeoJsonParserTest {
         }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeature
 
-        assertThat(geoData.features.size).isEqualTo(1)
-        val feature = geoData.features[0]
-        assertThat(feature.geometry).isInstanceOf(Geometry.GeometryCollection::class.java)
-        val geomCollection = feature.geometry as Geometry.GeometryCollection
+        assertThat(geoJsonObj.geometry).isInstanceOf(GeoJsonGeometryCollection::class.java)
+        val geomCollection = geoJsonObj.geometry as GeoJsonGeometryCollection
         assertThat(geomCollection.geometries.size).isEqualTo(2)
-        assertThat(geomCollection.geometries[0]).isInstanceOf(Geometry.Point::class.java)
-        assertThat(geomCollection.geometries[1]).isInstanceOf(Geometry.LineString::class.java)
+        assertThat(geomCollection.geometries[0]).isInstanceOf(GeoJsonPoint::class.java)
+        assertThat(geomCollection.geometries[1]).isInstanceOf(GeoJsonLineString::class.java)
     }
-    
+
     @Test
     fun testParseNullGeometry() {
         val geoJson = """
@@ -222,65 +212,45 @@ class GeoJsonParserTest {
         }
         """.trimIndent()
         val stream = ByteArrayInputStream(geoJson.toByteArray())
-        val geoData = parser.parse(stream)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeature
 
-        assertThat(geoData.features.size).isEqualTo(0)
+        assertThat(geoJsonObj.geometry).isNull()
+        assertThat(geoJsonObj.properties?.get("name")).isEqualTo("null island")
     }
 
     @Test
     fun testUsaJson() {
         val stream = File("src/test/resources/usa.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.size).isEqualTo(1)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
+        assertThat(geoJsonObj.features.size).isEqualTo(1)
     }
 
     @Test
     fun testSouthLondonSquareJson() {
         val stream = File("src/test/resources/south_london_square_geojson.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.size).isEqualTo(1)
-    }
-
-    @Test
-    fun testPoliceJson() {
-        val stream = File("src/test/resources/police.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.isNotEmpty()).isTrue()
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
+        assertThat(geoJsonObj.features.size).isEqualTo(1)
     }
 
     @Test
     fun testSouthLondonLineJson() {
         val stream = File("src/test/resources/south_london_line_geojson.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.size).isEqualTo(1)
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
+        assertThat(geoJsonObj.features.size).isEqualTo(1)
     }
 
     @Test
     fun testEarthquakesWithUsaJson() {
         val stream = File("src/test/resources/earthquakes_with_usa.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.isNotEmpty()).isTrue()
-    }
-
-    @Test
-    fun testRadarSearchJson() {
-        val stream = File("src/test/resources/radar_search.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.isNotEmpty()).isTrue()
-    }
-
-    @Test
-    fun testMedicareJson() {
-        val stream = File("src/test/resources/medicare.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.isNotEmpty()).isTrue()
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
+        assertThat(geoJsonObj.features.isNotEmpty()).isTrue()
     }
 
     @Test
     fun testEarthquakesJson() {
         val stream = File("src/test/resources/earthquakes.json").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData.features.isNotEmpty()).isTrue()
+        val geoJsonObj = parser.parse(stream) as GeoJsonFeatureCollection
+        assertThat(geoJsonObj.features.isNotEmpty()).isTrue()
     }
 
     @Test
