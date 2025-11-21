@@ -61,7 +61,63 @@ data class Kml(
 
     @XmlElement(true)
     @XmlSerialName("StyleMap", namespace = KML_NAMESPACE, prefix = "")
-    val styleMap: StyleMap? = null
+    val styleMap: StyleMap? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("GroundOverlay", namespace = KML_NAMESPACE, prefix = "")
+    val groundOverlay: GroundOverlay? = null
+)
+
+@Serializable
+@XmlSerialName("GroundOverlay", namespace = KML_NAMESPACE, prefix = "")
+data class GroundOverlay(
+    @XmlElement(true)
+    @XmlSerialName("name", namespace = KML_NAMESPACE, prefix = "")
+    val name: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("drawOrder", namespace = KML_NAMESPACE, prefix = "")
+    val drawOrder: Int? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
+    val color: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("Icon", namespace = KML_NAMESPACE, prefix = "")
+    val icon: Icon? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("LatLonBox", namespace = KML_NAMESPACE, prefix = "")
+    val latLonBox: LatLonBox? = null
+)
+
+@Serializable
+@XmlSerialName("Icon", namespace = KML_NAMESPACE, prefix = "")
+data class Icon(
+    @XmlElement(true)
+    @XmlSerialName("href", namespace = KML_NAMESPACE, prefix = "")
+    val href: String? = null
+)
+
+@Serializable
+@XmlSerialName("LatLonBox", namespace = KML_NAMESPACE, prefix = "")
+data class LatLonBox(
+    @XmlElement(true)
+    @XmlSerialName("north", namespace = KML_NAMESPACE, prefix = "")
+    val north: Double,
+
+    @XmlElement(true)
+    @XmlSerialName("south", namespace = KML_NAMESPACE, prefix = "")
+    val south: Double,
+
+    @XmlElement(true)
+    @XmlSerialName("east", namespace = KML_NAMESPACE, prefix = "")
+    val east: Double,
+
+    @XmlElement(true)
+    @XmlSerialName("west", namespace = KML_NAMESPACE, prefix = "")
+    val west: Double
 )
 
 fun Kml.findByPlacemarksById(id: String): List<Placemark> {
@@ -153,6 +209,10 @@ data class Placemark(
 
     @XmlSerialName("balloonVisibility", namespace = "http://www.google.com/kml/ext/2.2", prefix = "gx")
     val balloonVisibility: Int = 1,
+
+    @XmlElement(true)
+    @XmlSerialName("Style", namespace = KML_NAMESPACE, prefix = "")
+    val style: Style? = null,
 
     @XmlElement(true)
     @XmlSerialName("ExtendedData", namespace = KML_NAMESPACE, prefix = "")
@@ -250,23 +310,34 @@ data class Data(
 @XmlSerialName("Style", namespace = KML_NAMESPACE, prefix = "")
 data class Style(
     val id: String? = null,
-    @XmlElement(true) @XmlSerialName("LineStyle", namespace = KML_NAMESPACE, prefix = "") val lineStyle: LineStyle? = null,
-    @XmlElement(true) @XmlSerialName("PolyStyle", namespace = KML_NAMESPACE, prefix = "") val polyStyle: PolyStyle? = null
+
+    @XmlElement(true)
+    @XmlSerialName("LineStyle", namespace = KML_NAMESPACE, prefix = "")
+    val lineStyle: LineStyle? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("PolyStyle", namespace = KML_NAMESPACE, prefix = "")
+    val polyStyle: PolyStyle? = null
 ) : KmlFeature
 
 @Serializable
 @XmlSerialName("StyleMap", namespace = KML_NAMESPACE, prefix = "")
 data class StyleMap(
     val id: String? = null,
-    @XmlElement(true) @XmlSerialName("Pair", namespace = KML_NAMESPACE, prefix = "") val pairs: List<Pair> = emptyList()
+
+    @XmlElement(true)
+    @XmlSerialName("Pair", namespace = KML_NAMESPACE, prefix = "")
+    val pairs: List<Pair> = emptyList()
 ) : KmlFeature
 
 @Serializable
 @XmlSerialName("LineStyle")
 data class LineStyle(
+    @XmlElement(true)
     @XmlSerialName("color")
     val color: String? = null,
 
+    @XmlElement(true)
     @XmlSerialName("width")
     val width: Float? = null
 )
@@ -274,16 +345,29 @@ data class LineStyle(
 @Serializable
 @XmlSerialName("PolyStyle", namespace = KML_NAMESPACE, prefix = "")
 data class PolyStyle(
-    @XmlElement(true) @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "") val color: String? = null,
-    @XmlElement(true) @XmlSerialName("fill", namespace = KML_NAMESPACE, prefix = "") val fill: String? = null,
-    @XmlElement(true) @XmlSerialName("outline", namespace = KML_NAMESPACE, prefix = "") val outline: String? = null
+    @XmlElement(true)
+    @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
+    val color: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("fill", namespace = KML_NAMESPACE, prefix = "")
+    val fill: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("outline", namespace = KML_NAMESPACE, prefix = "")
+    val outline: String? = null
 )
 
 @Serializable
 @XmlSerialName("Pair", namespace = KML_NAMESPACE, prefix = "")
 data class Pair(
-    @XmlElement(true) @XmlSerialName("key", namespace = KML_NAMESPACE, prefix = "") val key: String? = null,
-    @XmlElement(true) @XmlSerialName("styleUrl", namespace = KML_NAMESPACE, prefix = "") val styleUrl: String? = null
+    @XmlElement(true)
+    @XmlSerialName("key", namespace = KML_NAMESPACE, prefix = "")
+    val key: String? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("styleUrl", namespace = KML_NAMESPACE, prefix = "")
+    val styleUrl: String? = null
 )
 
 @Serializable

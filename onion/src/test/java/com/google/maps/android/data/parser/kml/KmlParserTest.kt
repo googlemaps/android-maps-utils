@@ -172,15 +172,15 @@ class KmlParserTest {
             assertThat(name).isEqualTo("Club house")
             assertThat(extendedData).isNotNull()
             assertThat(extendedData!!.data).hasSize(3)
-            with(extendedData!!.data[0]) {
+            with(extendedData.data[0]) {
                 assertThat(name).isEqualTo("holeNumber")
                 assertThat(value).isEqualTo("1")
             }
-            with(extendedData!!.data[1]) {
+            with(extendedData.data[1]) {
                 assertThat(name).isEqualTo("holeYardage")
                 assertThat(value).isEqualTo("234")
             }
-            with(extendedData!!.data[2]) {
+            with(extendedData.data[2]) {
                 assertThat(name).isEqualTo("holePar")
                 assertThat(value).isEqualTo("4")
             }
@@ -190,26 +190,59 @@ class KmlParserTest {
     @Test
     fun testAmuGroundOverlayColor() {
         val stream = File("src/test/resources/amu_ground_overlay_color.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features).isEmpty() // GroundOverlay not yet parsed as Feature
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.groundOverlay).isNotNull()
+        with(kml.groundOverlay!!) {
+            assertThat(name).isEqualTo("Ground overlay with draw order")
+            assertThat(color).isEqualTo("7f000000")
+            assertThat(latLonBox).isNotNull()
+            with(latLonBox!!) {
+                assertThat(north).isWithin(0.0).of(37.91904192681665)
+                assertThat(south).isWithin(0.0).of(37.46543388598137)
+                assertThat(east).isWithin(0.0).of(15.35832653742206)
+                assertThat(west).isWithin(0.0).of(14.60128369746704)
+            }
+        }
     }
 
     @Test
     fun testAmuGroundOverlay() {
         val stream = File("src/test/resources/amu_ground_overlay.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features).isEmpty() // GroundOverlay not yet parsed as Feature
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.groundOverlay).isNotNull()
+        with(kml.groundOverlay!!) {
+            assertThat(name).isEqualTo("Ground overlay with draw order")
+            assertThat(drawOrder).isEqualTo(88)
+            assertThat(icon).isNotNull()
+            assertThat(icon!!.href).isEqualTo("http://www.colorcombos.com/images/colors/FF00FF.png")
+            assertThat(latLonBox).isNotNull()
+            with(latLonBox!!) {
+                assertThat(north).isWithin(0.0).of(37.85)
+                assertThat(south).isWithin(0.0).of(37.82)
+                assertThat(east).isWithin(0.0).of(-122.47)
+                assertThat(west).isWithin(0.0).of(-122.51)
+            }
+        }
     }
 
     @Test
     fun testAmuInlineStyle() {
         val stream = File("src/test/resources/amu_inline_style.kml").inputStream()
-        val geoData = parser.parse(stream)
-        assertThat(geoData).isNotNull()
-        assertThat(geoData.features.size).isEqualTo(1)
-        // TODO: Assert style properties when implemented
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.placemark).isNotNull()
+        with(kml.placemark!!) {
+            assertThat(name).isEqualTo("Adelaide")
+            assertThat(style).isNotNull()
+            with(style!!) {
+                assertThat(lineStyle).isNotNull()
+                assertThat(lineStyle!!.color).isEqualTo("ff000000")
+                assertThat(polyStyle).isNotNull()
+                assertThat(polyStyle!!.color).isEqualTo("ffffffff")
+            }
+        }
     }
 
     @Test
