@@ -40,7 +40,7 @@ class GeoJsonParserTest {
         assertThat(feature.properties?.size).isEqualTo(1)
         assertThat(feature.properties?.get("prop0")).isEqualTo("value0")
         val point = feature.geometry as GeoJsonPoint
-        assertThat(point.coordinates).isEqualTo(listOf(102.0, 0.5))
+        assertThat(point.coordinates).isEqualTo(Coordinates(0.5, 102.0))
     }
 
     @Test
@@ -70,10 +70,10 @@ class GeoJsonParserTest {
         val feature = geoJsonObj.features[0]
         val lineString = feature.geometry as GeoJsonLineString
         assertThat(lineString.coordinates.size).isEqualTo(4)
-        assertThat(lineString.coordinates[0]).isEqualTo(listOf(102.0, 0.0))
-        assertThat(lineString.coordinates[1]).isEqualTo(listOf(103.0, 1.0))
-        assertThat(lineString.coordinates[2]).isEqualTo(listOf(104.0, 0.0))
-        assertThat(lineString.coordinates[3]).isEqualTo(listOf(105.0, 1.0))
+        assertThat(lineString.coordinates[0]).isEqualTo(Coordinates(0.0, 102.0))
+        assertThat(lineString.coordinates[1]).isEqualTo(Coordinates(1.0, 103.0))
+        assertThat(lineString.coordinates[2]).isEqualTo(Coordinates(0.0, 104.0))
+        assertThat(lineString.coordinates[3]).isEqualTo(Coordinates(1.0, 105.0))
     }
 
     @Test
@@ -120,8 +120,8 @@ class GeoJsonParserTest {
 
         val multiPoint = geoJsonObj.geometry as GeoJsonMultiPoint
         assertThat(multiPoint.coordinates.size).isEqualTo(2)
-        assertThat(multiPoint.coordinates[0]).isEqualTo(listOf(100.0, 0.0))
-        assertThat(multiPoint.coordinates[1]).isEqualTo(listOf(101.0, 1.0))
+        assertThat(multiPoint.coordinates[0]).isEqualTo(Coordinates(0.0, 100.0))
+        assertThat(multiPoint.coordinates[1]).isEqualTo(Coordinates(1.0, 101.0))
     }
 
     @Test
@@ -143,10 +143,10 @@ class GeoJsonParserTest {
 
         val multiLineString = geoJsonObj.geometry as GeoJsonMultiLineString
         assertThat(multiLineString.coordinates.size).isEqualTo(2)
-        assertThat(multiLineString.coordinates[0][0]).isEqualTo(listOf(100.0, 0.0))
-        assertThat(multiLineString.coordinates[0][1]).isEqualTo(listOf(101.0, 1.0))
-        assertThat(multiLineString.coordinates[1][0]).isEqualTo(listOf(102.0, 2.0))
-        assertThat(multiLineString.coordinates[1][1]).isEqualTo(listOf(103.0, 3.0))
+        assertThat(multiLineString.coordinates[0][0]).isEqualTo(Coordinates(0.0, 100.0))
+        assertThat(multiLineString.coordinates[0][1]).isEqualTo(Coordinates(1.0, 101.0))
+        assertThat(multiLineString.coordinates[1][0]).isEqualTo(Coordinates(2.0, 102.0))
+        assertThat(multiLineString.coordinates[1][1]).isEqualTo(Coordinates(3.0, 103.0))
     }
 
     @Test
