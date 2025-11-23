@@ -26,7 +26,7 @@ class KmlParserTest {
             assertThat(point).isNotNull()
 
             with(point!!) {
-                assertThat(latLngAlt).isNear(LatLngAlt(0.0, 0.0, 0.0))
+                assertThat(coordinates).isNear(LatLngAlt(0.0, 0.0, 0.0))
             }
         }
     }
@@ -67,8 +67,7 @@ class KmlParserTest {
 
             assertThat(point).isNotNull()
             with(point!!) {
-                assertThat(coordinates).isEqualTo("-119.749531,33.715059,0")
-                assertThat(latLngAlt).isEqualTo(LatLngAlt(33.715059, -119.749531, 0.0))
+                assertThat(coordinates).isEqualTo(LatLngAlt(33.715059, -119.749531, 0.0))
                 assertThat(altitudeMode).isEqualTo(AltitudeMode.CLAMP_TO_SEA_FLOOR)
             }
         }
@@ -88,7 +87,7 @@ class KmlParserTest {
             with(placemarks.first()) {
                 assertThat(id).isEqualTo("mountainpin1")
                 assertThat(name).isEqualTo("Pin on a mountaintop")
-                assertThat(point?.latLngAlt).isNear(
+                assertThat(point?.coordinates).isNear(
                     LatLngAlt(-43.60505741890396, 170.1435558771009, 0.0)
                 )
             }
@@ -297,7 +296,7 @@ class KmlParserTest {
             assertThat(multiGeometry).isNotNull()
             with(multiGeometry!!) {
                 assertThat(points).hasSize(1)
-                assertThat(points.first()).isNear(LatLngAlt(40.4308, -3.6726))
+                assertThat(points.first().coordinates).isNear(LatLngAlt(40.4308, -3.6726))
                 assertThat(lineStrings).hasSize(1)
                 with(lineStrings[0]) {
                     assertThat(points).hasSize(2)
@@ -353,7 +352,7 @@ class KmlParserTest {
 
             with(placemarks[0]) {
                 assertThat(name).isEqualTo("Club house")
-                assertThat(point?.latLngAlt).isNear(LatLngAlt(33.5043, -111.956))
+                assertThat(point?.coordinates).isNear(LatLngAlt(33.5043, -111.956))
                 assertThat(extendedData).isNotNull()
                 with(extendedData!!.data[0]) {
                     assertThat(name).isEqualTo("holeNumber")
@@ -370,7 +369,7 @@ class KmlParserTest {
             }
             with(placemarks[1]) {
                 assertThat(name).isEqualTo("By the lake")
-                assertThat(point?.latLngAlt).isNear(LatLngAlt(33.5024, -111.95))
+                assertThat(point?.coordinates).isNear(LatLngAlt(33.5024, -111.95))
                 assertThat(extendedData).isNotNull()
                 with(extendedData!!.data[0]) {
                     assertThat(name).isEqualTo("holeNumber")
@@ -414,7 +413,7 @@ class KmlParserTest {
             assertThat(multiGeometry).isNotNull()
             with(multiGeometry!!) {
                 assertThat(points).hasSize(1)
-                assertThat(points.first()).isNear(LatLngAlt(42.07, -71.0))
+                assertThat(points.first().coordinates).isNear(LatLngAlt(42.07, -71.0))
                 assertThat(lineStrings).hasSize(1)
                 with(lineStrings.first()) {
                     assertThat(points).hasSize(3)
@@ -425,7 +424,7 @@ class KmlParserTest {
                 assertThat(multiGeometries).hasSize(1)
                 with(multiGeometries.first()) {
                     assertThat(points).hasSize(1)
-                    assertThat(points.first()).isNear(LatLngAlt(42.1, -71.2))
+                    assertThat(points.first().coordinates).isNear(LatLngAlt(42.1, -71.2))
                     assertThat(lineStrings).hasSize(1)
                     with(lineStrings.first()) {
                         assertThat(points).hasSize(3)
@@ -595,7 +594,7 @@ class KmlParserTest {
         assertThat(kml.placemark).isNotNull()
         with(kml.placemark!!) {
             assertThat(point).isNotNull()
-            assertThat(point!!.latLngAlt).isNear(LatLngAlt(13.0, 15.0, 0.0))
+            assertThat(point!!.coordinates).isNear(LatLngAlt(13.0, 15.0, 0.0))
         }
     }
 

@@ -77,9 +77,8 @@ class KmlParser : GeoFileParser {
         }
     }
 
-    private fun parsePoint(coordinates: String): Geometry.Point {
-        val coords = parseCoordinates(coordinates).first()
-        return Geometry.Point(coords.get(1), coords.get(0), coords.getOrNull(2))
+    private fun parsePoint(latLngAlt: LatLngAlt): Geometry.Point {
+        return Geometry.Point(latLngAlt.latitude, latLngAlt.longitude, latLngAlt.altitude)
     }
 
     private fun parseLineString(coordinates: String): Geometry.LineString {

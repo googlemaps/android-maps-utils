@@ -246,14 +246,11 @@ data class Placemark(
 data class Point(
     @XmlElement(true)
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
-    val coordinates: String,
+    val coordinates: LatLngAlt,
 
     @XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
     val altitudeMode: AltitudeMode? = null
-) {
-    @Transient
-    val latLngAlt = LatLngAlt.fromString(coordinates)
-}
+)
 
 @Serializable
 @XmlSerialName("LineString", namespace = KML_NAMESPACE, prefix = "")
@@ -478,7 +475,7 @@ private val coordinatesSeparator = Regex("""\s+""")
 
 internal fun String.toPointList() = split(coordinatesSeparator)
     .filter(String::isNotBlank)
-    .map { LatLngAlt.fromString(it) }
+    .map { LatLngAltSerializer.parse(it) }
 
 internal fun String?.asBoolean(default: Boolean = true): Boolean {
     return this?.let { (it.equals("true", ignoreCase = true) || it == "1") } ?: default

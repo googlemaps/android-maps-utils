@@ -18,6 +18,7 @@ package com.google.maps.android.data.renderer.mapper
 import com.google.maps.android.data.parser.kml.Boundary
 import com.google.maps.android.data.parser.kml.Document
 import com.google.maps.android.data.parser.kml.Kml
+import com.google.maps.android.data.parser.kml.LatLngAlt
 import com.google.maps.android.data.parser.kml.LineString as KmlLineString
 import com.google.maps.android.data.parser.kml.LinearRing
 import com.google.maps.android.data.parser.kml.Placemark
@@ -36,7 +37,7 @@ class KmlMapperTest {
     fun `test KmlPoint to Scene`() {
         val kml = Kml(
             placemark = Placemark(
-                point = KmlPoint("1.0,2.0,3.0")
+                point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0))
             )
         )
         val scene = KmlMapper.toScene(kml)
@@ -119,7 +120,7 @@ class KmlMapperTest {
             document = Document(
                 placemarks = listOf(
                     Placemark(
-                        point = KmlPoint("1.0,2.0,3.0")
+                        point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0))
                     )
                 )
             )
