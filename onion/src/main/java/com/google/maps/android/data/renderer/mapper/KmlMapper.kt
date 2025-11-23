@@ -59,30 +59,30 @@ object KmlMapper {
 
     private fun toGeometry(placemark: Placemark): Geometry {
         placemark.point?.let {
-            return PointGeometry(Point(it.coordinates.latitude, it.coordinates.longitude, it.coordinates.altitude))
+            return PointGeometry(Point(lat = it.coordinates.latitude, lng = it.coordinates.longitude, alt = it.coordinates.altitude))
         }
         placemark.lineString?.let {
-            return LineString(it.points.map { Point(it.latitude, it.longitude, it.altitude) })
+            return LineString(it.coordinates.map { Point(lat = it.latitude, lng = it.longitude, alt = it.altitude) })
         }
         placemark.polygon?.let {
-            val outerBoundary = it.outerBoundaryIs.linearRing.points.map { Point(it.latitude, it.longitude, it.altitude) }
+            val outerBoundary = it.outerBoundaryIs.linearRing.coordinates.map { Point(lat = it.latitude, lng = it.longitude, alt = it.altitude) }
             val innerBoundaries = it.innerBoundaryIs.map { boundary ->
-                boundary.linearRing.points.map { Point(it.latitude, it.longitude, it.altitude) }
+                boundary.linearRing.coordinates.map { Point(lat = it.latitude, lng = it.longitude, alt = it.altitude) }
             }
             return ModelPolygon(outerBoundary, innerBoundaries)
         }
         placemark.multiGeometry?.let {
             val geometries = mutableListOf<Geometry>()
             it.points.forEach { point ->
-                geometries.add(PointGeometry(Point(point.coordinates.latitude, point.coordinates.longitude, point.coordinates.altitude)))
+                geometries.add(PointGeometry(Point(lat = point.coordinates.latitude, lng = point.coordinates.longitude, alt = point.coordinates.altitude)))
             }
             it.lineStrings.forEach { lineString ->
-                geometries.add(LineString(lineString.points.map { Point(it.latitude, it.longitude, it.altitude) }))
+                geometries.add(LineString(lineString.coordinates.map { Point(lat = it.latitude, lng = it.longitude, alt = it.altitude) }))
             }
             it.polygons.forEach { polygon ->
-                val outerBoundary = polygon.outerBoundaryIs.linearRing.points.map { Point(it.latitude, it.longitude, it.altitude) }
+                val outerBoundary = polygon.outerBoundaryIs.linearRing.coordinates.map { Point(lat = it.latitude, lng = it.longitude, alt = it.altitude) }
                 val innerBoundaries = polygon.innerBoundaryIs.map { boundary ->
-                    boundary.linearRing.points.map { Point(it.latitude, it.longitude, it.altitude) }
+                    boundary.linearRing.coordinates.map { Point(lat = it.latitude, lng = it.longitude, alt = it.altitude) }
                 }
                 geometries.add(ModelPolygon(outerBoundary, innerBoundaries))
             }

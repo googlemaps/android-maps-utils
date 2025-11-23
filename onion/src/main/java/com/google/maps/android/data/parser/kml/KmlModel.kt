@@ -257,11 +257,9 @@ data class Point(
 data class LineString(
     @XmlElement(true)
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
-    val coordinates: String
-) {
-    @Transient
-    val points = coordinates.toPointList()
-}
+    @Serializable(with = LatLngAltListSerializer::class)
+    val coordinates: List<LatLngAlt>
+)
 
 @Serializable
 @XmlSerialName("Polygon", namespace = KML_NAMESPACE, prefix = "")
@@ -296,11 +294,9 @@ data class Boundary(
 data class LinearRing(
     @XmlElement(true)
     @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
-    val coordinates: String
-) {
-    @Transient
-    val points = coordinates.toPointList()
-}
+    @Serializable(with = LatLngAltListSerializer::class)
+    val coordinates: List<LatLngAlt>
+)
 
 @Serializable
 @XmlSerialName("MultiGeometry", namespace = KML_NAMESPACE, prefix = "")
@@ -467,15 +463,12 @@ data class BalloonVisibility(
     val value: Int = 1
 )
 
+
 internal fun String.stripWhitespace(): String = filter { !it.isWhitespace() }
 
 internal fun String.simplify(): String = this.stripWhitespace().lowercase()
 
 private val coordinatesSeparator = Regex("""\s+""")
-
-internal fun String.toPointList() = split(coordinatesSeparator)
-    .filter(String::isNotBlank)
-    .map { LatLngAltSerializer.parse(it) }
 
 internal fun String?.asBoolean(default: Boolean = true): Boolean {
     return this?.let { (it.equals("true", ignoreCase = true) || it == "1") } ?: default

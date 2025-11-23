@@ -43,7 +43,7 @@ class KmlParserTest {
             assertThat(polygon).isNotNull()
 
             with(polygon!!) {
-                assertThat(outerBoundaryIs.linearRing.coordinates.trim().split(Regex("\\s+"))).hasSize(5)
+                assertThat(outerBoundaryIs.linearRing.coordinates).hasSize(5)
                 assertThat(innerBoundaryIs).hasSize(2)
             }
         }
@@ -299,15 +299,15 @@ class KmlParserTest {
                 assertThat(points.first().coordinates).isNear(LatLngAlt(40.4308, -3.6726))
                 assertThat(lineStrings).hasSize(1)
                 with(lineStrings[0]) {
-                    assertThat(points).hasSize(2)
-                    assertThat(points[0]).isNear(LatLngAlt(40.4364, -3.6655))
-                    assertThat(points[1]).isNear(LatLngAlt(40.4308, -3.6726))
+                    assertThat(coordinates).hasSize(2)
+                    assertThat(coordinates[0]).isNear(LatLngAlt(40.4364, -3.6655))
+                    assertThat(coordinates[1]).isNear(LatLngAlt(40.4308, -3.6726))
                 }
                 assertThat(polygons).hasSize(1)
                 with(polygons[0]) {
                     with(outerBoundaryIs.linearRing) {
-                        assertThat(points).hasSize(5)
-                        assertThat(points).containsExactly(
+                        assertThat(coordinates).hasSize(5)
+                        assertThat(coordinates).containsExactly(
                             LatLngAlt(37.818844, -122.366278, 30.0),
                             LatLngAlt(37.819267, -122.365248, 30.0),
                             LatLngAlt(37.819861, -122.365640, 30.0),
@@ -316,8 +316,8 @@ class KmlParserTest {
                         )
                     }
                     with(innerBoundaryIs[0].linearRing) {
-                        assertThat(points).hasSize(5)
-                        assertThat(points).containsExactly(
+                        assertThat(coordinates).hasSize(5)
+                        assertThat(coordinates).containsExactly(
                             LatLngAlt(37.818977, -122.366212, 30.0),
                             LatLngAlt(37.819294, -122.365424, 30.0),
                             LatLngAlt(37.819731, -122.365704, 30.0),
@@ -326,8 +326,8 @@ class KmlParserTest {
                         )
                     }
                     with(innerBoundaryIs[1].linearRing) {
-                        assertThat(points).hasSize(5)
-                        assertThat(points).containsExactly(
+                        assertThat(coordinates).hasSize(5)
+                        assertThat(coordinates).containsExactly(
                             LatLngAlt(37.818977, -122.366212, 42.0),
                             LatLngAlt(37.819294, -122.365424, 42.0),
                             LatLngAlt(37.819731, -122.365704, 42.0),
@@ -416,10 +416,10 @@ class KmlParserTest {
                 assertThat(points.first().coordinates).isNear(LatLngAlt(42.07, -71.0))
                 assertThat(lineStrings).hasSize(1)
                 with(lineStrings.first()) {
-                    assertThat(points).hasSize(3)
-                    assertThat(points[0]).isNear(LatLngAlt(42.05, -71.0))
-                    assertThat(points[1]).isNear(LatLngAlt(42.07, -71.0))
-                    assertThat(points[2]).isNear(LatLngAlt(42.07, -71.05))
+                    assertThat(coordinates).hasSize(3)
+                    assertThat(coordinates[0]).isNear(LatLngAlt(42.05, -71.0))
+                    assertThat(coordinates[1]).isNear(LatLngAlt(42.07, -71.0))
+                    assertThat(coordinates[2]).isNear(LatLngAlt(42.07, -71.05))
                 }
                 assertThat(multiGeometries).hasSize(1)
                 with(multiGeometries.first()) {
@@ -427,10 +427,10 @@ class KmlParserTest {
                     assertThat(points.first().coordinates).isNear(LatLngAlt(42.1, -71.2))
                     assertThat(lineStrings).hasSize(1)
                     with(lineStrings.first()) {
-                        assertThat(points).hasSize(3)
-                        assertThat(points[0]).isNear(LatLngAlt(42.1, -71.1))
-                        assertThat(points[1]).isNear(LatLngAlt(42.1, -71.2))
-                        assertThat(points[2]).isNear(LatLngAlt(42.0833, -71.2))
+                        assertThat(coordinates).hasSize(3)
+                        assertThat(coordinates[0]).isNear(LatLngAlt(42.1, -71.1))
+                        assertThat(coordinates[1]).isNear(LatLngAlt(42.1, -71.2))
+                        assertThat(coordinates[2]).isNear(LatLngAlt(42.0833, -71.2))
                     }
                 }
             }
@@ -466,13 +466,13 @@ class KmlParserTest {
 
                     // Outer Boundary
                     with(outerBoundaryIs.linearRing) {
-                        assertThat(points).hasSize(204)
-                        assertThat(points.take(3)).containsExactly(
+                        assertThat(coordinates).hasSize(204)
+                        assertThat(coordinates.take(3)).containsExactly(
                             LatLngAlt(53.9768295288086, -112.160865783691, 0.0),
                             LatLngAlt(53.9792251586914, -112.167808532715, 0.0),
                             LatLngAlt(53.9850082397461, -112.178894042969, 0.0)
                         )
-                        assertThat(points.takeLast(3)).containsExactly(
+                        assertThat(coordinates.takeLast(3)).containsExactly(
                             LatLngAlt(53.8604164123535, -112.195640563965, 0.0),
                             LatLngAlt(53.8604316711426, -112.183418273926, 0.0),
                             LatLngAlt(53.9768295288086, -112.160865783691, 0.0)
@@ -481,13 +481,13 @@ class KmlParserTest {
 
                     // Inner Boundary 1
                     with(innerBoundaryIs[0].linearRing) {
-                        assertThat(points).hasSize(16)
-                        assertThat(points.take(3)).containsExactly(
+                        assertThat(coordinates).hasSize(16)
+                        assertThat(coordinates.take(3)).containsExactly(
                             LatLngAlt(53.8764839172363, -112.3466796875, 0.0),
                             LatLngAlt(53.8768043518066, -112.34423828125, 0.0),
                             LatLngAlt(53.8844604492188, -112.344253540039, 0.0)
                         )
-                        assertThat(points.takeLast(3)).containsExactly(
+                        assertThat(coordinates.takeLast(3)).containsExactly(
                             LatLngAlt(53.8750610351563, -112.34423828125, 0.0),
                             LatLngAlt(53.8758239746094, -112.34423828125, 0.0),
                             LatLngAlt(53.8764839172363, -112.3466796875, 0.0)
@@ -496,13 +496,13 @@ class KmlParserTest {
 
                     // Inner Boundary 2
                     with(innerBoundaryIs[1].linearRing) {
-                        assertThat(points).hasSize(11)
-                        assertThat(points.take(3)).containsExactly(
+                        assertThat(coordinates).hasSize(11)
+                        assertThat(coordinates.take(3)).containsExactly(
                             LatLngAlt(53.7740745544434, -112.789962768555, 0.0),
                             LatLngAlt(53.7740859985352, -112.752563476563, 0.0),
                             LatLngAlt(53.7379913330078, -112.752510070801, 0.0)
                         )
-                        assertThat(points.takeLast(3)).containsExactly(
+                        assertThat(coordinates.takeLast(3)).containsExactly(
                             LatLngAlt(53.7599258422852, -112.801826477051, 0.0),
                             LatLngAlt(53.7670745849609, -112.801948547363, 0.0),
                             LatLngAlt(53.7740745544434, -112.789962768555, 0.0)
@@ -511,13 +511,13 @@ class KmlParserTest {
 
                     // Inner Boundary 3
                     with(innerBoundaryIs[2].linearRing) {
-                        assertThat(points).hasSize(14)
-                        assertThat(points.take(3)).containsExactly(
+                        assertThat(coordinates).hasSize(14)
+                        assertThat(coordinates.take(3)).containsExactly(
                             LatLngAlt(53.6872520446777, -112.668632507324, 0.0),
                             LatLngAlt(53.6872940063477, -112.656639099121, 0.0),
                             LatLngAlt(53.6945533752441, -112.656684875488, 0.0)
                         )
-                        assertThat(points.takeLast(3)).containsExactly(
+                        assertThat(coordinates.takeLast(3)).containsExactly(
                             LatLngAlt(53.6725959777832, -112.65657043457, 0.0),
                             LatLngAlt(53.6798553466797, -112.656600952148, 0.0),
                             LatLngAlt(53.6872520446777, -112.668632507324, 0.0)
@@ -526,13 +526,13 @@ class KmlParserTest {
 
                     // Inner Boundary 4
                     with(innerBoundaryIs[3].linearRing) {
-                        assertThat(points).hasSize(29)
-                        assertThat(points.take(3)).containsExactly(
+                        assertThat(coordinates).hasSize(29)
+                        assertThat(coordinates.take(3)).containsExactly(
                             LatLngAlt(53.5984230041504, -112.36075592041, 0.0),
                             LatLngAlt(53.599365234375, -112.359878540039, 0.0),
                             LatLngAlt(53.5995483398438, -112.360336303711, 0.0)
                         )
-                        assertThat(points.takeLast(3)).containsExactly(
+                        assertThat(coordinates.takeLast(3)).containsExactly(
                             LatLngAlt(53.5936508178711, -112.358947753906, 0.0),
                             LatLngAlt(53.5965805053711, -112.358947753906, 0.0),
                             LatLngAlt(53.5984230041504, -112.36075592041, 0.0)
@@ -630,8 +630,16 @@ class KmlParserTest {
     @Test
     fun testAmuWrongNotExistCoordinates() {
         val stream = File("src/test/resources/amu_wrong_not_exist_coordinates.kml").inputStream()
-        assertFailsWith<Exception> {
-            parser.parse(stream)
+        val kml = parser.parseAsKml(stream)
+
+        assertThat(kml.folder).isNotNull()
+
+        with(kml.folder!!) {
+            assertThat(placemarks).hasSize(1)
+            with(placemarks.first()) {
+                assertThat(lineString).isNotNull()
+                assertThat(lineString?.coordinates).isEmpty()
+            }
         }
     }
 
