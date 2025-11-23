@@ -2,7 +2,6 @@ package com.google.maps.android.data.parser.kml
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import nl.adaptivity.xmlutil.serialization.XmlElement
 import nl.adaptivity.xmlutil.serialization.XmlSerialName
 
@@ -81,11 +80,13 @@ data class GroundOverlay(
 
     @XmlElement(true)
     @XmlSerialName("visibility", namespace = KML_NAMESPACE, prefix = "")
-    private val visibilityString: String? = null,
+    @Serializable(with = BooleanSerializer::class)
+    val visibility: Boolean = true,
 
     @XmlElement(true)
     @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
-    val color: String? = null,
+    @Serializable(with = ColorSerializer::class)
+    val color: Int? = null,
 
     @XmlElement(true)
     @XmlSerialName("Icon", namespace = KML_NAMESPACE, prefix = "")
@@ -94,10 +95,7 @@ data class GroundOverlay(
     @XmlElement(true)
     @XmlSerialName("LatLonBox", namespace = KML_NAMESPACE, prefix = "")
     val latLonBox: LatLonBox? = null
-) {
-    @Transient
-    val visibility: Boolean = visibilityString.asBoolean()
-}
+)
 
 @Serializable
 @XmlSerialName("Icon", namespace = KML_NAMESPACE, prefix = "")
@@ -178,7 +176,8 @@ data class Folder(
 
     @XmlElement(true)
     @XmlSerialName("visibility", namespace = KML_NAMESPACE, prefix = "")
-    private val visibilityString: String? = null,
+    @Serializable(with = BooleanSerializer::class)
+    val visibility: Boolean = true,
 
     @XmlElement(true)
     @XmlSerialName("Folder", namespace = KML_NAMESPACE, prefix = "")
@@ -191,10 +190,7 @@ data class Folder(
     @XmlElement(true)
     @XmlSerialName("GroundOverlay", KML_NAMESPACE)
     val groundOverlays: List<GroundOverlay> = emptyList()
-) : KmlFeature {
-    @Transient
-    val visibility: Boolean = visibilityString.asBoolean()
-}
+) : KmlFeature
 
 @Serializable
 @XmlSerialName("Placemark", namespace = KML_NAMESPACE, prefix = "")
@@ -274,14 +270,13 @@ data class Polygon(
 
     @XmlElement(true)
     @XmlSerialName("extrude", namespace = KML_NAMESPACE, prefix = "")
-    val extrudeString: String? = null,
+    @Serializable(with = BooleanSerializer::class)
+    val extrude: Boolean = false,
 
     @XmlElement(true)
     @XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
     val altitudeMode: AltitudeMode? = null
-) {
-    val extrude = extrudeString.asBoolean(false)
-}
+)
 
 @Serializable
 data class Boundary(
@@ -362,7 +357,8 @@ data class LabelStyle(
 
     @XmlElement(true)
     @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
-    val color: String? = null
+    @Serializable(with = ColorSerializer::class)
+    val color: Int? = null
 )
 
 @Serializable
@@ -415,7 +411,8 @@ data class StyleMap(
 data class LineStyle(
     @XmlElement(true)
     @XmlSerialName("color")
-    val color: String? = null,
+    @Serializable(with = ColorSerializer::class)
+    val color: Int? = null,
 
     @XmlElement(true)
     @XmlSerialName("width")
@@ -427,23 +424,19 @@ data class LineStyle(
 data class PolyStyle(
     @XmlElement(true)
     @XmlSerialName("color", namespace = KML_NAMESPACE, prefix = "")
-    val color: String? = null,
+    @Serializable(with = ColorSerializer::class)
+    val color: Int? = null,
 
     @XmlElement(true)
     @XmlSerialName("fill", namespace = KML_NAMESPACE, prefix = "")
-    val fillString: String? = null,
+    @Serializable(with = BooleanSerializer::class)
+    val fill: Boolean = true,
 
     @XmlElement(true)
     @XmlSerialName("outline", namespace = KML_NAMESPACE, prefix = "")
-    val outlineString: String? = null
-) {
-    @Transient
-    val fill: Boolean = fillString.asBoolean()
-
-    @Transient
-    val outline: Boolean = outlineString.asBoolean()
-
-}
+    @Serializable(with = BooleanSerializer::class)
+    val outline: Boolean = true
+)
 
 @Serializable
 @XmlSerialName("Pair", namespace = KML_NAMESPACE, prefix = "")
@@ -463,13 +456,6 @@ data class BalloonVisibility(
     val value: Int = 1
 )
 
-
 internal fun String.stripWhitespace(): String = filter { !it.isWhitespace() }
 
 internal fun String.simplify(): String = this.stripWhitespace().lowercase()
-
-private val coordinatesSeparator = Regex("""\s+""")
-
-internal fun String?.asBoolean(default: Boolean = true): Boolean {
-    return this?.let { (it.equals("true", ignoreCase = true) || it == "1") } ?: default
-}

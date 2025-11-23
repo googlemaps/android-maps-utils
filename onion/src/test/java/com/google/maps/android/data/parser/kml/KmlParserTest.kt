@@ -231,7 +231,7 @@ class KmlParserTest {
         assertThat(kml.groundOverlay).isNotNull()
         with(kml.groundOverlay!!) {
             assertThat(name).isEqualTo("Ground overlay with draw order")
-            assertThat(color).isEqualTo("7f000000")
+            assertThat(color).isEqualTo(0x7f000000)
             assertThat(drawOrder).isEqualTo(99)
             assertThat(latLonBox).isNear(
                 LatLonBox(
@@ -277,9 +277,9 @@ class KmlParserTest {
             assertThat(style).isNotNull()
             with(style!!) {
                 assertThat(lineStyle).isNotNull()
-                assertThat(lineStyle!!.color).isEqualTo("ff000000")
+                assertThat(lineStyle!!.color).isEqualTo(0xff000000.toInt())
                 assertThat(polyStyle).isNotNull()
-                assertThat(polyStyle!!.color).isEqualTo("ffffffff")
+                assertThat(polyStyle!!.color).isEqualTo(0xffffffff.toInt())
             }
         }
     }
@@ -451,7 +451,7 @@ class KmlParserTest {
                 assertThat(id).isEqualTo("fireadvisory")
                 assertThat(polyStyle).isNotNull()
                 with(polyStyle!!) {
-                    assertThat(color).isEqualTo("6400E9FF")
+                    assertThat(color).isEqualTo(0x6400E9FF)
                     assertThat(fill).isTrue()
                     assertThat(outline).isFalse()
                 }
@@ -559,7 +559,7 @@ class KmlParserTest {
                 with(polyStyle!!) {
                     assertThat(fill).isTrue()
                     assertThat(outline).isFalse()
-                    assertThat(color).isEqualTo("6400E9FF")
+                    assertThat(color).isEqualTo(0x6400E9FF)
                 }
             }
             assertThat(placemarks).hasSize(1)
@@ -609,7 +609,7 @@ class KmlParserTest {
             assertThat(groundOverlays).hasSize(1)
             with(groundOverlays.first()) {
                 assertThat(name).isEqualTo("GroundOverlay.kml")
-                assertThat(color).isEqualTo("7fffffff")
+                assertThat(color).isEqualTo(0x7fffffff)
                 assertThat(drawOrder).isEqualTo(1)
                 assertThat(visibility).isTrue()
                 assertThat(icon).isNotNull()
