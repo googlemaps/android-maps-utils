@@ -29,6 +29,7 @@ import com.google.maps.android.data.parser.geojson.GeoJsonPoint
 import com.google.maps.android.data.parser.geojson.GeoJsonPolygon
 import com.google.maps.android.data.renderer.model.Feature
 import com.google.maps.android.data.renderer.model.Geometry
+import com.google.maps.android.data.renderer.model.Layer
 import com.google.maps.android.data.renderer.model.LineString
 import com.google.maps.android.data.renderer.model.MultiGeometry
 import com.google.maps.android.data.renderer.model.Point
@@ -49,6 +50,10 @@ object GeoJsonMapper {
      * @return A [Scene] representation of the GeoJSON object.
      */
     fun toScene(geoJsonObject: GeoJsonObject): Scene {
+        return Scene(listOf(toLayer(geoJsonObject)))
+    }
+
+    fun toLayer(geoJsonObject: GeoJsonObject): Layer {
         val features = mutableListOf<Feature>()
 
         when (geoJsonObject) {
@@ -69,7 +74,7 @@ object GeoJsonMapper {
             }
         }
 
-        return Scene(features)
+        return Layer(features)
     }
 
     private fun toFeature(id: String?, geoJsonGeometry: GeoJsonGeometry, properties: Map<String, String?>?): Feature {

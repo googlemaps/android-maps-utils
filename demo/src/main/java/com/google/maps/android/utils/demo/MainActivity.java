@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.main);
 
-        // This tells the system that the app will handle drawing behind the system bars.
+        // This tells the system that the app will handle drawing behind the system
+        // bars.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         // This is the root view of my layout.
@@ -54,11 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // This will push the content down from behind the status bar and up from
             // behind the navigation bar.
             view.setPadding(
-                insets.left,
-                insets.top,
-                insets.right,
-                insets.bottom
-            );
+                    insets.left,
+                    insets.top,
+                    insets.right,
+                    insets.bottom);
 
             // Return CONSUMED to signal that we've handled the insets.
             return WindowInsetsCompat.CONSUMED;
@@ -89,11 +89,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("AnimationUtil sample", AnimationUtilDemoActivity.class);
         addDemo("Street View Demo", StreetViewDemoActivity.class);
         addDemo("Street View Demo (Java)", StreetViewDemoJavaActivity.class);
+        addDemo("Renderer Demo", RendererDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {
         Button b = new Button(this);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
         b.setLayoutParams(layoutParams);
         b.setText(demoName);
         b.setTag(activityClass);

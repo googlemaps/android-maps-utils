@@ -27,8 +27,11 @@ import com.google.maps.android.data.parser.kml.Polygon as KmlPolygon
 import com.google.maps.android.data.renderer.model.LineString
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
+import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.data.renderer.model.Polygon
+import com.google.maps.android.data.renderer.model.PolygonStyle
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class KmlMapperTest {
@@ -158,5 +161,47 @@ class KmlMapperTest {
         val feature = scene.features[0]
         val geometry = feature.geometry as PointGeometry
         assertEquals(Point(lat = 2.0, lng = 1.0, alt = 3.0), geometry.point)
+    }
+
+    @Test
+    fun `test top_peaks kml styling`() {
+        val stream = javaClass.classLoader!!.getResourceAsStream("top_peaks.kml")
+        val kml = com.google.maps.android.data.parser.kml.KmlParser().parse(stream)
+        val scene = KmlMapper.toScene(kml)
+
+        // Find Mount Elbert
+        val mountElbert = scene.features.find { it.properties["name"] == "Mount Elbert ☝️" }
+        assertNotNull("Mount Elbert should be found", mountElbert)
+        val elbertStyle = mountElbert!!.style as PointStyle
+        assertEquals(1.2f, elbertStyle.scale, 0.01f)
+        assertEquals("http://maps.google.com/mapfiles/kml/paddle/red-stars.png", elbertStyle.iconUrl)
+
+        // Find Ute Peak
+        val utePeak = scene.features.find { it.properties["name"] == "Ute Peak 🏞️" }
+        assertNotNull("Ute Peak should be found", utePeak)
+        val uteStyle = utePeak!!.style as PointStyle
+        assertEquals(1.0f, uteStyle.scale, 0.01f)
+        assertEquals("http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png", uteStyle.iconUrl)
+    }
+
+    @Test
+    fun `test mountain_ranges styling`() {
+        val stream = javaClass.classLoader!!.getResourceAsStream("mountain_ranges.kml")
+        val kml = com.google.maps.android.data.parser.kml.KmlParser().parse(stream)
+        val scene = KmlMapper.toScene(kml)
+
+        // Find Sangre de Cristo Mountains
+        val sangreDeCristo = scene.features.find { it.properties["name"] == "Sangre de Cristo Mountains" }
+        assertNotNull("Sangre de Cristo Mountains should be found", sangreDeCristo)
+        
+        val style = sangreDeCristo!!.style as PolygonStyle
+        
+        // Expected colors:
+        // KML LineStyle color: ff1427a5 (AABBGGRR) -> Android: ffa52714 (AARRGGBB)
+        // KML PolyStyle color: 4d1427a5 (AABBGGRR) -> Android: 4da52714 (AARRGGBB)
+        
+        assertEquals("Fill color should match", 0x4da52714.toInt(), style.fillColor)
+        assertEquals("Stroke color should match", 0xffa52714.toInt(), style.strokeColor)
+        assertEquals("Stroke width should match", 1.2f, style.strokeWidth, 0.01f)
     }
 }

@@ -17,6 +17,8 @@ package com.google.maps.android.data.renderer.mapview
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.AdvancedMarkerOptions
+import com.google.android.gms.maps.model.PinConfig
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.LatLng
@@ -34,6 +36,10 @@ import com.google.maps.android.data.renderer.model.Polygon
 import com.google.maps.android.data.renderer.model.PolygonStyle
 import com.google.maps.android.data.renderer.model.Scene
 import com.google.maps.android.data.renderer.model.Style
+import com.google.maps.android.data.renderer.model.Layer
+import com.google.maps.android.data.renderer.IconProvider
+
+import java.util.IdentityHashMap
 
 /**
  * A concrete implementation of the [Renderer] interface that renders a [Scene] onto a [GoogleMap].
@@ -43,13 +49,24 @@ import com.google.maps.android.data.renderer.model.Style
  *
  * @property googleMap The [GoogleMap] instance to render features on.
  */
-class MapViewRenderer(private val googleMap: GoogleMap) : Renderer {
+class MapViewRenderer(
+    private val googleMap: GoogleMap,
+    private val iconProvider: IconProvider? = null
+) : Renderer {
 
-    private val renderedFeatures = mutableMapOf<Feature, List<Any>>() // Stores rendered map objects
+    var useAdvancedMarkers: Boolean = false
+    private val renderedFeatures = IdentityHashMap<Feature, List<Any>>() // Stores rendered map objects
 
     override fun render(scene: Scene) {
-        clear()
-        scene.features.forEach { addFeature(it) }
+        scene.layers.forEach { addLayer(it) }
+    }
+
+    override fun addLayer(layer: Layer) {
+        layer.features.forEach { addFeature(it) }
+    }
+
+    override fun removeLayer(layer: Layer) {
+        layer.features.forEach { removeFeature(it) }
     }
 
     override fun addFeature(feature: Feature) {
@@ -58,8 +75,37 @@ class MapViewRenderer(private val googleMap: GoogleMap) : Renderer {
             is PointGeometry -> {
                 val point = feature.geometry.point
                 val style = feature.style as? PointStyle
-                val markerOptions = createMarkerOptions(point, style)
-                mapObjects.add(googleMap.addMarker(markerOptions)!!)
+                if (useAdvancedMarkers) {
+                    val markerOptions = createAdvancedMarkerOptions(point, style)
+                    val marker = googleMap.addMarker(markerOptions)!!
+                    mapObjects.add(marker)
+                    style?.iconUrl?.let { url ->
+                        iconProvider?.loadIcon(url) { bitmap ->
+                            if (bitmap != null) {
+                                try {
+                                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                } catch (e: Exception) {
+                                    // Marker might have been removed or other issue
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    val markerOptions = createMarkerOptions(point, style)
+                    val marker = googleMap.addMarker(markerOptions)!!
+                    mapObjects.add(marker)
+                    style?.iconUrl?.let { url ->
+                        iconProvider?.loadIcon(url) { bitmap ->
+                            if (bitmap != null) {
+                                try {
+                                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                } catch (e: Exception) {
+                                    // Marker might have been removed
+                                }
+                            }
+                        }
+                    }
+                }
             }
             is LineString -> {
                 val lineString = feature.geometry
@@ -108,15 +154,32 @@ class MapViewRenderer(private val googleMap: GoogleMap) : Renderer {
     private fun createMarkerOptions(point: Point, style: PointStyle?): MarkerOptions {
         val markerOptions = MarkerOptions().position(LatLng(point.lat, point.lng))
         style?.let {
-            if (it.iconUrl != null) {
-                // TODO: Load custom icon from URL/resource
-                // For now, using default marker
-            } else {
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(hueFromColor(it.color)))
-            }
+            // Default icon if not loaded yet
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(hueFromColor(it.color)))
             it.heading?.let { heading -> markerOptions.rotation(heading) }
             markerOptions.anchor(it.anchorU, it.anchorV)
             markerOptions.alpha(android.graphics.Color.alpha(it.color) / 255.0f)
+        }
+        return markerOptions
+    }
+
+    private fun createAdvancedMarkerOptions(point: Point, style: PointStyle?): AdvancedMarkerOptions {
+        val markerOptions = AdvancedMarkerOptions().position(LatLng(point.lat, point.lng))
+        style?.let {
+            // Default pin if not loaded yet
+            val pinConfig = PinConfig.builder()
+                .setBackgroundColor(it.color)
+                .setBorderColor(android.graphics.Color.WHITE) // Default border
+                .build()
+            markerOptions.icon(BitmapDescriptorFactory.fromPinConfig(pinConfig))
+            
+            // AdvancedMarkerOptions does not support rotation directly in the same way as MarkerOptions for flat icons,
+            // but it supports collision behavior etc.
+            // Rotation is not directly exposed on AdvancedMarkerOptions builder in the same way, or requires View.
+            // For now, we skip rotation for Advanced Markers in this basic implementation.
+            
+            // Alpha is also not directly on AdvancedMarkerOptions builder, it's on the Marker object.
+            // We can't set it here easily without creating the marker first.
         }
         return markerOptions
     }

@@ -17,6 +17,7 @@ package com.google.maps.android.data.renderer
 
 import com.google.maps.android.data.renderer.model.Feature
 import com.google.maps.android.data.renderer.model.Scene
+import com.google.maps.android.data.renderer.model.Layer
 
 /**
  * An interface defining the contract for rendering a [Scene] of geographic features.
@@ -50,6 +51,20 @@ interface Renderer {
      * @param feature The [Feature] to remove.
      */
     fun removeFeature(feature: Feature)
+
+    /**
+     * Adds a [Layer] to the map.
+     *
+     * @param layer The [Layer] to add.
+     */
+    fun addLayer(layer: Layer)
+
+    /**
+     * Removes a [Layer] from the map.
+     *
+     * @param layer The [Layer] to remove.
+     */
+    fun removeLayer(layer: Layer)
 
     /**
      * Clears all currently rendered features from the map.

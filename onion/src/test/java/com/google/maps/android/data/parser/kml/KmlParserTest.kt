@@ -646,8 +646,8 @@ class KmlParserTest {
     @Test
     fun testAmuWrongNotExistLatitudeCoordinates() {
         val stream = File("src/test/resources/amu_wrong_not_exist_latitude_coordinates.kml").inputStream()
-        assertFailsWith<Exception> {
-            parser.parse(stream)
+        assertFailsWith<nl.adaptivity.xmlutil.serialization.XmlParsingException> {
+            parser.parseAsKml(stream)
         }
     }
 }

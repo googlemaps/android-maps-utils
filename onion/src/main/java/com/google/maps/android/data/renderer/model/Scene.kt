@@ -22,4 +22,44 @@ package com.google.maps.android.data.renderer.model
  *
  * @property features The list of [Feature] objects contained within this scene. Defaults to an empty list.
  */
-data class Scene(val features: List<Feature> = emptyList())
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+
+/**
+ * A data class representing a collection of features to be rendered.
+ *
+ * This acts as a top-level container for all geometric objects and their styles within a single renderable unit.
+ *
+ * @property features The list of [Feature] objects contained within this scene. Defaults to an empty list.
+ */
+/**
+ * A data class representing a collection of layers to be rendered.
+ *
+ * This acts as a top-level container for multiple layers.
+ *
+ * @property layers The list of [Layer] objects contained within this scene. Defaults to an empty list.
+ */
+data class Scene(val layers: List<Layer> = emptyList()) {
+    
+    companion object {
+        fun fromFeatures(features: List<Feature>): Scene {
+            return Scene(listOf(Layer(features)))
+        }
+    }
+
+    val features: List<Feature>
+        get() = layers.flatMap { it.features }
+
+    val boundingBox: LatLngBounds? by lazy {
+        val boundsBuilder = LatLngBounds.builder()
+        var hasPoints = false
+        layers.forEach { layer ->
+            layer.boundingBox?.let {
+                boundsBuilder.include(it.northeast)
+                boundsBuilder.include(it.southwest)
+                hasPoints = true
+            }
+        }
+        if (hasPoints) boundsBuilder.build() else null
+    }
+}

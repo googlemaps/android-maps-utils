@@ -17,13 +17,13 @@ class KmlParser : GeoFileParser {
         }
     }
 
-    override fun parse(inputStream: InputStream): GeoData {
-        return transformToGeoData(parseAsKml(inputStream))
-    }
-
     fun parseAsKml(inputStream: InputStream): Kml {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
         return xml.decodeFromString<Kml>(xmlContent)
+    }
+
+    fun parse(inputStream: InputStream): Kml {
+        return parseAsKml(inputStream)
     }
 
     fun transformToGeoData(kml: Kml): GeoData {
