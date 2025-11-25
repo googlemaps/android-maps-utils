@@ -1,5 +1,6 @@
 [versions]
 compileSdk = "36"
+serialization = "0.91.3"
 targetSdk = "36"
 minimumSdk = "21"
 
@@ -11,6 +12,7 @@ lifecycle-extensions = "2.2.0"
 lifecycle-viewmodel-ktx = "2.9.4"
 kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.9.0"
 junit = "4.13.2"
 mockito-core = "5.20.0"
 secrets-gradle-plugin = "2.0.1"
@@ -38,9 +40,11 @@ kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", versi
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 junit = { module = "junit:junit", version.ref = "junit" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
+serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "serialization" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
