@@ -29,6 +29,6 @@ class PointSubject(
             return
         }
 
-        assertThat(actual.latLngAlt).isNear(expected)
+        assertThat(actual.coordinates).isNear(expected)
     }
 }

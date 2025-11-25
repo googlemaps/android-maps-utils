@@ -18,6 +18,7 @@ package com.google.maps.android.data.renderer.mapper
 import com.google.maps.android.data.parser.kml.Boundary
 import com.google.maps.android.data.parser.kml.Document
 import com.google.maps.android.data.parser.kml.Kml
+import com.google.maps.android.data.parser.kml.LatLngAlt
 import com.google.maps.android.data.parser.kml.LineString as KmlLineString
 import com.google.maps.android.data.parser.kml.LinearRing
 import com.google.maps.android.data.parser.kml.Placemark
@@ -36,28 +37,33 @@ class KmlMapperTest {
     fun `test KmlPoint to Scene`() {
         val kml = Kml(
             placemark = Placemark(
-                point = KmlPoint("1.0,2.0,3.0")
+                point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0))
             )
         )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
         val feature = scene.features[0]
         val geometry = feature.geometry as PointGeometry
-        assertEquals(Point(2.0, 1.0, 3.0), geometry.point)
+        assertEquals(Point(lat = 2.0, lng = 1.0, alt = 3.0), geometry.point)
     }
 
     @Test
     fun `test KmlLineString to Scene`() {
         val kml = Kml(
             placemark = Placemark(
-                lineString = KmlLineString("1.0,2.0 3.0,4.0")
+                lineString = KmlLineString(
+                    listOf(
+                        LatLngAlt(2.0, 1.0),
+                        LatLngAlt(4.0, 3.0)
+                    )
+                )
             )
         )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
         val feature = scene.features[0]
         val geometry = feature.geometry as LineString
-        assertEquals(listOf(Point(2.0, 1.0, null), Point(4.0, 3.0, null)), geometry.points)
+        assertEquals(listOf(Point(lat = 2.0, lng = 1.0, alt = null), Point(lat = 4.0, lng = 3.0, alt = null)), geometry.points)
     }
 
     @Test
@@ -66,7 +72,14 @@ class KmlMapperTest {
             placemark = Placemark(
                 polygon = KmlPolygon(
                     outerBoundaryIs = Boundary(
-                        linearRing = LinearRing("1.0,2.0 3.0,4.0 5.0,6.0 1.0,2.0")
+                        linearRing = LinearRing(
+                            listOf(
+                                LatLngAlt(1.0, 2.0),
+                                LatLngAlt(3.0, 4.0),
+                                LatLngAlt(5.0, 6.0),
+                                LatLngAlt(1.0, 2.0)
+                            )
+                        )
                     )
                 )
             )
@@ -76,7 +89,7 @@ class KmlMapperTest {
         val feature = scene.features[0]
         val geometry = feature.geometry as Polygon
         assertEquals(
-            listOf(Point(2.0, 1.0, null), Point(4.0, 3.0, null), Point(6.0, 5.0, null), Point(2.0, 1.0, null)),
+            listOf(Point(lat = 1.0, lng = 2.0, alt = null), Point(lat = 3.0, lng = 4.0, alt = null), Point(lat = 5.0, lng = 6.0, alt = null), Point(lat = 1.0, lng = 2.0, alt = null)),
             geometry.outerBoundary
         )
         assertEquals(0, geometry.innerBoundaries.size)
@@ -88,11 +101,27 @@ class KmlMapperTest {
             placemark = Placemark(
                 polygon = KmlPolygon(
                     outerBoundaryIs = Boundary(
-                        linearRing = LinearRing("0.0,0.0 10.0,0.0 10.0,10.0 0.0,10.0 0.0,0.0")
+                        linearRing = LinearRing(
+                            listOf(
+                                LatLngAlt(0.0, 0.0, 0.0),
+                                LatLngAlt(0.0, 10.0, 0.0),
+                                LatLngAlt(10.0, 10.0, 0.0),
+                                LatLngAlt(10.0, 0.0, 0.0),
+                                LatLngAlt(0.0, 0.0, 0.0)
+                            )
+                        )
                     ),
                     innerBoundaryIs = listOf(
                         Boundary(
-                            linearRing = LinearRing("2.0,2.0 8.0,2.0 8.0,8.0 2.0,8.0 2.0,2.0")
+                            linearRing = LinearRing(
+                                listOf(
+                                    LatLngAlt(2.0, 2.0, 0.0),
+                                    LatLngAlt(2.0, 8.0, 0.0),
+                                    LatLngAlt(8.0, 8.0, 0.0),
+                                    LatLngAlt(8.0, 2.0, 0.0),
+                                    LatLngAlt(2.0, 2.0, 0.0)
+                                )
+                            )
                         )
                     )
                 )
@@ -103,12 +132,12 @@ class KmlMapperTest {
         val feature = scene.features[0]
         val geometry = feature.geometry as Polygon
         assertEquals(
-            listOf(Point(0.0, 0.0, null), Point(0.0, 10.0, null), Point(10.0, 10.0, null), Point(10.0, 0.0, null), Point(0.0, 0.0, null)),
+            listOf(Point(lat = 0.0, lng = 0.0, alt = 0.0), Point(lat = 0.0, lng = 10.0, alt = 0.0), Point(lat = 10.0, lng = 10.0, alt = 0.0), Point(lat = 10.0, lng = 0.0, alt = 0.0), Point(lat = 0.0, lng = 0.0, alt = 0.0)),
             geometry.outerBoundary
         )
         assertEquals(1, geometry.innerBoundaries.size)
         assertEquals(
-            listOf(Point(2.0, 2.0, null), Point(2.0, 8.0, null), Point(8.0, 8.0, null), Point(8.0, 2.0, null), Point(2.0, 2.0, null)),
+            listOf(Point(lat = 2.0, lng = 2.0, alt = 0.0), Point(lat = 2.0, lng = 8.0, alt = 0.0), Point(lat = 8.0, lng = 8.0, alt = 0.0), Point(lat = 8.0, lng = 2.0, alt = 0.0), Point(lat = 2.0, lng = 2.0, alt = 0.0)),
             geometry.innerBoundaries[0]
         )
     }
@@ -119,7 +148,7 @@ class KmlMapperTest {
             document = Document(
                 placemarks = listOf(
                     Placemark(
-                        point = KmlPoint("1.0,2.0,3.0")
+                        point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0))
                     )
                 )
             )
@@ -128,6 +157,6 @@ class KmlMapperTest {
         assertEquals(1, scene.features.size)
         val feature = scene.features[0]
         val geometry = feature.geometry as PointGeometry
-        assertEquals(Point(2.0, 1.0, 3.0), geometry.point)
+        assertEquals(Point(lat = 2.0, lng = 1.0, alt = 3.0), geometry.point)
     }
 }

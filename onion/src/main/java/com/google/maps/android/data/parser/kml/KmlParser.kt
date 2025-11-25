@@ -77,25 +77,24 @@ class KmlParser : GeoFileParser {
         }
     }
 
-    private fun parsePoint(coordinates: String): Geometry.Point {
-        val coords = parseCoordinates(coordinates).first()
-        return Geometry.Point(coords.get(1), coords.get(0), coords.getOrNull(2))
+    private fun parsePoint(latLngAlt: LatLngAlt): Geometry.Point {
+        return Geometry.Point(latLngAlt.latitude, latLngAlt.longitude, latLngAlt.altitude)
     }
 
-    private fun parseLineString(coordinates: String): Geometry.LineString {
-        val points = parseCoordinates(coordinates).map {
-            Geometry.Point(it.get(1), it.get(0), it.getOrNull(2))
+    private fun parseLineString(coordinates: List<LatLngAlt>): Geometry.LineString {
+        val points = coordinates.map {
+            Geometry.Point(it.latitude, it.longitude, it.altitude)
         }
         return Geometry.LineString(points)
     }
 
     private fun parsePolygon(polygon: Polygon): Geometry.Polygon {
-        val shell = parseCoordinates(polygon.outerBoundaryIs.linearRing.coordinates).map { coordinate ->
-            Geometry.Point(coordinate[1], coordinate[0], coordinate.getOrNull(2))
+        val shell = polygon.outerBoundaryIs.linearRing.coordinates.map { coordinate ->
+            Geometry.Point(coordinate.latitude, coordinate.longitude, coordinate.altitude)
         }
         val holes = polygon.innerBoundaryIs.map {
-            parseCoordinates(it.linearRing.coordinates).map { coordinate ->
-                Geometry.Point(coordinate[1], coordinate[0], coordinate.getOrNull(2))
+            it.linearRing.coordinates.map { coordinate ->
+                Geometry.Point(coordinate.latitude, coordinate.longitude, coordinate.altitude)
             }
         }
         return Geometry.Polygon(shell, holes)
@@ -108,11 +107,5 @@ class KmlParser : GeoFileParser {
         multiGeometry.polygons.forEach { geometries.add(parsePolygon(it)) }
         multiGeometry.multiGeometries.forEach { geometries.add(parseMultiGeometry(it)) }
         return Geometry.GeometryCollection(geometries)
-    }
-
-    private fun parseCoordinates(coordinatesStr: String): List<List<Double>> {
-        return coordinatesStr.trim().split(Regex("\\s+")).map {
-            it.split(",").map { s -> s.toDouble() }
-        }
     }
 }
