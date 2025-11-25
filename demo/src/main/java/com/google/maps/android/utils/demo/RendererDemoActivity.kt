@@ -16,7 +16,6 @@
 
 package com.google.maps.android.utils.demo
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -31,21 +30,20 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.OnMapsSdkInitializedCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.data.parser.geojson.GeoJsonParser
 import com.google.maps.android.data.parser.kml.KmlParser
+import com.google.maps.android.data.renderer.UrlIconProvider
 import com.google.maps.android.data.renderer.mapper.GeoJsonMapper
 import com.google.maps.android.data.renderer.mapper.KmlMapper
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
-import com.google.maps.android.data.renderer.UrlIconProvider
 import com.google.maps.android.renderer.GoogleMapRenderer
 import com.google.maps.android.renderer.model.Layer
-import com.google.maps.android.data.renderer.model.Layer as OnionLayer
 import com.google.maps.android.renderer.model.Marker
 import com.google.maps.android.utils.demo.databinding.RendererDemoBinding
 import kotlinx.coroutines.launch
+import com.google.maps.android.data.renderer.model.Layer as OnionLayer
 
 /**
  * Demo activity for the new Renderer system.
@@ -110,8 +108,8 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "*/*"
-                val mimeTypes = arrayOf("application/vnd.google-earth.kml+xml", "application/json", "application/geo+json")
-                putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+                // val mimeTypes = arrayOf("application/vnd.google-earth.kml+xml", "application/json", "application/geo+json", "application/gpx+xml", "application/xml", "text/xml")
+                // putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
             }
             filePickerLauncher.launch(intent)
         }
@@ -209,14 +207,19 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
         lifecycleScope.launch {
             try {
                 val inputStream = contentResolver.openInputStream(uri) ?: return@launch
-                when (contentResolver.getType(uri)) {
-                    "application/vnd.google-earth.kml+xml" -> {
+                val type = contentResolver.getType(uri)
+                android.util.Log.d("RendererDemo", "Loading file with type: $type, uri: $uri")
+                
+                // Simple extension check fallback if type is generic xml or octet-stream
+                val isGpx = type == "application/gpx+xml" || uri.toString().endsWith(".gpx", ignoreCase = true)
+                val isKml = type == "application/vnd.google-earth.kml+xml" || uri.toString().endsWith(".kml", ignoreCase = true)
+                val isGeoJson = type == "application/json" || type == "application/geo+json" || uri.toString().endsWith(".json", ignoreCase = true) || uri.toString().endsWith(".geojson", ignoreCase = true)
+
+                when {
+                    isKml -> {
                         val kml = KmlParser().parse(inputStream)
                         val layer = KmlMapper.toLayer(kml)
                         android.util.Log.d("RendererDemo", "Parsed KML features: ${layer.features.size}")
-                        layer.features.forEach { feature ->
-                            android.util.Log.d("RendererDemo", "Feature: ${feature.geometry}, Style: ${feature.style}")
-                        }
                         mapViewRenderer.addLayer(layer)
                         layer.boundingBox?.let { bounds ->
                             try {
@@ -226,7 +229,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
                             }
                         }
                     }
-                    "application/json", "application/geo+json" -> {
+                    isGeoJson -> {
                         val geoJson = GeoJsonParser().parse(inputStream)
                         if (geoJson != null) {
                             val layer = GeoJsonMapper.toLayer(geoJson)
@@ -242,14 +245,26 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
                             Toast.makeText(this@RendererDemoActivity, "Failed to parse GeoJSON", Toast.LENGTH_SHORT).show()
                         }
                     }
+                    isGpx -> {
+                        val gpx = com.google.maps.android.data.parser.gpx.GpxParser().parse(inputStream)
+                        val layer = com.google.maps.android.data.renderer.mapper.GpxMapper.toLayer(gpx)
+                        mapViewRenderer.addLayer(layer)
+                        layer.boundingBox?.let { bounds ->
+                            try {
+                                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
                     else -> {
-                        Toast.makeText(this@RendererDemoActivity, "Unsupported file type", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RendererDemoActivity, "Unsupported file type: $type", Toast.LENGTH_SHORT).show()
                         return@launch
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@RendererDemoActivity, "Error loading file", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RendererDemoActivity, "Error loading file: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
