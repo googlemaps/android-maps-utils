@@ -76,35 +76,42 @@ private fun parseGeometry(json: JsonElement): GeoJsonGeometry? {
     }
 }
 
-private fun parsePoint(coordinates: List<JsonElement>): List<Double> {
-    return coordinates.map { it.jsonPrimitive.content.toDouble() }
+private fun parseCoordinates(coordinates: List<JsonElement>): Coordinates {
+    val lng = coordinates[0].jsonPrimitive.content.toDouble()
+    val lat = coordinates[1].jsonPrimitive.content.toDouble()
+    val alt = if (coordinates.size > 2) coordinates[2].jsonPrimitive.content.toDouble() else null
+    return Coordinates(lat, lng, alt)
 }
 
-private fun parseLineString(coordinates: List<JsonElement>): List<List<Double>> {
+private fun parsePoint(coordinates: List<JsonElement>): Coordinates {
+    return parseCoordinates(coordinates)
+}
+
+private fun parseLineString(coordinates: List<JsonElement>): List<Coordinates> {
     return coordinates.map {
-        parsePoint(it.jsonArray.toList())
+        parseCoordinates(it.jsonArray.toList())
     }
 }
 
-private fun parsePolygon(coordinates: List<JsonElement>): List<List<List<Double>>> {
-    return coordinates.map {
-        parseLineString(it.jsonArray.toList())
-    }
-}
-
-private fun parseMultiPoint(coordinates: List<JsonElement>): List<List<Double>> {
-    return coordinates.map {
-        parsePoint(it.jsonArray.toList())
-    }
-}
-
-private fun parseMultiLineString(coordinates: List<JsonElement>): List<List<List<Double>>> {
+private fun parsePolygon(coordinates: List<JsonElement>): List<List<Coordinates>> {
     return coordinates.map {
         parseLineString(it.jsonArray.toList())
     }
 }
 
-private fun parseMultiPolygon(coordinates: List<JsonElement>): List<List<List<List<Double>>>> {
+private fun parseMultiPoint(coordinates: List<JsonElement>): List<Coordinates> {
+    return coordinates.map {
+        parseCoordinates(it.jsonArray.toList())
+    }
+}
+
+private fun parseMultiLineString(coordinates: List<JsonElement>): List<List<Coordinates>> {
+    return coordinates.map {
+        parseLineString(it.jsonArray.toList())
+    }
+}
+
+private fun parseMultiPolygon(coordinates: List<JsonElement>): List<List<List<Coordinates>>> {
     return coordinates.map {
         parsePolygon(it.jsonArray.toList())
     }
