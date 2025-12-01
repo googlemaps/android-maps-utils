@@ -43,10 +43,7 @@ android {
     }
     resourcePrefix = "amu_"
 
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions("-d", "-t")
-    }
+
 
     kotlin {
         compilerOptions {

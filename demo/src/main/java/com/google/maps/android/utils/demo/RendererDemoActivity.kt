@@ -108,8 +108,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "*/*"
-                // val mimeTypes = arrayOf("application/vnd.google-earth.kml+xml", "application/json", "application/geo+json", "application/gpx+xml", "application/xml", "text/xml")
-                // putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+
             }
             filePickerLauncher.launch(intent)
         }
