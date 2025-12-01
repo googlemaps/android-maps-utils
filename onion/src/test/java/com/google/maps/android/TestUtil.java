@@ -1,5 +1,5 @@
-/**
- * Copyright 2020 Google Inc.
+/*
+ * Copyright 2025 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-pluginManagement {
-    includeBuild("build-logic")
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
+package com.google.maps.android;
 
-include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library", "onion")
+public class TestUtil {
+
+    /**
+     * Returns true if execution is occurring on GitHub Actions, and false otherwise.
+     * This is determined by checking the GITHUB_ACTIONS environment variable.
+     *
+     * @return true if running on GitHub Actions, false otherwise.
+     */
+    public static boolean isRunningOnGitHub() {
+        return "true".equals(System.getenv("GITHUB_ACTIONS"));
+    }
+}

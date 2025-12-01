@@ -12,3 +12,5 @@ project.properties
 .java-version
 secrets.properties
 .kotlin
+build-logic/convention/bin
+lint-checks/bin

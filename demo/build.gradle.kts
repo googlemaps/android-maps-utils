@@ -107,6 +107,7 @@ dependencies {
     implementation(project(":heatmaps"))
     implementation(project(":ui"))
     implementation(project(":data"))
+    implementation(project(":onion"))
 
     implementation(libs.appcompat)
     implementation(libs.lifecycle.extensions)
