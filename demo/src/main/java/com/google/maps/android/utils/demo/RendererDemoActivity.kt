@@ -19,6 +19,7 @@ package com.google.maps.android.utils.demo
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -34,29 +35,37 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.data.parser.geojson.GeoJsonParser
 import com.google.maps.android.data.parser.kml.KmlParser
+import com.google.maps.android.data.parser.kml.KmzParser
 import com.google.maps.android.data.renderer.UrlIconProvider
 import com.google.maps.android.data.renderer.mapper.GeoJsonMapper
 import com.google.maps.android.data.renderer.mapper.KmlMapper
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
-import com.google.maps.android.renderer.GoogleMapRenderer
-import com.google.maps.android.renderer.model.Layer
-import com.google.maps.android.renderer.model.Marker
+import com.google.maps.android.data.renderer.model.Feature
+import com.google.maps.android.data.renderer.model.Point
+import com.google.maps.android.data.renderer.model.PointGeometry
+import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.utils.demo.databinding.RendererDemoBinding
 import kotlinx.coroutines.launch
-import com.google.maps.android.data.renderer.model.Layer as OnionLayer
+import com.google.maps.android.data.renderer.model.DataLayer
 
 /**
  * Demo activity for the new Renderer system.
+ *
+ * This activity demonstrates:
+ * 1.  **Unified Rendering**: Using `MapViewRenderer` to render KML, GeoJSON, and GPX data.
+ * 2.  **Modern UI**: A full-screen map experience with a persistent Bottom Sheet for controls.
+ * 3.  **Layer Management**: Toggling layers (Peaks, Ranges) and handling multiple data sources.
+ * 4.  **Feature Interaction**: Loading external files via the system file picker.
+ * 5.  **Advanced Markers**: Toggling between legacy and Advanced Markers.
  */
 class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: RendererDemoBinding
     private lateinit var map: GoogleMap
-    private lateinit var googleMapRenderer: GoogleMapRenderer
     private lateinit var mapViewRenderer: MapViewRenderer
 
-    private var peaksLayer: OnionLayer? = null
-    private var rangesLayer: OnionLayer? = null
-    private val addedLayers = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<OnionLayer, Boolean>())
+    private var peaksLayer: DataLayer? = null
+    private var rangesLayer: DataLayer? = null
+    private val addedLayers = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<DataLayer, Boolean>())
 
     private val filePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -68,6 +77,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST) { renderer ->
             android.util.Log.d(
                 "RendererDemo",
@@ -80,48 +90,104 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            
+            // Apply bottom inset to Bottom Sheet (padding)
+            binding.bottomSheet.setPadding(
+                binding.bottomSheet.paddingLeft,
+                binding.bottomSheet.paddingTop,
+                binding.bottomSheet.paddingRight,
+                insets.bottom + (16 * resources.displayMetrics.density).toInt() // Original padding + inset
+            )
+
             WindowInsetsCompat.CONSUMED
         }
 
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_container) as SupportMapFragment
+        val mapFragment: SupportMapFragment
+        val existingFragment = supportFragmentManager.findFragmentById(R.id.map_container)
+        if (existingFragment is SupportMapFragment) {
+            mapFragment = existingFragment
+        } else {
+            val app = application as DemoApplication
+            val mapId = app.mapId
+            
+            val mapOptions = com.google.android.gms.maps.GoogleMapOptions()
+            if (mapId != null) {
+                mapOptions.mapId(mapId)
+            }
+            
+            mapFragment = SupportMapFragment.newInstance(mapOptions)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.map_container, mapFragment)
+                .commit()
+        }
+            
         mapFragment.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        googleMapRenderer = GoogleMapRenderer(map)
         val iconProvider = UrlIconProvider(lifecycleScope)
         mapViewRenderer = MapViewRenderer(map, iconProvider)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.422, -122.084), 10f))
         addDefaultLayer()
 
-        binding.clearLayersButton.setOnClickListener {
-            googleMapRenderer.clear()
-            mapViewRenderer.clear()
-            addedLayers.clear()
-        }
-
-        binding.loadFileButton.setOnClickListener {
+        binding.btnLoadFile.setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "*/*"
-
             }
             filePickerLauncher.launch(intent)
         }
 
-        binding.loadTopPeaksButton.setOnClickListener {
+        binding.btnClear.setOnClickListener {
+            mapViewRenderer.clear()
+            addedLayers.clear()
+            // No need to hide button, it's in the bottom sheet now
+            Toast.makeText(this, "Map Cleared", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.chipPeaks.setOnClickListener {
             toggleLayer(peaksLayer, "top_peaks.kml") { layer -> peaksLayer = layer }
         }
 
-        binding.loadMountainRangesButton.setOnClickListener {
+        binding.chipRanges.setOnClickListener {
             toggleLayer(rangesLayer, "mountain_ranges.kml") { layer -> rangesLayer = layer }
         }
 
-        binding.advancedMarkersSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.chipComplexKml.setOnClickListener {
+            toggleLayer(null, "kml-types.kml") { /* No persistence needed for demo */ }
+        }
+
+        binding.chipComplexGeojson.setOnClickListener {
+            lifecycleScope.launch {
+                val layer = loadGeoJsonFromAsset("geojson-types.json")
+                if (layer != null) {
+                    addLayerToMap(layer, "geojson-types.json")
+                }
+            }
+        }
+
+        binding.chipGroundOverlay.setOnClickListener {
+            lifecycleScope.launch {
+                val layer = loadLayerFromAsset("ground_overlay.kml")
+                if (layer != null) {
+                    addLayerToMap(layer, "ground_overlay.kml")
+                }
+            }
+        }
+
+        binding.chipBrightAngel.setOnClickListener {
+            lifecycleScope.launch {
+                val layer = loadGpxFromAsset("BrightAngel.gpx")
+                if (layer != null) {
+                    addLayerToMap(layer, "BrightAngel.gpx")
+                }
+            }
+        }
+
+        binding.switchAdvancedMarkers.setOnCheckedChangeListener { _, isChecked ->
             mapViewRenderer.useAdvancedMarkers = isChecked
             Toast.makeText(this, "Advanced Markers: $isChecked", Toast.LENGTH_SHORT).show()
         }
@@ -130,17 +196,39 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addDefaultLayer() {
-        val layer = Layer()
-        // Add a Marker
-        val marker = Marker(LatLng(37.422, -122.084)).apply {
-            title = "Googleplex"
-            snippet = "Mountain View, CA"
-        }
-        layer.addMapObject(marker)
-        googleMapRenderer.addLayer(layer)
+        // Add a Marker using the new DataRenderer system
+        val point = Point(37.422, -122.084)
+        val properties = mapOf(
+            "name" to "Googleplex",
+            "description" to "Mountain View, CA"
+        )
+        val style = PointStyle(
+            iconUrl = null // Use default marker
+        )
+        val feature = Feature(
+            geometry = PointGeometry(point),
+            properties = properties,
+            style = style
+        )
+        val layer = DataLayer(features = listOf(feature))
+        mapViewRenderer.addLayer(layer)
+        addedLayers.add(layer)
     }
 
-    private fun toggleLayer(layer: OnionLayer?, filename: String, onLayerLoaded: (OnionLayer) -> Unit) {
+    private fun addLayerToMap(layer: DataLayer, filename: String) {
+        mapViewRenderer.addLayer(layer)
+        addedLayers.add(layer)
+        Toast.makeText(this@RendererDemoActivity, "Loaded $filename", Toast.LENGTH_SHORT).show()
+        layer.boundingBox?.let { bounds ->
+            try {
+                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun toggleLayer(layer: DataLayer?, filename: String, onLayerLoaded: (DataLayer) -> Unit) {
         if (layer != null) {
             if (addedLayers.contains(layer)) {
                 mapViewRenderer.removeLayer(layer)
@@ -156,48 +244,60 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
                 val newLayer = loadLayerFromAsset(filename)
                 if (newLayer != null) {
                     onLayerLoaded(newLayer)
-                    mapViewRenderer.addLayer(newLayer)
-                    addedLayers.add(newLayer)
-                    Toast.makeText(this@RendererDemoActivity, "Loaded $filename", Toast.LENGTH_SHORT).show()
-                    newLayer.boundingBox?.let { bounds ->
-                        try {
-                            map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
+                    addLayerToMap(newLayer, filename)
                 }
             }
         }
     }
 
-    private suspend fun loadLayerFromAsset(filename: String): OnionLayer? {
-        return try {
-            val inputStream = assets.open(filename)
-            val kml = KmlParser().parse(inputStream)
-            KmlMapper.toLayer(kml)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
-            null
+    private suspend fun loadLayerFromAsset(filename: String): DataLayer? {
+        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val inputStream = assets.open(filename)
+                val kml = KmlParser().parse(inputStream)
+                KmlMapper.toLayer(kml)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
+                }
+                null
+            }
         }
     }
 
-    // kept for reference or other usages if any, but currently replaced by toggleLayer logic for buttons
-    private fun loadAssetKml(filename: String) {
-        lifecycleScope.launch {
-            val layer = loadLayerFromAsset(filename)
-            if (layer != null) {
-                mapViewRenderer.addLayer(layer)
-                addedLayers.add(layer)
-                layer.boundingBox?.let { bounds ->
-                    try {
-                        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+    private suspend fun loadGeoJsonFromAsset(filename: String): DataLayer? {
+        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val inputStream = assets.open(filename)
+                val geoJson = GeoJsonParser().parse(inputStream)
+                if (geoJson != null) {
+                    GeoJsonMapper.toLayer(geoJson)
+                } else {
+                    null
                 }
-                Toast.makeText(this@RendererDemoActivity, "Loaded $filename", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
+                }
+                null
+            }
+        }
+    }
+
+    private suspend fun loadGpxFromAsset(filename: String): DataLayer? {
+        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val inputStream = assets.open(filename)
+                val gpx = com.google.maps.android.data.parser.gpx.GpxParser().parse(inputStream)
+                com.google.maps.android.data.renderer.mapper.GpxMapper.toLayer(gpx)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
+                }
+                null
             }
         }
     }
@@ -205,66 +305,111 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadGeoFile(uri: Uri) {
         lifecycleScope.launch {
             try {
-                val inputStream = contentResolver.openInputStream(uri) ?: return@launch
-                val type = contentResolver.getType(uri)
-                android.util.Log.d("RendererDemo", "Loading file with type: $type, uri: $uri")
-                
-                // Simple extension check fallback if type is generic xml or octet-stream
-                val isGpx = type == "application/gpx+xml" || uri.toString().endsWith(".gpx", ignoreCase = true)
-                val isKml = type == "application/vnd.google-earth.kml+xml" || uri.toString().endsWith(".kml", ignoreCase = true)
-                val isGeoJson = type == "application/json" || type == "application/geo+json" || uri.toString().endsWith(".json", ignoreCase = true) || uri.toString().endsWith(".geojson", ignoreCase = true)
+                val result = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    val inputStream = contentResolver.openInputStream(uri) ?: return@withContext null
+                    val type = contentResolver.getType(uri)
+                    val filename = getFileName(uri)
+                    android.util.Log.d("RendererDemo", "Loading file with type: $type, filename: $filename, uri: $uri")
+                    
+                    // Simple extension check fallback if type is generic xml or octet-stream
+                    var isGpx = type == "application/gpx+xml" || (filename != null && filename.endsWith(".gpx", ignoreCase = true))
+                    var isKml = type == "application/vnd.google-earth.kml+xml" || (filename != null && filename.endsWith(".kml", ignoreCase = true))
+                    var isKmz = type == "application/vnd.google-earth.kmz" || (filename != null && filename.endsWith(".kmz", ignoreCase = true))
+                    var isGeoJson = type == "application/json" || type == "application/geo+json"
+                            || (filename != null && (filename.endsWith(".json", ignoreCase = true) || filename.endsWith(".geojson", ignoreCase = true)))
 
-                when {
-                    isKml -> {
-                        val kml = KmlParser().parse(inputStream)
-                        val layer = KmlMapper.toLayer(kml)
-                        android.util.Log.d("RendererDemo", "Parsed KML features: ${layer.features.size}")
-                        mapViewRenderer.addLayer(layer)
-                        layer.boundingBox?.let { bounds ->
-                            try {
-                                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+                    if (!isGpx && !isKml && !isKmz && !isGeoJson) {
+                        // Sniff content
+                        val header = contentResolver.openInputStream(uri)?.use { stream ->
+                            val buffer = ByteArray(1024)
+                            val read = stream.read(buffer)
+                            if (read > 0) String(buffer, 0, read, java.nio.charset.StandardCharsets.UTF_8) else ""
+                        } ?: ""
+
+                        if (com.google.maps.android.data.parser.gpx.GpxParser.canParse(header)) {
+                            isGpx = true
+                        } else if (KmlParser.canParse(header)) {
+                            isKml = true
+                        } else if (KmzParser.canParse(header)) {
+                            isKmz = true
+                        } else if (GeoJsonParser.canParse(header)) {
+                            isGeoJson = true
                         }
                     }
-                    isGeoJson -> {
-                        val geoJson = GeoJsonParser().parse(inputStream)
-                        if (geoJson != null) {
-                            val layer = GeoJsonMapper.toLayer(geoJson)
-                            mapViewRenderer.addLayer(layer)
-                            layer.boundingBox?.let { bounds ->
-                                try {
-                                    map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-                        } else {
-                            Toast.makeText(this@RendererDemoActivity, "Failed to parse GeoJSON", Toast.LENGTH_SHORT).show()
+
+                    val layer = when {
+                        isKmz -> {
+                            val kml = KmzParser().parse(inputStream)
+                            KmlMapper.toLayer(kml)
                         }
-                    }
-                    isGpx -> {
-                        val gpx = com.google.maps.android.data.parser.gpx.GpxParser().parse(inputStream)
-                        val layer = com.google.maps.android.data.renderer.mapper.GpxMapper.toLayer(gpx)
-                        mapViewRenderer.addLayer(layer)
-                        layer.boundingBox?.let { bounds ->
-                            try {
-                                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
+                        isKml -> {
+                            val kml = KmlParser().parse(inputStream)
+                            KmlMapper.toLayer(kml)
+                        }
+                        isGeoJson -> {
+                            val geoJson = GeoJsonParser().parse(inputStream)
+                            if (geoJson != null) {
+                                GeoJsonMapper.toLayer(geoJson)
+                            } else {
+                                null
                             }
                         }
+                        isGpx -> {
+                            val gpx = com.google.maps.android.data.parser.gpx.GpxParser().parse(inputStream)
+                            com.google.maps.android.data.renderer.mapper.GpxMapper.toLayer(gpx)
+                        }
+                        else -> null
                     }
-                    else -> {
-                        Toast.makeText(this@RendererDemoActivity, "Unsupported file type: $type", Toast.LENGTH_SHORT).show()
-                        return@launch
-                    }
+                    
+                    Triple(layer, filename, type)
                 }
+
+                if (result == null) {
+                     // InputStream null or other early exit
+                     return@launch
+                }
+                
+                val (layer, filename, type) = result
+
+                if (layer != null) {
+                    if (type != null && !type.contains("gpx") && !type.contains("kml") && !type.contains("json")) {
+                         // It was sniffed or extension matched, but type might be generic
+                    }
+                    android.util.Log.d("RendererDemo", "Parsed features: ${layer.features.size}")
+                    addLayerToMap(layer, filename ?: "External File")
+                } else {
+                     Toast.makeText(this@RendererDemoActivity, "Unsupported or failed to parse file", Toast.LENGTH_SHORT).show()
+                }
+
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this@RendererDemoActivity, "Error loading file: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun getFileName(uri: Uri): String? {
+        var result: String? = null
+        if (uri.scheme == "content") {
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (index >= 0) {
+                        result = cursor.getString(index)
+                    }
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
+        if (result == null) {
+            result = uri.path
+            val cut = result?.lastIndexOf('/')
+            if (cut != null && cut != -1) {
+                result = result?.substring(cut + 1)
+            }
+        }
+        return result
     }
 }

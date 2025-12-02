@@ -21,19 +21,28 @@ import com.google.maps.android.data.parser.gpx.Trk
 import com.google.maps.android.data.parser.gpx.Wpt
 import com.google.maps.android.data.renderer.model.Feature
 import com.google.maps.android.data.renderer.model.Geometry
-import com.google.maps.android.data.renderer.model.Layer
+import com.google.maps.android.data.renderer.model.DataLayer
 import com.google.maps.android.data.renderer.model.LineString
 import com.google.maps.android.data.renderer.model.MultiGeometry
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
-import com.google.maps.android.data.renderer.model.Scene
+import com.google.maps.android.data.renderer.model.DataScene
 
+/**
+ * A mapper class responsible for transforming GPX objects into the platform-agnostic
+ * [DataScene] model.
+ *
+ * This mapper handles:
+ * - Waypoints (mapped to Points)
+ * - Routes (mapped to LineStrings)
+ * - Tracks (mapped to MultiGeometries or LineStrings)
+ */
 object GpxMapper {
-    fun toScene(gpx: Gpx): Scene {
-        return Scene(listOf(toLayer(gpx)))
+    fun toScene(gpx: Gpx): DataScene {
+        return DataScene(listOf(toLayer(gpx)))
     }
 
-    fun toLayer(gpx: Gpx): Layer {
+    fun toLayer(gpx: Gpx): DataLayer {
         val features = mutableListOf<Feature>()
 
         gpx.waypoints.forEach { wpt ->
@@ -48,7 +57,7 @@ object GpxMapper {
             features.add(trk.toFeature())
         }
 
-        return Layer(features)
+        return DataLayer(features)
     }
 }
 

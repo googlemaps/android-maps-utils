@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.LatLngBounds
  * @property features The list of [Feature] objects contained within this layer.
  * @property properties Arbitrary properties associated with the layer.
  */
-data class Layer(
+data class DataLayer(
     val features: List<Feature> = emptyList(),
     val properties: Map<String, Any> = emptyMap()
 ) {
@@ -53,6 +53,11 @@ data class Layer(
                 }
                 is MultiGeometry -> {
                     // TODO: Implement MultiGeometry bounds calculation if needed
+                }
+                is GroundOverlay -> {
+                    boundsBuilder.include(geometry.latLngBounds.northeast)
+                    boundsBuilder.include(geometry.latLngBounds.southwest)
+                    hasPoints = true
                 }
             }
         }

@@ -64,7 +64,10 @@ data class Kml(
 
     @XmlElement(true)
     @XmlSerialName("GroundOverlay", namespace = KML_NAMESPACE, prefix = "")
-    val groundOverlay: GroundOverlay? = null
+    val groundOverlay: GroundOverlay? = null,
+
+    @kotlinx.serialization.Transient
+    val images: Map<String, android.graphics.Bitmap> = emptyMap()
 )
 
 @Serializable
@@ -160,7 +163,11 @@ data class Document(
 
     @XmlElement(true)
     @XmlSerialName("StyleMap", namespace = KML_NAMESPACE, prefix = "")
-    val styleMaps: List<StyleMap> = emptyList()
+    val styleMaps: List<StyleMap> = emptyList(),
+
+    @XmlElement(true)
+    @XmlSerialName("GroundOverlay", namespace = KML_NAMESPACE, prefix = "")
+    val groundOverlays: List<GroundOverlay> = emptyList()
 ) : KmlFeature
 
 @Serializable
@@ -225,6 +232,14 @@ data class Placemark(
     @XmlSerialName("MultiGeometry", namespace = KML_NAMESPACE, prefix = "")
     val multiGeometry: MultiGeometry? = null,
 
+    @XmlElement(true)
+    @XmlSerialName("Track", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+    val track: Track? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("MultiTrack", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+    val multiTrack: MultiTrack? = null,
+
     @XmlSerialName("balloonVisibility", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
     val balloonVisibility: Int = 1,
 
@@ -236,6 +251,34 @@ data class Placemark(
     @XmlSerialName("ExtendedData", namespace = KML_NAMESPACE, prefix = "")
     val extendedData: ExtendedData? = null
 ) : KmlFeature
+
+@Serializable
+@XmlSerialName("Track", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+data class Track(
+    @XmlElement(true)
+    @XmlSerialName("when", namespace = KML_NAMESPACE, prefix = "")
+    val whens: List<String> = emptyList(),
+
+    @XmlElement(true)
+    @XmlSerialName("coord", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+    val coords: List<String> = emptyList(),
+
+    @XmlElement(true)
+    @XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+    val altitudeMode: AltitudeMode? = null
+)
+
+@Serializable
+@XmlSerialName("MultiTrack", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+data class MultiTrack(
+    @XmlElement(true)
+    @XmlSerialName("altitudeMode", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+    val altitudeMode: AltitudeMode? = null,
+
+    @XmlElement(true)
+    @XmlSerialName("Track", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
+    val tracks: List<Track> = emptyList()
+)
 
 @Serializable
 @XmlSerialName("Point", namespace = KML_NAMESPACE, prefix = "")

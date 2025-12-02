@@ -25,6 +25,11 @@ class GeoJsonParser {
             else -> null
         }
     }
+    companion object {
+        fun canParse(header: String): Boolean {
+            return header.trimStart().startsWith("{")
+        }
+    }
 }
 
 private fun parseFeatureCollection(json: JsonElement): GeoJsonFeatureCollection {

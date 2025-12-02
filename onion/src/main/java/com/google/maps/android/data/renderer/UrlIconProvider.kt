@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory
 import android.util.LruCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
@@ -54,14 +55,14 @@ class UrlIconProvider(
         }
     }
 
-    override fun loadIcon(url: String, callback: (Bitmap?) -> Unit) {
+    override fun loadIcon(url: String, callback: (Bitmap?) -> Unit): Job {
         val cachedBitmap = memoryCache.get(url)
         if (cachedBitmap != null) {
             callback(cachedBitmap)
-            return
+            return Job().apply { complete() }
         }
 
-        scope.launch {
+        return scope.launch {
             val bitmap = loadBitmapFromUrl(url)
             if (bitmap != null) {
                 memoryCache.put(url, bitmap)
