@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.data.parser.geojson.GeoJsonParser
+import com.google.maps.android.data.parser.gpx.GpxParser
 import com.google.maps.android.data.parser.kml.KmlParser
 import com.google.maps.android.data.parser.kml.KmzParser
 import com.google.maps.android.data.renderer.UrlIconProvider
@@ -349,7 +350,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
                             if (read > 0) String(buffer, 0, read, java.nio.charset.StandardCharsets.UTF_8) else ""
                         } ?: ""
 
-                        if (com.google.maps.android.data.parser.gpx.GpxParser.canParse(header)) {
+                        if (GpxParser.canParse(header)) {
                             isGpx = true
                         } else if (KmlParser.canParse(header)) {
                             isKml = true
@@ -378,7 +379,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
                             }
                         }
                         isGpx -> {
-                            val gpx = com.google.maps.android.data.parser.gpx.GpxParser().parse(inputStream)
+                            val gpx = GpxParser().parse(inputStream)
                             com.google.maps.android.data.renderer.mapper.GpxMapper.toLayer(gpx)
                         }
                         else -> null
@@ -430,7 +431,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
             result = uri.path
             val cut = result?.lastIndexOf('/')
             if (cut != null && cut != -1) {
-                result = result?.substring(cut + 1)
+                result = result.substring(cut + 1)
             }
         }
         return result
