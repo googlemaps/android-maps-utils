@@ -65,8 +65,19 @@ class MapViewRenderer(
     // Uses IdentityHashMap because Feature equality might be based on content, but we want to track specific instances.
     private val renderedFeatures = IdentityHashMap<Feature, MutableList<Any>>()
 
-    // Tracks active icon loading jobs for each feature to allow cancellation if the feature is removed.
-    private val iconJobs = IdentityHashMap<Feature, Job>()
+    // Cache for loaded icons
+    private val iconCache = mutableMapOf<String, android.graphics.Bitmap>()
+
+    // Tracks markers that are waiting for an icon to be loaded
+    private val pendingMarkers =
+        mutableMapOf<String, MutableList<com.google.android.gms.maps.model.Marker>>()
+
+    // Tracks ground overlays that are waiting for an icon to be loaded
+    private val pendingGroundOverlays =
+        mutableMapOf<String, MutableList<com.google.android.gms.maps.model.GroundOverlay>>()
+
+    // Tracks active icon loading jobs by URL to avoid redundant loads
+    private val iconUrlJobs = mutableMapOf<String, Job>()
 
     // Cache for local images (e.g. from KMZ files)
     private val localImages = mutableMapOf<String, android.graphics.Bitmap>()
@@ -100,20 +111,36 @@ class MapViewRenderer(
                     val marker = map.addMarker(markerOptions)!!
                     mapObjects.add(marker)
                     style?.iconUrl?.let { url ->
-                        val localBitmap = localImages[url]
-                        if (localBitmap != null) {
-                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                        val cachedBitmap = iconCache[url]
+                        if (cachedBitmap != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(cachedBitmap))
                         } else {
-                            val job = iconProvider.loadIcon(url) { bitmap ->
-                                if (bitmap != null) {
-                                    try {
-                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                    } catch (e: Exception) {
-                                        // Marker might have been removed or other issue
+                            val localBitmap = localImages[url]
+                            if (localBitmap != null) {
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                                iconCache[url] = localBitmap
+                            } else {
+                                val markersForUrl = pendingMarkers.getOrPut(url) { mutableListOf() }
+                                markersForUrl.add(marker)
+
+                                if (!iconUrlJobs.containsKey(url)) {
+                                    val job = iconProvider.loadIcon(url) { bitmap ->
+                                        if (bitmap != null) {
+                                            iconCache[url] = bitmap
+                                            pendingMarkers[url]?.forEach { pendingMarker ->
+                                                try {
+                                                    pendingMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                                } catch (e: Exception) {
+                                                    // Marker might have been removed
+                                                }
+                                            }
+                                        }
+                                        pendingMarkers.remove(url)
+                                        iconUrlJobs.remove(url)
                                     }
+                                    job?.let { iconUrlJobs[url] = it }
                                 }
                             }
-                            job?.let { iconJobs[feature] = it }
                         }
                     }
                 } else {
@@ -121,20 +148,36 @@ class MapViewRenderer(
                     val marker = map.addMarker(markerOptions)!!
                     mapObjects.add(marker)
                     style?.iconUrl?.let { url ->
-                        val localBitmap = localImages[url]
-                        if (localBitmap != null) {
-                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                        val cachedBitmap = iconCache[url]
+                        if (cachedBitmap != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(cachedBitmap))
                         } else {
-                            val job = iconProvider.loadIcon(url) { bitmap ->
-                                if (bitmap != null) {
-                                    try {
-                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                    } catch (e: Exception) {
-                                        // Marker might have been removed
+                            val localBitmap = localImages[url]
+                            if (localBitmap != null) {
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                                iconCache[url] = localBitmap
+                            } else {
+                                val markersForUrl = pendingMarkers.getOrPut(url) { mutableListOf() }
+                                markersForUrl.add(marker)
+
+                                if (!iconUrlJobs.containsKey(url)) {
+                                    val job = iconProvider.loadIcon(url) { bitmap ->
+                                        if (bitmap != null) {
+                                            iconCache[url] = bitmap
+                                            pendingMarkers[url]?.forEach { pendingMarker ->
+                                                try {
+                                                    pendingMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                                } catch (e: Exception) {
+                                                    // Marker might have been removed
+                                                }
+                                            }
+                                        }
+                                        pendingMarkers.remove(url)
+                                        iconUrlJobs.remove(url)
                                     }
+                                    job?.let { iconUrlJobs[url] = it }
                                 }
                             }
-                            job?.let { iconJobs[feature] = it }
                         }
                     }
                 }
@@ -161,35 +204,55 @@ class MapViewRenderer(
                 val groundOverlay = feature.geometry
                 val style = feature.style as? GroundOverlayStyle
                 val options = createGroundOverlayOptions(groundOverlay, style)
-                
+
                 style?.iconUrl?.let { url ->
-                    val localBitmap = localImages[url]
-                    if (localBitmap != null) {
-                        options.image(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                    val cachedBitmap = iconCache[url]
+                    if (cachedBitmap != null) {
+                        options.image(BitmapDescriptorFactory.fromBitmap(cachedBitmap))
                         val mapOverlay = map.addGroundOverlay(options)
                         if (mapOverlay != null) {
                             mapObjects.add(mapOverlay)
                         }
                     } else {
-                        // GroundOverlay requires an image to be set immediately.
-                        // Use a transparent placeholder.
-                        options.image(BitmapDescriptorFactory.fromBitmap(TRANSPARENT_BITMAP))
-                        options.visible(false) // Hide until loaded
-                        
-                        val mapOverlay = map.addGroundOverlay(options)
-                        if (mapOverlay != null) {
-                            mapObjects.add(mapOverlay)
-                            val job = iconProvider.loadIcon(url) { bitmap ->
-                                if (bitmap != null) {
-                                    try {
-                                        mapOverlay.setImage(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                        mapOverlay.isVisible = style?.visibility ?: true // Restore visibility
-                                    } catch (e: Exception) {
-                                        // Overlay might be removed
+                        val localBitmap = localImages[url]
+                        if (localBitmap != null) {
+                            options.image(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                            iconCache[url] = localBitmap
+                            val mapOverlay = map.addGroundOverlay(options)
+                            if (mapOverlay != null) {
+                                mapObjects.add(mapOverlay)
+                            }
+                        } else {
+                            // GroundOverlay requires an image to be set immediately.
+                            // Use a transparent placeholder.
+                            options.image(BitmapDescriptorFactory.fromBitmap(TRANSPARENT_BITMAP))
+                            options.visible(false) // Hide until loaded
+                            
+                            val mapOverlay = map.addGroundOverlay(options)
+                            if (mapOverlay != null) {
+                                mapObjects.add(mapOverlay)
+                                val overlaysForUrl = pendingGroundOverlays.getOrPut(url) { mutableListOf() }
+                                overlaysForUrl.add(mapOverlay)
+
+                                if (!iconUrlJobs.containsKey(url)) {
+                                    val job = iconProvider.loadIcon(url) { bitmap ->
+                                        if (bitmap != null) {
+                                            iconCache[url] = bitmap
+                                            pendingGroundOverlays[url]?.forEach { pendingOverlay ->
+                                                try {
+                                                    pendingOverlay.setImage(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                                    pendingOverlay.isVisible = style?.visibility ?: true // Restore visibility
+                                                } catch (e: Exception) {
+                                                    // Overlay might be removed
+                                                }
+                                            }
+                                        }
+                                        pendingGroundOverlays.remove(url)
+                                        iconUrlJobs.remove(url)
                                     }
+                                    job?.let { iconUrlJobs[url] = it }
                                 }
                             }
-                            iconJobs[feature] = job
                         }
                     }
                 } ?: run { // No iconUrl, add directly
@@ -206,7 +269,28 @@ class MapViewRenderer(
     }
 
     override fun removeFeature(feature: Feature) {
-        iconJobs.remove(feature)?.cancel()
+        renderedFeatures[feature]?.forEach { mapObject ->
+            if (mapObject is com.google.android.gms.maps.model.Marker) {
+                for ((url, markers) in pendingMarkers) {
+                    if (markers.remove(mapObject)) {
+                        if (markers.isEmpty()) {
+                            pendingMarkers.remove(url)
+                        }
+                        break // A marker can only be in one list
+                    }
+                }
+            } else if (mapObject is com.google.android.gms.maps.model.GroundOverlay) {
+                for ((url, overlays) in pendingGroundOverlays) {
+                    if (overlays.remove(mapObject)) {
+                        if (overlays.isEmpty()) {
+                            pendingGroundOverlays.remove(url)
+                        }
+                        break // An overlay can only be in one list
+                    }
+                }
+            }
+        }
+
         renderedFeatures[feature]?.forEach { mapObject ->
             when (mapObject) {
                 is com.google.android.gms.maps.model.Marker -> mapObject.remove()
@@ -219,8 +303,11 @@ class MapViewRenderer(
     }
 
     override fun clear() {
-        iconJobs.values.forEach { it.cancel() }
-        iconJobs.clear()
+        iconUrlJobs.values.forEach { it.cancel() }
+        iconUrlJobs.clear()
+        pendingMarkers.clear()
+        pendingGroundOverlays.clear()
+        iconCache.clear()
         renderedFeatures.values.flatten().forEach { mapObject ->
             when (mapObject) {
                 is com.google.android.gms.maps.model.Marker -> mapObject.remove()

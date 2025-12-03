@@ -45,7 +45,9 @@ import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.utils.demo.databinding.RendererDemoBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import com.google.maps.android.data.renderer.model.DataLayer
 
 /**
@@ -251,14 +253,21 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private suspend fun loadLayerFromAsset(filename: String): DataLayer? {
-        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 val inputStream = assets.open(filename)
                 val kml = KmlParser().parse(inputStream)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@RendererDemoActivity,
+                        "Loaded $filename",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 KmlMapper.toLayer(kml)
             } catch (e: Exception) {
                 e.printStackTrace()
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
                 }
                 null
@@ -267,18 +276,25 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private suspend fun loadGeoJsonFromAsset(filename: String): DataLayer? {
-        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 val inputStream = assets.open(filename)
                 val geoJson = GeoJsonParser().parse(inputStream)
                 if (geoJson != null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@RendererDemoActivity,
+                            "Loaded $filename",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     GeoJsonMapper.toLayer(geoJson)
                 } else {
                     null
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
                 }
                 null
@@ -287,14 +303,21 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private suspend fun loadGpxFromAsset(filename: String): DataLayer? {
-        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 val inputStream = assets.open(filename)
                 val gpx = com.google.maps.android.data.parser.gpx.GpxParser().parse(inputStream)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@RendererDemoActivity,
+                        "Loaded $filename",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 com.google.maps.android.data.renderer.mapper.GpxMapper.toLayer(gpx)
             } catch (e: Exception) {
                 e.printStackTrace()
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(this@RendererDemoActivity, "Error loading $filename", Toast.LENGTH_SHORT).show()
                 }
                 null
@@ -305,7 +328,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadGeoFile(uri: Uri) {
         lifecycleScope.launch {
             try {
-                val result = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                val result = withContext(Dispatchers.IO) {
                     val inputStream = contentResolver.openInputStream(uri) ?: return@withContext null
                     val type = contentResolver.getType(uri)
                     val filename = getFileName(uri)
