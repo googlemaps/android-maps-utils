@@ -951,21 +951,10 @@ public open class DefaultClusterRenderer<T : ClusterItem>(
      * A Marker and its position. [Marker.getPosition] must be called from the UI thread, so this
      * object allows lookup from other threads.
      */
-    private class MarkerWithPosition(
+    private data class MarkerWithPosition(
         val marker: Marker
     ) {
         var position: LatLng = marker.position
-
-        override fun equals(other: Any?): Boolean {
-            if (other !is MarkerWithPosition) {
-                return false
-            }
-            return marker == other.marker
-        }
-
-        override fun hashCode(): Int {
-            return marker.hashCode()
-        }
     }
 
     private val ANIMATION_INTERP: TimeInterpolator = DecelerateInterpolator()
