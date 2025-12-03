@@ -39,11 +39,11 @@ import com.google.android.gms.maps.model.LatLngBounds
  *
  * @property layers The list of [Layer] objects contained within this scene. Defaults to an empty list.
  */
-data class Scene(val layers: List<Layer> = emptyList()) {
+data class DataScene(val layers: List<DataLayer> = emptyList()) {
     
     companion object {
-        fun fromFeatures(features: List<Feature>): Scene {
-            return Scene(listOf(Layer(features)))
+        fun fromFeatures(features: List<Feature>): DataScene {
+            return DataScene(listOf(DataLayer(features)))
         }
     }
 

@@ -16,16 +16,21 @@
 package com.google.maps.android.data.renderer.mapview
 
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.AdvancedMarkerOptions
-import com.google.android.gms.maps.model.PinConfig
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.gms.maps.model.PolygonOptions
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.maps.android.data.renderer.Renderer
+import com.google.android.gms.maps.model.GroundOverlayOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PinConfig
+import com.google.android.gms.maps.model.PolygonOptions
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.data.renderer.DataRenderer
+import com.google.maps.android.data.renderer.IconProvider
+import com.google.maps.android.data.renderer.model.DataLayer
+import com.google.maps.android.data.renderer.model.DataScene
 import com.google.maps.android.data.renderer.model.Feature
-import com.google.maps.android.data.renderer.model.Geometry
+import com.google.maps.android.data.renderer.model.GroundOverlay
+import com.google.maps.android.data.renderer.model.GroundOverlayStyle
 import com.google.maps.android.data.renderer.model.LineString
 import com.google.maps.android.data.renderer.model.LineStyle
 import com.google.maps.android.data.renderer.model.MultiGeometry
@@ -34,39 +39,65 @@ import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.data.renderer.model.Polygon
 import com.google.maps.android.data.renderer.model.PolygonStyle
-import com.google.maps.android.data.renderer.model.Scene
-import com.google.maps.android.data.renderer.model.Style
-import com.google.maps.android.data.renderer.model.Layer
-import com.google.maps.android.data.renderer.IconProvider
-
+import kotlinx.coroutines.Job
 import java.util.IdentityHashMap
 
 /**
- * A concrete implementation of the [Renderer] interface that renders a [Scene] onto a [GoogleMap].
+ * A concrete implementation of the [DataRenderer] interface that renders a [DataScene] onto a [GoogleMap].
  *
- * This class is responsible for translating the platform-agnostic [Scene] and [Feature] models
+ * This class is responsible for translating the platform-agnostic [DataScene] and [Feature] models
  * into specific Google Maps SDK objects (e.g., Markers, Polylines, Polygons).
  *
- * @property googleMap The [GoogleMap] instance to render features on.
+ * @property map The [GoogleMap] instance to render features on.
  */
 class MapViewRenderer(
-    private val googleMap: GoogleMap,
-    private val iconProvider: IconProvider? = null
-) : Renderer {
+    private val map: GoogleMap,
+    private val iconProvider: IconProvider
+) : DataRenderer {
 
+    /**
+     * Controls whether to use the new Advanced Markers API (if available) or legacy Markers.
+     * Default is false (legacy Markers).
+     */
     var useAdvancedMarkers: Boolean = false
-    private val renderedFeatures = IdentityHashMap<Feature, List<Any>>() // Stores rendered map objects
 
-    override fun render(scene: Scene) {
-        scene.layers.forEach { addLayer(it) }
+    // Maps a Feature to the list of GoogleMap objects (Marker, Polyline, etc.) representing it.
+    // Uses IdentityHashMap because Feature equality might be based on content, but we want to track specific instances.
+    private val renderedFeatures = IdentityHashMap<Feature, MutableList<Any>>()
+
+    // Cache for loaded icons
+    private val iconCache = mutableMapOf<String, android.graphics.Bitmap>()
+
+    // Tracks markers that are waiting for an icon to be loaded
+    private val pendingMarkers =
+        mutableMapOf<String, MutableList<com.google.android.gms.maps.model.Marker>>()
+
+    // Tracks ground overlays that are waiting for an icon to be loaded
+    private val pendingGroundOverlays =
+        mutableMapOf<String, MutableList<com.google.android.gms.maps.model.GroundOverlay>>()
+
+    // Tracks active icon loading jobs by URL to avoid redundant loads
+    private val iconUrlJobs = mutableMapOf<String, Job>()
+
+    // Cache for local images (e.g. from KMZ files)
+    private val localImages = mutableMapOf<String, android.graphics.Bitmap>()
+
+    override fun render(scene: DataScene) {
+        scene.layers.forEach { renderLayer(it) }
     }
 
-    override fun addLayer(layer: Layer) {
-        layer.features.forEach { addFeature(it) }
+    override fun addLayer(layer: DataLayer) {
+        renderLayer(layer)
     }
 
-    override fun removeLayer(layer: Layer) {
+    override fun removeLayer(layer: DataLayer) {
         layer.features.forEach { removeFeature(it) }
+    }
+
+    private fun renderLayer(layer: DataLayer) {
+        layer.features.forEach { feature ->
+            addFeature(feature)
+        }
     }
 
     override fun addFeature(feature: Feature) {
@@ -77,30 +108,74 @@ class MapViewRenderer(
                 val style = feature.style as? PointStyle
                 if (useAdvancedMarkers) {
                     val markerOptions = createAdvancedMarkerOptions(point, style)
-                    val marker = googleMap.addMarker(markerOptions)!!
+                    val marker = map.addMarker(markerOptions)!!
                     mapObjects.add(marker)
                     style?.iconUrl?.let { url ->
-                        iconProvider?.loadIcon(url) { bitmap ->
-                            if (bitmap != null) {
-                                try {
-                                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                } catch (e: Exception) {
-                                    // Marker might have been removed or other issue
+                        val cachedBitmap = iconCache[url]
+                        if (cachedBitmap != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(cachedBitmap))
+                        } else {
+                            val localBitmap = localImages[url]
+                            if (localBitmap != null) {
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                                iconCache[url] = localBitmap
+                            } else {
+                                val markersForUrl = pendingMarkers.getOrPut(url) { mutableListOf() }
+                                markersForUrl.add(marker)
+
+                                if (!iconUrlJobs.containsKey(url)) {
+                                    val job = iconProvider.loadIcon(url) { bitmap ->
+                                        if (bitmap != null) {
+                                            iconCache[url] = bitmap
+                                            pendingMarkers[url]?.forEach { pendingMarker ->
+                                                try {
+                                                    pendingMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                                } catch (e: Exception) {
+                                                    // Marker might have been removed
+                                                }
+                                            }
+                                        }
+                                        pendingMarkers.remove(url)
+                                        iconUrlJobs.remove(url)
+                                    }
+                                    job?.let { iconUrlJobs[url] = it }
                                 }
                             }
                         }
                     }
                 } else {
                     val markerOptions = createMarkerOptions(point, style)
-                    val marker = googleMap.addMarker(markerOptions)!!
+                    val marker = map.addMarker(markerOptions)!!
                     mapObjects.add(marker)
                     style?.iconUrl?.let { url ->
-                        iconProvider?.loadIcon(url) { bitmap ->
-                            if (bitmap != null) {
-                                try {
-                                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                } catch (e: Exception) {
-                                    // Marker might have been removed
+                        val cachedBitmap = iconCache[url]
+                        if (cachedBitmap != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(cachedBitmap))
+                        } else {
+                            val localBitmap = localImages[url]
+                            if (localBitmap != null) {
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                                iconCache[url] = localBitmap
+                            } else {
+                                val markersForUrl = pendingMarkers.getOrPut(url) { mutableListOf() }
+                                markersForUrl.add(marker)
+
+                                if (!iconUrlJobs.containsKey(url)) {
+                                    val job = iconProvider.loadIcon(url) { bitmap ->
+                                        if (bitmap != null) {
+                                            iconCache[url] = bitmap
+                                            pendingMarkers[url]?.forEach { pendingMarker ->
+                                                try {
+                                                    pendingMarker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                                } catch (e: Exception) {
+                                                    // Marker might have been removed
+                                                }
+                                            }
+                                        }
+                                        pendingMarkers.remove(url)
+                                        iconUrlJobs.remove(url)
+                                    }
+                                    job?.let { iconUrlJobs[url] = it }
                                 }
                             }
                         }
@@ -111,13 +186,13 @@ class MapViewRenderer(
                 val lineString = feature.geometry
                 val style = feature.style as? LineStyle
                 val polylineOptions = createPolylineOptions(lineString, style)
-                mapObjects.add(googleMap.addPolyline(polylineOptions))
+                mapObjects.add(map.addPolyline(polylineOptions))
             }
             is Polygon -> {
                 val polygon = feature.geometry
                 val style = feature.style as? PolygonStyle
                 val polygonOptions = createPolygonOptions(polygon, style)
-                mapObjects.add(googleMap.addPolygon(polygonOptions))
+                mapObjects.add(map.addPolygon(polygonOptions))
             }
             is MultiGeometry -> {
                 feature.geometry.geometries.forEach { geometry ->
@@ -125,27 +200,120 @@ class MapViewRenderer(
                     addFeature(feature.copy(geometry = geometry))
                 }
             }
+            is GroundOverlay -> {
+                val groundOverlay = feature.geometry
+                val style = feature.style as? GroundOverlayStyle
+                val options = createGroundOverlayOptions(groundOverlay, style)
+
+                style?.iconUrl?.let { url ->
+                    val cachedBitmap = iconCache[url]
+                    if (cachedBitmap != null) {
+                        options.image(BitmapDescriptorFactory.fromBitmap(cachedBitmap))
+                        val mapOverlay = map.addGroundOverlay(options)
+                        if (mapOverlay != null) {
+                            mapObjects.add(mapOverlay)
+                        }
+                    } else {
+                        val localBitmap = localImages[url]
+                        if (localBitmap != null) {
+                            options.image(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                            iconCache[url] = localBitmap
+                            val mapOverlay = map.addGroundOverlay(options)
+                            if (mapOverlay != null) {
+                                mapObjects.add(mapOverlay)
+                            }
+                        } else {
+                            // GroundOverlay requires an image to be set immediately.
+                            // Use a transparent placeholder.
+                            options.image(BitmapDescriptorFactory.fromBitmap(TRANSPARENT_BITMAP))
+                            options.visible(false) // Hide until loaded
+                            
+                            val mapOverlay = map.addGroundOverlay(options)
+                            if (mapOverlay != null) {
+                                mapObjects.add(mapOverlay)
+                                val overlaysForUrl = pendingGroundOverlays.getOrPut(url) { mutableListOf() }
+                                overlaysForUrl.add(mapOverlay)
+
+                                if (!iconUrlJobs.containsKey(url)) {
+                                    val job = iconProvider.loadIcon(url) { bitmap ->
+                                        if (bitmap != null) {
+                                            iconCache[url] = bitmap
+                                            pendingGroundOverlays[url]?.forEach { pendingOverlay ->
+                                                try {
+                                                    pendingOverlay.setImage(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                                    pendingOverlay.isVisible = style?.visibility ?: true // Restore visibility
+                                                } catch (e: Exception) {
+                                                    // Overlay might be removed
+                                                }
+                                            }
+                                        }
+                                        pendingGroundOverlays.remove(url)
+                                        iconUrlJobs.remove(url)
+                                    }
+                                    job?.let { iconUrlJobs[url] = it }
+                                }
+                            }
+                        }
+                    }
+                } ?: run { // No iconUrl, add directly
+                    val mapOverlay = map.addGroundOverlay(options)
+                    if (mapOverlay != null) {
+                        mapObjects.add(mapOverlay)
+                    }
+                }
+            }
         }
-        renderedFeatures[feature] = mapObjects
+        if (mapObjects.isNotEmpty()) {
+            renderedFeatures[feature] = mapObjects
+        }
     }
 
     override fun removeFeature(feature: Feature) {
+        renderedFeatures[feature]?.forEach { mapObject ->
+            if (mapObject is com.google.android.gms.maps.model.Marker) {
+                for ((url, markers) in pendingMarkers) {
+                    if (markers.remove(mapObject)) {
+                        if (markers.isEmpty()) {
+                            pendingMarkers.remove(url)
+                        }
+                        break // A marker can only be in one list
+                    }
+                }
+            } else if (mapObject is com.google.android.gms.maps.model.GroundOverlay) {
+                for ((url, overlays) in pendingGroundOverlays) {
+                    if (overlays.remove(mapObject)) {
+                        if (overlays.isEmpty()) {
+                            pendingGroundOverlays.remove(url)
+                        }
+                        break // An overlay can only be in one list
+                    }
+                }
+            }
+        }
+
         renderedFeatures[feature]?.forEach { mapObject ->
             when (mapObject) {
                 is com.google.android.gms.maps.model.Marker -> mapObject.remove()
                 is com.google.android.gms.maps.model.Polyline -> mapObject.remove()
                 is com.google.android.gms.maps.model.Polygon -> mapObject.remove()
+                is com.google.android.gms.maps.model.GroundOverlay -> mapObject.remove()
             }
         }
         renderedFeatures.remove(feature)
     }
 
     override fun clear() {
+        iconUrlJobs.values.forEach { it.cancel() }
+        iconUrlJobs.clear()
+        pendingMarkers.clear()
+        pendingGroundOverlays.clear()
+        iconCache.clear()
         renderedFeatures.values.flatten().forEach { mapObject ->
             when (mapObject) {
                 is com.google.android.gms.maps.model.Marker -> mapObject.remove()
                 is com.google.android.gms.maps.model.Polyline -> mapObject.remove()
                 is com.google.android.gms.maps.model.Polygon -> mapObject.remove()
+                is com.google.android.gms.maps.model.GroundOverlay -> mapObject.remove()
             }
         }
         renderedFeatures.clear()
@@ -211,9 +379,27 @@ class MapViewRenderer(
         return polygonOptions
     }
 
+    private fun createGroundOverlayOptions(groundOverlay: GroundOverlay, style: GroundOverlayStyle?): GroundOverlayOptions {
+        val options = GroundOverlayOptions()
+        options.positionFromBounds(groundOverlay.latLngBounds)
+        options.bearing(groundOverlay.rotation)
+        style?.let {
+            options.zIndex(it.zIndex)
+            options.transparency(it.transparency)
+            options.visible(it.visibility)
+        }
+        return options
+    }
+
     private fun hueFromColor(color: Int): Float {
         val hsv = FloatArray(3)
         android.graphics.Color.colorToHSV(color, hsv)
         return hsv[0]
+    }
+
+    companion object {
+        private val TRANSPARENT_BITMAP by lazy {
+            android.graphics.Bitmap.createBitmap(1, 1, android.graphics.Bitmap.Config.ARGB_8888)
+        }
     }
 }

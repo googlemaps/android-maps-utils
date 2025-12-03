@@ -16,8 +16,8 @@
 package com.google.maps.android.data.renderer
 
 import com.google.maps.android.data.renderer.model.Feature
-import com.google.maps.android.data.renderer.model.Scene
-import com.google.maps.android.data.renderer.model.Layer
+import com.google.maps.android.data.renderer.model.DataScene
+import com.google.maps.android.data.renderer.model.DataLayer
 
 /**
  * An interface defining the contract for rendering a [Scene] of geographic features.
@@ -26,17 +26,14 @@ import com.google.maps.android.data.renderer.model.Layer
  * [Scene] and [Feature] models into specific map objects (e.g., Markers, Polylines, Polygons)
  * for a given mapping platform.
  */
-interface Renderer {
+interface DataRenderer {
 
     /**
-     * Renders an entire [Scene] to the map.
+     * Renders an entire [DataScene] to the map.
      *
-     * This method should clear any previously rendered features and draw all features
-     * present in the provided [Scene].
-     *
-     * @param scene The [Scene] to be rendered.
+     * @param scene The scene to render.
      */
-    fun render(scene: Scene)
+    fun render(scene: DataScene)
 
     /**
      * Adds a single [Feature] to the map.
@@ -53,18 +50,18 @@ interface Renderer {
     fun removeFeature(feature: Feature)
 
     /**
-     * Adds a [Layer] to the map.
+     * Adds a [DataLayer] to the map.
      *
-     * @param layer The [Layer] to add.
+     * @param layer The [DataLayer] to add.
      */
-    fun addLayer(layer: Layer)
+    fun addLayer(layer: DataLayer)
 
     /**
-     * Removes a [Layer] from the map.
+     * Removes a [DataLayer] from the map.
      *
-     * @param layer The [Layer] to remove.
+     * @param layer The [DataLayer] to remove.
      */
-    fun removeLayer(layer: Layer)
+    fun removeLayer(layer: DataLayer)
 
     /**
      * Clears all currently rendered features from the map.

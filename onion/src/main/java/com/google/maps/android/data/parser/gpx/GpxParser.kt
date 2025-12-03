@@ -20,6 +20,12 @@ import nl.adaptivity.xmlutil.serialization.XML
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
+/**
+ * A parser for GPX (GPS Exchange Format) files.
+ *
+ * Uses the `pdvrieze/xmlutil` library for XML parsing.
+ * Supports parsing GPX 1.0 and 1.1 formats (normalizing 1.0 to 1.1).
+ */
 class GpxParser {
     private val xml = XML {
         defaultPolicy {
@@ -34,5 +40,11 @@ class GpxParser {
         // (The structure for waypoints and tracks is compatible enough for our needs)
         val normalizedXml = xmlContent.replace("http://www.topografix.com/GPX/1/0", "http://www.topografix.com/GPX/1/1")
         return xml.decodeFromString<Gpx>(normalizedXml)
+    }
+
+    companion object {
+        fun canParse(header: String): Boolean {
+            return header.contains("<gpx")
+        }
     }
 }

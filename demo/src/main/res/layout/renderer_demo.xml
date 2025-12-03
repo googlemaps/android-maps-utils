@@ -1,54 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/clear_layers_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Clear" />
-
-        <Button
-            android:id="@+id/load_file_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Load File" />
-
-        <Button
-            android:id="@+id/load_top_peaks_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Peaks" />
-
-        <Button
-            android:id="@+id/load_mountain_ranges_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Ranges" />
-    </LinearLayout>
-
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/advanced_markers_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Use Advanced Markers" />
-
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map_container"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <!-- Bottom Sheet -->
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bottom_sheet"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="120dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btn_load_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Load File"
+                app:icon="@android:drawable/ic_menu_add" />
+
+            <Button
+                android:id="@+id/btn_clear"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                app:icon="@android:drawable/ic_menu_delete" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Presets"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_layers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleLine="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_peaks"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Peaks" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_ranges"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ranges" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_complex_kml"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Complex KML" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_complex_geojson"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Complex GeoJSON" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_ground_overlay"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ground Overlay" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_bright_angel"
+                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bright Angel" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_advanced_markers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Use Advanced Markers" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -18,6 +18,8 @@ package com.google.maps.android.data.renderer
 
 import android.graphics.Bitmap
 
+import kotlinx.coroutines.Job
+
 /**
  * Interface for providing icons to the renderer.
  * Implementations can load icons from URLs, assets, or other sources.
@@ -28,6 +30,7 @@ interface IconProvider {
      *
      * @param url The URL of the icon to load.
      * @param callback A callback to be invoked when the icon is loaded. The bitmap may be null if loading failed.
+     * @return A [Job] representing the loading operation, which can be cancelled.
      */
-    fun loadIcon(url: String, callback: (Bitmap?) -> Unit)
+    fun loadIcon(url: String, callback: (Bitmap?) -> Unit): Job
 }

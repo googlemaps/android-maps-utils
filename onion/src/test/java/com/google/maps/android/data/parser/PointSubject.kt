@@ -6,13 +6,14 @@ import com.google.common.truth.FailureMetadata
 import com.google.common.truth.Subject
 import com.google.common.truth.Truth
 import com.google.maps.android.SphericalUtil
+import com.google.maps.android.data.renderer.model.Point
 import kotlin.math.abs
 
-fun assertThat(point: Geometry.Point?): PointSubject {
+fun assertThat(point: Point?): PointSubject {
     return Truth.assertAbout(pointSubjectFactory()).that(point)
 }
 
-fun pointSubjectFactory(): Subject.Factory<PointSubject, Geometry.Point> {
+fun pointSubjectFactory(): Subject.Factory<PointSubject, Point> {
     return Subject.Factory { metaData, target ->
         PointSubject(
             metaData,
@@ -23,7 +24,7 @@ fun pointSubjectFactory(): Subject.Factory<PointSubject, Geometry.Point> {
 
 class PointSubject(
     metadata: FailureMetadata,
-    private val actual: Geometry.Point?
+    private val actual: Point?
 ) : Subject(metadata, actual) {
 
     fun hasAltitude() {
@@ -42,14 +43,14 @@ class PointSubject(
         }
     }
 
-    fun isNear(expected: Geometry.Point) {
+    fun isNear(expected: Point) {
         if (actual == null) {
             failWithActual(Fact.simpleFact("expected a non-null Point, but was null"))
             return
         }
         val tolerance = 1e-6
         if (abs(actual.lat - expected.lat) > tolerance ||
-            abs(actual.lon - expected.lon) > tolerance
+            abs(actual.lng - expected.lng) > tolerance
         ) {
             failWithActual(
                 Fact.fact("expected to be near", expected.toString()),
@@ -78,14 +79,14 @@ class PointSubject(
     }
 
     inner class PointDistanceSubject(private val tolerance: Double) {
-        fun of(expected: Geometry.Point) {
+        fun of(expected: Point) {
             if (actual == null) {
                 failWithActual(Fact.simpleFact("expected a non-null Point, but was null"))
                 return
             }
             val distance = SphericalUtil.computeDistanceBetween(
-                LatLng(actual.lat, actual.lon),
-                LatLng(expected.lat, expected.lon)
+                LatLng(actual.lat, actual.lng),
+                LatLng(expected.lat, expected.lng)
             )
             if (distance > tolerance) {
                 failWithActual(
