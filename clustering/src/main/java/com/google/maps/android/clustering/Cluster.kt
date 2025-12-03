@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.clustering;
+package com.google.maps.android.clustering
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Collection;
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * A collection of ClusterItems that are nearby each other.
  */
-public interface Cluster<T extends ClusterItem> {
-    LatLng getPosition();
-
-    Collection<T> getItems();
-
-    int getSize();
+public interface Cluster<T : ClusterItem> {
+    public val position: LatLng
+    public val items: Collection<T>
+    public val size: Int
 }

@@ -1,7 +1,9 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -13,27 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.maps.android.clustering.algo;
+package com.google.maps.android.clustering.algo
 
-import com.google.maps.android.clustering.ClusterItem;
-
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import com.google.maps.android.clustering.ClusterItem
+import java.util.concurrent.locks.ReadWriteLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 /**
  * Base Algorithm class that implements lock/unlock functionality.
  */
-public abstract class AbstractAlgorithm<T extends ClusterItem> implements Algorithm<T> {
+public abstract class AbstractAlgorithm<T : ClusterItem> : Algorithm<T> {
 
-    private final ReadWriteLock mLock = new ReentrantReadWriteLock();
+    private val lock: ReadWriteLock = ReentrantReadWriteLock()
 
-    @Override
-    public void lock() {
-        mLock.writeLock().lock();
+    override fun lock() {
+        lock.writeLock().lock()
     }
 
-    @Override
-    public void unlock() {
-        mLock.writeLock().unlock();
+    override fun unlock() {
+        lock.writeLock().unlock()
     }
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.clustering.algo;
+package com.google.maps.android.clustering.algo
 
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.maps.android.clustering.ClusterItem;
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.clustering.ClusterItem
 
 /**
  * This abstract interface provides two methods: one to determine if the map should recluster when
@@ -26,10 +26,7 @@ import com.google.maps.android.clustering.ClusterItem;
  *
  * @param <T> The {@link ClusterItem} type
  */
-
-public interface ScreenBasedAlgorithm<T extends ClusterItem> extends Algorithm<T> {
-
-    boolean shouldReclusterOnMapMovement();
-
-    void onCameraChange(CameraPosition position);
+public interface ScreenBasedAlgorithm<T : ClusterItem> : Algorithm<T> {
+    public fun shouldReclusterOnMapMovement(): Boolean
+    public fun onCameraChange(position: CameraPosition)
 }

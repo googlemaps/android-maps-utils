@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2023 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.clustering;
+package com.google.maps.android.clustering
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * ClusterItem represents a marker on the map.
@@ -29,20 +26,20 @@ public interface ClusterItem {
     /**
      * The position of this marker. This must always return the same value.
      */
-    @NonNull LatLng getPosition();
+    public val position: LatLng
 
     /**
      * The title of this marker.
      */
-    @Nullable String getTitle();
+    public val title: String?
 
     /**
      * The description of this marker.
      */
-    @Nullable String getSnippet();
+    public val snippet: String?
 
     /**
      * The z-index of this marker.
      */
-    @Nullable Float getZIndex();
+    public val zIndex: Float?
 }
