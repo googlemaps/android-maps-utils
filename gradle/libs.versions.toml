@@ -1,46 +1,49 @@
 [versions]
 compileSdk = "36"
-serialization = "0.91.3"
 targetSdk = "36"
 minimumSdk = "21"
 
+androidx-test-ext-junit = "1.3.0"
 appcompat = "1.7.1"
+core-ktx = "1.17.0"
 dokka-gradle-plugin = "2.0.0"
+espresso-core = "3.7.0"
 gradle = "8.13.0"
+gradleMavenPublishPlugin = "0.35.0"
 jacoco-android = "0.2.1"
-lifecycle-extensions = "2.2.0"
-lifecycle-viewmodel-ktx = "2.9.4"
+junit = "4.13.2"
 kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
-ktor = "2.3.10"
-junit = "4.13.2"
-mockito-core = "5.20.0"
-secrets-gradle-plugin = "2.0.1"
-truth = "1.4.5"
-play-services-maps = "19.2.0"
-core-ktx = "1.17.0"
-robolectric = "4.16"
+ktor = "3.3.3"
 kxml2 = "2.3.0"
-mockk = "1.14.5"
-lint = "31.13.0"
-org-jacoco-core = "0.8.13"
+lifecycle-extensions = "2.2.0"
+lifecycle-viewmodel-ktx = "2.10.0"
+lint = "31.13.1"
 material = "1.13.0"
-gradleMavenPublishPlugin = "0.34.0"
-androidx-test-ext-junit = "1.2.1"
-espresso-core = "3.6.1"
+mockito-core = "5.20.0"
+mockk = "1.14.6"
+org-jacoco-core = "0.8.13"
+play-services-maps = "19.2.0"
+robolectric = "4.16"
+secrets-gradle-plugin = "2.0.1"
+serialization = "0.91.3"
+truth = "1.4.5"
 uiautomator = "2.3.0"
 
 [libraries]
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
 jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
+junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycle-extensions" }
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -49,24 +52,25 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-junit = { module = "junit:junit", version.ref = "junit" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
-secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "serialization" }
-truth = { module = "com.google.truth:truth", version.ref = "truth" }
-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kxml2 = { module = "net.sf.kxml:kxml2", version.ref = "kxml2" }
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycle-extensions" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
+lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }
 lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint" }
-lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
-testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
-org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
+serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "serialization" }
+testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
 uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }

@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="start"
+            android:gravity="center_vertical"
             android:layout_marginBottom="16dp">
 
             <Button
@@ -52,6 +52,21 @@
                 android:text="Clear"
                 app:icon="@android:drawable/ic_menu_delete" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btn_toggle_sheet"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="0dp"
+                app:icon="@android:drawable/ic_menu_sort_by_size"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+
         </LinearLayout>
 
         <TextView
@@ -69,44 +84,50 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_peaks"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Peaks" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_ranges"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Ranges" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_complex_kml"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Complex KML" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_complex_geojson"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Complex GeoJSON" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_ground_overlay"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Ground Overlay" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_bright_angel"
-                    style="@style/Widget.MaterialComponents.Chip.Action"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checkable="true"
                     android:text="Bright Angel" />
 
         </com.google.android.material.chip.ChipGroup>

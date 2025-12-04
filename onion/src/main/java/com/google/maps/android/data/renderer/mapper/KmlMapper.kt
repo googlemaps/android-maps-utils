@@ -56,7 +56,7 @@ object KmlMapper {
         return DataScene(listOf(toLayer(kml)))
     }
 
-    fun toLayer(kml: Kml): DataLayer {
+    internal fun toLayer(kml: Kml): DataLayer {
         val styles = mutableMapOf<String, KmlStyle>()
         val styleMaps = mutableMapOf<String, KmlStyleMap>()
 
@@ -107,6 +107,10 @@ object KmlMapper {
             features.add(groundOverlay.toRendererFeature())
         }
     }
+}
+
+fun Kml.toLayer(): DataLayer {
+    return KmlMapper.toLayer(this)
 }
 
 private fun Placemark.toRendererFeature(styles: Map<String, KmlStyle>, styleMaps: Map<String, KmlStyleMap>): Feature {

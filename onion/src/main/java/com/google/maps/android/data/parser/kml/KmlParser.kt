@@ -23,6 +23,7 @@ class KmlParser {
     }
 
     companion object {
+        val SUPPORTED_EXTENSIONS = setOf("kml")
         fun canParse(header: String): Boolean {
             return header.contains("<kml")
         }

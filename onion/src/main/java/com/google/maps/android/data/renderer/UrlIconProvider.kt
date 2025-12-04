@@ -19,23 +19,28 @@ package com.google.maps.android.data.renderer
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.LruCache
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Implementation of [IconProvider] that loads icons from URLs.
- * Uses an [LruCache] to cache loaded icons.
+ * Uses an [LruCache] to cache loaded icons and handles "thundering herd" by deduplicating in-flight requests.
  */
-class UrlIconProvider(
-    private val scope: CoroutineScope
+open class UrlIconProvider(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : IconProvider {
 
     private val memoryCache: LruCache<String, Bitmap>
+    private val inFlight = ConcurrentHashMap<String, Deferred<Bitmap?>>()
+    private val downloadScope = CoroutineScope(SupervisorJob() + dispatcher)
 
     init {
         // Get max available VM memory, exceeding this amount will throw an
@@ -55,26 +60,35 @@ class UrlIconProvider(
         }
     }
 
-    override fun loadIcon(url: String, callback: (Bitmap?) -> Unit): Job {
-        val cachedBitmap = memoryCache.get(url)
-        if (cachedBitmap != null) {
-            callback(cachedBitmap)
-            return Job().apply { complete() }
+    override suspend fun loadIcon(url: String): Bitmap? {
+        // 1. Fast path: Memory cache
+        memoryCache.get(url)?.let { return it }
+
+        // 2. In-flight deduplication
+        // computeIfAbsent is not available on API 21, so we use synchronized block
+        val deferred = synchronized(inFlight) {
+            inFlight.getOrPut(url) {
+                downloadScope.async {
+                    try {
+                        val bitmap = loadBitmapFromUrl(url)
+                        if (bitmap != null) {
+                            memoryCache.put(url, bitmap)
+                        }
+                        bitmap
+                    } finally {
+                        // Always remove from in-flight map when done, success or failure
+                        inFlight.remove(url)
+                    }
+                }
+            }
         }
 
-        return scope.launch {
-            val bitmap = loadBitmapFromUrl(url)
-            if (bitmap != null) {
-                memoryCache.put(url, bitmap)
-            }
-            withContext(Dispatchers.Main) {
-                callback(bitmap)
-            }
-        }
+        // 3. Wait for result
+        return deferred.await()
     }
 
-    private suspend fun loadBitmapFromUrl(urlString: String): Bitmap? {
-        return withContext(Dispatchers.IO) {
+    protected open suspend fun loadBitmapFromUrl(urlString: String): Bitmap? {
+        return withContext(dispatcher) {
             try {
                 val url = URL(urlString)
                 val connection = url.openConnection() as HttpURLConnection

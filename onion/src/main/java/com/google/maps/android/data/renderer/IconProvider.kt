@@ -29,8 +29,7 @@ interface IconProvider {
      * Loads an icon from the given URL.
      *
      * @param url The URL of the icon to load.
-     * @param callback A callback to be invoked when the icon is loaded. The bitmap may be null if loading failed.
-     * @return A [Job] representing the loading operation, which can be cancelled.
+     * @return The loaded [Bitmap], or null if loading failed.
      */
-    fun loadIcon(url: String, callback: (Bitmap?) -> Unit): Job
+    suspend fun loadIcon(url: String): Bitmap?
 }

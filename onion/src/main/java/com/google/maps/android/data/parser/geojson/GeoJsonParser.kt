@@ -26,6 +26,7 @@ class GeoJsonParser {
         }
     }
     companion object {
+        val SUPPORTED_EXTENSIONS = setOf("json", "geojson")
         fun canParse(header: String): Boolean {
             return header.trimStart().startsWith("{")
         }

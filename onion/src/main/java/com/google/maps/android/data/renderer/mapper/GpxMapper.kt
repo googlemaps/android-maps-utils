@@ -42,7 +42,7 @@ object GpxMapper {
         return DataScene(listOf(toLayer(gpx)))
     }
 
-    fun toLayer(gpx: Gpx): DataLayer {
+    internal fun toLayer(gpx: Gpx): DataLayer {
         val features = mutableListOf<Feature>()
 
         gpx.waypoints.forEach { wpt ->
@@ -59,6 +59,10 @@ object GpxMapper {
 
         return DataLayer(features)
     }
+}
+
+fun Gpx.toLayer(): DataLayer {
+    return GpxMapper.toLayer(this)
 }
 
 private fun Wpt.toFeature(): Feature {

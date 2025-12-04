@@ -91,6 +91,7 @@ class KmzParser(private val imageDecoder: ImageDecoder = AndroidImageDecoder()) 
     }
 
     companion object {
+        val SUPPORTED_EXTENSIONS = setOf("kmz")
         fun canParse(header: String): Boolean {
             return header.startsWith("PK") // Zip file signature
         }

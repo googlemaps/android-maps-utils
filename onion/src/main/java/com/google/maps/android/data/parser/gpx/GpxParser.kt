@@ -43,6 +43,7 @@ class GpxParser {
     }
 
     companion object {
+        val SUPPORTED_EXTENSIONS = setOf("gpx")
         fun canParse(header: String): Boolean {
             return header.contains("<gpx")
         }

@@ -213,3 +213,7 @@ object GeoJsonMapper {
         return Point(lat, lng, alt)
     }
 }
+
+fun GeoJsonObject.toLayer(): DataLayer {
+    return GeoJsonMapper.toLayer(this)
+}
