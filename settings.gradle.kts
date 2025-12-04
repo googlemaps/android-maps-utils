@@ -29,4 +29,4 @@ pluginManagement {
     }
 }
 
-include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library", "onion")
+include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library", "onion", "visual-testing")

@@ -21,6 +21,7 @@ plugins {
     id("com.android.application")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-android")
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
 }
 
 val secretsFile = rootProject.file("secrets.properties")
@@ -74,6 +75,7 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -100,6 +102,14 @@ android {
     namespace = "com.google.maps.android.utils.demo"
 }
 
+configurations.all {
+    resolutionStrategy {
+        force(libs.kotlinx.coroutines.core)
+        force(libs.kotlinx.coroutines.android)
+        force(libs.kotlinx.serialization.json)
+    }
+}
+
 // [START maps_android_utils_install_snippet]
 dependencies {
     // [START_EXCLUDE silent]
@@ -117,9 +127,18 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.material)
     implementation(libs.core.ktx)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    implementation(project(":visual-testing"))
+    implementation(libs.uiautomator)
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]
