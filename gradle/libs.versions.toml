@@ -1,28 +1,29 @@
 [versions]
 compileSdk = "36"
 targetSdk = "36"
+minimumSdk = "21"
+
 appcompat = "1.7.1"
-dokka-gradle-plugin = "2.0.0"
-gradle = "8.10.1"
+dokka-gradle-plugin = "2.1.0"
+gradle = "8.13.1"
 jacoco-android = "0.2.1"
 lifecycle-extensions = "2.2.0"
-lifecycle-viewmodel-ktx = "2.9.2"
-kotlin = "2.2.0"
+lifecycle-viewmodel-ktx = "2.9.4"
+kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
 junit = "4.13.2"
-mockito-core = "5.18.0"
+mockito-core = "5.20.0"
 secrets-gradle-plugin = "2.0.1"
-truth = "1.4.4"
+truth = "1.4.5"
 play-services-maps = "19.2.0"
-core-ktx = "1.16.0"
-robolectric = "4.15.1"
+core-ktx = "1.17.0"
+robolectric = "4.16"
 kxml2 = "2.3.0"
-androidx-test-core = "1.5.0"
-mockk = "1.14.5"
-lint = "31.12.0"
-org-jacoco-core = "0.8.13"
-material = "1.12.0"
-gradleMavenPublishPlugin = "0.34.0"
+mockk = "1.14.6"
+lint = "31.13.1"
+org-jacoco-core = "0.8.14"
+material = "1.13.0"
+gradleMavenPublishPlugin = "0.35.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -36,6 +37,7 @@ lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 junit = { module = "junit:junit", version.ref = "junit" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }

@@ -32,10 +32,10 @@ buildscript {
 }
 
 tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
+    delete(layout.buildDirectory)
 }
 
 allprojects {
     group = "com.google.maps.android"
-    version = "3.16.0"
+    version = "3.19.1"
 }

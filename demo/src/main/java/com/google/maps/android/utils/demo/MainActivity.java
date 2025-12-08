@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("Clustering: Force on Zoom", ZoomClusteringDemoActivity.class);
         addDemo("PolyUtil.decode", PolyDecodeDemoActivity.class);
         addDemo("PolyUtil.simplify", PolySimplifyDemoActivity.class);
+        addDemo("Polyline Progress", PolylineProgressDemoActivity.class);
         addDemo("IconGenerator", IconGeneratorDemoActivity.class);
         addDemo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity.class);
         addDemo("Generating tiles", TileProviderAndProjectionDemo.class);
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("Multi Layer", MultiLayerDemoActivity.class);
         addDemo("AnimationUtil sample", AnimationUtilDemoActivity.class);
         addDemo("Street View Demo", StreetViewDemoActivity.class);
+        addDemo("Street View Demo (Java)", StreetViewDemoJavaActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {

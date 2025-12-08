@@ -134,7 +134,7 @@ public class KmlStyleTest {
     @Test
     @Ignore("I should run via Robolectric - java.lang.NullPointerException: IBitmapDescriptorFactory is not initialized") // FIXME
     public void testMarkerColorLeadingSpace() {
-        if (TestUtil.isRunningOnTravis()) {
+        if (TestUtil.isRunningOnGitHub()) {
             Assume.assumeTrue("Skipping KmlStyleTest.testMarkerColorLeadingSpace() - this is expected behavior on Travis CI (#573)", false);
             return;
         }
@@ -148,7 +148,7 @@ public class KmlStyleTest {
     @Test
     @Ignore("I should run via Robolectric - java.lang.NullPointerException: IBitmapDescriptorFactory is not initialized") // FIXME
     public void testMarkerColorTrailingSpace() {
-        if (TestUtil.isRunningOnTravis()) {
+        if (TestUtil.isRunningOnGitHub()) {
             Assume.assumeTrue("Skipping KmlStyleTest.testMarkerColorTrailingSpace() - this is expected behavior on Travis CI (#573)", false);
             return;
         }

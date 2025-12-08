@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /**
  * Copyright 2024 Google Inc.
  *
@@ -21,14 +23,13 @@ plugins {
 
 android {
     lint {
-        sarifOutput = file("$buildDir/reports/lint-results.sarif")
+        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
     }
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = 21
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
         consumerProguardFiles("consumer-rules.pro")
-        buildConfigField("String", "TRAVIS", "\"${System.getenv("TRAVIS")}\"")
     }
     buildTypes {
         release {
@@ -40,16 +41,19 @@ android {
         }
     }
     resourcePrefix = "amu_"
-    adbOptions {
+
+    installation {
         timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions("-d", "-t")
+        installOptions += listOf("-d", "-t")
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+
     kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
         jvmToolchain(17)
     }
+
     testOptions {
         animationsDisabled = true
         unitTests.isIncludeAndroidResources = true
@@ -72,6 +76,11 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.androidx.test.core)
     implementation(libs.kotlin.stdlib.jdk8)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.core)
 }
 
 tasks.register("instrumentTest") {

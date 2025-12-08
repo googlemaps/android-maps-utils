@@ -16,20 +16,23 @@
 
 package com.google.maps.android.clustering.algo;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.geometry.Bounds;
-import com.google.maps.android.quadtree.PointQuadTree;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * A variant of {@link CentroidNonHierarchicalDistanceBasedAlgorithm} that uses
  * continuous zoom scaling and Euclidean distance for clustering.
  *
- * <p>This class overrides {@link #getClusteringItems(PointQuadTree, float)} to compute
+ * <p>This class overrides {@link #getClusters(float)} to compute
  * clusters with a zoom-dependent radius, while keeping the centroid-based cluster positions.</p>
  *
  * @param <T> the type of cluster item
@@ -38,15 +41,21 @@ public class ContinuousZoomEuclideanCentroidAlgorithm<T extends ClusterItem>
         extends CentroidNonHierarchicalDistanceBasedAlgorithm<T> {
 
     @Override
-    protected Collection<QuadItem<T>> getClusteringItems(PointQuadTree<QuadItem<T>> quadTree, float zoom) {
+    public Set<? extends Cluster<T>> getClusters(float zoom) {
         // Continuous zoom — no casting to int
         final double zoomSpecificSpan = getMaxDistanceBetweenClusteredItems() / Math.pow(2, zoom) / 256;
 
         final Set<QuadItem<T>> visitedCandidates = new HashSet<>();
-        final Collection<QuadItem<T>> result = new ArrayList<>();
+        final Set<Cluster<T>> results = new HashSet<>();
+        final Map<QuadItem<T>, Double> distanceToCluster = new HashMap<>();
+        final Map<QuadItem<T>, StaticCluster<T>> itemToCluster = new HashMap<>();
+
         synchronized (mQuadTree) {
-            for (QuadItem<T> candidate : mItems) {
-                if (visitedCandidates.contains(candidate)) continue;
+            for (QuadItem<T> candidate : getClusteringItems(mQuadTree, zoom)) {
+                if (visitedCandidates.contains(candidate)) {
+                    // Candidate is already part of another cluster.
+                    continue;
+                }
 
                 Bounds searchBounds = createBoundsFromSpan(candidate.getPoint(), zoomSpecificSpan);
                 Collection<QuadItem<T>> clusterItems = new ArrayList<>();
@@ -58,11 +67,46 @@ public class ContinuousZoomEuclideanCentroidAlgorithm<T extends ClusterItem>
                     }
                 }
 
+                if (clusterItems.size() == 1) {
+                    // Only the current marker is in range. Just add the single item to the results.
+                    results.add(candidate);
+                    visitedCandidates.add(candidate);
+                    distanceToCluster.put(candidate, 0d);
+                    continue;
+                }
+                StaticCluster<T> cluster = new StaticCluster<>(candidate.mClusterItem.getPosition());
+                results.add(cluster);
+
+                for (QuadItem<T> clusterItem : clusterItems) {
+                    Double existingDistance = distanceToCluster.get(clusterItem);
+                    double distance = distanceSquared(clusterItem.getPoint(), candidate.getPoint());
+                    if (existingDistance != null) {
+                        // Item already belongs to another cluster. Check if it's closer to this cluster.
+                        if (existingDistance < distance) {
+                            continue;
+                        }
+                        // Move item to the closer cluster.
+                        itemToCluster.get(clusterItem).remove(clusterItem.mClusterItem);
+                    }
+                    distanceToCluster.put(clusterItem, distance);
+                    cluster.add(clusterItem.mClusterItem);
+                    itemToCluster.put(clusterItem, cluster);
+                }
                 visitedCandidates.addAll(clusterItems);
-                result.add(candidate);
             }
         }
-        return result;
-    }
 
+        // Now, apply the centroid logic from CentroidNonHierarchicalDistanceBasedAlgorithm
+        Set<StaticCluster<T>> newClusters = new HashSet<>();
+        for (Cluster<T> cluster : results) {
+            LatLng centroid = computeCentroid(cluster.getItems());
+            StaticCluster<T> newCluster = new StaticCluster<>(centroid);
+            for (T item : cluster.getItems()) {
+                newCluster.add(item);
+            }
+            newClusters.add(newCluster);
+        }
+
+        return newClusters;
+    }
 }

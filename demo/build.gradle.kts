@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /**
  * Copyright 2025 Google LLC
  *
@@ -22,13 +24,13 @@ plugins {
 
 android {
     lint {
-        sarifOutput = file("$buildDir/reports/lint-results.sarif")
+        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
     }
 
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
         applicationId = "com.google.maps.android.utils.demo"
-        minSdk = 21
+        minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
@@ -44,12 +46,17 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    buildFeatures {
+        viewBinding = true
     }
+
     kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
         jvmToolchain(17)
     }
+
     namespace = "com.google.maps.android.utils.demo"
 }
 
