@@ -133,6 +133,8 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     public class Collection extends MapObjectManager.Collection {
         private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
         private GoogleMap.OnInfoWindowLongClickListener mInfoWindowLongClickListener;
+
+        private GoogleMap.OnInfoWindowCloseListener mInfoWindowCloseListener;
         private GoogleMap.OnMarkerClickListener mMarkerClickListener;
         private GoogleMap.OnMarkerDragListener mMarkerDragListener;
         private GoogleMap.InfoWindowAdapter mInfoWindowAdapter;
@@ -189,6 +191,10 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
         public void setOnInfoWindowLongClickListener(GoogleMap.OnInfoWindowLongClickListener infoWindowLongClickListener) {
             mInfoWindowLongClickListener = infoWindowLongClickListener;
+        }
+
+        public void setOnInfoWindowCloseListener(GoogleMap.OnInfoWindowCloseListener infoWindowCloseListener) {
+            mInfoWindowCloseListener = infoWindowCloseListener;
         }
 
         public void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener markerClickListener) {
