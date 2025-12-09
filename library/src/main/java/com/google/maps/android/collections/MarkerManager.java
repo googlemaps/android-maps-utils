@@ -37,7 +37,8 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMarkerDragListener,
         GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowLongClickListener {
+        GoogleMap.OnInfoWindowLongClickListener,
+        GoogleMap.OnInfoWindowCloseListener{
 
     public MarkerManager(GoogleMap map) {
         super(map);
@@ -89,6 +90,14 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowLongClickListener != null) {
             collection.mInfoWindowLongClickListener.onInfoWindowLongClick(marker);
+        }
+    }
+
+    @Override
+    public void onInfoWindowClose(@NonNull Marker marker) {
+        Collection collection = mAllObjects.get(marker);
+        if (collection != null && collection.mInfoWindowCloseListener != null) {
+            collection.mInfoWindowCloseListener.onInfoWindowClose(marker);
         }
     }
 
