@@ -37,8 +37,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMarkerDragListener,
         GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowLongClickListener,
-        GoogleMap.OnInfoWindowCloseListener{
+        GoogleMap.OnInfoWindowLongClickListener {
 
     public MarkerManager(GoogleMap map) {
         super(map);
@@ -94,14 +93,6 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
 
     @Override
-    public void onInfoWindowClose(@NonNull Marker marker) {
-        Collection collection = mAllObjects.get(marker);
-        if (collection != null && collection.mInfoWindowCloseListener != null) {
-            collection.mInfoWindowCloseListener.onInfoWindowClose(marker);
-        }
-    }
-
-    @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mMarkerClickListener != null) {
@@ -142,8 +133,6 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     public class Collection extends MapObjectManager.Collection {
         private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
         private GoogleMap.OnInfoWindowLongClickListener mInfoWindowLongClickListener;
-
-        private GoogleMap.OnInfoWindowCloseListener mInfoWindowCloseListener;
         private GoogleMap.OnMarkerClickListener mMarkerClickListener;
         private GoogleMap.OnMarkerDragListener mMarkerDragListener;
         private GoogleMap.InfoWindowAdapter mInfoWindowAdapter;
@@ -200,10 +189,6 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
         public void setOnInfoWindowLongClickListener(GoogleMap.OnInfoWindowLongClickListener infoWindowLongClickListener) {
             mInfoWindowLongClickListener = infoWindowLongClickListener;
-        }
-
-        public void setOnInfoWindowCloseListener(GoogleMap.OnInfoWindowCloseListener infoWindowCloseListener) {
-            mInfoWindowCloseListener = infoWindowCloseListener;
         }
 
         public void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener markerClickListener) {
