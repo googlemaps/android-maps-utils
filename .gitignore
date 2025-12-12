@@ -12,3 +12,7 @@ project.properties
 .java-version
 secrets.properties
 .kotlin
+
+# This covers new IDEs, like Antigravity
+.vscode/
+**/bin/
