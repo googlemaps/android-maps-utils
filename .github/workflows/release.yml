@@ -31,7 +31,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - uses: gradle/actions/wrapper-validation@v4
+    - uses: gradle/actions/wrapper-validation@v5
     - name: Set up Gradle Publishing Environment Variables
       run: |
         echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
