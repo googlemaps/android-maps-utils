@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addDemo("AnimationUtil sample", AnimationUtilDemoActivity.class);
         addDemo("Street View Demo", StreetViewDemoActivity.class);
         addDemo("Street View Demo (Java)", StreetViewDemoJavaActivity.class);
+        addDemo("Transit Layer Demo", TransitLayerDemoActivity.class);
     }
 
     private void addDemo(String demoName, Class<? extends Activity> activityClass) {

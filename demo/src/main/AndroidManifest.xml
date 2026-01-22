@@ -134,6 +134,9 @@
         <activity
             android:name=".ClusterAlgorithmsDemoActivity"
             android:exported="true" />
+        <activity
+            android:name=".TransitLayerDemoActivity"
+            android:exported="true" />
 
     </application>
 
