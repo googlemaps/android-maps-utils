@@ -29,6 +29,7 @@ import com.google.maps.android.utils.meta.AttributionId
 internal class AttributionIdInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         // See [AttributionIdInitializer]
+>>>>>>> cdb28ce7 (feat: update to maps 20.0.0 and add usage attribution)
         MapsApiSettings.addInternalUsageAttributionId(
             /* context = */ context,
             /* internalUsageAttributionId = */ AttributionId.VALUE
