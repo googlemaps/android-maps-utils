@@ -1,0 +1,12 @@
+{
+  "release-type": "android",
+  "packages": {
+    ".": {
+      "release-type": "android",
+      "extra-files": [
+        "README.md",
+        "build.gradle.kts"
+      ]
+    }
+  }
+}
