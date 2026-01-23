@@ -2,7 +2,7 @@
   "release-type": "android",
   "packages": {
     ".": {
-      "release-type": "android",
+      "release-type": "simple",
       "extra-files": [
         "README.md",
         "build.gradle.kts"
