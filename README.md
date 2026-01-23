@@ -61,8 +61,18 @@ This repository includes a [sample app](demo) that illustrates the use of this l
 
 To run the demo app, ensure you've met the requirements above then:
 1. Clone the repository
-1. Add a file `local.properties` in the root project (this file should *NOT* be under version control to protect your API key)
-1. Add a single line to `local.properties` that looks like `MAPS_API_KEY=YOUR_API_KEY`, where `YOUR_API_KEY` is the API key you obtained earlier
+1. Add a file `secrets.properties` in the root project (this file should *NOT* be under version control to protect your API key)
+1. Add the following keys to `secrets.properties`:
+   - `MAPS_API_KEY`: **Required**. Your Google Maps API Key. Ensure it has the **Maps SDK for Android** enabled.
+   - `PLACES_API_KEY`: **Optional**. Required for demos using the Places API (e.g., Heatmaps with Places). Ensure the **Places API** is enabled.
+   - `MAP_ID`: **Optional**. Required for demos using Advanced Markers or Cloud-based Map Styling.
+
+   For example:
+   ```properties
+   MAPS_API_KEY=YOUR_MAPS_API_KEY
+   PLACES_API_KEY=YOUR_PLACES_API_KEY
+   MAP_ID=YOUR_MAP_ID
+   ```
 1. Build and run the `debug` variant for the Maps SDK for Android version
 
 ### Setting up the Map ID
@@ -70,7 +80,7 @@ To run the demo app, ensure you've met the requirements above then:
 Some of the features in the demo app, such as Advanced Markers, require a Map ID. You can learn more about map IDs in the [official documentation](https://developers.google.com/maps/documentation/android-sdk/map-ids/mapid-over). You can set the Map ID in one of the following ways:
 
 1.  **`secrets.properties`:** Add a line to your `secrets.properties` file with your Map ID:
-    ```
+    ```properties
     MAP_ID=YOUR_MAP_ID
     ```
 
@@ -143,6 +153,24 @@ StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.M
 By default, the `Source` is set to `Source.DEFAULT`, but you can also specify `Source.OUTDOOR` to request outdoor Street View panoramas.
 
 </details>
+
+## Internal usage attribution ID
+
+This library calls the `addInternalUsageAttributionId` method, which helps Google understand which libraries and samples are helpful to developers and is optional. Instructions for opting out of the identifier are provided below.
+
+If you wish to disable this, you can do so by removing the initializer in your `AndroidManifest.xml` using the `tools:node="remove"` attribute:
+
+```xml
+<provider
+    android:name="androidx.startup.InitializationProvider"
+    android:authorities="${applicationId}.androidx-startup"
+    android:exported="false"
+    tools:node="merge">
+    <meta-data
+        android:name="com.google.maps.android.utils.attribution.AttributionIdInitializer"
+        tools:node="remove" />
+</provider>
+```
 
 ## Contributing
 

@@ -27,7 +27,7 @@ android {
     }
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = 21
+        minSdk = libs.versions.minimumSdk.get().toInt()
         testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -60,6 +60,7 @@ android {
         unitTests.isReturnDefaultValues = true
     }
     namespace = "com.google.maps.android"
+    sourceSets["main"].java.srcDir("build/generated/source/artifactId")
 }
 
 dependencies {
@@ -67,12 +68,14 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
+    implementation(libs.startup.runtime)
     lintPublish(project(":lint-checks"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.kxml2)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlin.test)
+    testImplementation(libs.androidx.test.core)
     testImplementation(libs.truth)
     implementation(libs.kotlin.stdlib.jdk8)
 
@@ -88,4 +91,40 @@ tasks.register("instrumentTest") {
 
 if (System.getenv("JITPACK") != null) {
     apply(plugin = "maven")
+}
+
+// START: Attribution ID Generation Logic
+val attributionId = "gmp_git_androidmapsutils_v$version"
+
+val generateArtifactIdFile = tasks.register("generateArtifactIdFile") {
+    description = "Generates an AttributionId object from the project version."
+    group = "build"
+
+    val outputDir = layout.buildDirectory.dir("generated/source/artifactId")
+    val packageName = "com.google.maps.android.utils.meta"
+    val packagePath = packageName.replace('.', '/')
+    val outputFile = outputDir.get().file("$packagePath/ArtifactId.kt").asFile
+
+    outputs.file(outputFile)
+
+    doLast {
+        outputFile.parentFile.mkdirs()
+        outputFile.writeText(
+            """
+            package $packageName
+
+            /**
+             * Automatically generated object containing the library's attribution ID.
+             * This is used to track library usage for analytics.
+             */
+            public object AttributionId {
+                public const val VALUE: String = "$attributionId"
+            }
+            """.trimIndent()
+        )
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn(generateArtifactIdFile)
 }
