@@ -37,5 +37,7 @@ tasks.register<Delete>("clean") {
 
 allprojects {
     group = "com.google.maps.android"
-    version = project.property("version") as String
+    // {x-release-please-start-version}
+    version = "3.20.1"
+    // {x-release-please-end}
 }
