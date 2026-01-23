@@ -25,7 +25,7 @@ lint = "32.0.0"
 org-jacoco-core = "0.8.14"
 material = "1.13.0"
 gradleMavenPublishPlugin = "0.36.0"
-androidx-test-core = "1.6.1"
+androidx-test-core = "1.7.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
