@@ -25,6 +25,7 @@ lint = "32.0.0"
 org-jacoco-core = "0.8.14"
 material = "1.13.0"
 gradleMavenPublishPlugin = "0.36.0"
+androidx-test-core = "1.6.1"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -57,3 +58,4 @@ testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
