@@ -22,7 +22,8 @@ import com.google.android.gms.maps.MapsApiSettings
 import com.google.maps.android.utils.meta.AttributionId
 
 /**
- * Adds a usage attribution ID to the initializer, which helps Google understand which libraries and samples are helpful to developers, such as usage of this library.
+ * Adds a usage attribution ID to the initializer, which helps Google understand which libraries
+ * and samples are helpful to developers, such as usage of this library.
  * To opt out of sending the usage attribution ID, please remove this initializer from your manifest.
  */
 internal class AttributionIdInitializer : Initializer<Unit> {
