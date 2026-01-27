@@ -16,8 +16,8 @@
 name: Update documentation
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published]
   repository_dispatch:
       types: [gh-pages]
   workflow_dispatch:
