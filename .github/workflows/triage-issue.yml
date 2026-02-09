@@ -1,0 +1,69 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Issue Triage with Gemini
+
+on:
+  issues:
+    types: [opened, edited]
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Mock Issue Title'
+        default: 'Test Issue'
+      body:
+        description: 'Mock Issue Body'
+        default: 'This is a test issue description.'
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run Triage Script
+        id: run_script
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ISSUE_TITLE: ${{ github.event.issue.title || github.event.inputs.title }}
+          ISSUE_BODY: ${{ github.event.issue.body || github.event.inputs.body }}
+        run: |
+          labels=$(python .github/scripts/triage_issue.py)
+          echo "labels=$labels" >> $GITHUB_OUTPUT
+
+      - name: Apply Labels
+        if: steps.run_script.outputs.labels != '' && (github.event.issue.number)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          # Convert comma-separated labels to gh command arguments
+          IFS=',' read -ra ADDR <<< "${{ steps.run_script.outputs.labels }}"
+          for i in "${ADDR[@]}"; do
+            # Trim whitespace
+            label=$(echo "$i" | xargs)
+            # Only add priority labels as requested
+            if [[ "$label" == priority:* ]]; then
+              gh issue edit "$ISSUE_NUMBER" --add-label "$label"
+            fi
+          done
