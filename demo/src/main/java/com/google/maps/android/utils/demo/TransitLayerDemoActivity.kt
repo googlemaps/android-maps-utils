@@ -17,17 +17,17 @@
 package com.google.maps.android.utils.demo
 
 import android.widget.CheckBox
-import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
+/**
+ * Demonstrates the Transit Layer feature of the Google Maps API.
+ *
+ * This activity allows users to toggle the transit layer on and off via a checkbox.
+ * The transit layer displays public transport lines and stations on the map.
+ */
 class TransitLayerDemoActivity : BaseDemoActivity() {
-    private var checkBox: CheckBox? = null
 
     override fun getLayoutId(): Int {
         return R.layout.activity_transit_layer_demo
@@ -37,25 +37,33 @@ class TransitLayerDemoActivity : BaseDemoActivity() {
         if (!isRestore) {
             map.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    LatLng(51.503186, -0.126446), // London
-                    10f
+                    LONDON,
+                    DEFAULT_ZOOM
                 )
             )
         }
 
-        checkBox = findViewById<CheckBox>(R.id.transit_toggle).apply {
-            isChecked = map.isTransitEnabled
-            setOnCheckedChangeListener { _, isChecked ->
-                map.isTransitEnabled = isChecked
-                updateMessage()
-            }
+        val checkBox = findViewById<CheckBox>(R.id.transit_toggle)
+        checkBox.isChecked = map.isTransitEnabled
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            map.isTransitEnabled = isChecked
+            updateMessage()
         }
 
         updateMessage()
     }
 
     private fun updateMessage() {
-        val status = if (map.isTransitEnabled) "ENABLED" else "DISABLED"
-        Toast.makeText(this, "Transit Layer is $status", Toast.LENGTH_SHORT).show()
+        val status = if (map.isTransitEnabled) {
+            getString(R.string.status_enabled)
+        } else {
+            getString(R.string.status_disabled)
+        }
+        Toast.makeText(this, getString(R.string.transit_layer_status_fmt, status), Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private val LONDON = LatLng(51.503186, -0.126446)
+        private const val DEFAULT_ZOOM = 10f
     }
 }

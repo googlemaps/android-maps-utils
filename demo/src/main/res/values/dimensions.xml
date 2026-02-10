@@ -18,4 +18,13 @@
 <resources>
     <dimen name="custom_profile_image">50dp</dimen>
     <dimen name="custom_profile_padding">2dp</dimen>
+    <!-- UI Dimensions -->
+    <dimen name="divider_thickness">0.5dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">32dp</dimen>
+
+    <!-- Card Dimensions -->
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="checkbox_padding">12dp</dimen>
 </resources>

@@ -103,7 +103,8 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity
     public boolean onClusterClick(Cluster<Person> cluster) {
         // Show a toast with some info when the cluster is clicked.
         String firstName = cluster.getItems().iterator().next().name;
-        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.cluster_info_fmt, cluster.getSize(), firstName), Toast.LENGTH_SHORT)
+                .show();
 
         // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
         // inside of bounds, then animate to center of the bounds.

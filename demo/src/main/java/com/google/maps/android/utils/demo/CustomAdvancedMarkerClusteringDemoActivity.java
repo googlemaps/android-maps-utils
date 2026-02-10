@@ -58,10 +58,10 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
     public void onMapsSdkInitialized(@NonNull MapsInitializer.Renderer renderer) {
         switch (renderer) {
             case LATEST:
-                Log.d("MapsDemo", "The latest version of the renderer is used.");
+                Log.d("MapsDemo", getString(R.string.renderer_latest));
                 break;
             case LEGACY:
-                Log.d("MapsDemo", "The legacy version of the renderer is used.");
+                Log.d("MapsDemo", getString(R.string.renderer_legacy));
                 break;
             default:
                 break;
@@ -100,7 +100,7 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
         @SuppressLint("SetTextI18n")
         private View addTextAsMarker(int size) {
             TextView textView = new TextView(getApplicationContext());
-            textView.setText("I am a cluster of size " + size);
+            textView.setText(getString(R.string.cluster_text_fmt, size));
             textView.setBackgroundColor(Color.BLACK);
             textView.setTextColor(Color.YELLOW);
             return textView;
@@ -130,7 +130,8 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
     public boolean onClusterClick(Cluster<Person> cluster) {
         // Show a toast with some info when the cluster is clicked.
         String firstName = cluster.getItems().iterator().next().name;
-        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.cluster_info_fmt, cluster.getSize(), firstName), Toast.LENGTH_SHORT)
+                .show();
 
         // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
         // inside of bounds, then animate to center of the bounds.

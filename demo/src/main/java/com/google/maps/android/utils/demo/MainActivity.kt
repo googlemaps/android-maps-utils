@@ -3,14 +3,13 @@ package com.google.maps.android.utils.demo
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,10 +33,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.maps.android.utils.demo.model.Demo
 import com.google.maps.android.utils.demo.model.DemoGroup
 
@@ -79,47 +76,47 @@ class MainActivity : ComponentActivity() {
     private fun getDemoGroups(): List<DemoGroup> {
         return listOf(
             DemoGroup(
-                "Clustering", listOf(
-                    Demo("Advanced Markers Clustering Example", CustomAdvancedMarkerClusteringDemoActivity::class.java),
-                    Demo("Cluster Algorithms", ClusterAlgorithmsDemoActivity::class.java),
-                    Demo("Clustering", ClusteringDemoActivity::class.java),
-                    Demo("Clustering: Custom Look", CustomMarkerClusteringDemoActivity::class.java),
-                    Demo("Clustering: Diff", ClusteringDiffDemoActivity::class.java),
-                    Demo("Clustering: 2K markers", BigClusteringDemoActivity::class.java),
-                    Demo("Clustering: 20K only visible markers", VisibleClusteringDemoActivity::class.java),
-                    Demo("Clustering: ViewModel", ClusteringViewModelDemoActivity::class.java),
-                    Demo("Clustering: Force on Zoom", ZoomClusteringDemoActivity::class.java)
+                R.string.category_clustering, listOf(
+                    Demo(R.string.demo_title_clustering_advanced, CustomAdvancedMarkerClusteringDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_algorithms, ClusterAlgorithmsDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_default, ClusteringDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_custom_look, CustomMarkerClusteringDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_diff, ClusteringDiffDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_2k, BigClusteringDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_20k, VisibleClusteringDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_viewmodel, ClusteringViewModelDemoActivity::class.java),
+                    Demo(R.string.demo_title_clustering_force_zoom, ZoomClusteringDemoActivity::class.java)
                 )
             ),
             DemoGroup(
-                "Data Layers", listOf(
-                    Demo("GeoJSON Layer", GeoJsonDemoActivity::class.java),
-                    Demo("KML Layer Overlay", KmlDemoActivity::class.java),
-                    Demo("Heatmaps", HeatmapsDemoActivity::class.java),
-                    Demo("Heatmaps with Places API", HeatmapsPlacesDemoActivity::class.java),
-                    Demo("Multi Layer", MultiLayerDemoActivity::class.java),
-                    Demo("Transit Layer Demo", TransitLayerDemoActivity::class.java)
+                R.string.category_data_layers, listOf(
+                    Demo(R.string.demo_title_geojson, GeoJsonDemoActivity::class.java),
+                    Demo(R.string.demo_title_kml, KmlDemoActivity::class.java),
+                    Demo(R.string.demo_title_heatmaps, HeatmapsDemoActivity::class.java),
+                    Demo(R.string.demo_title_heatmaps_places, HeatmapsPlacesDemoActivity::class.java),
+                    Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
+                    Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java)
                 )
             ),
             DemoGroup(
-                "Geometry", listOf(
-                    Demo("PolyUtil.decode", PolyDecodeDemoActivity::class.java),
-                    Demo("PolyUtil.simplify", PolySimplifyDemoActivity::class.java),
-                    Demo("Polyline Progress", PolylineProgressDemoActivity::class.java),
-                    Demo("SphericalUtil.computeDistanceBetween", DistanceDemoActivity::class.java)
+                R.string.category_geometry, listOf(
+                    Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
+                    Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
+                    Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
+                    Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java)
                 )
             ),
             DemoGroup(
-                "Utilities", listOf(
-                    Demo("IconGenerator", IconGeneratorDemoActivity::class.java),
-                    Demo("Generating tiles", TileProviderAndProjectionDemo::class.java),
-                    Demo("AnimationUtil sample", AnimationUtilDemoActivity::class.java)
+                R.string.category_utilities, listOf(
+                    Demo(R.string.demo_title_icon_generator, IconGeneratorDemoActivity::class.java),
+                    Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
+                    Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java)
                 )
             ),
             DemoGroup(
-                "Street View", listOf(
-                    Demo("Street View Demo", StreetViewDemoActivity::class.java),
-                    Demo("Street View Demo (Java)", StreetViewDemoJavaActivity::class.java)
+                R.string.category_street_view, listOf(
+                    Demo(R.string.demo_title_street_view, StreetViewDemoActivity::class.java),
+                    Demo(R.string.demo_title_street_view_java, StreetViewDemoJavaActivity::class.java)
                 )
             )
         )
@@ -140,21 +137,24 @@ fun DemoList(
     onDemoClick: (Class<out Activity>) -> Unit
 ) {
     // We use rememberSaveable to preserve the expanded state across configuration changes (e.g. rotation).
-    // Storing the title of the expanded group ensures only one group is open at a time (accordion style).
-    var expandedGroupTitle by rememberSaveable { mutableStateOf<String?>(null) }
+    // Storing the ID of the expanded group ensures only one group is open at a time (accordion style).
+    var expandedGroupResId by rememberSaveable { mutableStateOf<Int?>(null) }
 
     LazyColumn(contentPadding = contentPadding) {
         items(groups) { group ->
             DemoGroupItem(
                 group = group,
-                isExpanded = expandedGroupTitle == group.title,
+                isExpanded = expandedGroupResId == group.titleResId,
                 onHeaderClick = {
                     // Toggle expansion: if clicking the already open group, collapse it. Otherwise expand the new one.
-                    expandedGroupTitle = if (expandedGroupTitle == group.title) null else group.title
+                    expandedGroupResId = if (expandedGroupResId == group.titleResId) null else group.titleResId
                 },
                 onDemoClick = onDemoClick
             )
-            HorizontalDivider(thickness = 0.5.dp, color = Color.LightGray)
+            HorizontalDivider(
+                thickness = dimensionResource(id = R.dimen.divider_thickness),
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
         }
     }
 }
@@ -180,24 +180,24 @@ fun DemoGroupItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onHeaderClick)
-                .background(Color(0xFFEEEEEE)) // Light gray background for separation
-                .padding(16.dp),
+                .background(MaterialTheme.colorScheme.surfaceVariant) // Use semantic color
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = group.title,
-                fontSize = 18.sp,
+                text = stringResource(group.titleResId),
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(1f)
             )
             // Animate the arrow rotation for a polished feel
             val rotation by animateFloatAsState(if (isExpanded) 180f else 0f, label = "arrowRotation")
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = if (isExpanded) "Collapse" else "Expand",
+                contentDescription = if (isExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand),
                 modifier = Modifier.rotate(rotation),
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -207,18 +207,21 @@ fun DemoGroupItem(
             Column {
                 group.demos.forEach { demo ->
                     Text(
-                        text = demo.title,
+                        text = stringResource(demo.titleResId),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { onDemoClick(demo.activityClass) }
-                            .padding(horizontal = 32.dp, vertical = 16.dp), // Indented for hierarchy
-                        fontSize = 16.sp,
-                        color = Color(0xFF222222)
+                            .padding(
+                                horizontal = dimensionResource(id = R.dimen.padding_large),
+                                vertical = dimensionResource(id = R.dimen.padding_medium)
+                            ), // Indented for hierarchy
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     HorizontalDivider(
-                        thickness = 0.5.dp,
-                        color = Color.LightGray,
-                        modifier = Modifier.padding(start = 16.dp)
+                        thickness = dimensionResource(id = R.dimen.divider_thickness),
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
                     )
                 }
             }
