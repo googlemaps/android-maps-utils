@@ -29,6 +29,10 @@ import kotlin.time.Duration.Companion.seconds
 class TransitLayerDemoActivity : BaseDemoActivity() {
     private var checkBox: CheckBox? = null
 
+    override fun getLayoutId(): Int {
+        return R.layout.activity_transit_layer_demo
+    }
+
     override fun startDemo(isRestore: Boolean) {
         if (!isRestore) {
             map.moveCamera(
@@ -39,29 +43,13 @@ class TransitLayerDemoActivity : BaseDemoActivity() {
             )
         }
 
-        // Create a checkbox to toggle transit layer
-        checkBox = CheckBox(this).apply {
-            text = "Transit Layer"
+        checkBox = findViewById<CheckBox>(R.id.transit_toggle).apply {
             isChecked = map.isTransitEnabled
-            setBackgroundColor(android.graphics.Color.WHITE)
-            setPadding(20, 20, 20, 20)
             setOnCheckedChangeListener { _, isChecked ->
                 map.isTransitEnabled = isChecked
-                lifecycleScope.launch {
-                    delay(2.seconds)
-                    updateMessage()
-                }
+                updateMessage()
             }
         }
-
-        // Add checkbox to the layout
-        val params = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            setMargins(50, 50, 0, 0)
-        }
-        addContentView(checkBox, params)
 
         updateMessage()
     }
