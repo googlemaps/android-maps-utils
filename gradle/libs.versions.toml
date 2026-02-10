@@ -1,61 +1,119 @@
-[versions]
-compileSdk = "36"
-targetSdk = "36"
-minimumSdk = "23"
+# This file defines the versions and library dependencies used in the project.
+# By centralizing this information, we ensure consistency across all modules
+# and make it easier to manage updates. For more details on version catalogs, see:
+# https://docs.gradle.org/current/userguide/version_catalog_basics.html
 
+[versions]
+# --- Project Configuration ---
+# These specific versions define the Android API levels used for compilation, targeting, and minimum support.
+compileSdk = "36"
+minimumSdk = "23"
+targetSdk = "36"
+
+# --- Core Android & Kotlin ---
+# Foundational versions for Android app development and Kotlin language features.
 appcompat = "1.7.1"
-dokka-gradle-plugin = "2.1.0"
-gradle = "8.13.2"
-jacoco-android = "0.2.1"
-lifecycle-extensions = "2.2.0"
-lifecycle-viewmodel-ktx = "2.10.0"
-startup-runtime = "1.2.0"
+core-ktx = "1.17.0"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
-junit = "4.13.2"
-mockito-core = "5.21.0"
-secrets-gradle-plugin = "2.0.1"
-truth = "1.4.5"
+lifecycle-extensions = "2.2.0"
+lifecycle-viewmodel-ktx = "2.10.0"
+material = "1.13.0"
+startup-runtime = "1.2.0"
+
+# --- Jetpack Compose ---
+# Versions for Jetpack Compose, Android's modern UI toolkit.
+# The Compose BOM (Bill of Materials) coordinates versions of all Compose libraries.
+activity-compose = "1.12.3"
+compose-bom = "2026.01.01"
+
+# --- Google Services (Maps) ---
+# Versions for Google Play Services libraries essential for map functionality.
 play-services-maps = "20.0.0"
-core-ktx = "1.17.0"
-robolectric = "4.16.1"
+
+# --- Testing ---
+# Versions for unit and instrumented testing libraries.
+androidx-test-core = "1.7.0"
+junit = "4.13.2"
 kxml2 = "2.3.0"
-mockk = "1.14.7"
+mockito-core = "5.21.0"
+mockk = "1.14.9"
+robolectric = "4.16.1"
+truth = "1.4.5"
+
+# --- Lint & Analysis ---
+# Versions for code quality and static analysis tools.
+jacoco-android = "0.2.1"
 lint = "32.0.0"
 org-jacoco-core = "0.8.14"
-material = "1.13.0"
+
+# --- Gradle Plugins ---
+# Versions for Gradle plugins used in the build process.
+dokka-gradle-plugin = "2.1.0"
+gradle = "8.13.2"
 gradleMavenPublishPlugin = "0.36.0"
-androidx-test-core = "1.7.0"
+secrets-gradle-plugin = "2.0.1"
+
 
 [libraries]
+# --- Core Android & Kotlin ---
+# Essential libraries for Android development, providing backwards compatibility, lifecycle management, and Kotlin support.
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
-dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
-jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycle-extensions" }
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startup-runtime" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
-junit = { module = "junit:junit", version.ref = "junit" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
-secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
-truth = { module = "com.google.truth:truth", version.ref = "truth" }
+lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycle-extensions" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startup-runtime" }
+
+# --- Jetpack Compose ---
+# Libraries for building modern, declarative UIs.
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+material3 = { group = "androidx.compose.material3", name = "material3" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+
+# --- Google Services (Maps) ---
+# Key libraries for integrating Google Maps and related services.
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+
+# --- Testing ---
+# Tools for running implementation validation and user interface tests.
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kxml2 = { module = "net.sf.kxml:kxml2", version.ref = "kxml2" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+
+# --- Lint & Analysis ---
+# Libraries and tools for static code analysis, linting, and coverage reporting.
+jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
+lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }
 lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint" }
-lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
-testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
+
+# --- Gradle Plugins ---
+# Dependencies for custom or third-party Gradle plugins used in the build.
+dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
-androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
+
+
+[plugins]
+# --- Core Gradle Plugins ---
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

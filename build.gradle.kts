@@ -35,6 +35,13 @@ tasks.register<Delete>("clean") {
     delete(layout.buildDirectory)
 }
 
+tasks.register<Exec>("installAndLaunch") {
+    description = "Installs and launches the demo app."
+    group = "install"
+    dependsOn(":demo:installDebug")
+    commandLine("adb", "shell", "am", "start", "-n", "com.google.maps.android.utils.demo/.MainActivity")
+}
+
 allprojects {
     group = "com.google.maps.android"
     // {x-release-please-start-version}

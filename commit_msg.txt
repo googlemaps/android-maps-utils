@@ -1,0 +1,8 @@
+feat(demo): modernize MainActivity with Compose and fix UI issues
+
+- Replace legacy MainActivity.java/xml with Compose-based MainActivity.kt
+- Enforce edge-to-edge support with `enableEdgeToEdge()` and Scaffold
+- Organize libs.versions.toml into categorized sections
+- Add TransitLayerDemoActivity to demonstrate transit layer usage
+- Fix spinner text contrast in ClusterAlgorithmsDemoActivity
+- Add material-icons-core dependency to resolve compilation error

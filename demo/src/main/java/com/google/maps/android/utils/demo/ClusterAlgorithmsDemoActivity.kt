@@ -64,9 +64,9 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
     private fun setupSpinner() {
         val spinner: Spinner = findViewById(R.id.algorithm_spinner)
         val adapter = ArrayAdapter.createFromResource(
-            this, R.array.clustering_algorithms, android.R.layout.simple_spinner_item
+            this, R.array.clustering_algorithms, R.layout.text_view_spinner_item
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.text_view_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
