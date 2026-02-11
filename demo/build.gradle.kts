@@ -20,6 +20,7 @@ plugins {
     id("com.android.application")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-android")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -48,6 +49,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 
     kotlin {
@@ -76,6 +78,15 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.activity.compose)
+    implementation(libs.ui)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.material3)
+    implementation(libs.material.icons.core)
+    debugImplementation(libs.ui.tooling)
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]

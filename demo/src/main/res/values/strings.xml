@@ -38,4 +38,78 @@
 
     <!-- This should be set here or in secrets.properties. -->
     <string name="map_id">DEMO_MAP_ID</string>
+    <!-- Demo Categories -->
+    <string name="category_clustering">Clustering</string>
+    <string name="category_data_layers">Data Layers</string>
+    <string name="category_geometry">Geometry</string>
+    <string name="category_utilities">Utilities</string>
+    <string name="category_street_view">Street View</string>
+
+    <!-- Demo Titles: Clustering -->
+    <string name="demo_title_clustering_advanced">Advanced Markers Clustering Example</string>
+    <string name="demo_title_clustering_algorithms">Cluster Algorithms</string>
+    <string name="demo_title_clustering_default">Clustering</string>
+    <string name="demo_title_clustering_custom_look">Clustering: Custom Look</string>
+    <string name="demo_title_clustering_diff">Clustering: Diff</string>
+    <string name="demo_title_clustering_2k">Clustering: 2K markers</string>
+    <string name="demo_title_clustering_20k">Clustering: 20K only visible markers</string>
+    <string name="demo_title_clustering_viewmodel">Clustering: ViewModel</string>
+    <string name="demo_title_clustering_force_zoom">Clustering: Force on Zoom</string>
+
+    <!-- Demo Titles: Data Layers -->
+    <string name="demo_title_geojson">GeoJSON Layer</string>
+    <string name="demo_title_kml">KML Layer Overlay</string>
+    <string name="demo_title_heatmaps">Heatmaps</string>
+    <string name="demo_title_heatmaps_places">Heatmaps with Places API</string>
+    <string name="demo_title_multi_layer">Multi Layer</string>
+    <string name="demo_title_transit_layer">Transit Layer Demo</string>
+
+    <!-- Demo Titles: Geometry -->
+    <string name="demo_title_poly_decode">PolyUtil.decode</string>
+    <string name="demo_title_poly_simplify">PolyUtil.simplify</string>
+    <string name="demo_title_polyline_progress">Polyline Progress</string>
+    <string name="demo_title_spherical_distance">SphericalUtil.computeDistanceBetween</string>
+
+    <!-- Demo Titles: Utilities -->
+    <string name="demo_title_icon_generator">IconGenerator</string>
+    <string name="demo_title_tile_provider">Generating tiles</string>
+    <string name="demo_title_animation_util">AnimationUtil sample</string>
+
+    <!-- Demo Titles: Street View -->
+    <string name="demo_title_street_view">Street View Demo</string>
+    <string name="demo_title_street_view_java">Street View Demo (Java)</string>
+
+    <!-- UI Strings -->
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="transit_layer_checkbox">Transit Layer</string>
+    <string name="status_enabled">ENABLED</string>
+    <string name="status_disabled">DISABLED</string>
+    <string name="transit_layer_status_fmt">Transit Layer is %s</string>
+
+    <!-- Polyline Progress Demo -->
+    <string name="polyline_progress_0_percent">0%</string>
+    <string name="polyline_progress_restart">Restart</string>
+    <string name="polyline_progress_pause">Pause</string>
+
+    <!-- Places Demo -->
+    <string name="go">Go</string>
+
+    <!-- Distance Demo -->
+    <string name="drag_the_markers">Drag the markers!</string>
+    <string name="distance_format">The markers are %s apart.</string>
+    <string name="unit_mm">mm</string>
+    <string name="unit_m">m</string>
+    <string name="unit_km">km</string>
+
+    <!-- Clustering Diff Demo -->
+    <string name="cluster_info_fmt">%1$d (including %2$s)</string>
+
+    <!-- Big Clustering Demo -->
+    <string name="error_reading_markers">Problem reading list of markers.</string>
+
+    <!-- Custom Advanced Marker Clustering Demo -->
+    <string name="cluster_text_fmt">I am a cluster of size %d</string>
+    <string name="renderer_latest">The latest version of the renderer is used.</string>
+    <string name="renderer_legacy">The legacy version of the renderer is used.</string>
 </resources>

@@ -43,7 +43,7 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
         try {
             readItems();
         } catch (JSONException e) {
-            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_reading_markers), Toast.LENGTH_LONG).show();
         }
     }
 

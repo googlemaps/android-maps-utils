@@ -57,14 +57,14 @@ public class DistanceDemoActivity extends BaseDemoActivity implements GoogleMap.
         mMarkerB = getMap().addMarker(new MarkerOptions().position(new LatLng(-33.8291, 151.248)).draggable(true));
         mPolyline = getMap().addPolyline(new PolylineOptions().geodesic(true));
 
-        Toast.makeText(this, "Drag the markers!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.drag_the_markers), Toast.LENGTH_LONG).show();
         showDistance();
     }
 
     @SuppressLint("SetTextI18n")
     private void showDistance() {
         double distance = SphericalUtil.computeDistanceBetween(mMarkerA.getPosition(), mMarkerB.getPosition());
-        mTextView.setText("The markers are " + formatNumber(distance) + " apart.");
+        mTextView.setText(getString(R.string.distance_format, formatNumber(distance)));
     }
 
     private void updatePolyline() {
@@ -72,13 +72,13 @@ public class DistanceDemoActivity extends BaseDemoActivity implements GoogleMap.
     }
 
     private String formatNumber(double distance) {
-        String unit = "m";
+        String unit = getString(R.string.unit_m);
         if (distance < 1) {
             distance *= 1000;
-            unit = "mm";
+            unit = getString(R.string.unit_mm);
         } else if (distance > 1000) {
             distance /= 1000;
-            unit = "km";
+            unit = getString(R.string.unit_km);
         }
 
         return String.format("%4.3f%s", distance, unit);
