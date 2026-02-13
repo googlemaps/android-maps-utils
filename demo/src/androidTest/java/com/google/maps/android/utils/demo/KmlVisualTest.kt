@@ -1,95 +1,59 @@
 package com.google.maps.android.utils.demo
 
-import android.graphics.BitmapFactory
-import android.util.Log
+import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiScrollable
-import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import com.google.maps.android.visualtesting.GeminiVisualTestHelper
+import com.google.common.truth.Truth.assertWithMessage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 @RunWith(AndroidJUnit4::class)
-class KmlVisualTest {
+class KmlVisualTest : BaseVisualTest() {
     @Test
     fun verifyKmlLayerOverlay() = runBlocking {
-        // Read Gemini API Key from BuildConfig
-        val geminiApiKey = BuildConfig.GEMINI_API_KEY
-        assertTrue("GEMINI_API_KEY is not set in secrets.properties. Please add GEMINI_API_KEY=YOUR_API_KEY to your secrets.properties file.",
-            geminiApiKey != "YOUR_GEMINI_API_KEY")
-
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val uiDevice = UiDevice.getInstance(instrumentation)
-        val context = instrumentation.targetContext
-
-        // Launch the app
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        // Launch KmlDemoActivity directly
+        val intent = Intent(context, KmlDemoActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
-        uiDevice.wait(Until.hasObject(By.pkg(context.packageName).depth(0)), 10000)
-
-
-        // Scroll down to find the "KML Layer Overlay" button
-        val appViews = UiScrollable(UiSelector().scrollable(true))
-        appViews.scrollIntoView(UiSelector().text("KML LAYER OVERLAY"))
+        uiDevice.wait(Until.hasObject(By.pkg(context.packageName).depth(0)), 15000)
 
         // Wait for the KML screen to load and map to render
-        TimeUnit.SECONDS.sleep(10)
-
-        // Wait for the app to load and find the "KML Layer Overlay" button
-        val kmlButton = uiDevice.wait(Until.findObject(By.text("KML LAYER OVERLAY")), 10000)
-
-        if (kmlButton == null) {
-            // Dump window hierarchy to logcat for debugging
-            val outputStream = ByteArrayOutputStream()
-            uiDevice.dumpWindowHierarchy(outputStream)
-            Log.e("KmlVisualTest", "Could not find KML button. UI Hierarchy:\n" + outputStream.toString("UTF-8"))
-
-            // Take a screenshot for visual inspection
-            val screenshotFile = File(context.cacheDir, "test_failure_screenshot.png")
-            uiDevice.takeScreenshot(screenshotFile)
-            Log.e("KmlVisualTest", "Debug screenshot saved to device cache.")
-        }
-
-        assertNotNull("KML Layer Overlay button not found. Check logcat for UI hierarchy dump and debug screenshot.", kmlButton)
-        kmlButton.wait(Until.clickable(true), 5000)
-        kmlButton.click()
-
-
+        delay(10.seconds)
 
         // Capture a screenshot
-        val screenshotFile = File(context.cacheDir, "kml_screenshot.png")
-        val screenshotTaken = uiDevice.takeScreenshot(screenshotFile)
-        assertTrue("Failed to take screenshot", screenshotTaken)
-
-        val screenshotBitmap = BitmapFactory.decodeFile(screenshotFile.absolutePath)
-        assertTrue("Failed to decode screenshot file into a bitmap", screenshotBitmap != null)
+        val screenshotBitmap = captureScreenshot("kml_screenshot.png")
 
         // --- STEP 2: Define your verification prompt ---
-        val prompt = "Please act as a UI tester and analyze this screenshot to verify the application is rendering the map overlays correctly. Check the image against the following three acceptance criteria:\n" +
-                "Geographic Context: Confirm the map is focused on the Googleplex campus in Mountain View, bounded by Amphitheatre Pkwy (north) and Charleston Rd (south).\n" +
-                "Polygon Rendering: Verify the presence of at least two distinct colored building footprints:\n" +
-                "If the polygons are rendered in the correct colors with the correct labels and street context, confirm that the visual test has PASSED.\n" +
-                "\n"
+        val prompt = """
+            Task: Analyze the provided image and verify it against the following three strict criteria.
+            Criteria Checklist:
+            Location: The image must display a map of the Googleplex (look for text labels such as "Googleplex", "Amphitheatre Pkwy", or "Charleston Rd").
+            Subject Matter: The map must feature highlighted building footprints (polygonal shapes overlaying the buildings).
+            Color Palette: The building footprints must explicitly include all four of the following colors: Blue, Red, Green, and Yellow.
+
+            Decision Logic:
+            If ALL criteria are met, the test passes.
+            If ANY criterion is not met, the test fails.
+
+            Required Output Format:
+            Provide your response in the following format:
+            Test Result: [PASS / FAIL]
+            Verification Details:
+            Location Check: [State if Googleplex is confirmed]
+            Footprint Check: [State if footprints are visible]
+            Color Check: [List the colors found]
+            Failure Explanation: [If FAIL, you must explain exactly which specific criterion was not met. If PASS, write "None".]
+        """.trimIndent()
 
         // --- STEP 3: Analyze the image using Gemini ---
-        val geminiResponse = GeminiVisualTestHelper().analyzeImage(screenshotBitmap, prompt, geminiApiKey)
+        val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
 
         // --- STEP 4: Assert on Gemini's response ---
-        println("Gemini's analysis: $geminiResponse")
-        // Example assertion: Check if Gemini confirms the presence of clusters
-        assertTrue(
-            "PASSED",
-            geminiResponse!!.contains("PASSED", ignoreCase = true)
-        )
+        assertWithMessage("Gemini's analysis failed: $geminiResponse").that(geminiResponse).contains("Test Result: PASS")
+        assertWithMessage("Gemini's analysis failed: $geminiResponse").that(geminiResponse).doesNotContain("Test Result: FAIL")
     }
 }

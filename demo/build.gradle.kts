@@ -135,8 +135,11 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
+
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.truth)
+
     implementation(project(":visual-testing"))
     implementation(libs.uiautomator)
     // [END_EXCLUDE]
