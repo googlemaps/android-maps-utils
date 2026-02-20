@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.maps.android.clustering.algo;
+package com.google.maps.android.clustering.algo
 
-import com.google.maps.android.clustering.ClusterItem;
-
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import com.google.maps.android.clustering.ClusterItem
+import java.util.concurrent.locks.ReadWriteLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 /**
  * Base Algorithm class that implements lock/unlock functionality.
  */
-public abstract class AbstractAlgorithm<T extends ClusterItem> implements Algorithm<T> {
+abstract class AbstractAlgorithm<T : ClusterItem> : Algorithm<T> {
 
-    private final ReadWriteLock mLock = new ReentrantReadWriteLock();
+    private val mLock: ReadWriteLock = ReentrantReadWriteLock()
 
-    @Override
-    public void lock() {
-        mLock.writeLock().lock();
+    override fun lock() {
+        mLock.writeLock().lock()
     }
 
-    @Override
-    public void unlock() {
-        mLock.writeLock().unlock();
+    override fun unlock() {
+        mLock.writeLock().unlock()
     }
 }

@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.clustering;
+package com.google.maps.android.clustering
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Collection;
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * A collection of ClusterItems that are nearby each other.
  */
-public interface Cluster<T extends ClusterItem> {
-    LatLng getPosition();
+interface Cluster<T : ClusterItem> {
+    val position: LatLng
 
-    Collection<T> getItems();
+    val items: Collection<T>
 
-    int getSize();
+    val size: Int
 }
