@@ -24,8 +24,8 @@ startup-runtime = "1.2.0"
 # --- Jetpack Compose ---
 # Versions for Jetpack Compose, Android's modern UI toolkit.
 # The Compose BOM (Bill of Materials) coordinates versions of all Compose libraries.
-activity-compose = "1.12.3"
-compose-bom = "2026.01.01"
+activity-compose = "1.12.4"
+compose-bom = "2026.02.00"
 
 # --- Google Services (Maps) ---
 # Versions for Google Play Services libraries essential for map functionality.
@@ -44,7 +44,7 @@ truth = "1.4.5"
 # --- Lint & Analysis ---
 # Versions for code quality and static analysis tools.
 jacoco-android = "0.2.1"
-lint = "32.0.0"
+lint = "32.0.1"
 org-jacoco-core = "0.8.14"
 
 # --- Gradle Plugins ---
