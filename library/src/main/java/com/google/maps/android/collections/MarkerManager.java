@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
  */
 public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collection> implements
         GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnInfoWindowCloseListener,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMarkerDragListener,
         GoogleMap.InfoWindowAdapter,
@@ -47,6 +48,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     void setListenersOnUiThread() {
         if (mMap != null) {
             mMap.setOnInfoWindowClickListener(this);
+            mMap.setOnInfoWindowCloseListener(this);
             mMap.setOnInfoWindowLongClickListener(this);
             mMap.setOnMarkerClickListener(this);
             mMap.setOnMarkerDragListener(this);
@@ -81,6 +83,14 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
         Collection collection = mAllObjects.get(marker);
         if (collection != null && collection.mInfoWindowClickListener != null) {
             collection.mInfoWindowClickListener.onInfoWindowClick(marker);
+        }
+    }
+
+    @Override
+    public void onInfoWindowClose(@NonNull Marker marker) {
+        Collection collection = mAllObjects.get(marker);
+        if (collection != null && collection.mInfoWindowCloseListener != null) {
+            collection.mInfoWindowCloseListener.onInfoWindowClose(marker);
         }
     }
 
@@ -132,6 +142,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
     public class Collection extends MapObjectManager.Collection {
         private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
+        private GoogleMap.OnInfoWindowCloseListener mInfoWindowCloseListener;
         private GoogleMap.OnInfoWindowLongClickListener mInfoWindowLongClickListener;
         private GoogleMap.OnMarkerClickListener mMarkerClickListener;
         private GoogleMap.OnMarkerDragListener mMarkerDragListener;
@@ -185,6 +196,10 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
 
         public void setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener infoWindowClickListener) {
             mInfoWindowClickListener = infoWindowClickListener;
+        }
+
+        public void setOnInfoWindowCloseListener(GoogleMap.OnInfoWindowCloseListener infoWindowCloseListener) {
+            mInfoWindowCloseListener = infoWindowCloseListener;
         }
 
         public void setOnInfoWindowLongClickListener(GoogleMap.OnInfoWindowLongClickListener infoWindowLongClickListener) {
