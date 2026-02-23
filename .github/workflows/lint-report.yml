@@ -40,13 +40,13 @@ jobs:
         run: ./gradlew lint
 
       - name: Upload SARIF for library
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: library/build/reports/lint-results-debug.sarif
           category: library
 
       - name: Upload SARIF for demo
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: demo/build/reports/lint-results-debug.sarif
           category: demo
