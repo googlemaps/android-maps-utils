@@ -138,6 +138,9 @@
         <activity
             android:name=".RendererDemoActivity"
             android:exported="true" />
+        <activity
+            android:name=".TransitLayerDemoActivity"
+            android:exported="true" />
 
     </application>
 

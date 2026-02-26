@@ -1,0 +1,61 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Publish
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4.7.1
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Create .gpg key
+        run: |
+          echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
+          gpg --quiet --output $GITHUB_WORKSPACE/release.gpg --dearmor ./release.asc
+
+          echo "Build and publish"
+          sed -i -e "s,mavenCentralUsername=,mavenCentralUsername=$SONATYPE_TOKEN_USERNAME,g" gradle.properties
+          SONATYPE_TOKEN_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_TOKEN_PASSWORD" | sed -e 's/[\/&]/\\&/g')
+          sed -i -e "s,mavenCentralPassword=,mavenCentralPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
+          sed -i -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
+          sed -i -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
+          sed -i -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
+
+        env:
+          GPG_KEY_ARMOR: ${{ secrets.SYNCED_GPG_KEY_ARMOR }}
+          GPG_KEY_ID: ${{ secrets.SYNCED_GPG_KEY_ID }}
+          GPG_PASSWORD: ${{ secrets.SYNCED_GPG_KEY_PASSWORD }}
+          SONATYPE_TOKEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
+          SONATYPE_TOKEN_USERNAME: ${{ secrets.SONATYPE_TOKEN }}
+
+      - name: Publish to MavenCentral
+        run: ./gradlew publishToMavenCentral --warn --stacktrace

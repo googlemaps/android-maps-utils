@@ -1145,23 +1145,33 @@ public class Renderer {
 
     /**
      * Creates a new InfoWindowAdapter and sets text if marker snippet or title is set. This allows
-     * the info window to have custom HTML.
+     * the info window to have custom HTML. If the marker has no title, the InfoWindow is deactivated.
      */
     private void createInfoWindow() {
         mMarkers.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
-            public View getInfoWindow(@NonNull Marker arg0) {
+            public View getInfoWindow(@NonNull Marker marker) {
                 return null;
             }
 
-            public View getInfoContents(@NonNull Marker arg0) {
+            @Override
+            public View getInfoContents(@NonNull Marker marker) {
+                String title = marker.getTitle();
+                if (title == null) {
+                    return null;
+                }
+
                 View view = LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
                 TextView infoWindowText = view.findViewById(R.id.window);
-                if (arg0.getSnippet() != null) {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
-                } else {
-                    infoWindowText.setText(Html.fromHtml(arg0.getTitle()));
+
+                StringBuilder infoText = new StringBuilder(title);
+
+                String snippet = marker.getSnippet();
+                if (snippet != null) {
+                    infoText.append("<br>").append(snippet);
                 }
+                infoWindowText.setText(Html.fromHtml(infoText.toString()));
+
                 return view;
             }
         });

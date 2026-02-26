@@ -21,7 +21,8 @@ plugins {
     id("com.android.application")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlin-android")
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
+    alias(libs.plugins.compose.compiler)
 }
 
 val secretsFile = rootProject.file("secrets.properties")
@@ -90,6 +91,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 
     kotlin {
@@ -137,11 +139,20 @@ dependencies {
     testImplementation(libs.truth)
 
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.espresso-core)
     androidTestImplementation(libs.truth)
 
     implementation(project(":visual-testing"))
     implementation(libs.uiautomator)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.activity.compose)
+    implementation(libs.ui)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.material3)
+    implementation(libs.material.icons.core)
+    debugImplementation(libs.ui.tooling)
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]

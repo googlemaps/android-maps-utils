@@ -35,9 +35,18 @@ tasks.register<Delete>("clean") {
     delete(layout.buildDirectory)
 }
 
+tasks.register<Exec>("installAndLaunch") {
+    description = "Installs and launches the demo app."
+    group = "install"
+    dependsOn(":demo:installDebug")
+    commandLine("adb", "shell", "am", "start", "-n", "com.google.maps.android.utils.demo/.MainActivity")
+}
+
 allprojects {
     group = "com.google.maps.android"
-    version = "3.19.0"
+    // {x-release-please-start-version}
+    version = "4.0.0"
+    // {x-release-please-end}
 
     plugins.withId("java") {
         configure<JavaPluginExtension> {

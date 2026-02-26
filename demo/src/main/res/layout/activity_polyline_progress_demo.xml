@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="0%%"
+            android:text="@string/polyline_progress_0_percent"
             android:minWidth="40dp"
             android:gravity="center"
             />
@@ -53,19 +53,21 @@
 
         <Button
             android:id="@+id/resetButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_weight="1"
-            android:text="Restart" />
+            android:text="@string/polyline_progress_restart" />
 
         <Button
             android:id="@+id/pauseButton"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_marginHorizontal="16dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pause" />
+            android:text="@string/polyline_progress_pause" />
 
     </LinearLayout>
 
