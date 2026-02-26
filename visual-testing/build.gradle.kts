@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import org.gradle.api.tasks.testing.Test
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -53,9 +54,6 @@ android {
         animationsDisabled = true
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
-        unitTests.all {
-            it.setFailOnNoDiscoveredTests(false)
-        }
     }
 }
 
