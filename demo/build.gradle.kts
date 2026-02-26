@@ -139,7 +139,7 @@ dependencies {
     testImplementation(libs.truth)
 
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso-core)
+    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.truth)
 
     implementation(project(":visual-testing"))
