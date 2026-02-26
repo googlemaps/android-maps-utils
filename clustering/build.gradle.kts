@@ -27,7 +27,7 @@ android {
     }
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = 23
+        * Copyright 2026 Google LLC3
         testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
         consumerProguardFiles("consumer-rules.pro")
     }
