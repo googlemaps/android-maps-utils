@@ -53,6 +53,9 @@ android {
         animationsDisabled = true
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
+        unitTests.all {
+            it.setFailOnNoDiscoveredTests(false)
+        }
     }
 }
 
