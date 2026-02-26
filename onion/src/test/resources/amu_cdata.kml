@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+ <Document>
+  <name>2013-06-09</name>
+  <description><![CDATA[TELEPORT]]></description>
+  <Placemark>
+   <name>img_2838_jpg.jpeg</name>
+   <Point>
+    <coordinates>2.82120419,42.59294510,90.50130000 </coordinates>
+    <altitudeMode>clampToGround</altitudeMode>
+    <extrude>1</extrude>
+   </Point>
+   </Placemark>
+   </Document>
+</kml>

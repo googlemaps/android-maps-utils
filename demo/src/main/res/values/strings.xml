@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- Copyright 2024 Google LLC
+ Copyright 2026 Google LLC
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@
     <string name="demo_title_heatmaps_places">Heatmaps with Places API</string>
     <string name="demo_title_multi_layer">Multi Layer</string>
     <string name="demo_title_transit_layer">Transit Layer Demo</string>
+    <string name="demo_title_renderer">Renderer Demo</string>
 
     <!-- Demo Titles: Geometry -->
     <string name="demo_title_poly_decode">PolyUtil.decode</string>

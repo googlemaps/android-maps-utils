@@ -111,7 +111,8 @@ class MainActivity : ComponentActivity() {
                     Demo(R.string.demo_title_heatmaps, HeatmapsDemoActivity::class.java),
                     Demo(R.string.demo_title_heatmaps_places, HeatmapsPlacesDemoActivity::class.java),
                     Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
-                    Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java)
+                    Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
+                    Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java)
                 )
             ),
             DemoGroup(
