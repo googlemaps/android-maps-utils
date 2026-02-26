@@ -89,7 +89,7 @@ class PublishingConventionPlugin : Plugin<Project> {
                 developers {
                     developer {
                         id.set("google")
-                        name.set("Google Inc.")
+                        name.set("Google LLC")
                     }
                 }
                 organization {
