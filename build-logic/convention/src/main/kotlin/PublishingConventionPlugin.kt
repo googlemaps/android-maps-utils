@@ -66,8 +66,13 @@ class PublishingConventionPlugin : Plugin<Project> {
             publishToMavenCentral()
             signAllPublications()
 
+            val artifactName = if (project.name == "library") {
+                "android-maps-utils"
+            } else {
+                "maps-utils-${project.name}"
+            }
             coordinates(
-                artifactId = "android-maps-utils",
+                artifactId = artifactName,
             )
 
             pom {
