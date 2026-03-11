@@ -40,11 +40,15 @@ public interface ClusterRenderer<T extends ClusterItem> {
 
     void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<T> listener);
 
+    void setOnClusterInfoWindowCloseListener(ClusterManager.OnClusterInfoWindowCloseListener<T> listener);
+
     void setOnClusterInfoWindowLongClickListener(ClusterManager.OnClusterInfoWindowLongClickListener<T> listener);
 
     void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<T> listener);
 
     void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener);
+
+    void setOnClusterItemInfoWindowCloseListener(ClusterManager.OnClusterItemInfoWindowCloseListener<T> listener);
 
     void setOnClusterItemInfoWindowLongClickListener(ClusterManager.OnClusterItemInfoWindowLongClickListener<T> listener);
 
