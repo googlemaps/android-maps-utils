@@ -17,6 +17,7 @@
 package com.google.maps.android.utils.attribution
 
 import android.content.Context
+import androidx.annotation.Keep
 import androidx.startup.Initializer
 import com.google.android.gms.maps.MapsApiSettings
 import com.google.maps.android.utils.meta.AttributionId
@@ -26,6 +27,7 @@ import com.google.maps.android.utils.meta.AttributionId
  * and samples are helpful to developers, such as usage of this library.
  * To opt out of sending the usage attribution ID, please remove this initializer from your manifest.
  */
+@Keep
 internal class AttributionIdInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         // See [AttributionIdInitializer]
