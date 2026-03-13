@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.collections.GroundOverlayManager;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.collections.PolygonManager;
@@ -81,19 +82,29 @@ public class KmlDemoActivity extends BaseDemoActivity {
             KmlContainer container = kmlLayer.getContainers().iterator().next();
             //Retrieve a nested container within the first container
             container = container.getContainers().iterator().next();
-            //Retrieve the first placemark in the nested container
-            KmlPlacemark placemark = container.getPlacemarks().iterator().next();
-            //Retrieve a polygon object in a placemark
-            KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
-            //Create LatLngBounds of the outer coordinates of the polygon
+
+            Iterable<KmlPlacemark> pms = container.getPlacemarks();
+
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
-                builder.include(latLng);
+
+            for (KmlPlacemark placemark : pms) {
+                //Retrieve a polygon object in a placemark
+                KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+                //Create LatLngBounds of the outer coordinates of the polygon
+                for (LatLng latLng : polygon.getOuterBoundaryCoordinates()) {
+                    builder.include(latLng);
+                }
             }
 
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
-            getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 1));
+            getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 25));
+            getMap().addPolygon(new PolygonOptions().add(
+                    new LatLng(builder.build().southwest.latitude, builder.build().southwest.longitude),
+                    new LatLng(builder.build().northeast.latitude, builder.build().southwest.longitude),
+                    new LatLng(builder.build().northeast.latitude, builder.build().northeast.longitude),
+                    new LatLng(builder.build().southwest.latitude, builder.build().northeast.longitude)
+            ));
         } catch (Exception e) {
             // may fail depending on the KML being shown
             e.printStackTrace();
