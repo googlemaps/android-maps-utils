@@ -1,20 +1,4 @@
 <!DOCTYPE html>
-<!--
- Copyright 2026 Google LLC
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,10 +7,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; background-color: #f6f8fa; color: #24292f; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
         h1, h2 { text-align: center; color: #0969da; }
         .charts { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 30px; }
-        .chart-container { flex: 1 1 45%; min-width: 300px; padding: 15px; border: 1px solid #d0d7de; border-radius: 6px; }
+        .chart-container { flex: 1 1 45%; min-width: 400px; padding: 15px; border: 1px solid #d0d7de; border-radius: 6px; }
         canvas { width: 100% !important; height: 300px !important; }
         .footer { text-align: center; margin-top: 40px; font-size: 0.9em; color: #57606a; }
     </style>
@@ -45,12 +29,30 @@
             
             <!-- NonHierarchicalDistanceBasedAlgorithm Chart -->
             <div class="chart-container">
-                <h2>DistanceBasedAlgorithm</h2>
+                <h2>NonHierarchicalDistanceBasedAlgorithm</h2>
                 <canvas id="distanceChart"></canvas>
+            </div>
+
+            <!-- CentroidNonHierarchicalDistanceBasedAlgorithm Chart -->
+            <div class="chart-container">
+                <h2>CentroidNonHierarchicalDistanceBased</h2>
+                <canvas id="centroidChart"></canvas>
+            </div>
+
+            <!-- ContinuousZoomEuclideanCentroidAlgorithm Chart -->
+            <div class="chart-container">
+                <h2>ContinuousZoomEuclideanCentroid</h2>
+                <canvas id="continuousChart"></canvas>
+            </div>
+
+            <!-- PreCachingAlgorithmDecorator Chart -->
+            <div class="chart-container">
+                <h2>PreCachingAlgorithmDecorator</h2>
+                <canvas id="preCachingChart"></canvas>
             </div>
         </div>
         <div class="footer">
-            Note: Measurements are in milliseconds (ms). Lower is better. Tests conducted with 50,000 random items.
+            Note: Measurements are in milliseconds (ms) averaged across 10 iterations. Lower is better. Tests conducted with 50,000 random items.
         </div>
     </div>
 
@@ -62,31 +64,32 @@
             plugins: { legend: { position: 'top' } }
         };
 
-        const gridCtx = document.getElementById('gridChart').getContext('2d');
-        new Chart(gridCtx, {
-            type: 'bar',
-            data: {
-                labels: ['addItems', 'zoom 4.0', 'zoom 8.0', 'zoom 16.0'],
-                datasets: [
-                    { label: 'Java (main)', data: [8.84, 30.78, 198.23, 198.36], backgroundColor: 'rgba(255, 99, 132, 0.7)', borderColor: 'rgb(255, 99, 132)', borderWidth: 1 },
-                    { label: 'Kotlin (rewrite)', data: [12.45, 31.69, 213.00, 210.77], backgroundColor: 'rgba(54, 162, 235, 0.7)', borderColor: 'rgb(54, 162, 235)', borderWidth: 1 }
-                ]
-            },
-            options: chartOptions
-        });
+        const labels = ['addItems', 'zoom 4.0', 'zoom 8.0', 'zoom 12.0', 'zoom 16.0'];
 
-        const distanceCtx = document.getElementById('distanceChart').getContext('2d');
-        new Chart(distanceCtx, {
-            type: 'bar',
-            data: {
-                labels: ['addItems', 'zoom 4.0', 'zoom 8.0', 'zoom 16.0'],
-                datasets: [
-                    { label: 'Java (main)', data: [35.88, 102.94, 73.67, 80.52], backgroundColor: 'rgba(255, 99, 132, 0.7)', borderColor: 'rgb(255, 99, 132)', borderWidth: 1 },
-                    { label: 'Kotlin (rewrite)', data: [37.30, 93.58, 85.88, 64.44], backgroundColor: 'rgba(54, 162, 235, 0.7)', borderColor: 'rgb(54, 162, 235)', borderWidth: 1 }
-                ]
-            },
-            options: chartOptions
-        });
+        const colors = {
+            java: { bg: 'rgba(255, 99, 132, 0.7)', border: 'rgb(255, 99, 132)' },
+            kotlin: { bg: 'rgba(54, 162, 235, 0.7)', border: 'rgb(54, 162, 235)' }
+        };
+
+        function createChart(ctxId, dataJava, dataKotlin) {
+            new Chart(document.getElementById(ctxId).getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Java (main)', data: dataJava, backgroundColor: colors.java.bg, borderColor: colors.java.border, borderWidth: 1 },
+                        { label: 'Kotlin (rewrite)', data: dataKotlin, backgroundColor: colors.kotlin.bg, borderColor: colors.kotlin.border, borderWidth: 1 }
+                    ]
+                },
+                options: chartOptions
+            });
+        }
+
+        createChart('gridChart', [6.28, 29.93, 206.30, 269.87, 228.93], [6.37, 29.77, 189.84, 250.74, 221.97]);
+        createChart('distanceChart', [22.60, 50.19, 70.89, 63.84, 62.89], [20.62, 48.33, 62.50, 55.42, 53.83]);
+        createChart('centroidChart', [32.28, 81.76, 133.18, 82.79, 90.66], [43.37, 77.41, 128.38, 105.66, 72.02]);
+        createChart('continuousChart', [21.99, 82.72, 105.88, 92.08, 100.84], [20.78, 76.80, 96.01, 89.77, 87.47]);
+        createChart('preCachingChart', [48.36, 84.21, 74.76, 75.32, 62.51], [47.58, 118.35, 72.57, 66.87, 69.80]);
     </script>
 </body>
 </html>
