@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2026 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clustering Benchmark Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; background-color: #f6f8fa; color: #24292f; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+        h1, h2 { text-align: center; color: #0969da; }
+        .charts { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 30px; }
+        .chart-container { flex: 1 1 45%; min-width: 300px; padding: 15px; border: 1px solid #d0d7de; border-radius: 6px; }
+        canvas { width: 100% !important; height: 300px !important; }
+        .footer { text-align: center; margin-top: 40px; font-size: 0.9em; color: #57606a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Android Maps Utils Clustering Benchmarks</h1>
+        <p style="text-align: center;">Performance comparison between the original Java implementation (<code>main</code>) and the Kotlin rewrite (<code>feat/rewrite-android-maps-utils</code>).</p>
+        
+        <div class="charts">
+            <!-- GridBasedAlgorithm Chart -->
+            <div class="chart-container">
+                <h2>GridBasedAlgorithm</h2>
+                <canvas id="gridChart"></canvas>
+            </div>
+            
+            <!-- NonHierarchicalDistanceBasedAlgorithm Chart -->
+            <div class="chart-container">
+                <h2>DistanceBasedAlgorithm</h2>
+                <canvas id="distanceChart"></canvas>
+            </div>
+        </div>
+        <div class="footer">
+            Note: Measurements are in milliseconds (ms). Lower is better. Tests conducted with 50,000 random items.
+        </div>
+    </div>
+
+    <script>
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, title: { display: true, text: 'Time (ms)' } } },
+            plugins: { legend: { position: 'top' } }
+        };
+
+        const gridCtx = document.getElementById('gridChart').getContext('2d');
+        new Chart(gridCtx, {
+            type: 'bar',
+            data: {
+                labels: ['addItems', 'zoom 4.0', 'zoom 8.0', 'zoom 16.0'],
+                datasets: [
+                    { label: 'Java (main)', data: [8.84, 30.78, 198.23, 198.36], backgroundColor: 'rgba(255, 99, 132, 0.7)', borderColor: 'rgb(255, 99, 132)', borderWidth: 1 },
+                    { label: 'Kotlin (rewrite)', data: [12.45, 31.69, 213.00, 210.77], backgroundColor: 'rgba(54, 162, 235, 0.7)', borderColor: 'rgb(54, 162, 235)', borderWidth: 1 }
+                ]
+            },
+            options: chartOptions
+        });
+
+        const distanceCtx = document.getElementById('distanceChart').getContext('2d');
+        new Chart(distanceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['addItems', 'zoom 4.0', 'zoom 8.0', 'zoom 16.0'],
+                datasets: [
+                    { label: 'Java (main)', data: [35.88, 102.94, 73.67, 80.52], backgroundColor: 'rgba(255, 99, 132, 0.7)', borderColor: 'rgb(255, 99, 132)', borderWidth: 1 },
+                    { label: 'Kotlin (rewrite)', data: [37.30, 93.58, 85.88, 64.44], backgroundColor: 'rgba(54, 162, 235, 0.7)', borderColor: 'rgb(54, 162, 235)', borderWidth: 1 }
+                ]
+            },
+            options: chartOptions
+        });
+    </script>
+</body>
+</html>
