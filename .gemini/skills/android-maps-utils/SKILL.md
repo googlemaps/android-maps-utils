@@ -17,7 +17,6 @@ dependencies {
     implementation("com.google.maps.android:android-maps-utils:4.1.1") // x-release-please-version
 }
 ```
-*(Note: If the user is using Jetpack Compose, they should ideally be using `maps-compose-utils` from the `android-maps-compose` repository instead of this library directly, though this library is the underlying foundation).*
 
 ## 2. Core Features & Usage Patterns
 
