@@ -14,7 +14,7 @@ Add the necessary dependency to the app-level `build.gradle.kts` file:
 ```kotlin
 dependencies {
     // Google Maps Utility Library
-    implementation("com.google.maps.android:android-maps-utils:3.9.0") // Check for the latest version
+    implementation("com.google.maps.android:android-maps-utils:3.9.0") // x-release-please-version
 }
 ```
 *(Note: If the user is using Jetpack Compose, they should ideally be using `maps-compose-utils` from the `android-maps-compose` repository instead of this library directly, though this library is the underlying foundation).*
