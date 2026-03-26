@@ -59,11 +59,15 @@ jobs:
         run: |
           # Convert comma-separated labels to gh command arguments
           IFS=',' read -ra ADDR <<< "${{ steps.run_script.outputs.labels }}"
+          priority_added=false
           for i in "${ADDR[@]}"; do
             # Trim whitespace
             label=$(echo "$i" | xargs)
-            # Only add priority labels as requested
-            if [[ "$label" == priority:* ]]; then
+            # Only add the first priority label found
+            if [[ "$label" == priority:* ]] && [ "$priority_added" = false ]; then
               gh issue edit "$ISSUE_NUMBER" --add-label "$label"
+              priority_added=true
             fi
           done
+          # Remove 'triage me' label
+          gh issue edit "$ISSUE_NUMBER" --remove-label "triage me" || true
