@@ -39,5 +39,9 @@ gradlePlugin {
             id = "android.maps.utils.PublishingConventionPlugin"
             implementationClass = "PublishingConventionPlugin"
         }
+        register("bomPublishingConventionPlugin") {
+            id = "android.maps.utils.BomPublishingConventionPlugin"
+            implementationClass = "BomPublishingConventionPlugin"
+        }
     }
 }
