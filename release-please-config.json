@@ -5,7 +5,9 @@
       "release-type": "simple",
       "extra-files": [
         "README.md",
-        "build.gradle.kts"
+        "build.gradle.kts",
+        ".gemini/skills/android-maps-utils/SKILL.md",
+        "llm-integration-prompt.md"
       ]
     }
   }

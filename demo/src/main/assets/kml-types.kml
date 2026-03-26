@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Complex Geometry Example</name>
+    <description>Demonstrates styles, polygons with holes, and MultiGeometry.</description>
+
+    <!-- Define shared styles for consistency and reusability -->
+    <Style id="examplePointStyle">
+      <IconStyle>
+        <color>ff0000ff</color> <!-- Red (AABBGGRR format) -->
+        <scale>1.2</scale>
+        <!-- Standard Google Earth pushpin icon -->
+        <Icon>
+          <href>maps.google.com</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.0</scale>
+      </LabelStyle>
+    </Style>
+
+    <Style id="examplePolygonStyle">
+      <LineStyle>
+        <color>ff0000ff</color> <!-- Red outline -->
+        <width>3</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7f00ff00</color> <!-- Green fill with 50% opacity -->
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+
+    <!-- 1. Point Placemark (using a defined style) -->
+    <Placemark>
+      <name>Styled Point</name>
+      <description>This point uses a shared style definition.</description>
+      <styleUrl>#examplePointStyle</styleUrl>
+      <Point>
+        <coordinates>-122.0839597,37.4222899,0</coordinates>
+      </Point>
+    </Placemark>
+
+    <!-- 2. Complex Polygon with a Hole -->
+    <Placemark>
+      <name>Polygon with a Hole</name>
+      <description>A polygon demonstrating an inner boundary (hole).</description>
+      <styleUrl>#examplePolygonStyle</styleUrl>
+      <Polygon>
+        <altitudeMode>clampToGround</altitudeMode>
+        <!-- Define the Outer Boundary (The main shape) -->
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              -122.085,37.425,0
+              -122.087,37.425,0
+              -122.087,37.427,0
+              -122.085,37.427,0
+              -122.085,37.425,0 <!-- Close the outer ring -->
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+
+        <!-- Define the Inner Boundary (The Hole) -->
+        <innerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              -122.0865,37.4255,0
+              -122.0855,37.4255,0
+              -122.0855,37.4265,0
+              -122.0865,37.4265,0
+              -122.0865,37.4255,0 <!-- Close the inner ring -->
+            </coordinates>
+          </LinearRing>
+        </innerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- 3. MultiGeometry Placemark -->
+    <!-- Groups different geometry types under a single placemark -->
+    <Placemark>
+      <name>MultiGeometry Example</name>
+      <description>Combines a LineString and a Point into one feature.</description>
+      <MultiGeometry>
+        <Point>
+          <coordinates>-122.0845,37.4215,0</coordinates>
+        </Point>
+        <LineString>
+          <coordinates>
+            -122.084,37.421,0
+            -122.085,37.421,0
+            -122.0845,37.4215,0
+          </coordinates>
+        </LineString>
+      </MultiGeometry>
+    </Placemark>
+
+  </Document>
+</kml>

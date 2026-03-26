@@ -26,3 +26,9 @@ information on using pull requests.
 
 This project follows
 [Google's Open Source Community Guidelines](https://opensource.google/conduct/).
+
+## Using AI to Contribute
+
+This repository provides an official Gemini Skill to help AI agents navigate and contribute to the project effectively. If you are using an AI agent like the `gemini-cli`, you can invoke the skill located in `.gemini/skills/android-maps-utils` to learn how to interact with the codebase.
+
+Additionally, the `.geminiignore` file prevents AI tools from consuming large or irrelevant files to preserve context limits. You can also reference the generic `llm-integration-prompt.md` to feed into web-based LLMs for general assistance.
