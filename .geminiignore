@@ -1,0 +1,40 @@
+# Ignore build and generated directories
+build/
+**/build/
+.gradle/
+.idea/
+.kotlin/
+.vscode/
+
+# Ignore outputs
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# Ignore large media assets (images, fonts, etc) unless specifically required
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.webp
+**/*.svg
+**/*.mp4
+**/*.mp3
+**/*.wav
+**/*.ttf
+**/*.woff
+**/*.woff2
+**/*.otf
+
+# Ignore temporary and cache files
+tmp/
+**/tmp/
+*.log
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.DS_Store
