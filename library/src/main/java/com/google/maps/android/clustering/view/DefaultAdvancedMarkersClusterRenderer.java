@@ -127,9 +127,11 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
 
     private ClusterManager.OnClusterClickListener<T> mClickListener;
     private ClusterManager.OnClusterInfoWindowClickListener<T> mInfoWindowClickListener;
+    private ClusterManager.OnClusterInfoWindowCloseListener<T> mInfoWindowCloseListener;
     private ClusterManager.OnClusterInfoWindowLongClickListener<T> mInfoWindowLongClickListener;
     private ClusterManager.OnClusterItemClickListener<T> mItemClickListener;
     private ClusterManager.OnClusterItemInfoWindowClickListener<T> mItemInfoWindowClickListener;
+    private ClusterManager.OnClusterItemInfoWindowCloseListener<T> mItemInfoWindowCloseListener;
     private ClusterManager.OnClusterItemInfoWindowLongClickListener<T> mItemInfoWindowLongClickListener;
 
     public DefaultAdvancedMarkersClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
@@ -162,6 +164,15 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
             }
         });
 
+        mClusterManager.getMarkerCollection().setOnInfoWindowCloseListener(new GoogleMap.OnInfoWindowCloseListener() {
+            @Override
+            public void onInfoWindowClose(@NonNull Marker marker) {
+                if (mItemInfoWindowCloseListener != null) {
+                    mItemInfoWindowCloseListener.onClusterItemInfoWindowClose(mMarkerCache.get(marker));
+                }
+            }
+        });
+
         mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(marker -> {
             if (mItemInfoWindowLongClickListener != null) {
                 mItemInfoWindowLongClickListener.onClusterItemInfoWindowLongClick(mMarkerCache.get(marker));
@@ -177,6 +188,12 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
             }
         });
 
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowCloseListener(marker -> {
+            if (mInfoWindowCloseListener != null) {
+                mInfoWindowCloseListener.onClusterInfoWindowClose(mClusterMarkerCache.get(marker));
+            }
+        });
+
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(marker -> {
             if (mInfoWindowLongClickListener != null) {
                 mInfoWindowLongClickListener.onClusterInfoWindowLongClick(mClusterMarkerCache.get(marker));
@@ -188,9 +205,11 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
     public void onRemove() {
         mClusterManager.getMarkerCollection().setOnMarkerClickListener(null);
         mClusterManager.getMarkerCollection().setOnInfoWindowClickListener(null);
+        mClusterManager.getMarkerCollection().setOnInfoWindowCloseListener(null);
         mClusterManager.getMarkerCollection().setOnInfoWindowLongClickListener(null);
         mClusterManager.getClusterMarkerCollection().setOnMarkerClickListener(null);
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowClickListener(null);
+        mClusterManager.getClusterMarkerCollection().setOnInfoWindowCloseListener(null);
         mClusterManager.getClusterMarkerCollection().setOnInfoWindowLongClickListener(null);
     }
 
@@ -544,6 +563,11 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
     }
 
     @Override
+    public void setOnClusterInfoWindowCloseListener(ClusterManager.OnClusterInfoWindowCloseListener<T> listener) {
+        mInfoWindowCloseListener = listener;
+    }
+
+    @Override
     public void setOnClusterInfoWindowLongClickListener(ClusterManager.OnClusterInfoWindowLongClickListener<T> listener) {
         mInfoWindowLongClickListener = listener;
     }
@@ -556,6 +580,11 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
     @Override
     public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<T> listener) {
         mItemInfoWindowClickListener = listener;
+    }
+
+    @Override
+    public void setOnClusterItemInfoWindowCloseListener(ClusterManager.OnClusterItemInfoWindowCloseListener<T> listener) {
+        mItemInfoWindowCloseListener = listener;
     }
 
     @Override
