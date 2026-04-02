@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2024 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">Maps Utils Demo</string>
+    <string name="input_text">Looking for…</string>
+    <string name="button_send">Go!</string>
+    <string name="police_stations">Police Stations in Victoria</string>
+    <string name="medicare">Medicare Offices</string>
+    <string name="attrib_format">Data from &lt;a href = "%s">data.gov.au&lt;/a>, modified under &lt;a href = \"https://creativecommons.org/licenses/by/3.0/au/\">CC BY 3.0 AU&lt;/a></string>
+    <string name="police_stations_url">https://data.gov.au/dataset/police-station-locations/resource/76110b24-0f0a-4c29-9583-3f99eaba486c</string>
+    <string name="medicare_url">https://data.gov.au/dataset/location-of-medicare-offices/resource/5d38e1be-4011-49c4-8b8b-75405eeb1088</string>
+    <string name="kml_url">https://raw.githubusercontent.com/googlemaps/android-maps-utils/70a77b066b8391da06a2d708792de8337bf5d3b6/demo/src/main/res/raw/campus.kml</string>
+    <string name="geojson_url">https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson</string>
+    <string-array name="heatmaps_datasets_array">
+        <item>@string/police_stations</item>
+        <item>@string/medicare</item>
+    </string-array>
+    <string name="button_radius">Radius</string>
+    <string name="button_gradient">Gradient</string>
+    <string name="button_opacity">Opacity</string>
+    <string name="bad_maps_api_key">The Google Maps API key looks invalid or is missing. If you are sure your key is correct, you can remove this check from the demo.</string>
+    <string name="percentage_format">%1$d%%</string>
+
+    <!-- This should be set here or in secrets.properties. -->
+    <string name="map_id">DEMO_MAP_ID</string>
+    <!-- Demo Categories -->
+    <string name="category_clustering">Clustering</string>
+    <string name="category_data_layers">Data Layers</string>
+    <string name="category_geometry">Geometry</string>
+    <string name="category_utilities">Utilities</string>
+    <string name="category_street_view">Street View</string>
+
+    <!-- Demo Titles: Clustering -->
+    <string name="demo_title_clustering_advanced">Advanced Markers Clustering Example</string>
+    <string name="demo_title_clustering_algorithms">Cluster Algorithms</string>
+    <string name="demo_title_clustering_default">Clustering</string>
+    <string name="demo_title_clustering_custom_look">Clustering: Custom Look</string>
+    <string name="demo_title_clustering_diff">Clustering: Diff</string>
+    <string name="demo_title_clustering_2k">Clustering: 2K markers</string>
+    <string name="demo_title_clustering_20k">Clustering: 20K only visible markers</string>
+    <string name="demo_title_clustering_viewmodel">Clustering: ViewModel</string>
+    <string name="demo_title_clustering_force_zoom">Clustering: Force on Zoom</string>
+
+    <!-- Demo Titles: Data Layers -->
+    <string name="demo_title_geojson">GeoJSON Layer</string>
+    <string name="demo_title_kml">KML Layer Overlay</string>
+    <string name="demo_title_heatmaps">Heatmaps</string>
+    <string name="demo_title_heatmaps_places">Heatmaps with Places API</string>
+    <string name="demo_title_multi_layer">Multi Layer</string>
+    <string name="demo_title_transit_layer">Transit Layer Demo</string>
+
+    <!-- Demo Titles: Geometry -->
+    <string name="demo_title_poly_decode">PolyUtil.decode</string>
+    <string name="demo_title_poly_simplify">PolyUtil.simplify</string>
+    <string name="demo_title_polyline_progress">Polyline Progress</string>
+    <string name="demo_title_spherical_distance">SphericalUtil.computeDistanceBetween</string>
+
+    <!-- Demo Titles: Utilities -->
+    <string name="demo_title_icon_generator">IconGenerator</string>
+    <string name="demo_title_tile_provider">Generating tiles</string>
+    <string name="demo_title_animation_util">AnimationUtil sample</string>
+
+    <!-- Demo Titles: Street View -->
+    <string name="demo_title_street_view">Street View Demo</string>
+    <string name="demo_title_street_view_java">Street View Demo (Java)</string>
+
+    <!-- UI Strings -->
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="transit_layer_checkbox">Transit Layer</string>
+    <string name="status_enabled">ENABLED</string>
+    <string name="status_disabled">DISABLED</string>
+    <string name="transit_layer_status_fmt">Transit Layer is %s</string>
+
+    <!-- Polyline Progress Demo -->
+    <string name="polyline_progress_0_percent">0%</string>
+    <string name="polyline_progress_restart">Restart</string>
+    <string name="polyline_progress_pause">Pause</string>
+
+    <!-- Places Demo -->
+    <string name="go">Go</string>
+
+    <!-- Distance Demo -->
+    <string name="drag_the_markers">Drag the markers!</string>
+    <string name="distance_format">The markers are %s apart.</string>
+    <string name="unit_mm">mm</string>
+    <string name="unit_m">m</string>
+    <string name="unit_km">km</string>
+
+    <!-- Clustering Diff Demo -->
+    <string name="cluster_info_fmt">%1$d (including %2$s)</string>
+
+    <!-- Big Clustering Demo -->
+    <string name="error_reading_markers">Problem reading list of markers.</string>
+
+    <!-- Custom Advanced Marker Clustering Demo -->
+    <string name="cluster_text_fmt">I am a cluster of size %d</string>
+    <string name="renderer_latest">The latest version of the renderer is used.</string>
+    <string name="renderer_legacy">The legacy version of the renderer is used.</string>
+</resources>

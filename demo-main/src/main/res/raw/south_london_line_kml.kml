@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+        <Placemark>
+            <name>South London Line KML</name>
+            <ExtendedData></ExtendedData>
+            <LineString>
+                <coordinates>
+                    -0.262298583984375,51.29627609493991 -0.188140869140625,51.31602217169266 -0.127716064453125,51.32288838086245 -0.06866455078125,51.31859712057431 -0.0054931640625,51.301428064502886 0.028839111328125,51.28940590271679</coordinates>
+            </LineString>
+        </Placemark>
+    </Document>
+</kml>

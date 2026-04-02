@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+        <Placemark>
+            <name>South London Polygon KML</name>
+            <ExtendedData></ExtendedData>
+            <Polygon>
+                <outerBoundaryIs>
+                    <LinearRing>
+                        <coordinates>
+                            -0.1847076416015625,51.221722572383214 -0.0652313232421875,51.221722572383214 -0.0652313232421875,51.251386581388196 -0.1847076416015625,51.251386581388196 -0.1847076416015625,51.221722572383214</coordinates>
+                    </LinearRing>
+                </outerBoundaryIs>
+            </Polygon>
+        </Placemark>
+    </Document>
+</kml>
