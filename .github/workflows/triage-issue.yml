@@ -56,9 +56,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          LABELS: ${{ steps.run_script.outputs.labels }}
         run: |
           # Convert comma-separated labels to gh command arguments
-          IFS=',' read -ra ADDR <<< "${{ steps.run_script.outputs.labels }}"
+          IFS=',' read -ra ADDR <<< "$LABELS"
           priority_added=false
           for i in "${ADDR[@]}"; do
             # Trim whitespace
