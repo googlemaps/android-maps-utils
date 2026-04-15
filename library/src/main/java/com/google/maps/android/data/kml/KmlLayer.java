@@ -198,6 +198,8 @@ public class KmlLayer extends Layer {
      */
     private static XmlPullParser createXmlParser(InputStream stream) throws XmlPullParserException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setFeature(XmlPullParser.FEATURE_PROCESS_DOCDECL, false);
+        factory.setFeature(XmlPullParser.FEATURE_VALIDATION, false);
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
         parser.setInput(stream, null);
