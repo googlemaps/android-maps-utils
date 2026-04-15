@@ -453,7 +453,7 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
             if (DefaultAdvancedMarkersClusterRenderer.this.mClusters != null && mAnimate) {
                 existingClustersOnScreen = new ArrayList<>();
                 for (Cluster<T> c : DefaultAdvancedMarkersClusterRenderer.this.mClusters) {
-                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
+                    if (shouldRenderAsCluster(c) && c.getPosition() != null && visibleBounds.contains(c.getPosition())) {
                         Point point = mSphericalMercatorProjection.toPoint(c.getPosition());
                         existingClustersOnScreen.add(point);
                     }
@@ -492,7 +492,7 @@ public class DefaultAdvancedMarkersClusterRenderer<T extends ClusterItem> implem
             if (mAnimate) {
                 newClustersOnScreen = new ArrayList<>();
                 for (Cluster<T> c : clusters) {
-                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.getPosition())) {
+                    if (shouldRenderAsCluster(c) && c.getPosition() != null && visibleBounds.contains(c.getPosition())) {
                         Point p = mSphericalMercatorProjection.toPoint(c.getPosition());
                         newClustersOnScreen.add(p);
                     }
