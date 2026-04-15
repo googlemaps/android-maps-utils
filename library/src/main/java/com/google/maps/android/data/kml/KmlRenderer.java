@@ -538,8 +538,6 @@ public class KmlRenderer extends Renderer {
         protected Bitmap doInBackground(String... params) {
             try {
                 return getBitmapFromUrl(mIconUrl);
-            } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mIconUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -588,8 +586,6 @@ public class KmlRenderer extends Renderer {
         protected Bitmap doInBackground(String... params) {
             try {
                 return getBitmapFromUrl(mGroundOverlayUrl);
-            } catch (MalformedURLException e) {
-                return BitmapFactory.decodeFile(mGroundOverlayUrl);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Image [" + mGroundOverlayUrl + "] download issue", e);
             }
@@ -621,7 +617,11 @@ public class KmlRenderer extends Renderer {
      * @return the bitmap of that image, scaled according to screen density.
      */
     private Bitmap getBitmapFromUrl(String url) throws IOException {
-        return BitmapFactory.decodeStream(openConnectionCheckRedirects(new URL(url).openConnection()));
+        URL parsedUrl = new URL(url);
+        if (!parsedUrl.getProtocol().equalsIgnoreCase("http") && !parsedUrl.getProtocol().equalsIgnoreCase("https")) {
+            throw new MalformedURLException("Unsupported scheme: " + parsedUrl.getProtocol());
+        }
+        return BitmapFactory.decodeStream(openConnectionCheckRedirects(parsedUrl.openConnection()));
     }
 
     /**
