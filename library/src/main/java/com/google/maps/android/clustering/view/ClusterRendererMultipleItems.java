@@ -524,7 +524,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
             }
 
             for (final MarkerWithPosition marker : markersToRemove) {
-                boolean onScreen = visibleBounds.contains(marker.position);
+                boolean onScreen = marker.position != null && visibleBounds.contains(marker.position);
                 if (onScreen && mAnimate) {
                     final Point point = mSphericalMercatorProjection.toPoint(marker.position);
                     final Point closest = findClosestCluster(newClustersOnScreen, point);

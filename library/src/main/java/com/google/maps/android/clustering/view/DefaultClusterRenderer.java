@@ -492,7 +492,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
 
             // Remove the old markers, animating them into clusters if zooming out.
             for (final MarkerWithPosition marker : markersToRemove) {
-                boolean onScreen = visibleBounds.contains(marker.position);
+                boolean onScreen = marker.position != null && visibleBounds.contains(marker.position);
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
                 if (!zoomingIn && zoomDelta > -3 && onScreen && mAnimate) {
