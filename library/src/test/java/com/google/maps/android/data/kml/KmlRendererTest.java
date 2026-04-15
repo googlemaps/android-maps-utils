@@ -77,4 +77,42 @@ public class KmlRendererTest {
         assertNotNull(styleMap.get("BlueKey"));
         assertEquals(styles.get("BlueKey"), redStyle);
     }
+
+    @Test
+    public void testBitmapUrlSchemeValidation() throws Exception {
+        KmlRenderer renderer = new KmlRenderer(null, null, null, null, null, null, null);
+        java.lang.reflect.Method method = KmlRenderer.class.getDeclaredMethod("getBitmapFromUrl", String.class);
+        method.setAccessible(true);
+        
+        // Should throw MalformedURLException for file:// scheme
+        try {
+            method.invoke(renderer, "file:///android_asset/image.png");
+            org.junit.Assert.fail("Should have thrown InvocationTargetException containing MalformedURLException");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            assertTrue(e.getCause() instanceof java.net.MalformedURLException);
+            assertEquals("Unsupported scheme: file", e.getCause().getMessage());
+        }
+
+        // Should throw MalformedURLException for ftp:// scheme
+        try {
+            method.invoke(renderer, "ftp://example.com/image.png");
+            org.junit.Assert.fail("Should have thrown InvocationTargetException containing MalformedURLException");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            assertTrue(e.getCause() instanceof java.net.MalformedURLException);
+            assertEquals("Unsupported scheme: ftp", e.getCause().getMessage());
+        }
+        
+        // For http/https, it should not throw MalformedURLException with "Unsupported scheme"
+        try {
+            method.invoke(renderer, "http://example.com/image.png");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            org.junit.Assert.assertFalse(e.getCause().getMessage() != null && e.getCause().getMessage().startsWith("Unsupported scheme"));
+        }
+        
+        try {
+            method.invoke(renderer, "https://example.com/image.png");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            org.junit.Assert.assertFalse(e.getCause().getMessage() != null && e.getCause().getMessage().startsWith("Unsupported scheme"));
+        }
+    }
 }
