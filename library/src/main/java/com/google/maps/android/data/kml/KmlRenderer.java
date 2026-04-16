@@ -67,17 +67,36 @@ public class KmlRenderer extends Renderer {
 
     private ArrayList<KmlContainer> mContainers;
 
+    private final KmlUrlSanitizer mUrlSanitizer;
+
     /* package */ KmlRenderer(GoogleMap map,
                               Context context,
                               MarkerManager markerManager,
                               PolygonManager polygonManager,
                               PolylineManager polylineManager,
                               GroundOverlayManager groundOverlayManager,
-                              @Nullable ImagesCache imagesCache) {
+                              @Nullable ImagesCache imagesCache,
+                              @Nullable KmlUrlSanitizer urlSanitizer) {
         super(map, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache);
         mGroundOverlayUrls = new HashSet<>();
         mMarkerIconsDownloaded = false;
         mGroundOverlayImagesDownloaded = false;
+        mUrlSanitizer = (urlSanitizer == null) ? new DefaultKmlUrlSanitizer() : urlSanitizer;
+    }
+
+    private static class DefaultKmlUrlSanitizer implements KmlUrlSanitizer {
+        @Override
+        public String sanitizeUrl(String url) {
+            try {
+                URL parsedUrl = new URL(url);
+                if (parsedUrl.getProtocol().equalsIgnoreCase("http") || parsedUrl.getProtocol().equalsIgnoreCase("https")) {
+                    return url;
+                }
+            } catch (MalformedURLException e) {
+                // Return null to block invalid URLs
+            }
+            return null;
+        }
     }
 
     /**
@@ -617,10 +636,11 @@ public class KmlRenderer extends Renderer {
      * @return the bitmap of that image, scaled according to screen density.
      */
     private Bitmap getBitmapFromUrl(String url) throws IOException {
-        URL parsedUrl = new URL(url);
-        if (!parsedUrl.getProtocol().equalsIgnoreCase("http") && !parsedUrl.getProtocol().equalsIgnoreCase("https")) {
-            throw new MalformedURLException("Unsupported scheme: " + parsedUrl.getProtocol());
+        String sanitizedUrl = mUrlSanitizer.sanitizeUrl(url);
+        if (sanitizedUrl == null) {
+            throw new MalformedURLException("URL blocked by sanitizer: " + url);
         }
+        URL parsedUrl = new URL(sanitizedUrl);
         return BitmapFactory.decodeStream(openConnectionCheckRedirects(parsedUrl.openConnection()));
     }
 
@@ -651,11 +671,9 @@ public class KmlRenderer extends Renderer {
                         target = new URL(base, loc);
                     }
                     http.disconnect();
-                    // Redirection should be allowed only for HTTP and HTTPS
-                    // and should be limited to 5 redirections at most.
-                    if (target == null || !(target.getProtocol().equals("http")
-                            || target.getProtocol().equals("https"))
-                            || redirects >= 5) {
+                    
+                    // Validate redirect URL using the sanitizer
+                    if (target == null || mUrlSanitizer.sanitizeUrl(target.toString()) == null || redirects >= 5) {
                         throw new SecurityException("illegal URL redirect");
                     }
                     redir = true;
