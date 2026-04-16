@@ -46,6 +46,9 @@ import java.util.zip.ZipInputStream;
  */
 public class KmlLayer extends Layer {
 
+    private static final int MAX_KMZ_ENTRY_COUNT = 200;
+    private static final long MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE = 50 * 1024 * 1024; // 50MB
+
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
      *
@@ -145,16 +148,22 @@ public class KmlLayer extends Layer {
         BufferedInputStream bis = new BufferedInputStream(stream);
         bis.mark(1024);
         ZipInputStream zip = new ZipInputStream(bis);
+        CountingInputStream countingStream = new CountingInputStream(zip, MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE);
         try {
             KmlParser parser = null;
             ZipEntry entry = zip.getNextEntry();
             if (entry != null) { // is a KMZ zip file
+                int entryCount = 0;
                 HashMap<String, Bitmap> images = new HashMap<>();
                 while (entry != null) {
+                    entryCount++;
+                    if (entryCount > MAX_KMZ_ENTRY_COUNT) {
+                        throw new IOException("Zip bomb detected! Max number of entries exceeded: " + MAX_KMZ_ENTRY_COUNT);
+                    }
                     if (parser == null && entry.getName().toLowerCase().endsWith(".kml")) {
-                        parser = parseKml(zip);
+                        parser = parseKml(countingStream);
                     } else {
-                        Bitmap bitmap = BitmapFactory.decodeStream(zip);
+                        Bitmap bitmap = BitmapFactory.decodeStream(countingStream);
                         if (bitmap != null) {
                             images.put(entry.getName(), bitmap);
                         } else {
@@ -179,6 +188,57 @@ public class KmlLayer extends Layer {
             stream.close();
             bis.close();
             zip.close();
+        }
+    }
+
+    /**
+     * Wrapper for an InputStream that counts the number of bytes read and throws an IOException
+     * if the limit is exceeded.
+     */
+    private static class CountingInputStream extends InputStream {
+        private final InputStream mIn;
+        private long mTotalBytes = 0;
+        private final long mMaxBytes;
+
+        public CountingInputStream(InputStream in, long maxBytes) {
+            mIn = in;
+            mMaxBytes = maxBytes;
+        }
+
+        @Override
+        public int read() throws IOException {
+            int b = mIn.read();
+            if (b != -1) {
+                mTotalBytes++;
+                checkLimit();
+            }
+            return b;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            int n = mIn.read(b, off, len);
+            if (n != -1) {
+                mTotalBytes += n;
+                checkLimit();
+            }
+            return n;
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long skipped = mIn.skip(n);
+            if (skipped > 0) {
+                mTotalBytes += skipped;
+                checkLimit();
+            }
+            return skipped;
+        }
+
+        private void checkLimit() throws IOException {
+            if (mTotalBytes > mMaxBytes) {
+                throw new IOException("Zip bomb detected! Uncompressed size exceeds limit of " + mMaxBytes + " bytes.");
+            }
         }
     }
 
