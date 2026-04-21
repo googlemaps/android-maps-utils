@@ -36,6 +36,8 @@ public class KmlTestUtil {
     static XmlPullParser createParser(String fileName) throws XmlPullParserException, IOException {
         InputStream stream = KmlTestUtil.class.getClassLoader().getResourceAsStream(fileName);
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setFeature(XmlPullParser.FEATURE_PROCESS_DOCDECL, false);
+        factory.setFeature(XmlPullParser.FEATURE_VALIDATION, false);
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
         parser.setInput(stream, null);

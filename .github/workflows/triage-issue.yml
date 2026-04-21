@@ -56,14 +56,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          LABELS: ${{ steps.run_script.outputs.labels }}
         run: |
           # Convert comma-separated labels to gh command arguments
-          IFS=',' read -ra ADDR <<< "${{ steps.run_script.outputs.labels }}"
+          IFS=',' read -ra ADDR <<< "$LABELS"
+          priority_added=false
           for i in "${ADDR[@]}"; do
             # Trim whitespace
             label=$(echo "$i" | xargs)
-            # Only add priority labels as requested
-            if [[ "$label" == priority:* ]]; then
+            # Only add the first priority label found
+            if [[ "$label" == priority:* ]] && [ "$priority_added" = false ]; then
               gh issue edit "$ISSUE_NUMBER" --add-label "$label"
+              priority_added=true
             fi
           done
+          # Remove 'triage me' label
+          gh issue edit "$ISSUE_NUMBER" --remove-label "triage me" || true
