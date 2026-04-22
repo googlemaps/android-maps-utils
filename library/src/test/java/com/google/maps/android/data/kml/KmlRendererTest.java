@@ -41,7 +41,7 @@ public class KmlRendererTest {
         mParser = new KmlParser(parser);
         mParser.parseKml();
 
-        mRenderer = new KmlRenderer(mMap1, null, null, null, null, null, null);
+        mRenderer = new KmlRenderer(mMap1, null, null, null, null, null, null, null);
         mRenderer.storeKmlData(mParser.getStyles(), mParser.getStyleMaps(), mParser.getPlacemarks(),
                 mParser.getContainers(), mParser.getGroundOverlays());
     }
@@ -65,7 +65,7 @@ public class KmlRendererTest {
         KmlStyle redStyle = new KmlStyle();
         styles.put("BlueValue", blueStyle);
         styles.put("RedValue", redStyle);
-        KmlRenderer renderer = new KmlRenderer(null, null, null, null, null, null, null);
+        KmlRenderer renderer = new KmlRenderer(null, null, null, null, null, null, null, null);
         renderer.assignStyleMap(styleMap, styles);
         assertNotNull(styles.get("BlueKey"));
         assertEquals(styles.get("BlueKey"), styles.get("BlueValue"));
@@ -80,7 +80,7 @@ public class KmlRendererTest {
 
     @Test
     public void testBitmapUrlSchemeValidation() throws Exception {
-        KmlRenderer renderer = new KmlRenderer(null, null, null, null, null, null, null);
+        KmlRenderer renderer = new KmlRenderer(null, null, null, null, null, null, null, null);
         java.lang.reflect.Method method = KmlRenderer.class.getDeclaredMethod("getBitmapFromUrl", String.class);
         method.setAccessible(true);
         
@@ -90,7 +90,7 @@ public class KmlRendererTest {
             org.junit.Assert.fail("Should have thrown InvocationTargetException containing MalformedURLException");
         } catch (java.lang.reflect.InvocationTargetException e) {
             assertTrue(e.getCause() instanceof java.net.MalformedURLException);
-            assertEquals("Unsupported scheme: file", e.getCause().getMessage());
+            assertTrue(e.getCause().getMessage().contains("URL blocked by sanitizer"));
         }
 
         // Should throw MalformedURLException for ftp:// scheme
@@ -99,20 +99,20 @@ public class KmlRendererTest {
             org.junit.Assert.fail("Should have thrown InvocationTargetException containing MalformedURLException");
         } catch (java.lang.reflect.InvocationTargetException e) {
             assertTrue(e.getCause() instanceof java.net.MalformedURLException);
-            assertEquals("Unsupported scheme: ftp", e.getCause().getMessage());
+            assertTrue(e.getCause().getMessage().contains("URL blocked by sanitizer"));
         }
         
-        // For http/https, it should not throw MalformedURLException with "Unsupported scheme"
+        // For http/https, it should not throw MalformedURLException with "URL blocked by sanitizer"
         try {
             method.invoke(renderer, "http://example.com/image.png");
         } catch (java.lang.reflect.InvocationTargetException e) {
-            org.junit.Assert.assertFalse(e.getCause().getMessage() != null && e.getCause().getMessage().startsWith("Unsupported scheme"));
+            org.junit.Assert.assertFalse(e.getCause().getMessage() != null && e.getCause().getMessage().contains("URL blocked by sanitizer"));
         }
         
         try {
             method.invoke(renderer, "https://example.com/image.png");
         } catch (java.lang.reflect.InvocationTargetException e) {
-            org.junit.Assert.assertFalse(e.getCause().getMessage() != null && e.getCause().getMessage().startsWith("Unsupported scheme"));
+            org.junit.Assert.assertFalse(e.getCause().getMessage() != null && e.getCause().getMessage().contains("URL blocked by sanitizer"));
         }
     }
 }
