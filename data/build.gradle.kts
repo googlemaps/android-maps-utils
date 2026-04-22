@@ -76,6 +76,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.truth)
+    testImplementation(libs.androidx.test.core)
     implementation(libs.kotlin.stdlib.jdk8)
 
     testImplementation(libs.mockk)

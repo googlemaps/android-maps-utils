@@ -47,9 +47,12 @@ import java.util.zip.ZipInputStream;
  */
 public class KmlLayer extends Layer {
 
+    private static final int DEFAULT_MAX_KMZ_ENTRY_COUNT = 200;
+    private static final long DEFAULT_MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE = 50 * 1024 * 1024; // 50MB
+
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
-     *
+     * <p>
      * Constructor may be called on a background thread, as I/O and parsing may be long-running.
      *
      * @param map        GoogleMap object
@@ -60,12 +63,30 @@ public class KmlLayer extends Layer {
      */
     public KmlLayer(GoogleMap map, int resourceId, Context context)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null, null);
+        this(map, context.getResources().openRawResource(resourceId), context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null, null, DEFAULT_MAX_KMZ_ENTRY_COUNT, DEFAULT_MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE);
     }
 
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
+     * <p>
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
      *
+     * @param map        GoogleMap object
+     * @param resourceId Raw resource KML or KMZ file
+     * @param context The Context
+     * @param maxKmzEntryCount The maximum number of entries a KMZ file can contain.
+     * @param maxKmzUncompressedTotalSize The maximum size of the uncompressed KMZ file in bytes.
+     * @throws XmlPullParserException if file cannot be parsed
+     * @throws IOException if I/O error
+     */
+    public KmlLayer(GoogleMap map, int resourceId, Context context, int maxKmzEntryCount, long maxKmzUncompressedTotalSize)
+            throws XmlPullParserException, IOException {
+        this(map, context.getResources().openRawResource(resourceId), context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null, null, maxKmzEntryCount, maxKmzUncompressedTotalSize);
+    }
+
+    /**
+     * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
+     * <p>
      * Constructor may be called on a background thread, as I/O and parsing may be long-running.
      *
      * @param map    GoogleMap object
@@ -76,14 +97,32 @@ public class KmlLayer extends Layer {
      */
     public KmlLayer(GoogleMap map, InputStream stream, Context context)
             throws XmlPullParserException, IOException {
-        this(map, stream, context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null, null);
+        this(map, stream, context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null, null, DEFAULT_MAX_KMZ_ENTRY_COUNT, DEFAULT_MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE);
     }
 
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
-     *
+     * <p>
      * Constructor may be called on a background thread, as I/O and parsing may be long-running.
      *
+     * @param map    GoogleMap object
+     * @param stream InputStream containing KML or KMZ file
+     * @param context The Context
+     * @param maxKmzEntryCount The maximum number of entries a KMZ file can contain.
+     * @param maxKmzUncompressedTotalSize The maximum size of the uncompressed KMZ file in bytes.
+     * @throws XmlPullParserException if file cannot be parsed
+     * @throws IOException if I/O error
+     */
+    public KmlLayer(GoogleMap map, InputStream stream, Context context, int maxKmzEntryCount, long maxKmzUncompressedTotalSize)
+            throws XmlPullParserException, IOException {
+        this(map, stream, context, new MarkerManager(map), new PolygonManager(map), new PolylineManager(map), new GroundOverlayManager(map), null, null, maxKmzEntryCount, maxKmzUncompressedTotalSize);
+    }
+
+    /**
+     * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
+     * <p>
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     * <p>
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
      *
@@ -107,14 +146,49 @@ public class KmlLayer extends Layer {
                     GroundOverlayManager groundOverlayManager,
                     Renderer.ImagesCache cache)
             throws XmlPullParserException, IOException {
-        this(map, context.getResources().openRawResource(resourceId), context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, null);
+        this(map, context.getResources().openRawResource(resourceId), context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, null, DEFAULT_MAX_KMZ_ENTRY_COUNT, DEFAULT_MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE);
     }
 
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
-     *
+     * <p>
      * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     * <p>
+     * Use this constructor with shared object managers in order to handle multiple layers with
+     * their own event handlers on the map.
      *
+     * @param map        GoogleMap object
+     * @param resourceId Raw resource KML or KMZ file
+     * @param context The Context
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @param cache cache to be used for fetched images
+     * @param maxKmzEntryCount The maximum number of entries a KMZ file can contain.
+     * @param maxKmzUncompressedTotalSize The maximum size of the uncompressed KMZ file in bytes.
+     * @throws XmlPullParserException if file cannot be parsed
+     * @throws IOException if I/O error
+     */
+    public KmlLayer(GoogleMap map,
+                    @RawRes int resourceId,
+                    Context context,
+                    MarkerManager markerManager,
+                    PolygonManager polygonManager,
+                    PolylineManager polylineManager,
+                    GroundOverlayManager groundOverlayManager,
+                    Renderer.ImagesCache cache,
+                    int maxKmzEntryCount,
+                    long maxKmzUncompressedTotalSize)
+            throws XmlPullParserException, IOException {
+        this(map, context.getResources().openRawResource(resourceId), context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, null, maxKmzEntryCount, maxKmzUncompressedTotalSize);
+    }
+
+    /**
+     * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
+     * <p>
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     * <p>
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
      *
@@ -138,14 +212,49 @@ public class KmlLayer extends Layer {
                     GroundOverlayManager groundOverlayManager,
                     Renderer.ImagesCache cache)
             throws XmlPullParserException, IOException {
-        this(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, null);
+        this(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, null, DEFAULT_MAX_KMZ_ENTRY_COUNT, DEFAULT_MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE);
     }
 
     /**
      * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
-     *
+     * <p>
      * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     * <p>
+     * Use this constructor with shared object managers in order to handle multiple layers with
+     * their own event handlers on the map.
      *
+     * @param map    GoogleMap object
+     * @param stream InputStream containing KML or KMZ file
+     * @param context The Context
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @param cache cache to be used for fetched images
+     * @param maxKmzEntryCount The maximum number of entries a KMZ file can contain.
+     * @param maxKmzUncompressedTotalSize The maximum size of the uncompressed KMZ file in bytes.
+     * @throws XmlPullParserException if file cannot be parsed
+     * @throws IOException if I/O error
+     */
+    public KmlLayer(GoogleMap map,
+                    InputStream stream,
+                    Context context,
+                    MarkerManager markerManager,
+                    PolygonManager polygonManager,
+                    PolylineManager polylineManager,
+                    GroundOverlayManager groundOverlayManager,
+                    Renderer.ImagesCache cache,
+                    int maxKmzEntryCount,
+                    long maxKmzUncompressedTotalSize)
+            throws XmlPullParserException, IOException {
+        this(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, null, maxKmzEntryCount, maxKmzUncompressedTotalSize);
+    }
+
+    /**
+     * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
+     * <p>
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     * <p>
      * Use this constructor with shared object managers in order to handle multiple layers with
      * their own event handlers on the map.
      *
@@ -171,6 +280,43 @@ public class KmlLayer extends Layer {
                     Renderer.ImagesCache cache,
                     @Nullable KmlUrlSanitizer urlSanitizer)
             throws XmlPullParserException, IOException {
+        this(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, cache, urlSanitizer, DEFAULT_MAX_KMZ_ENTRY_COUNT, DEFAULT_MAX_KMZ_UNCOMPRESSED_TOTAL_SIZE);
+    }
+
+    /**
+     * Creates a new KmlLayer object - addLayerToMap() must be called to trigger rendering onto a map.
+     * <p>
+     * Constructor may be called on a background thread, as I/O and parsing may be long-running.
+     * <p>
+     * Use this constructor with shared object managers in order to handle multiple layers with
+     * their own event handlers on the map.
+     *
+     * @param map    GoogleMap object
+     * @param stream InputStream containing KML or KMZ file
+     * @param context The Context
+     * @param markerManager marker manager to create marker collection from
+     * @param polygonManager polygon manager to create polygon collection from
+     * @param polylineManager polyline manager to create polyline collection from
+     * @param groundOverlayManager ground overlay manager to create ground overlay collection from
+     * @param cache cache to be used for fetched images
+     * @param urlSanitizer sanitizer to be used for external URLs
+     * @param maxKmzEntryCount The maximum number of entries a KMZ file can contain.
+     * @param maxKmzUncompressedTotalSize The maximum size of the uncompressed KMZ file in bytes.
+     * @throws XmlPullParserException if file cannot be parsed
+     * @throws IOException if I/O error
+     */
+    public KmlLayer(GoogleMap map,
+                    InputStream stream,
+                    Context context,
+                    MarkerManager markerManager,
+                    PolygonManager polygonManager,
+                    PolylineManager polylineManager,
+                    GroundOverlayManager groundOverlayManager,
+                    Renderer.ImagesCache cache,
+                    @Nullable KmlUrlSanitizer urlSanitizer,
+                    int maxKmzEntryCount,
+                    long maxKmzUncompressedTotalSize)
+            throws XmlPullParserException, IOException {
         if (stream == null) {
             throw new IllegalArgumentException("KML InputStream cannot be null");
         }
@@ -179,16 +325,22 @@ public class KmlLayer extends Layer {
         BufferedInputStream bis = new BufferedInputStream(stream);
         bis.mark(1024);
         ZipInputStream zip = new ZipInputStream(bis);
+        CountingInputStream countingStream = new CountingInputStream(zip, maxKmzUncompressedTotalSize);
         try {
             KmlParser parser = null;
             ZipEntry entry = zip.getNextEntry();
             if (entry != null) { // is a KMZ zip file
+                int entryCount = 0;
                 HashMap<String, Bitmap> images = new HashMap<>();
                 while (entry != null) {
+                    entryCount++;
+                    if (entryCount > maxKmzEntryCount) {
+                        throw new IOException("Zip bomb detected! Max number of entries exceeded: " + maxKmzEntryCount);
+                    }
                     if (parser == null && entry.getName().toLowerCase().endsWith(".kml")) {
-                        parser = parseKml(zip);
+                        parser = parseKml(countingStream);
                     } else {
-                        Bitmap bitmap = BitmapFactory.decodeStream(zip);
+                        Bitmap bitmap = BitmapFactory.decodeStream(countingStream);
                         if (bitmap != null) {
                             images.put(entry.getName(), bitmap);
                         } else {
@@ -213,6 +365,57 @@ public class KmlLayer extends Layer {
             stream.close();
             bis.close();
             zip.close();
+        }
+    }
+
+    /**
+     * Wrapper for an InputStream that counts the number of bytes read and throws an IOException
+     * if the limit is exceeded.
+     */
+    private static class CountingInputStream extends InputStream {
+        private final InputStream mIn;
+        private long mTotalBytes = 0;
+        private final long mMaxBytes;
+
+        public CountingInputStream(InputStream in, long maxBytes) {
+            mIn = in;
+            mMaxBytes = maxBytes;
+        }
+
+        @Override
+        public int read() throws IOException {
+            int b = mIn.read();
+            if (b != -1) {
+                mTotalBytes++;
+                checkLimit();
+            }
+            return b;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            int n = mIn.read(b, off, len);
+            if (n != -1) {
+                mTotalBytes += n;
+                checkLimit();
+            }
+            return n;
+        }
+
+        @Override
+        public long skip(long n) throws IOException {
+            long skipped = mIn.skip(n);
+            if (skipped > 0) {
+                mTotalBytes += skipped;
+                checkLimit();
+            }
+            return skipped;
+        }
+
+        private void checkLimit() throws IOException {
+            if (mTotalBytes > mMaxBytes) {
+                throw new IOException("Zip bomb detected! Uncompressed size exceeds limit of " + mMaxBytes + " bytes.");
+            }
         }
     }
 
