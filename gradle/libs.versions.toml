@@ -31,7 +31,7 @@ compose-bom = "2026.02.00"
 # Versions for Google Play Services libraries essential for map functionality.
 play-services-maps = "20.0.0"
 navigation-sdk = "7.6.0"
-desugar-jdk-libs = "2.0.3"
+desugar-jdk-libs = "2.1.5"
 
 # --- Testing ---
 # Versions for unit and instrumented testing libraries.
