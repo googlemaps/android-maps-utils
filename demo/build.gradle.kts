@@ -52,6 +52,12 @@ android {
         compose = true
     }
 
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -75,6 +81,7 @@ android {
 
 // [START maps_android_utils_install_snippet]
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.3")
     // [START_EXCLUDE silent]
     "standardImplementation"(project(":library"))
     "navigationImplementation"(project(":library")) {
