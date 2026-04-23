@@ -42,10 +42,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <!--
         To add your Maps API key to this project:
             1. Open the file local.properties under the root project
