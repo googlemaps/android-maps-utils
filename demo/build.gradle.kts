@@ -70,6 +70,7 @@ android {
     productFlavors {
         create("standard") {
             dimension = "sdk"
+            isDefault = true
         }
         create("navigation") {
             dimension = "sdk"

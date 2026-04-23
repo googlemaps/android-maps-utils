@@ -37,7 +37,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run Android Lint
-        run: ./gradlew lint
+        run: ./gradlew :library:lintDebug :demo:lintStandardDebug
 
       - name: Upload SARIF for library
         uses: github/codeql-action/upload-sarif@v3
