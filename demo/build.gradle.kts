@@ -60,13 +60,29 @@ android {
     }
 
     namespace = "com.google.maps.android.utils.demo"
+
+    flavorDimensions += "sdk"
+    productFlavors {
+        create("standard") {
+            dimension = "sdk"
+        }
+        create("navigation") {
+            dimension = "sdk"
+            minSdk = 24 // Navigation SDK 7.x requires API 24+
+        }
+    }
 }
 
 // [START maps_android_utils_install_snippet]
 dependencies {
     // [START_EXCLUDE silent]
-    implementation(project(":library"))
+    "standardImplementation"(project(":library"))
+    "navigationImplementation"(project(":library")) {
+        exclude(group = "com.google.android.gms", module = "play-services-maps")
+    }
 
+    "navigationImplementation"(libs.navigation.sdk)
+    
     implementation(libs.appcompat)
     implementation(libs.lifecycle.extensions)
     implementation(libs.lifecycle.viewmodel.ktx)

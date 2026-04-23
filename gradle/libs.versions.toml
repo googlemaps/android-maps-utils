@@ -30,6 +30,7 @@ compose-bom = "2026.02.00"
 # --- Google Services (Maps) ---
 # Versions for Google Play Services libraries essential for map functionality.
 play-services-maps = "20.0.0"
+navigation-sdk = "7.4.0"
 
 # --- Testing ---
 # Versions for unit and instrumented testing libraries.
@@ -84,6 +85,7 @@ material-icons-core = { group = "androidx.compose.material", name = "material-ic
 # --- Google Services (Maps) ---
 # Key libraries for integrating Google Maps and related services.
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+navigation-sdk = { module = "com.google.android.libraries.navigation:navigation", version.ref = "navigation-sdk" }
 
 # --- Testing ---
 # Tools for running implementation validation and user interface tests.
