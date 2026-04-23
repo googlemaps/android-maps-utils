@@ -25,6 +25,7 @@ plugins {
 
 android {
     lint {
+        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
     }
 
     defaultConfig {

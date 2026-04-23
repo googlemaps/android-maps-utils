@@ -42,11 +42,11 @@ jobs:
       - name: Upload SARIF for library
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: library/build/reports/lint-results-debug.sarif
+          sarif_file: library/build/reports/lint-results.sarif
           category: library
 
       - name: Upload SARIF for demo
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: demo/build/reports/lint-results-standardDebug.sarif
+          sarif_file: demo/build/reports/lint-results.sarif
           category: demo
