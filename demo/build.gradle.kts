@@ -82,7 +82,7 @@ android {
 
 // [START maps_android_utils_install_snippet]
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.3")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     // [START_EXCLUDE silent]
     "standardImplementation"(project(":library"))
     "navigationImplementation"(project(":library")) {
