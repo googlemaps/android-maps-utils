@@ -88,7 +88,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     private final float mDensity;
     private boolean mAnimate;
     private long mAnimationDurationMs;
-    private final Executor mExecutor = Executors.newSingleThreadExecutor();
+    private final Executor mExecutor;
     private final Queue<AnimationTask> ongoingAnimations = new LinkedList<>();
     private static TimeInterpolator animationInterp = new DecelerateInterpolator();
 
@@ -171,7 +171,12 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     private ClusterManager.OnClusterItemInfoWindowLongClickListener<T> mItemInfoWindowLongClickListener;
 
     public ClusterRendererMultipleItems(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
+        this(context, map, clusterManager, Executors.newSingleThreadExecutor());
+    }
+
+    public ClusterRendererMultipleItems(Context context, GoogleMap map, ClusterManager<T> clusterManager, Executor executor) {
         mMap = map;
+        mExecutor = executor;
         mAnimate = true;
         mAnimationDurationMs = 300;
         mDensity = context.getResources().getDisplayMetrics().density;
