@@ -81,7 +81,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private final float mDensity;
     private boolean mAnimate;
     private long mAnimationDurationMs;
-    private final Executor mExecutor = Executors.newSingleThreadExecutor();
+    private final Executor mExecutor;
 
     private static final int[] BUCKETS = {10, 20, 50, 100, 200, 500, 1000};
     private ShapeDrawable mColoredCircleBackground;
@@ -132,7 +132,12 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
     private ClusterManager.OnClusterItemInfoWindowLongClickListener<T> mItemInfoWindowLongClickListener;
 
     public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
+        this(context, map, clusterManager, Executors.newSingleThreadExecutor());
+    }
+
+    public DefaultClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager, Executor executor) {
         mMap = map;
+        mExecutor = executor;
         mAnimate = true;
         mAnimationDurationMs = 300;
         mDensity = context.getResources().getDisplayMetrics().density;
