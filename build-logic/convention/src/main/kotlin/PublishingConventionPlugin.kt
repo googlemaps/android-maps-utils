@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,8 +66,13 @@ class PublishingConventionPlugin : Plugin<Project> {
             publishToMavenCentral()
             signAllPublications()
 
+            val artifactName = if (project.name == "library") {
+                "android-maps-utils"
+            } else {
+                "maps-utils-${project.name}"
+            }
             coordinates(
-                artifactId = "android-maps-utils",
+                artifactId = artifactName,
             )
 
             pom {
@@ -89,7 +94,7 @@ class PublishingConventionPlugin : Plugin<Project> {
                 developers {
                     developer {
                         id.set("google")
-                        name.set("Google Inc.")
+                        name.set("Google LLC")
                     }
                 }
                 organization {

@@ -13,6 +13,10 @@ project.properties
 secrets.properties
 .kotlin
 
+# Build artifacts
+build-logic/convention/bin
+lint-checks/bin
+
 # This covers new IDEs, like Antigravity
 .vscode/
 **/bin/
