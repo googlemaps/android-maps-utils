@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.R;
 import com.google.maps.android.RendererLogger;
+import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
@@ -107,6 +108,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
     }
 
     public void setAnimationType(AnimationType type) {
+
         animationInterp = switch (type) {
             case LINEAR -> new LinearInterpolator();
             case EASE_IN, ACCELERATE -> new AccelerateInterpolator();
@@ -178,7 +180,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         mMap = map;
         mExecutor = executor;
         mAnimate = true;
-        mAnimationDurationMs = 300;
+        mAnimationDurationMs = 5000;
         mDensity = context.getResources().getDisplayMetrics().density;
         mIconGenerator = new IconGenerator(context);
         mIconGenerator.setContentView(makeSquareTextView(context));
@@ -439,6 +441,8 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         private SphericalMercatorProjection mSphericalMercatorProjection;
         private float mMapZoom;
 
+        private static final double EPSILON = 1e-9;
+
         private RenderTask(Set<? extends Cluster<T>> clusters) {
             this.clusters = clusters;
         }
@@ -454,6 +458,10 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
         public void setMapZoom(float zoom) {
             this.mMapZoom = zoom;
             this.mSphericalMercatorProjection = new SphericalMercatorProjection(256 * Math.pow(2, Math.min(zoom, mZoom)));
+        }
+
+        private boolean areClose(double a, double b) {
+            return Math.abs(a - b) < EPSILON;
         }
 
         @SuppressLint("NewApi")
@@ -535,9 +543,16 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                     final Point closest = findClosestCluster(newClustersOnScreen, point);
                     if (closest != null) {
                         LatLng animateTo = mSphericalMercatorProjection.toLatLng(closest);
-                        markerModifier.animateThenRemove(marker, marker.position, animateTo);
-                        RendererLogger.d("ClusterRenderer", "Animating then removing marker at position: " + marker.position);
-                    } else if (mClusterMarkerCache.mCache.keySet().iterator().hasNext() && mClusterMarkerCache.mCache.keySet().iterator().next().getItems().contains(marker.clusterItem)) {
+                        if (areClose(marker.position.latitude, animateTo.latitude) && areClose(marker.position.longitude, animateTo.longitude)) {
+                            // Treat them as the same, no need for animation
+                            markerModifier.remove(true, marker.marker);
+                            RendererLogger.d("ClusterRenderer", "Removing marker without animation (coordinates are very close)");
+                        } else {
+                            // If they are not close, proceed with the original logic
+                            markerModifier.animateThenRemove(marker, marker.position, animateTo);
+                        }
+                    }
+                    else if (mClusterMarkerCache.mCache.keySet().iterator().hasNext() && mClusterMarkerCache.mCache.keySet().iterator().next().getItems().contains(marker.clusterItem)) {
                         T foundItem = null;
                         for (Cluster<T> cluster : mClusterMarkerCache.mCache.keySet()) {
                             for (T clusterItem : cluster.getItems()) {
@@ -1158,7 +1173,7 @@ public class ClusterRendererMultipleItems<T extends ClusterItem> implements Clus
                         if (animateFrom != null) {
                             markerModifier.animate(markerWithPosition, animateFrom, item.getPosition());
                             RendererLogger.d("ClusterRenderer", "Animating marker from " + animateFrom + " to " + item.getPosition());
-                        } else if (currentLocation != null) {
+                        } else {
                             markerModifier.animate(markerWithPosition, currentLocation, item.getPosition());
                             RendererLogger.d("ClusterRenderer", "Animating marker from " + currentLocation + " to " + item.getPosition());
                         }
