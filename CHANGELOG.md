@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.0](https://github.com/googlemaps/android-maps-utils/compare/v4.2.0...v4.3.0) (2026-04-24)
+
+
+### Features
+
+* add constructor parameter for custom Executor in cluster renderers ([#1682](https://github.com/googlemaps/android-maps-utils/issues/1682)) ([b803dc0](https://github.com/googlemaps/android-maps-utils/commit/b803dc0602417806d1b029498c60a7111ffed723))
+
 ## [4.2.0](https://github.com/googlemaps/android-maps-utils/compare/v4.1.1...v4.2.0) (2026-04-22)
 
 
