@@ -19,11 +19,14 @@ import android.app.Instrumentation
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.google.maps.android.visualtesting.GeminiVisualTestHelper
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import java.io.File
+import java.io.FileOutputStream
 
 abstract class BaseVisualTest {
 
@@ -66,5 +69,58 @@ abstract class BaseVisualTest {
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
+    }
+
+    /**
+     * Verifies the screenshot against a golden image.
+     * If the golden matches, the test passes immediately.
+     * If it fails (or no golden exists), it falls back to Gemini for visual verification.
+     * If Gemini passes, it saves/updates the golden image and logs a warning to review it.
+     */
+    protected suspend fun verifyScreenshotWithGoldenFallback(
+        testName: String,
+        screenshotBitmap: Bitmap,
+        prompt: String,
+        passCondition: (String) -> Boolean
+    ) {
+        val goldenFile = File(context.getExternalFilesDir(null), "goldens/$testName.png")
+        
+        var isPixelMatch = false
+        if (goldenFile.exists()) {
+            val goldenBitmap = BitmapFactory.decodeFile(goldenFile.absolutePath)
+            isPixelMatch = compareBitmaps(screenshotBitmap, goldenBitmap)
+        }
+
+        if (isPixelMatch) {
+            Log.i("VisualTest", "Screenshot matched golden perfectly for '$testName'. Fast pass.")
+            return
+        }
+
+        Log.w("VisualTest", "Screenshot did not match golden for '$testName'. Falling back to Gemini.")
+        val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
+        
+        requireNotNull(geminiResponse) { "Gemini response was null for test '$testName'" }
+        
+        val passed = passCondition(geminiResponse)
+        
+        if (passed) {
+            // Update golden since Gemini approved it
+            goldenFile.parentFile?.mkdirs()
+            FileOutputStream(goldenFile).use { out ->
+                screenshotBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            }
+            Log.w("VisualTest", "Gemini approved the new UI state for '$testName'. Golden image updated at ${goldenFile.absolutePath}. Please review this image manually to prevent baking in hallucinations.")
+        } else {
+            fail("Visual verification failed for '$testName'. Gemini response: $geminiResponse")
+        }
+    }
+
+    private fun compareBitmaps(b1: Bitmap, b2: Bitmap): Boolean {
+        if (b1.width != b2.width || b1.height != b2.height) return false
+        val pixels1 = IntArray(b1.width * b1.height)
+        val pixels2 = IntArray(b2.width * b2.height)
+        b1.getPixels(pixels1, 0, b1.width, 0, 0, b1.width, b1.height)
+        b2.getPixels(pixels2, 0, b2.width, 0, 0, b2.width, b2.height)
+        return pixels1.contentEquals(pixels2)
     }
 }
