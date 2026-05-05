@@ -21,7 +21,6 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,13 +51,13 @@ class ClusteringVisualTest : BaseVisualTest() {
             val screenshotBitmap = captureScreenshot("natural_lang_click_screenshot.png")
 
             // --- Perform a visual assertion on the new screen ---
-            val prompt = "Does this image show a map with several markers clustered together? Answer only YES or NO."
-            val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
-
-            println("Gemini's analysis after natural language click: $geminiResponse")
-            assertTrue(
-                "Visual verification failed. Gemini did not confirm the presence of a map with clusters.",
-                geminiResponse?.contains("YES", ignoreCase = true) == true,
+            val prompt =
+                "Does this image show a map with several markers clustered together? Answer only YES or NO."
+            verifyScreenshotWithGoldenFallback(
+                testName = "Clustering_NaturalLanguageClick",
+                screenshotBitmap = screenshotBitmap,
+                prompt = prompt,
+                passCondition = { it.contains("YES", ignoreCase = true) },
             )
         }
 
@@ -72,7 +71,10 @@ class ClusteringVisualTest : BaseVisualTest() {
                 // Dump window hierarchy to logcat for debugging
                 val outputStream = ByteArrayOutputStream()
                 uiDevice.dumpWindowHierarchy(outputStream)
-                Log.e("ClusteringVisualTest", "Could not find clustering button. UI Hierarchy:\n${outputStream.toString("UTF-8")}")
+                Log.e(
+                    "ClusteringVisualTest",
+                    "Could not find clustering button. UI Hierarchy:\n${outputStream.toString("UTF-8")}",
+                )
 
                 // Take a screenshot for visual inspection
                 val screenshotFile = File(context.cacheDir, "test_failure_screenshot.png")
@@ -80,7 +82,10 @@ class ClusteringVisualTest : BaseVisualTest() {
                 Log.e("ClusteringVisualTest", "Debug screenshot saved to device cache.")
             }
 
-            assertNotNull("Clustering button not found. Check logcat for UI hierarchy dump and debug screenshot.", clusteringButton)
+            assertNotNull(
+                "Clustering button not found. Check logcat for UI hierarchy dump and debug screenshot.",
+                clusteringButton,
+            )
             clusteringButton.click()
 
             // Wait for the clustering screen to load and map to render
@@ -99,15 +104,11 @@ class ClusteringVisualTest : BaseVisualTest() {
                 If all three elements are present and legible, just confirm that the visual test has PASSED. If any element is missing or incorrect, please detail the discrepancy.
                 """.trimIndent()
 
-            // --- STEP 3: Analyze the image using Gemini ---
-            val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
-
-            // --- STEP 4: Assert on Gemini's response ---
-            println("Gemini's analysis: $geminiResponse")
-            // Example assertion: Check if Gemini confirms the presence of clusters
-            assertTrue(
-                "PASSED",
-                geminiResponse!!.contains("PASSED", ignoreCase = true),
+            verifyScreenshotWithGoldenFallback(
+                testName = "Clustering_ScreenContent",
+                screenshotBitmap = screenshotBitmap,
+                prompt = prompt,
+                passCondition = { it.contains("PASSED", ignoreCase = true) },
             )
         }
 }
