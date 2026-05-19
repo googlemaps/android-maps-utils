@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo
 
 import com.google.android.gms.maps.model.LatLng
@@ -33,7 +32,6 @@ import java.util.HashSet
  * @param <T> the type of cluster item
 </T> */
 open class CentroidNonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : NonHierarchicalDistanceBasedAlgorithm<T>() {
-
     /**
      * Computes the centroid (average latitude and longitude) of a collection of cluster items.
      *

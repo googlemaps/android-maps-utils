@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,37 +37,51 @@ object AnimationUtil {
      */
     @JvmOverloads
     @JvmStatic
-    fun animateMarkerTo(marker: Marker, finalPosition: LatLng, durationInMs: Long = 2000) {
+    fun animateMarkerTo(
+        marker: Marker,
+        finalPosition: LatLng,
+        durationInMs: Long = 2000,
+    ) {
         val latLngInterpolator = LatLngInterpolator.Linear()
         val startPosition = marker.position
         val handler = Handler(Looper.getMainLooper())
         val start = SystemClock.uptimeMillis()
         val interpolator = AccelerateDecelerateInterpolator()
 
-        handler.post(object : Runnable {
-            override fun run() {
-                val elapsed = SystemClock.uptimeMillis() - start
-                val t = elapsed / durationInMs.toFloat()
-                val v = interpolator.getInterpolation(t)
-                marker.position = latLngInterpolator.interpolate(v, startPosition, finalPosition)
+        handler.post(
+            object : Runnable {
+                override fun run() {
+                    val elapsed = SystemClock.uptimeMillis() - start
+                    val t = elapsed / durationInMs.toFloat()
+                    val v = interpolator.getInterpolation(t)
+                    marker.position = latLngInterpolator.interpolate(v, startPosition, finalPosition)
 
-                // Repeat till progress is complete.
-                if (t < 1) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 16)
+                    // Repeat till progress is complete.
+                    if (t < 1) {
+                        // Post again 16ms later.
+                        handler.postDelayed(this, 16)
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     /**
      * For other LatLngInterpolator interpolators, see [link here](https://gist.github.com/broady/6314689)
      */
     interface LatLngInterpolator {
-        fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng
+        fun interpolate(
+            fraction: Float,
+            a: LatLng,
+            b: LatLng,
+        ): LatLng
 
         class Linear : LatLngInterpolator {
-            override fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng {
+            override fun interpolate(
+                fraction: Float,
+                a: LatLng,
+                b: LatLng,
+            ): LatLng {
                 val lat = (b.latitude - a.latitude) * fraction + a.latitude
                 var lngDelta = b.longitude - a.longitude
 

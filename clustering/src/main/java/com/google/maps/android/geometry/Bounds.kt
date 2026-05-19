@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.google.maps.android.geometry
 
 /**
@@ -24,7 +22,7 @@ class Bounds(
     @JvmField val minX: Double,
     @JvmField val maxX: Double,
     @JvmField val minY: Double,
-    @JvmField val maxY: Double
+    @JvmField val maxY: Double,
 ) {
     @JvmField
     val midX: Double = (minX + maxX) / 2
@@ -32,23 +30,21 @@ class Bounds(
     @JvmField
     val midY: Double = (minY + maxY) / 2
 
-    fun contains(x: Double, y: Double): Boolean {
-        return minX <= x && x <= maxX && minY <= y && y <= maxY
-    }
+    fun contains(
+        x: Double,
+        y: Double,
+    ): Boolean = minX <= x && x <= maxX && minY <= y && y <= maxY
 
-    fun contains(point: Point): Boolean {
-        return contains(point.x, point.y)
-    }
+    fun contains(point: Point): Boolean = contains(point.x, point.y)
 
-    fun intersects(minX: Double, maxX: Double, minY: Double, maxY: Double): Boolean {
-        return minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY
-    }
+    fun intersects(
+        minX: Double,
+        maxX: Double,
+        minY: Double,
+        maxY: Double,
+    ): Boolean = minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY
 
-    fun intersects(bounds: Bounds): Boolean {
-        return intersects(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY)
-    }
+    fun intersects(bounds: Bounds): Boolean = intersects(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY)
 
-    fun contains(bounds: Bounds): Boolean {
-        return bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY
-    }
+    fun contains(bounds: Bounds): Boolean = bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY
 }

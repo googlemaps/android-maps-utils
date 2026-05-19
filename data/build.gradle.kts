@@ -19,6 +19,8 @@ plugins {
     id("kotlin-android")
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
+    id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
+    id("jacoco")
 }
 
 android {
@@ -39,13 +41,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            enableUnitTestCoverage = true
+        }
     }
     resourcePrefix = "amu_"
-
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions("-d", "-t")
-    }
 
     kotlin {
         compilerOptions {
@@ -67,6 +67,8 @@ dependencies {
     implementation(project(":ui"))
     api(libs.play.services.maps)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.serialization)
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
     lintPublish(project(":lint-checks"))
@@ -91,4 +93,19 @@ tasks.register("instrumentTest") {
 
 if (System.getenv("JITPACK") != null) {
     apply(plugin = "maven")
+}
+
+tasks.register<JacocoReport>("jacocoDebugReport") {
+    dependsOn("testDebugUnitTest")
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+    val debugTree = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug")) {
+        exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*", "android/**/*.*")
+    }
+    val mainSrc = layout.projectDirectory.dir("src/main/java")
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(files(layout.buildDirectory.file("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")))
 }

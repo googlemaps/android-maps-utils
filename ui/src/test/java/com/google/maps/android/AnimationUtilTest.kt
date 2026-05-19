@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
@@ -31,7 +30,6 @@ import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
 class AnimationUtilTest {
-
     private lateinit var marker: Marker
     private lateinit var currentPosition: LatLng
 
@@ -73,7 +71,7 @@ class AnimationUtilTest {
         }
 
         // Check the final position — allowing a reasonable tolerance (0.5 or more)
-        assertEquals(10.0, currentPosition.latitude, 0.5)  // 0.5 tolerance
+        assertEquals(10.0, currentPosition.latitude, 0.5) // 0.5 tolerance
         assertEquals(10.0, currentPosition.longitude, 0.5) // 0.5 tolerance
     }
 }

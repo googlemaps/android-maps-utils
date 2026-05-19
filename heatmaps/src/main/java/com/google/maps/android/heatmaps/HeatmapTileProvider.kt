@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,13 +17,13 @@ package com.google.maps.android.heatmaps
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import androidx.core.graphics.createBitmap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Tile
 import com.google.android.gms.maps.model.TileProvider
 import com.google.maps.android.geometry.Bounds
 import com.google.maps.android.quadtree.PointQuadTree
 import java.io.ByteArrayOutputStream
-import androidx.core.graphics.createBitmap
 import kotlin.math.exp
 import kotlin.math.floor
 import kotlin.math.pow
@@ -31,8 +31,9 @@ import kotlin.math.pow
 /**
  * Tile provider that creates heatmap tiles.
  */
-class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
-
+class HeatmapTileProvider private constructor(
+    builder: Builder,
+) : TileProvider {
     private var data: Collection<WeightedLatLng>
     private var radius: Int
     private var gradient: Gradient
@@ -74,10 +75,11 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @param latLngs A collection of LatLngs.
          * @return This builder.
          */
-        fun data(latLngs: Collection<LatLng>): Builder = apply {
-            this.weightedData(wrapData(latLngs))
-            require(this.weightedData?.isNotEmpty() == true) { "No input points." }
-        }
+        fun data(latLngs: Collection<LatLng>): Builder =
+            apply {
+                this.weightedData(wrapData(latLngs))
+                require(this.weightedData?.isNotEmpty() == true) { "No input points." }
+            }
 
         /**
          * Specifies the dataset to use for the heatmap, accepting WeightedLatLngs.
@@ -85,10 +87,11 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @param weightedData A collection of WeightedLatLngs.
          * @return This builder.
          */
-        fun weightedData(weightedData: Collection<WeightedLatLng>): Builder = apply {
-            this.weightedData = weightedData
-            require(this.weightedData?.isNotEmpty() == true) { "No input points." }
-        }
+        fun weightedData(weightedData: Collection<WeightedLatLng>): Builder =
+            apply {
+                this.weightedData = weightedData
+                require(this.weightedData?.isNotEmpty() == true) { "No input points." }
+            }
 
         /**
          * Specifies the radius of the heatmap blur, in pixels.
@@ -96,10 +99,11 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @param radius The radius. Must be between 10 and 50, inclusive.
          * @return This builder.
          */
-        fun radius(radius: Int): Builder = apply {
-            this.radius = radius
-            require(this.radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
-        }
+        fun radius(radius: Int): Builder =
+            apply {
+                this.radius = radius
+                require(this.radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
+            }
 
         /**
          * Specifies the color gradient of the heatmap.
@@ -107,9 +111,10 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @param gradient The gradient to use.
          * @return This builder.
          */
-        fun gradient(gradient: Gradient): Builder = apply {
-            this.gradient = gradient
-        }
+        fun gradient(gradient: Gradient): Builder =
+            apply {
+                this.gradient = gradient
+            }
 
         /**
          * Specifies the opacity of the heatmap layer.
@@ -117,10 +122,11 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @param opacity The opacity. Must be between 0 and 1, inclusive.
          * @return This builder.
          */
-        fun opacity(opacity: Double): Builder = apply {
-            this.opacity = opacity
-            require(this.opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
-        }
+        fun opacity(opacity: Double): Builder =
+            apply {
+                this.opacity = opacity
+                require(this.opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
+            }
 
         /**
          * Specifies a custom maximum intensity value for the heatmap.
@@ -128,9 +134,10 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @param intensity The maximum intensity.
          * @return This builder.
          */
-        fun maxIntensity(intensity: Double): Builder = apply {
-            this.intensity = intensity
-        }
+        fun maxIntensity(intensity: Double): Builder =
+            apply {
+                this.intensity = intensity
+            }
 
         /**
          * Creates a new HeatmapTileProvider instance from the builder's properties.
@@ -138,7 +145,9 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
          * @return A new HeatmapTileProvider.
          */
         fun build(): HeatmapTileProvider {
-            require(this.weightedData?.isNotEmpty() == true) { "No input data: you must use either .data or .weightedData before building." }
+            require(
+                this.weightedData?.isNotEmpty() == true,
+            ) { "No input data: you must use either .data or .weightedData before building." }
             return HeatmapTileProvider(this)
         }
     }
@@ -207,7 +216,11 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         updateData(this.data)
     }
 
-    override fun getTile(x: Int, y: Int, zoom: Int): Tile {
+    override fun getTile(
+        x: Int,
+        y: Int,
+        zoom: Int,
+    ): Tile {
         val tileWidth = WORLD_WIDTH / 2.0.pow(zoom.toDouble())
         val padding = tileWidth * radius / TILE_DIM
         val tileWidthPadded = tileWidth + 2 * padding
@@ -231,10 +244,13 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         }
 
         val tileBounds = Bounds(minX, maxX, minY, maxY)
-        val paddedBounds = Bounds(
-            bounds.minX - padding, bounds.maxX + padding,
-            bounds.minY - padding, bounds.maxY + padding
-        )
+        val paddedBounds =
+            Bounds(
+                bounds.minX - padding,
+                bounds.maxX + padding,
+                bounds.minY - padding,
+                bounds.maxY + padding,
+            )
         if (!tileBounds.intersects(paddedBounds)) {
             return TileProvider.NO_TILE
         }
@@ -288,6 +304,7 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         const val DEFAULT_OPACITY = 0.7
         private val DEFAULT_GRADIENT_COLORS = intArrayOf(Color.rgb(102, 225, 0), Color.rgb(255, 0, 0))
         private val DEFAULT_GRADIENT_START_POINTS = floatArrayOf(0.2f, 1f)
+
         @JvmField
         val DEFAULT_GRADIENT = Gradient(DEFAULT_GRADIENT_COLORS, DEFAULT_GRADIENT_START_POINTS)
         internal const val WORLD_WIDTH = 1.0
@@ -299,7 +316,10 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         const val MIN_RADIUS = 10
         const val MAX_RADIUS = 50
 
-        private data class Vector(val x: Int, val y: Int)
+        private data class Vector(
+            val x: Int,
+            val y: Int,
+        )
 
         private fun wrapData(data: Collection<LatLng>): Collection<WeightedLatLng> = data.map { WeightedLatLng(it) }
 
@@ -330,7 +350,10 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         }
 
         @JvmStatic
-        fun generateKernel(radius: Int, sd: Double): DoubleArray {
+        fun generateKernel(
+            radius: Int,
+            sd: Double,
+        ): DoubleArray {
             val kernel = DoubleArray(radius * 2 + 1)
             for (i in -radius..radius) {
                 kernel[i + radius] = exp(-i * i / (2 * sd * sd))
@@ -339,7 +362,10 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
         }
 
         @JvmStatic
-        fun convolve(grid: Array<DoubleArray>, kernel: DoubleArray): Array<DoubleArray> {
+        fun convolve(
+            grid: Array<DoubleArray>,
+            kernel: DoubleArray,
+        ): Array<DoubleArray> {
             val radius = floor(kernel.size / 2.0).toInt()
             val dimOld = grid.size
             val dim = dimOld - 2 * radius
@@ -374,7 +400,11 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
             return outputGrid
         }
 
-        internal fun colorize(grid: Array<DoubleArray>, colorMap: IntArray, max: Double): Bitmap {
+        internal fun colorize(
+            grid: Array<DoubleArray>,
+            colorMap: IntArray,
+            max: Double,
+        ): Bitmap {
             val maxColor = colorMap.last()
             val colorMapScaling = (colorMap.size - 1) / max
             val dim = grid.size
@@ -384,11 +414,12 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
                     val value = grid[j][i]
                     val index = i * dim + j
                     val col = (value * colorMapScaling).toInt()
-                    colors[index] = if (value != 0.0) {
-                        if (col < colorMap.size) colorMap[col] else maxColor
-                    } else {
-                        Color.TRANSPARENT
-                    }
+                    colors[index] =
+                        if (value != 0.0) {
+                            if (col < colorMap.size) colorMap[col] else maxColor
+                        } else {
+                            Color.TRANSPARENT
+                        }
                 }
             }
             val tile = createBitmap(dim, dim)
@@ -400,7 +431,7 @@ class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
             points: Collection<WeightedLatLng>,
             bounds: Bounds,
             radius: Int,
-            screenDim: Int
+            screenDim: Int,
         ): Double {
             val minX = bounds.minX
             val maxX = bounds.maxX

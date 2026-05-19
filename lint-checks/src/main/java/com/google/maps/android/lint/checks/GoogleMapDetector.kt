@@ -1,17 +1,18 @@
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+/*
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.maps.android.lint.checks
 
 import com.android.tools.lint.detector.api.Category
@@ -27,7 +28,9 @@ import com.intellij.psi.PsiMethod
 import org.jetbrains.uast.UCallExpression
 
 @Suppress("UnstableApiUsage")
-class GoogleMapDetector : Detector(), SourceCodeScanner  {
+class GoogleMapDetector :
+    Detector(),
+    SourceCodeScanner {
     override fun getApplicableMethodNames(): List<String>? =
         listOf(
             "setInfoWindowAdapter",
@@ -37,7 +40,11 @@ class GoogleMapDetector : Detector(), SourceCodeScanner  {
             "setOnMarkerDragListener",
         )
 
-    override fun visitMethodCall(context: JavaContext, node: UCallExpression, method: PsiMethod) {
+    override fun visitMethodCall(
+        context: JavaContext,
+        node: UCallExpression,
+        method: PsiMethod,
+    ) {
         val evaluator = context.evaluator
         if (!evaluator.isMemberInClass(method, "com.google.android.gms.maps.GoogleMap")) {
             return
@@ -46,20 +53,22 @@ class GoogleMapDetector : Detector(), SourceCodeScanner  {
             issue = POTENTIAL_BEHAVIOR_OVERRIDE,
             scope = node,
             location = context.getLocation(node),
-            message = POTENTIAL_BEHAVIOR_OVERRIDE.getBriefDescription(TextFormat.TEXT)
+            message = POTENTIAL_BEHAVIOR_OVERRIDE.getBriefDescription(TextFormat.TEXT),
         )
     }
 
     companion object {
         private val migrationGuideUrl = "https://bit.ly/3kTpQmY"
 
-        val POTENTIAL_BEHAVIOR_OVERRIDE = Issue.create(
-            id = "PotentialBehaviorOverride",
-            briefDescription = "Using this method may override behaviors set by the Maps SDK for " +
-                "Android Utility Library. If you are not using clustering, GeoJson, or KML, you " +
-                "can safely suppress this warning, otherwise, refer to the utility " +
-                "library's migration guide: $migrationGuideUrl",
-            explanation = """
+        val POTENTIAL_BEHAVIOR_OVERRIDE =
+            Issue.create(
+                id = "PotentialBehaviorOverride",
+                briefDescription =
+                    "Using this method may override behaviors set by the Maps SDK for " +
+                        "Android Utility Library. If you are not using clustering, GeoJson, or KML, you " +
+                        "can safely suppress this warning, otherwise, refer to the utility " +
+                        "library's migration guide: $migrationGuideUrl",
+                explanation = """
                 This lint warns for potential behavior override while using clustering, GeoJson, or
                 KML since these features use this method in their internal implementations. As such,
                 to achieve the desired behavior requires using an alternative API.
@@ -78,13 +87,14 @@ class GoogleMapDetector : Detector(), SourceCodeScanner  {
                 
                 Refer to the migration guide for more info: $migrationGuideUrl
             """,
-            category = Category.CORRECTNESS,
-            priority = 6,
-            severity = Severity.WARNING,
-            implementation = Implementation(
-                GoogleMapDetector::class.java,
-                Scope.JAVA_FILE_SCOPE
+                category = Category.CORRECTNESS,
+                priority = 6,
+                severity = Severity.WARNING,
+                implementation =
+                    Implementation(
+                        GoogleMapDetector::class.java,
+                        Scope.JAVA_FILE_SCOPE,
+                    ),
             )
-        )
     }
 }

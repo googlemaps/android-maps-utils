@@ -3,11 +3,14 @@
   "packages": {
     ".": {
       "release-type": "simple",
+      "prerelease": true,
+      "prerelease-type": "rc",
       "extra-files": [
         "README.md",
         "build.gradle.kts",
         ".gemini/skills/android-maps-utils/SKILL.md",
-        "llm-integration-prompt.md"
+        "llm-integration-prompt.md",
+        "MIGRATION.md"
       ]
     }
   }

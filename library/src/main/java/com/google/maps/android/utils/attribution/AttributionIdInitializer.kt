@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.attribution
 
 import android.content.Context
@@ -32,12 +31,12 @@ internal class AttributionIdInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         // See [AttributionIdInitializer]
         MapsApiSettings.addInternalUsageAttributionId(
-            /* context = */ context,
-            /* internalUsageAttributionId = */ AttributionId.VALUE
+            // context =
+            context,
+            // internalUsageAttributionId =
+            AttributionId.VALUE,
         )
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
-    }
+    override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 }

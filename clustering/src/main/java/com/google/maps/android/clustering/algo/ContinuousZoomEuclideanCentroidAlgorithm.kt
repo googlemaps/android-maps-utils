@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo
 
 import com.google.maps.android.clustering.Cluster
@@ -33,7 +32,6 @@ import kotlin.math.pow
  * @param <T> the type of cluster item
  */
 class ContinuousZoomEuclideanCentroidAlgorithm<T : ClusterItem> : CentroidNonHierarchicalDistanceBasedAlgorithm<T>() {
-
     override fun getClusters(zoom: Float): Set<Cluster<T>> {
         // Continuous zoom — no casting to int
         val zoomSpecificSpan = maxDistanceBetweenClusteredItems.toDouble() / 2.0.pow(zoom.toDouble()) / 256.0

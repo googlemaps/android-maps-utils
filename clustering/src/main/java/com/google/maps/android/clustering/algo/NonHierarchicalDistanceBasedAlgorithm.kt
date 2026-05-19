@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo
 
 import com.google.android.gms.maps.model.LatLng
@@ -43,7 +42,6 @@ import java.util.LinkedHashSet
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
 open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
-
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
@@ -179,9 +177,10 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
         return results
     }
 
-    protected open fun getClusteringItems(quadTree: PointQuadTree<QuadItem<T>>, zoom: Float): Collection<QuadItem<T>> {
-        return mItems
-    }
+    protected open fun getClusteringItems(
+        quadTree: PointQuadTree<QuadItem<T>>,
+        zoom: Float,
+    ): Collection<QuadItem<T>> = mItems
 
     override val items: Collection<T>
         get() {
@@ -201,9 +200,10 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
      * @param b the second point
      * @return the squared Euclidean distance between [a] and [b]
      */
-    protected fun distanceSquared(a: Point, b: Point): Double {
-        return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
-    }
+    protected fun distanceSquared(
+        a: Point,
+        b: Point,
+    ): Double = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
 
     /**
      * Creates a square bounding box centered at a point with the specified span.
@@ -212,17 +212,25 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
      * @param span the total width/height of the bounding box
      * @return the [Bounds] object representing the search area
      */
-    protected fun createBoundsFromSpan(p: Point, span: Double): Bounds {
+    protected fun createBoundsFromSpan(
+        p: Point,
+        span: Double,
+    ): Bounds {
         // TODO: Use a span that takes into account the visual size of the marker, not just its
         // LatLng.
         val halfSpan = span / 2
         return Bounds(
-            p.x - halfSpan, p.x + halfSpan,
-            p.y - halfSpan, p.y + halfSpan
+            p.x - halfSpan,
+            p.x + halfSpan,
+            p.y - halfSpan,
+            p.y + halfSpan,
         )
     }
 
-    protected class QuadItem<T : ClusterItem>(@JvmField val mClusterItem: T) : PointQuadTree.Item, Cluster<T> {
+    protected class QuadItem<T : ClusterItem>(
+        @JvmField val mClusterItem: T,
+    ) : PointQuadTree.Item,
+        Cluster<T> {
         private val mPoint: Point = PROJECTION.toPoint(mClusterItem.position)
         private val mPosition: LatLng = mClusterItem.position
         private val singletonSet: Set<T> = Collections.singleton(mClusterItem)
@@ -239,9 +247,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
         override val size: Int
             get() = 1
 
-        override fun hashCode(): Int {
-            return mClusterItem.hashCode()
-        }
+        override fun hashCode(): Int = mClusterItem.hashCode()
 
         override fun equals(other: Any?): Boolean {
             if (other !is QuadItem<*>) {

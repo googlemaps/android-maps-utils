@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,7 +28,9 @@ import androidx.core.content.ContextCompat
 /**
  * Draws a bubble with a shadow, filled with any color.
  */
-internal class BubbleDrawable(context: Context) : Drawable() {
+internal class BubbleDrawable(
+    context: Context,
+) : Drawable() {
     private val shadow: Drawable? = ContextCompat.getDrawable(context, R.drawable.amu_bubble_shadow)
     private val mask: Drawable? = ContextCompat.getDrawable(context, R.drawable.amu_bubble_mask)
     private var color: Int = Color.WHITE
@@ -43,22 +45,22 @@ internal class BubbleDrawable(context: Context) : Drawable() {
         shadow?.draw(canvas)
     }
 
-    override fun setAlpha(alpha: Int) {
-        throw UnsupportedOperationException()
-    }
+    override fun setAlpha(alpha: Int): Unit = throw UnsupportedOperationException()
 
-    override fun setColorFilter(cf: ColorFilter?) {
-        throw UnsupportedOperationException()
-    }
+    override fun setColorFilter(cf: ColorFilter?): Unit = throw UnsupportedOperationException()
 
-    @Deprecated("Deprecated in Java",
-        ReplaceWith("PixelFormat.TRANSLUCENT", "android.graphics.PixelFormat")
+    @Deprecated(
+        "Deprecated in Java",
+        ReplaceWith("PixelFormat.TRANSLUCENT", "android.graphics.PixelFormat"),
     )
-    override fun getOpacity(): Int {
-        return PixelFormat.TRANSLUCENT
-    }
+    override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
-    override fun setBounds(left: Int, top: Int, right: Int, bottom: Int) {
+    override fun setBounds(
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
+    ) {
         mask?.setBounds(left, top, right, bottom)
         shadow?.setBounds(left, top, right, bottom)
     }
@@ -68,7 +70,5 @@ internal class BubbleDrawable(context: Context) : Drawable() {
         shadow?.bounds = bounds
     }
 
-    override fun getPadding(padding: Rect): Boolean {
-        return mask?.getPadding(padding) ?: false
-    }
+    override fun getPadding(padding: Rect): Boolean = mask?.getPadding(padding) ?: false
 }

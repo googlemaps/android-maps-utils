@@ -1,11 +1,11 @@
 /*
- * Copyright 2026 Google LLC.
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.quadtree
 
 import com.google.maps.android.geometry.Bounds
@@ -26,7 +25,6 @@ import org.junit.Test
 import java.util.Random
 
 class PointQuadTreeTest {
-
     private lateinit var mTree: PointQuadTree<Item>
 
     @Before
@@ -114,7 +112,8 @@ class PointQuadTreeTest {
 
         assertEquals(10000, searchAll().size)
         assertEquals(
-            1, mTree.search(Bounds(0.0, 0.00001, 0.0, 0.00001)).size
+            1,
+            mTree.search(Bounds(0.0, 0.00001, 0.0, 0.00001)).size,
         )
         assertEquals(0, mTree.search(Bounds(.7, .8, .7, .8)).size)
         mTree.clear()
@@ -234,11 +233,12 @@ class PointQuadTreeTest {
         System.gc()
     }
 
-    private fun searchAll(): Collection<Item> {
-        return mTree.search(Bounds(0.0, 1.0, 0.0, 1.0))
-    }
+    private fun searchAll(): Collection<Item> = mTree.search(Bounds(0.0, 1.0, 0.0, 1.0))
 
-    private class Item(x: Double, y: Double) : PointQuadTree.Item {
+    private class Item(
+        x: Double,
+        y: Double,
+    ) : PointQuadTree.Item {
         override val point: Point = Point(x, y)
     }
 }

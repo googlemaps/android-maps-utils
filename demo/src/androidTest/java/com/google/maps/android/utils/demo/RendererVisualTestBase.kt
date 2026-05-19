@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.demo
 
 import android.content.Intent
@@ -23,11 +22,11 @@ import org.junit.Assert.assertTrue
 import java.util.concurrent.TimeUnit
 
 abstract class RendererVisualTestBase : BaseVisualTest() {
-
     protected fun launchActivity() {
-        val intent = Intent(context, RendererDemoActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+        val intent =
+            Intent(context, RendererDemoActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
         context.startActivity(intent)
         uiDevice.wait(Until.hasObject(By.pkg(context.packageName).depth(0)), 10000)
         // Wait for map initialization
@@ -37,7 +36,7 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
     protected suspend fun clickButton(label: String) {
         // Ensure bottom sheet is expanded enough to find the button
         expandBottomSheet()
-        
+
         // Try to find by text first for speed
         val element = uiDevice.findObject(By.textContains(label))
         if (element != null) {
@@ -46,7 +45,7 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
             // Fallback to AI if standard selector fails
             helper.performActionFromPrompt("Click the $label button or chip", uiDevice, geminiApiKey)
         }
-        
+
         // Wait for action to settle (bottom sheet collapse, map render)
         TimeUnit.SECONDS.sleep(2)
     }
@@ -74,7 +73,8 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
     protected suspend fun verifyMapContent(description: String) {
         val screenshotBitmap = captureScreenshot("visual_test_${System.currentTimeMillis()}.png")
 
-        val prompt = """
+        val prompt =
+            """
             Analyze this screenshot of a map app.
             Check if the following condition is met:
             "$description"
@@ -84,14 +84,14 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
             CRITICAL: Start your response with YES if BOTH the condition is met AND the bottom sheet is collapsed.
             Start your response with NO if ANY condition is not met.
             Then explain your reasoning.
-        """.trimIndent()
+            """.trimIndent()
 
         val response = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
         println("Gemini Verification for '$description': $response")
 
         assertTrue(
             "Visual verification failed. Response: $response",
-            response?.trim()?.startsWith("YES", ignoreCase = true) == true
+            response?.trim()?.startsWith("YES", ignoreCase = true) == true,
         )
     }
 }

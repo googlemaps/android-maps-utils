@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.heatmaps
 
 import com.google.android.gms.maps.model.LatLng
@@ -26,7 +25,6 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class HeatmapTileProviderTest {
-
     @Test
     fun testBuilder_weightedData() {
         val data = listOf(WeightedLatLng(LatLng(0.0, 0.0)))
@@ -60,11 +58,16 @@ class HeatmapTileProviderTest {
             // success
         }
     }
-    
+
     @Test
     fun testBuilder_radius() {
         val data = listOf(LatLng(0.0, 0.0))
-        val provider = HeatmapTileProvider.Builder().data(data).radius(20).build()
+        val provider =
+            HeatmapTileProvider
+                .Builder()
+                .data(data)
+                .radius(20)
+                .build()
         assertThat(provider).isNotNull()
     }
 
@@ -88,7 +91,12 @@ class HeatmapTileProviderTest {
     @Test
     fun testBuilder_opacity() {
         val data = listOf(LatLng(0.0, 0.0))
-        val provider = HeatmapTileProvider.Builder().data(data).opacity(0.5).build()
+        val provider =
+            HeatmapTileProvider
+                .Builder()
+                .data(data)
+                .opacity(0.5)
+                .build()
         assertThat(provider).isNotNull()
     }
 

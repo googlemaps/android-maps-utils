@@ -42,7 +42,7 @@ class PublishingConventionPlugin : Plugin<Project> {
 
     private fun Project.configureJacoco() {
         configure<JacocoPluginExtension> {
-            toolVersion = "0.8.7"
+            toolVersion = "0.8.12"
         }
 
         tasks.withType<Test>().configureEach {
@@ -66,13 +66,13 @@ class PublishingConventionPlugin : Plugin<Project> {
             publishToMavenCentral()
             signAllPublications()
 
-            val artifactName = if (project.name == "library") {
-                "android-maps-utils"
-            } else {
-                "maps-utils-${project.name}"
+            val artifactIdName = when (project.name) {
+                "maps-utils" -> "android-maps-utils"
+                "library" -> "android-maps-utils-core"
+                else -> "android-maps-utils-${project.name}"
             }
             coordinates(
-                artifactId = artifactName,
+                artifactId = artifactIdName,
             )
 
             pom {

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.demo
 
 import android.annotation.SuppressLint
@@ -41,7 +40,6 @@ import kotlinx.coroutines.launch
  * 4. Displays the results of the Street View data fetch on the screen.
  */
 class StreetViewDemoActivity : AppCompatActivity() {
-
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

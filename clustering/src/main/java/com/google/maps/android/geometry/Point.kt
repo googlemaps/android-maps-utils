@@ -1,11 +1,11 @@
 /*
- * Copyright 2026 Google LLC.
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.geometry
 
-open class Point(@JvmField val x: Double, @JvmField val y: Double) {
-    override fun toString(): String {
-        return "Point(x=$x, y=$y)"
-    }
+open class Point(
+    @JvmField val x: Double,
+    @JvmField val y: Double,
+) {
+    override fun toString(): String = "Point(x=$x, y=$y)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -39,7 +39,8 @@ open class Point(@JvmField val x: Double, @JvmField val y: Double) {
         return result
     }
 
-    fun copy(x: Double = this.x, y: Double = this.y): Point {
-        return Point(x, y)
-    }
+    fun copy(
+        x: Double = this.x,
+        y: Double = this.y,
+    ): Point = Point(x, y)
 }

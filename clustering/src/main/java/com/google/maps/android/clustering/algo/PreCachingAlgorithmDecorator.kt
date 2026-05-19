@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo
 
 import androidx.collection.LruCache
@@ -27,8 +26,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
  */
-class PreCachingAlgorithmDecorator<T : ClusterItem>(private val algorithm: Algorithm<T>) : AbstractAlgorithm<T>() {
-
+class PreCachingAlgorithmDecorator<T : ClusterItem>(
+    private val algorithm: Algorithm<T>,
+) : AbstractAlgorithm<T>() {
     // TODO: evaluate maxSize parameter for LruCache.
     private val mCache = LruCache<Int, Set<Cluster<T>>>(5)
     private val mCacheLock: ReadWriteLock = ReentrantReadWriteLock()
@@ -127,7 +127,9 @@ class PreCachingAlgorithmDecorator<T : ClusterItem>(private val algorithm: Algor
         return results!!
     }
 
-    private inner class PrecacheRunnable(private val zoom: Int) : Runnable {
+    private inner class PrecacheRunnable(
+        private val zoom: Int,
+    ) : Runnable {
         override fun run() {
             try {
                 // Wait between 500 - 1000 ms.

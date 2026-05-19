@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.attribution
 
 import android.content.Context
@@ -34,7 +33,6 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class AttributionIdInitializerTest {
-
     @Before
     fun setUp() {
         mockkStatic(MapsApiSettings::class)
@@ -56,7 +54,7 @@ class AttributionIdInitializerTest {
         verify {
             MapsApiSettings.addInternalUsageAttributionId(
                 context,
-                AttributionId.VALUE
+                AttributionId.VALUE,
             )
         }
     }

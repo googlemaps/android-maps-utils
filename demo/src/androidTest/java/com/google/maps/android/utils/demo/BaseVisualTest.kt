@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,6 @@ import org.junit.Assert.assertTrue
 import java.io.File
 
 abstract class BaseVisualTest {
-
     protected val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
     protected val uiDevice = UiDevice.getInstance(instrumentation)
     protected val context: Context = instrumentation.targetContext
@@ -36,7 +35,7 @@ abstract class BaseVisualTest {
         val key = BuildConfig.GEMINI_API_KEY
         assertTrue(
             "GEMINI_API_KEY is not set in secrets.properties. Please add GEMINI_API_KEY=YOUR_API_KEY to your secrets.properties file.",
-            key != "YOUR_GEMINI_API_KEY"
+            key != "YOUR_GEMINI_API_KEY",
         )
         key
     }
@@ -60,9 +59,10 @@ abstract class BaseVisualTest {
     protected fun waitForMapRendering(seconds: Long = 3) {
         // Optional: Wait for map container if possible
         // uiDevice.wait(Until.hasObject(By.descContains("Google Map")), 5000)
-        
+
         try {
-            java.util.concurrent.TimeUnit.SECONDS.sleep(seconds)
+            java.util.concurrent.TimeUnit.SECONDS
+                .sleep(seconds)
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }

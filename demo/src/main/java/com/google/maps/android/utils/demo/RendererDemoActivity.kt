@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.demo
 
 import android.content.Intent
@@ -39,13 +38,13 @@ import com.google.android.material.chip.Chip
 import com.google.maps.android.data.DataLayerLoader
 import com.google.maps.android.data.renderer.UrlIconProvider
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
+import com.google.maps.android.data.renderer.model.DataLayer
 import com.google.maps.android.data.renderer.model.Feature
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.utils.demo.databinding.RendererDemoBinding
 import kotlinx.coroutines.launch
-import com.google.maps.android.data.renderer.model.DataLayer
 
 /**
  * Demo activity for the new Renderer system.
@@ -57,13 +56,15 @@ import com.google.maps.android.data.renderer.model.DataLayer
  * 4.  **Feature Interaction**: Loading external files via the system file picker.
  * 5.  **Advanced Markers**: Toggling between legacy and Advanced Markers.
  */
-class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
+class RendererDemoActivity :
+    AppCompatActivity(),
+    OnMapReadyCallback {
     private lateinit var binding: RendererDemoBinding
     private lateinit var map: GoogleMap
     private lateinit var mapViewRenderer: MapViewRenderer
 
     private val addedLayers = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<DataLayer, Boolean>())
-    
+
     // Map Chip ID to loaded DataLayer
     private val chipLayers = mutableMapOf<Int, DataLayer>()
 
@@ -71,13 +72,14 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val dataLayerLoader = DataLayerLoader(this)
 
-    private val filePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            result.data?.data?.let { uri ->
-                loadGeoFile(uri)
+    private val filePickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    loadGeoFile(uri)
+                }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +87,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
         MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST) { renderer ->
             Log.d(
                 "RendererDemo",
-                "Maps SDK initialized with renderer: $renderer"
+                "Maps SDK initialized with renderer: $renderer",
             )
         }
 
@@ -96,13 +98,13 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
+
             // Apply bottom inset to Bottom Sheet (padding)
             binding.bottomSheet.setPadding(
                 binding.bottomSheet.paddingLeft,
                 binding.bottomSheet.paddingTop,
                 binding.bottomSheet.paddingRight,
-                insets.bottom + (16 * resources.displayMetrics.density).toInt() // Original padding + inset
+                insets.bottom + (16 * resources.displayMetrics.density).toInt(), // Original padding + inset
             )
 
             WindowInsetsCompat.CONSUMED
@@ -115,18 +117,21 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             val app = application as DemoApplication
             val mapId = app.mapId
-            
-            val mapOptions = com.google.android.gms.maps.GoogleMapOptions()
+
+            val mapOptions =
+                com.google.android.gms.maps
+                    .GoogleMapOptions()
             if (mapId != null) {
                 mapOptions.mapId(mapId)
             }
-            
+
             mapFragment = SupportMapFragment.newInstance(mapOptions)
-            supportFragmentManager.beginTransaction()
+            supportFragmentManager
+                .beginTransaction()
                 .add(R.id.map_container, mapFragment)
                 .commit()
         }
-            
+
         mapFragment.getMapAsync(this)
     }
 
@@ -143,10 +148,11 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
         addDefaultLayer()
 
         binding.btnLoadFile.setOnClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "*/*"
-            }
+            val intent =
+                Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                }
             filePickerLauncher.launch(intent)
         }
 
@@ -156,7 +162,7 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
             chipLayers.clear()
             binding.chipGroupLayers.clearCheck()
         }
-        
+
         binding.btnToggleSheet.setOnClickListener {
             if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -193,8 +199,11 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
             mapViewRenderer.useAdvancedMarkers = isChecked
         }
     }
-    
-    private fun onChipClicked(chip: Chip, filename: String) {
+
+    private fun onChipClicked(
+        chip: Chip,
+        filename: String,
+    ) {
         if (chip.isChecked) {
             // Load and add
             val existingLayer = chipLayers[chip.id]
@@ -214,33 +223,35 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
             if (layer != null) {
                 mapViewRenderer.removeLayer(layer)
                 addedLayers.remove(layer)
-
             }
         }
     }
 
     private suspend fun loadLayerFromAsset(
         filename: String,
-        onSuccess: (DataLayer) -> Unit
+        onSuccess: (DataLayer) -> Unit,
     ) {
-        dataLayerLoader.loadAsset(filename)?.let { layer ->  onSuccess(layer) }
+        dataLayerLoader.loadAsset(filename)?.let { layer -> onSuccess(layer) }
     }
 
     private fun addDefaultLayer() {
         // Add a Marker using the new DataRenderer system
         val point = Point(37.422, -122.084)
-        val properties = mapOf(
-            "name" to "Googleplex",
-            "description" to "Mountain View, CA"
-        )
-        val style = PointStyle(
-            iconUrl = null // Use default marker
-        )
-        val feature = Feature(
-            geometry = PointGeometry(point),
-            properties = properties,
-            style = style
-        )
+        val properties =
+            mapOf(
+                "name" to "Googleplex",
+                "description" to "Mountain View, CA",
+            )
+        val style =
+            PointStyle(
+                iconUrl = null, // Use default marker
+            )
+        val feature =
+            Feature(
+                geometry = PointGeometry(point),
+                properties = properties,
+                style = style,
+            )
         val layer = DataLayer(features = listOf(feature))
         mapViewRenderer.addLayer(layer)
         addedLayers.add(layer)
@@ -281,7 +292,6 @@ class RendererDemoActivity : AppCompatActivity(), OnMapReadyCallback {
                 } else {
                     Toast.makeText(this@RendererDemoActivity, "Unsupported or failed to parse file", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(this@RendererDemoActivity, "Error loading file: ${e.message}", Toast.LENGTH_SHORT).show()

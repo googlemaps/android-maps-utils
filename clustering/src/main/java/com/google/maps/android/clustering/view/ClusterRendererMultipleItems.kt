@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.view
 
 import android.animation.Animator
@@ -77,18 +76,17 @@ import kotlin.math.sign
 open class ClusterRendererMultipleItems<T : ClusterItem>(
     context: Context,
     private val mMap: GoogleMap,
-    private val mClusterManager: ClusterManager<T>
+    private val mClusterManager: ClusterManager<T>,
 ) : ClusterRenderer<T> {
-
     private val mIconGenerator: IconGenerator = IconGenerator(context)
     private val mDensity: Float = context.resources.displayMetrics.density
     private var mAnimate: Boolean = true
     private var mAnimationDurationMs: Long = 300
     private val mExecutor = Executors.newSingleThreadExecutor()
     private val ongoingAnimations: Queue<AnimationTask> = LinkedList()
-    
+
     private var mColoredCircleBackground: ShapeDrawable? = null
-    
+
     // Default interpolator
     private var animationInterp: TimeInterpolator = DecelerateInterpolator()
 
@@ -100,18 +98,19 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
         FAST_OUT_SLOW_IN,
         BOUNCE,
         ACCELERATE,
-        DECELERATE
+        DECELERATE,
     }
 
     fun setAnimationType(type: AnimationType) {
-        animationInterp = when (type) {
-            AnimationType.LINEAR -> LinearInterpolator()
-            AnimationType.EASE_IN, AnimationType.ACCELERATE -> AccelerateInterpolator()
-            AnimationType.EASE_OUT, AnimationType.DECELERATE -> DecelerateInterpolator()
-            AnimationType.EASE_IN_OUT -> AccelerateDecelerateInterpolator()
-            AnimationType.FAST_OUT_SLOW_IN -> FastOutSlowInInterpolator()
-            AnimationType.BOUNCE -> BounceInterpolator()
-        }
+        animationInterp =
+            when (type) {
+                AnimationType.LINEAR -> LinearInterpolator()
+                AnimationType.EASE_IN, AnimationType.ACCELERATE -> AccelerateInterpolator()
+                AnimationType.EASE_OUT, AnimationType.DECELERATE -> DecelerateInterpolator()
+                AnimationType.EASE_IN_OUT -> AccelerateDecelerateInterpolator()
+                AnimationType.FAST_OUT_SLOW_IN -> FastOutSlowInInterpolator()
+                AnimationType.BOUNCE -> BounceInterpolator()
+            }
     }
 
     /**
@@ -178,33 +177,33 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
 
         mClusterManager.markerCollection.setOnMarkerClickListener { marker ->
             RendererLogger.d("ClusterRenderer", "Marker clicked: $marker")
-            mItemClickListener != null && mItemClickListener!!.onClusterItemClick(mMarkerCache[marker])
+            mMarkerCache[marker]?.let { mItemClickListener?.onClusterItemClick(it) } ?: false
         }
 
         mClusterManager.markerCollection.setOnInfoWindowClickListener { marker ->
             RendererLogger.d("ClusterRenderer", "Info window clicked for marker: $marker")
-            mItemInfoWindowClickListener?.onClusterItemInfoWindowClick(mMarkerCache[marker])
+            mMarkerCache[marker]?.let { mItemInfoWindowClickListener?.onClusterItemInfoWindowClick(it) }
         }
 
         mClusterManager.markerCollection.setOnInfoWindowLongClickListener { marker ->
             RendererLogger.d("ClusterRenderer", "Info window long-clicked for marker: $marker")
-            mItemInfoWindowLongClickListener?.onClusterItemInfoWindowLongClick(mMarkerCache[marker])
+            mMarkerCache[marker]?.let { mItemInfoWindowLongClickListener?.onClusterItemInfoWindowLongClick(it) }
         }
 
         RendererLogger.d("ClusterRenderer", "Setting up ClusterMarkerCollection listeners")
 
         mClusterManager.clusterMarkerCollection.setOnMarkerClickListener { marker ->
-            mClickListener != null && mClickListener!!.onClusterClick(mClusterMarkerCache[marker])
+            mClusterMarkerCache[marker]?.let { mClickListener?.onClusterClick(it) } ?: false
         }
 
         mClusterManager.clusterMarkerCollection.setOnInfoWindowClickListener { marker ->
             RendererLogger.d("ClusterRenderer", "Info window clicked for cluster marker: $marker")
-            mInfoWindowClickListener?.onClusterInfoWindowClick(mClusterMarkerCache[marker])
+            mClusterMarkerCache[marker]?.let { mInfoWindowClickListener?.onClusterInfoWindowClick(it) }
         }
 
         mClusterManager.clusterMarkerCollection.setOnInfoWindowLongClickListener { marker ->
             RendererLogger.d("ClusterRenderer", "Info window long-clicked for cluster marker: $marker")
-            mInfoWindowLongClickListener?.onClusterInfoWindowLongClick(mClusterMarkerCache[marker])
+            mClusterMarkerCache[marker]?.let { mInfoWindowLongClickListener?.onClusterInfoWindowLongClick(it) }
         }
     }
 
@@ -229,10 +228,11 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
 
     private fun makeSquareTextView(context: Context): SquareTextView {
         val squareTextView = SquareTextView(context)
-        val layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        val layoutParams =
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            )
         squareTextView.layoutParams = layoutParams
         squareTextView.id = R.id.amu_text
         val twelveDpi = (12 * mDensity).toInt()
@@ -267,11 +267,12 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
         RendererLogger.setEnabled(enabled)
     }
 
-    protected fun getClusterText(bucket: Int): String {
-        return if (bucket < BUCKETS[0]) {
+    protected fun getClusterText(bucket: Int): String =
+        if (bucket < BUCKETS[0]) {
             bucket.toString()
-        } else "$bucket+"
-    }
+        } else {
+            "$bucket+"
+        }
 
     /**
      * Gets the "bucket" for a particular cluster. By default, uses the number of points within the
@@ -295,7 +296,9 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * re-rendering, which is performed by the RenderTask.
      */
     @SuppressLint("HandlerLeak")
-    private inner class ViewModifier(looper: Looper) : Handler(looper) {
+    private inner class ViewModifier(
+        looper: Looper,
+    ) : Handler(looper) {
         private var mViewModificationInProgress = false
         private var mNextClusters: RenderTask? = null
 
@@ -350,9 +353,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @return true if the provided cluster should be rendered as a single marker on the map, false
      * if the items within this cluster should be rendered as individual markers instead.
      */
-    protected open fun shouldRenderAsCluster(cluster: Cluster<T>): Boolean {
-        return cluster.size >= minClusterSize
-    }
+    protected open fun shouldRenderAsCluster(cluster: Cluster<T>): Boolean = cluster.size >= minClusterSize
 
     /**
      * Transforms the current view (represented by DefaultClusterRenderer.mClusters and DefaultClusterRenderer.mZoom) to a
@@ -378,7 +379,9 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * When zooming in, markers are animated out from the nearest existing cluster. When zooming
      * out, existing clusters are animated to the nearest new cluster.
      */
-    private inner class RenderTask(val clusters: Set<Cluster<T>>) : Runnable {
+    private inner class RenderTask(
+        val clusters: Set<Cluster<T>>,
+    ) : Runnable {
         private var mCallback: Runnable? = null
         private var mProjection: Projection? = null
         private var mSphericalMercatorProjection: SphericalMercatorProjection? = null
@@ -394,9 +397,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
 
         fun setMapZoom(zoom: Float) {
             mMapZoom = zoom
-            mSphericalMercatorProjection = SphericalMercatorProjection(
-                256 * 2.0.pow(min(zoom.toDouble(), mZoom.toDouble()))
-            )
+            mSphericalMercatorProjection =
+                SphericalMercatorProjection(
+                    256 * 2.0.pow(min(zoom.toDouble(), mZoom.toDouble())),
+                )
         }
 
         @SuppressLint("NewApi")
@@ -469,7 +473,6 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
                 RendererLogger.d("ClusterRenderer", "New clusters on screen found: " + newClustersOnScreen.size)
             }
 
-
             for (marker in markersToRemove) {
                 val onScreen = marker.position?.let { visibleBounds.contains(it) } ?: false
 
@@ -480,7 +483,15 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
                         val animateTo = mSphericalMercatorProjection!!.toLatLng(closest)
                         markerModifier.animateThenRemove(marker, marker.position!!, animateTo!!)
                         RendererLogger.d("ClusterRenderer", "Animating then removing marker at position: " + marker.position)
-                    } else if (mClusterMarkerCache.mCache.keys.iterator().hasNext() && mClusterMarkerCache.mCache.keys.iterator().next().items.contains(marker.clusterItem)) {
+                    } else if (mClusterMarkerCache.mCache.keys
+                            .iterator()
+                            .hasNext() &&
+                        mClusterMarkerCache.mCache.keys
+                            .iterator()
+                            .next()
+                            .items
+                            .contains(marker.clusterItem)
+                    ) {
                         var foundItem: T? = null
                         for (cluster in mClusterMarkerCache.mCache.keys) {
                             for (clusterItem in cluster.items) {
@@ -492,7 +503,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
                         }
                         // Remove it because it will join a cluster
                         markerModifier.animateThenRemove(marker, marker.position!!, foundItem!!.position)
-                        RendererLogger.d("ClusterRenderer", "Animating then removing marker joining cluster at position: " + marker.position)
+                        RendererLogger.d(
+                            "ClusterRenderer",
+                            "Animating then removing marker joining cluster at position: " + marker.position,
+                        )
                     } else {
                         markerModifier.remove(true, marker.marker)
                         RendererLogger.d("ClusterRenderer", "Removing marker without animation at position: " + marker.position)
@@ -564,7 +578,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
         }
     }
 
-    private fun findClosestCluster(markers: List<Point>?, point: Point): Point? {
+    private fun findClosestCluster(
+        markers: List<Point>?,
+        point: Point,
+    ): Point? {
         if (markers == null || markers.isEmpty()) return null
 
         val maxDistance = mClusterManager.algorithm.maxDistanceBetweenClusteredItems
@@ -586,8 +603,9 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * UI.
      */
     @SuppressLint("HandlerLeak")
-    private inner class MarkerModifier : Handler(Looper.getMainLooper()), MessageQueue.IdleHandler {
-
+    private inner class MarkerModifier :
+        Handler(Looper.getMainLooper()),
+        MessageQueue.IdleHandler {
         private val lock = ReentrantLock()
         private val busyCondition = lock.newCondition()
 
@@ -616,7 +634,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
          *
          * @param priority whether this operation should have priority.
          */
-        fun add(priority: Boolean, c: CreateMarkerTask) {
+        fun add(
+            priority: Boolean,
+            c: CreateMarkerTask,
+        ) {
             withLock {
                 sendEmptyMessage(BLANK)
                 if (priority) {
@@ -633,7 +654,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
          * @param priority whether this operation should have priority.
          * @param m        the markerWithPosition to remove.
          */
-        fun remove(priority: Boolean, m: Marker) {
+        fun remove(
+            priority: Boolean,
+            m: Marker,
+        ) {
             withLock {
                 sendEmptyMessage(BLANK)
                 if (priority) {
@@ -651,7 +675,11 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
-        fun animate(marker: MarkerWithPosition<T>, from: LatLng, to: LatLng) {
+        fun animate(
+            marker: MarkerWithPosition<T>,
+            from: LatLng,
+            to: LatLng,
+        ) {
             withLock {
                 val task = AnimationTask(marker, from, to, lock)
 
@@ -675,7 +703,11 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
-        fun animateThenRemove(marker: MarkerWithPosition<T>, from: LatLng, to: LatLng) {
+        fun animateThenRemove(
+            marker: MarkerWithPosition<T>,
+            from: LatLng,
+            to: LatLng,
+        ) {
             withLock {
                 val animationTask = AnimationTask(marker, from, to, lock)
                 for (existingTask in ongoingAnimations) {
@@ -700,7 +732,6 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
 
             lock.lock()
             try {
-
                 // Perform up to 10 tasks at once.
                 // Consider only performing 10 remove tasks, not adds and animations.
                 // Removes are relatively slow and are much better when batched.
@@ -754,9 +785,11 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
             get() {
                 lock.lock()
                 try {
-                    return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
+                    return !(
+                        mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
                             mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
-                            mAnimationTasks.isEmpty())
+                            mAnimationTasks.isEmpty()
+                    )
                 } finally {
                     lock.unlock()
                 }
@@ -798,15 +831,14 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
         val mCache: MutableMap<T, Marker> = HashMap()
         private val mCacheReverse: MutableMap<Marker, T> = HashMap()
 
-        operator fun get(item: T): Marker? {
-            return mCache[item]
-        }
+        operator fun get(item: T): Marker? = mCache[item]
 
-        operator fun get(m: Marker): T? {
-            return mCacheReverse[m]
-        }
+        operator fun get(m: Marker): T? = mCacheReverse[m]
 
-        fun put(item: T, m: Marker) {
+        fun put(
+            item: T,
+            m: Marker,
+        ) {
             mCache[item] = m
             mCacheReverse[m] = item
         }
@@ -835,7 +867,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param item          item to be rendered
      * @param markerOptions the markerOptions representing the provided item
      */
-    protected open fun onBeforeClusterItemRendered(item: T, markerOptions: MarkerOptions) {
+    protected open fun onBeforeClusterItemRendered(
+        item: T,
+        markerOptions: MarkerOptions,
+    ) {
         if (item.title != null && item.snippet != null) {
             markerOptions.title(item.title)
             markerOptions.snippet(item.snippet)
@@ -865,7 +900,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param item   item being updated
      * @param marker cached marker that contains a potentially previous state of the item.
      */
-    protected open fun onClusterItemUpdated(item: T, marker: Marker) {
+    protected open fun onClusterItemUpdated(
+        item: T,
+        marker: Marker,
+    ) {
         var changed = false
         // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
         if (item.title != null && item.snippet != null) {
@@ -913,7 +951,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param cluster       cluster to be rendered
      * @param markerOptions markerOptions representing the provided cluster
      */
-    protected open fun onBeforeClusterRendered(cluster: Cluster<T>, markerOptions: MarkerOptions) {
+    protected open fun onBeforeClusterRendered(
+        cluster: Cluster<T>,
+        markerOptions: MarkerOptions,
+    ) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         markerOptions.icon(getDescriptorForCluster(cluster))
     }
@@ -946,7 +987,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param cluster the cluster that was just added to the map
      * @param marker  the marker representing the cluster that was just added to the map
      */
-    protected fun onClusterRendered(cluster: Cluster<T>, marker: Marker) {}
+    protected fun onClusterRendered(
+        cluster: Cluster<T>,
+        marker: Marker,
+    ) {}
 
     /**
      * Called when a cached marker for a Cluster already exists on the map so the marker may
@@ -966,7 +1010,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param cluster cluster being updated
      * @param marker  cached marker that contains a potentially previous state of the cluster
      */
-    protected open fun onClusterUpdated(cluster: Cluster<T>, marker: Marker) {
+    protected open fun onClusterUpdated(
+        cluster: Cluster<T>,
+        marker: Marker,
+    ) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         marker.setIcon(getDescriptorForCluster(cluster))
     }
@@ -977,7 +1024,10 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param clusterItem the item that was just added to the map
      * @param marker      the marker representing the item that was just added to the map
      */
-    protected fun onClusterItemRendered(clusterItem: T, marker: Marker) {}
+    protected fun onClusterItemRendered(
+        clusterItem: T,
+        marker: Marker,
+    ) {}
 
     /**
      * Get the marker from a ClusterItem
@@ -985,9 +1035,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param clusterItem ClusterItem which you will obtain its marker
      * @return a marker from a ClusterItem or null if it does not exists
      */
-    fun getMarker(clusterItem: T): Marker? {
-        return mMarkerCache[clusterItem]
-    }
+    fun getMarker(clusterItem: T): Marker? = mMarkerCache[clusterItem]
 
     /**
      * Get the ClusterItem from a marker
@@ -995,9 +1043,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param marker which you will obtain its ClusterItem
      * @return a ClusterItem from a marker or null if it does not exists
      */
-    fun getClusterItem(marker: Marker): T? {
-        return mMarkerCache[marker]
-    }
+    fun getClusterItem(marker: Marker): T? = mMarkerCache[marker]
 
     /**
      * Get the marker from a Cluster
@@ -1005,9 +1051,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param cluster which you will obtain its marker
      * @return a marker from a cluster or null if it does not exists
      */
-    fun getMarker(cluster: Cluster<T>): Marker? {
-        return mClusterMarkerCache[cluster]
-    }
+    fun getMarker(cluster: Cluster<T>): Marker? = mClusterMarkerCache[cluster]
 
     /**
      * Get the Cluster from a marker
@@ -1015,9 +1059,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * @param marker which you will obtain its Cluster
      * @return a Cluster from a marker or null if it does not exists
      */
-    fun getCluster(marker: Marker): Cluster<T>? {
-        return mClusterMarkerCache[marker]
-    }
+    fun getCluster(marker: Marker): Cluster<T>? = mClusterMarkerCache[marker]
 
     /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
@@ -1025,9 +1067,8 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
     private inner class CreateMarkerTask(
         private val cluster: Cluster<T>,
         private val newMarkers: MutableSet<MarkerWithPosition<T>>,
-        private val animateFrom: LatLng?
+        private val animateFrom: LatLng?,
     ) {
-
         fun perform(markerModifier: MarkerModifier) {
             // Don't show small clusters. Render the markers inside, instead.
             if (!shouldRenderAsCluster(cluster)) {
@@ -1042,7 +1083,15 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
                         if (animateFrom != null) {
                             RendererLogger.d("ClusterRenderer", "Animating from position: $animateFrom")
                             markerOptions.position(animateFrom)
-                        } else if (mClusterMarkerCache.mCache.keys.iterator().hasNext() && mClusterMarkerCache.mCache.keys.iterator().next().items.contains(item)) {
+                        } else if (mClusterMarkerCache.mCache.keys
+                                .iterator()
+                                .hasNext() &&
+                            mClusterMarkerCache.mCache.keys
+                                .iterator()
+                                .next()
+                                .items
+                                .contains(item)
+                        ) {
                             var foundItem: T? = null
                             for (cluster in mClusterMarkerCache.mCache.keys) {
                                 for (clusterItem in cluster.items) {
@@ -1116,20 +1165,21 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
      * A Marker and its position. [Marker.getPosition] must be called from the UI thread, so this
      * object allows lookup from other threads.
      */
-    private class MarkerWithPosition<T>(val marker: Marker, val clusterItem: T?) {
+    private class MarkerWithPosition<T>(
+        val marker: Marker,
+        val clusterItem: T?,
+    ) {
         var position: LatLng? = marker.position
 
-        override fun equals(other: Any?): Boolean {
-            return if (other is MarkerWithPosition<*>) {
+        override fun equals(other: Any?): Boolean =
+            if (other is MarkerWithPosition<*>) {
                 marker == other.marker
-            } else false
-        }
+            } else {
+                false
+            }
 
-        override fun hashCode(): Int {
-            return marker.hashCode()
-        }
+        override fun hashCode(): Int = marker.hashCode()
     }
-
 
     /**
      * Animates a markerWithPosition from one position to another. TODO: improve performance for
@@ -1139,8 +1189,9 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
         val markerWithPosition: MarkerWithPosition<T>,
         val from: LatLng,
         val to: LatLng,
-        val lock: Lock
-    ) : AnimatorListenerAdapter(), ValueAnimator.AnimatorUpdateListener {
+        val lock: Lock,
+    ) : AnimatorListenerAdapter(),
+        ValueAnimator.AnimatorUpdateListener {
         val marker: Marker = markerWithPosition.marker
         private var mRemoveOnComplete: Boolean = false
         private var mMarkerManager: MarkerManager? = null
@@ -1215,8 +1266,9 @@ open class ClusterRendererMultipleItems<T : ClusterItem>(
         private const val TASK_FINISHED = 1
         private const val BLANK = 0
 
-        private fun distanceSquared(a: Point, b: Point): Double {
-            return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
-        }
+        private fun distanceSquared(
+            a: Point,
+            b: Point,
+        ): Double = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
     }
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo
 
 import androidx.collection.LongSparseArray
@@ -40,25 +39,17 @@ class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     private var mGridSize = DEFAULT_GRID_SIZE
     private val mItems: MutableSet<T> = Collections.synchronizedSet(HashSet())
 
-    override fun addItem(item: T): Boolean {
-        return mItems.add(item)
-    }
+    override fun addItem(item: T): Boolean = mItems.add(item)
 
-    override fun addItems(items: Collection<T>): Boolean {
-        return mItems.addAll(items)
-    }
+    override fun addItems(items: Collection<T>): Boolean = mItems.addAll(items)
 
     override fun clearItems() {
         mItems.clear()
     }
 
-    override fun removeItem(item: T): Boolean {
-        return mItems.remove(item)
-    }
+    override fun removeItem(item: T): Boolean = mItems.remove(item)
 
-    override fun removeItems(items: Collection<T>): Boolean {
-        return mItems.removeAll(items.toSet())
-    }
+    override fun removeItems(items: Collection<T>): Boolean = mItems.removeAll(items.toSet())
 
     override fun updateItem(item: T): Boolean {
         var result: Boolean
@@ -92,7 +83,13 @@ class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
 
                 var cluster = sparseArray.get(coord)
                 if (cluster == null) {
-                    cluster = StaticCluster(proj.toLatLng(com.google.maps.android.geometry.Point(floor(p.x) + .5, floor(p.y) + .5)))
+                    cluster =
+                        StaticCluster(
+                            proj.toLatLng(
+                                com.google.maps.android.geometry
+                                    .Point(floor(p.x) + .5, floor(p.y) + .5),
+                            ),
+                        )
                     sparseArray.put(coord, cluster)
                     clusters.add(cluster)
                 }
@@ -109,8 +106,10 @@ class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     companion object {
         private const val DEFAULT_GRID_SIZE = 100
 
-        private fun getCoord(numCells: Long, x: Double, y: Double): Long {
-            return (numCells * floor(x) + floor(y)).toLong()
-        }
+        private fun getCoord(
+            numCells: Long,
+            x: Double,
+            y: Double,
+        ): Long = (numCells * floor(x) + floor(y)).toLong()
     }
 }

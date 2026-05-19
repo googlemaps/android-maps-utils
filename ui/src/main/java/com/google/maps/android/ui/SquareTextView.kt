@@ -27,31 +27,36 @@ import kotlin.math.max
  * not, depending on the Inspection Settings. It's not really an error, just a warning.
  */
 @SuppressLint("AppCompatCustomView")
-class SquareTextView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : TextView(context, attrs, defStyle) {
-    private var offsetTop = 0
-    private var offsetLeft = 0
+class SquareTextView
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0,
+    ) : TextView(context, attrs, defStyle) {
+        private var offsetTop = 0
+        private var offsetLeft = 0
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width = measuredWidth
-        val height = measuredHeight
-        val dimension = max(width, height)
-        if (width > height) {
-            offsetTop = width - height
-            offsetLeft = 0
-        } else {
-            offsetTop = 0
-            offsetLeft = height - width
+        override fun onMeasure(
+            widthMeasureSpec: Int,
+            heightMeasureSpec: Int,
+        ) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            val width = measuredWidth
+            val height = measuredHeight
+            val dimension = max(width, height)
+            if (width > height) {
+                offsetTop = width - height
+                offsetLeft = 0
+            } else {
+                offsetTop = 0
+                offsetLeft = height - width
+            }
+            setMeasuredDimension(dimension, dimension)
         }
-        setMeasuredDimension(dimension, dimension)
-    }
 
-    override fun draw(canvas: Canvas) {
-        canvas.translate(offsetLeft / 2f, offsetTop / 2f)
-        super.draw(canvas)
+        override fun draw(canvas: Canvas) {
+            canvas.translate(offsetLeft / 2f, offsetTop / 2f)
+            super.draw(canvas)
+        }
     }
-}

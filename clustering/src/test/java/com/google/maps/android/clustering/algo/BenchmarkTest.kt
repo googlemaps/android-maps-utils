@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.clustering.algo
 
 import com.google.android.gms.maps.model.LatLng
@@ -23,8 +22,10 @@ import org.junit.Test
 import java.util.Random
 
 class BenchmarkTest {
-
-    private class MyItem(lat: Double, lng: Double) : ClusterItem {
+    private class MyItem(
+        lat: Double,
+        lng: Double,
+    ) : ClusterItem {
         override val position: LatLng = LatLng(lat, lng)
         override val title: String? = null
         override val snippet: String? = null
@@ -65,7 +66,10 @@ class BenchmarkTest {
         runBenchmark(PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm()), "PreCachingAlgorithmDecorator")
     }
 
-    private fun runBenchmark(algorithm: Algorithm<MyItem>, name: String) {
+    private fun runBenchmark(
+        algorithm: Algorithm<MyItem>,
+        name: String,
+    ) {
         println("--- Benchmarking $name ---")
         val count = 50000
         val items = generateItems(count)
@@ -90,8 +94,12 @@ class BenchmarkTest {
             val startCluster = System.nanoTime()
             val clusters = algorithm.getClusters(zoom)
             val endCluster = System.nanoTime()
-            System.out.printf("getClusters(zoom=%.1f) created %,d clusters in %.2f ms%n",
-                zoom, clusters.size, (endCluster - startCluster) / 1000000.0)
+            System.out.printf(
+                "getClusters(zoom=%.1f) created %,d clusters in %.2f ms%n",
+                zoom,
+                clusters.size,
+                (endCluster - startCluster) / 1000000.0,
+            )
         }
     }
 }

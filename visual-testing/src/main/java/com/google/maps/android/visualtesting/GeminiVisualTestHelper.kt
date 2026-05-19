@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.visualtesting
 
 import android.graphics.Bitmap
@@ -47,28 +46,34 @@ import java.io.ByteArrayOutputStream
  * https://makersuite.google.com/app/apikey
  */
 class GeminiVisualTestHelper {
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        prettyPrint = true
-    }
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(json)
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            prettyPrint = true
         }
-    }
+
+    private val client =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(json)
+            }
+        }
 
     /**
      * Executes a UI action based on a natural language prompt.
      * It analyzes the current UI hierarchy and asks Gemini to determine the best action.
      */
-    suspend fun performActionFromPrompt(prompt: String, uiDevice: UiDevice, apiKey: String) {
+    suspend fun performActionFromPrompt(
+        prompt: String,
+        uiDevice: UiDevice,
+        apiKey: String,
+    ) {
         val hierarchyStream = ByteArrayOutputStream()
         uiDevice.dumpWindowHierarchy(hierarchyStream)
         val hierarchyXml = hierarchyStream.toString("UTF-8")
 
-        val systemPrompt = """
+        val systemPrompt =
+            """
             You are an expert Android QA automaton. Your task is to translate a natural language command 
             into a specific action to be performed on a UI. Given a UI hierarchy (in XML format), 
             determine the correct action and selector.
@@ -84,7 +89,7 @@ class GeminiVisualTestHelper {
 
             Example for setting text:
             { "action": "setText", "selector": { "resourceId": "com.example.app:id/email_input" }, "textValue": "test@example.com" }
-        """.trimIndent()
+            """.trimIndent()
 
         val fullPrompt = "$systemPrompt\n\nCommand: \"$prompt\"\n\nUI Hierarchy:\n$hierarchyXml"
 
@@ -93,10 +98,11 @@ class GeminiVisualTestHelper {
         val modelName = "gemini-2.5-flash"
         val request = GeminiRequest(contents = listOf(Content(parts = listOf(Part(text = fullPrompt)))))
 
-        val response: HttpResponse = client.post("https://generativelanguage.googleapis.com/v1/models/$modelName:generateContent?key=$apiKey") {
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }
+        val response: HttpResponse =
+            client.post("https://generativelanguage.googleapis.com/v1/models/$modelName:generateContent?key=$apiKey") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
 
         if (response.status != HttpStatusCode.OK) {
             val errorBody = response.bodyAsText()
@@ -105,8 +111,14 @@ class GeminiVisualTestHelper {
         }
 
         val geminiResponse: GeminiResponse = response.body()
-        val actionJson = geminiResponse.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
-            ?: throw Exception("Gemini returned no action JSON.")
+        val actionJson =
+            geminiResponse.candidates
+                .firstOrNull()
+                ?.content
+                ?.parts
+                ?.firstOrNull()
+                ?.text
+                ?: throw Exception("Gemini returned no action JSON.")
 
         // Remove markdown code block delimiters if present
         val cleanedActionJson = actionJson.removePrefix("```json\n").removeSuffix("\n```")
@@ -115,33 +127,43 @@ class GeminiVisualTestHelper {
 
         try {
             val aiAction = json.decodeFromString<AiAction>(cleanedActionJson)
-            val selector = aiAction.selector.let {
-                when {
-                    it.text != null -> By.text(it.text)
-                    it.contentDescription != null -> By.desc(it.contentDescription)
-                    it.resourceId != null -> By.res(it.resourceId)
-                    else -> throw IllegalArgumentException("Selector must have text, contentDescription, or resourceId.")
+            val selector =
+                aiAction.selector.let {
+                    when {
+                        it.text != null -> By.text(it.text)
+                        it.contentDescription != null -> By.desc(it.contentDescription)
+                        it.resourceId != null -> By.res(it.resourceId)
+                        else -> throw IllegalArgumentException("Selector must have text, contentDescription, or resourceId.")
+                    }
                 }
-            }
 
-            val uiObject = uiDevice.wait(Until.findObject(selector), 10000)
-                ?: throw Exception("Could not find UI element for selector: $selector")
+            val uiObject =
+                uiDevice.wait(Until.findObject(selector), 10000)
+                    ?: throw Exception("Could not find UI element for selector: $selector")
 
             when (aiAction.action.lowercase()) {
-                "click" -> uiObject.click()
-                "longclick" -> uiObject.longClick()
+                "click" -> {
+                    uiObject.click()
+                }
+
+                "longclick" -> {
+                    uiObject.longClick()
+                }
+
                 "settext" -> {
                     val textToSet = aiAction.textValue ?: throw Exception("Action 'setText' requires a 'textValue' field.")
                     uiObject.text = textToSet
                 }
-                else -> throw UnsupportedOperationException("Action '${aiAction.action}' is not supported.")
+
+                else -> {
+                    throw UnsupportedOperationException("Action '${aiAction.action}' is not supported.")
+                }
             }
         } catch (e: Exception) {
             Log.e("GeminiVisualTestHelper", "Failed to parse or execute AI action", e)
             throw e // Re-throw to fail the test
         }
     }
-
 
     /**
      * Fetches and logs the list of available Gemini models for the given API key.
@@ -162,30 +184,37 @@ class GeminiVisualTestHelper {
     suspend fun analyzeImage(
         bitmap: Bitmap,
         prompt: String,
-        apiKey: String
+        apiKey: String,
     ): String? {
         // Log available models first for easier debugging.
         listAvailableModels(apiKey)
 
         val base64Image = bitmap.toBase64EncodedJpeg()
-        val request = GeminiRequest(
-            contents = listOf(
-                Content(
-                    parts = listOf(
-                        Part(text = prompt),
-                        Part(inlineData = InlineData(
-                            mimeType = "image/jpeg",
-                            data = base64Image
-                        ))
-                    )
-                )
+        val request =
+            GeminiRequest(
+                contents =
+                    listOf(
+                        Content(
+                            parts =
+                                listOf(
+                                    Part(text = prompt),
+                                    Part(
+                                        inlineData =
+                                            InlineData(
+                                                mimeType = "image/jpeg",
+                                                data = base64Image,
+                                            ),
+                                    ),
+                                ),
+                        ),
+                    ),
             )
-        )
 
-        val response: HttpResponse = client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=$apiKey") {
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }
+        val response: HttpResponse =
+            client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=$apiKey") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
 
         if (response.status != HttpStatusCode.OK) {
             val errorBody = response.bodyAsText()
@@ -201,7 +230,12 @@ class GeminiVisualTestHelper {
             throw Exception("Gemini API returned no candidates. This might be due to safety settings or an issue with the prompt.")
         }
 
-        return geminiResponse.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+        return geminiResponse.candidates
+            .firstOrNull()
+            ?.content
+            ?.parts
+            ?.firstOrNull()
+            ?.text
     }
 
     private fun Bitmap.toBase64EncodedJpeg(): String {
@@ -217,61 +251,60 @@ class GeminiVisualTestHelper {
 data class AiAction(
     val action: String,
     val selector: AiSelector,
-    val textValue: String? = null
+    val textValue: String? = null,
 )
 
 @Serializable
 data class AiSelector(
     val text: String? = null,
     val contentDescription: String? = null,
-    val resourceId: String? = null
+    val resourceId: String? = null,
 )
-
 
 // --- Data classes for Model Listing ---
 @Serializable
 data class ModelsListResponse(
-    val models: List<ModelInfo> = emptyList()
+    val models: List<ModelInfo> = emptyList(),
 )
 
 @Serializable
 data class ModelInfo(
     val name: String,
     @SerialName("displayName")
-    val displayName: String
+    val displayName: String,
 )
 
 // --- Data classes for Gemini Request/Response ---
 @Serializable
 data class GeminiRequest(
-    val contents: List<Content>
+    val contents: List<Content>,
 )
 
 @Serializable
 data class Content(
-    val parts: List<Part>
+    val parts: List<Part>,
 )
 
 @Serializable
 data class Part(
     val text: String? = null,
     @SerialName("inline_data")
-    val inlineData: InlineData? = null
+    val inlineData: InlineData? = null,
 )
 
 @Serializable
 data class InlineData(
     @SerialName("mime_type")
     val mimeType: String,
-    val data: String
+    val data: String,
 )
 
 @Serializable
 data class GeminiResponse(
-    val candidates: List<Candidate> = emptyList()
+    val candidates: List<Candidate> = emptyList(),
 )
 
 @Serializable
 data class Candidate(
-    val content: Content
+    val content: Content,
 )
