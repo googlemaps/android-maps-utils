@@ -19,6 +19,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -44,7 +45,57 @@ class AndroidImageDecoder : ImageDecoder {
  */
 class KmzParser(
     private val imageDecoder: ImageDecoder = AndroidImageDecoder(),
+    private val maxKmzEntryCount: Int = 200,
+    private val maxKmzUncompressedTotalSize: Long = 50 * 1024 * 1024,
 ) {
+    /**
+     * Wrapper for an InputStream that counts the number of bytes read and throws an IOException
+     * if the limit is exceeded.
+     */
+    private class CountingInputStream(
+        private val mIn: InputStream,
+        private val mMaxBytes: Long,
+    ) : InputStream() {
+        private var mTotalBytes: Long = 0
+
+        @Throws(IOException::class)
+        override fun read(): Int {
+            val b = mIn.read()
+            if (b != -1) {
+                mTotalBytes++
+                checkLimit()
+            }
+            return b
+        }
+
+        @Throws(IOException::class)
+        override fun read(b: ByteArray, off: Int, len: Int): Int {
+            val n = mIn.read(b, off, len)
+            if (n != -1) {
+                mTotalBytes += n
+                checkLimit()
+            }
+            return n
+        }
+
+        @Throws(IOException::class)
+        override fun skip(n: Long): Long {
+            val skipped = mIn.skip(n)
+            if (skipped > 0) {
+                mTotalBytes += skipped
+                checkLimit()
+            }
+            return skipped
+        }
+
+        @Throws(IOException::class)
+        private fun checkLimit() {
+            if (mTotalBytes > mMaxBytes) {
+                throw java.io.IOException("Zip bomb detected! Uncompressed size exceeds limit of $mMaxBytes bytes.")
+            }
+        }
+    }
+
     /**
      * Parses a KMZ file from an InputStream.
      *
@@ -55,20 +106,26 @@ class KmzParser(
         val images = mutableMapOf<String, Bitmap>()
         var kml: Kml? = null
         val zipInputStream = ZipInputStream(BufferedInputStream(inputStream))
+        val countingStream = CountingInputStream(zipInputStream, maxKmzUncompressedTotalSize)
 
         try {
             var entry: ZipEntry? = zipInputStream.nextEntry
+            var entryCount = 0
             while (entry != null) {
+                entryCount++
+                if (entryCount > maxKmzEntryCount) {
+                    throw java.io.IOException("Zip bomb detected! Max number of entries exceeded: $maxKmzEntryCount")
+                }
                 val name = entry.name
                 if (!entry.isDirectory) {
                     if (name.endsWith(".kml", ignoreCase = true) && kml == null) {
                         // Found the KML file (first one found is usually the main one in KMZ)
                         // We need to read it into a byte array because we can't close the ZipInputStream yet
-                        val bytes = zipInputStream.readBytes()
+                        val bytes = countingStream.readBytes()
                         kml = KmlParser().parse(ByteArrayInputStream(bytes))
                     } else {
                         // Try to decode as image
-                        val bytes = zipInputStream.readBytes()
+                        val bytes = countingStream.readBytes()
                         val bitmap = imageDecoder.decode(bytes)
                         if (bitmap != null) {
                             images[name] = bitmap

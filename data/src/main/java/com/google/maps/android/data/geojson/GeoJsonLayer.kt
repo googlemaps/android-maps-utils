@@ -48,7 +48,7 @@ public class GeoJsonLayer : Layer {
     @JvmOverloads
     @Throws(JSONException::class)
     public constructor(
-        map: GoogleMap,
+        map: GoogleMap?,
         geoJsonFile: JSONObject,
         markerManager: MarkerManager? = null,
         polygonManager: PolygonManager? = null,
@@ -64,7 +64,7 @@ public class GeoJsonLayer : Layer {
     @JvmOverloads
     @Throws(IOException::class, JSONException::class)
     public constructor(
-        map: GoogleMap,
+        map: GoogleMap?,
         resourceId: Int,
         context: Context,
         markerManager: MarkerManager? = null,
@@ -126,8 +126,8 @@ public class GeoJsonLayer : Layer {
         calculateBoundingBox()
     }
 
-    private fun initializeRenderer(map: GoogleMap) {
-        mRenderer = MapViewRenderer(map, UrlIconProvider())
+    private fun initializeRenderer(map: GoogleMap?) {
+        mRenderer = map?.let { MapViewRenderer(it, UrlIconProvider()) }
     }
 
     private fun toLegacyGeometry(geometry: com.google.maps.android.data.parser.geojson.GeoJsonGeometry): Geometry =

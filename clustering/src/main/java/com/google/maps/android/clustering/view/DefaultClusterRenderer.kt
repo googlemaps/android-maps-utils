@@ -57,6 +57,7 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
@@ -68,16 +69,16 @@ import kotlin.math.sign
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
-open class DefaultClusterRenderer<T : ClusterItem>(
+open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
     context: Context,
     private val mMap: GoogleMap,
     private val mClusterManager: ClusterManager<T>,
+    private val mExecutor: Executor = Executors.newSingleThreadExecutor(),
 ) : ClusterRenderer<T> {
     private val mIconGenerator: IconGenerator = IconGenerator(context)
     private val mDensity: Float = context.resources.displayMetrics.density
     private var mAnimate: Boolean = true
     private var mAnimationDurationMs: Long = 300
-    private val mExecutor = Executors.newSingleThreadExecutor()
     private var mColoredCircleBackground: ShapeDrawable? = null
 
     /**

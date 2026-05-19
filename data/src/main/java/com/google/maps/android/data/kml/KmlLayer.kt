@@ -50,7 +50,7 @@ public class KmlLayer : Layer {
     @JvmOverloads
     @Throws(XmlPullParserException::class, IOException::class)
     public constructor(
-        map: GoogleMap,
+        map: GoogleMap?,
         resourceId: Int,
         context: Context,
         markerManager: MarkerManager? = null,
@@ -58,6 +58,8 @@ public class KmlLayer : Layer {
         polylineManager: PolylineManager? = null,
         groundOverlayManager: GroundOverlayManager? = null,
         cache: Renderer.ImagesCache? = null,
+        maxKmzEntryCount: Int = 200,
+        maxKmzUncompressedTotalSize: Long = 50 * 1024 * 1024,
     ) : this(
         map,
         context.resources.openRawResource(resourceId),
@@ -67,12 +69,14 @@ public class KmlLayer : Layer {
         polylineManager,
         groundOverlayManager,
         cache,
+        maxKmzEntryCount,
+        maxKmzUncompressedTotalSize,
     )
 
     @JvmOverloads
     @Throws(XmlPullParserException::class, IOException::class)
     public constructor(
-        map: GoogleMap,
+        map: GoogleMap?,
         stream: InputStream,
         context: Context,
         markerManager: MarkerManager? = null,
@@ -80,9 +84,11 @@ public class KmlLayer : Layer {
         polylineManager: PolylineManager? = null,
         groundOverlayManager: GroundOverlayManager? = null,
         cache: Renderer.ImagesCache? = null,
+        maxKmzEntryCount: Int = 200,
+        maxKmzUncompressedTotalSize: Long = 50 * 1024 * 1024,
     ) {
         mGoogleMap = map
-        mRenderer = MapViewRenderer(map, UrlIconProvider())
+        mRenderer = map?.let { MapViewRenderer(it, UrlIconProvider()) }
 
         val bis = BufferedInputStream(stream)
         bis.mark(1024)
@@ -93,7 +99,10 @@ public class KmlLayer : Layer {
         val isKmz = read > 0 && String(headerBytes, 0, read, StandardCharsets.UTF_8).startsWith("PK")
         val kmlObj =
             if (isKmz) {
-                KmzParser().parse(bis)
+                KmzParser(
+                    maxKmzEntryCount = maxKmzEntryCount,
+                    maxKmzUncompressedTotalSize = maxKmzUncompressedTotalSize
+                ).parse(bis)
             } else {
                 KmlParser().parse(bis)
             }
