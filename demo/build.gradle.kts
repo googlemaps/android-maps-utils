@@ -52,6 +52,12 @@ android {
         compose = true
     }
 
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -60,13 +66,31 @@ android {
     }
 
     namespace = "com.google.maps.android.utils.demo"
+
+    flavorDimensions += "sdk"
+    productFlavors {
+        create("standard") {
+            dimension = "sdk"
+            isDefault = true
+        }
+        create("navigation") {
+            dimension = "sdk"
+            minSdk = 24 // Navigation SDK 7.x requires API 24+
+        }
+    }
 }
 
 // [START maps_android_utils_install_snippet]
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     // [START_EXCLUDE silent]
-    implementation(project(":library"))
+    "standardImplementation"(project(":library"))
+    "navigationImplementation"(project(":library")) {
+        exclude(group = "com.google.android.gms", module = "play-services-maps")
+    }
 
+    "navigationImplementation"(libs.navigation.sdk)
+    
     implementation(libs.appcompat)
     implementation(libs.lifecycle.extensions)
     implementation(libs.lifecycle.viewmodel.ktx)
