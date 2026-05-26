@@ -204,6 +204,7 @@ public class KmlRenderer extends Renderer {
      *
      * @param map map to place placemark, container, style and ground overlays on
      */
+    @Override
     public void setMap(GoogleMap map) {
         removeLayerFromMap();
         super.setMap(map);
@@ -499,6 +500,7 @@ public class KmlRenderer extends Renderer {
     private void addGroundOverlayToMap(String groundOverlayUrl,
                                        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlays, boolean containerVisibility) {
         BitmapDescriptor groundOverlayBitmap = getCachedGroundOverlayImage(groundOverlayUrl);
+        HashMap<KmlGroundOverlay, GroundOverlay> groundOverlaysToUpdate = new HashMap<>();
         for (KmlGroundOverlay kmlGroundOverlay : groundOverlays.keySet()) {
             if (kmlGroundOverlay.getImageUrl().equals(groundOverlayUrl)) {
                 GroundOverlayOptions groundOverlayOptions = kmlGroundOverlay.getGroundOverlayOptions()
@@ -507,9 +509,10 @@ public class KmlRenderer extends Renderer {
                 if (!containerVisibility) {
                     mapGroundOverlay.setVisible(false);
                 }
-                groundOverlays.put(kmlGroundOverlay, mapGroundOverlay);
+                groundOverlaysToUpdate.put(kmlGroundOverlay, mapGroundOverlay);
             }
         }
+        groundOverlays.putAll(groundOverlaysToUpdate);
     }
 
     /**

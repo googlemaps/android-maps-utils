@@ -80,7 +80,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
         String containerId = null;
         HashMap<String, String> containerProperties = new HashMap<String, String>();
         HashMap<String, KmlStyle> containerStyles = new HashMap<String, KmlStyle>();
-        HashMap<? extends Feature, Object> containerPlacemarks = new HashMap<>();
+        HashMap<KmlPlacemark, Object> containerPlacemarks = new HashMap<>();
         ArrayList<KmlContainer> nestedContainers = new ArrayList<KmlContainer>();
         HashMap<String, String> containerStyleMaps = new HashMap<String, String>();
         HashMap<KmlGroundOverlay, GroundOverlay> containerGroundOverlays
@@ -105,7 +105,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 } else if (parser.getName().equals(STYLE)) {
                     setContainerStyle(parser, containerStyles);
                 } else if (parser.getName().equals(PLACEMARK)) {
-                    setContainerPlacemark(parser, (HashMap<KmlPlacemark, Object>) containerPlacemarks);
+                    setContainerPlacemark(parser, containerPlacemarks);
                 } else if (parser.getName().equals(EXTENDED_DATA)) {
                     setExtendedDataProperties(parser, containerProperties);
                 } else if (parser.getName().equals(GROUND_OVERLAY)) {
@@ -116,7 +116,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
             eventType = parser.next();
         }
 
-        return new KmlContainer(containerProperties, containerStyles, (HashMap<KmlPlacemark, Object>) containerPlacemarks,
+        return new KmlContainer(containerProperties, containerStyles, containerPlacemarks,
                 containerStyleMaps, nestedContainers, containerGroundOverlays, containerId);
     }
 

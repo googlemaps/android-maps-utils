@@ -418,6 +418,7 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
         }
 
         @SuppressLint("NewApi")
+        @Override
         public void run() {
             if (!shouldRender(immutableOf(DefaultClusterRenderer.this.mClusters), immutableOf(clusters))) {
                 mCallback.run();
@@ -632,13 +633,16 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          */
         public void add(boolean priority, CreateMarkerTask c) {
             lock.lock();
-            sendEmptyMessage(BLANK);
-            if (priority) {
-                mOnScreenCreateMarkerTasks.add(c);
-            } else {
-                mCreateMarkerTasks.add(c);
+            try {
+                sendEmptyMessage(BLANK);
+                if (priority) {
+                    mOnScreenCreateMarkerTasks.add(c);
+                } else {
+                    mCreateMarkerTasks.add(c);
+                }
+            } finally {
+                lock.unlock();
             }
-            lock.unlock();
         }
 
         /**
@@ -649,13 +653,16 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          */
         public void remove(boolean priority, Marker m) {
             lock.lock();
-            sendEmptyMessage(BLANK);
-            if (priority) {
-                mOnScreenRemoveMarkerTasks.add(m);
-            } else {
-                mRemoveMarkerTasks.add(m);
+            try {
+                sendEmptyMessage(BLANK);
+                if (priority) {
+                    mOnScreenRemoveMarkerTasks.add(m);
+                } else {
+                    mRemoveMarkerTasks.add(m);
+                }
+            } finally {
+                lock.unlock();
             }
-            lock.unlock();
         }
 
         /**
@@ -667,8 +674,11 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          */
         public void animate(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            mAnimationTasks.add(new AnimationTask(marker, from, to));
-            lock.unlock();
+            try {
+                mAnimationTasks.add(new AnimationTask(marker, from, to));
+            } finally {
+                lock.unlock();
+            }
         }
 
         /**
@@ -681,10 +691,13 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          */
         public void animateThenRemove(MarkerWithPosition marker, LatLng from, LatLng to) {
             lock.lock();
-            AnimationTask animationTask = new AnimationTask(marker, from, to);
-            animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
-            mAnimationTasks.add(animationTask);
-            lock.unlock();
+            try {
+                AnimationTask animationTask = new AnimationTask(marker, from, to);
+                animationTask.removeOnAnimationComplete(mClusterManager.getMarkerManager());
+                mAnimationTasks.add(animationTask);
+            } finally {
+                lock.unlock();
+            }
         }
 
         @Override
@@ -748,8 +761,8 @@ public class DefaultClusterRenderer<T extends ClusterItem> implements ClusterRen
          * @return true if there is still work to be processed.
          */
         public boolean isBusy() {
+            lock.lock();
             try {
-                lock.lock();
                 return !(mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
                         mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
                         mAnimationTasks.isEmpty()
