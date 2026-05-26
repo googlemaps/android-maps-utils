@@ -25,10 +25,10 @@ import androidx.annotation.RawRes;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.collections.GroundOverlayManager;
-import com.google.maps.android.data.Layer;
 import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.collections.PolygonManager;
 import com.google.maps.android.collections.PolylineManager;
+import com.google.maps.android.data.Layer;
 import com.google.maps.android.data.Renderer;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -39,6 +39,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -337,7 +338,7 @@ public class KmlLayer extends Layer {
                     if (entryCount > maxKmzEntryCount) {
                         throw new IOException("Zip bomb detected! Max number of entries exceeded: " + maxKmzEntryCount);
                     }
-                    if (parser == null && entry.getName().toLowerCase().endsWith(".kml")) {
+                    if (parser == null && entry.getName().toLowerCase(Locale.ROOT).endsWith(".kml")) {
                         parser = parseKml(countingStream);
                     } else {
                         Bitmap bitmap = BitmapFactory.decodeStream(countingStream);
@@ -474,6 +475,7 @@ public class KmlLayer extends Layer {
      *
      * @return true if there is at least 1 container within the KmlLayer, false otherwise
      */
+    @Override
     public boolean hasContainers() {
         return super.hasContainers();
     }
@@ -483,6 +485,7 @@ public class KmlLayer extends Layer {
      *
      * @return iterable of KmlContainerInterface objects
      */
+    @Override
     public Iterable<KmlContainer> getContainers() {
         return super.getContainers();
     }
@@ -492,6 +495,7 @@ public class KmlLayer extends Layer {
      *
      * @return iterable of KmlGroundOverlay objects
      */
+    @Override
     public Iterable<KmlGroundOverlay> getGroundOverlays() {
         return super.getGroundOverlays();
     }

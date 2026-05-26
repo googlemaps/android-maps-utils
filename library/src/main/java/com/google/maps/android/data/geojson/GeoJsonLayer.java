@@ -172,6 +172,8 @@ public class GeoJsonLayer extends Layer {
      *
      * @return iterable of Feature elements
      */
+    @Override
+    @SuppressWarnings("unchecked")
     public Iterable<GeoJsonFeature> getFeatures() {
         return (Iterable<GeoJsonFeature>) super.getFeatures();
     }
