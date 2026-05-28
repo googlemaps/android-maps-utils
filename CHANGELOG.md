@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.1](https://github.com/googlemaps/android-maps-utils/compare/v4.4.0...v4.4.1) (2026-05-26)
+
+
+### Bug Fixes
+
+* address lint, compiler, and Error Prone warnings ([#1692](https://github.com/googlemaps/android-maps-utils/issues/1692)) ([ce809c7](https://github.com/googlemaps/android-maps-utils/commit/ce809c741ce37611a25efce2b1b95f95d2e108fe))
+
 ## [4.4.0](https://github.com/googlemaps/android-maps-utils/compare/v4.3.0...v4.4.0) (2026-05-20)
 
 
