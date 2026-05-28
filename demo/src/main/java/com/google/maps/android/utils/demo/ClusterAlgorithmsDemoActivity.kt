@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.demo
 
 import android.os.Build
@@ -39,20 +38,17 @@ import kotlin.random.Random
  * available in the library.
  */
 class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
-
     private var clusterManager: ClusterManager<MyItem>? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_cluster_algorithms_demo
-    }
+    override fun getLayoutId(): Int = R.layout.activity_cluster_algorithms_demo
 
     override fun startDemo(isRestore: Boolean) {
-
         if (!isRestore) {
             map.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    LatLng(51.503186, -0.126446), 10f
-                )
+                    LatLng(51.503186, -0.126446),
+                    10f,
+                ),
             )
         }
 
@@ -63,29 +59,35 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
 
     private fun setupSpinner() {
         val spinner: Spinner = findViewById(R.id.algorithm_spinner)
-        val adapter = ArrayAdapter.createFromResource(
-            this, R.array.clustering_algorithms, R.layout.text_view_spinner_item
-        )
+        val adapter =
+            ArrayAdapter.createFromResource(
+                this,
+                R.array.clustering_algorithms,
+                R.layout.text_view_spinner_item,
+            )
         adapter.setDropDownViewResource(R.layout.text_view_spinner_dropdown_item)
         spinner.adapter = adapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                setupClusterer(position)
-            }
+        spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    setupClusterer(position)
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Do nothing
+                }
             }
-        }
     }
 
     /**
      * Sets up the ClusterManager with the chosen algorithm and populates it with items.
      */
     private fun setupClusterer(algorithmPosition: Int) {
-
         val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         val metrics = DisplayMetrics()
         val width: Int
@@ -114,16 +116,32 @@ class ClusterAlgorithmsDemoActivity : BaseDemoActivity() {
         clusterManager = ClusterManager(this, map)
 
         // 3. Set the desired algorithm based on the spinner position
-        clusterManager?.algorithm = when (algorithmPosition) {
-            1 -> GridBasedAlgorithm()
-            2 -> NonHierarchicalDistanceBasedAlgorithm()
-            3 -> CentroidNonHierarchicalDistanceBasedAlgorithm()
-            4 -> NonHierarchicalViewBasedAlgorithm(widthDp, heightDp)
-            5 -> ContinuousZoomEuclideanCentroidAlgorithm()
-            else -> {
-                GridBasedAlgorithm()
+        clusterManager?.algorithm =
+            when (algorithmPosition) {
+                1 -> {
+                    GridBasedAlgorithm()
+                }
+
+                2 -> {
+                    NonHierarchicalDistanceBasedAlgorithm()
+                }
+
+                3 -> {
+                    CentroidNonHierarchicalDistanceBasedAlgorithm()
+                }
+
+                4 -> {
+                    NonHierarchicalViewBasedAlgorithm(widthDp, heightDp)
+                }
+
+                5 -> {
+                    ContinuousZoomEuclideanCentroidAlgorithm()
+                }
+
+                else -> {
+                    GridBasedAlgorithm()
+                }
             }
-        }
 
         // 4. Point the map's listeners to the ClusterManager
         map.setOnCameraIdleListener(clusterManager)

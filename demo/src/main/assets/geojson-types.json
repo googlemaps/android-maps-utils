@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "City Hall",
+        "type": "Point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.0060, 40.7128]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Main Street",
+        "type": "LineString"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-74.0060, 40.7128],
+          [-74.0050, 40.7135],
+          [-74.0040, 40.7140]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Central Park",
+        "type": "Polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-73.9819, 40.7680],
+            [-73.9754, 40.7715],
+            [-73.9657, 40.7697],
+            [-73.9646, 40.7661],
+            [-73.9819, 40.7680]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "District Boundaries",
+        "type": "GeometryCollection"
+      },
+      "geometry": {
+        "type": "GeometryCollection",
+        "geometries": [
+          {
+            "type": "LineString",
+            "coordinates": [
+              [-74.0100, 40.7150],
+              [-74.0000, 40.7200]
+            ]
+          },
+          {
+            "type": "Point",
+            "coordinates": [-73.9950, 40.7500]
+          }
+        ]
+      }
+    }
+  ]
+}

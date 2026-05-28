@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
@@ -39,7 +38,6 @@ import org.robolectric.RobolectricTestRunner
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class StreetViewHelperTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -57,38 +55,40 @@ class StreetViewHelperTest {
      * Tests that [StreetViewJavaHelper.fetchStreetViewData] calls the onStreetViewResult callback with the OK status when the call is successful.
      */
     @Test
-    fun `fetchStreetViewData should call onStreetViewResult with OK status`() = runTest {
-        // Arrange
-        val latLng = LatLng(1.0, 2.0)
-        val apiKey = "some_api_key"
-        val callback = mockk<StreetViewJavaHelper.StreetViewCallback>(relaxed = true)
-        coEvery { StreetViewUtils.fetchStreetViewData(latLng, apiKey) } returns Status.OK
+    fun `fetchStreetViewData should call onStreetViewResult with OK status`() =
+        runTest {
+            // Arrange
+            val latLng = LatLng(1.0, 2.0)
+            val apiKey = "some_api_key"
+            val callback = mockk<StreetViewJavaHelper.StreetViewCallback>(relaxed = true)
+            coEvery { StreetViewUtils.fetchStreetViewData(latLng, apiKey) } returns Status.OK
 
-        // Act
-        StreetViewJavaHelper.fetchStreetViewData(latLng, apiKey, callback)
-        testDispatcher.scheduler.advanceUntilIdle()
+            // Act
+            StreetViewJavaHelper.fetchStreetViewData(latLng, apiKey, callback)
+            testDispatcher.scheduler.advanceUntilIdle()
 
-        // Assert
-        verify { callback.onStreetViewResult(Status.OK) }
-    }
+            // Assert
+            verify { callback.onStreetViewResult(Status.OK) }
+        }
 
     /**
      * Tests that [StreetViewJavaHelper.fetchStreetViewData] calls the onStreetViewError callback when an exception occurs.
      */
     @Test
-    fun `fetchStreetViewData should call onStreetViewError when an exception occurs`() = runTest {
-        // Arrange
-        val latLng = LatLng(1.0, 2.0)
-        val apiKey = "some_api_key"
-        val callback = mockk<StreetViewJavaHelper.StreetViewCallback>(relaxed = true)
-        val exception = Exception("some_error")
-        coEvery { StreetViewUtils.fetchStreetViewData(latLng, apiKey) } throws exception
+    fun `fetchStreetViewData should call onStreetViewError when an exception occurs`() =
+        runTest {
+            // Arrange
+            val latLng = LatLng(1.0, 2.0)
+            val apiKey = "some_api_key"
+            val callback = mockk<StreetViewJavaHelper.StreetViewCallback>(relaxed = true)
+            val exception = Exception("some_error")
+            coEvery { StreetViewUtils.fetchStreetViewData(latLng, apiKey) } throws exception
 
-        // Act
-        StreetViewJavaHelper.fetchStreetViewData(latLng, apiKey, callback)
-        testDispatcher.scheduler.advanceUntilIdle()
+            // Act
+            StreetViewJavaHelper.fetchStreetViewData(latLng, apiKey, callback)
+            testDispatcher.scheduler.advanceUntilIdle()
 
-        // Assert
-        verify { callback.onStreetViewError(exception) }
-    }
+            // Assert
+            verify { callback.onStreetViewError(exception) }
+        }
 }

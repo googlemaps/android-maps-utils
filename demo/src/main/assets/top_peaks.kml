@@ -1,0 +1,1034 @@
+<?xml version='1.0' encoding='utf-8'?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Style id="14erStyle">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-stars.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="shortPeakStyle">
+      <IconStyle>
+        <scale>1.0</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0.8</scale>
+      </LabelStyle>
+    </Style>
+    <Folder>
+      <name>14ers (14,000 ft and above)</name>
+      <Placemark>
+        <name>Mount Elbert ☝️</name>
+        <Point>
+          <coordinates>-106.4454,39.1178,4401.2</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Massive</name>
+        <Point>
+          <coordinates>-106.4757,39.1875,4398.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Harvard 🎓</name>
+        <Point>
+          <coordinates>-106.3207,38.9244,4395.6</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Blanca Peak</name>
+        <Point>
+          <coordinates>-105.4856,37.5775,4374.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>La Plata Peak</name>
+        <Point>
+          <coordinates>-106.4729,39.0294,4372.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Uncompahgre Peak ⭐</name>
+        <Point>
+          <coordinates>-107.4621,38.0717,4365.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Crestone Peak</name>
+        <Point>
+          <coordinates>-105.5855,37.9669,4359.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Lincoln</name>
+        <Point>
+          <coordinates>-106.1116,39.3515,4356.5</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Castle Peak 🏰</name>
+        <Point>
+          <coordinates>-106.8614,39.0097,4352.2</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Grays Peak 🐺</name>
+        <Point>
+          <coordinates>-105.8176,39.6339,4352.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Antero 💎</name>
+        <Point>
+          <coordinates>-106.2462,38.6741,4351.4</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Torreys Peak 🗼</name>
+        <Point>
+          <coordinates>-105.8212,39.6428,4351.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Blue Sky 🟦</name>
+        <Point>
+          <coordinates>-105.6438,39.5883,4350.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Quandary Peak 🤔</name>
+        <Point>
+          <coordinates>-106.1064,39.3973,4349.9</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Longs Peak 📏</name>
+        <Point>
+          <coordinates>-105.6151,40.255,4346.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Wilson 🏐</name>
+        <Point>
+          <coordinates>-107.9916,37.8391,4344.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Shavano 🏹</name>
+        <Point>
+          <coordinates>-106.2393,38.6192,4337.7</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Princeton 🎓</name>
+        <Point>
+          <coordinates>-106.2424,38.7492,4329.3</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Belford 🔔</name>
+        <Point>
+          <coordinates>-106.3607,38.9607,4329.1</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Crestone Needle 💉</name>
+        <Point>
+          <coordinates>-105.5766,37.9647,4329.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Yale 🎓</name>
+        <Point>
+          <coordinates>-106.3138,38.8442,4328.2</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Bross 👨‍🎨</name>
+        <Point>
+          <coordinates>-106.1077,39.3354,4321.6</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Kit Carson Mountain 🤠</name>
+        <Point>
+          <coordinates>-105.6026,37.9797,4319.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Maroon Peak 🟫</name>
+        <Point>
+          <coordinates>-106.989,39.0708,4317.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Tabeguache Peak 🌮</name>
+        <Point>
+          <coordinates>-106.2509,38.6255,4316.7</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Oxford 🎓</name>
+        <Point>
+          <coordinates>-106.3388,38.9648,4315.9</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Sneffels 🤧</name>
+        <Point>
+          <coordinates>-107.7923,38.0038,4315.4</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Democrat 🇺🇸</name>
+        <Point>
+          <coordinates>-106.14,39.3396,4314.5</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Capitol Peak 🏛️</name>
+        <Point>
+          <coordinates>-107.0829,39.1503,4309.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Pikes Peak 🏔️</name>
+        <Point>
+          <coordinates>-105.0442,38.8405,4302.31</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Snowmass Mountain ❄️</name>
+        <Point>
+          <coordinates>-107.0665,39.1188,4297.3</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Windom Peak 🌬️</name>
+        <Point>
+          <coordinates>-107.5919,37.6212,4296.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Eolus 🌬️</name>
+        <Point>
+          <coordinates>-107.6227,37.6218,4295.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Challenger Point 🚀</name>
+        <Point>
+          <coordinates>-105.6066,37.9804,4294.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Columbia 🇨🇴</name>
+        <Point>
+          <coordinates>-106.2975,38.9039,4290.8</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Missouri Mountain 🚢</name>
+        <Point>
+          <coordinates>-106.3785,38.9476,4289.8</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Humboldt Peak 🐧</name>
+        <Point>
+          <coordinates>-105.5552,37.9762,4289.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Bierstadt 🍺</name>
+        <Point>
+          <coordinates>-105.6688,39.5826,4287.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sunlight Peak ☀️</name>
+        <Point>
+          <coordinates>-107.5959,37.6274,4287.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Handies Peak 🖐️</name>
+        <Point>
+          <coordinates>-107.5044,37.913,4284.8</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Culebra Peak 🐍</name>
+        <Point>
+          <coordinates>-105.1858,37.1224,4283.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Ellingwood Point 👉</name>
+        <Point>
+          <coordinates>-105.4927,37.5826,4282.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Lindsey 💃</name>
+        <Point>
+          <coordinates>-105.4449,37.5837,4282.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Little Bear Peak 🐻</name>
+        <Point>
+          <coordinates>-105.4972,37.5666,4280.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Sherman 🎖️</name>
+        <Point>
+          <coordinates>-106.1699,39.225,4280.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Redcloud Peak ☁️</name>
+        <Point>
+          <coordinates>-107.4219,37.941,4280.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Pyramid Peak 🔺</name>
+        <Point>
+          <coordinates>-106.9502,39.0717,4274.7</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Wilson Peak 🏐</name>
+        <Point>
+          <coordinates>-107.9847,37.8603,4274.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Wetterhorn Peak 📯</name>
+        <Point>
+          <coordinates>-107.5109,38.0607,4274.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>San Luis Peak ⚜️</name>
+        <Point>
+          <coordinates>-106.9313,37.9868,4273.8</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount of the Holy Cross ✝️</name>
+        <Point>
+          <coordinates>-106.4817,39.4668,4270.5</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Huron Peak 🏞️</name>
+        <Point>
+          <coordinates>-106.4381,38.9455,4270.2</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sunshine Peak ☀️</name>
+        <Point>
+          <coordinates>-107.4256,37.9228,4269.0</coordinates>
+        </Point>
+        <styleUrl>#14erStyle</styleUrl>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Other Peaks</name>
+      <Placemark>
+        <name>Grizzly Peak 🐻</name>
+        <Point>
+          <coordinates>-106.5976,39.0425,4265.6</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Ouray</name>
+        <Point>
+          <coordinates>-106.2247,38.4227,4255.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Vermilion Peak</name>
+        <Point>
+          <coordinates>-107.8285,37.7993,4237.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Silverheels</name>
+        <Point>
+          <coordinates>-106.0054,39.3394,4215.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Rio Grande Pyramid</name>
+        <Point>
+          <coordinates>-107.3924,37.6797,4214.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bald Mountain 👨‍🦲</name>
+        <Point>
+          <coordinates>-105.9705,39.4448,4173.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Oso 🐻</name>
+        <Point>
+          <coordinates>-107.4936,37.607,4173.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Jackson 🕺</name>
+        <Point>
+          <coordinates>-106.5367,39.4853,4168.5</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bard Peak ✍️</name>
+        <Point>
+          <coordinates>-105.8044,39.7204,4159.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>West Spanish Peak 🇪🇸</name>
+        <Point>
+          <coordinates>-104.9934,37.3756,4155.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Powell 💪</name>
+        <Point>
+          <coordinates>-106.3407,39.7601,4141.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Hagues Peak ☁️</name>
+        <Point>
+          <coordinates>-105.6464,40.4845,4137.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Tower Mountain 🗼</name>
+        <Point>
+          <coordinates>-107.623,37.8573,4132.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Treasure Mountain 💎</name>
+        <Point>
+          <coordinates>-107.1228,39.0244,4125.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>North Arapaho Peak 🫎</name>
+        <Point>
+          <coordinates>-105.6504,40.0265,4117.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Parry Peak 🤺</name>
+        <Point>
+          <coordinates>-105.7132,39.8381,4083.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bill Williams Peak 🤠</name>
+        <Point>
+          <coordinates>-106.6102,39.1806,4081.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sultan Mountain 👑</name>
+        <Point>
+          <coordinates>-107.7038,37.7859,4076.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Herard 🗣️</name>
+        <Point>
+          <coordinates>-105.4949,37.8492,4068.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>West Buffalo Peak 🐃</name>
+        <Point>
+          <coordinates>-106.1249,38.9917,4064.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Summit Peak 🏆</name>
+        <Point>
+          <coordinates>-106.6968,37.3506,4056.2</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Middle Peak 🎯</name>
+        <Point>
+          <coordinates>-108.1082,37.8536,4056.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Antora Peak 🦌</name>
+        <Point>
+          <coordinates>-106.218,38.325,4046.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Henry Mountain 👑</name>
+        <Point>
+          <coordinates>-106.6211,38.6856,4042.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Hesperus Mountain 🌟</name>
+        <Point>
+          <coordinates>-108.089,37.4451,4035.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Jacque Peak 👨‍🍳</name>
+        <Point>
+          <coordinates>-106.197,39.4549,4027.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bennett Peak 👨‍🔬</name>
+        <Point>
+          <coordinates>-106.4343,37.4833,4026.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Conejos Peak 🐇</name>
+        <Point>
+          <coordinates>-106.5709,37.2887,4017.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Twilight Peak 🌆</name>
+        <Point>
+          <coordinates>-107.727,37.663,4012.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>South River Peak 🏞️</name>
+        <Point>
+          <coordinates>-106.9815,37.5741,4009.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bushnell Peak 🔭</name>
+        <Point>
+          <coordinates>-105.8892,38.3412,3995.8</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>West Elk Peak 🦌</name>
+        <Point>
+          <coordinates>-107.1994,38.7179,3975.2</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Centennial 💯</name>
+        <Point>
+          <coordinates>-107.2446,37.6062,3967.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Clark Peak 🦸</name>
+        <Point>
+          <coordinates>-105.93,40.6068,3948.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Richthofen ✈️</name>
+        <Point>
+          <coordinates>-105.8945,40.4695,3946.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Chair Mountain 🪑</name>
+        <Point>
+          <coordinates>-107.2822,39.0581,3879.1</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Gunnison 🔫</name>
+        <Point>
+          <coordinates>-107.3826,38.8121,3878.7</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>East Spanish Peak 🇪🇸</name>
+        <Point>
+          <coordinates>-104.9201,37.3934,3867.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Gothic Mountain 🦇</name>
+        <Point>
+          <coordinates>-107.0107,38.9562,3850.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Lone Cone 🍦</name>
+        <Point>
+          <coordinates>-108.2556,37.888,3846.1</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Graham Peak 🥣</name>
+        <Point>
+          <coordinates>-107.3761,37.4972,3821.1</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Whetstone Mountain 🔪</name>
+        <Point>
+          <coordinates>-106.9799,38.8223,3818.1</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Specimen Mountain 🔬</name>
+        <Point>
+          <coordinates>-105.8081,40.4449,3808.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>East Beckwith Mountain 🌄</name>
+        <Point>
+          <coordinates>-107.2233,38.8464,3792.1</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Knobby Crest 🪢</name>
+        <Point>
+          <coordinates>-105.605,39.3681,3790.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Bison Mountain 🦬</name>
+        <Point>
+          <coordinates>-105.4978,39.2384,3789.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Anthracite Range High Point 🔥</name>
+        <Point>
+          <coordinates>-107.1445,38.8145,3777.8</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Matchless Mountain 🔥</name>
+        <Point>
+          <coordinates>-106.6451,38.834,3776.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Flat Top Mountain 🔝</name>
+        <Point>
+          <coordinates>-107.0833,40.0147,3767.7</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Greenhorn Mountain 🌿</name>
+        <Point>
+          <coordinates>-105.0133,37.8815,3765.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Elliott Mountain 🌊</name>
+        <Point>
+          <coordinates>-108.058,37.7344,3763.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Parkview Mountain 🏞️</name>
+        <Point>
+          <coordinates>-106.1363,40.3303,3749.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Cornwall Mountain 🌽</name>
+        <Point>
+          <coordinates>-106.492,37.3811,3746.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Zirkel ⭕</name>
+        <Point>
+          <coordinates>-106.6631,40.8313,3714.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Crested Butte 🧈</name>
+        <Point>
+          <coordinates>-106.9436,38.8835,3709.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sawtooth Mountain 🦷</name>
+        <Point>
+          <coordinates>-106.867,38.274,3704.2</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Park Cone 🍦</name>
+        <Point>
+          <coordinates>-106.6028,38.7967,3690.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Carbon Peak ⚫</name>
+        <Point>
+          <coordinates>-107.0431,38.7943,3684.3</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Guero 💡</name>
+        <Point>
+          <coordinates>-107.3861,38.7196,3675.4</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Red Table Mountain 🟥</name>
+        <Point>
+          <coordinates>-106.7712,39.4181,3670.7</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Chalk Benchmark 🖍️</name>
+        <Point>
+          <coordinates>-106.75,37.1418,3669.3</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Zwischen ↔️</name>
+        <Point>
+          <coordinates>-105.4554,37.7913,3661.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Little Cone 🍦</name>
+        <Point>
+          <coordinates>-108.0908,37.9275,3654.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Huntsman Ridge Peak 🏹</name>
+        <Point>
+          <coordinates>-107.3668,39.192,3614.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sheep Mountain 🐏</name>
+        <Point>
+          <coordinates>-106.2658,40.361,3604.2</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Waugh Mountain 😢</name>
+        <Point>
+          <coordinates>-105.6955,38.6022,3571.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Coal Mountain ⚫</name>
+        <Point>
+          <coordinates>-107.4837,38.787,3569.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Williams Peak 🎾</name>
+        <Point>
+          <coordinates>-106.1854,39.8552,3541.8</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Puma Peak 🐆</name>
+        <Point>
+          <coordinates>-105.5815,39.1572,3528.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Mount Mestas ✨</name>
+        <Point>
+          <coordinates>-105.1474,37.583,3528.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Thirtynine Mile Mountain 📏</name>
+        <Point>
+          <coordinates>-105.5553,38.8324,3521.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Tomichi Dome ⛰️</name>
+        <Point>
+          <coordinates>-106.5291,38.4849,3496.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Blair Mountain 🧙‍♀️</name>
+        <Point>
+          <coordinates>-107.4176,39.7943,3495.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Twin Sisters Peaks 👯‍♀️</name>
+        <Point>
+          <coordinates>-105.5175,40.2886,3485.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Elk Mountain 🦌</name>
+        <Point>
+          <coordinates>-106.1285,40.1619,3482.1</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Iron Mountain 🔩</name>
+        <Point>
+          <coordinates>-105.2538,37.6375,3480.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Marcellina Mountain 💃</name>
+        <Point>
+          <coordinates>-107.2438,38.9299,3461.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Crater Peak 🌋</name>
+        <Point>
+          <coordinates>-107.6628,39.0396,3454.2</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Hardscrabble Mountain ⛏️</name>
+        <Point>
+          <coordinates>-106.8021,39.5171,3405.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Cochetopa Dome ⛰️</name>
+        <Point>
+          <coordinates>-106.7147,38.2267,3395.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>North Mamm Peak 🐘</name>
+        <Point>
+          <coordinates>-107.866,39.3865,3391.3</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Laramie Mountains 💻</name>
+        <Point>
+          <coordinates>-105.7162,40.7704,3360.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sand Mountain North ⌛</name>
+        <Point>
+          <coordinates>-107.0575,40.7636,3317.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Black Mountain ⚫</name>
+        <Point>
+          <coordinates>-107.3691,40.7835,3312.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Sleepy Cat Peak 😴🐈</name>
+        <Point>
+          <coordinates>-107.5338,40.1275,3308.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Spruce Mountain 🌲</name>
+        <Point>
+          <coordinates>-107.522,39.1973,3303.5</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Green Mountain 🌲</name>
+        <Point>
+          <coordinates>-105.3001,39.3053,3178.3</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Columbus Mountain 🗺️</name>
+        <Point>
+          <coordinates>-107.1921,40.8799,3126.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Ute Peak 🏞️</name>
+        <Point>
+          <coordinates>-108.7787,37.2841,3043.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+      <Placemark>
+        <name>Horse Mountain 🐴</name>
+        <Point>
+          <coordinates>-107.2864,37.308,3033.0</coordinates>
+        </Point>
+        <styleUrl>#shortPeakStyle</styleUrl>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

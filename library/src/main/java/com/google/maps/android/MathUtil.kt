@@ -1,11 +1,11 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android
 
 import kotlin.math.PI
@@ -40,9 +39,18 @@ object MathUtil {
      * Restrict x to the range [low, high].
      */
     @JvmStatic
-    fun clamp(x: Double, low: Double, high: Double): Double {
-        return if (x < low) low else if (x > high) high else x
-    }
+    fun clamp(
+        x: Double,
+        low: Double,
+        high: Double,
+    ): Double =
+        if (x < low) {
+            low
+        } else if (x > high) {
+            high
+        } else {
+            x
+        }
 
     /**
      * Wraps the given value into the inclusive-exclusive interval between min and max.
@@ -52,9 +60,11 @@ object MathUtil {
      * @param max The maximum.
      */
     @JvmStatic
-    fun wrap(n: Double, min: Double, max: Double): Double {
-        return if (n >= min && n < max) n else mod(n - min, max - min) + min
-    }
+    fun wrap(
+        n: Double,
+        min: Double,
+        max: Double,
+    ): Double = if (n >= min && n < max) n else mod(n - min, max - min) + min
 
     /**
      * Returns the non-negative remainder of x / m.
@@ -63,9 +73,10 @@ object MathUtil {
      * @param m The modulus.
      */
     @JvmStatic
-    fun mod(x: Double, m: Double): Double {
-        return (x % m + m) % m
-    }
+    fun mod(
+        x: Double,
+        m: Double,
+    ): Double = (x % m + m) % m
 
     /**
      * Returns mercator Y corresponding to latitude.
@@ -86,9 +97,7 @@ object MathUtil {
      * Returns latitude from mercator Y.
      */
     @JvmStatic
-    fun inverseMercator(y: Double): Double {
-        return 2 * atan(exp(y)) - PI / 2
-    }
+    fun inverseMercator(y: Double): Double = 2 * atan(exp(y)) - PI / 2
 
     /**
      * Returns haversine(angle-in-radians).
@@ -106,15 +115,11 @@ object MathUtil {
      * The argument must be in [0, 1], and the result is positive.
      */
     @JvmStatic
-    fun arcHav(x: Double): Double {
-        return 2 * asin(sqrt(x))
-    }
+    fun arcHav(x: Double): Double = 2 * asin(sqrt(x))
 
     // Given h==hav(x), returns sin(abs(x)).
     @JvmStatic
-    fun sinFromHav(h: Double): Double {
-        return 2 * sqrt(h * (1 - h))
-    }
+    fun sinFromHav(h: Double): Double = 2 * sqrt(h * (1 - h))
 
     // Returns hav(asin(x)).
     @JvmStatic
@@ -125,7 +130,10 @@ object MathUtil {
 
     // Returns sin(arcHav(x) + arcHav(y)).
     @JvmStatic
-    fun sinSumFromHav(x: Double, y: Double): Double {
+    fun sinSumFromHav(
+        x: Double,
+        y: Double,
+    ): Double {
         val a = sqrt(x * (1 - x))
         val b = sqrt(y * (1 - y))
         return 2 * (a + b - 2 * (a * y + b * x))
@@ -135,7 +143,9 @@ object MathUtil {
      * Returns hav() of distance from (lat1, lng1) to (lat2, lng2) on the unit sphere.
      */
     @JvmStatic
-    fun havDistance(lat1: Double, lat2: Double, dLng: Double): Double {
-        return hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2)
-    }
+    fun havDistance(
+        lat1: Double,
+        lat2: Double,
+        dLng: Double,
+    ): Double = hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2)
 }

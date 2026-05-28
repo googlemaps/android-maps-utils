@@ -1,11 +1,11 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
@@ -62,9 +61,11 @@ object PolyUtil {
      * @return `true` if the point is inside the polygon, `false` otherwise.
      */
     @JvmStatic
-    fun containsLocation(point: LatLng, polygon: List<LatLng>, geodesic: Boolean): Boolean {
-        return containsLocation(point.latitude, point.longitude, polygon, geodesic)
-    }
+    fun containsLocation(
+        point: LatLng,
+        polygon: List<LatLng>,
+        geodesic: Boolean,
+    ): Boolean = containsLocation(point.latitude, point.longitude, polygon, geodesic)
 
     /**
      * Overload of {@link #containsLocation(LatLng, List, boolean)} that takes latitude and
@@ -75,7 +76,7 @@ object PolyUtil {
         latitude: Double,
         longitude: Double,
         polygon: List<LatLng>,
-        geodesic: Boolean
+        geodesic: Boolean,
     ): Boolean {
         if (polygon.isEmpty()) {
             return false
@@ -124,10 +125,8 @@ object PolyUtil {
         point: LatLng,
         polygon: List<LatLng>,
         geodesic: Boolean,
-        tolerance: Double = DEFAULT_TOLERANCE
-    ): Boolean {
-        return isLocationOnEdgeOrPath(point, polygon, true, geodesic, tolerance)
-    }
+        tolerance: Double = DEFAULT_TOLERANCE,
+    ): Boolean = isLocationOnEdgeOrPath(point, polygon, true, geodesic, tolerance)
 
     /**
      * Computes whether the given point lies on or near a polyline, within a specified
@@ -147,17 +146,15 @@ object PolyUtil {
         point: LatLng,
         polyline: List<LatLng>,
         geodesic: Boolean,
-        tolerance: Double = DEFAULT_TOLERANCE
-    ): Boolean {
-        return isLocationOnEdgeOrPath(point, polyline, false, geodesic, tolerance)
-    }
+        tolerance: Double = DEFAULT_TOLERANCE,
+    ): Boolean = isLocationOnEdgeOrPath(point, polyline, false, geodesic, tolerance)
 
     private fun isLocationOnEdgeOrPath(
         point: LatLng,
         poly: List<LatLng>,
         closed: Boolean,
         geodesic: Boolean,
-        toleranceEarth: Double
+        toleranceEarth: Double,
     ): Boolean {
         val idx = locationIndexOnEdgeOrPath(point, poly, closed, geodesic, toleranceEarth)
 
@@ -185,10 +182,8 @@ object PolyUtil {
         point: LatLng,
         poly: List<LatLng>,
         geodesic: Boolean,
-        tolerance: Double = DEFAULT_TOLERANCE
-    ): Int {
-        return locationIndexOnEdgeOrPath(point, poly, false, geodesic, tolerance)
-    }
+        tolerance: Double = DEFAULT_TOLERANCE,
+    ): Int = locationIndexOnEdgeOrPath(point, poly, false, geodesic, tolerance)
 
     /**
      * Computes whether (and where) a given point lies on or near a polyline, within a specified tolerance.
@@ -212,7 +207,7 @@ object PolyUtil {
         poly: List<LatLng>,
         closed: Boolean,
         geodesic: Boolean,
-        toleranceEarth: Double
+        toleranceEarth: Double,
     ): Int {
         if (poly.isEmpty()) {
             return -1
@@ -300,27 +295,31 @@ object PolyUtil {
      * @return a simplified poly produced by the Douglas-Peucker algorithm
      */
     @JvmStatic
-    fun simplify(poly: List<LatLng>, tolerance: Double): List<LatLng> {
+    fun simplify(
+        poly: List<LatLng>,
+        tolerance: Double,
+    ): List<LatLng> {
         require(poly.isNotEmpty()) { "Polyline must have at least 1 point" }
         require(tolerance > 0) { "Tolerance must be greater than zero" }
 
         // The simplification process is handled by the Douglas-Peucker algorithm,
         // which is implemented in a separate private function for clarity.
         // Before we can apply the algorithm, we need to handle a special case for closed polygons.
-        val workingPoly = if (isClosedPolygon(poly)) {
-            // For closed polygons, the Douglas-Peucker algorithm needs to "see" the connection
-            // between the last and first points. A common trick to achieve this is to temporarily
-            // open the polygon and add a point that is very close to the last point. This ensures
-            // that the simplification process takes the closing segment into account.
-            val lastPoint = poly.last()
-            val offset = 0.00000000001
-            poly.toMutableList().apply {
-                removeAt(size - 1)
-                add(LatLng(lastPoint.latitude + offset, lastPoint.longitude + offset))
+        val workingPoly =
+            if (isClosedPolygon(poly)) {
+                // For closed polygons, the Douglas-Peucker algorithm needs to "see" the connection
+                // between the last and first points. A common trick to achieve this is to temporarily
+                // open the polygon and add a point that is very close to the last point. This ensures
+                // that the simplification process takes the closing segment into account.
+                val lastPoint = poly.last()
+                val offset = 0.00000000001
+                poly.toMutableList().apply {
+                    removeAt(size - 1)
+                    add(LatLng(lastPoint.latitude + offset, lastPoint.longitude + offset))
+                }
+            } else {
+                poly
             }
-        } else {
-            poly
-        }
 
         // The douglasPeucker function returns a boolean array indicating which points to keep.
         val pointsToKeep = douglasPeucker(workingPoly, tolerance)
@@ -344,7 +343,10 @@ object PolyUtil {
      * @return A boolean array where `true` indicates that the point at the corresponding index
      * should be kept in the simplified polyline.
      */
-    private fun douglasPeucker(poly: List<LatLng>, tolerance: Double): BooleanArray {
+    private fun douglasPeucker(
+        poly: List<LatLng>,
+        tolerance: Double,
+    ): BooleanArray {
         val n = poly.size
         // We start with a boolean array that will mark the points to keep.
         // Initially, only the first and last points are marked for keeping.
@@ -398,9 +400,7 @@ object PolyUtil {
      * points are the same), and false if it is not
      */
     @JvmStatic
-    fun isClosedPolygon(poly: List<LatLng>): Boolean {
-        return poly.isNotEmpty() && poly.first() == poly.last()
-    }
+    fun isClosedPolygon(poly: List<LatLng>): Boolean = poly.isNotEmpty() && poly.first() == poly.last()
 
     /**
      * Computes the distance on the sphere between the point p and the line segment start to end.
@@ -411,7 +411,11 @@ object PolyUtil {
      * @return the distance in meters (assuming spherical earth)
      */
     @JvmStatic
-    fun distanceToLine(p: LatLng, start: LatLng, end: LatLng): Double {
+    fun distanceToLine(
+        p: LatLng,
+        start: LatLng,
+        end: LatLng,
+    ): Double {
         if (start == end) {
             return computeDistanceBetween(end, p)
         }
@@ -426,7 +430,8 @@ object PolyUtil {
         val lonCorrection = cos(s1lat)
         val s2s1lat = s2lat - s1lat
         val s2s1lng = (s2lng - s1lng) * lonCorrection
-        val u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * lonCorrection * s2s1lng) /
+        val u =
+            ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * lonCorrection * s2s1lng) /
                 (s2s1lat * s2s1lat + s2s1lng * s2s1lng)
 
         if (u <= 0) {
@@ -436,10 +441,11 @@ object PolyUtil {
             return computeDistanceBetween(p, end)
         }
 
-        val su = LatLng(
-            start.latitude + u * (end.latitude - start.latitude),
-            start.longitude + u * (end.longitude - start.longitude)
-        )
+        val su =
+            LatLng(
+                start.latitude + u * (end.latitude - start.latitude),
+                start.longitude + u * (end.longitude - start.longitude),
+            )
         return computeDistanceBetween(p, su)
     }
 
@@ -504,7 +510,10 @@ object PolyUtil {
         return result.toString()
     }
 
-    private fun encode(v: Long, result: StringBuilder) {
+    private fun encode(
+        v: Long,
+        result: StringBuilder,
+    ) {
         var value = if (v < 0) (v shl 1).inv() else (v shl 1)
         while (value >= 0x20) {
             result.append(Character.toChars(((0x20 or (value and 0x1f).toInt()) + 63)))
@@ -517,16 +526,22 @@ object PolyUtil {
      * Returns tan(latitude-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
      * See http://williams.best.vwh.net/avform.htm .
      */
-    private fun tanLatGC(lat1: Double, lat2: Double, lng2: Double, lng3: Double): Double {
-        return (tan(lat1) * sin(lng2 - lng3) + tan(lat2) * sin(lng3)) / sin(lng2)
-    }
+    private fun tanLatGC(
+        lat1: Double,
+        lat2: Double,
+        lng2: Double,
+        lng3: Double,
+    ): Double = (tan(lat1) * sin(lng2 - lng3) + tan(lat2) * sin(lng3)) / sin(lng2)
 
     /**
      * Returns mercator(latitude-at-lng3) on the Rhumb line (lat1, lng1) to (lat2, lng2). lng1==0.
      */
-    private fun mercatorLatRhumb(lat1: Double, lat2: Double, lng2: Double, lng3: Double): Double {
-        return (mercator(lat1) * (lng2 - lng3) + mercator(lat2) * lng3) / lng2
-    }
+    private fun mercatorLatRhumb(
+        lat1: Double,
+        lat2: Double,
+        lng2: Double,
+        lng3: Double,
+    ): Double = (mercator(lat1) * (lng2 - lng3) + mercator(lat2) * lng3) / lng2
 
     /**
      * Computes whether the vertical segment (lat3, lng3) to South Pole intersects the segment
@@ -539,7 +554,7 @@ object PolyUtil {
         lng2: Double,
         lat3: Double,
         lng3: Double,
-        geodesic: Boolean
+        geodesic: Boolean,
     ): Boolean {
         // Both ends on the same side of lng3.
         if ((lng3 >= 0 && lng3 >= lng2) || (lng3 < 0 && lng3 < lng2)) {
@@ -588,7 +603,7 @@ object PolyUtil {
         lat2: Double,
         lng2: Double,
         lat3: Double,
-        lng3: Double
+        lng3: Double,
     ): Double {
         val sinLat1 = sin(lat1)
         val cosLat2 = cos(lat2)
@@ -612,7 +627,7 @@ object PolyUtil {
         lng2: Double,
         lat3: Double,
         lng3: Double,
-        havTolerance: Double
+        havTolerance: Double,
     ): Boolean {
         val havDist13 = havDistance(lat1, lat3, lng1 - lng3)
         if (havDist13 <= havTolerance) {

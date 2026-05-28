@@ -176,6 +176,10 @@ If you wish to disable this, you can do so by removing the initializer in your `
 
 Contributions are welcome and encouraged! If you'd like to contribute, send us a [pull request] and refer to our [code of conduct] and [contributing guide].
 
+### Using AI
+This repository provides an official Gemini Skill and an `llm-integration-prompt.md` to help AI agents navigate the codebase and provide assistance. Refer to the [contributing guide] for more details on AI usage.
+
+
 ## Terms of Service
 
 This library uses Google Maps Platform services. Use of Google Maps Platform services through this library is subject to the Google Maps Platform [Terms of Service].
