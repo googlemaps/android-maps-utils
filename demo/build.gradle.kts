@@ -128,6 +128,9 @@ configurations.all {
         force(libs.kotlinx.coroutines.android)
         force(libs.kotlinx.serialization.json)
     }
+    if (name.contains("navigation", ignoreCase = true)) {
+        exclude(group = "com.google.android.gms", module = "play-services-maps")
+    }
 }
 
 // [START maps_android_utils_install_snippet]
@@ -138,9 +141,7 @@ dependencies {
     val modules = listOf(":clustering", ":heatmaps", ":ui", ":data")
     modules.forEach { moduleName ->
         "standardImplementation"(project(moduleName))
-        "navigationImplementation"(project(moduleName)) {
-            exclude(group = "com.google.android.gms", module = "play-services-maps")
-        }
+        "navigationImplementation"(project(moduleName))
     }
 
     "navigationImplementation"(libs.navigation.sdk)
