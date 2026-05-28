@@ -25,11 +25,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 
 public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
   private GoogleMap mMap;
@@ -90,18 +90,15 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     // 2. Call the getMapId() method
     String mapId = app.getMapId();
 
-    // Create a new SupportMapFragment instance
-    SupportMapFragment mapFragment;
-
-    if (mapId == null) {
-      mapFragment = SupportMapFragment.newInstance();
-    } else {
-      // Create the map options
-      GoogleMapOptions mapOptions = new GoogleMapOptions();
+    // Create the map options
+    GoogleMapOptions mapOptions = null;
+    if (mapId != null) {
+      mapOptions = new GoogleMapOptions();
       mapOptions.mapId(mapId);
-      // Create a new SupportMapFragment instance
-      mapFragment = SupportMapFragment.newInstance(mapOptions);
     }
+
+    // Use the provider to get the correct fragment for the current flavor
+    Fragment mapFragment = MapFragmentProvider.getFragment(mapOptions);
 
     // Add the fragment to the container (R.id.map)
     // Check savedInstanceState to prevent re-adding on rotation
@@ -109,8 +106,14 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
       getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
     }
 
-    // Get the map
-    mapFragment.getMapAsync(this);
+    // Get the map asynchronously. We use reflection because the fragment type
+    // depends on the build flavor (SupportMapFragment or SupportNavigationFragment).
+    try {
+      mapFragment.getClass().getMethod("getMapAsync", OnMapReadyCallback.class)
+          .invoke(mapFragment, this);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /** Run the demo-specific code. */

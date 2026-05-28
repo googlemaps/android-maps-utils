@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.4.1](https://github.com/googlemaps/android-maps-utils/compare/v4.4.0...v4.4.1) (2026-05-26)
+
+
+### Bug Fixes
+
+* address lint, compiler, and Error Prone warnings ([#1692](https://github.com/googlemaps/android-maps-utils/issues/1692)) ([ce809c7](https://github.com/googlemaps/android-maps-utils/commit/ce809c741ce37611a25efce2b1b95f95d2e108fe))
+
+## [4.4.0](https://github.com/googlemaps/android-maps-utils/compare/v4.3.0...v4.4.0) (2026-05-20)
+
+
+### Features
+
+* add navigation flavor to demo for SDK 7.x reproduction ([#1680](https://github.com/googlemaps/android-maps-utils/issues/1680)) ([12ac29a](https://github.com/googlemaps/android-maps-utils/commit/12ac29a3db8c96bd34536581f5f5cf665a9c4f76))
+
 ## [4.3.0](https://github.com/googlemaps/android-maps-utils/compare/v4.2.0...v4.3.0) (2026-04-24)
 
 
