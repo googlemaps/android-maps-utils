@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.2](https://github.com/googlemaps/android-maps-utils/compare/v4.4.1...v4.4.2) (2026-06-02)
+
+
+### Bug Fixes
+
+* change model name from gemini-2.5-flash to gemini-3.5-flash ([#1696](https://github.com/googlemaps/android-maps-utils/issues/1696)) ([838a2bf](https://github.com/googlemaps/android-maps-utils/commit/838a2bf0621768c7dbdd6daa30db5522d90102ec))
+
 ## [4.4.1](https://github.com/googlemaps/android-maps-utils/compare/v4.4.0...v4.4.1) (2026-05-26)
 
 
