@@ -177,7 +177,18 @@ public class GeoJsonParser {
      * @param geoJsonGeometry geometry object to parse
      * @return Geometry object
      */
+    /** Maximum nesting depth for GeometryCollection to prevent stack overflow. */
+    private static final int MAX_GEOMETRY_DEPTH = 20;
+
     public static Geometry parseGeometry(JSONObject geoJsonGeometry) {
+        return parseGeometry(geoJsonGeometry, 0);
+    }
+
+    private static Geometry parseGeometry(JSONObject geoJsonGeometry, int depth) {
+        if (depth > MAX_GEOMETRY_DEPTH) {
+            Log.w(LOG_TAG, "GeoJSON geometry nesting depth exceeds maximum (" + MAX_GEOMETRY_DEPTH + "), ignoring.");
+            return null;
+        }
         try {
             String geometryType = geoJsonGeometry.getString("type");
             JSONArray geometryArray;
@@ -190,7 +201,7 @@ public class GeoJsonParser {
                 // No geometries or coordinates array
                 return null;
             }
-            return createGeometry(geometryType, geometryArray);
+            return createGeometry(geometryType, geometryArray, depth);
         } catch (JSONException e) {
             return null;
         }
@@ -239,7 +250,7 @@ public class GeoJsonParser {
      * @return Geometry object
      * @throws JSONException if the coordinates or geometries could be parsed
      */
-    private static Geometry createGeometry(String geometryType, JSONArray geometryArray)
+    private static Geometry createGeometry(String geometryType, JSONArray geometryArray, int depth)
             throws JSONException {
         switch (geometryType) {
             case POINT:
@@ -255,7 +266,7 @@ public class GeoJsonParser {
             case MULTIPOLYGON:
                 return createMultiPolygon(geometryArray);
             case GEOMETRY_COLLECTION:
-                return createGeometryCollection(geometryArray);
+                return createGeometryCollection(geometryArray, depth + 1);
         }
         return null;
     }
@@ -360,13 +371,13 @@ public class GeoJsonParser {
      * @return GeoJsonGeometryCollection object
      * @throws JSONException if geometries cannot be parsed
      */
-    private static GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries)
+    private static GeoJsonGeometryCollection createGeometryCollection(JSONArray geometries, int depth)
             throws JSONException {
         ArrayList<Geometry> geometryCollectionElements
                 = new ArrayList<>();
         for (int i = 0; i < geometries.length(); i++) {
             JSONObject geometryElement = geometries.getJSONObject(i);
-            Geometry geometry = parseGeometry(geometryElement);
+            Geometry geometry = parseGeometry(geometryElement, depth);
             if (geometry != null) {
                 // Do not add geometries that could not be parsed
                 geometryCollectionElements.add(geometry);
