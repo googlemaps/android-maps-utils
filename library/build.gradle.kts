@@ -128,3 +128,7 @@ val generateArtifactIdFile = tasks.register("generateArtifactIdFile") {
 tasks.named("preBuild") {
     dependsOn(generateArtifactIdFile)
 }
+
+tasks.named("dokkaGeneratePublicationHtml") {
+    dependsOn(generateArtifactIdFile)
+}
