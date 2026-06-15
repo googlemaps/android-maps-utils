@@ -67,7 +67,7 @@ class PublishingConventionPlugin : Plugin<Project> {
             signAllPublications()
 
             coordinates(
-                artifactId = "android-maps-utils",
+                artifactId = if (project.name == "library") "android-maps-utils" else "android-maps-utils-${project.name}",
             )
 
             pom {

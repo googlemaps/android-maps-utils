@@ -41,7 +41,9 @@ tasks.register<Delete>("clean") {
 
 allprojects {
     group = "com.google.maps.android"
-    version = "3.19.0"
+    // {x-release-please-start-version}
+    version = "4.4.1"
+    // {x-release-please-end}
 
     plugins.withId("java") {
         configure<JavaPluginExtension> {
