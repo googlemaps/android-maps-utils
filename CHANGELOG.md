@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.5.0](https://github.com/googlemaps/android-maps-utils/compare/v4.4.1...v4.5.0) (2026-06-15)
+
+
+### Features
+
+* add manual RC release workflow ([#1695](https://github.com/googlemaps/android-maps-utils/issues/1695)) ([688fc83](https://github.com/googlemaps/android-maps-utils/commit/688fc833ba55235450096546b22d3ac0db73d59b))
+
+
+### Bug Fixes
+
+* change model name from gemini-2.5-flash to gemini-3.5-flash ([#1696](https://github.com/googlemaps/android-maps-utils/issues/1696)) ([838a2bf](https://github.com/googlemaps/android-maps-utils/commit/838a2bf0621768c7dbdd6daa30db5522d90102ec))
+
 ## [4.4.1](https://github.com/googlemaps/android-maps-utils/compare/v4.4.0...v4.4.1) (2026-05-26)
 
 
