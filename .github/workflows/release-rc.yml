@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'RC version (e.g. 4.5.0-rc.1)'
+        description: 'RC version (e.g. 4.5.0-rc01)'
         required: true
       branch:
         description: 'Branch to release from'
