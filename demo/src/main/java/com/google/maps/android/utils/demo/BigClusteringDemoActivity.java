@@ -37,7 +37,7 @@ public class BigClusteringDemoActivity extends BaseDemoActivity {
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
         }
 
-        mClusterManager = new ClusterManager<>(this, getMap());
+        mClusterManager = new ClusterManager<MyItem>(this, getMap());
 
         getMap().setOnCameraIdleListener(mClusterManager);
         try {

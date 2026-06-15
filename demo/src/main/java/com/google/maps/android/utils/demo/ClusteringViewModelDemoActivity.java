@@ -58,7 +58,7 @@ public class ClusteringViewModelDemoActivity extends BaseDemoActivity {
 
         mViewModel.getAlgorithm().updateViewSize(widthDp, heightDp);
 
-        ClusterManager<MyItem> mClusterManager = new ClusterManager<>(this, getMap());
+        ClusterManager<MyItem> mClusterManager = new ClusterManager<MyItem>(this, getMap());
         mClusterManager.setAlgorithm(mViewModel.getAlgorithm());
 
         getMap().setOnCameraIdleListener(mClusterManager);

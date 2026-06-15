@@ -40,7 +40,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
  * ClusterManager should be added to the map as an: <ul> <li>{@link com.google.android.gms.maps.GoogleMap.OnCameraIdleListener}</li>
  * <li>{@link com.google.android.gms.maps.GoogleMap.OnMarkerClickListener}</li> </ul>
  */
-public class ClusterManager<T : ClusterItem>(
+public class ClusterManager<T : ClusterItem>
+@JvmOverloads constructor(
     context: Context,
     public val map: GoogleMap,
     public val markerManager: MarkerManager = MarkerManager(map)
@@ -79,7 +80,7 @@ public class ClusterManager<T : ClusterItem>(
             cluster()
         }
 
-    public var renderer: ClusterRenderer<T> = DefaultClusterRenderer(map, this)
+    public var renderer: ClusterRenderer<T> = DefaultClusterRenderer(context, map, this)
         set(value) {
             field.setOnClusterClickListener(null)
             field.setOnClusterItemClickListener(null)

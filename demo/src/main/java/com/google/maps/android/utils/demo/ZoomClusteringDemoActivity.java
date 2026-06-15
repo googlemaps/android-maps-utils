@@ -86,7 +86,7 @@ public class ZoomClusteringDemoActivity extends BaseDemoActivity implements Clus
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.528146, 73.797726), 9.5f));
         }
 
-        ClusterManager<MyItem> clusterManager = new ClusterManager<>(this, getMap());
+        ClusterManager<MyItem> clusterManager = new ClusterManager<MyItem>(this, getMap());
         getMap().setOnCameraIdleListener(clusterManager);
 
         // Initialize renderer

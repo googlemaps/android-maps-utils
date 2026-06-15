@@ -74,7 +74,7 @@ import kotlin.math.pow
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
-public class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem>(
+public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem>(
     private val context: Context,
     private val map: GoogleMap,
     private val clusterManager: ClusterManager<T>
@@ -141,7 +141,6 @@ public class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem>(
         null
 
     init {
-        val context = clusterManager.markerManager.context
         density = context.resources.displayMetrics.density
         iconGenerator = IconGenerator(context)
         iconGenerator.setContentView(makeSquareTextView(context))

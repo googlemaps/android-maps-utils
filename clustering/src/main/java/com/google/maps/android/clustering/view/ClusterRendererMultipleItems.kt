@@ -80,7 +80,7 @@ import kotlin.math.pow
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
-public class ClusterRendererMultipleItems<T : ClusterItem>(
+public open class ClusterRendererMultipleItems<T : ClusterItem>(
     private val context: Context,
     private val map: GoogleMap,
     private val clusterManager: ClusterManager<T>
@@ -180,7 +180,6 @@ public class ClusterRendererMultipleItems<T : ClusterItem>(
         null
 
     init {
-        val context = clusterManager.markerManager.context
         density = context.resources.displayMetrics.density
         iconGenerator = IconGenerator(context)
         iconGenerator.setContentView(makeSquareTextView(context))
@@ -436,7 +435,7 @@ public class ClusterRendererMultipleItems<T : ClusterItem>(
             val markerModifier = MarkerModifier()
             val zoom = mapZoom
             val markersToRemove = markers
-            val visibleBounds: LatLngBounds
+            var visibleBounds: LatLngBounds
 
             try {
                 visibleBounds = projection!!.visibleRegion.latLngBounds

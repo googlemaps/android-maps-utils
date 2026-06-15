@@ -75,6 +75,7 @@ import kotlin.random.Random
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
 public open class DefaultClusterRenderer<T : ClusterItem>(
+    private val context: Context,
     private val map: GoogleMap,
     private val clusterManager: ClusterManager<T>
 ) : ClusterRenderer<T> {
@@ -140,7 +141,6 @@ public open class DefaultClusterRenderer<T : ClusterItem>(
         null
 
     init {
-        val context = clusterManager.markerManager.context
         density = context.resources.displayMetrics.density
         iconGenerator = IconGenerator(context)
         iconGenerator.setContentView(makeSquareTextView(context))
@@ -505,9 +505,9 @@ public open class DefaultClusterRenderer<T : ClusterItem>(
 
             runBlocking(executor) { markerModifier.waitUntilFree() }
 
-            DefaultClusterRenderer.this.markers = newMarkers
-            DefaultClusterRenderer.this.clusters = clusters
-            DefaultClusterRenderer.this.zoom = zoom
+            this@DefaultClusterRenderer.markers = newMarkers
+            this@DefaultClusterRenderer.clusters = clusters
+            this@DefaultClusterRenderer.zoom = zoom
 
             callback?.run()
         }

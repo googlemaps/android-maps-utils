@@ -63,7 +63,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
         PolylineManager polylineManager = new PolylineManager(getMap());
 
         // Add clustering
-        ClusterManager<MyItem> clusterManager = new ClusterManager<>(this, getMap(), markerManager);
+        ClusterManager<MyItem> clusterManager = new ClusterManager<MyItem>(this, getMap(), markerManager);
         getMap().setOnCameraIdleListener(clusterManager);
         addClusterItems(clusterManager);
 

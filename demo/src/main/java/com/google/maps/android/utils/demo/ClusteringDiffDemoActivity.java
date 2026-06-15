@@ -148,7 +148,7 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 6));
         }
 
-        mClusterManager = new ClusterManager<>(this, getMap());
+        mClusterManager = new ClusterManager<Person>(this, getMap());
         mClusterManager.setRenderer(new PersonRenderer());
         getMap().setOnCameraIdleListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);

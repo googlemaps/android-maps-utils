@@ -178,7 +178,7 @@ public class CustomAdvancedMarkerClusteringDemoActivity extends BaseDemoActivity
         // This line is extremely important to initialise the advanced markers. Without it, advanced markers will not work.
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
 
-        mClusterManager = new ClusterManager<>(this, getMap());
+        mClusterManager = new ClusterManager<Person>(this, getMap());
         mClusterManager.setRenderer(new AdvancedMarkerRenderer());
         getMap().setOnCameraIdleListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);

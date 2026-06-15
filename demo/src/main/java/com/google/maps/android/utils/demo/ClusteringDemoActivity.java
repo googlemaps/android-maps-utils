@@ -47,7 +47,7 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
             getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
         }
 
-        mClusterManager = new ClusterManager<>(this, getMap());
+        mClusterManager = new ClusterManager<MyItem>(this, getMap());
         getMap().setOnCameraIdleListener(mClusterManager);
 
         // Add a custom InfoWindowAdapter by setting it to the MarkerManager.Collection object from
