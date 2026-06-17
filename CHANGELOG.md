@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.1](https://github.com/googlemaps/android-maps-utils/compare/v4.5.0...v4.5.1) (2026-06-17)
+
+
+### Bug Fixes
+
+* enable filterTouchesWhenObscured on WebView layouts ([#1705](https://github.com/googlemaps/android-maps-utils/issues/1705)) ([3e59470](https://github.com/googlemaps/android-maps-utils/commit/3e59470f718d12bb2269f9ae38ccd2af912adb5a))
+
 ## [4.5.0](https://github.com/googlemaps/android-maps-utils/compare/v4.4.1...v4.5.0) (2026-06-16)
 
 
