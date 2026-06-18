@@ -49,7 +49,7 @@ tasks.register<Exec>("installAndLaunch") {
 allprojects {
     group = "com.google.maps.android"
     // {x-release-please-start-version}
-    version = "4.4.1"
+    version = "4.5.1"
     // {x-release-please-end}
 
     plugins.withId("java") {
