@@ -1,0 +1,397 @@
+{
+  "moduleName": "data",
+  "moduleVersion": "5.0.0-rc02",
+  "outputDir": "/home/runner/work/android-maps-utils/android-maps-utils/data/build/dokka/html",
+  "cacheRoot": null,
+  "offlineMode": false,
+  "sourceSets": [
+    {
+      "displayName": "debug",
+      "sourceSetID": {
+        "scopeId": ":data",
+        "sourceSetName": "debug"
+      },
+      "classpath": [
+        "/usr/local/lib/android/sdk/platforms/android-36/android.jar",
+        "/usr/local/lib/android/sdk/build-tools/35.0.0/core-lambda-stubs.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/full_jar/debug/createFullJarDebug/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/full_jar/debug/createFullJarDebug/full.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common/2.6.2/10f354fdb64868baecd67128560c5a0d6312c495/lifecycle-common-2.6.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.10.2/c8705d275d81f19e8afaf3ff9b5bf7a4b6b6c19b/kotlinx-coroutines-android-1.10.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.9.0/aea6f7d49fe5c458f8963ee6d4bdaf4a459ab3e7/kotlinx-serialization-json-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/io.github.pdvrieze.xmlutil/serialization-jvm/0.91.3/816d18866918d5e20376070d188d0e0dc3cceb1b/serialization-jvm-0.91.3.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.9.0/91448df39c558f7c6147b8bd8db01debe16e0cc1/kotlinx-serialization-core-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/2.3.10/eb57a55dda1c04e2b68de7d50619dd7526150442/kotlin-stdlib-jdk7-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.4.2/bc60b5568a66d765a9fe8e266fd0c6c727e0b50b/collection-jvm-1.4.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.8.1/b8a16fe526014b7941c1debaccaf9c5153692dbb/annotation-jvm-1.8.1.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/io.github.pdvrieze.xmlutil/core-jvmcommon/0.91.3/6a8cb6cb9d461934eccbeecfb8f980bd86441540/core-jvmcommon-0.91.3.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/2.3.10/626e0d6a554c61b239816b108314301950a20de4/kotlin-stdlib-jdk8-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/1.0/c949a840a6acbc5268d088e47b04177bf90b3cad/listenablefuture-1.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/full_jar/release/createFullJarRelease/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/full_jar/release/createFullJarRelease/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/00f680614b908c9ad59bdb64d1d0c711/transformed/jetified-play-services-maps-20.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/4f2571c9a35d850bc1cb09023277e60f/transformed/jetified-appcompat-resources-1.7.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/ba5ce8cdf4280452df0badc0265ccc30/transformed/appcompat-1.7.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/325b5339a77993d6935f28c5b35fc73a/transformed/jetified-play-services-base-18.5.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/945cb589730aed405bf99b621df89c44/transformed/jetified-play-services-tasks-18.2.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/11b7e02da595d35938fb3282e8cd03e2/transformed/jetified-play-services-basement-18.9.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6c2fe1dd462133773ed7d3e87382574a/transformed/fragment-1.5.4-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/669d7c6eef4a3377adbffe894cb5244e/transformed/jetified-activity-1.8.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/1724dfbec0fc43983bcd94633acb146b/transformed/loader-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/adf666a8d5b7975349807fb7ec5bc610/transformed/lifecycle-livedata-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/58070e9b3d36332c6f40e10baa788e4e/transformed/lifecycle-runtime-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/4ded22f0950672aa5afb081c59a9d45f/transformed/lifecycle-viewmodel-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/21e0980d300c381c6ef6f7d1b9cf8f41/transformed/lifecycle-livedata-core-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/23b023b985f79d7394148ad4025854d0/transformed/jetified-lifecycle-viewmodel-savedstate-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e389ea76182226a5c31319b298b9f885/transformed/jetified-core-ktx-1.17.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/ddd05cccfd234ac79fc3fe90d365de9a/transformed/drawerlayout-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e183c6fc9925153e0e1bd8a06180489e/transformed/viewpager-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3d710f11acf6d3810641b7c909f3c128/transformed/vectordrawable-animated-1.1.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/48febb84734e7bfbe964dd7347951ca0/transformed/vectordrawable-1.1.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e8040b39044fb34d8208fb2571c5ae3d/transformed/customview-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/860cd9ac43164e3dc83c69a1a2e25f4e/transformed/core-1.17.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/162225ec828261ce67a4a52087fdc1ed/transformed/jetified-kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3489d40487905360a256dd8a0aad202a/transformed/jetified-kotlinx-coroutines-android-1.10.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b72ec4d3cf9308316a35fae7fa782986/transformed/jetified-kotlinx-serialization-json-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/2d50a931c4bd45f913dc80a945026bb1/transformed/jetified-serialization-jvm-0.91.3.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6bf0a55ba4667018dc38dea19b2b9113/transformed/jetified-kotlinx-serialization-core-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/10cf24c79b8c7fdf57d8ae53f2a32b14/transformed/jetified-savedstate-1.2.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/7ca87ad5b0a1f2ed73a6526ad5b04019/transformed/jetified-kotlin-stdlib-jdk7-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/d4056858d0694eccbfc7351dc164a0b9/transformed/versionedparcelable-1.1.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b83b06945a035486fdb87500b4667942/transformed/jetified-collection-jvm-1.4.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6018f506362ee84bf076d6abb499015c/transformed/jetified-annotation-experimental-1.4.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/d2a199dc440bc938c1b5bf71fc6ed1b1/transformed/cursoradapter-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/0e60b77a3e9b94e3addeb6d068ef4bed/transformed/interpolator-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b0656477ecf70618086e18349103cae2/transformed/core-runtime-2.2.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3b084de3425c95bdb82081e5eec3c4c7/transformed/jetified-annotation-jvm-1.8.1.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/7c93f50a68f704bc971408598283b400/transformed/jetified-core-viewtree-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/bf034d17d990e4e7da8905b2e1de6f6d/transformed/jetified-core-jvmcommon-0.91.3.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/27aa17645891b06415d1d2f7d5ae39cc/transformed/jetified-kotlin-stdlib-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/f7a44333f90d1f2d1a9822b80f298e14/transformed/jetified-kotlin-stdlib-jdk8-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/cb5b79e8ea8a59e4dbc842d0e8d7e5aa/transformed/jetified-annotations-23.0.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/0263ded217986287e75d44630b599f29/transformed/jetified-listenablefuture-1.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/07994cb401e92bd59839b1ccebe743e6/transformed/jetified-jspecify-1.0.0.jar"
+      ],
+      "sourceRoots": [
+      ],
+      "dependentSourceSets": [
+      ],
+      "samples": [
+      ],
+      "includes": [
+      ],
+      "includeNonPublic": false,
+      "reportUndocumented": false,
+      "skipEmptyPackages": true,
+      "skipDeprecated": false,
+      "jdkVersion": 17,
+      "sourceLinks": [
+      ],
+      "perPackageOptions": [
+      ],
+      "externalDocumentationLinks": [
+        {
+          "url": "https://developer.android.com/reference/kotlin/",
+          "packageListUrl": "https://developer.android.com/reference/kotlin/package-list"
+        },
+        {
+          "url": "https://developer.android.com/reference/kotlin/",
+          "packageListUrl": "https://developer.android.com/reference/kotlin/androidx/package-list"
+        },
+        {
+          "url": "https://docs.oracle.com/en/java/javase/17/docs/api/",
+          "packageListUrl": "https://docs.oracle.com/en/java/javase/17/docs/api/element-list"
+        },
+        {
+          "url": "https://kotlinlang.org/api/core/",
+          "packageListUrl": "https://kotlinlang.org/api/core/package-list"
+        }
+      ],
+      "languageVersion": null,
+      "apiVersion": null,
+      "noStdlibLink": false,
+      "noJdkLink": false,
+      "suppressedFiles": [
+      ],
+      "analysisPlatform": "jvm",
+      "documentedVisibilities": [
+        "PUBLIC"
+      ]
+    },
+    {
+      "displayName": "androidJvm",
+      "sourceSetID": {
+        "scopeId": ":data",
+        "sourceSetName": "main"
+      },
+      "classpath": [
+        "/usr/local/lib/android/sdk/platforms/android-36/android.jar",
+        "/usr/local/lib/android/sdk/build-tools/35.0.0/core-lambda-stubs.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/full_jar/debug/createFullJarDebug/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/full_jar/debug/createFullJarDebug/full.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common/2.6.2/10f354fdb64868baecd67128560c5a0d6312c495/lifecycle-common-2.6.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.10.2/c8705d275d81f19e8afaf3ff9b5bf7a4b6b6c19b/kotlinx-coroutines-android-1.10.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.9.0/aea6f7d49fe5c458f8963ee6d4bdaf4a459ab3e7/kotlinx-serialization-json-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/io.github.pdvrieze.xmlutil/serialization-jvm/0.91.3/816d18866918d5e20376070d188d0e0dc3cceb1b/serialization-jvm-0.91.3.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.9.0/91448df39c558f7c6147b8bd8db01debe16e0cc1/kotlinx-serialization-core-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/2.3.10/eb57a55dda1c04e2b68de7d50619dd7526150442/kotlin-stdlib-jdk7-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.4.2/bc60b5568a66d765a9fe8e266fd0c6c727e0b50b/collection-jvm-1.4.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.8.1/b8a16fe526014b7941c1debaccaf9c5153692dbb/annotation-jvm-1.8.1.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/io.github.pdvrieze.xmlutil/core-jvmcommon/0.91.3/6a8cb6cb9d461934eccbeecfb8f980bd86441540/core-jvmcommon-0.91.3.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/2.3.10/626e0d6a554c61b239816b108314301950a20de4/kotlin-stdlib-jdk8-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/1.0/c949a840a6acbc5268d088e47b04177bf90b3cad/listenablefuture-1.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/full_jar/release/createFullJarRelease/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/full_jar/release/createFullJarRelease/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/00f680614b908c9ad59bdb64d1d0c711/transformed/jetified-play-services-maps-20.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/4f2571c9a35d850bc1cb09023277e60f/transformed/jetified-appcompat-resources-1.7.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/ba5ce8cdf4280452df0badc0265ccc30/transformed/appcompat-1.7.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/325b5339a77993d6935f28c5b35fc73a/transformed/jetified-play-services-base-18.5.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/945cb589730aed405bf99b621df89c44/transformed/jetified-play-services-tasks-18.2.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/11b7e02da595d35938fb3282e8cd03e2/transformed/jetified-play-services-basement-18.9.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6c2fe1dd462133773ed7d3e87382574a/transformed/fragment-1.5.4-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/669d7c6eef4a3377adbffe894cb5244e/transformed/jetified-activity-1.8.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/1724dfbec0fc43983bcd94633acb146b/transformed/loader-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/adf666a8d5b7975349807fb7ec5bc610/transformed/lifecycle-livedata-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/58070e9b3d36332c6f40e10baa788e4e/transformed/lifecycle-runtime-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/4ded22f0950672aa5afb081c59a9d45f/transformed/lifecycle-viewmodel-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/21e0980d300c381c6ef6f7d1b9cf8f41/transformed/lifecycle-livedata-core-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/23b023b985f79d7394148ad4025854d0/transformed/jetified-lifecycle-viewmodel-savedstate-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e389ea76182226a5c31319b298b9f885/transformed/jetified-core-ktx-1.17.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/ddd05cccfd234ac79fc3fe90d365de9a/transformed/drawerlayout-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e183c6fc9925153e0e1bd8a06180489e/transformed/viewpager-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3d710f11acf6d3810641b7c909f3c128/transformed/vectordrawable-animated-1.1.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/48febb84734e7bfbe964dd7347951ca0/transformed/vectordrawable-1.1.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e8040b39044fb34d8208fb2571c5ae3d/transformed/customview-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/860cd9ac43164e3dc83c69a1a2e25f4e/transformed/core-1.17.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/162225ec828261ce67a4a52087fdc1ed/transformed/jetified-kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3489d40487905360a256dd8a0aad202a/transformed/jetified-kotlinx-coroutines-android-1.10.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b72ec4d3cf9308316a35fae7fa782986/transformed/jetified-kotlinx-serialization-json-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/2d50a931c4bd45f913dc80a945026bb1/transformed/jetified-serialization-jvm-0.91.3.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6bf0a55ba4667018dc38dea19b2b9113/transformed/jetified-kotlinx-serialization-core-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/10cf24c79b8c7fdf57d8ae53f2a32b14/transformed/jetified-savedstate-1.2.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/7ca87ad5b0a1f2ed73a6526ad5b04019/transformed/jetified-kotlin-stdlib-jdk7-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/d4056858d0694eccbfc7351dc164a0b9/transformed/versionedparcelable-1.1.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b83b06945a035486fdb87500b4667942/transformed/jetified-collection-jvm-1.4.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6018f506362ee84bf076d6abb499015c/transformed/jetified-annotation-experimental-1.4.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/d2a199dc440bc938c1b5bf71fc6ed1b1/transformed/cursoradapter-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/0e60b77a3e9b94e3addeb6d068ef4bed/transformed/interpolator-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b0656477ecf70618086e18349103cae2/transformed/core-runtime-2.2.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3b084de3425c95bdb82081e5eec3c4c7/transformed/jetified-annotation-jvm-1.8.1.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/7c93f50a68f704bc971408598283b400/transformed/jetified-core-viewtree-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/bf034d17d990e4e7da8905b2e1de6f6d/transformed/jetified-core-jvmcommon-0.91.3.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/27aa17645891b06415d1d2f7d5ae39cc/transformed/jetified-kotlin-stdlib-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/f7a44333f90d1f2d1a9822b80f298e14/transformed/jetified-kotlin-stdlib-jdk8-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/cb5b79e8ea8a59e4dbc842d0e8d7e5aa/transformed/jetified-annotations-23.0.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/0263ded217986287e75d44630b599f29/transformed/jetified-listenablefuture-1.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/07994cb401e92bd59839b1ccebe743e6/transformed/jetified-jspecify-1.0.0.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar"
+      ],
+      "sourceRoots": [
+        "/home/runner/work/android-maps-utils/android-maps-utils/data/src/main/java"
+      ],
+      "dependentSourceSets": [
+      ],
+      "samples": [
+      ],
+      "includes": [
+      ],
+      "includeNonPublic": false,
+      "reportUndocumented": false,
+      "skipEmptyPackages": true,
+      "skipDeprecated": false,
+      "jdkVersion": 17,
+      "sourceLinks": [
+      ],
+      "perPackageOptions": [
+      ],
+      "externalDocumentationLinks": [
+        {
+          "url": "https://developer.android.com/reference/kotlin/",
+          "packageListUrl": "https://developer.android.com/reference/kotlin/package-list"
+        },
+        {
+          "url": "https://developer.android.com/reference/kotlin/",
+          "packageListUrl": "https://developer.android.com/reference/kotlin/androidx/package-list"
+        },
+        {
+          "url": "https://docs.oracle.com/en/java/javase/17/docs/api/",
+          "packageListUrl": "https://docs.oracle.com/en/java/javase/17/docs/api/element-list"
+        },
+        {
+          "url": "https://kotlinlang.org/api/core/",
+          "packageListUrl": "https://kotlinlang.org/api/core/package-list"
+        }
+      ],
+      "languageVersion": null,
+      "apiVersion": null,
+      "noStdlibLink": false,
+      "noJdkLink": false,
+      "suppressedFiles": [
+      ],
+      "analysisPlatform": "jvm",
+      "documentedVisibilities": [
+        "PUBLIC"
+      ]
+    },
+    {
+      "displayName": "release",
+      "sourceSetID": {
+        "scopeId": ":data",
+        "sourceSetName": "release"
+      },
+      "classpath": [
+        "/usr/local/lib/android/sdk/platforms/android-36/android.jar",
+        "/usr/local/lib/android/sdk/build-tools/35.0.0/core-lambda-stubs.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/full_jar/debug/createFullJarDebug/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/full_jar/debug/createFullJarDebug/full.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common/2.6.2/10f354fdb64868baecd67128560c5a0d6312c495/lifecycle-common-2.6.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.10.2/c8705d275d81f19e8afaf3ff9b5bf7a4b6b6c19b/kotlinx-coroutines-android-1.10.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.9.0/aea6f7d49fe5c458f8963ee6d4bdaf4a459ab3e7/kotlinx-serialization-json-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/io.github.pdvrieze.xmlutil/serialization-jvm/0.91.3/816d18866918d5e20376070d188d0e0dc3cceb1b/serialization-jvm-0.91.3.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.9.0/91448df39c558f7c6147b8bd8db01debe16e0cc1/kotlinx-serialization-core-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/2.3.10/eb57a55dda1c04e2b68de7d50619dd7526150442/kotlin-stdlib-jdk7-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.4.2/bc60b5568a66d765a9fe8e266fd0c6c727e0b50b/collection-jvm-1.4.2.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.8.1/b8a16fe526014b7941c1debaccaf9c5153692dbb/annotation-jvm-1.8.1.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/io.github.pdvrieze.xmlutil/core-jvmcommon/0.91.3/6a8cb6cb9d461934eccbeecfb8f980bd86441540/core-jvmcommon-0.91.3.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.10/8b80e2f80a3b7daa99c16017f91d4c72cd8b31a6/kotlin-stdlib-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/2.3.10/626e0d6a554c61b239816b108314301950a20de4/kotlin-stdlib-jdk8-2.3.10.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/1.0/c949a840a6acbc5268d088e47b04177bf90b3cad/listenablefuture-1.0.jar",
+        "/home/runner/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/full_jar/release/createFullJarRelease/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/full_jar/release/createFullJarRelease/full.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/library/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "/home/runner/work/android-maps-utils/android-maps-utils/ui/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/00f680614b908c9ad59bdb64d1d0c711/transformed/jetified-play-services-maps-20.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/4f2571c9a35d850bc1cb09023277e60f/transformed/jetified-appcompat-resources-1.7.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/ba5ce8cdf4280452df0badc0265ccc30/transformed/appcompat-1.7.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/325b5339a77993d6935f28c5b35fc73a/transformed/jetified-play-services-base-18.5.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/945cb589730aed405bf99b621df89c44/transformed/jetified-play-services-tasks-18.2.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/11b7e02da595d35938fb3282e8cd03e2/transformed/jetified-play-services-basement-18.9.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6c2fe1dd462133773ed7d3e87382574a/transformed/fragment-1.5.4-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/669d7c6eef4a3377adbffe894cb5244e/transformed/jetified-activity-1.8.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/1724dfbec0fc43983bcd94633acb146b/transformed/loader-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/adf666a8d5b7975349807fb7ec5bc610/transformed/lifecycle-livedata-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/58070e9b3d36332c6f40e10baa788e4e/transformed/lifecycle-runtime-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/4ded22f0950672aa5afb081c59a9d45f/transformed/lifecycle-viewmodel-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/21e0980d300c381c6ef6f7d1b9cf8f41/transformed/lifecycle-livedata-core-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/23b023b985f79d7394148ad4025854d0/transformed/jetified-lifecycle-viewmodel-savedstate-2.6.2-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e389ea76182226a5c31319b298b9f885/transformed/jetified-core-ktx-1.17.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/ddd05cccfd234ac79fc3fe90d365de9a/transformed/drawerlayout-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e183c6fc9925153e0e1bd8a06180489e/transformed/viewpager-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3d710f11acf6d3810641b7c909f3c128/transformed/vectordrawable-animated-1.1.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/48febb84734e7bfbe964dd7347951ca0/transformed/vectordrawable-1.1.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/e8040b39044fb34d8208fb2571c5ae3d/transformed/customview-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/860cd9ac43164e3dc83c69a1a2e25f4e/transformed/core-1.17.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/162225ec828261ce67a4a52087fdc1ed/transformed/jetified-kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3489d40487905360a256dd8a0aad202a/transformed/jetified-kotlinx-coroutines-android-1.10.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b72ec4d3cf9308316a35fae7fa782986/transformed/jetified-kotlinx-serialization-json-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/2d50a931c4bd45f913dc80a945026bb1/transformed/jetified-serialization-jvm-0.91.3.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6bf0a55ba4667018dc38dea19b2b9113/transformed/jetified-kotlinx-serialization-core-jvm-1.9.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/10cf24c79b8c7fdf57d8ae53f2a32b14/transformed/jetified-savedstate-1.2.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/7ca87ad5b0a1f2ed73a6526ad5b04019/transformed/jetified-kotlin-stdlib-jdk7-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/d4056858d0694eccbfc7351dc164a0b9/transformed/versionedparcelable-1.1.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b83b06945a035486fdb87500b4667942/transformed/jetified-collection-jvm-1.4.2.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/6018f506362ee84bf076d6abb499015c/transformed/jetified-annotation-experimental-1.4.1-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/d2a199dc440bc938c1b5bf71fc6ed1b1/transformed/cursoradapter-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/0e60b77a3e9b94e3addeb6d068ef4bed/transformed/interpolator-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/b0656477ecf70618086e18349103cae2/transformed/core-runtime-2.2.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/3b084de3425c95bdb82081e5eec3c4c7/transformed/jetified-annotation-jvm-1.8.1.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/7c93f50a68f704bc971408598283b400/transformed/jetified-core-viewtree-1.0.0-api.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/bf034d17d990e4e7da8905b2e1de6f6d/transformed/jetified-core-jvmcommon-0.91.3.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/27aa17645891b06415d1d2f7d5ae39cc/transformed/jetified-kotlin-stdlib-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/f7a44333f90d1f2d1a9822b80f298e14/transformed/jetified-kotlin-stdlib-jdk8-2.3.10.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/cb5b79e8ea8a59e4dbc842d0e8d7e5aa/transformed/jetified-annotations-23.0.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/0263ded217986287e75d44630b599f29/transformed/jetified-listenablefuture-1.0.jar",
+        "/home/runner/.gradle/caches/9.4.1/transforms/07994cb401e92bd59839b1ccebe743e6/transformed/jetified-jspecify-1.0.0.jar"
+      ],
+      "sourceRoots": [
+      ],
+      "dependentSourceSets": [
+      ],
+      "samples": [
+      ],
+      "includes": [
+      ],
+      "includeNonPublic": false,
+      "reportUndocumented": false,
+      "skipEmptyPackages": true,
+      "skipDeprecated": false,
+      "jdkVersion": 17,
+      "sourceLinks": [
+      ],
+      "perPackageOptions": [
+      ],
+      "externalDocumentationLinks": [
+        {
+          "url": "https://developer.android.com/reference/kotlin/",
+          "packageListUrl": "https://developer.android.com/reference/kotlin/package-list"
+        },
+        {
+          "url": "https://developer.android.com/reference/kotlin/",
+          "packageListUrl": "https://developer.android.com/reference/kotlin/androidx/package-list"
+        },
+        {
+          "url": "https://docs.oracle.com/en/java/javase/17/docs/api/",
+          "packageListUrl": "https://docs.oracle.com/en/java/javase/17/docs/api/element-list"
+        },
+        {
+          "url": "https://kotlinlang.org/api/core/",
+          "packageListUrl": "https://kotlinlang.org/api/core/package-list"
+        }
+      ],
+      "languageVersion": null,
+      "apiVersion": null,
+      "noStdlibLink": false,
+      "noJdkLink": false,
+      "suppressedFiles": [
+      ],
+      "analysisPlatform": "jvm",
+      "documentedVisibilities": [
+        "PUBLIC"
+      ]
+    }
+  ],
+  "pluginsClasspath": [
+    "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.dokka/templating-plugin/2.1.0/c3c13a48444b9c22e5286e88581ce0334e25352d/templating-plugin-2.1.0.jar",
+    "/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains.dokka/dokka-base/2.1.0/3379db5f1799a2ae6c98603214367743d4d6863f/dokka-base-2.1.0.jar"
+  ],
+  "pluginsConfiguration": [
+    {
+      "fqPluginName": "org.jetbrains.dokka.base.DokkaBase",
+      "serializationFormat": "JSON",
+      "values": "{\"customAssets\":[],\"customStyleSheets\":[],\"separateInheritedMembers\":false,\"mergeImplicitExpectActualDeclarations\":false}"
+    },
+    {
+      "fqPluginName": "org.jetbrains.dokka.versioning.VersioningPlugin",
+      "serializationFormat": "JSON",
+      "values": "{\"olderVersions\":[],\"renderVersionsNavigationOnAllPages\":true}"
+    }
+  ],
+  "modules": [
+  ],
+  "failOnWarning": false,
+  "delayTemplateSubstitution": false,
+  "suppressObviousFunctions": true,
+  "includes": [
+  ],
+  "suppressInheritedMembers": false,
+  "finalizeCoroutines": false
+}

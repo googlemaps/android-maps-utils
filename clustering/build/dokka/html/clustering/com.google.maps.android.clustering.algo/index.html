@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>com.google.maps.android.clustering.algo</title>
+    <link href="../../images/logo-icon.svg" rel="icon" type="image/svg">
+        <script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../styles/style.css" rel="Stylesheet">
+<link href="../../styles/main.css" rel="Stylesheet">
+<link href="../../styles/prism.css" rel="Stylesheet">
+<link href="../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer="defer"></script>
+</head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+            <a class="library-name--link" href="../../index.html" tabindex="1">
+                    clustering
+            </a>
+        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle"
+                type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+5.0.0-rc02        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true"
+                        data-filter=":clustering/main">androidJvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox"
+                        data-role="dropdown-toggle"
+                        aria-controls="platform-tags-listbox"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-label="Toggle source sets"
+                ></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":clustering/main"
+                                       data-filter=":clustering/main"/>
+                                <span class="checkbox--icon"></span>
+                                androidJvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button"
+                    type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config='{"defaultSize": 280, "minSize": 200, "maxSize": 400}'>
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list"
+                    data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    clustering
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageIds="clustering::com.google.maps.android.clustering.algo////PointingToDeclaration//454482369">
+  <div class="breadcrumbs"><a href="../../index.html">clustering</a><span class="delimiter">/</span><span class="current">com.google.maps.android.clustering.algo</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="1927717480%2FClasslikes%2F454482369" anchor-label="AbstractAlgorithm" id="1927717480%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-abstract-algorithm/index.html"><span>Abstract</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1927717480%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-abstract-algorithm/index.html">AbstractAlgorithm</a><span class="token operator">&lt;</span><a href="-abstract-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span> : <a href="-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="-abstract-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Base Algorithm class that implements lock/unlock functionality.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-479460698%2FClasslikes%2F454482369" anchor-label="Algorithm" id="-479460698%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-algorithm/index.html"><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-479460698%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Logic for computing clusters</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1191307790%2FClasslikes%2F454482369" anchor-label="CentroidNonHierarchicalDistanceBasedAlgorithm" id="1191307790%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-centroid-non-hierarchical-distance-based-algorithm/index.html"><span>Centroid</span><wbr></wbr><span>Non</span><wbr></wbr><span>Hierarchical</span><wbr></wbr><span>Distance</span><wbr></wbr><span>Based</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1191307790%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-centroid-non-hierarchical-distance-based-algorithm/index.html">CentroidNonHierarchicalDistanceBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-centroid-non-hierarchical-distance-based-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span> : <a href="-non-hierarchical-distance-based-algorithm/index.html">NonHierarchicalDistanceBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-centroid-non-hierarchical-distance-based-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">A variant of <a href="-non-hierarchical-distance-based-algorithm/index.html">NonHierarchicalDistanceBasedAlgorithm</a> that clusters items based on distance but assigns cluster positions at the centroid of their items, instead of using the position of a single item as the cluster position.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="360463002%2FClasslikes%2F454482369" anchor-label="ContinuousZoomEuclideanCentroidAlgorithm" id="360463002%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-continuous-zoom-euclidean-centroid-algorithm/index.html"><span>Continuous</span><wbr></wbr><span>Zoom</span><wbr></wbr><span>Euclidean</span><wbr></wbr><span>Centroid</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="360463002%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-continuous-zoom-euclidean-centroid-algorithm/index.html">ContinuousZoomEuclideanCentroidAlgorithm</a><span class="token operator">&lt;</span><a href="-continuous-zoom-euclidean-centroid-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span> : <a href="-centroid-non-hierarchical-distance-based-algorithm/index.html">CentroidNonHierarchicalDistanceBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-continuous-zoom-euclidean-centroid-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">A variant of <a href="-centroid-non-hierarchical-distance-based-algorithm/index.html">CentroidNonHierarchicalDistanceBasedAlgorithm</a> that uses continuous zoom scaling and Euclidean distance for clustering.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1518958581%2FClasslikes%2F454482369" anchor-label="GridBasedAlgorithm" id="-1518958581%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-grid-based-algorithm/index.html"><span>Grid</span><wbr></wbr><span>Based</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1518958581%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-grid-based-algorithm/index.html">GridBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-grid-based-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span> : <a href="-abstract-algorithm/index.html">AbstractAlgorithm</a><span class="token operator">&lt;</span><a href="-grid-based-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Groups markers into a grid for clustering. This algorithm organizes items into a two-dimensional grid, facilitating the formation of clusters based on proximity within each grid cell. The grid size determines the spatial granularity of clustering, and clusters are created by aggregating items within the same grid cell.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="800767022%2FClasslikes%2F454482369" anchor-label="NonHierarchicalDistanceBasedAlgorithm" id="800767022%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-non-hierarchical-distance-based-algorithm/index.html"><span>Non</span><wbr></wbr><span>Hierarchical</span><wbr></wbr><span>Distance</span><wbr></wbr><span>Based</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="800767022%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-non-hierarchical-distance-based-algorithm/index.html">NonHierarchicalDistanceBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-non-hierarchical-distance-based-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span> : <a href="-abstract-algorithm/index.html">AbstractAlgorithm</a><span class="token operator">&lt;</span><a href="-non-hierarchical-distance-based-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">A simple clustering algorithm with O(nlog n) performance. Resulting clusters are not hierarchical.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-830263682%2FClasslikes%2F454482369" anchor-label="NonHierarchicalViewBasedAlgorithm" id="-830263682%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-non-hierarchical-view-based-algorithm/index.html"><span>Non</span><wbr></wbr><span>Hierarchical</span><wbr></wbr><span>View</span><wbr></wbr><span>Based</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-830263682%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-non-hierarchical-view-based-algorithm/index.html">NonHierarchicalViewBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-non-hierarchical-view-based-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">mViewWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">mViewHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span> : <a href="-non-hierarchical-distance-based-algorithm/index.html">NonHierarchicalDistanceBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-non-hierarchical-view-based-algorithm/index.html">T</a><span class="token operator">&gt; </span>, <a href="-screen-based-algorithm/index.html">ScreenBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-non-hierarchical-view-based-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Algorithm that can be used for managing large numbers of items (>1000 markers). This algorithm works the same way as <a href="-non-hierarchical-distance-based-algorithm/index.html">NonHierarchicalDistanceBasedAlgorithm</a> but works, only in visible area. It requires .shouldReclusterOnMapMovement to be true in order to re-render clustering when camera movement changes the visible area.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="464236901%2FClasslikes%2F454482369" anchor-label="PreCachingAlgorithmDecorator" id="464236901%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-pre-caching-algorithm-decorator/index.html"><span>Pre</span><wbr></wbr><span>Caching</span><wbr></wbr><span>Algorithm</span><wbr></wbr><span><span>Decorator</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="464236901%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-pre-caching-algorithm-decorator/index.html">PreCachingAlgorithmDecorator</a><span class="token operator">&lt;</span><a href="-pre-caching-algorithm-decorator/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">algorithm<span class="token operator">: </span><a href="-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="-pre-caching-algorithm-decorator/index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span> : <a href="-abstract-algorithm/index.html">AbstractAlgorithm</a><span class="token operator">&lt;</span><a href="-pre-caching-algorithm-decorator/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1245723355%2FClasslikes%2F454482369" anchor-label="ScreenBasedAlgorithm" id="-1245723355%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-screen-based-algorithm/index.html"><span>Screen</span><wbr></wbr><span>Based</span><wbr></wbr><span><span>Algorithm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1245723355%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-screen-based-algorithm/index.html">ScreenBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-screen-based-algorithm/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span> : <a href="-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="-screen-based-algorithm/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">This abstract interface provides two methods: one to determine if the map should recluster when the map moves ({@link  #shouldReclusterOnMapMovement()}), and another method to determine the behavior when the camera moves ({@link  #onCameraChange(CameraPosition)} ()})</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="174412910%2FClasslikes%2F454482369" anchor-label="ScreenBasedAlgorithmAdapter" id="174412910%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-screen-based-algorithm-adapter/index.html"><span>Screen</span><wbr></wbr><span>Based</span><wbr></wbr><span>Algorithm</span><wbr></wbr><span><span>Adapter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="174412910%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-screen-based-algorithm-adapter/index.html">ScreenBasedAlgorithmAdapter</a><span class="token operator">&lt;</span><a href="-screen-based-algorithm-adapter/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">algorithm<span class="token operator">: </span><a href="-algorithm/index.html">Algorithm</a><span class="token operator">&lt;</span><a href="-screen-based-algorithm-adapter/index.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span> : <a href="-abstract-algorithm/index.html">AbstractAlgorithm</a><span class="token operator">&lt;</span><a href="-screen-based-algorithm-adapter/index.html">T</a><span class="token operator">&gt; </span>, <a href="-screen-based-algorithm/index.html">ScreenBasedAlgorithm</a><span class="token operator">&lt;</span><a href="-screen-based-algorithm-adapter/index.html">T</a><span class="token operator">&gt; </span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1024303095%2FClasslikes%2F454482369" anchor-label="StaticCluster" id="-1024303095%2FClasslikes%2F454482369" data-filterable-set=":clustering/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":clustering/main" data-filterable-set=":clustering/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-static-cluster/index.html"><span>Static</span><wbr></wbr><span><span>Cluster</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1024303095%2FClasslikes%2F454482369"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":clustering/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-static-cluster/index.html">StaticCluster</a><span class="token operator">&lt;</span><a href="-static-cluster/index.html">T</a><span class="token operator"> : </span><a href="../com.google.maps.android.clustering/-cluster-item/index.html">ClusterItem</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">mCenter<span class="token operator">: </span><span data-unresolved-link="com.google.android.gms.maps.model/LatLng///PointingToDeclaration/">LatLng</span></span></span><span class="token punctuation">)</span> : <a href="../com.google.maps.android.clustering/-cluster/index.html">Cluster</a><span class="token operator">&lt;</span><a href="-static-cluster/index.html">T</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">A cluster whose center is determined upon creation.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

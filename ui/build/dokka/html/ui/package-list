@@ -1,0 +1,42 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.google.maps.android.ui////PointingToDeclaration/ui/com.google.maps.android.ui/index.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil.LatLngInterpolator.Linear///PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/-lat-lng-interpolator/-linear/index.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil.LatLngInterpolator.Linear/Linear/#/PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/-lat-lng-interpolator/-linear/-linear.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil.LatLngInterpolator.Linear/interpolate/#kotlin.Float#com.google.android.gms.maps.model.LatLng#com.google.android.gms.maps.model.LatLng/PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/-lat-lng-interpolator/-linear/interpolate.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil.LatLngInterpolator///PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/-lat-lng-interpolator/index.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil.LatLngInterpolator/interpolate/#kotlin.Float#com.google.android.gms.maps.model.LatLng#com.google.android.gms.maps.model.LatLng/PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/-lat-lng-interpolator/interpolate.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil///PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/index.html
+$dokka.location:com.google.maps.android.ui/AnimationUtil/animateMarkerTo/#com.google.android.gms.maps.model.Marker#com.google.android.gms.maps.model.LatLng#kotlin.Long/PointingToDeclaration/ui/com.google.maps.android.ui/-animation-util/animate-marker-to.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion///PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/index.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_BLUE/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-b-l-u-e.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_DEFAULT/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-d-e-f-a-u-l-t.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_GREEN/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-g-r-e-e-n.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_ORANGE/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-o-r-a-n-g-e.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_PURPLE/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-p-u-r-p-l-e.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_RED/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-r-e-d.html
+$dokka.location:com.google.maps.android.ui/IconGenerator.Companion/STYLE_WHITE/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-companion/-s-t-y-l-e_-w-h-i-t-e.html
+$dokka.location:com.google.maps.android.ui/IconGenerator///PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/index.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/IconGenerator/#android.content.Context/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/-icon-generator.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/getAnchorU/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/get-anchor-u.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/getAnchorV/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/get-anchor-v.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/makeIcon/#/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/make-icon.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/makeIcon/#kotlin.CharSequence?/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/make-icon.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setBackground/#android.graphics.drawable.Drawable?/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-background.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setColor/#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-color.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setContentPadding/#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-content-padding.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setContentRotation/#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-content-rotation.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setContentView/#android.view.View/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-content-view.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setRotation/#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-rotation.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setStyle/#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-style.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setTextAppearance/#android.content.Context#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-text-appearance.html
+$dokka.location:com.google.maps.android.ui/IconGenerator/setTextAppearance/#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-icon-generator/set-text-appearance.html
+$dokka.location:com.google.maps.android.ui/RotationLayout///PointingToDeclaration/ui/com.google.maps.android.ui/-rotation-layout/index.html
+$dokka.location:com.google.maps.android.ui/RotationLayout/RotationLayout/#android.content.Context#android.util.AttributeSet?#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-rotation-layout/-rotation-layout.html
+$dokka.location:com.google.maps.android.ui/RotationLayout/dispatchDraw/#android.graphics.Canvas/PointingToDeclaration/ui/com.google.maps.android.ui/-rotation-layout/dispatch-draw.html
+$dokka.location:com.google.maps.android.ui/RotationLayout/onMeasure/#kotlin.Int#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-rotation-layout/on-measure.html
+$dokka.location:com.google.maps.android.ui/RotationLayout/setViewRotation/#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-rotation-layout/set-view-rotation.html
+$dokka.location:com.google.maps.android.ui/SquareTextView///PointingToDeclaration/ui/com.google.maps.android.ui/-square-text-view/index.html
+$dokka.location:com.google.maps.android.ui/SquareTextView/SquareTextView/#android.content.Context#android.util.AttributeSet?#kotlin.Int/PointingToDeclaration/ui/com.google.maps.android.ui/-square-text-view/-square-text-view.html
+$dokka.location:com.google.maps.android.ui/SquareTextView/draw/#android.graphics.Canvas/PointingToDeclaration/ui/com.google.maps.android.ui/-square-text-view/draw.html
+com.google.maps.android.ui

@@ -1,0 +1,13 @@
+R_DEF: Internal format may change without notice
+local
+drawable amu_bubble_mask
+drawable amu_bubble_shadow
+id amu_text
+id webview
+id window
+layout amu_info_window
+layout amu_text_bubble
+layout amu_webview
+style amu_Bubble.TextAppearance.Dark
+style amu_Bubble.TextAppearance.Light
+style amu_ClusterIcon.TextAppearance
