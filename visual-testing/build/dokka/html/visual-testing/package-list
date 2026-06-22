@@ -1,0 +1,46 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.google.maps.android.visualtesting////PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/index.html
+$dokka.location:com.google.maps.android.visualtesting/AiAction///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-action/index.html
+$dokka.location:com.google.maps.android.visualtesting/AiAction/AiAction/#kotlin.String#com.google.maps.android.visualtesting.AiSelector#kotlin.String?/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-action/-ai-action.html
+$dokka.location:com.google.maps.android.visualtesting/AiAction/action/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-action/action.html
+$dokka.location:com.google.maps.android.visualtesting/AiAction/selector/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-action/selector.html
+$dokka.location:com.google.maps.android.visualtesting/AiAction/textValue/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-action/text-value.html
+$dokka.location:com.google.maps.android.visualtesting/AiSelector///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-selector/index.html
+$dokka.location:com.google.maps.android.visualtesting/AiSelector/AiSelector/#kotlin.String?#kotlin.String?#kotlin.String?/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-selector/-ai-selector.html
+$dokka.location:com.google.maps.android.visualtesting/AiSelector/contentDescription/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-selector/content-description.html
+$dokka.location:com.google.maps.android.visualtesting/AiSelector/resourceId/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-selector/resource-id.html
+$dokka.location:com.google.maps.android.visualtesting/AiSelector/text/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-ai-selector/text.html
+$dokka.location:com.google.maps.android.visualtesting/Candidate///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-candidate/index.html
+$dokka.location:com.google.maps.android.visualtesting/Candidate/Candidate/#com.google.maps.android.visualtesting.Content/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-candidate/-candidate.html
+$dokka.location:com.google.maps.android.visualtesting/Candidate/content/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-candidate/content.html
+$dokka.location:com.google.maps.android.visualtesting/Content///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-content/index.html
+$dokka.location:com.google.maps.android.visualtesting/Content/Content/#kotlin.collections.List[com.google.maps.android.visualtesting.Part]/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-content/-content.html
+$dokka.location:com.google.maps.android.visualtesting/Content/parts/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-content/parts.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiRequest///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-request/index.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiRequest/GeminiRequest/#kotlin.collections.List[com.google.maps.android.visualtesting.Content]/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-request/-gemini-request.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiRequest/contents/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-request/contents.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiResponse///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-response/index.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiResponse/GeminiResponse/#kotlin.collections.List[com.google.maps.android.visualtesting.Candidate]/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-response/-gemini-response.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiResponse/candidates/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-response/candidates.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiVisualTestHelper///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-visual-test-helper/index.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiVisualTestHelper/GeminiVisualTestHelper/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-visual-test-helper/-gemini-visual-test-helper.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiVisualTestHelper/analyzeImage/#android.graphics.Bitmap#kotlin.String#kotlin.String/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-visual-test-helper/analyze-image.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiVisualTestHelper/listAvailableModels/#kotlin.String/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-visual-test-helper/list-available-models.html
+$dokka.location:com.google.maps.android.visualtesting/GeminiVisualTestHelper/performActionFromPrompt/#kotlin.String#androidx.test.uiautomator.UiDevice#kotlin.String/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-gemini-visual-test-helper/perform-action-from-prompt.html
+$dokka.location:com.google.maps.android.visualtesting/InlineData///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-inline-data/index.html
+$dokka.location:com.google.maps.android.visualtesting/InlineData/InlineData/#kotlin.String#kotlin.String/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-inline-data/-inline-data.html
+$dokka.location:com.google.maps.android.visualtesting/InlineData/data/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-inline-data/data.html
+$dokka.location:com.google.maps.android.visualtesting/InlineData/mimeType/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-inline-data/mime-type.html
+$dokka.location:com.google.maps.android.visualtesting/ModelInfo///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-model-info/index.html
+$dokka.location:com.google.maps.android.visualtesting/ModelInfo/ModelInfo/#kotlin.String#kotlin.String/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-model-info/-model-info.html
+$dokka.location:com.google.maps.android.visualtesting/ModelInfo/displayName/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-model-info/display-name.html
+$dokka.location:com.google.maps.android.visualtesting/ModelInfo/name/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-model-info/name.html
+$dokka.location:com.google.maps.android.visualtesting/ModelsListResponse///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-models-list-response/index.html
+$dokka.location:com.google.maps.android.visualtesting/ModelsListResponse/ModelsListResponse/#kotlin.collections.List[com.google.maps.android.visualtesting.ModelInfo]/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-models-list-response/-models-list-response.html
+$dokka.location:com.google.maps.android.visualtesting/ModelsListResponse/models/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-models-list-response/models.html
+$dokka.location:com.google.maps.android.visualtesting/Part///PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-part/index.html
+$dokka.location:com.google.maps.android.visualtesting/Part/Part/#kotlin.String?#com.google.maps.android.visualtesting.InlineData?/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-part/-part.html
+$dokka.location:com.google.maps.android.visualtesting/Part/inlineData/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-part/inline-data.html
+$dokka.location:com.google.maps.android.visualtesting/Part/text/#/PointingToDeclaration/visual-testing/com.google.maps.android.visualtesting/-part/text.html
+com.google.maps.android.visualtesting
