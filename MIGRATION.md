@@ -19,7 +19,7 @@ If your project uses all utilities, you can import the aggregator artifact direc
 ```toml
 # gradle/libs.versions.toml
 [versions]
-androidMapsUtils = "5.0.0-rc1" # x-release-please-version
+androidMapsUtils = "5.0.0-rc02" # x-release-please-version
 
 [libraries]
 android-maps-utils = { group = "com.google.maps.android", name = "android-maps-utils", version.ref = "androidMapsUtils" }
