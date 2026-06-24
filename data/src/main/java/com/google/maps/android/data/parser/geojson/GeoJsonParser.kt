@@ -52,6 +52,7 @@ class GeoJsonParser {
     }
 
     companion object {
+        const val MAX_GEOMETRY_DEPTH = 20
         val SUPPORTED_EXTENSIONS = setOf("json", "geojson")
 
         fun canParse(header: String): Boolean = header.trimStart().startsWith("{")
@@ -92,7 +93,11 @@ private fun parseFeature(json: JsonElement): GeoJsonFeature {
     return GeoJsonFeature(geometry, properties, id)
 }
 
-private fun parseGeometry(json: JsonElement): GeoJsonGeometry? {
+internal fun parseGeometry(
+    json: JsonElement,
+    maxDepth: Int = GeoJsonParser.MAX_GEOMETRY_DEPTH,
+): GeoJsonGeometry? {
+    if (maxDepth < 0) return null
     val type = json.jsonObject["type"]?.jsonPrimitive?.content ?: return null
     val coordinates = json.jsonObject["coordinates"]?.jsonArray
     val geometries = json.jsonObject["geometries"]?.jsonArray
@@ -104,7 +109,7 @@ private fun parseGeometry(json: JsonElement): GeoJsonGeometry? {
         "MultiPoint" -> coordinates?.let { GeoJsonMultiPoint(parseMultiPoint(it)) }
         "MultiLineString" -> coordinates?.let { GeoJsonMultiLineString(parseMultiLineString(it)) }
         "MultiPolygon" -> coordinates?.let { GeoJsonMultiPolygon(parseMultiPolygon(it)) }
-        "GeometryCollection" -> geometries?.let { GeoJsonGeometryCollection(parseGeometryCollection(it)) }
+        "GeometryCollection" -> geometries?.let { GeoJsonGeometryCollection(parseGeometryCollection(it, maxDepth - 1)) }
         else -> null
     }
 }
@@ -143,7 +148,10 @@ private fun parseMultiPolygon(coordinates: List<JsonElement>): List<List<List<Co
         parsePolygon(it.jsonArray.toList())
     }
 
-private fun parseGeometryCollection(geometries: List<JsonElement>): List<GeoJsonGeometry> =
+private fun parseGeometryCollection(
+    geometries: List<JsonElement>,
+    maxDepth: Int,
+): List<GeoJsonGeometry> =
     geometries.mapNotNull {
-        parseGeometry(it)
+        parseGeometry(it, maxDepth)
     }

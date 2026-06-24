@@ -301,4 +301,36 @@ class GeoJsonParserTest {
             parser.parse(stream)
         }
     }
+
+    @Test
+    fun testDeeplyNestedGeometryCollectionDoesNotThrowStackOverflow() {
+        val nested = buildNestedGeometryCollectionJson(200)
+        val stream = ByteArrayInputStream(nested.toByteArray())
+        val geoJsonObj = parser.parse(stream)
+        assertThat(geoJsonObj).isNotNull()
+    }
+
+    @Test
+    fun testGeometryBeyondMaxDepthReturnsNull() {
+        val pointJson = """{"type": "Point", "coordinates": [0.0, 0.0]}"""
+        val element = kotlinx.serialization.json.Json.parseToJsonElement(pointJson)
+        val result = parseGeometry(element, -1)
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun testCustomMaxDepthRespectsLimit() {
+        val pointJson = """{"type": "Point", "coordinates": [0.0, 0.0]}"""
+        val element = kotlinx.serialization.json.Json.parseToJsonElement(pointJson)
+        assertThat(parseGeometry(element, 0)).isNotNull()
+        assertThat(parseGeometry(element, -1)).isNull()
+    }
+
+    private fun buildNestedGeometryCollectionJson(depth: Int): String {
+        var current = """{"type": "Point", "coordinates": [0.0, 0.0]}"""
+        repeat(depth) {
+            current = """{"type": "GeometryCollection", "geometries": [$current]}"""
+        }
+        return """{"type": "Feature", "geometry": $current}"""
+    }
 }
