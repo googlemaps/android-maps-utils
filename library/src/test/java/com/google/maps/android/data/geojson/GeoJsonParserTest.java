@@ -386,4 +386,65 @@ public class GeoJsonParserTest {
         parser = new GeoJsonParser(invalidGeometryInvalidCoordinatesString());
         assertEquals(0, parser.getFeatures().size());
     }
+
+    // ---------------------------------------------------------------
+    // Tests for fix: StackOverflowError on deeply nested GeometryCollection
+    // PR #1699
+    // ---------------------------------------------------------------
+
+    private static JSONObject buildNestedGeometryCollection(int depth) throws Exception {
+        JSONObject innermost = new JSONObject();
+        innermost.put("type", "Point");
+        innermost.put("coordinates", new org.json.JSONArray("[0, 0]"));
+
+        JSONObject current = innermost;
+        for (int i = 0; i < depth; i++) {
+            JSONObject wrapper = new JSONObject();
+            wrapper.put("type", "GeometryCollection");
+            wrapper.put("geometries", new org.json.JSONArray().put(current));
+            current = wrapper;
+        }
+        return current;
+    }
+
+    @Test
+    public void testDeeplyNestedGeometryCollection_doesNotThrowStackOverflow() throws Exception {
+        JSONObject deeplyNested = buildNestedGeometryCollection(2000);
+        try {
+            GeoJsonParser.parseGeometry(deeplyNested);
+        } catch (StackOverflowError e) {
+            throw new AssertionError(
+                "StackOverflowError thrown for deeply nested GeometryCollection — fix did not work!", e);
+        }
+    }
+
+
+    @Test
+    public void testGeometryBeyondMaxDepth_returnsNull() throws Exception {
+        JSONObject point = new JSONObject();
+        point.put("type", "Point");
+        point.put("coordinates", new org.json.JSONArray("[0, 0]"));
+        Geometry result = GeoJsonParser.parseGeometry(point, -1);
+        assertNull("Geometry exceeding max depth (countdown < 0) should be null", result);
+    }
+
+    @Test
+    public void testCustomMaxDepth_respectsLimit() throws Exception {
+        JSONObject point = new JSONObject();
+        point.put("type", "Point");
+        point.put("coordinates", new org.json.JSONArray("[0, 0]"));
+        Geometry valid = GeoJsonParser.parseGeometry(point, 0);
+        assertNotNull("Geometry at maxDepth 0 should not be null", valid);
+        Geometry invalid = GeoJsonParser.parseGeometry(point, -1);
+        assertNull("Geometry at maxDepth -1 should be null", invalid);
+    }
+
+        @Test
+    public void testShallowNestedGeometryCollection_parsedCorrectly() throws Exception {
+        JSONObject shallow = buildNestedGeometryCollection(3);
+        Geometry result = GeoJsonParser.parseGeometry(shallow);
+        assertNotNull("GeometryCollection with normal nesting should not be null", result);
+        assertTrue("Geometry type must be GeoJsonGeometryCollection",
+                result instanceof GeoJsonGeometryCollection);
+    }
 }
