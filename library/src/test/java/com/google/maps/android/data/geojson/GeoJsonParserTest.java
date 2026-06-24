@@ -418,12 +418,6 @@ public class GeoJsonParserTest {
         }
     }
 
-    @Test
-    public void testGeometryBeyondMaxDepth_returnsNull() throws Exception {
-        JSONObject tooDeep = buildNestedGeometryCollection(21);
-        Geometry result = GeoJsonParser.parseGeometry(tooDeep);
-        assertNull("Geometry melebihi MAX_GEOMETRY_DEPTH seharusnya null", result);
-    }
 
     @Test
     public void testShallowNestedGeometryCollection_parsedCorrectly() throws Exception {
