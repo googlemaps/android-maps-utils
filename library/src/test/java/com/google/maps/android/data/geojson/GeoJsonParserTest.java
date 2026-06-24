@@ -386,4 +386,51 @@ public class GeoJsonParserTest {
         parser = new GeoJsonParser(invalidGeometryInvalidCoordinatesString());
         assertEquals(0, parser.getFeatures().size());
     }
+
+    // ---------------------------------------------------------------
+    // Tests for fix: StackOverflowError on deeply nested GeometryCollection
+    // PR #1699
+    // ---------------------------------------------------------------
+
+    private static JSONObject buildNestedGeometryCollection(int depth) throws Exception {
+        JSONObject innermost = new JSONObject();
+        innermost.put("type", "Point");
+        innermost.put("coordinates", new org.json.JSONArray("[0, 0]"));
+
+        JSONObject current = innermost;
+        for (int i = 0; i < depth; i++) {
+            JSONObject wrapper = new JSONObject();
+            wrapper.put("type", "GeometryCollection");
+            wrapper.put("geometries", new org.json.JSONArray().put(current));
+            current = wrapper;
+        }
+        return current;
+    }
+
+    @Test
+    public void testDeeplyNestedGeometryCollection_doesNotThrowStackOverflow() throws Exception {
+        JSONObject deeplyNested = buildNestedGeometryCollection(2000);
+        try {
+            GeoJsonParser.parseGeometry(deeplyNested);
+        } catch (StackOverflowError e) {
+            throw new AssertionError(
+                "StackOverflowError thrown for deeply nested GeometryCollection — fix tidak bekerja!", e);
+        }
+    }
+
+    @Test
+    public void testGeometryBeyondMaxDepth_returnsNull() throws Exception {
+        JSONObject tooDeep = buildNestedGeometryCollection(21);
+        Geometry result = GeoJsonParser.parseGeometry(tooDeep);
+        assertNull("Geometry melebihi MAX_GEOMETRY_DEPTH seharusnya null", result);
+    }
+
+    @Test
+    public void testShallowNestedGeometryCollection_parsedCorrectly() throws Exception {
+        JSONObject shallow = buildNestedGeometryCollection(3);
+        Geometry result = GeoJsonParser.parseGeometry(shallow);
+        assertNotNull("GeometryCollection dengan nesting normal seharusnya tidak null", result);
+        assertTrue("Tipe geometry harus GeoJsonGeometryCollection",
+                result instanceof GeoJsonGeometryCollection);
+    }
 }
