@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2026 Google LLC
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,16 @@ public class KmlTestUtil {
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
         parser.setInput(stream, null);
+        return parser;
+    }
+
+    static XmlPullParser createParserFromString(String xml) throws XmlPullParserException, IOException {
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setFeature(XmlPullParser.FEATURE_PROCESS_DOCDECL, false);
+        factory.setFeature(XmlPullParser.FEATURE_VALIDATION, false);
+        factory.setNamespaceAware(true);
+        XmlPullParser parser = factory.newPullParser();
+        parser.setInput(new java.io.StringReader(xml));
         return parser;
     }
 }
