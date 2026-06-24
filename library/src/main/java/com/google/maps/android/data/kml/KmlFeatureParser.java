@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,8 +182,19 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @param geometryType Type of geometry object to create
      */
-    private static Geometry createGeometry(XmlPullParser parser, String geometryType)
+    /* package */ static final int MAX_GEOMETRY_DEPTH = 20;
+
+    /* package */ static Geometry createGeometry(XmlPullParser parser, String geometryType)
             throws IOException, XmlPullParserException {
+        return createGeometry(parser, geometryType, MAX_GEOMETRY_DEPTH);
+    }
+
+    /* package */ static Geometry createGeometry(XmlPullParser parser, String geometryType, int maxDepth)
+            throws IOException, XmlPullParserException {
+        if (maxDepth < 0) {
+            KmlParser.skip(parser);
+            return null;
+        }
         int eventType = parser.getEventType();
         while (!(eventType == END_TAG && parser.getName().equals(geometryType))) {
             if (eventType == START_TAG) {
@@ -196,7 +207,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 } else if (parser.getName().equals("Polygon")) {
                     return createPolygon(parser);
                 } else if (parser.getName().equals("MultiGeometry")) {
-                    return createMultiGeometry(parser);
+                    return createMultiGeometry(parser, maxDepth);
                 } else if (parser.getName().equals("MultiTrack")) {
                     return createMultiTrack(parser);
                 }
@@ -349,14 +360,17 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      *
      * @return KmlMultiGeometry object
      */
-    private static KmlMultiGeometry createMultiGeometry(XmlPullParser parser)
+    private static KmlMultiGeometry createMultiGeometry(XmlPullParser parser, int maxDepth)
             throws XmlPullParserException, IOException {
         ArrayList<Geometry> geometries = new ArrayList<Geometry>();
         // Get next otherwise have an infinite loop
         int eventType = parser.next();
         while (!(eventType == END_TAG && parser.getName().equals("MultiGeometry"))) {
             if (eventType == START_TAG && parser.getName().matches(GEOMETRY_REGEX)) {
-                geometries.add(createGeometry(parser, parser.getName()));
+                Geometry geom = createGeometry(parser, parser.getName(), maxDepth - 1);
+                if (geom != null) {
+                    geometries.add(geom);
+                }
             }
             eventType = parser.next();
         }

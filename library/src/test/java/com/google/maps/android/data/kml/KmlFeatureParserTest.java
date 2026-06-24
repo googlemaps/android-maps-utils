@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2026 Google LLC
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,5 +124,53 @@ public class KmlFeatureParserTest {
         LatLng latLng = (LatLng) feature.getGeometry().getGeometryObject();
         assertEquals(latLng.latitude, -43.60505741890396, 0.001);
         assertEquals(latLng.longitude, 170.1435558771009, 0.001);
+    }
+
+    @Test
+    public void testDeeplyNestedMultiGeometry_doesNotThrowStackOverflow() throws Exception {
+        StringBuilder sb = new StringBuilder("<Placemark>");
+        for (int i = 0; i < 200; i++) {
+            sb.append("<MultiGeometry>");
+        }
+        sb.append("<Point><coordinates>0,0</coordinates></Point>");
+        for (int i = 0; i < 200; i++) {
+            sb.append("</MultiGeometry>");
+        }
+        sb.append("</Placemark>");
+        XmlPullParser parser = KmlTestUtil.createParserFromString(sb.toString());
+        parser.next();
+        KmlPlacemark placemark = KmlFeatureParser.createPlacemark(parser);
+        assertNotNull(placemark);
+    }
+
+    @Test
+    public void testGeometryExceedingMaxDepth_returnsNull() throws Exception {
+        XmlPullParser parser = KmlTestUtil.createParserFromString("<Point><coordinates>0,0</coordinates></Point>");
+        parser.next();
+        assertNull(KmlFeatureParser.createGeometry(parser, "Point", -1));
+    }
+
+    @Test
+    public void testDeeplyNestedFolder_doesNotThrowStackOverflow() throws Exception {
+        StringBuilder sb = new StringBuilder("<Folder>");
+        for (int i = 0; i < 200; i++) {
+            sb.append("<Folder>");
+        }
+        sb.append("<name>Deep Folder</name>");
+        for (int i = 0; i < 200; i++) {
+            sb.append("</Folder>");
+        }
+        sb.append("</Folder>");
+        XmlPullParser parser = KmlTestUtil.createParserFromString(sb.toString());
+        parser.next();
+        KmlContainer container = KmlContainerParser.assignPropertiesToContainer(parser, 20);
+        assertNotNull(container);
+    }
+
+    @Test
+    public void testContainerExceedingMaxDepth_returnsNull() throws Exception {
+        XmlPullParser parser = KmlTestUtil.createParserFromString("<Folder><name>Test</name></Folder>");
+        parser.next();
+        assertNull(KmlContainerParser.assignPropertiesToContainer(parser, -1));
     }
 }

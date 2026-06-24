@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google Inc.
+ * Copyright 2026 Google LLC
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,10 +61,12 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * XmlPullParser) and assigns specific elements read from the XmlPullParser to the container.
      */
 
+    /* package */ static final int MAX_CONTAINER_DEPTH = 20;
+
     /* package */
     static KmlContainer createContainer(XmlPullParser parser)
             throws XmlPullParserException, IOException {
-        return assignPropertiesToContainer(parser);
+        return assignPropertiesToContainer(parser, MAX_CONTAINER_DEPTH);
     }
 
     /**
@@ -74,8 +76,12 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
      * @param parser XmlPullParser object reading from a KML file
      * @return KmlContainer object with properties read from the XmlPullParser
      */
-    private static KmlContainer assignPropertiesToContainer(XmlPullParser parser)
+    /* package */ static KmlContainer assignPropertiesToContainer(XmlPullParser parser, int maxDepth)
             throws XmlPullParserException, IOException {
+        if (maxDepth < 0) {
+            KmlParser.skip(parser);
+            return null;
+        }
         String startTag = parser.getName();
         String containerId = null;
         HashMap<String, String> containerProperties = new HashMap<String, String>();
@@ -97,7 +103,10 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
                 if (parser.getName().matches(UNSUPPORTED_REGEX)) {
                     KmlParser.skip(parser);
                 } else if (parser.getName().matches(CONTAINER_REGEX)) {
-                    nestedContainers.add(assignPropertiesToContainer(parser));
+                    KmlContainer container = assignPropertiesToContainer(parser, maxDepth - 1);
+                    if (container != null) {
+                        nestedContainers.add(container);
+                    }
                 } else if (parser.getName().matches(PROPERTY_REGEX)) {
                     containerProperties.put(parser.getName(), parser.nextText());
                 } else if (parser.getName().equals(STYLE_MAP)) {
