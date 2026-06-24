@@ -1,11 +1,11 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
@@ -38,17 +37,21 @@ object SphericalUtil {
      * @return The heading in degrees clockwise from north.
      */
     @JvmStatic
-    fun computeHeading(from: LatLng, to: LatLng): Double {
+    fun computeHeading(
+        from: LatLng,
+        to: LatLng,
+    ): Double {
         // http://williams.best.vwh.net/avform.htm#Crs
         val fromLat = Math.toRadians(from.latitude)
         val fromLng = Math.toRadians(from.longitude)
         val toLat = Math.toRadians(to.latitude)
         val toLng = Math.toRadians(to.longitude)
         val dLng = toLng - fromLng
-        val heading = atan2(
-            sin(dLng) * cos(toLat),
-            cos(fromLat) * sin(toLat) - sin(fromLat) * cos(toLat) * cos(dLng)
-        )
+        val heading =
+            atan2(
+                sin(dLng) * cos(toLat),
+                cos(fromLat) * sin(toLat) - sin(fromLat) * cos(toLat) * cos(dLng),
+            )
         return wrap(Math.toDegrees(heading), -180.0, 180.0)
     }
 
@@ -61,7 +64,11 @@ object SphericalUtil {
      * @param heading  The heading in degrees clockwise from north.
      */
     @JvmStatic
-    fun computeOffset(from: LatLng, distance: Double, heading: Double): LatLng {
+    fun computeOffset(
+        from: LatLng,
+        distance: Double,
+        heading: Double,
+    ): LatLng {
         var distance = distance
         var heading = heading
         distance /= EARTH_RADIUS
@@ -74,10 +81,11 @@ object SphericalUtil {
         val sinFromLat = sin(fromLat)
         val cosFromLat = cos(fromLat)
         val sinLat = cosDistance * sinFromLat + sinDistance * cosFromLat * cos(heading)
-        val dLng = atan2(
-            sinDistance * cosFromLat * sin(heading),
-            cosDistance - sinFromLat * sinLat
-        )
+        val dLng =
+            atan2(
+                sinDistance * cosFromLat * sin(heading),
+                cosDistance - sinFromLat * sinLat,
+            )
         return LatLng(Math.toDegrees(asin(sinLat)), Math.toDegrees(fromLng + dLng))
     }
 
@@ -92,7 +100,11 @@ object SphericalUtil {
      * @param heading  The heading in degrees clockwise from north.
      */
     @JvmStatic
-    fun computeOffsetOrigin(to: LatLng, distance: Double, heading: Double): LatLng? {
+    fun computeOffsetOrigin(
+        to: LatLng,
+        distance: Double,
+        heading: Double,
+    ): LatLng? {
         var distance = distance
         var heading = heading
         heading = Math.toRadians(heading)
@@ -124,7 +136,8 @@ object SphericalUtil {
             // No solution which would make sense in LatLng-space.
             return null
         }
-        val fromLngRadians = Math.toRadians(to.longitude) -
+        val fromLngRadians =
+            Math.toRadians(to.longitude) -
                 atan2(n3, n1 * cos(fromLatRadians) - n2 * sin(fromLatRadians))
         return LatLng(Math.toDegrees(fromLatRadians), Math.toDegrees(fromLngRadians))
     }
@@ -139,7 +152,11 @@ object SphericalUtil {
      * @return The interpolated LatLng.
      */
     @JvmStatic
-    fun interpolate(from: LatLng, to: LatLng, fraction: Double): LatLng {
+    fun interpolate(
+        from: LatLng,
+        to: LatLng,
+        fraction: Double,
+    ): LatLng {
         // http://en.wikipedia.org/wiki/Slerp
         val fromLat = Math.toRadians(from.latitude)
         val fromLng = Math.toRadians(from.longitude)
@@ -154,7 +171,7 @@ object SphericalUtil {
         if (sinAngle < 1E-6) {
             return LatLng(
                 from.latitude + fraction * (to.latitude - from.latitude),
-                from.longitude + fraction * (to.longitude - from.longitude)
+                from.longitude + fraction * (to.longitude - from.longitude),
             )
         }
         val a = sin((1 - fraction) * angle) / sinAngle
@@ -174,29 +191,37 @@ object SphericalUtil {
     /**
      * Returns distance on the unit sphere; the arguments are in radians.
      */
-    private fun distanceRadians(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double {
-        return arcHav(havDistance(lat1, lat2, lng1 - lng2))
-    }
+    private fun distanceRadians(
+        lat1: Double,
+        lng1: Double,
+        lat2: Double,
+        lng2: Double,
+    ): Double = arcHav(havDistance(lat1, lat2, lng1 - lng2))
 
     /**
      * Returns the angle between two LatLngs, in radians. This is the same as the distance
      * on the unit sphere.
      */
     @JvmStatic
-    fun computeAngleBetween(from: LatLng, to: LatLng): Double {
-        return distanceRadians(
-            Math.toRadians(from.latitude), Math.toRadians(from.longitude),
-            Math.toRadians(to.latitude), Math.toRadians(to.longitude)
+    fun computeAngleBetween(
+        from: LatLng,
+        to: LatLng,
+    ): Double =
+        distanceRadians(
+            Math.toRadians(from.latitude),
+            Math.toRadians(from.longitude),
+            Math.toRadians(to.latitude),
+            Math.toRadians(to.longitude),
         )
-    }
 
     /**
      * Returns the distance between two LatLngs, in meters.
      */
     @JvmStatic
-    fun computeDistanceBetween(from: LatLng, to: LatLng): Double {
-        return computeAngleBetween(from, to) * EARTH_RADIUS
-    }
+    fun computeDistanceBetween(
+        from: LatLng,
+        to: LatLng,
+    ): Double = computeAngleBetween(from, to) * EARTH_RADIUS
 
     /**
      * Returns the length of the given path, in meters, on Earth.
@@ -228,9 +253,7 @@ object SphericalUtil {
      * @return The path's area in square meters.
      */
     @JvmStatic
-    fun computeArea(path: List<LatLng>): Double {
-        return abs(computeSignedArea(path))
-    }
+    fun computeArea(path: List<LatLng>): Double = abs(computeSignedArea(path))
 
     /**
      * Returns the signed area of a closed path on Earth. The sign of the area may be used to
@@ -241,9 +264,7 @@ object SphericalUtil {
      * @return The loop's area in square meters.
      */
     @JvmStatic
-    fun computeSignedArea(path: List<LatLng>): Double {
-        return computeSignedArea(path, EARTH_RADIUS)
-    }
+    fun computeSignedArea(path: List<LatLng>): Double = computeSignedArea(path, EARTH_RADIUS)
 
     /**
      * Returns the signed area of a closed path on a sphere of given radius.
@@ -251,7 +272,10 @@ object SphericalUtil {
      * Used by SphericalUtilTest.
      */
     @JvmStatic
-    fun computeSignedArea(path: List<LatLng>, radius: Double): Double {
+    fun computeSignedArea(
+        path: List<LatLng>,
+        radius: Double,
+    ): Double {
         val size = path.size
         if (size < 3) {
             return 0.0
@@ -279,7 +303,12 @@ object SphericalUtil {
      * See http://books.google.com/books?id=3uBHAAAAIAAJ&pg=PA71
      * The arguments named "tan" are tan((pi/2 - latitude)/2).
      */
-    private fun polarTriangleArea(tan1: Double, lng1: Double, tan2: Double, lng2: Double): Double {
+    private fun polarTriangleArea(
+        tan1: Double,
+        lng1: Double,
+        tan2: Double,
+        lng2: Double,
+    ): Double {
         val deltaLng = lng1 - lng2
         val t = tan1 * tan2
         return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng))
@@ -295,9 +324,10 @@ object SphericalUtil {
      * the percentage is outside the range [0, 1]
      */
     @JvmStatic
-    fun getPointOnPolyline(polyline: List<LatLng>, percentage: Double): LatLng? {
-        return getPolylinePrefix(polyline, percentage).lastOrNull()
-    }
+    fun getPointOnPolyline(
+        polyline: List<LatLng>,
+        percentage: Double,
+    ): LatLng? = getPolylinePrefix(polyline, percentage).lastOrNull()
 
     /**
      * Returns a new polyline that is a prefix of the original polyline, representing a given
@@ -312,7 +342,10 @@ object SphericalUtil {
      * is empty or the percentage is outside the range [0, 1]
      */
     @JvmStatic
-    fun getPolylinePrefix(polyline: List<LatLng>, percentage: Double): List<LatLng> {
+    fun getPolylinePrefix(
+        polyline: List<LatLng>,
+        percentage: Double,
+    ): List<LatLng> {
         if (polyline.isEmpty() || percentage !in 0.0..1.0) {
             return emptyList()
         }

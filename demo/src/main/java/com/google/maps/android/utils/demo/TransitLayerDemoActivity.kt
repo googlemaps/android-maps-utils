@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.demo
 
 import android.widget.CheckBox
@@ -28,18 +27,15 @@ import com.google.android.gms.maps.model.LatLng
  * The transit layer displays public transport lines and stations on the map.
  */
 class TransitLayerDemoActivity : BaseDemoActivity() {
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_transit_layer_demo
-    }
+    override fun getLayoutId(): Int = R.layout.activity_transit_layer_demo
 
     override fun startDemo(isRestore: Boolean) {
         if (!isRestore) {
             map.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     LONDON,
-                    DEFAULT_ZOOM
-                )
+                    DEFAULT_ZOOM,
+                ),
             )
         }
 
@@ -54,11 +50,12 @@ class TransitLayerDemoActivity : BaseDemoActivity() {
     }
 
     private fun updateMessage() {
-        val status = if (map.isTransitEnabled) {
-            getString(R.string.status_enabled)
-        } else {
-            getString(R.string.status_disabled)
-        }
+        val status =
+            if (map.isTransitEnabled) {
+                getString(R.string.status_enabled)
+            } else {
+                getString(R.string.status_disabled)
+            }
         Toast.makeText(this, getString(R.string.transit_layer_status_fmt, status), Toast.LENGTH_SHORT).show()
     }
 

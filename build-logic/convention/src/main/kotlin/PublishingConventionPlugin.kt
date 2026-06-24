@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class PublishingConventionPlugin : Plugin<Project> {
 
     private fun Project.configureJacoco() {
         configure<JacocoPluginExtension> {
-            toolVersion = "0.8.7"
+            toolVersion = "0.8.12"
         }
 
         tasks.withType<Test>().configureEach {
@@ -66,8 +66,13 @@ class PublishingConventionPlugin : Plugin<Project> {
             publishToMavenCentral()
             signAllPublications()
 
+            val artifactIdName = when (project.name) {
+                "maps-utils" -> "android-maps-utils"
+                "library" -> "android-maps-utils-core"
+                else -> "android-maps-utils-${project.name}"
+            }
             coordinates(
-                artifactId = "android-maps-utils",
+                artifactId = artifactIdName,
             )
 
             pom {
@@ -89,7 +94,7 @@ class PublishingConventionPlugin : Plugin<Project> {
                 developers {
                     developer {
                         id.set("google")
-                        name.set("Google Inc.")
+                        name.set("Google LLC")
                     }
                 }
                 organization {

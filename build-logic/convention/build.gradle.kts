@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ repositories {
     gradlePluginPortal()
 }
 
-
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.gradle)
@@ -38,6 +37,10 @@ gradlePlugin {
         register("publishingConventionPlugin") {
             id = "android.maps.utils.PublishingConventionPlugin"
             implementationClass = "PublishingConventionPlugin"
+        }
+        register("bomPublishingConventionPlugin") {
+            id = "android.maps.utils.BomPublishingConventionPlugin"
+            implementationClass = "BomPublishingConventionPlugin"
         }
     }
 }

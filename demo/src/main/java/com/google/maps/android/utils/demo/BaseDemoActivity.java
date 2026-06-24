@@ -1,11 +1,11 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.maps.android.utils.demo;
 
 import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.hasMapsApiKey;
@@ -21,117 +20,106 @@ import static com.google.maps.android.utils.demo.ApiKeyValidatorKt.hasMapsApiKey
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.OnMapReadyCallback;
-
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 public abstract class BaseDemoActivity extends FragmentActivity implements OnMapReadyCallback {
-    private GoogleMap mMap;
-    private boolean mIsRestore;
+  private GoogleMap mMap;
+  private boolean mIsRestore;
 
-    protected int getLayoutId() {
-        return R.layout.map;
+  protected int getLayoutId() {
+    return R.layout.map;
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    if (!hasMapsApiKey(this)) {
+      Toast.makeText(this, R.string.bad_maps_api_key, Toast.LENGTH_LONG).show();
+      finish();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    mIsRestore = savedInstanceState != null;
+    setContentView(getLayoutId());
+    // This tells the system that the app will handle drawing behind the system bars.
+    WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        if (!hasMapsApiKey(this)) {
-            Toast.makeText(this, R.string.bad_maps_api_key, Toast.LENGTH_LONG).show();
-            finish();
-        }
+    // This is the root view of my layout.
+    // Make sure to replace R.id.root_layout with the actual ID of your root view.
+    final View rootView = findViewById(android.R.id.content);
 
-        mIsRestore = savedInstanceState != null;
-        setContentView(getLayoutId());
-        // This tells the system that the app will handle drawing behind the system bars.
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+    // Add a listener to handle window insets.
+    ViewCompat.setOnApplyWindowInsetsListener(
+        rootView,
+        (view, windowInsets) -> {
+          final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-        // This is the root view of my layout.
-        // Make sure to replace R.id.root_layout with the actual ID of your root view.
-        final View rootView = findViewById(android.R.id.content);
+          // Apply the insets as padding to the view.
+          // This will push the content down from behind the status bar and up from
+          // behind the navigation bar.
+          view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
 
-        // Add a listener to handle window insets.
-        ViewCompat.setOnApplyWindowInsetsListener(rootView, (view, windowInsets) -> {
-            final Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-
-            // Apply the insets as padding to the view.
-            // This will push the content down from behind the status bar and up from
-            // behind the navigation bar.
-            view.setPadding(
-                insets.left,
-                insets.top,
-                insets.right,
-                insets.bottom
-            );
-
-            // Return CONSUMED to signal that we've handled the insets.
-            return WindowInsetsCompat.CONSUMED;
+          // Return CONSUMED to signal that we've handled the insets.
+          return WindowInsetsCompat.CONSUMED;
         });
-        setUpMap(savedInstanceState);
+    setUpMap(savedInstanceState);
+  }
+
+  @Override
+  public void onMapReady(@NonNull GoogleMap map) {
+    if (mMap != null) {
+      return;
+    }
+    mMap = map;
+    startDemo(mIsRestore);
+  }
+
+  private void setUpMap(Bundle savedInstanceState) {
+    // 1. Get the Application instance and cast it
+    DemoApplication app = (DemoApplication) getApplication();
+
+    // 2. Call the getMapId() method
+    String mapId = app.getMapId();
+
+    // Create the map options
+    GoogleMapOptions mapOptions = null;
+    if (mapId != null) {
+      mapOptions = new GoogleMapOptions();
+      mapOptions.mapId(mapId);
     }
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap map) {
-        if (mMap != null) {
-            return;
-        }
-        mMap = map;
-        startDemo(mIsRestore);
+    // Use the provider to get the correct fragment for the current flavor
+    Fragment mapFragment = MapFragmentProvider.getFragment(mapOptions);
+
+    // Add the fragment to the container (R.id.map)
+    // Check savedInstanceState to prevent re-adding on rotation
+    if (savedInstanceState == null) {
+      getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
     }
 
-    private void setUpMap(Bundle savedInstanceState) {
-        // 1. Get the Application instance and cast it
-        DemoApplication app = (DemoApplication) getApplication();
-
-        // 2. Call the getMapId() method
-        String mapId = app.getMapId();
-
-        // Create the map options
-        GoogleMapOptions mapOptions = null;
-        if (mapId != null) {
-            mapOptions = new GoogleMapOptions();
-            mapOptions.mapId(mapId);
-        }
-
-        // Use the provider to get the correct fragment for the current flavor
-        Fragment mapFragment = MapFragmentProvider.getFragment(mapOptions);
-
-        // Add the fragment to the container (R.id.map)
-        // Check savedInstanceState to prevent re-adding on rotation
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.map, mapFragment)
-                    .commit();
-        }
-
-        // Get the map asynchronously. We use reflection because the fragment type
-        // depends on the build flavor (SupportMapFragment or SupportNavigationFragment).
-        try {
-            mapFragment.getClass().getMethod("getMapAsync", OnMapReadyCallback.class)
-                    .invoke(mapFragment, this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    // Get the map asynchronously. We use reflection because the fragment type
+    // depends on the build flavor (SupportMapFragment or SupportNavigationFragment).
+    try {
+      mapFragment.getClass().getMethod("getMapAsync", OnMapReadyCallback.class)
+          .invoke(mapFragment, this);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Run the demo-specific code.
-     */
-    protected abstract void startDemo(boolean isRestore);
+  /** Run the demo-specific code. */
+  protected abstract void startDemo(boolean isRestore);
 
-    protected GoogleMap getMap() {
-        return mMap;
-    }
+  protected GoogleMap getMap() {
+    return mMap;
+  }
 }

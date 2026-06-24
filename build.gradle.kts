@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+plugins {
+    id("com.vanniktech.maven.publish") version "0.36.0" apply false
+}
 
 buildscript {
     val kotlinVersion by extra(libs.versions.kotlin.get())
@@ -47,4 +51,12 @@ allprojects {
     // {x-release-please-start-version}
     version = "4.5.1"
     // {x-release-please-end}
+
+    plugins.withId("java") {
+        configure<JavaPluginExtension> {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
+        }
+    }
 }

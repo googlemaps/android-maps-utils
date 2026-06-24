@@ -1,11 +1,11 @@
 /*
- * Copyright 2023 Google Inc.
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,23 +15,21 @@
  */
 package com.google.maps.android
 
-import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
-
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * Utility functions for StreetView
  */
 class StreetViewUtils {
     companion object {
-
         /**
          * This function will check whether a location is available on StreetView or not.
          *
@@ -46,15 +44,15 @@ class StreetViewUtils {
         suspend fun fetchStreetViewData(
             latLng: LatLng,
             apiKey: String,
-            source: Source = Source.DEFAULT
+            source: Source = Source.DEFAULT,
         ): Status {
-
-            val urlString = buildString {
-                append("https://maps.googleapis.com/maps/api/streetview/metadata")
-                append("?location=${latLng.latitude},${latLng.longitude}")
-                append("&key=$apiKey")
-                append("&source=${source.value}")
-            }
+            val urlString =
+                buildString {
+                    append("https://maps.googleapis.com/maps/api/streetview/metadata")
+                    append("?location=${latLng.latitude},${latLng.longitude}")
+                    append("&key=$apiKey")
+                    append("&source=${source.value}")
+                }
 
             return withContext(Dispatchers.IO) {
                 try {
@@ -89,7 +87,9 @@ class StreetViewUtils {
     }
 }
 
-data class ResponseStreetView(val status: Status)
+data class ResponseStreetView(
+    val status: Status,
+)
 
 enum class Status {
     OK,
@@ -98,10 +98,12 @@ enum class Status {
     REQUEST_DENIED,
     OVER_QUERY_LIMIT,
     INVALID_REQUEST,
-    UNKNOWN_ERROR
+    UNKNOWN_ERROR,
 }
 
-enum class Source(var value: String) {
+enum class Source(
+    var value: String,
+) {
     DEFAULT("default"),
-    OUTDOOR("outdoor");
+    OUTDOOR("outdoor"),
 }
