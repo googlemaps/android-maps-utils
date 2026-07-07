@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.2](https://github.com/googlemaps/android-maps-utils/compare/v4.5.1...v4.5.2) (2026-07-07)
+
+
+### Bug Fixes
+
+* prevent StackOverflowError when parsing deeply nested KML containers and multi-geometries ([#1710](https://github.com/googlemaps/android-maps-utils/issues/1710)) ([1463cc5](https://github.com/googlemaps/android-maps-utils/commit/1463cc572da85b8a2317690fa94b0e2432995a96))
+
 ## [4.5.1](https://github.com/googlemaps/android-maps-utils/compare/v4.5.0...v4.5.1) (2026-06-17)
 
 
