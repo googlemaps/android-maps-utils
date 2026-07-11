@@ -65,8 +65,10 @@ public class ClusterManager<T extends ClusterItem> implements
 
     private OnClusterItemClickListener<T> mOnClusterItemClickListener;
     private OnClusterInfoWindowClickListener<T> mOnClusterInfoWindowClickListener;
+    private OnClusterInfoWindowCloseListener<T> mOnClusterInfoWindowCloseListener;
     private OnClusterInfoWindowLongClickListener<T> mOnClusterInfoWindowLongClickListener;
     private OnClusterItemInfoWindowClickListener<T> mOnClusterItemInfoWindowClickListener;
+    private OnClusterItemInfoWindowCloseListener<T> mOnClusterItemInfoWindowCloseListener;
     private OnClusterItemInfoWindowLongClickListener<T> mOnClusterItemInfoWindowLongClickListener;
     private OnClusterClickListener<T> mOnClusterClickListener;
 
@@ -109,9 +111,11 @@ public class ClusterManager<T extends ClusterItem> implements
         mRenderer.onAdd();
         mRenderer.setOnClusterClickListener(mOnClusterClickListener);
         mRenderer.setOnClusterInfoWindowClickListener(mOnClusterInfoWindowClickListener);
+        mRenderer.setOnClusterInfoWindowCloseListener(mOnClusterInfoWindowCloseListener);
         mRenderer.setOnClusterInfoWindowLongClickListener(mOnClusterInfoWindowLongClickListener);
         mRenderer.setOnClusterItemClickListener(mOnClusterItemClickListener);
         mRenderer.setOnClusterItemInfoWindowClickListener(mOnClusterItemInfoWindowClickListener);
+        mRenderer.setOnClusterItemInfoWindowCloseListener(mOnClusterItemInfoWindowCloseListener);
         mRenderer.setOnClusterItemInfoWindowLongClickListener(mOnClusterItemInfoWindowLongClickListener);
         cluster();
     }
@@ -371,6 +375,16 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
+     * Sets a callback that's invoked when a Cluster info window is closed. Note: For this listener to function,
+     * the ClusterManager must be added as a info window click listener to the map.
+     */
+    public void setOnClusterInfoWindowCloseListener(OnClusterInfoWindowCloseListener<T> listener) {
+        mOnClusterInfoWindowCloseListener = listener;
+        mRenderer.setOnClusterInfoWindowCloseListener(listener);
+    }
+
+
+    /**
      * Sets a callback that's invoked when a Cluster info window is long-pressed. Note: For this listener to function,
      * the ClusterManager must be added as a info window click listener to the map.
      */
@@ -395,6 +409,16 @@ public class ClusterManager<T extends ClusterItem> implements
     public void setOnClusterItemInfoWindowClickListener(OnClusterItemInfoWindowClickListener<T> listener) {
         mOnClusterItemInfoWindowClickListener = listener;
         mRenderer.setOnClusterItemInfoWindowClickListener(listener);
+    }
+
+
+    /**
+     * Sets a callback that's invoked when an individual ClusterItem's Info Window is closed. Note: For this
+     * listener to function, the ClusterManager must be added as a info window click listener to the map.
+     */
+    public void setOnClusterItemInfoWindowCloseListener(OnClusterItemInfoWindowCloseListener<T> listener) {
+        mOnClusterItemInfoWindowCloseListener = listener;
+        mRenderer.setOnClusterItemInfoWindowCloseListener(listener);
     }
 
     /**
@@ -426,6 +450,13 @@ public class ClusterManager<T extends ClusterItem> implements
     }
 
     /**
+     * Called when a Cluster's Info Window is closed.
+     */
+    public interface OnClusterInfoWindowCloseListener<T extends ClusterItem> {
+        void onClusterInfoWindowClose(Cluster<T> cluster);
+    }
+
+    /**
      * Called when a Cluster's Info Window is long clicked.
      */
     public interface OnClusterInfoWindowLongClickListener<T extends ClusterItem> {
@@ -454,6 +485,13 @@ public class ClusterManager<T extends ClusterItem> implements
      */
     public interface OnClusterItemInfoWindowClickListener<T extends ClusterItem> {
         void onClusterItemInfoWindowClick(T item);
+    }
+
+    /**
+     * Called when an individual ClusterItem's Info Window is closed.
+     */
+    public interface OnClusterItemInfoWindowCloseListener<T extends ClusterItem> {
+        void onClusterItemInfoWindowClose(T item);
     }
 
     /**
