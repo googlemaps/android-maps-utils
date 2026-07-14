@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
-    id("kotlin-android")
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
 }
@@ -60,7 +59,6 @@ android {
         unitTests.isReturnDefaultValues = true
     }
     namespace = "com.google.maps.android"
-    sourceSets["main"].java.srcDir("build/generated/source/artifactId")
 }
 
 dependencies {
@@ -93,22 +91,21 @@ if (System.getenv("JITPACK") != null) {
     apply(plugin = "maven")
 }
 
-// START: Attribution ID Generation Logic
-val attributionId = "gmp_git_androidmapsutils_v$version"
+abstract class GenerateArtifactIdTask : DefaultTask() {
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
 
-val generateArtifactIdFile = tasks.register("generateArtifactIdFile") {
-    description = "Generates an AttributionId object from the project version."
-    group = "build"
+    @get:Input
+    abstract val version: Property<String>
 
-    val outputDir = layout.buildDirectory.dir("generated/source/artifactId")
-    val packageName = "com.google.maps.android.utils.meta"
-    val packagePath = packageName.replace('.', '/')
-    val outputFile = outputDir.get().file("$packagePath/ArtifactId.kt").asFile
-
-    outputs.file(outputFile)
-
-    doLast {
+    @TaskAction
+    fun generate() {
+        val dir = outputDir.get().asFile
+        val packageName = "com.google.maps.android.utils.meta"
+        val packagePath = packageName.replace('.', '/')
+        val outputFile = File(dir, "$packagePath/ArtifactId.kt")
         outputFile.parentFile.mkdirs()
+        val attributionId = "gmp_git_androidmapsutils_v${version.get()}"
         outputFile.writeText(
             """
             package $packageName
@@ -125,8 +122,18 @@ val generateArtifactIdFile = tasks.register("generateArtifactIdFile") {
     }
 }
 
-tasks.named("preBuild") {
-    dependsOn(generateArtifactIdFile)
+val generateArtifactIdFile = tasks.register<GenerateArtifactIdTask>("generateArtifactIdFile") {
+    outputDir.set(layout.buildDirectory.dir("generated/source/artifactId"))
+    version.set(project.version.toString())
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.sources.java?.addGeneratedSourceDirectory(
+            generateArtifactIdFile,
+            GenerateArtifactIdTask::outputDir
+        )
+    }
 }
 
 tasks.named("dokkaGeneratePublicationHtml") {

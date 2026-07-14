@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id("kotlin-android")
+    
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
 }

@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
-    id("kotlin-android")
+    
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
 }
@@ -44,7 +44,7 @@ android {
 
     installation {
         timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions("-d", "-t")
+        installOptions += listOf("-d", "-t")
     }
 
     kotlin {

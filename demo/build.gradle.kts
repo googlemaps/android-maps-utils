@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.application")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("kotlin-android")
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
     alias(libs.plugins.compose.compiler)
 }
@@ -92,6 +91,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -128,6 +128,7 @@ configurations.all {
         force(libs.kotlinx.coroutines.android)
         force(libs.kotlinx.serialization.json)
     }
+    exclude(group = "org.chromium.net", module = "cronet-fallback")
     if (name.contains("navigation", ignoreCase = true)) {
         exclude(group = "com.google.android.gms", module = "play-services-maps")
     }

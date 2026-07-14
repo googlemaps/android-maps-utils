@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
-    id("kotlin-android")
+    
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
     id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
