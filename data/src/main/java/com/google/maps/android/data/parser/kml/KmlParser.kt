@@ -15,8 +15,12 @@
  */
 package com.google.maps.android.data.parser.kml
 
-import kotlinx.serialization.decodeFromString
+import nl.adaptivity.xmlutil.EventType
+import nl.adaptivity.xmlutil.XmlDelegatingReader
+import nl.adaptivity.xmlutil.XmlException
+import nl.adaptivity.xmlutil.XmlReader
 import nl.adaptivity.xmlutil.serialization.XML
+import nl.adaptivity.xmlutil.xmlStreaming
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
@@ -31,7 +35,9 @@ class KmlParser {
 
     fun parseAsKml(inputStream: InputStream): Kml {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
-        return xml.decodeFromString<Kml>(xmlContent)
+        return DepthLimitingReader(xmlStreaming.newReader(xmlContent)).use { reader ->
+            xml.decodeFromReader(Kml.serializer(), reader)
+        }
     }
 
     fun parse(inputStream: InputStream): Kml = parseAsKml(inputStream)
@@ -39,6 +45,30 @@ class KmlParser {
     companion object {
         val SUPPORTED_EXTENSIONS = setOf("kml")
 
+        /**
+         * Maximum element nesting depth accepted when parsing. The generated serializers
+         * recurse once per nested element (e.g. `<Folder>` in `<Folder>`, `<MultiGeometry>`
+         * in `<MultiGeometry>`), so without a bound a maliciously deep document causes a
+         * StackOverflowError. Legitimate KML stays far below this limit.
+         */
+        const val MAX_ELEMENT_DEPTH = 50
+
         fun canParse(header: String): Boolean = header.contains("<kml")
+    }
+}
+
+/** Fails parsing with an [XmlException] once elements nest deeper than [KmlParser.MAX_ELEMENT_DEPTH]. */
+private class DepthLimitingReader(delegate: XmlReader) : XmlDelegatingReader(delegate) {
+    override fun next(): EventType = checkDepth(super.next())
+
+    override fun nextTag(): EventType = checkDepth(super.nextTag())
+
+    private fun checkDepth(event: EventType): EventType {
+        if (event == EventType.START_ELEMENT && depth > KmlParser.MAX_ELEMENT_DEPTH) {
+            throw XmlException(
+                "KML element nesting exceeds the maximum depth of ${KmlParser.MAX_ELEMENT_DEPTH}"
+            )
+        }
+        return event
     }
 }

@@ -662,4 +662,51 @@ class KmlParserTest {
             parser.parseAsKml(stream)
         }
     }
+
+    @Test
+    fun testDeeplyNestedFoldersDoesNotThrowStackOverflow() {
+        val kml = buildString {
+            append("""<kml xmlns="http://www.opengis.net/kml/2.2"><Document>""")
+            repeat(2000) { append("<Folder>") }
+            repeat(2000) { append("</Folder>") }
+            append("</Document></kml>")
+        }
+
+        assertFailsWith<nl.adaptivity.xmlutil.serialization.XmlParsingException> {
+            parser.parseAsKml(kml.byteInputStream())
+        }
+    }
+
+    @Test
+    fun testDeeplyNestedMultiGeometryDoesNotThrowStackOverflow() {
+        val kml = buildString {
+            append("""<kml xmlns="http://www.opengis.net/kml/2.2"><Document><Placemark>""")
+            repeat(2000) { append("<MultiGeometry>") }
+            append("<Point><coordinates>0,0</coordinates></Point>")
+            repeat(2000) { append("</MultiGeometry>") }
+            append("</Placemark></Document></kml>")
+        }
+
+        assertFailsWith<nl.adaptivity.xmlutil.serialization.XmlParsingException> {
+            parser.parseAsKml(kml.byteInputStream())
+        }
+    }
+
+    @Test
+    fun testShallowNestedFoldersParsedCorrectly() {
+        val kml = buildString {
+            append("""<kml xmlns="http://www.opengis.net/kml/2.2"><Document>""")
+            repeat(10) { append("<Folder><name>folder$it</name>") }
+            append("<Placemark><Point><coordinates>1,2,0</coordinates></Point></Placemark>")
+            repeat(10) { append("</Folder>") }
+            append("</Document></kml>")
+        }
+
+        val parsed = parser.parseAsKml(kml.byteInputStream())
+
+        var folder = parsed.document!!.folders.single()
+        repeat(9) { folder = folder.folders.single() }
+        assertThat(folder.name).isEqualTo("folder9")
+        assertThat(folder.placemarks.single().point!!.coordinates).isNear(LatLngAlt(2.0, 1.0, 0.0))
+    }
 }
