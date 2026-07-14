@@ -80,7 +80,19 @@ jobs:
         run: |
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
-          gh release create "v${VERSION}" \
-            --title "v${VERSION}" \
-            --generate-notes \
-            --prerelease
+
+          # Find the previous tag to use as baseline for release notes
+          PREVIOUS_TAG=$(git tag -l 'v*' --sort=-version:refname --merged HEAD | grep -v "v${VERSION}" | head -1)
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            gh release create "v${VERSION}" \
+              --title "v${VERSION}" \
+              --generate-notes \
+              --notes-start-tag "$PREVIOUS_TAG" \
+              --prerelease
+          else
+            gh release create "v${VERSION}" \
+              --title "v${VERSION}" \
+              --generate-notes \
+              --prerelease
+          fi
