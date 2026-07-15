@@ -57,7 +57,7 @@ org-jacoco-core = "0.8.14"
 # --- Gradle Plugins ---
 # Versions for Gradle plugins used in the build process.
 dokka-gradle-plugin = "2.1.0"
-gradle = "9.2.1"
+gradle = "9.3.0"
 gradleMavenPublishPlugin = "0.36.0"
 secrets-gradle-plugin = "2.0.1"
 serialization = "0.91.3"
