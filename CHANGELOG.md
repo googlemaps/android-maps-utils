@@ -1,5 +1,21 @@
 # Changelog
 
+## [5.0.0](https://github.com/googlemaps/android-maps-utils/compare/v4.5.2...v5.0.0) (2026-07-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* rewrite android maps utils ([#1658](https://github.com/googlemaps/android-maps-utils/issues/1658))
+
+### Features
+
+* rewrite android maps utils ([#1658](https://github.com/googlemaps/android-maps-utils/issues/1658)) ([eeb0156](https://github.com/googlemaps/android-maps-utils/commit/eeb01567e47a118f5cc4ef10f2c81e033b25d147))
+
+
+### Bug Fixes
+
+* prevent StackOverflowError from deeply nested GeometryCollection in GeoJsonParser ([#1699](https://github.com/googlemaps/android-maps-utils/issues/1699)) ([f513807](https://github.com/googlemaps/android-maps-utils/commit/f513807fb6f21a941b67274148415e15b440f53c))
+
 ## [4.5.2](https://github.com/googlemaps/android-maps-utils/compare/v4.5.1...v4.5.2) (2026-07-07)
 
 
