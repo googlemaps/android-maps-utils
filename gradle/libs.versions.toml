@@ -52,7 +52,7 @@ uiautomator = "2.3.0"
 # Versions for code quality and static analysis tools.
 jacoco-android = "0.2.1"
 lint = "32.0.1"
-org-jacoco-core = "0.8.14"
+org-jacoco-core = "0.8.15"
 
 # --- Gradle Plugins ---
 # Versions for Gradle plugins used in the build process.
