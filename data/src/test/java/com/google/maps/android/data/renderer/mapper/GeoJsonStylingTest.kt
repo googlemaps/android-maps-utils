@@ -113,4 +113,94 @@ class GeoJsonStylingTest {
         // Verify stroke width
         assertEquals(3.0f, style.width!!, 0.001f)
     }
+
+    @Test
+    fun `parse styled multipolygon applies polygon style`() {
+        val geoJson =
+            """
+            {
+              "type": "Feature",
+              "properties": {
+                "stroke": "#ff0000",
+                "stroke-width": 2.0,
+                "fill": "#00ff00",
+                "fill-opacity": 0.25
+              },
+              "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [100.0, 0.0],
+                      [101.0, 0.0],
+                      [101.0, 1.0],
+                      [100.0, 0.0]
+                    ]
+                  ],
+                  [
+                    [
+                      [102.0, 2.0],
+                      [103.0, 2.0],
+                      [103.0, 3.0],
+                      [102.0, 2.0]
+                    ]
+                  ]
+                ]
+              }
+            }
+            """.trimIndent()
+
+        val parser = GeoJsonParser()
+        val geoJsonObject = parser.parse(ByteArrayInputStream(geoJson.toByteArray()))!!
+        val layer = GeoJsonMapper.toLayer(geoJsonObject)
+        val feature = layer.features.first()
+
+        // A MultiPolygon must carry polygon styling (fill), not line styling.
+        assertTrue(feature.style is PolygonStyle)
+        val style = feature.style as PolygonStyle
+
+        assertEquals(0xFFFF0000.toInt(), style.strokeColor)
+        assertEquals(2.0f, style.strokeWidth, 0.001f)
+
+        // Fill: green with 0.25 opacity (0.25 * 255 = 63 = 0x3F)
+        val expectedFillColor = (0x3F shl 24) or 0x00FF00
+        assertEquals(expectedFillColor, style.fillColor)
+    }
+
+    @Test
+    fun `parse styled multilinestring keeps line style`() {
+        val geoJson =
+            """
+            {
+              "type": "Feature",
+              "properties": {
+                "stroke": "#0000ff",
+                "stroke-width": 3.0
+              },
+              "geometry": {
+                "type": "MultiLineString",
+                "coordinates": [
+                  [
+                    [100.0, 0.0],
+                    [101.0, 1.0]
+                  ],
+                  [
+                    [102.0, 2.0],
+                    [103.0, 3.0]
+                  ]
+                ]
+              }
+            }
+            """.trimIndent()
+
+        val parser = GeoJsonParser()
+        val geoJsonObject = parser.parse(ByteArrayInputStream(geoJson.toByteArray()))!!
+        val layer = GeoJsonMapper.toLayer(geoJsonObject)
+        val feature = layer.features.first()
+
+        assertTrue(feature.style is LineStyle)
+        val style = feature.style as LineStyle
+        assertEquals(0xFF0000FF.toInt(), style.color)
+        assertEquals(3.0f, style.width!!, 0.001f)
+    }
 }
