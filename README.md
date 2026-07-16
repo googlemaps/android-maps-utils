@@ -15,6 +15,10 @@
 This open-source library contains utilities that are useful for a wide
 range of applications using the [Google Maps SDK for Android][maps-sdk].
 
+As of version 5.0.0, the library has been rewritten in Kotlin and split into
+focused submodules so you can depend only on what you need. If you are
+upgrading from 4.x, see the [migration guide](MIGRATION.md).
+
 - **Marker animation** - animates a marker from one position to another
 - **Marker clustering** — handles the display of a large number of points
 - **Marker icons** — display text on your Markers
@@ -33,23 +37,37 @@ You can also find Kotlin extensions for this library in [Maps Android KTX][andro
 
 ## Requirements
 
-* Android API level 21+
+* Android API level 23+
 * [Sign up with Google Maps Platform]
 * A Google Maps Platform [project] with the **Maps SDK for Android** enabled
 - An [API key] associated with the project above ... follow the [API key instructions] if you're new to the process
 
 ## Installation
 
-```groovy
+```kotlin
 dependencies {
     // Utilities for Maps SDK for Android (requires Google Play Services)
     // You do not need to add a separate dependency for the Maps SDK for Android
     // since this library builds in the compatible version of the Maps SDK.
-    implementation 'com.google.maps.android:android-maps-utils:3.20.1'
+    // The aggregator artifact transitively pulls in all submodules below.
+    implementation("com.google.maps.android:android-maps-utils:5.0.0") // x-release-please-version
+}
+```
 
-    // Optionally add the Kotlin Extensions (KTX) for full Kotlin language support
-    // See latest version at https://github.com/googlemaps/android-maps-ktx
-    // implementation 'com.google.maps.android:maps-utils-ktx:<latest-version>'
+Alternatively, depend only on the submodules your app needs:
+
+```kotlin
+dependencies {
+    // Base utilities: PolyUtil, SphericalUtil, collection managers, Street View metadata
+    implementation("com.google.maps.android:android-maps-utils-core:5.0.0") // x-release-please-version
+    // Marker clustering
+    implementation("com.google.maps.android:android-maps-utils-clustering:5.0.0") // x-release-please-version
+    // KML and GeoJSON import
+    implementation("com.google.maps.android:android-maps-utils-data:5.0.0") // x-release-please-version
+    // Heatmaps
+    implementation("com.google.maps.android:android-maps-utils-heatmaps:5.0.0") // x-release-please-version
+    // Marker icons and animation
+    implementation("com.google.maps.android:android-maps-utils-ui:5.0.0") // x-release-please-version
 }
 ```
 
@@ -110,10 +128,10 @@ Full guides for using the utilities are published in
 
 ### Marker utilities
 
-- Marker animation [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/ui/AnimationUtil.java), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/AnimationUtilDemoActivity.java)
-- Marker clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/clustering), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering)
-- Advanced Markers clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/clustering), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/CustomAdvancedMarkerClusteringDemoActivity.java)
-- Marker icons [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/ui/IconGenerator.java), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/IconGeneratorDemoActivity.java)
+- Marker animation [source](https://github.com/googlemaps/android-maps-utils/blob/main/ui/src/main/java/com/google/maps/android/ui/AnimationUtil.kt), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/AnimationUtilDemoActivity.java)
+- Marker clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/clustering/src/main/java/com/google/maps/android/clustering), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/marker-clustering)
+- Advanced Markers clustering [source](https://github.com/googlemaps/android-maps-utils/tree/main/clustering/src/main/java/com/google/maps/android/clustering), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/CustomAdvancedMarkerClusteringDemoActivity.java)
+- Marker icons [source](https://github.com/googlemaps/android-maps-utils/blob/main/ui/src/main/java/com/google/maps/android/ui/IconGenerator.kt), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/IconGeneratorDemoActivity.java)
 </details>
 
 <details>
@@ -121,9 +139,9 @@ Full guides for using the utilities are published in
 
 ### Data visualization utilities
 
-- Display heat maps [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/heatmaps), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/heatmap)
-- Import GeoJSON [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/data/geojson), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/geojson)
-- Import KML [source](https://github.com/googlemaps/android-maps-utils/tree/main/library/src/main/java/com/google/maps/android/data/kml), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/kml)
+- Display heat maps [source](https://github.com/googlemaps/android-maps-utils/tree/main/heatmaps/src/main/java/com/google/maps/android/heatmaps), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/heatmap)
+- Import GeoJSON [source](https://github.com/googlemaps/android-maps-utils/tree/main/data/src/main/java/com/google/maps/android/data/geojson), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/geojson)
+- Import KML [source](https://github.com/googlemaps/android-maps-utils/tree/main/data/src/main/java/com/google/maps/android/data/kml), [guide](https://developers.google.com/maps/documentation/android-sdk/utility/kml)
 
 </details>
 
@@ -132,8 +150,8 @@ Full guides for using the utilities are published in
 
 ### Additional utilities
 
-- Polyline encoding and decoding [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/PolyUtil.java), [encoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolySimplifyDemoActivity.java), [decoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolyDecodeDemoActivity.java)
-- Spherical geometry [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/SphericalUtil.java), [compute distance sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/DistanceDemoActivity.java)
+- Polyline encoding and decoding [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/PolyUtil.kt), [encoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolySimplifyDemoActivity.java), [decoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolyDecodeDemoActivity.java)
+- Spherical geometry [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/SphericalUtil.kt), [compute distance sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/DistanceDemoActivity.java)
 
 </details>
 
