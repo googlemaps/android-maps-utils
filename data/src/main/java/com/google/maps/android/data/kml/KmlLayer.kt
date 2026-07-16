@@ -16,6 +16,7 @@
 package com.google.maps.android.data.kml
 
 import android.content.Context
+import android.graphics.Color
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -387,7 +388,12 @@ public class KmlLayer : Layer {
             when (modelGeometry) {
                 is com.google.maps.android.data.renderer.model.PointGeometry -> {
                     com.google.maps.android.data.renderer.model.PointStyle(
-                        color = inline?.mMarkerColor?.toInt() ?: 0,
+                        // mMarkerColor is a hue (0..360), not an ARGB color — convert it before handing it to the
+                        // renderer, which derives the marker's hue and alpha from an ARGB value. Passing the raw
+                        // hue (or 0) made the alpha channel 0 and rendered every KML point marker invisible.
+                        color =
+                            inline?.mMarkerColor?.let { hue -> Color.HSVToColor(floatArrayOf(hue, 1f, 1f)) }
+                                ?: Color.BLACK,
                         iconUrl = inline?.getIconUrl(),
                     )
                 }
