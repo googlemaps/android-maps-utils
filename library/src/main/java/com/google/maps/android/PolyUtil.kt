@@ -427,11 +427,11 @@ object PolyUtil {
         val s2lat = Math.toRadians(end.latitude)
         val s2lng = Math.toRadians(end.longitude)
 
-        val lonCorrection = cos(s1lat)
+        val lngCorrection = cos(s1lat)
         val s2s1lat = s2lat - s1lat
-        val s2s1lng = (s2lng - s1lng) * lonCorrection
+        val s2s1lng = (s2lng - s1lng) * lngCorrection
         val u =
-            ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * lonCorrection * s2s1lng) /
+            ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * lngCorrection * s2s1lng) /
                 (s2s1lat * s2s1lat + s2s1lng * s2s1lng)
 
         if (u <= 0) {
