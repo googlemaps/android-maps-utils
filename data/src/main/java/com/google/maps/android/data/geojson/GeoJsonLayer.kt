@@ -33,6 +33,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
+import java.util.Observer
 
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class GeoJsonLayer : Layer {
@@ -41,8 +42,11 @@ public class GeoJsonLayer : Layer {
     private var mRenderer: MapViewRenderer? = null
     private var mIsLayerOnMap = false
     private val mFeatureMap = HashMap<GeoJsonFeature, com.google.maps.android.data.renderer.model.Feature>()
-    private val mModelToLegacyFeatures = HashMap<com.google.maps.android.data.renderer.model.Feature, GeoJsonFeature>()
+    private val mModelToLegacyFeatures = java.util.IdentityHashMap<com.google.maps.android.data.renderer.model.Feature, GeoJsonFeature>()
     private var mFeatureClickListener: OnFeatureClickListener? = null
+    private val mFeatureObserver = Observer { observable, _ ->
+        if (observable is GeoJsonFeature) onFeatureChanged(observable)
+    }
 
     public interface GeoJsonOnFeatureClickListener : OnFeatureClickListener
 
@@ -123,6 +127,7 @@ public class GeoJsonLayer : Layer {
             }
         }
 
+        mFeatures.forEach { it.addObserver(mFeatureObserver) }
         // Calculate bounding box
         calculateBoundingBox()
     }
@@ -231,8 +236,7 @@ public class GeoJsonLayer : Layer {
     override fun addLayerToMap() {
         val renderer = mRenderer ?: return
         mFeatures.forEach { feature ->
-            val modelFeature = toModelFeature(feature)
-            renderer.addFeature(modelFeature)
+            if (feature.getGeometry() != null) renderer.addFeature(toModelFeature(feature))
         }
         mIsLayerOnMap = true
     }
@@ -240,8 +244,7 @@ public class GeoJsonLayer : Layer {
     override fun removeLayerFromMap() {
         val renderer = mRenderer ?: return
         mFeatures.forEach { feature ->
-            val modelFeature = toModelFeature(feature)
-            renderer.removeFeature(modelFeature)
+            mFeatureMap[feature]?.let { renderer.removeFeature(it) }
         }
         mIsLayerOnMap = false
     }
@@ -286,6 +289,18 @@ public class GeoJsonLayer : Layer {
                         strokeWidth = polygonStyle.getStrokeWidth(),
                         geodesic = polygonStyle.isGeodesic(),
                     )
+                }
+
+                is com.google.maps.android.data.renderer.model.MultiGeometry -> {
+                    if (geometry is GeoJsonMultiPolygon) {
+                        val polygonStyle = feature.polygonStyle ?: mDefaultPolygonStyle
+                        com.google.maps.android.data.renderer.model.PolygonStyle(
+                            fillColor = polygonStyle.fillColor,
+                            strokeColor = polygonStyle.getStrokeColor(),
+                            strokeWidth = polygonStyle.getStrokeWidth(),
+                            geodesic = polygonStyle.isGeodesic(),
+                        )
+                    } else null
                 }
 
                 else -> {
@@ -354,20 +369,35 @@ public class GeoJsonLayer : Layer {
         get() = mFeatures
 
     public fun addFeature(feature: GeoJsonFeature) {
-        mFeatures.add(feature)
-        if (mIsLayerOnMap) {
+        if (!mFeatures.contains(feature)) {
+            mFeatures.add(feature)
+            feature.addObserver(mFeatureObserver)
+        }
+        if (mIsLayerOnMap && feature.getGeometry() != null) {
             mRenderer?.addFeature(toModelFeature(feature))
         }
     }
 
     public fun removeFeature(feature: GeoJsonFeature) {
-        mFeatures.remove(feature)
+        if (!mFeatures.remove(feature)) return
+        feature.deleteObserver(mFeatureObserver)
         val modelFeature = mFeatureMap.remove(feature)
         if (modelFeature != null) {
             mModelToLegacyFeatures.remove(modelFeature)
             if (mIsLayerOnMap) {
                 mRenderer?.removeFeature(modelFeature)
             }
+        }
+    }
+
+    private fun onFeatureChanged(feature: GeoJsonFeature) {
+        mFeatureMap.remove(feature)?.let { oldModel ->
+            mModelToLegacyFeatures.remove(oldModel)
+            if (mIsLayerOnMap) mRenderer?.removeFeature(oldModel)
+        }
+        if (mFeatures.contains(feature) && feature.getGeometry() != null) {
+            val updatedModel = toModelFeature(feature)
+            if (mIsLayerOnMap) mRenderer?.addFeature(updatedModel)
         }
     }
 

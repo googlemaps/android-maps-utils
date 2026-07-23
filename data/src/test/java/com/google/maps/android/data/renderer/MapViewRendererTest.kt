@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.AdvancedMarkerOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polygon as MapPolygon
+
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
@@ -32,11 +34,13 @@ import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.Polygon
 import com.google.maps.android.data.renderer.model.PolygonStyle
+
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
 import org.junit.Test
 
 /**
@@ -153,7 +157,7 @@ class MapViewRendererTest {
     }
 
     @Test
-fun testRemoveFeature_multiGeometry_removesAllRenderedObjects() {
+    fun testRemoveFeature_multiGeometry_removesAllRenderedObjects() {
         // Given
         val mockMap = mockk<GoogleMap>(relaxed = true)
         val mockIconProvider = mockk<IconProvider>(relaxed = true)
@@ -304,5 +308,42 @@ fun testRemoveFeature_multiGeometry_removesAllRenderedObjects() {
 
         // Then
         verify(exactly = 1) { mockPolygon.remove() }
+    }
+
+    @Test
+    fun nestedMultiGeometry_childrenBelongToParentFeature() {
+        val map = mockk<GoogleMap>(relaxed = true)
+        val firstPolygon = mockk<MapPolygon>(relaxed = true)
+        val secondPolygon = mockk<MapPolygon>(relaxed = true)
+        every { map.addPolygon(any<PolygonOptions>()) } returnsMany listOf(firstPolygon, secondPolygon)
+        val renderer = MapViewRenderer(map, mockk(relaxed = true))
+        val polygon =
+            Polygon(
+                listOf(
+                    Point(0.0, 0.0),
+                    Point(0.0, 1.0),
+                    Point(1.0, 1.0),
+                    Point(0.0, 0.0),
+                ),
+            )
+        val feature =
+            Feature(
+                MultiGeometry(
+                    listOf(
+                        polygon,
+                        MultiGeometry(listOf(polygon.copy())),
+                    ),
+                ),
+            )
+
+        renderer.addFeature(feature)
+
+        assertSame(feature, renderer.getFeatureForMapObject(firstPolygon))
+        assertSame(feature, renderer.getFeatureForMapObject(secondPolygon))
+
+        renderer.removeFeature(feature)
+
+        verify(exactly = 1) { firstPolygon.remove() }
+        verify(exactly = 1) { secondPolygon.remove() }
     }
 }
