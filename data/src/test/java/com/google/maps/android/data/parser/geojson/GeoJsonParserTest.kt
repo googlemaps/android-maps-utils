@@ -326,6 +326,43 @@ class GeoJsonParserTest {
         assertThat(parseGeometry(element, -1)).isNull()
     }
 
+    @Test
+    fun testDeeplyNestedArraysAreRejectedWithoutStackOverflow() {
+        // A ~6 KB document of deeply nested arrays overflows Json.parseToJsonElement's stack before
+        // the MAX_GEOMETRY_DEPTH guard (which runs on the already-built tree) can act. The
+        // structural-depth check must reject it up-front instead of crashing.
+        val deep =
+            "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":" +
+                "[".repeat(3000) + "1" + "]".repeat(3000) + "}}"
+        val stream = ByteArrayInputStream(deep.toByteArray())
+        assertFailsWith<IllegalArgumentException> { parser.parse(stream) }
+    }
+
+    @Test
+    fun testExcessivelyNestedGeometryCollectionIsRejected() {
+        val nested = buildNestedGeometryCollectionJson(1000)
+        val stream = ByteArrayInputStream(nested.toByteArray())
+        assertFailsWith<IllegalArgumentException> { parser.parse(stream) }
+    }
+
+    @Test
+    fun testOversizedInputIsRejected() {
+        val boundedParser = GeoJsonParser(maxInputSize = 1024L)
+        val big =
+            "{\"type\":\"MultiPoint\",\"coordinates\":[" +
+                (0 until 2000).joinToString(",") { "[1,1]" } + "]}"
+        val stream = ByteArrayInputStream(big.toByteArray())
+        assertFailsWith<IllegalArgumentException> { boundedParser.parse(stream) }
+    }
+
+    @Test
+    fun testNonFiniteCoordinateIsRejected() {
+        val geoJson =
+            """{"type": "Feature", "geometry": {"type": "Point", "coordinates": ["Infinity", "NaN"]}}"""
+        val stream = ByteArrayInputStream(geoJson.toByteArray())
+        assertFailsWith<IllegalArgumentException> { parser.parse(stream) }
+    }
+
     private fun buildNestedGeometryCollectionJson(depth: Int): String {
         var current = """{"type": "Point", "coordinates": [0.0, 0.0]}"""
         repeat(depth) {
