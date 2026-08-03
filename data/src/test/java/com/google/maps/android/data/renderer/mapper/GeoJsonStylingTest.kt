@@ -296,4 +296,94 @@ class GeoJsonStylingTest {
         assertEquals(0xFF0000FF.toInt(), style.color)
         assertEquals(2.0f, style.width, 0.001f)
     }
+
+    @Test
+    fun `parse styled multipolygon with fill only creates polygon style`() {
+        val geoJson =
+            """
+            {
+              "type": "Feature",
+              "properties": {
+                "fill": "#ff0000",
+                "fill-opacity": 0.5
+              },
+              "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                  [
+                    [
+                      [100.0, 0.0],
+                      [101.0, 0.0],
+                      [101.0, 1.0],
+                      [100.0, 0.0]
+                    ]
+                  ]
+                ]
+              }
+            }
+            """.trimIndent()
+
+        val parser = GeoJsonParser()
+        val geoJsonObject = parser.parse(ByteArrayInputStream(geoJson.toByteArray()))!!
+        val layer = GeoJsonMapper.toLayer(geoJsonObject)
+        val feature = layer.features.first()
+
+        assertTrue(feature.style is PolygonStyle)
+        val style = feature.style as PolygonStyle
+        val expectedFillColor = (0x7F shl 24) or 0xFF0000
+        assertEquals(expectedFillColor, style.fillColor)
+    }
+
+    @Test
+    fun `parse empty multipolygon does not crash`() {
+        val geoJson =
+            """
+            {
+              "type": "Feature",
+              "properties": {
+                "stroke": "#ff0000"
+              },
+              "geometry": {
+                "type": "MultiPolygon",
+                "coordinates": []
+              }
+            }
+            """.trimIndent()
+
+        val parser = GeoJsonParser()
+        val geoJsonObject = parser.parse(ByteArrayInputStream(geoJson.toByteArray()))!!
+        val layer = GeoJsonMapper.toLayer(geoJsonObject)
+        val feature = layer.features.first()
+
+        // Empty geometries list should be handled safely without throwing exceptions
+        org.junit.Assert.assertNotNull(feature)
+    }
+
+    @Test
+    fun `parse styled multipoint handles style gracefully`() {
+        val geoJson =
+            """
+            {
+              "type": "Feature",
+              "properties": {
+                "title": "Cluster Points"
+              },
+              "geometry": {
+                "type": "MultiPoint",
+                "coordinates": [
+                  [100.0, 0.0],
+                  [101.0, 1.0]
+                ]
+              }
+            }
+            """.trimIndent()
+
+        val parser = GeoJsonParser()
+        val geoJsonObject = parser.parse(ByteArrayInputStream(geoJson.toByteArray()))!!
+        val layer = GeoJsonMapper.toLayer(geoJsonObject)
+        val feature = layer.features.first()
+
+        org.junit.Assert.assertNotNull(feature)
+    }
 }
+
