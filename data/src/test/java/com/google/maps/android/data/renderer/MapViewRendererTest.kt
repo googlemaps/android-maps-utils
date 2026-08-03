@@ -21,31 +21,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolygonOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
 import com.google.maps.android.data.renderer.model.Feature
-<<<<<<< HEAD
 import com.google.maps.android.data.renderer.model.LineString
-=======
->>>>>>> origin/main
+import com.google.maps.android.data.renderer.model.LineStyle
 import com.google.maps.android.data.renderer.model.MultiGeometry
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.Polygon
-<<<<<<< HEAD
-=======
 import com.google.maps.android.data.renderer.model.PolygonStyle
->>>>>>> origin/main
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
-import org.junit.Assert.assertEquals
-import org.junit.Test
-
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.maps.android.data.renderer.model.LineString
-import com.google.maps.android.data.renderer.model.LineStyle
 
 /**
  * Unit tests for [MapViewRenderer] verifying correct translation of platform-agnostic
