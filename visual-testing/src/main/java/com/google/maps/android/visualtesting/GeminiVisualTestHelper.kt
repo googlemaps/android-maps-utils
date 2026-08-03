@@ -95,22 +95,37 @@ class GeminiVisualTestHelper {
 
         // Use a simpler text-only model for this task as no image is involved.
         // The user mentioned "gemini-flash 2.5" works, but we should use a standard name.
-        val modelName = "gemini-2.5-flash"
+        val modelName = "gemini-2.5-flash-lite"
         val request = GeminiRequest(contents = listOf(Content(parts = listOf(Part(text = fullPrompt)))))
 
-        val response: HttpResponse =
-            client.post("https://generativelanguage.googleapis.com/v1/models/$modelName:generateContent?key=$apiKey") {
+        var attempts = 0
+        var response: HttpResponse? = null
+        while (attempts < 3) {
+            attempts++
+            response = client.post("https://generativelanguage.googleapis.com/v1/models/$modelName:generateContent?key=$apiKey") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
-
-        if (response.status != HttpStatusCode.OK) {
-            val errorBody = response.bodyAsText()
-            Log.e("GeminiVisualTestHelper", "Action API Error: ${response.status} $errorBody")
-            throw Exception("Gemini Action API returned an error: ${response.status}\n$errorBody")
+            if (response.status == HttpStatusCode.OK) {
+                break
+            }
+            if (response.status == HttpStatusCode.ServiceUnavailable || response.status == HttpStatusCode.TooManyRequests) {
+                Log.w("GeminiVisualTestHelper", "Transient Action API error ${response.status}. Retrying attempt $attempts/3...")
+                kotlinx.coroutines.delay(2000L * attempts)
+            } else {
+                break
+            }
         }
 
-        val geminiResponse: GeminiResponse = response.body()
+        val finalResponse = response ?: throw Exception("Gemini Action API request failed to produce a response.")
+
+        if (finalResponse.status != HttpStatusCode.OK) {
+            val errorBody = finalResponse.bodyAsText()
+            Log.e("GeminiVisualTestHelper", "Action API Error: ${finalResponse.status} $errorBody")
+            throw Exception("Gemini Action API returned an error: ${finalResponse.status}\n$errorBody")
+        }
+
+        val geminiResponse: GeminiResponse = finalResponse.body()
         val actionJson =
             geminiResponse.candidates
                 .firstOrNull()
@@ -210,19 +225,34 @@ class GeminiVisualTestHelper {
                     ),
             )
 
-        val response: HttpResponse =
-            client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=$apiKey") {
+        var attempts = 0
+        var response: HttpResponse? = null
+        while (attempts < 3) {
+            attempts++
+            response = client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=$apiKey") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
-
-        if (response.status != HttpStatusCode.OK) {
-            val errorBody = response.bodyAsText()
-            Log.e("GeminiVisualTestHelper", "API Error: ${response.status} $errorBody")
-            throw Exception("Gemini API returned an error: ${response.status}\n$errorBody")
+            if (response.status == HttpStatusCode.OK) {
+                break
+            }
+            if (response.status == HttpStatusCode.ServiceUnavailable || response.status == HttpStatusCode.TooManyRequests) {
+                Log.w("GeminiVisualTestHelper", "Transient API error ${response.status}. Retrying attempt $attempts/3...")
+                kotlinx.coroutines.delay(2000L * attempts)
+            } else {
+                break
+            }
         }
 
-        val geminiResponse: GeminiResponse = response.body()
+        val finalResponse = response ?: throw Exception("Gemini API request failed to produce a response.")
+
+        if (finalResponse.status != HttpStatusCode.OK) {
+            val errorBody = finalResponse.bodyAsText()
+            Log.e("GeminiVisualTestHelper", "API Error: ${finalResponse.status} $errorBody")
+            throw Exception("Gemini API returned an error: ${finalResponse.status}\n$errorBody")
+        }
+
+        val geminiResponse: GeminiResponse = finalResponse.body()
 
         if (geminiResponse.candidates.isEmpty()) {
             val rawBody = response.bodyAsText()

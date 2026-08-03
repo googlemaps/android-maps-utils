@@ -62,7 +62,7 @@ class RendererVisualTest : RendererVisualTestBase() {
             clickButton("Complex GeoJSON")
             collapseBottomSheet()
             verifyMapContent(
-                "Does the map show at least two red push pins a black line drawn near Lower Manhattan, a black trapezoid drawn around the Central Park Zoo and a short black line connected to the southern most red push pin?",
+                "Does the map display the GeoJSON overlay features including red markers, orange island polygons in lower Manhattan, purple corridor lines in midtown, and a green polygon near Central Park?",
             )
         }
 

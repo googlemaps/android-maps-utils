@@ -20,19 +20,32 @@ import com.google.android.gms.maps.model.AdvancedMarkerOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolygonOptions
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
 import com.google.maps.android.data.renderer.model.Feature
+<<<<<<< HEAD
 import com.google.maps.android.data.renderer.model.LineString
+=======
+>>>>>>> origin/main
 import com.google.maps.android.data.renderer.model.MultiGeometry
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.Polygon
+<<<<<<< HEAD
+=======
+import com.google.maps.android.data.renderer.model.PolygonStyle
+>>>>>>> origin/main
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
+
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.data.renderer.model.LineString
+import com.google.maps.android.data.renderer.model.LineStyle
 
 /**
  * Unit tests for [MapViewRenderer] verifying correct translation of platform-agnostic
@@ -148,7 +161,7 @@ class MapViewRendererTest {
     }
 
     @Test
-    fun testRemoveFeature_multiGeometry_removesAllRenderedObjects() {
+fun testRemoveFeature_multiGeometry_removesAllRenderedObjects() {
         // Given
         val mockMap = mockk<GoogleMap>(relaxed = true)
         val mockIconProvider = mockk<IconProvider>(relaxed = true)
@@ -210,5 +223,94 @@ class MapViewRendererTest {
         // Then: every polyline ever added has been removed — nothing is left on the map.
         assertEquals(2, addedPolylines.size)
         addedPolylines.forEach { polyline -> verify(exactly = 1) { polyline.remove() } }
+    }
+
+    @Test
+    fun testAddFeatureMultiPolygon_appliesPolygonStyleToChildPolygons() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockPolygon = mockk<com.google.android.gms.maps.model.Polygon>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        val optionsSlot = slot<PolygonOptions>()
+        every { mockMap.addPolygon(capture(optionsSlot)) } returns mockPolygon
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+
+        val childPolygon = Polygon(
+            outerBoundary = listOf(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 0.0)),
+            innerBoundaries = emptyList()
+        )
+        val multiGeometry = MultiGeometry(geometries = listOf(childPolygon))
+        val style = PolygonStyle(
+            fillColor = 0x3F00FF00,
+            strokeColor = 0xFFFF0000.toInt(),
+            strokeWidth = 2.0f
+        )
+        val feature = Feature(geometry = multiGeometry, style = style)
+
+        // When
+        renderer.addFeature(feature)
+
+        // Then
+        verify(exactly = 1) { mockMap.addPolygon(any()) }
+        val capturedOptions = optionsSlot.captured
+        assertEquals(0x3F00FF00, capturedOptions.fillColor)
+        assertEquals(0xFFFF0000.toInt(), capturedOptions.strokeColor)
+        assertEquals(2.0f, capturedOptions.strokeWidth, 0.001f)
+    }
+
+    @Test
+    fun testAddFeatureMultiLineString_appliesLineStyleToChildLines() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockPolyline = mockk<Polyline>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        val optionsSlot = slot<PolylineOptions>()
+        every { mockMap.addPolyline(capture(optionsSlot)) } returns mockPolyline
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+
+        val childLine = LineString(points = listOf(Point(0.0, 0.0), Point(1.0, 1.0)))
+        val multiGeometry = MultiGeometry(geometries = listOf(childLine))
+        val style = LineStyle(color = 0xFF0000FF.toInt(), width = 3.0f)
+        val feature = Feature(geometry = multiGeometry, style = style)
+
+        // When
+        renderer.addFeature(feature)
+
+        // Then
+        verify(exactly = 1) { mockMap.addPolyline(any()) }
+        val capturedOptions = optionsSlot.captured
+        assertEquals(0xFF0000FF.toInt(), capturedOptions.color)
+        assertEquals(3.0f, capturedOptions.width, 0.001f)
+    }
+
+    @Test
+    fun testRemoveFeature_removesRenderedObjects() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockPolygon = mockk<com.google.android.gms.maps.model.Polygon>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        every { mockMap.addPolygon(any()) } returns mockPolygon
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+
+        val childPolygon = Polygon(
+            outerBoundary = listOf(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 0.0)),
+            innerBoundaries = emptyList()
+        )
+        val multiGeometry = MultiGeometry(geometries = listOf(childPolygon))
+        val feature = Feature(geometry = multiGeometry, style = PolygonStyle(fillColor = 0xFF00FF00.toInt()))
+
+        renderer.addFeature(feature)
+
+        // When
+        renderer.removeFeature(feature)
+
+        // Then
+        verify(exactly = 1) { mockPolygon.remove() }
     }
 }
