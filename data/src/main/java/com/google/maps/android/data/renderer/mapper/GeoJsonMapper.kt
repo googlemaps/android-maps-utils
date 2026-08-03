@@ -91,8 +91,9 @@ object GeoJsonMapper {
         val finalProperties = if (id != null) featureProperties + ("id" to id) else featureProperties
 
         val style = properties?.let { props ->
-            when (geometry) {
-                is LineString, is MultiGeometry -> { // MultiGeometry could contain lines
+            when {
+                geometry is LineString || (geometry is MultiGeometry && !geometry.isPolygonal()) -> {
+                    // MultiGeometry could contain lines
                     val strokeColor = props["stroke"]?.let { parseColor(it) }
                     val strokeWidth = props["stroke-width"]?.toFloatOrNull()
                     if (strokeColor != null || strokeWidth != null) {
@@ -102,7 +103,7 @@ object GeoJsonMapper {
                         )
                     } else null
                 }
-                is ModelPolygon -> {
+                geometry is ModelPolygon || (geometry is MultiGeometry && geometry.isPolygonal()) -> {
                     val strokeColor = props["stroke"]?.let { parseColor(it) }
                     val strokeWidth = props["stroke-width"]?.toFloatOrNull()
                     val fillColor = props["fill"]?.let { parseColor(it) }
@@ -125,7 +126,7 @@ object GeoJsonMapper {
                         )
                     } else null
                 }
-                is PointGeometry -> {
+                geometry is PointGeometry -> {
                      // TODO: Marker styling (marker-color, marker-size, marker-symbol)
                      null
                 }
@@ -135,6 +136,14 @@ object GeoJsonMapper {
 
         return Feature(geometry, style = style, properties = finalProperties)
     }
+
+    /**
+     * True for a Polygon or a multi-geometry whose members are all (recursively) polygons — i.e. a
+     * GeoJSON MultiPolygon — which per the simplestyle-spec carries fill styling rather than line styling.
+     */
+    private fun Geometry.isPolygonal(): Boolean =
+        this is ModelPolygon ||
+            (this is MultiGeometry && geometries.isNotEmpty() && geometries.all { it.isPolygonal() })
 
     private fun parseColor(colorString: String): Int? {
         if (colorString.startsWith("#")) {

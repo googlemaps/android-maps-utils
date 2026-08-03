@@ -263,7 +263,8 @@ class RendererDemoActivity :
 
         layer.boundingBox?.let { bounds ->
             try {
-                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                val padding = (120 * resources.displayMetrics.density).toInt()
+                map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding))
             } catch (e: Exception) {
                 e.printStackTrace()
             }

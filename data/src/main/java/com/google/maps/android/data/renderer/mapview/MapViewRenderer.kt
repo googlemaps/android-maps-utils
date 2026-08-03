@@ -174,8 +174,11 @@ class MapViewRenderer(
 
             is MultiGeometry -> {
                 feature.geometry.geometries.forEach { geometry ->
-                    // Recursively add each geometry in the MultiGeometry
-                    addFeature(feature.copy(geometry = geometry))
+                    val childFeature = feature.copy(geometry = geometry)
+                    addFeature(childFeature)
+                    renderedFeatures[childFeature]?.let { childObjects ->
+                        mapObjects.addAll(childObjects)
+                    }
                 }
             }
 

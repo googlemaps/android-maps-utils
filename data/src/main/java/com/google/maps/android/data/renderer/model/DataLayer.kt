@@ -34,37 +34,53 @@ data class DataLayer(
         val boundsBuilder = LatLngBounds.builder()
         var hasPoints = false
         features.forEach { feature ->
-            when (val geometry = feature.geometry) {
-                is PointGeometry -> {
-                    boundsBuilder.include(LatLng(geometry.point.lat, geometry.point.lng))
-                    hasPoints = true
-                }
-
-                is LineString -> {
-                    geometry.points.forEach {
-                        boundsBuilder.include(LatLng(it.lat, it.lng))
-                        hasPoints = true
-                    }
-                }
-
-                is Polygon -> {
-                    geometry.outerBoundary.forEach {
-                        boundsBuilder.include(LatLng(it.lat, it.lng))
-                        hasPoints = true
-                    }
-                }
-
-                is MultiGeometry -> {
-                    // TODO: Implement MultiGeometry bounds calculation if needed
-                }
-
-                is GroundOverlay -> {
-                    boundsBuilder.include(geometry.latLngBounds.northeast)
-                    boundsBuilder.include(geometry.latLngBounds.southwest)
-                    hasPoints = true
-                }
+            if (includeGeometryPoints(feature.geometry, boundsBuilder)) {
+                hasPoints = true
             }
         }
         if (hasPoints) boundsBuilder.build() else null
     }
+
+    private fun includeGeometryPoints(
+        geometry: Geometry,
+        boundsBuilder: LatLngBounds.Builder,
+    ): Boolean {
+        var added = false
+        when (geometry) {
+            is PointGeometry -> {
+                boundsBuilder.include(LatLng(geometry.point.lat, geometry.point.lng))
+                added = true
+            }
+
+            is LineString -> {
+                geometry.points.forEach {
+                    boundsBuilder.include(LatLng(it.lat, it.lng))
+                    added = true
+                }
+            }
+
+            is Polygon -> {
+                geometry.outerBoundary.forEach {
+                    boundsBuilder.include(LatLng(it.lat, it.lng))
+                    added = true
+                }
+            }
+
+            is MultiGeometry -> {
+                geometry.geometries.forEach { subGeom ->
+                    if (includeGeometryPoints(subGeom, boundsBuilder)) {
+                        added = true
+                    }
+                }
+            }
+
+            is GroundOverlay -> {
+                boundsBuilder.include(geometry.latLngBounds.northeast)
+                boundsBuilder.include(geometry.latLngBounds.southwest)
+                added = true
+            }
+        }
+        return added
+    }
 }
+
