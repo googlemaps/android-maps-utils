@@ -32,6 +32,12 @@ import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.Polygon
 import com.google.maps.android.data.renderer.model.PolygonStyle
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 /**
  * Unit tests for [MapViewRenderer] verifying correct translation of platform-agnostic
