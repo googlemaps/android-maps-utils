@@ -42,8 +42,22 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
         if (element != null) {
             element.click()
         } else {
-            // Fallback to AI if standard selector fails
-            helper.performActionFromPrompt("Click the $label button or chip", uiDevice, geminiApiKey)
+            val scrollable = androidx.test.uiautomator.UiScrollable(
+                androidx.test.uiautomator.UiSelector().scrollable(true)
+            )
+            val scrolled = try {
+                if (scrollable.exists()) {
+                    scrollable.setAsHorizontalList()
+                    scrollable.scrollTextIntoView(label)
+                } else false
+            } catch (e: Exception) { false }
+
+            val scrolledElement = uiDevice.findObject(By.textContains(label))
+            if (scrolledElement != null) {
+                scrolledElement.click()
+            } else {
+                helper.performActionFromPrompt("Click the $label button or chip", uiDevice, geminiApiKey)
+            }
         }
 
         // Wait for action to settle (bottom sheet collapse, map render)
