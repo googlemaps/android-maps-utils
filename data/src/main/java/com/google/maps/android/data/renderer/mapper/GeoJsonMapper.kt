@@ -103,7 +103,7 @@ object GeoJsonMapper {
                         )
                     } else null
                 }
-                geometry is ModelPolygon || geometry is MultiGeometry -> {
+                geometry is ModelPolygon || (geometry is MultiGeometry && geometry.isPolygonal()) -> {
                     val strokeColor = props["stroke"]?.let { parseColor(it) }
                     val strokeWidth = props["stroke-width"]?.toFloatOrNull()
                     val fillColor = props["fill"]?.let { parseColor(it) }
