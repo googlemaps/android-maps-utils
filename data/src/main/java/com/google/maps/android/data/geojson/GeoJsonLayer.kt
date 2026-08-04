@@ -16,6 +16,7 @@
 package com.google.maps.android.data.geojson
 
 import android.content.Context
+import android.graphics.Color
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -258,7 +259,10 @@ public class GeoJsonLayer : Layer {
                 is com.google.maps.android.data.renderer.model.PointGeometry -> {
                     val pointStyle = feature.pointStyle ?: mDefaultPointStyle
                     com.google.maps.android.data.renderer.model.PointStyle(
-                        color = 0,
+                        // The renderer derives the marker's alpha from the color's alpha channel, so encode the
+                        // legacy style's alpha into an otherwise-black color (hue 0 keeps the default marker look).
+                        // A transparent color here (e.g. 0) would render the marker invisible.
+                        color = Color.argb((pointStyle.getAlpha() * 255).toInt().coerceIn(0, 255), 0, 0, 0),
                         anchorU = pointStyle.getAnchorU(),
                         anchorV = pointStyle.getAnchorV(),
                         heading = pointStyle.getRotation(),

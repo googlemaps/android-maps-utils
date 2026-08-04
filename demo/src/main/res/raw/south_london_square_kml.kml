@@ -13,5 +13,11 @@
                 </outerBoundaryIs>
             </Polygon>
         </Placemark>
+        <Placemark>
+            <name>South London Point KML</name>
+            <Point>
+                <coordinates>-0.12,51.24,0</coordinates>
+            </Point>
+        </Placemark>
     </Document>
 </kml>
