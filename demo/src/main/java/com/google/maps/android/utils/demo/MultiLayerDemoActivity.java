@@ -113,7 +113,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
               feature ->
                   Toast.makeText(
                           MultiLayerDemoActivity.this,
-                          "GeoJSON polygon clicked: " + feature.getProperty("title"),
+                          "GeoJSON feature clicked: " + feature.getProperty("title"),
                           Toast.LENGTH_SHORT)
                       .show());
     } catch (IOException e) {
@@ -144,7 +144,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
                       Toast.LENGTH_SHORT)
                   .show());
 
-      // KML Polygon
+      // KML Polygon & Point
       KmlLayer kmlPolygonLayer =
           new KmlLayer(
               getMap(),
@@ -160,7 +160,7 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
           feature ->
               Toast.makeText(
                       MultiLayerDemoActivity.this,
-                      "KML polygon clicked: " + feature.getProperty("name"),
+                      "KML feature clicked: " + feature.getProperty("name"),
                       Toast.LENGTH_SHORT)
                   .show());
     } catch (XmlPullParserException e) {

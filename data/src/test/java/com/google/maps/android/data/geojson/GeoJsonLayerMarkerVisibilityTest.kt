@@ -76,4 +76,32 @@ class GeoJsonLayerMarkerVisibilityTest {
 
         assertEquals(1.0f, optionsSlot.captured.alpha, 0.001f)
     }
+
+    @Test
+    fun pointFeature_withCustomAlpha_isRenderedWithMatchingAlpha() {
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockMarker = mockk<Marker>(relaxed = true)
+        val optionsSlot = slot<MarkerOptions>()
+        every { mockMap.addMarker(capture(optionsSlot)) } returns mockMarker
+
+        val geoJson =
+            """
+            {
+              "type": "FeatureCollection",
+              "features": [
+                {
+                  "type": "Feature",
+                  "properties": { "name": "A point" },
+                  "geometry": { "type": "Point", "coordinates": [-111.620, 41.942] }
+                }
+              ]
+            }
+            """.trimIndent()
+
+        val layer = GeoJsonLayer(mockMap, JSONObject(geoJson))
+        layer.features.first().pointStyle = GeoJsonPointStyle().apply { setAlpha(0.5f) }
+        layer.addLayerToMap()
+
+        assertEquals(0.5f, optionsSlot.captured.alpha, 0.01f)
+    }
 }
