@@ -21,8 +21,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolygonOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
 import com.google.maps.android.data.renderer.model.Feature
+import com.google.maps.android.data.renderer.model.LineString
+import com.google.maps.android.data.renderer.model.LineStyle
 import com.google.maps.android.data.renderer.model.MultiGeometry
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
@@ -34,11 +38,6 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.maps.android.data.renderer.model.LineString
-import com.google.maps.android.data.renderer.model.LineStyle
 
 /**
  * Unit tests for [MapViewRenderer] verifying correct translation of platform-agnostic
@@ -151,6 +150,71 @@ class MapViewRendererTest {
         assertEquals(LatLng(41.942, -111.620), capturedOptions.position)
         assertEquals("Critical Right Turn", capturedOptions.title)
         assertEquals("Be careful here!", capturedOptions.snippet)
+    }
+
+    @Test
+fun testRemoveFeature_multiGeometry_removesAllRenderedObjects() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        val addedPolygons = mutableListOf<com.google.android.gms.maps.model.Polygon>()
+        every { mockMap.addPolygon(any()) } answers {
+            mockk<com.google.android.gms.maps.model.Polygon>(relaxed = true).also { addedPolygons.add(it) }
+        }
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+        val feature =
+            Feature(
+                geometry =
+                    MultiGeometry(
+                        listOf(
+                            Polygon(listOf(Point(0.0, 0.0), Point(0.0, 1.0), Point(1.0, 1.0))),
+                            Polygon(listOf(Point(2.0, 2.0), Point(2.0, 3.0), Point(3.0, 3.0))),
+                        ),
+                    ),
+            )
+
+        // When
+        renderer.addFeature(feature)
+        renderer.removeFeature(feature)
+
+        // Then: both rendered polygons are removed via the original feature reference.
+        assertEquals(2, addedPolygons.size)
+        addedPolygons.forEach { polygon -> verify(exactly = 1) { polygon.remove() } }
+    }
+
+    @Test
+    fun testAddFeature_multiGeometry_addedTwice_doesNotLeakOnRemove() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        val addedPolylines = mutableListOf<com.google.android.gms.maps.model.Polyline>()
+        every { mockMap.addPolyline(any()) } answers {
+            mockk<com.google.android.gms.maps.model.Polyline>(relaxed = true).also { addedPolylines.add(it) }
+        }
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+        val feature =
+            Feature(
+                geometry =
+                    MultiGeometry(
+                        listOf(
+                            LineString(listOf(Point(0.0, 0.0), Point(1.0, 1.0))),
+                        ),
+                    ),
+            )
+
+        // When: a hide/show cycle (remove + re-add) followed by a final remove.
+        renderer.addFeature(feature)
+        renderer.removeFeature(feature)
+        renderer.addFeature(feature)
+        renderer.removeFeature(feature)
+
+        // Then: every polyline ever added has been removed — nothing is left on the map.
+        assertEquals(2, addedPolylines.size)
+        addedPolylines.forEach { polyline -> verify(exactly = 1) { polyline.remove() } }
     }
 
     @Test

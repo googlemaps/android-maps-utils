@@ -29,6 +29,7 @@ import com.google.maps.android.data.renderer.IconProvider
 import com.google.maps.android.data.renderer.model.DataLayer
 import com.google.maps.android.data.renderer.model.DataScene
 import com.google.maps.android.data.renderer.model.Feature
+import com.google.maps.android.data.renderer.model.Geometry
 import com.google.maps.android.data.renderer.model.GroundOverlay
 import com.google.maps.android.data.renderer.model.GroundOverlayStyle
 import com.google.maps.android.data.renderer.model.LineString
@@ -109,9 +110,25 @@ class MapViewRenderer(
 
     override fun addFeature(feature: Feature) {
         val mapObjects = mutableListOf<Any>()
-        when (feature.geometry) {
+        addGeometry(feature.geometry, feature, mapObjects)
+        if (mapObjects.isNotEmpty()) {
+            renderedFeatures[feature] = mapObjects
+        }
+    }
+
+    /**
+     * Renders a single [geometry] (recursing into [MultiGeometry] members) with [feature]'s style and
+     * properties, accumulating every created map object into [mapObjects] so nested geometries stay
+     * associated with the original [feature] and can be removed later via [removeFeature].
+     */
+    private fun addGeometry(
+        geometry: Geometry,
+        feature: Feature,
+        mapObjects: MutableList<Any>,
+    ) {
+        when (geometry) {
             is PointGeometry -> {
-                val point = feature.geometry.point
+                val point = geometry.point
                 val style = feature.style as? PointStyle
                 if (useAdvancedMarkers) {
                     val markerOptions = createAdvancedMarkerOptions(point, style, feature.properties)
@@ -159,31 +176,25 @@ class MapViewRenderer(
             }
 
             is LineString -> {
-                val lineString = feature.geometry
                 val style = feature.style as? LineStyle
-                val polylineOptions = createPolylineOptions(lineString, style)
+                val polylineOptions = createPolylineOptions(geometry, style)
                 mapObjects.add(map.addPolyline(polylineOptions))
             }
 
             is Polygon -> {
-                val polygon = feature.geometry
                 val style = feature.style as? PolygonStyle
-                val polygonOptions = createPolygonOptions(polygon, style)
+                val polygonOptions = createPolygonOptions(geometry, style)
                 mapObjects.add(map.addPolygon(polygonOptions))
             }
 
             is MultiGeometry -> {
-                feature.geometry.geometries.forEach { geometry ->
-                    val childFeature = feature.copy(geometry = geometry)
-                    addFeature(childFeature)
-                    renderedFeatures[childFeature]?.let { childObjects ->
-                        mapObjects.addAll(childObjects)
-                    }
-                }
+                // Recursively render each member into the same list so the rendered objects stay
+                // keyed by the original feature rather than by intermediate copies.
+                geometry.geometries.forEach { addGeometry(it, feature, mapObjects) }
             }
 
             is GroundOverlay -> {
-                val groundOverlay = feature.geometry
+                val groundOverlay = geometry
                 val style = feature.style as? GroundOverlayStyle
                 val options = createGroundOverlayOptions(groundOverlay, style)
 
@@ -225,9 +236,6 @@ class MapViewRenderer(
                     }
                 }
             }
-        }
-        if (mapObjects.isNotEmpty()) {
-            renderedFeatures[feature] = mapObjects
         }
     }
 
