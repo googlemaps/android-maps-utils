@@ -92,8 +92,8 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
         // QuadItem delegates hashcode() and equals() to its item so,
         //   removing any QuadItem to that item will remove the item
         synchronized(mQuadTree) {
-            val quadItem = mItemMap.remove(item)
-            val result = quadItem != null && mItems.remove(quadItem)
+            val quadItem = mItemMap.remove(item) ?: QuadItem(item)
+            val result = mItems.remove(quadItem)
             if (result) {
                 mQuadTree.remove(quadItem)
             }
@@ -107,8 +107,8 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
             for (item in items) {
                 // QuadItem delegates hashcode() and equals() to its item so,
                 //   removing any QuadItem to that item will remove the item
-                val quadItem = mItemMap.remove(item)
-                val individualResult = quadItem != null && mItems.remove(quadItem)
+                val quadItem = mItemMap.remove(item) ?: QuadItem(item)
+                val individualResult = mItems.remove(quadItem)
                 if (individualResult) {
                     mQuadTree.remove(quadItem)
                     result = true
