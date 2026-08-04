@@ -327,15 +327,36 @@ class GeoJsonParserTest {
     }
 
     @Test
-    fun testDeeplyNestedArraysAreRejectedWithoutStackOverflow() {
-        // A ~6 KB document of deeply nested arrays overflows Json.parseToJsonElement's stack before
-        // the MAX_GEOMETRY_DEPTH guard (which runs on the already-built tree) can act. The
-        // structural-depth check must reject it up-front instead of crashing.
-        val deep =
-            "{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":" +
-                "[".repeat(3000) + "1" + "]".repeat(3000) + "}}"
-        val stream = ByteArrayInputStream(deep.toByteArray())
-        assertFailsWith<IllegalArgumentException> { parser.parse(stream) }
+    fun testDeeplyNestedArraysAreRejectedInsteadOfOverflowingTheParserStack() {
+        // Json.parseToJsonElement() descends into nested *arrays* on the call stack
+        // (JsonTreeReader.readArray -> read -> readArray ...; only nested objects switch to the
+        // stackless path), and it runs before anything inspects the parsed tree, so the
+        // MAX_GEOMETRY_DEPTH guard never sees this document: unpatched, the parse dies with a
+        // StackOverflowError, which is an Error and therefore not contained by the
+        // catch (Exception) in DataLayerLoader.
+        //
+        // Three details keep that deterministic rather than machine-dependent:
+        //  - the nesting sits under "bbox", a member the parser never dereferences, so no
+        //    coordinate/type check can reject the document first and mask the overflow;
+        //  - the parse runs on a thread with an explicit 1 MB stack, the usual size of a worker
+        //    thread, instead of whatever (much larger) stack the test runner's thread has. 1 MB is
+        //    above every platform minimum, so the request is honoured as-is;
+        //  - 50 000 levels overflow that stack whether or not the parser is JIT-compiled (the
+        //    threshold is a few thousand levels interpreted and ~17 000 once compiled), while the
+        //    structural-depth check rejects the document at nesting level 513 without recursing
+        //    at all.
+        // A small document is parsed first so that class loading is not charged to the bounded
+        // stack.
+        val point = """{"type": "Point", "coordinates": [0.0, 0.0]}"""
+        parser.parse(ByteArrayInputStream(point.toByteArray()))
+
+        val deep = "[".repeat(50000) + "1" + "]".repeat(50000)
+        val geoJson = """{"type": "FeatureCollection", "bbox": $deep, "features": []}"""
+        assertFailsWith<IllegalArgumentException> {
+            parseOnThreadWithStackSize(1024L * 1024) {
+                parser.parse(ByteArrayInputStream(geoJson.toByteArray()))
+            }
+        }
     }
 
     @Test
@@ -361,6 +382,29 @@ class GeoJsonParserTest {
             """{"type": "Feature", "geometry": {"type": "Point", "coordinates": ["Infinity", "NaN"]}}"""
         val stream = ByteArrayInputStream(geoJson.toByteArray())
         assertFailsWith<IllegalArgumentException> { parser.parse(stream) }
+    }
+
+    /**
+     * Runs [block] on a thread with a fixed stack size and rethrows whatever it threw, so that a
+     * test about stack consumption does not depend on the stack size of the thread the test
+     * framework happens to use.
+     */
+    private fun parseOnThreadWithStackSize(
+        stackSizeBytes: Long,
+        block: () -> Unit,
+    ) {
+        var thrown: Throwable? = null
+        val thread =
+            Thread(null, {
+                try {
+                    block()
+                } catch (t: Throwable) {
+                    thrown = t
+                }
+            }, "geojson-parse", stackSizeBytes)
+        thread.start()
+        thread.join()
+        thrown?.let { throw it }
     }
 
     private fun buildNestedGeometryCollectionJson(depth: Int): String {
