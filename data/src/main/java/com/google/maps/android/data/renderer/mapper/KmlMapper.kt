@@ -15,7 +15,10 @@
  */
 package com.google.maps.android.data.renderer.mapper
 
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import com.google.maps.android.data.parser.kml.Folder
+
 import com.google.maps.android.data.parser.kml.Kml
 import com.google.maps.android.data.parser.kml.Placemark
 import com.google.maps.android.data.renderer.model.DataLayer
@@ -173,14 +176,7 @@ private fun Placemark.toRendererFeature(
 }
 
 private fun KmlGroundOverlay.toRendererFeature(): Feature {
-    val geometry =
-        GroundOverlay(
-            north = latLonBox?.north ?: 0.0,
-            south = latLonBox?.south ?: 0.0,
-            east = latLonBox?.east ?: 0.0,
-            west = latLonBox?.west ?: 0.0,
-            rotation = latLonBox?.rotation?.toFloat() ?: 0f,
-        )
+    val geometry = toRendererGeometry()
     val style =
         GroundOverlayStyle(
             iconUrl = icon?.href,
@@ -193,6 +189,62 @@ private fun KmlGroundOverlay.toRendererFeature(): Feature {
 
     return Feature(geometry, style = style, properties = properties)
 }
+
+private fun KmlGroundOverlay.toRendererGeometry(): GroundOverlay {
+    if (latLonBox != null) {
+        return GroundOverlay(
+            north = latLonBox.north,
+            south = latLonBox.south,
+            east = latLonBox.east,
+            west = latLonBox.west,
+            rotation = latLonBox.rotation?.toFloat() ?: 0f,
+        )
+    }
+    if (latLonQuad != null && latLonQuad.coordinates.size >= 4) {
+        val sw = latLonQuad.coordinates[0]
+        val se = latLonQuad.coordinates[1]
+        val ne = latLonQuad.coordinates[2]
+        val nw = latLonQuad.coordinates[3]
+
+        val swLatLng = LatLng(sw.latitude, sw.longitude)
+        val seLatLng = LatLng(se.latitude, se.longitude)
+        val neLatLng = LatLng(ne.latitude, ne.longitude)
+        val nwLatLng = LatLng(nw.latitude, nw.longitude)
+
+        val nRot = 90.0 - bearing(nwLatLng, neLatLng)
+        val sRot = 270.0 - bearing(seLatLng, swLatLng)
+        val rotation = -(nRot + sRot) / 2.0
+
+        val n = (ne.latitude + nw.latitude) / 2.0
+        val s = (se.latitude + sw.latitude) / 2.0
+        val e = (ne.longitude + se.longitude) / 2.0
+        val w = (nw.longitude + sw.longitude) / 2.0
+
+        return GroundOverlay(
+            north = n,
+            south = s,
+            east = e,
+            west = w,
+            rotation = rotation.toFloat(),
+        )
+    }
+    return GroundOverlay(
+        north = 0.0,
+        south = 0.0,
+        east = 0.0,
+        west = 0.0,
+        rotation = 0f,
+    )
+}
+
+private fun bearing(
+    from: LatLng,
+    to: LatLng,
+): Double {
+    val h = SphericalUtil.computeHeading(from, to)
+    return if (h < 0) h + 360.0 else h
+}
+
 
 private fun KmlStyle.toRendererStyle(geometry: Geometry): Style? =
     when (geometry) {

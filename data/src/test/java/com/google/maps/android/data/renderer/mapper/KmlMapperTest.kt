@@ -246,4 +246,40 @@ class KmlMapperTest {
         assertEquals("Stroke color should match", 0xffa52714.toInt(), style.strokeColor)
         assertEquals("Stroke width should match", 1.2f, style.strokeWidth, 0.01f)
     }
+
+    @Test
+    fun `test GroundOverlay with LatLonQuad to Scene`() {
+        val kmlString =
+            """
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <GroundOverlay>
+                  <name>Quad Overlay</name>
+                  <Icon>
+                    <href>https://developers.google.com/kml/documentation/images/etna.jpg</href>
+                  </Icon>
+                  <LatLonQuad>
+                    <coordinates>
+                      -0.15,51.2 -0.10,51.2 -0.10,51.4 -0.15,51.4
+                    </coordinates>
+                  </LatLonQuad>
+                </GroundOverlay>
+              </Document>
+            </kml>
+            """.trimIndent()
+        val kml =
+            com.google.maps.android.data.parser.kml
+                .KmlParser()
+                .parse(kmlString.byteInputStream())
+        val scene = KmlMapper.toScene(kml)
+        assertEquals(1, scene.features.size)
+        val feature = scene.features[0]
+        val geometry = feature.geometry as com.google.maps.android.data.renderer.model.GroundOverlay
+        assertEquals(51.4, geometry.north, 0.000001)
+        assertEquals(51.2, geometry.south, 0.000001)
+        assertEquals(-0.10, geometry.east, 0.000001)
+        assertEquals(-0.15, geometry.west, 0.000001)
+        assertEquals(0.0f, geometry.rotation, 0.001f)
+    }
 }
+

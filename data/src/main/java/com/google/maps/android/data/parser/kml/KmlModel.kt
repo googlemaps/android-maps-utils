@@ -102,6 +102,9 @@ data class GroundOverlay(
     @XmlElement(true)
     @XmlSerialName("LatLonBox", namespace = KML_NAMESPACE, prefix = "")
     val latLonBox: LatLonBox? = null,
+    @XmlElement(true)
+    @XmlSerialName("LatLonQuad", namespace = KML_NAMESPACE, prefix = "")
+    val latLonQuad: LatLonQuad? = null,
 )
 
 @Serializable
@@ -131,6 +134,17 @@ data class LatLonBox(
     @XmlSerialName("rotation", namespace = KML_NAMESPACE, prefix = "")
     val rotation: Double? = null,
 )
+
+@Serializable
+@XmlSerialName("LatLonQuad", namespace = KML_NAMESPACE, prefix = "")
+data class LatLonQuad(
+    @XmlElement(true)
+    @XmlSerialName("coordinates", namespace = KML_NAMESPACE, prefix = "")
+    @Serializable(with = LatLngAltListSerializer::class)
+    val coordinates: List<LatLngAlt> = emptyList(),
+)
+
+
 
 fun Kml.findByPlacemarksById(id: String): List<Placemark> =
     buildList {

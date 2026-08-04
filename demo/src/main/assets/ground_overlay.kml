@@ -4,7 +4,7 @@
     <name>Ground Overlays</name>
     <description>Examples of Ground Overlays</description>
     <GroundOverlay>
-      <name>Large-scale overlay on terrain</name>
+      <name>Large-scale overlay on terrain (LatLonBox)</name>
       <description>Overlay showing Mount Etna erupting on July 13th, 2001.</description>
       <Icon>
         <href>https://developers.google.com/kml/documentation/images/etna.jpg</href>
@@ -17,5 +17,19 @@
         <rotation>-0.1556640799496235</rotation>
       </LatLonBox>
     </GroundOverlay>
+    <GroundOverlay>
+      <name>Quad overlay west of Etna (LatLonQuad)</name>
+      <description>Overlay defined by LatLonQuad corner coordinates</description>
+      <Icon>
+        <href>https://developers.google.com/kml/documentation/images/etna.jpg</href>
+      </Icon>
+      <LatLonQuad>
+        <coordinates>
+          13.80,37.46 14.55,37.46 14.55,37.91 13.80,37.91
+        </coordinates>
+      </LatLonQuad>
+    </GroundOverlay>
   </Folder>
 </kml>
+
+

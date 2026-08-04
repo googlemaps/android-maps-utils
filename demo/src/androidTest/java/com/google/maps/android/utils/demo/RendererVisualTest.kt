@@ -72,8 +72,11 @@ class RendererVisualTest : RendererVisualTestBase() {
             launchActivity()
             clickButton("Ground Overlay")
             collapseBottomSheet()
-            verifyMapContent("Does the map show an image overlay of Mount Etna, a volcano, superimposed on the base map near Sicily?")
+            verifyMapContent(
+                "Does the map show two image overlays of Mount Etna side by side in Sicily, one standard rectangular overlay on Mount Etna and a second quadrilateral overlay just west of it?",
+            )
         }
+
 
     @Test
     fun testBrightAngelLayer() =
