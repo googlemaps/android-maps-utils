@@ -53,7 +53,11 @@ jobs:
         uses: madrapps/jacoco-report@e51ce1f46f7f8b5331593f935e59cbaf44b84920 # v1.8.0
         with:
           paths: |
-            ${{ github.workspace }}/library/build/jacoco/jacoco.xml
+            ${{ github.workspace }}/library/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/clustering/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/data/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/heatmaps/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/ui/build/jacoco/jacoco.xml
           token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
           min-coverage-overall: 26
           min-coverage-changed-files: 60

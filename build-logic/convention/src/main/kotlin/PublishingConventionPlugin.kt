@@ -23,6 +23,7 @@ import org.gradle.kotlin.dsl.*
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 class PublishingConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -49,6 +50,24 @@ class PublishingConventionPlugin : Plugin<Project> {
             extensions.configure(JacocoTaskExtension::class.java) {
                 isIncludeNoLocationClasses = true
                 excludes = listOf("jdk.internal.*")
+            }
+        }
+
+        // com.mxalbert.gradle.jacoco-android (last released for AGP 8.x) auto-detects
+        // classDirectories using paths that predate AGP's built-in Kotlin compiler, so it
+        // only finds javac output and silently misses every Kotlin-compiled class. Point the
+        // debug report tasks at both compiler outputs directly so Kotlin sources are covered.
+        tasks.withType<JacocoReport>().configureEach {
+            if (name.contains("Debug")) {
+                classDirectories.setFrom(
+                    fileTree(layout.buildDirectory.dir("intermediates/javac/debug")) {
+                        include("**/classes/**")
+                        exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.class")
+                    },
+                    fileTree(layout.buildDirectory.dir("intermediates/built_in_kotlinc/debug")) {
+                        include("**/classes/**")
+                    }
+                )
             }
         }
     }
