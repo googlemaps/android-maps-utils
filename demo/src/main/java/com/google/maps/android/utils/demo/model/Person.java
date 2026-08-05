@@ -24,11 +24,15 @@ import java.util.Objects;
 public class Person implements ClusterItem {
   public final String name;
   public final int profilePhoto;
-  private final LatLng mPosition;
+  private LatLng mPosition;
 
   public Person(LatLng position, String name, int pictureResource) {
     this.name = name;
     profilePhoto = pictureResource;
+    mPosition = position;
+  }
+
+  public void setPosition(LatLng position) {
     mPosition = position;
   }
 

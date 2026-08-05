@@ -161,6 +161,13 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity
   }
 
   private void addItems() {
+    // Add 60 filler background markers across Greater London to force PointQuadTree to split into quadrants (MAX_ELEMENTS = 50)
+    for (int i = 0; i < 60; i++) {
+      double lat = 51.3 + (i % 10) * 0.05;
+      double lng = -0.4 + (i / 10) * 0.08;
+      mClusterManager.addItem(new Person(new LatLng(lat, lng), "Citizen " + i, R.drawable.john));
+    }
+
     // Marker in Enfield
     mClusterManager.addItem(new Person(City.ENFIELD.latLng, "John", R.drawable.john));
 
@@ -181,7 +188,7 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity
     Log.d("ClusterTest", "Item rotated to: " + newLocation.toString() + ", City: " + cityName);
 
     if (itemToUpdate != null) {
-      itemToUpdate = new Person(newLocation, "Teach", R.drawable.teacher);
+      itemToUpdate.setPosition(newLocation);
       mClusterManager.updateItem(itemToUpdate); // Update the marker
       mClusterManager.cluster();
     }

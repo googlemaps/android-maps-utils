@@ -47,6 +47,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
      */
     @JvmField
     protected val mItems: MutableCollection<QuadItem<T>> = LinkedHashSet()
+    protected val mItemMap = HashMap<T, QuadItem<T>>()
 
     /**
      * Any modifications should be synchronized on mQuadTree.
@@ -61,6 +62,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
         synchronized(mQuadTree) {
             val result = mItems.add(quadItem)
             if (result) {
+                mItemMap[item] = quadItem
                 mQuadTree.add(quadItem)
             }
             return result
@@ -81,6 +83,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
     override fun clearItems() {
         synchronized(mQuadTree) {
             mItems.clear()
+            mItemMap.clear()
             mQuadTree.clear()
         }
     }
@@ -88,8 +91,8 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
     override fun removeItem(item: T): Boolean {
         // QuadItem delegates hashcode() and equals() to its item so,
         //   removing any QuadItem to that item will remove the item
-        val quadItem = QuadItem(item)
         synchronized(mQuadTree) {
+            val quadItem = mItemMap.remove(item) ?: QuadItem(item)
             val result = mItems.remove(quadItem)
             if (result) {
                 mQuadTree.remove(quadItem)
@@ -104,7 +107,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
             for (item in items) {
                 // QuadItem delegates hashcode() and equals() to its item so,
                 //   removing any QuadItem to that item will remove the item
-                val quadItem = QuadItem(item)
+                val quadItem = mItemMap.remove(item) ?: QuadItem(item)
                 val individualResult = mItems.remove(quadItem)
                 if (individualResult) {
                     mQuadTree.remove(quadItem)
