@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.branch }}
           token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
@@ -63,6 +63,7 @@ jobs:
       - name: Commit and push
         env:
           VERSION: ${{ inputs.version }}
+          BRANCH: ${{ inputs.branch }}
         run: |
           git add \
             .release-please-manifest.json \
@@ -71,7 +72,7 @@ jobs:
             MIGRATION.md \
             .gemini/skills/android-maps-utils/SKILL.md
           git commit -m "chore: release v${VERSION}"
-          git push origin "${{ inputs.branch }}"
+          git push origin "$BRANCH"
 
       - name: Tag and create pre-release
         env:
