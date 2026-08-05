@@ -31,8 +31,8 @@ class GpxParser {
         XML {
             defaultPolicy {
                 ignoreUnknownChildren()
-                isCollectingNSAttributes = true
             }
+            isCollectingNSAttributes = true
         }
 
     fun parse(inputStream: InputStream): Gpx {

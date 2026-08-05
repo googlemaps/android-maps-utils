@@ -37,10 +37,16 @@ internal object LatLngAltSerializer : KSerializer<LatLngAlt> {
 
     internal fun parse(string: String): LatLngAlt {
         val parts = string.split(",").map { it.trim().toDouble() }
+        val lng = parts[0]
+        val lat = parts[1]
+        val alt = parts.getOrNull(2)
+        require(lng.isFinite() && lat.isFinite() && (alt == null || alt.isFinite())) {
+            "KML coordinate contains a non-finite value"
+        }
         return LatLngAlt(
-            longitude = parts[0],
-            latitude = parts[1],
-            altitude = parts.getOrNull(2),
+            longitude = lng,
+            latitude = lat,
+            altitude = alt,
         )
     }
 }

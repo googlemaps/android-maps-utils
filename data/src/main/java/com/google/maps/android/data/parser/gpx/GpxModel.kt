@@ -78,7 +78,13 @@ data class Wpt(
     @XmlElement(true)
     @XmlSerialName("sym", namespace = GPX_NAMESPACE, prefix = "")
     val sym: String? = null,
-)
+) {
+    init {
+        require(lat.isFinite() && lon.isFinite() && (ele == null || ele.isFinite())) {
+            "GPX coordinate contains a non-finite value"
+        }
+    }
+}
 
 @Serializable
 @XmlSerialName("rte", namespace = GPX_NAMESPACE, prefix = "")
