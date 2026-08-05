@@ -98,7 +98,7 @@ public class QuadItemTest {
   }
 
   private static class TestingItem implements ClusterItem {
-    private final LatLng mPosition;
+    private LatLng mPosition;
     private String mTitle;
 
     TestingItem(String title, double lat, double lng) {
@@ -109,6 +109,9 @@ public class QuadItemTest {
     TestingItem(double lat, double lng) {
       mTitle = "";
       mPosition = new LatLng(lat, lng);
+    }
+    public void setPosition(double lat, double lng) {
+    mPosition = new LatLng(lat, lng);
     }
 
     @NonNull
