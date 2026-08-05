@@ -71,6 +71,18 @@ dependencies {
 }
 ```
 
+### Compatibility with Google Navigation SDK for Android
+
+If your project integrates the [Google Navigation SDK for Android](https://developers.google.com/maps/documentation/navigation/android-sdk), you must exclude the transitive `play-services-maps` dependency to prevent duplicate class conflicts:
+
+```kotlin
+configurations.all {
+    if (name.contains("navigation", ignoreCase = true)) {
+        exclude(group = "com.google.android.gms", module = "play-services-maps")
+    }
+}
+```
+
 ## Sample App
 
 <img src="https://developers.google.com/maps/documentation/android-sdk/images/utility-markercluster.png" width="150" align=right>
