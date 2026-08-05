@@ -30,8 +30,10 @@ upgrading from 4.x, see the [migration guide](MIGRATION.md).
 - **Spherical geometry** — for example: computeDistance, computeHeading,
   computeArea
 - **Street View metadata** — checks if a Street View panorama exists at a given location
+- **Reactive Kotlin Extensions & Builders** — coroutine suspensions (`awaitMap()`), reactive `Flow` observers (`mapClickEvents()`), and option builder DSLs (`addMarker { ... }`) consolidated directly into `com.google.maps.android.*`.
 
-You can also find Kotlin extensions for this library in [Maps Android KTX][android-maps-ktx].
+> [!IMPORTANT]
+> **KTX Consolidation Notice (`v6.0.0-rc01+`)**: All Kotlin extensions (`maps-ktx` and `maps-utils-ktx` from `android-maps-ktx`) are now built directly into `android-maps-utils` under the canonical `com.google.maps.android.*` packages. Separate dependencies on `android-maps-ktx` or `maps-utils-ktx` are no longer needed and should be removed. Legacy calls to `com.google.maps.android.ktx.*` packages remain supported via `@Deprecated(level = DeprecationLevel.WARNING)` bridges that forward directly to canonical implementations.
 
 <p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
 
@@ -46,9 +48,7 @@ You can also find Kotlin extensions for this library in [Maps Android KTX][andro
 
 ```kotlin
 dependencies {
-    // Utilities for Maps SDK for Android (requires Google Play Services)
-    // You do not need to add a separate dependency for the Maps SDK for Android
-    // since this library builds in the compatible version of the Maps SDK.
+    // Utilities and consolidated Kotlin Extensions for Maps SDK for Android
     // The aggregator artifact transitively pulls in all submodules below.
     implementation("com.google.maps.android:android-maps-utils:5.1.0") // x-release-please-version
 }
@@ -164,6 +164,60 @@ Full guides for using the utilities are published in
 
 - Polyline encoding and decoding [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/PolyUtil.kt), [encoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolySimplifyDemoActivity.java), [decoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolyDecodeDemoActivity.java)
 - Spherical geometry [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/SphericalUtil.kt), [compute distance sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/DistanceDemoActivity.java)
+
+</details>
+
+<details>
+  <summary>Reactive Kotlin Extensions & Builders (Consolidated in v6.0.0-rc01)</summary>
+
+### Reactive Kotlin Extensions & Builders
+
+All Kotlin extensions formerly provided by `android-maps-ktx` (`maps-ktx` and `maps-utils-ktx`) are now integrated into `android-maps-utils` (`v6.0.0-rc01+`) under canonical packages (`com.google.maps.android.*`, `com.google.maps.android.clustering.*`, etc.).
+
+#### 1. Coroutine Suspensions (`awaitMap()`, `awaitAnimateCamera()`)
+```kotlin
+import com.google.maps.android.awaitMap
+import com.google.maps.android.awaitAnimateCamera
+
+// Suspend until GoogleMap is ready on MapView / MapFragment
+val googleMap: GoogleMap = mapView.awaitMap()
+
+// Suspend until camera animation completes
+googleMap.awaitAnimateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12f))
+```
+
+#### 2. Option Builders DSL (`addMarker`, `addPolyline`, `addPolygon`)
+```kotlin
+import com.google.maps.android.addMarker
+import com.google.maps.android.addCircle
+
+googleMap.addMarker {
+    position(LatLng(-33.852, 151.211))
+    title("Sydney Opera House")
+}
+
+googleMap.addCircle {
+    center(LatLng(-33.870, 151.200))
+    radius(500.0)
+    strokeWidth(2f)
+}
+```
+
+#### 3. Reactive `Flow` Observers (`mapClickEvents`, `cameraMoveEvents`)
+```kotlin
+import com.google.maps.android.mapClickEvents
+
+lifecycleScope.launch {
+    repeatOnLifecycle(Lifecycle.State.STARTED) {
+        googleMap.mapClickEvents().collect { latLng ->
+            Log.d("MapClick", "Clicked: $latLng")
+        }
+    }
+}
+```
+
+#### Backward Compatibility & Deprecation
+Existing references to `com.google.maps.android.ktx.*` continue to work through `@Deprecated(level = DeprecationLevel.WARNING)` forwarding wrappers. You can safely migrate your code incrementally to `com.google.maps.android.*`.
 
 </details>
 

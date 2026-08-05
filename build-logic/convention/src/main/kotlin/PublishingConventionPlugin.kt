@@ -62,10 +62,11 @@ class PublishingConventionPlugin : Plugin<Project> {
                 classDirectories.setFrom(
                     fileTree(layout.buildDirectory.dir("intermediates/javac/debug")) {
                         include("**/classes/**")
-                        exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.class")
+                        exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.class", "**/ktx/**")
                     },
                     fileTree(layout.buildDirectory.dir("intermediates/built_in_kotlinc/debug")) {
                         include("**/classes/**")
+                        exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.class", "**/ktx/**")
                     }
                 )
             }
