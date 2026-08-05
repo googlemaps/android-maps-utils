@@ -137,6 +137,9 @@
         <activity
             android:name=".TransitLayerDemoActivity"
             android:exported="true" />
+        <activity
+            android:name=".KtxExtensionsDemoActivity"
+            android:exported="true" />
 
     </application>
 

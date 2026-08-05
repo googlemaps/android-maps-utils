@@ -16,46 +16,98 @@
 package com.google.maps.android.utils.attribution
 
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import com.google.android.gms.maps.MapsApiSettings
+import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.utils.meta.AttributionId
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockkStatic
-import io.mockk.runs
-import io.mockk.unmockkStatic
-import io.mockk.verify
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.mockito.Mock
+import org.mockito.MockedStatic
+import org.mockito.Mockito.mockStatic
+import org.mockito.Mockito.verify
+import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(RobolectricTestRunner::class)
+/**
+ * Unit test suite for [AttributionIdInitializer] and its deprecated KTX compatibility shim
+ * [com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer].
+ *
+ * **Purpose:**
+ * Verifies that the Jetpack App Startup `Initializer` for library usage attribution correctly
+ * registers the library's unique attribution identifier (`AttributionId.VALUE` = "maps-utils-android")
+ * with the Google Maps SDK's [MapsApiSettings] upon application startup, and declares no dependent
+ * startup initializers.
+ *
+ * **How it works:**
+ * Uses Mockito's static mocking (`mockStatic(MapsApiSettings::class.java)`) to intercept calls
+ * to the static SDK method [MapsApiSettings.addInternalUsageAttributionId]. Each test instantiates
+ * an initializer, checks its dependencies, and invokes `create(context)`.
+ *
+ * **How we know it is correct:**
+ * - **Code under test:** Correct if invoking `create(context)` registers `AttributionId.VALUE` exactly
+ *   once with the provided `Context`, and `dependencies()` returns an empty list.
+ * - **Test:** Correct because `mapsApiSettingsMock.verify { ... }` will fail the test if the static
+ *   attribution registration method was not invoked or received incorrect parameters.
+ */
+@RunWith(MockitoJUnitRunner::class)
 class AttributionIdInitializerTest {
+
+    @Mock
+    private lateinit var context: Context
+
+    private lateinit var mapsApiSettingsMock: MockedStatic<MapsApiSettings>
+
     @Before
     fun setUp() {
-        mockkStatic(MapsApiSettings::class)
-        every { MapsApiSettings.addInternalUsageAttributionId(any(), any()) } just runs
+        mapsApiSettingsMock = mockStatic(MapsApiSettings::class.java)
     }
 
     @After
     fun tearDown() {
-        unmockkStatic(MapsApiSettings::class)
+        mapsApiSettingsMock.close()
     }
 
+    /**
+     * **Purpose:** Tests that the canonical [AttributionIdInitializer] registers usage attribution
+     * and has no initializer dependencies.
+     *
+     * **How it works:** Instantiates [AttributionIdInitializer], asserts `dependencies()` is empty,
+     * calls `create(context)`, and verifies static invocation of [MapsApiSettings.addInternalUsageAttributionId].
+     *
+     * **How we know it is correct:**
+     * - **Code under test:** Proves canonical initialization correctly passes `AttributionId.VALUE` to Maps SDK.
+     * - **Test:** Verifies exact static invocation arguments; fails if attribution registration is omitted or altered.
+     */
     @Test
-    fun `create adds internal usage attribution id`() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
+    fun `test canonical AttributionIdInitializer create and dependencies`() {
         val initializer = AttributionIdInitializer()
-
+        assertThat(initializer.dependencies()).isEmpty()
         initializer.create(context)
+        mapsApiSettingsMock.verify {
+            MapsApiSettings.addInternalUsageAttributionId(context, AttributionId.VALUE)
+        }
+    }
 
-        verify {
-            MapsApiSettings.addInternalUsageAttributionId(
-                context,
-                AttributionId.VALUE,
-            )
+    /**
+     * **Purpose:** Tests that the deprecated KTX compatibility shim
+     * [com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer] continues to register
+     * usage attribution without breaking existing apps.
+     *
+     * **How it works:** Instantiates the KTX shim class and performs the exact same dependency
+     * and creation verification as the canonical initializer test.
+     *
+     * **How we know it is correct:**
+     * - **Code under test:** Proves backwards-compatible KTX typealias/shim preserves identical startup behavior.
+     * - **Test:** Fails if the KTX shim fails to invoke [MapsApiSettings.addInternalUsageAttributionId].
+     */
+    @Test
+    fun `test ktx AttributionIdInitializer create and dependencies`() {
+        val initializer = com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer()
+        assertThat(initializer.dependencies()).isEmpty()
+        initializer.create(context)
+        mapsApiSettingsMock.verify {
+            MapsApiSettings.addInternalUsageAttributionId(context, AttributionId.VALUE)
         }
     }
 }
