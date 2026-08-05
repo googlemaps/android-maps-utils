@@ -22,6 +22,9 @@ on:
       types: [gh-pages]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   gh-page-sync:
     runs-on: ubuntu-latest
