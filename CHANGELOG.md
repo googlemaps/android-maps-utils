@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.1.0](https://github.com/googlemaps/android-maps-utils/compare/v5.0.0...v5.1.0) (2026-08-05)
+
+
+### Features
+
+* **data:** add support for parsing GroundOverlay with LatLonQuad bounds ([#1739](https://github.com/googlemaps/android-maps-utils/issues/1739)) ([c2a165d](https://github.com/googlemaps/android-maps-utils/commit/c2a165d03b63cdd12ac8abbd06e9717c854cd4d7))
+
+
+### Bug Fixes
+
+* apply polygon styling to GeoJSON MultiPolygon features ([#1727](https://github.com/googlemaps/android-maps-utils/issues/1727)) ([67d7252](https://github.com/googlemaps/android-maps-utils/commit/67d7252e5c1cdf1556b7fc707e80c8372540036c))
+* bound untrusted GeoJSON input to prevent parser resource exhaustion ([#1733](https://github.com/googlemaps/android-maps-utils/issues/1733)) ([1e41aa4](https://github.com/googlemaps/android-maps-utils/commit/1e41aa46ea5c228a43c09dabfda1e3fb43273c41))
+* remove MultiGeometry features from the map in removeFeature ([#1725](https://github.com/googlemaps/android-maps-utils/issues/1725)) ([4f796ca](https://github.com/googlemaps/android-maps-utils/commit/4f796cae53717f4c218a43f34c34cf77350fb0d9))
+* render legacy bridge point markers visible ([#1726](https://github.com/googlemaps/android-maps-utils/issues/1726)) ([fe802a4](https://github.com/googlemaps/android-maps-utils/commit/fe802a4e04b257ab7fde4462946a8fed34ec80b0))
+* stale QuadItem removal after ClusterItem position updates ([#1730](https://github.com/googlemaps/android-maps-utils/issues/1730)) ([c39ba07](https://github.com/googlemaps/android-maps-utils/commit/c39ba07c5229ec71a8ee077422b1c49bb58fa138))
+* **visual-testing:** add UiScrollable chip scroll support for robust chip selection ([#1735](https://github.com/googlemaps/android-maps-utils/issues/1735)) ([6104d93](https://github.com/googlemaps/android-maps-utils/commit/6104d938b1e21a731d370974a496bafbed67bf59))
+
 ## [5.0.0](https://github.com/googlemaps/android-maps-utils/compare/v4.5.2...v5.0.0) (2026-07-15)
 
 
