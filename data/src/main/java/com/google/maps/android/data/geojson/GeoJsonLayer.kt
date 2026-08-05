@@ -26,14 +26,37 @@ import com.google.maps.android.collections.PolygonManager
 import com.google.maps.android.collections.PolylineManager
 import com.google.maps.android.data.Geometry
 import com.google.maps.android.data.Layer
+import com.google.maps.android.data.MultiGeometry
+import com.google.maps.android.data.parser.geojson.GeoJsonFeature as ParserGeoJsonFeature
+import com.google.maps.android.data.parser.geojson.GeoJsonFeatureCollection as ParserGeoJsonFeatureCollection
+import com.google.maps.android.data.parser.geojson.GeoJsonGeometry as ParserGeoJsonGeometry
+import com.google.maps.android.data.parser.geojson.GeoJsonGeometryCollection as ParserGeoJsonGeometryCollection
+import com.google.maps.android.data.parser.geojson.GeoJsonLineString as ParserGeoJsonLineString
+import com.google.maps.android.data.parser.geojson.GeoJsonMultiLineString as ParserGeoJsonMultiLineString
+import com.google.maps.android.data.parser.geojson.GeoJsonMultiPoint as ParserGeoJsonMultiPoint
+import com.google.maps.android.data.parser.geojson.GeoJsonMultiPolygon as ParserGeoJsonMultiPolygon
 import com.google.maps.android.data.parser.geojson.GeoJsonParser
+import com.google.maps.android.data.parser.geojson.GeoJsonPoint as ParserGeoJsonPoint
+import com.google.maps.android.data.parser.geojson.GeoJsonPolygon as ParserGeoJsonPolygon
 import com.google.maps.android.data.renderer.UrlIconProvider
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
+import com.google.maps.android.data.renderer.model.Feature as ModelFeature
+import com.google.maps.android.data.renderer.model.Geometry as ModelGeometry
+import com.google.maps.android.data.renderer.model.LineString as ModelLineString
+import com.google.maps.android.data.renderer.model.LineStyle as ModelLineStyle
+import com.google.maps.android.data.renderer.model.MultiGeometry as ModelMultiGeometry
+import com.google.maps.android.data.renderer.model.Point as ModelPoint
+import com.google.maps.android.data.renderer.model.PointGeometry as ModelPointGeometry
+import com.google.maps.android.data.renderer.model.PointStyle as ModelPointStyle
+import com.google.maps.android.data.renderer.model.Polygon as ModelPolygon
+import com.google.maps.android.data.renderer.model.PolygonStyle as ModelPolygonStyle
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
+import java.util.IdentityHashMap
 import java.util.Observer
+
 
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class GeoJsonLayer : Layer {
@@ -41,8 +64,9 @@ public class GeoJsonLayer : Layer {
     private var mBoundingBox: LatLngBounds? = null
     private var mRenderer: MapViewRenderer? = null
     private var mIsLayerOnMap = false
-    private val mFeatureMap = HashMap<GeoJsonFeature, com.google.maps.android.data.renderer.model.Feature>()
-    private val mModelToLegacyFeatures = java.util.IdentityHashMap<com.google.maps.android.data.renderer.model.Feature, GeoJsonFeature>()
+    private val mFeatureMap = HashMap<GeoJsonFeature, ModelFeature>()
+    private val mModelToLegacyFeatures = IdentityHashMap<ModelFeature, GeoJsonFeature>()
+
     private var mFeatureClickListener: OnFeatureClickListener? = null
     private val mFeatureObserver = Observer { observable, _ ->
         if (observable is GeoJsonFeature) onFeatureChanged(observable)
@@ -88,7 +112,7 @@ public class GeoJsonLayer : Layer {
 
         // Map parsed object to our legacy GeoJsonFeature instances
         when (parsed) {
-            is com.google.maps.android.data.parser.geojson.GeoJsonFeatureCollection -> {
+            is ParserGeoJsonFeatureCollection -> {
                 parsed.features.forEach { feature ->
                     val legacyGeometry = feature.geometry?.let { toLegacyGeometry(it) }
                     val legacyProps = feature.properties?.filterValues { it != null }?.mapValues { it.value as String }
@@ -103,7 +127,7 @@ public class GeoJsonLayer : Layer {
                 }
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonFeature -> {
+            is ParserGeoJsonFeature -> {
                 val legacyGeometry = parsed.geometry?.let { toLegacyGeometry(it) }
                 val legacyProps = parsed.properties?.filterValues { it != null }?.mapValues { it.value as String }
                 val legacyFeature = GeoJsonFeature(legacyGeometry, parsed.id, legacyProps, null)
@@ -115,7 +139,7 @@ public class GeoJsonLayer : Layer {
                 mFeatures.add(legacyFeature)
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonGeometry -> {
+            is ParserGeoJsonGeometry -> {
                 val legacyGeometry = toLegacyGeometry(parsed)
                 val legacyFeature = GeoJsonFeature(legacyGeometry, null, null, null)
 
@@ -136,36 +160,37 @@ public class GeoJsonLayer : Layer {
         mRenderer = map?.let { MapViewRenderer(it, UrlIconProvider()) }
     }
 
-    private fun toLegacyGeometry(geometry: com.google.maps.android.data.parser.geojson.GeoJsonGeometry): Geometry =
+    private fun toLegacyGeometry(geometry: ParserGeoJsonGeometry): Geometry =
         when (geometry) {
-            is com.google.maps.android.data.parser.geojson.GeoJsonPoint -> {
+            is ParserGeoJsonPoint -> {
                 GeoJsonPoint(LatLng(geometry.coordinates.lat, geometry.coordinates.lng), geometry.coordinates.alt)
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonLineString -> {
+            is ParserGeoJsonLineString -> {
                 GeoJsonLineString(geometry.coordinates.map { LatLng(it.lat, it.lng) }, geometry.coordinates.mapNotNull { it.alt })
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonPolygon -> {
+            is ParserGeoJsonPolygon -> {
                 GeoJsonPolygon(geometry.coordinates.map { ring -> ring.map { LatLng(it.lat, it.lng) } })
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonMultiPoint -> {
+            is ParserGeoJsonMultiPoint -> {
                 GeoJsonMultiPoint(geometry.coordinates.map { GeoJsonPoint(LatLng(it.lat, it.lng), it.alt) })
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonMultiLineString -> {
+            is ParserGeoJsonMultiLineString -> {
                 GeoJsonMultiLineString(geometry.coordinates.map { GeoJsonLineString(it.map { c -> LatLng(c.lat, c.lng) }) })
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonMultiPolygon -> {
+            is ParserGeoJsonMultiPolygon -> {
                 GeoJsonMultiPolygon(geometry.coordinates.map { GeoJsonPolygon(it.map { ring -> ring.map { c -> LatLng(c.lat, c.lng) } }) })
             }
 
-            is com.google.maps.android.data.parser.geojson.GeoJsonGeometryCollection -> {
+            is ParserGeoJsonGeometryCollection -> {
                 GeoJsonGeometryCollection(geometry.geometries.map { toLegacyGeometry(it) })
             }
         }
+
 
     private fun calculateBoundingBox() {
         val boundsBuilder = LatLngBounds.builder()
@@ -193,7 +218,7 @@ public class GeoJsonLayer : Layer {
                     }
                 }
 
-                is com.google.maps.android.data.MultiGeometry -> {
+                is MultiGeometry -> {
                     includeMultiGeometryBounds(geometry, boundsBuilder)
                     hasPoints = true
                 }
@@ -205,7 +230,7 @@ public class GeoJsonLayer : Layer {
     }
 
     private fun includeMultiGeometryBounds(
-        multiGeometry: com.google.maps.android.data.MultiGeometry,
+        multiGeometry: MultiGeometry,
         builder: LatLngBounds.Builder,
     ) {
         multiGeometry.getGeometryObject().forEach { geom ->
@@ -213,10 +238,11 @@ public class GeoJsonLayer : Layer {
                 is GeoJsonPoint -> builder.include(geom.getCoordinates())
                 is GeoJsonLineString -> geom.getCoordinates().forEach { builder.include(it) }
                 is GeoJsonPolygon -> geom.getOuterBoundaryCoordinates().forEach { builder.include(it) }
-                is com.google.maps.android.data.MultiGeometry -> includeMultiGeometryBounds(geom, builder)
+                is MultiGeometry -> includeMultiGeometryBounds(geom, builder)
             }
         }
     }
+
 
     override fun getMap(): GoogleMap? = mGoogleMap
 
@@ -249,7 +275,7 @@ public class GeoJsonLayer : Layer {
         mIsLayerOnMap = false
     }
 
-    private fun toModelFeature(feature: GeoJsonFeature): com.google.maps.android.data.renderer.model.Feature {
+    private fun toModelFeature(feature: GeoJsonFeature): ModelFeature {
         val existing = mFeatureMap[feature]
         if (existing != null) return existing
 
@@ -259,9 +285,9 @@ public class GeoJsonLayer : Layer {
 
         val style =
             when (modelGeometry) {
-                is com.google.maps.android.data.renderer.model.PointGeometry -> {
+                is ModelPointGeometry -> {
                     val pointStyle = feature.pointStyle ?: mDefaultPointStyle
-                    com.google.maps.android.data.renderer.model.PointStyle(
+                    ModelPointStyle(
                         // The renderer derives the marker's alpha from the color's alpha channel, so encode the
                         // legacy style's alpha into an otherwise-black color (hue 0 keeps the default marker look).
                         // A transparent color here (e.g. 0) would render the marker invisible.
@@ -272,18 +298,18 @@ public class GeoJsonLayer : Layer {
                     )
                 }
 
-                is com.google.maps.android.data.renderer.model.LineString -> {
+                is ModelLineString -> {
                     val lineStyle = feature.lineStringStyle ?: mDefaultLineStringStyle
-                    com.google.maps.android.data.renderer.model.LineStyle(
+                    ModelLineStyle(
                         color = lineStyle.color,
                         width = lineStyle.getWidth(),
                         geodesic = lineStyle.isGeodesic(),
                     )
                 }
 
-                is com.google.maps.android.data.renderer.model.Polygon -> {
+                is ModelPolygon -> {
                     val polygonStyle = feature.polygonStyle ?: mDefaultPolygonStyle
-                    com.google.maps.android.data.renderer.model.PolygonStyle(
+                    ModelPolygonStyle(
                         fillColor = polygonStyle.fillColor,
                         strokeColor = polygonStyle.getStrokeColor(),
                         strokeWidth = polygonStyle.getStrokeWidth(),
@@ -291,10 +317,10 @@ public class GeoJsonLayer : Layer {
                     )
                 }
 
-                is com.google.maps.android.data.renderer.model.MultiGeometry -> {
+                is ModelMultiGeometry -> {
                     if (geometry is GeoJsonMultiPolygon) {
                         val polygonStyle = feature.polygonStyle ?: mDefaultPolygonStyle
-                        com.google.maps.android.data.renderer.model.PolygonStyle(
+                        ModelPolygonStyle(
                             fillColor = polygonStyle.fillColor,
                             strokeColor = polygonStyle.getStrokeColor(),
                             strokeWidth = polygonStyle.getStrokeWidth(),
@@ -308,19 +334,17 @@ public class GeoJsonLayer : Layer {
                 }
             }
 
-        val modelFeature =
-            com.google.maps.android.data.renderer.model
-                .Feature(modelGeometry, style, properties)
+        val modelFeature = ModelFeature(modelGeometry, style, properties)
         mFeatureMap[feature] = modelFeature
         mModelToLegacyFeatures[modelFeature] = feature
         return modelFeature
     }
 
-    private fun toModelGeometry(geometry: Geometry): com.google.maps.android.data.renderer.model.Geometry =
+    private fun toModelGeometry(geometry: Geometry): ModelGeometry =
         when (geometry) {
             is GeoJsonPoint -> {
-                com.google.maps.android.data.renderer.model.PointGeometry(
-                    com.google.maps.android.data.renderer.model.Point(
+                ModelPointGeometry(
+                    ModelPoint(
                         geometry.getCoordinates().latitude,
                         geometry.getCoordinates().longitude,
                         geometry.getAltitude(),
@@ -329,33 +353,31 @@ public class GeoJsonLayer : Layer {
             }
 
             is GeoJsonLineString -> {
-                com.google.maps.android.data.renderer.model.LineString(
+                ModelLineString(
                     geometry.getCoordinates().map {
-                        com.google.maps.android.data.renderer.model
-                            .Point(it.latitude, it.longitude)
+                        ModelPoint(it.latitude, it.longitude)
                     },
                 )
             }
 
             is GeoJsonPolygon -> {
-                com.google.maps.android.data.renderer.model.Polygon(
+                ModelPolygon(
                     geometry.getOuterBoundaryCoordinates().map {
-                        com.google.maps.android.data.renderer.model.Point(
+                        ModelPoint(
                             it.latitude,
                             it.longitude,
                         )
                     },
                     geometry.getInnerBoundaryCoordinates().map { inner ->
                         inner.map {
-                            com.google.maps.android.data.renderer.model
-                                .Point(it.latitude, it.longitude)
+                            ModelPoint(it.latitude, it.longitude)
                         }
                     },
                 )
             }
 
-            is com.google.maps.android.data.MultiGeometry -> {
-                com.google.maps.android.data.renderer.model.MultiGeometry(
+            is MultiGeometry -> {
+                ModelMultiGeometry(
                     geometry.getGeometryObject().map { toModelGeometry(it) },
                 )
             }
@@ -364,6 +386,7 @@ public class GeoJsonLayer : Layer {
                 throw IllegalArgumentException("Unknown geometry type")
             }
         }
+
 
     override val features: Iterable<GeoJsonFeature>
         get() = mFeatures
