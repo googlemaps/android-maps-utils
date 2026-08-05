@@ -31,16 +31,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v5
+      - name: Set up JDK 21
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
       - name: Create dummy secrets.properties
         run: echo "MAPS_API_KEY=dummy" > secrets.properties
@@ -50,10 +50,14 @@ jobs:
 
       - name: Jacoco Report to PR
         id: jacoco
-        uses: madrapps/jacoco-report@v1.7.2
+        uses: madrapps/jacoco-report@e51ce1f46f7f8b5331593f935e59cbaf44b84920 # v1.8.0
         with:
           paths: |
-            ${{ github.workspace }}/library/build/jacoco/jacoco.xml
+            ${{ github.workspace }}/library/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/clustering/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/data/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/heatmaps/build/jacoco/jacoco.xml,
+            ${{ github.workspace }}/ui/build/jacoco/jacoco.xml
           token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
           min-coverage-overall: 26
           min-coverage-changed-files: 60
