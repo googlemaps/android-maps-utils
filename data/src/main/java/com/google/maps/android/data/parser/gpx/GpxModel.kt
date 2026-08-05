@@ -56,6 +56,17 @@ data class Metadata(
     val time: String? = null,
 )
 
+/**
+ * Represents a GPX waypoint (`<wpt>`), point of interest, or named feature on a map.
+ *
+ * @property lat The latitude of the waypoint.
+ * @property lon The longitude of the waypoint.
+ * @property ele The elevation (in meters) of the waypoint, or null if unspecified.
+ * @property time The timestamp of the waypoint.
+ * @property name The name of the waypoint.
+ * @property desc A description of the waypoint.
+ * @property sym The symbol name or icon for the waypoint.
+ */
 @Serializable
 @XmlSerialName("wpt", namespace = GPX_NAMESPACE, prefix = "")
 data class Wpt(
@@ -79,8 +90,14 @@ data class Wpt(
     @XmlSerialName("sym", namespace = GPX_NAMESPACE, prefix = "")
     val sym: String? = null,
 ) {
+    /**
+     * Descriptive alias for [ele] (elevation in meters).
+     */
+    val elevation: Double?
+        get() = ele
+
     init {
-        require(lat.isFinite() && lon.isFinite() && (ele == null || ele.isFinite())) {
+        require(lat.isFinite() && lon.isFinite() && (elevation?.isFinite() ?: true)) {
             "GPX coordinate contains a non-finite value"
         }
     }
