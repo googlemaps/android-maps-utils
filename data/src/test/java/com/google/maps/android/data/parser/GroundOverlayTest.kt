@@ -46,4 +46,42 @@ class GroundOverlayTest {
         val style = feature.style as GroundOverlayStyle
         assertEquals("https://developers.google.com/kml/documentation/images/etna.jpg", style.iconUrl)
     }
+
+    @Test
+    fun testGroundOverlayWithLatLonQuadParsing() {
+        val kmlString =
+            """
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <GroundOverlay>
+                  <name>Quad Overlay</name>
+                  <Icon>
+                    <href>https://developers.google.com/kml/documentation/images/etna.jpg</href>
+                  </Icon>
+                  <LatLonQuad>
+                    <coordinates>
+                      -0.15,51.2 -0.10,51.2 -0.10,51.4 -0.15,51.4
+                    </coordinates>
+                  </LatLonQuad>
+                </GroundOverlay>
+              </Document>
+            </kml>
+            """.trimIndent()
+
+        val kml = KmlParser().parse(kmlString.byteInputStream())
+        val layer = KmlMapper.toLayer(kml)
+
+        assertEquals(1, layer.features.size)
+        val feature = layer.features[0]
+
+        assertTrue(feature.geometry is GroundOverlay)
+        val groundOverlay = feature.geometry as GroundOverlay
+
+        assertEquals(51.4, groundOverlay.north, 0.000001)
+        assertEquals(51.2, groundOverlay.south, 0.000001)
+        assertEquals(-0.10, groundOverlay.east, 0.000001)
+        assertEquals(-0.15, groundOverlay.west, 0.000001)
+        assertEquals(0.0f, groundOverlay.rotation, 0.001f)
+    }
 }
+
