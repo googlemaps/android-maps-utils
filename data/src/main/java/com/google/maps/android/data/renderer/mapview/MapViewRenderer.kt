@@ -109,12 +109,14 @@ class MapViewRenderer(
     }
 
     override fun addFeature(feature: Feature) {
+        removeFeature(feature)
         val mapObjects = mutableListOf<Any>()
         addGeometry(feature.geometry, feature, mapObjects)
         if (mapObjects.isNotEmpty()) {
             renderedFeatures[feature] = mapObjects
         }
     }
+
 
     /**
      * Renders a single [geometry] (recursing into [MultiGeometry] members) with [feature]'s style and
