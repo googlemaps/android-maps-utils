@@ -17,6 +17,8 @@ package com.google.maps.android.data.parser.kml
 
 import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.data.parser.kml.assertThat
+import nl.adaptivity.xmlutil.XmlException
+import nl.adaptivity.xmlutil.serialization.XmlParsingException
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -658,7 +660,7 @@ class KmlParserTest {
     @Test
     fun testAmuWrongNotExistLatitudeCoordinates() {
         val stream = File("src/test/resources/amu_wrong_not_exist_latitude_coordinates.kml").inputStream()
-        assertFailsWith<nl.adaptivity.xmlutil.serialization.XmlParsingException> {
+        assertFailsWith<XmlException> {
             parser.parseAsKml(stream)
         }
     }
@@ -672,7 +674,7 @@ class KmlParserTest {
             append("</Document></kml>")
         }
 
-        assertFailsWith<nl.adaptivity.xmlutil.serialization.XmlParsingException> {
+        assertFailsWith<XmlParsingException> {
             parser.parseAsKml(kml.byteInputStream())
         }
     }
@@ -687,7 +689,7 @@ class KmlParserTest {
             append("</Placemark></Document></kml>")
         }
 
-        assertFailsWith<nl.adaptivity.xmlutil.serialization.XmlParsingException> {
+        assertFailsWith<XmlParsingException> {
             parser.parseAsKml(kml.byteInputStream())
         }
     }

@@ -108,4 +108,11 @@ class GpxParserTest {
         assertTrue(trkFeature.geometry is LineString)
         assertEquals("Trk1", trkFeature.properties["name"])
     }
+
+    @Test
+    fun `test Wpt elevation property alias`() {
+        val wpt = Wpt(lat = 1.0, lon = 2.0, ele = 123.45)
+        assertEquals(123.45, wpt.ele)
+        assertEquals(123.45, wpt.elevation)
+    }
 }

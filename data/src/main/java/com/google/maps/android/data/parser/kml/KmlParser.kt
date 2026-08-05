@@ -29,8 +29,8 @@ class KmlParser {
         XML {
             defaultPolicy {
                 ignoreUnknownChildren()
-                isCollectingNSAttributes = true
             }
+            isCollectingNSAttributes = true
         }
 
     fun parseAsKml(inputStream: InputStream): Kml {

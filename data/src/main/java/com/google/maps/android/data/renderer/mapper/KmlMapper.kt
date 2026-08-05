@@ -251,7 +251,7 @@ private fun KmlStyle.toRendererStyle(geometry: Geometry): Style? =
         is PointGeometry -> {
             iconStyle?.let {
                 PointStyle(
-                    scale = it.scale,
+                    scale = it.scale.takeIf { s -> s.isFinite() && s >= 0f } ?: 1.0f,
                     iconUrl = it.icon?.href,
                     // TODO: Map other properties like heading, hotSpot if needed
                 )
@@ -262,7 +262,7 @@ private fun KmlStyle.toRendererStyle(geometry: Geometry): Style? =
             lineStyle?.let {
                 LineStyle(
                     color = convertKmlColor(it.color ?: 0xFF000000.toInt()),
-                    width = it.width ?: 1.0f,
+                    width = it.width?.takeIf { w -> w.isFinite() && w >= 0f } ?: 1.0f,
                 )
             }
         }
@@ -272,7 +272,7 @@ private fun KmlStyle.toRendererStyle(geometry: Geometry): Style? =
                 PolygonStyle(
                     fillColor = if (it.fill) convertKmlColor(it.color ?: 0x00000000) else 0x00000000,
                     strokeColor = convertKmlColor(lineStyle?.color ?: 0xFF000000.toInt()),
-                    strokeWidth = lineStyle?.width ?: 1.0f,
+                    strokeWidth = lineStyle?.width?.takeIf { w -> w.isFinite() && w >= 0f } ?: 1.0f,
                     // TODO: Handle outline property
                 )
             }

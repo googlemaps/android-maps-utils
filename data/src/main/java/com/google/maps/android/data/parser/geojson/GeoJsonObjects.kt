@@ -26,7 +26,13 @@ package com.google.maps.android.data.parser.geojson
  * @property lng The longitude of the coordinate.
  * @property alt The altitude of the coordinate, in meters. Optional.
  */
-data class Coordinates(val lat: Double, val lng: Double, val alt: Double? = null)
+data class Coordinates(val lat: Double, val lng: Double, val alt: Double? = null) {
+    init {
+        require(lat.isFinite() && lng.isFinite() && (alt == null || alt.isFinite())) {
+            "GeoJSON coordinate contains a non-finite value"
+        }
+    }
+}
 
 // Using a sealed interface for all GeoJSON objects
 sealed interface GeoJsonObject {

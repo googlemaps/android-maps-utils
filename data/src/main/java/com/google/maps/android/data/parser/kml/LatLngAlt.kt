@@ -22,4 +22,10 @@ data class LatLngAlt(
     val latitude: Double,
     val longitude: Double,
     val altitude: Double? = null,
-)
+) {
+    init {
+        require(latitude.isFinite() && longitude.isFinite() && (altitude == null || altitude.isFinite())) {
+            "KML coordinate contains a non-finite value"
+        }
+    }
+}

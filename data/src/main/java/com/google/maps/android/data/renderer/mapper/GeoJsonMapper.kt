@@ -95,7 +95,7 @@ object GeoJsonMapper {
                 geometry is LineString || (geometry is MultiGeometry && !geometry.isPolygonal()) -> {
                     // MultiGeometry could contain lines
                     val strokeColor = props["stroke"]?.let { parseColor(it) }
-                    val strokeWidth = props["stroke-width"]?.toFloatOrNull()
+                    val strokeWidth = props["stroke-width"]?.toFloatOrNull()?.takeIf { it.isFinite() && it >= 0f }
                     if (strokeColor != null || strokeWidth != null) {
                         LineStyle(
                             color = strokeColor ?: 0xFF000000.toInt(),
@@ -105,10 +105,10 @@ object GeoJsonMapper {
                 }
                 geometry is ModelPolygon || (geometry is MultiGeometry && geometry.isPolygonal()) -> {
                     val strokeColor = props["stroke"]?.let { parseColor(it) }
-                    val strokeWidth = props["stroke-width"]?.toFloatOrNull()
+                    val strokeWidth = props["stroke-width"]?.toFloatOrNull()?.takeIf { it.isFinite() && it >= 0f }
                     val fillColor = props["fill"]?.let { parseColor(it) }
-                    val fillOpacity = props["fill-opacity"]?.toFloatOrNull()
-                    val strokeOpacity = props["stroke-opacity"]?.toFloatOrNull()
+                    val fillOpacity = props["fill-opacity"]?.toFloatOrNull()?.takeIf { it.isFinite() && it in 0f..1f }
+                    val strokeOpacity = props["stroke-opacity"]?.toFloatOrNull()?.takeIf { it.isFinite() && it in 0f..1f }
 
                     val finalFillColor = if (fillColor != null && fillOpacity != null) {
                         applyOpacity(fillColor, fillOpacity)
