@@ -26,6 +26,16 @@ android-maps-utils = { group = "com.google.maps.android", name = "android-maps-u
 ```
 This aggregator dynamically and transitively pulls all individual submodules. Alternatively, you can choose to import only the specific submodules your app requires (e.g., `android-maps-utils-core` and `android-maps-utils-clustering`).
 
+> [!IMPORTANT]
+> **Google Navigation SDK Compatibility**: If your project integrates the Google Navigation SDK for Android, add an exclusion for `play-services-maps` to prevent duplicate class conflicts:
+> ```kotlin
+> configurations.all {
+>     if (name.contains("navigation", ignoreCase = true)) {
+>         exclude(group = "com.google.android.gms", module = "play-services-maps")
+>     }
+> }
+> ```
+
 ---
 
 ## 2. Kotlin Property Syntax Overrides (Breaking Changes for Kotlin Callers)
