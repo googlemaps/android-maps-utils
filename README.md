@@ -174,10 +174,15 @@ Full guides for using the utilities are published in
 
 All Kotlin extensions formerly provided by `android-maps-ktx` (`maps-ktx` and `maps-utils-ktx`) are now integrated into `android-maps-utils` (`v6.0.0-rc01+`) under canonical packages (`com.google.maps.android.*`, `com.google.maps.android.clustering.*`, etc.).
 
-#### 1. Coroutine Suspensions (`awaitMap()`, `awaitAnimateCamera()`)
+#### 1. Coroutine Suspensions (`awaitMapsSdkInitialized()`, `awaitMap()`, `awaitAnimateCamera()`)
 ```kotlin
+import com.google.android.gms.maps.MapsInitializer
+import com.google.maps.android.awaitMapsSdkInitialized
 import com.google.maps.android.awaitMap
 import com.google.maps.android.awaitAnimateCamera
+
+// Suspend until Maps SDK is initialized
+val renderer: MapsInitializer.Renderer = context.awaitMapsSdkInitialized(MapsInitializer.Renderer.LATEST)
 
 // Suspend until GoogleMap is ready on MapView / MapFragment
 val googleMap: GoogleMap = mapView.awaitMap()
