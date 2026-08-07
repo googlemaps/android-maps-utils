@@ -35,10 +35,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.addMarker
 import com.google.maps.android.awaitAnimateCamera
 import com.google.maps.android.awaitMap
+import com.google.maps.android.awaitMapsSdkInitialized
 import com.google.maps.android.ktx.addCircle as deprecatedBridgeAddCircle
 import com.google.maps.android.mapClickEvents
 import kotlinx.coroutines.launch
@@ -66,16 +68,19 @@ class KtxExtensionsDemoActivity : ComponentActivity() {
         val mapView = remember { MapView(context) }
 
         LaunchedEffect(mapView) {
+            // 1. Canonical awaitMapsSdkInitialized() coroutine suspension
+            context.awaitMapsSdkInitialized(MapsInitializer.Renderer.LATEST)
+
             mapView.onCreate(Bundle())
             mapView.onStart()
             mapView.onResume()
 
-            // 1. Canonical awaitMap() coroutine suspension
+            // 2. Canonical awaitMap() coroutine suspension
             val googleMap: GoogleMap = mapView.awaitMap()
 
             val sydney = LatLng(-33.852, 151.211)
             
-            // 2. Canonical addMarker builder DSL
+            // 3. Canonical addMarker builder DSL
             googleMap.addMarker {
                 position(sydney)
                 title("Sydney Opera House (Canonical Builder)")
