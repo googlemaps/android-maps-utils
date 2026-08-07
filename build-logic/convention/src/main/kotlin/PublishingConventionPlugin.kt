@@ -83,7 +83,19 @@ class PublishingConventionPlugin : Plugin<Project> {
             )
 
             publishToMavenCentral()
-            signAllPublications()
+
+            // Only enable GPG publication signing when signing credentials are present.
+            // Why: When signAllPublications() is invoked unconditionally, the Maven Publish plugin
+            // registers GPG signature files (.asc) as mandatory artifacts of the publication.
+            // On local developer machines without GPG keys configured, running tasks such as
+            // './gradlew publishToMavenLocal' fails because the .asc files cannot be generated.
+            // Making signing conditional allows local publishing to succeed without credentials
+            // while ensuring all CI and release pipeline builds are properly signed.
+            val isSigningConfigured = !providers.gradleProperty("signing.keyId").getOrElse("").isEmpty() ||
+                !providers.gradleProperty("signing.secretKeyRingFile").getOrElse("").isEmpty()
+            if (isSigningConfigured) {
+                signAllPublications()
+            }
 
             val artifactIdName = when (project.name) {
                 "maps-utils" -> "android-maps-utils"
