@@ -32,6 +32,7 @@ compose-bom = "2026.06.01"
 # --- Google Services (Maps) ---
 # Versions for Google Play Services libraries essential for map functionality.
 play-services-maps = "20.0.0"
+play-services-location = "21.3.0"
 navigation-sdk = "7.8.0"
 desugar-jdk-libs = "2.1.5"
 
@@ -43,6 +44,7 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 kxml2 = "2.3.0"
 mockito-core = "5.23.0"
+mockito-kotlin = "2.2.0"
 mockk = "1.14.11"
 robolectric = "4.16.1"
 truth = "1.4.5"
@@ -99,6 +101,7 @@ material-icons-core = { group = "androidx.compose.material", name = "material-ic
 # --- Google Services (Maps) ---
 # Key libraries for integrating Google Maps and related services.
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "play-services-maps" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 navigation-sdk = { module = "com.google.android.libraries.navigation:navigation", version.ref = "navigation-sdk" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar-jdk-libs" }
 
@@ -109,6 +112,7 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 junit = { module = "junit:junit", version.ref = "junit" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
+mockito-kotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockito-kotlin" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }

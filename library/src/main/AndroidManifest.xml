@@ -28,6 +28,9 @@
             <meta-data
                 android:name="com.google.maps.android.utils.attribution.AttributionIdInitializer"
                 android:value="androidx.startup" />
+            <meta-data
+                android:name="com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer"
+                android:value="androidx.startup" />
         </provider>
     </application>
 </manifest>
