@@ -40,8 +40,8 @@ jobs:
 
       - name: Configure git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "googlemaps-bot"
+          git config user.email "googlemaps-bot@users.noreply.github.com"
 
       - name: Update version files
         env:
