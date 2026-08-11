@@ -509,7 +509,7 @@ public class KmlLayer : Layer {
     override val features: Iterable<KmlPlacemark>
         get() = mPlacemarks
 
-    public fun isLayerOnMap(): Boolean = mIsLayerOnMap
+    override fun isLayerOnMap(): Boolean = mIsLayerOnMap
 
     override fun setOnFeatureClickListener(listener: OnFeatureClickListener) {
         mFeatureClickListener = listener
