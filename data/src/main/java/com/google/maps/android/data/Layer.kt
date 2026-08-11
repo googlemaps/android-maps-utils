@@ -41,6 +41,8 @@ public abstract class Layer {
 
     public abstract fun removeLayerFromMap()
 
+    public abstract fun isLayerOnMap(): Boolean
+
     public fun interface OnFeatureClickListener {
         public fun onFeatureClick(feature: Feature)
     }

@@ -457,7 +457,7 @@ public class GeoJsonLayer : Layer {
 
     public fun getBoundingBox(): LatLngBounds? = mBoundingBox
 
-    public fun isLayerOnMap(): Boolean = mIsLayerOnMap
+    override fun isLayerOnMap(): Boolean = mIsLayerOnMap
 
     override fun toString(): String =
         StringBuilder("Collection{")
