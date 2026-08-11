@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/googlemaps/android-maps-utils/compare/v5.1.0...v5.1.1) (2026-08-11)
+
+
+### Bug Fixes
+
+* restore isLayerOnMap() as abstract member of Layer ([#1748](https://github.com/googlemaps/android-maps-utils/issues/1748)) ([ddc283c](https://github.com/googlemaps/android-maps-utils/commit/ddc283c52ef239196de65acade2a40ae0b72bf46)), closes [#1746](https://github.com/googlemaps/android-maps-utils/issues/1746)
+
 ## [5.1.0](https://github.com/googlemaps/android-maps-utils/compare/v5.0.0...v5.1.0) (2026-08-05)
 
 
