@@ -60,7 +60,7 @@ dokka-gradle-plugin = "2.2.0"
 gradle = "9.3.1"
 gradleMavenPublishPlugin = "0.37.0"
 secrets-gradle-plugin = "2.0.1"
-serialization = "1.0.1"
+serialization = "1.0.2"
 
 
 [libraries]
