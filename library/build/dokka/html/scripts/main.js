@@ -1,3 +1,19 @@
+/**
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (()=>{var e={8527:e=>{e.exports='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M6.16 14.41L1.37 9.66l1.26-1.28 3.24 3.21L13.23.5l1.5 1-8.57 12.91z"/></svg>'},5570:e=>{e.exports='<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path d="M5 7.99L1.5 4.5l1-1L5 6.01 7.5 3.5l.99 1L5 7.99z"/></svg>'},107:e=>{e.exports='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M13.63 3.65l-1.28-1.27L8 6.73 3.64 2.38 2.37 3.65l4.35 4.36-4.34 4.34 1.27 1.28L8 9.28l4.35 4.36 1.28-1.28-4.36-4.35 4.36-4.36z"/></svg>'},7224:e=>{e.exports='<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path d="M1 4.1h8v1.8H1z"/></svg>'},538:e=>{e.exports='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.64 13.36l-4.51-4.51A4.94 4.94 0 0 0 11 6a5 5 0 1 0-2.17 4.12l4.51 4.51zM2.42 6A3.6 3.6 0 1 1 6 9.61 3.6 3.6 0 0 1 2.42 6z"/></svg>'},1924:(e,n,t)=>{"use strict";var r=t(210),o=t(5559),i=o(r("String.prototype.indexOf"));e.exports=function(e,n){var t=r(e,!!n);return"function"==typeof t&&i(e,".prototype.")>-1?o(t):t}},5559:(e,n,t)=>{"use strict";var r=t(8612),o=t(210),i=o("%Function.prototype.apply%"),a=o("%Function.prototype.call%"),l=o("%Reflect.apply%",!0)||r.call(a,i),c=o("%Object.getOwnPropertyDescriptor%",!0),u=o("%Object.defineProperty%",!0),s=o("%Math.max%");if(u)try{u({},"a",{value:1})}catch(e){u=null}e.exports=function(e){var n=l(r,a,arguments);if(c&&u){var t=c(n,"length");t.configurable&&u(n,"length",{value:1+s(0,e.length-(arguments.length-1))})}return n};var f=function(){return l(r,i,arguments)};u?u(e.exports,"apply",{value:f}):e.exports.apply=f},4184:(e,n)=>{var t;
 /*!
   Copyright (c) 2018 Jed Watson.
