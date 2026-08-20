@@ -27,8 +27,6 @@ information on using pull requests.
 This project follows
 [Google's Open Source Community Guidelines](https://opensource.google/conduct/).
 
-## Using AI to Contribute
+## AI-Assisted Contributions
 
-This repository provides an official Gemini Skill to help AI agents navigate and contribute to the project effectively. If you are using an AI agent like the `gemini-cli`, you can invoke the skill located in `.gemini/skills/android-maps-utils` to learn how to interact with the codebase.
-
-Additionally, the `.geminiignore` file prevents AI tools from consuming large or irrelevant files to preserve context limits. You can also reference the generic `llm-integration-prompt.md` to feed into web-based LLMs for general assistance.
+We welcome contributions generated or assisted by AI/LLM tools, provided you adhere to our project guidelines and maintain full ownership of your work. As the submitting author, you assume complete responsibility and accountability for all submitted code, documentation, tests, and pull request descriptions. Please thoroughly review, test, and validate all generated output—ensuring it follows idiomatic Kotlin and Android architectural standards—before submitting. Contributions must comply with the standard Google Contributor License Agreement (CLA), AI tools must not be listed as authors or co-authors on commits or PRs, and running automated agents to submit mass issues, scripted linters, or unsolicited, bot-generated pull requests without prior human discussion is strictly prohibited.
