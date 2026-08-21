@@ -59,7 +59,6 @@ import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.abs
 import kotlin.math.min
@@ -268,17 +267,19 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
             }
             val projection = mMap.projection
 
-            var renderTask: RenderTask?
-            synchronized(this) {
-                renderTask = mNextClusters
+            val renderTask = synchronized(this) {
+                val task = mNextClusters
                 mNextClusters = null
                 mViewModificationInProgress = true
+                task
             }
 
-            renderTask!!.setCallback { sendEmptyMessage(TASK_FINISHED) }
-            renderTask!!.setProjection(projection)
-            renderTask!!.setMapZoom(mMap.cameraPosition.zoom)
-            mExecutor.execute(renderTask)
+            renderTask?.let {
+                it.setCallback { sendEmptyMessage(TASK_FINISHED) }
+                it.setProjection(projection)
+                it.setMapZoom(mMap.cameraPosition.zoom)
+                mExecutor.execute(it)
+            }
         }
 
         fun queue(clusters: Set<Cluster<T>>) {
@@ -472,7 +473,7 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
                     val closest = findClosestCluster(newClustersOnScreen, point)
                     if (closest != null) {
                         val animateTo = mSphericalMercatorProjection!!.toLatLng(closest)
-                        markerModifier.animateThenRemove(marker, marker.position, animateTo!!)
+                        markerModifier.animateThenRemove(marker, marker.position, animateTo)
                     } else {
                         markerModifier.remove(true, marker.marker)
                     }
@@ -1013,7 +1014,7 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
             if (!shouldRenderAsCluster(cluster)) {
                 for (item in cluster.items) {
                     var marker = mMarkerCache[item]
-                    var markerWithPosition: MarkerWithPosition
+                    val markerWithPosition: MarkerWithPosition
                     if (marker == null) {
                         val markerOptions = MarkerOptions()
                         if (animateFrom != null) {
@@ -1042,9 +1043,9 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
             }
 
             var marker = mClusterMarkerCache[cluster]
-            var markerWithPosition: MarkerWithPosition
+            val markerWithPosition: MarkerWithPosition
             if (marker == null) {
-                val markerOptions = MarkerOptions().position(if (animateFrom == null) cluster.position else animateFrom)
+                val markerOptions = MarkerOptions().position(animateFrom ?: cluster.position)
                 onBeforeClusterRendered(cluster, markerOptions)
                 marker = mClusterManager.clusterMarkerCollection.addMarker(markerOptions)
                 mClusterMarkerCache.put(cluster, marker)

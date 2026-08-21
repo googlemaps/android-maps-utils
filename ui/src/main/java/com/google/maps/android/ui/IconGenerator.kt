@@ -26,6 +26,8 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.widget.TextViewCompat
 
 /**
  * IconGenerator generates icons that contain text (or custom content) within an info
@@ -168,9 +170,7 @@ class IconGenerator(private val context: Context) {
      * @param resid the identifier of the resource.
      */
     fun setTextAppearance(context: Context, resid: Int) {
-        if (textView != null) {
-            textView!!.setTextAppearance(context, resid)
-        }
+        textView?.let { TextViewCompat.setTextAppearance(it, resid) }
     }
 
     /**
@@ -206,9 +206,8 @@ class IconGenerator(private val context: Context) {
      *
      * @param background the Drawable to use as the background, or null to remove the background.
      */
-    // View#setBackgroundDrawable is compatible with pre-API level 16 (Jelly Bean).
     fun setBackground(background: Drawable?) {
-        container.setBackgroundDrawable(background)
+        ViewCompat.setBackground(container, background)
 
         // Force setting of padding.
         // setBackgroundDrawable does not call setPadding if the background has 0 padding.

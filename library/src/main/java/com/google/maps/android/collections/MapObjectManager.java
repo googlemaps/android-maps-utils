@@ -34,7 +34,7 @@ import java.util.Set;
  * <p>All object operations (adds and removes) should occur via its collection class. That is, don't
  * add an object via a collection, then remove it via Object.remove()
  */
-abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
+abstract class MapObjectManager<O, C extends MapObjectManager<O, C>.Collection> {
   protected final GoogleMap mMap;
 
   private final Map<String, C> mNamedCollections = new HashMap<>();
@@ -97,6 +97,7 @@ abstract class MapObjectManager<O, C extends MapObjectManager.Collection> {
 
     public Collection() {}
 
+    @SuppressWarnings("unchecked")
     protected void add(O object) {
       mObjects.add(object);
       mAllObjects.put(object, (C) this);

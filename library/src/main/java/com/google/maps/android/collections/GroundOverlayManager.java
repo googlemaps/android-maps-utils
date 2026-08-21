@@ -60,7 +60,9 @@ public class GroundOverlayManager
     }
   }
 
-  public class Collection extends MapObjectManager.Collection {
+  /** A collection of {@link GroundOverlay}s on the map with its own set of listeners. */
+  public class Collection
+      extends MapObjectManager<GroundOverlay, GroundOverlayManager.Collection>.Collection {
     private GoogleMap.OnGroundOverlayClickListener mGroundOverlayClickListener;
 
     public Collection() {}

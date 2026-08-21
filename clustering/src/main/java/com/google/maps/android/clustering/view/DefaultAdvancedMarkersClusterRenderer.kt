@@ -60,7 +60,6 @@ import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.abs
 import kotlin.math.min
@@ -269,17 +268,19 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
             }
             val projection = mMap.projection
 
-            var renderTask: RenderTask?
-            synchronized(this) {
-                renderTask = mNextClusters
+            val renderTask = synchronized(this) {
+                val task = mNextClusters
                 mNextClusters = null
                 mViewModificationInProgress = true
+                task
             }
 
-            renderTask!!.setCallback { sendEmptyMessage(TASK_FINISHED) }
-            renderTask!!.setProjection(projection)
-            renderTask!!.setMapZoom(mMap.cameraPosition.zoom)
-            mExecutor.execute(renderTask)
+            renderTask?.let {
+                it.setCallback { sendEmptyMessage(TASK_FINISHED) }
+                it.setProjection(projection)
+                it.setMapZoom(mMap.cameraPosition.zoom)
+                mExecutor.execute(it)
+            }
         }
 
         fun queue(clusters: Set<Cluster<T>>) {
@@ -473,7 +474,7 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
                     val closest = findClosestCluster(newClustersOnScreen, point)
                     if (closest != null) {
                         val animateTo = mSphericalMercatorProjection!!.toLatLng(closest)
-                        markerModifier.animateThenRemove(marker, marker.position, animateTo!!)
+                        markerModifier.animateThenRemove(marker, marker.position, animateTo)
                     } else {
                         markerModifier.remove(true, marker.marker)
                     }
@@ -1004,7 +1005,7 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
             if (!shouldRenderAsCluster(cluster)) {
                 for (item in cluster.items) {
                     var marker = mMarkerCache[item] as AdvancedMarker?
-                    var markerWithPosition: MarkerWithPosition
+                    val markerWithPosition: MarkerWithPosition
                     if (marker == null) {
                         val advancedMarkerOptions = AdvancedMarkerOptions()
                         if (animateFrom != null) {
@@ -1016,9 +1017,10 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
                             }
                         }
                         onBeforeClusterItemRendered(item, advancedMarkerOptions)
-                        marker = mClusterManager.markerCollection.addMarker(advancedMarkerOptions) as AdvancedMarker?
-                        markerWithPosition = MarkerWithPosition(marker!!)
-                        mMarkerCache.put(item, marker!!)
+                        val newMarker = mClusterManager.markerCollection.addMarker(advancedMarkerOptions) as AdvancedMarker
+                        marker = newMarker
+                        markerWithPosition = MarkerWithPosition(newMarker)
+                        mMarkerCache.put(item, newMarker)
                         if (animateFrom != null) {
                             markerModifier.animate(markerWithPosition, animateFrom, item.position)
                         }
@@ -1033,14 +1035,14 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
             }
 
             var marker = mClusterMarkerCache[cluster] as AdvancedMarker?
-            var markerWithPosition: MarkerWithPosition
+            val markerWithPosition: MarkerWithPosition
             if (marker == null) {
-                val advancedMarkerOptions = AdvancedMarkerOptions().position(if (animateFrom == null) cluster.position else animateFrom)
+                val advancedMarkerOptions = AdvancedMarkerOptions().position(animateFrom ?: cluster.position)
                 onBeforeClusterRendered(cluster, advancedMarkerOptions)
-                val `object` = mClusterManager.clusterMarkerCollection.addMarker(advancedMarkerOptions)
-                marker = `object` as AdvancedMarker?
-                mClusterMarkerCache.put(cluster, marker!!)
-                markerWithPosition = MarkerWithPosition(marker)
+                val newMarker = mClusterManager.clusterMarkerCollection.addMarker(advancedMarkerOptions) as AdvancedMarker
+                marker = newMarker
+                mClusterMarkerCache.put(cluster, newMarker)
+                markerWithPosition = MarkerWithPosition(newMarker)
                 if (animateFrom != null) {
                     markerModifier.animate(markerWithPosition, animateFrom, cluster.position)
                 }
@@ -1048,7 +1050,7 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
                 markerWithPosition = MarkerWithPosition(marker)
                 onClusterUpdated(cluster, marker)
             }
-            onClusterRendered(cluster, marker!!)
+            onClusterRendered(cluster, marker)
             newMarkers.add(markerWithPosition)
         }
     }

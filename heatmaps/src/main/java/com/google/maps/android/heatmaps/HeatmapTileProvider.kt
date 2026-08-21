@@ -75,11 +75,11 @@ class HeatmapTileProvider private constructor(
          * @param latLngs A collection of LatLngs.
          * @return This builder.
          */
-        fun data(latLngs: Collection<LatLng>): Builder =
-            apply {
-                this.weightedData(wrapData(latLngs))
-                require(this.weightedData?.isNotEmpty() == true) { "No input points." }
-            }
+        fun data(latLngs: Collection<LatLng>): Builder {
+            weightedData(wrapData(latLngs))
+            require(weightedData?.isNotEmpty() == true) { "No input points." }
+            return this
+        }
 
         /**
          * Specifies the dataset to use for the heatmap, accepting WeightedLatLngs.
@@ -87,11 +87,11 @@ class HeatmapTileProvider private constructor(
          * @param weightedData A collection of WeightedLatLngs.
          * @return This builder.
          */
-        fun weightedData(weightedData: Collection<WeightedLatLng>): Builder =
-            apply {
-                this.weightedData = weightedData
-                require(this.weightedData?.isNotEmpty() == true) { "No input points." }
-            }
+        fun weightedData(weightedData: Collection<WeightedLatLng>): Builder {
+            this.weightedData = weightedData
+            require(this.weightedData?.isNotEmpty() == true) { "No input points." }
+            return this
+        }
 
         /**
          * Specifies the radius of the heatmap blur, in pixels.
@@ -99,11 +99,11 @@ class HeatmapTileProvider private constructor(
          * @param radius The radius. Must be between 10 and 50, inclusive.
          * @return This builder.
          */
-        fun radius(radius: Int): Builder =
-            apply {
-                this.radius = radius
-                require(this.radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
-            }
+        fun radius(radius: Int): Builder {
+            this.radius = radius
+            require(this.radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
+            return this
+        }
 
         /**
          * Specifies the color gradient of the heatmap.
@@ -111,10 +111,10 @@ class HeatmapTileProvider private constructor(
          * @param gradient The gradient to use.
          * @return This builder.
          */
-        fun gradient(gradient: Gradient): Builder =
-            apply {
-                this.gradient = gradient
-            }
+        fun gradient(gradient: Gradient): Builder {
+            this.gradient = gradient
+            return this
+        }
 
         /**
          * Specifies the opacity of the heatmap layer.
@@ -122,11 +122,11 @@ class HeatmapTileProvider private constructor(
          * @param opacity The opacity. Must be between 0 and 1, inclusive.
          * @return This builder.
          */
-        fun opacity(opacity: Double): Builder =
-            apply {
-                this.opacity = opacity
-                require(this.opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
-            }
+        fun opacity(opacity: Double): Builder {
+            this.opacity = opacity
+            require(this.opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
+            return this
+        }
 
         /**
          * Specifies a custom maximum intensity value for the heatmap.
@@ -134,10 +134,10 @@ class HeatmapTileProvider private constructor(
          * @param intensity The maximum intensity.
          * @return This builder.
          */
-        fun maxIntensity(intensity: Double): Builder =
-            apply {
-                this.intensity = intensity
-            }
+        fun maxIntensity(intensity: Double): Builder {
+            this.intensity = intensity
+            return this
+        }
 
         /**
          * Creates a new HeatmapTileProvider instance from the builder's properties.

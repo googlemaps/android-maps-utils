@@ -63,7 +63,6 @@ import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.abs
@@ -325,17 +324,19 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
             }
             val projection = mMap.projection
 
-            var renderTask: RenderTask?
-            synchronized(this) {
-                renderTask = mNextClusters
+            val renderTask = synchronized(this) {
+                val task = mNextClusters
                 mNextClusters = null
                 mViewModificationInProgress = true
+                task
             }
 
-            renderTask!!.setCallback { sendEmptyMessage(TASK_FINISHED) }
-            renderTask!!.setProjection(projection)
-            renderTask!!.setMapZoom(mMap.cameraPosition.zoom)
-            mExecutor.execute(renderTask)
+            renderTask?.let {
+                it.setCallback { sendEmptyMessage(TASK_FINISHED) }
+                it.setProjection(projection)
+                it.setMapZoom(mMap.cameraPosition.zoom)
+                mExecutor.execute(it)
+            }
         }
 
         fun queue(clusters: Set<Cluster<T>>) {
@@ -475,14 +476,15 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
             }
 
             for (marker in markersToRemove) {
-                val onScreen = marker.position?.let { visibleBounds.contains(it) } ?: false
+                val position = marker.position
+                val onScreen = position?.let { visibleBounds.contains(it) } ?: false
 
                 if (onScreen && mAnimate) {
-                    val point = mSphericalMercatorProjection!!.toPoint(marker.position!!)
+                    val point = mSphericalMercatorProjection!!.toPoint(position)
                     val closest = findClosestCluster(newClustersOnScreen, point)
                     if (closest != null) {
                         val animateTo = mSphericalMercatorProjection!!.toLatLng(closest)
-                        markerModifier.animateThenRemove(marker, marker.position!!, animateTo!!)
+                        markerModifier.animateThenRemove(marker, position, animateTo)
                         RendererLogger.d("ClusterRenderer", "Animating then removing marker at position: " + marker.position)
                     } else if (mClusterMarkerCache.mCache.keys
                             .iterator()
@@ -1143,7 +1145,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
             val markerWithPosition: MarkerWithPosition<T>
             if (marker == null) {
                 RendererLogger.d("ClusterRenderer", "Creating new cluster marker")
-                val markerOptions = MarkerOptions().position(if (animateFrom == null) cluster.position else animateFrom)
+                val markerOptions = MarkerOptions().position(animateFrom ?: cluster.position)
                 onBeforeClusterRendered(cluster, markerOptions)
                 marker = mClusterManager.clusterMarkerCollection.addMarker(markerOptions)
                 mClusterMarkerCache.put(cluster, marker)
