@@ -18,6 +18,8 @@ package com.google.maps.android.data.renderer
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.LruCache
+import com.google.maps.android.data.kml.DefaultKmlUrlSanitizer
+import com.google.maps.android.data.kml.KmlUrlSanitizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -35,6 +37,11 @@ import java.util.concurrent.ConcurrentHashMap
  */
 open class UrlIconProvider(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    // Icon/overlay hrefs originate from the (frequently untrusted) KML/GeoJSON document. The
+    // sanitizer is applied before every fetch to prevent SSRF; the secure default blocks
+    // non-http(s) schemes and hosts resolving to loopback/link-local/private ranges. Pass a
+    // custom implementation to widen/narrow the policy, or `null` to disable (not recommended).
+    private val urlSanitizer: KmlUrlSanitizer? = DefaultKmlUrlSanitizer(),
 ) : IconProvider {
     private val memoryCache: LruCache<String, Bitmap>
     private val inFlight = ConcurrentHashMap<String, Deferred<Bitmap?>>()
@@ -93,8 +100,18 @@ open class UrlIconProvider(
     protected open suspend fun loadBitmapFromUrl(urlString: String): Bitmap? =
         withContext(dispatcher) {
             try {
-                val url = URL(urlString)
+                // Validate the (untrusted) href before issuing any request. `null` => blocked.
+                val safeUrl =
+                    if (urlSanitizer != null) {
+                        urlSanitizer.sanitizeUrl(urlString) ?: return@withContext null
+                    } else {
+                        urlString
+                    }
+                val url = URL(safeUrl)
                 val connection = url.openConnection() as HttpURLConnection
+                // Do not auto-follow redirects: a 30x to an internal host would otherwise bypass
+                // the sanitizer's host check (redirect-based SSRF).
+                connection.instanceFollowRedirects = false
                 connection.doInput = true
                 connection.connect()
                 val input = connection.inputStream
