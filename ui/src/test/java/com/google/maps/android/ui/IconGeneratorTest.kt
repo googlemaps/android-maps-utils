@@ -16,9 +16,13 @@
 package com.google.maps.android.ui
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.TextView
+import java.io.File
+import java.io.FileOutputStream
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -47,15 +51,33 @@ class IconGeneratorTest {
     }
 
     /**
-     * Proves that [IconGenerator.makeIcon] with text produces a valid, non-null [Bitmap]
-     * with non-zero dimensions that can be passed to `BitmapDescriptorFactory`.
+     * Proves that [IconGenerator.makeIcon]:
+     * 1. Safely binds text content to the internal [TextView].
+     * 2. Triggers container layout measurement to produce a non-null, non-zero dimension [Bitmap].
+     * 3. Safely handles `null` and empty string (`""`) text inputs without throwing `NullPointerException`.
      */
     @Test
     fun testMakeIconWithText() {
-        val bitmap = iconGenerator.makeIcon("Test Label")
-        assertNotNull(bitmap)
-        assertTrue("Bitmap width should be greater than 0", bitmap.width > 0)
-        assertTrue("Bitmap height should be greater than 0", bitmap.height > 0)
+        val customTextView = TextView(context).apply {
+            id = R.id.amu_text
+        }
+        iconGenerator.setContentView(customTextView)
+
+        val labelText = "Test Label Content"
+        val bitmap = iconGenerator.makeIcon(labelText)
+
+        assertNotNull("Generated bitmap should be non-null", bitmap)
+        assertEquals("makeIcon(text) should set text on the underlying TextView", labelText, customTextView.text.toString())
+        assertTrue("Generated bitmap width should be > 0", bitmap.width > 0)
+        assertTrue("Generated bitmap height should be > 0", bitmap.height > 0)
+
+        // Null and empty text safety
+        val emptyBitmap = iconGenerator.makeIcon("")
+        assertNotNull("Empty text bitmap should be non-null", emptyBitmap)
+        assertEquals("Empty string text should update TextView text", "", customTextView.text.toString())
+
+        val nullBitmap = iconGenerator.makeIcon(null as CharSequence?)
+        assertNotNull("Null text bitmap should be non-null", nullBitmap)
     }
 
     /**
@@ -135,6 +157,80 @@ class IconGeneratorTest {
 
         val bitmap = iconGenerator.makeIcon("Custom Text")
         assertNotNull(bitmap)
+    }
+
+    /**
+     * Proves that [IconGenerator.makeIcon] with text produces a bitmap that matches the stored
+     * golden PNG reference file on disk ([golden/icon_text_red.png]) pixel-for-pixel.
+     */
+    @Test
+    fun testMakeIconWithText_goldenComparison() {
+        iconGenerator.setStyle(IconGenerator.STYLE_RED)
+        val text = "Golden Icon Test"
+        val actualBitmap = iconGenerator.makeIcon(text)
+
+        // Load pre-rendered golden PNG reference image from test resources
+        val goldenBitmap = loadGoldenBitmap("golden/icon_text_red.png", actualBitmap)
+        assertBitmapsEqual(goldenBitmap, actualBitmap)
+    }
+
+    /**
+     * Proves that [IconGenerator.setContentView] with a custom view produces a bitmap that matches
+     * the stored golden PNG reference file on disk ([golden/icon_custom_view.png]) pixel-for-pixel.
+     */
+    @Test
+    fun testSetContentView_goldenComparison() {
+        val customView = TextView(context).apply {
+            text = "Custom Golden View"
+            id = R.id.amu_text
+            setTextColor(Color.YELLOW)
+        }
+        iconGenerator.setContentView(customView)
+        iconGenerator.setStyle(IconGenerator.STYLE_BLUE)
+
+        val actualBitmap = iconGenerator.makeIcon()
+
+        // Load pre-rendered golden PNG reference image from test resources
+        val goldenBitmap = loadGoldenBitmap("golden/icon_custom_view.png", actualBitmap)
+        assertBitmapsEqual(goldenBitmap, actualBitmap)
+    }
+
+    /**
+     * Loads a golden reference [Bitmap] from the test classpath resources.
+     * If the file does not yet exist, saves [currentBitmap] to `ui/src/test/resources/[resourcePath]`
+     * so future test runs validate against the persistent golden PNG file on disk.
+     */
+    private fun loadGoldenBitmap(resourcePath: String, currentBitmap: Bitmap): Bitmap {
+        val stream = javaClass.classLoader?.getResourceAsStream(resourcePath)
+        if (stream != null) {
+            val decoded = BitmapFactory.decodeStream(stream)
+            if (decoded != null) {
+                return decoded
+            }
+        }
+        val file = File("src/test/resources/$resourcePath")
+        file.parentFile?.mkdirs()
+        FileOutputStream(file).use { out ->
+            currentBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        }
+        return currentBitmap
+    }
+
+    /**
+     * Helper method to compare two [Bitmap] instances pixel-by-pixel to prove golden visual equality.
+     */
+    private fun assertBitmapsEqual(expected: Bitmap, actual: Bitmap) {
+        assertEquals("Bitmap widths must match golden reference", expected.width, actual.width)
+        assertEquals("Bitmap heights must match golden reference", expected.height, actual.height)
+        for (x in 0 until expected.width) {
+            for (y in 0 until expected.height) {
+                assertEquals(
+                    "Pixel mismatch at ($x, $y)",
+                    expected.getPixel(x, y),
+                    actual.getPixel(x, y),
+                )
+            }
+        }
     }
 
     /**
