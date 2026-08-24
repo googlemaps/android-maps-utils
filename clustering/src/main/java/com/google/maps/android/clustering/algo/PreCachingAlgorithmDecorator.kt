@@ -22,6 +22,7 @@ import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.withLock
 
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
@@ -107,24 +108,18 @@ class PreCachingAlgorithmDecorator<T : ClusterItem>(
         }
 
     private fun getClustersInternal(discreteZoom: Int): Set<Cluster<T>> {
-        var results: Set<Cluster<T>>?
-        mCacheLock.readLock().lock()
-        results = mCache.get(discreteZoom)
-        mCacheLock.readLock().unlock()
+        val cached = mCacheLock.readLock().withLock {
+            mCache.get(discreteZoom)
+        }
+        if (cached != null) {
+            return cached
+        }
 
-        if (results == null) {
-            mCacheLock.writeLock().lock()
-            try {
-                results = mCache.get(discreteZoom)
-                if (results == null) {
-                    results = algorithm.getClusters(discreteZoom.toFloat())
-                    mCache.put(discreteZoom, results)
-                }
-            } finally {
-                mCacheLock.writeLock().unlock()
+        return mCacheLock.writeLock().withLock {
+            mCache.get(discreteZoom) ?: algorithm.getClusters(discreteZoom.toFloat()).also {
+                mCache.put(discreteZoom, it)
             }
         }
-        return results!!
     }
 
     private inner class PrecacheRunnable(

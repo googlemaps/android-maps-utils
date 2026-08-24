@@ -16,7 +16,6 @@
 package com.google.maps.android.clustering
 
 import android.content.Context
-import android.os.AsyncTask
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener

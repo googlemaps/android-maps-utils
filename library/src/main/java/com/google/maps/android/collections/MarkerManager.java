@@ -17,6 +17,7 @@ package com.google.maps.android.collections;
 
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.AdvancedMarkerOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -51,11 +52,13 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     }
   }
 
+  @Override
   public Collection newCollection() {
     return new Collection();
   }
 
   @Override
+  @Nullable
   public View getInfoWindow(@NonNull Marker marker) {
     Collection collection = mAllObjects.get(marker);
     if (collection != null && collection.mInfoWindowAdapter != null) {
@@ -65,6 +68,7 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
   }
 
   @Override
+  @Nullable
   public View getInfoContents(@NonNull Marker marker) {
     Collection collection = mAllObjects.get(marker);
     if (collection != null && collection.mInfoWindowAdapter != null) {
@@ -127,7 +131,8 @@ public class MarkerManager extends MapObjectManager<Marker, MarkerManager.Collec
     object.remove();
   }
 
-  public class Collection extends MapObjectManager.Collection {
+  /** A collection of {@link Marker}s on the map with its own set of listeners. */
+  public class Collection extends MapObjectManager<Marker, MarkerManager.Collection>.Collection {
     private GoogleMap.OnInfoWindowClickListener mInfoWindowClickListener;
     private GoogleMap.OnInfoWindowLongClickListener mInfoWindowLongClickListener;
     private GoogleMap.OnMarkerClickListener mMarkerClickListener;

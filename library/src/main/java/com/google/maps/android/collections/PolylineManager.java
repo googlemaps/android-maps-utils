@@ -59,7 +59,8 @@ public class PolylineManager extends MapObjectManager<Polyline, PolylineManager.
     }
   }
 
-  public class Collection extends MapObjectManager.Collection {
+  /** A collection of {@link Polyline}s on the map with its own set of listeners. */
+  public class Collection extends MapObjectManager<Polyline, PolylineManager.Collection>.Collection {
     private GoogleMap.OnPolylineClickListener mPolylineClickListener;
 
     public Collection() {}

@@ -22,7 +22,6 @@ import com.google.maps.android.geometry.Bounds
 import com.google.maps.android.geometry.Point
 import com.google.maps.android.projection.SphericalMercatorProjection
 import com.google.maps.android.quadtree.PointQuadTree
-import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
 import java.util.HashSet

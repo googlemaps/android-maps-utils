@@ -59,7 +59,8 @@ public class PolygonManager extends MapObjectManager<Polygon, PolygonManager.Col
     }
   }
 
-  public class Collection extends MapObjectManager.Collection {
+  /** A collection of {@link Polygon}s on the map with its own set of listeners. */
+  public class Collection extends MapObjectManager<Polygon, PolygonManager.Collection>.Collection {
     private GoogleMap.OnPolygonClickListener mPolygonClickListener;
 
     public Collection() {}

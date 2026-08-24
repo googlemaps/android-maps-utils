@@ -59,7 +59,8 @@ public class CircleManager extends MapObjectManager<Circle, CircleManager.Collec
     }
   }
 
-  public class Collection extends MapObjectManager.Collection {
+  /** A collection of {@link Circle}s on the map with its own set of listeners. */
+  public class Collection extends MapObjectManager<Circle, CircleManager.Collection>.Collection {
     private GoogleMap.OnCircleClickListener mCircleClickListener;
 
     public Collection() {}

@@ -18,7 +18,6 @@ package com.google.maps.android.clustering.view
 import androidx.annotation.StyleRes
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
-import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener
 import com.google.maps.android.clustering.ClusterManager.OnClusterInfoWindowClickListener
 import com.google.maps.android.clustering.ClusterManager.OnClusterInfoWindowLongClickListener

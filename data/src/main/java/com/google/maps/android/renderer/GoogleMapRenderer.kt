@@ -40,13 +40,17 @@ class GoogleMapRenderer(
 
     override fun addLayer(layer: Layer) {
         if (layers.add(layer)) {
-            layer.mapObjects.forEach { renderObject(it) }
+            for (mapObject in layer.mapObjects) {
+                renderObject(mapObject)
+            }
         }
     }
 
     override fun removeLayer(layer: Layer): Boolean {
         if (layers.remove(layer)) {
-            layer.mapObjects.forEach { removeRenderedObject(it) }
+            for (mapObject in layer.mapObjects) {
+                removeRenderedObject(mapObject)
+            }
             return true
         }
         return false
@@ -55,8 +59,10 @@ class GoogleMapRenderer(
     override fun getLayers(): Collection<Layer> = layers
 
     override fun clear() {
-        layers.forEach { layer ->
-            layer.mapObjects.forEach { removeRenderedObject(it) }
+        for (layer in layers) {
+            for (mapObject in layer.mapObjects) {
+                removeRenderedObject(mapObject)
+            }
         }
         layers.clear()
     }
@@ -135,7 +141,9 @@ class GoogleMapRenderer(
                 visible(polygon.isVisible)
                 zIndex(polygon.zIndex)
                 strokeJointType(polygon.strokeJointType)
-                polygon.holes.forEach { addHole(it) }
+                for (hole in polygon.holes) {
+                    addHole(hole)
+                }
                 polygon.strokePattern?.let { strokePattern(it) }
             }
         val sdkPolygon = map.addPolygon(options)

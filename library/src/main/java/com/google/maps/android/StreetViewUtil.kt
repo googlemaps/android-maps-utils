@@ -72,8 +72,7 @@ class StreetViewUtils {
                         throw IOException("HTTP Error: $responseCode")
                     }
                 } catch (e: IOException) {
-                    e.printStackTrace()
-                    throw IOException("Network error: ${e.message}")
+                    throw IOException("Network error: ${e.message}", e)
                 }
             }
         }
