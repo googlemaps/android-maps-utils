@@ -409,14 +409,17 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
             }
             // TODO: Add some padding, so that markers can animate in from off-screen.
 
+            val sphericalMercatorProjection = mSphericalMercatorProjection
+            val animate = mAnimate && sphericalMercatorProjection != null
+
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
             var existingClustersOnScreen: MutableList<Point>? = null
-            if (this@DefaultClusterRenderer.mClusters != null && mAnimate) {
+            if (this@DefaultClusterRenderer.mClusters != null && animate) {
                 existingClustersOnScreen = ArrayList()
                 for (c in this@DefaultClusterRenderer.mClusters!!) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.position)) {
-                        val point = mSphericalMercatorProjection!!.toPoint(c.position)
+                        val point = sphericalMercatorProjection.toPoint(c.position)
                         existingClustersOnScreen.add(point)
                     }
                 }
@@ -429,11 +432,11 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
                 )
             for (c in clusters) {
                 val onScreen = visibleBounds.contains(c.position)
-                if (zoomingIn && onScreen && mAnimate) {
-                    val point = mSphericalMercatorProjection!!.toPoint(c.position)
+                if (zoomingIn && onScreen && animate) {
+                    val point = sphericalMercatorProjection.toPoint(c.position)
                     val closest = findClosestCluster(existingClustersOnScreen, point)
                     if (closest != null) {
-                        val animateTo = mSphericalMercatorProjection!!.toLatLng(closest)
+                        val animateTo = sphericalMercatorProjection.toLatLng(closest)
                         markerModifier.add(true, CreateMarkerTask(c, newMarkers, animateTo))
                     } else {
                         markerModifier.add(true, CreateMarkerTask(c, newMarkers, null))
@@ -453,11 +456,11 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
             // Find all of the new clusters that were added on-screen. These are candidates for
             // markers to animate from.
             var newClustersOnScreen: MutableList<Point>? = null
-            if (mAnimate) {
+            if (animate) {
                 newClustersOnScreen = ArrayList()
                 for (c in clusters) {
                     if (shouldRenderAsCluster(c) && visibleBounds.contains(c.position)) {
-                        val p = mSphericalMercatorProjection!!.toPoint(c.position)
+                        val p = sphericalMercatorProjection.toPoint(c.position)
                         newClustersOnScreen.add(p)
                     }
                 }
@@ -468,11 +471,11 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
                 val onScreen = visibleBounds.contains(marker.position)
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
-                if (!zoomingIn && zoomDelta > -3 && onScreen && mAnimate) {
-                    val point = mSphericalMercatorProjection!!.toPoint(marker.position)
+                if (!zoomingIn && zoomDelta > -3 && onScreen && animate) {
+                    val point = sphericalMercatorProjection.toPoint(marker.position)
                     val closest = findClosestCluster(newClustersOnScreen, point)
                     if (closest != null) {
-                        val animateTo = mSphericalMercatorProjection!!.toLatLng(closest)
+                        val animateTo = sphericalMercatorProjection.toLatLng(closest)
                         markerModifier.animateThenRemove(marker, marker.position, animateTo)
                     } else {
                         markerModifier.remove(true, marker.marker)
