@@ -28,9 +28,9 @@ import java.util.Locale;
  * make the app issue requests to loopback, link-local (including the {@code 169.254.169.254}
  * metadata endpoint), or private-network hosts reachable from the device.
  *
- * <p>This sanitizer allows only {@code http}/{@code https} URLs whose host does not resolve to a
- * loopback, any-local, link-local, site-local (RFC 1918), or multicast address, and returns
- * {@code null} (block) otherwise. Public icon/overlay URLs continue to load unchanged.
+ * <p>This sanitizer allows only {@code http}/{@code https} URLs whose host does not resolve to an
+ * internal address (see {@link #isInternalAddress(InetAddress)}), and returns {@code null} (block)
+ * otherwise. Public icon/overlay URLs continue to load unchanged.
  */
 public class DefaultKmlUrlSanitizer implements KmlUrlSanitizer {
 
@@ -62,12 +62,12 @@ public class DefaultKmlUrlSanitizer implements KmlUrlSanitizer {
 
         try {
             // Block if ANY resolved address is internal, to defeat split-horizon / multi-A tricks.
-            for (InetAddress address : InetAddress.getAllByName(host)) {
-                if (address.isLoopbackAddress()
-                        || address.isAnyLocalAddress()
-                        || address.isLinkLocalAddress()
-                        || address.isSiteLocalAddress()
-                        || address.isMulticastAddress()) {
+            InetAddress[] addresses = InetAddress.getAllByName(host);
+            if (addresses.length == 0) {
+                return null;
+            }
+            for (InetAddress address : addresses) {
+                if (isInternalAddress(address)) {
                     return null;
                 }
             }
@@ -77,5 +77,54 @@ public class DefaultKmlUrlSanitizer implements KmlUrlSanitizer {
         }
 
         return url;
+    }
+
+    /**
+     * Returns {@code true} if {@code address} is one that a fetch triggered by an untrusted
+     * document must never reach.
+     *
+     * <p>Covers the ranges recognized by {@link InetAddress} (loopback, wildcard/any-local,
+     * link-local, IPv4 RFC 1918 site-local, multicast) plus ranges that {@code InetAddress} does
+     * not classify but are still internal or special-purpose:
+     *
+     * <ul>
+     *   <li>{@code fc00::/7} IPv6 Unique Local Addresses (RFC 4193) not covered by
+     *       {@code isSiteLocalAddress()}.
+     *   <li>{@code 100.64.0.0/10} IPv4 Carrier-Grade NAT / shared address space (RFC 6598).
+     *   <li>{@code 192.0.0.0/24} IETF protocol assignments (RFC 6890), which includes NAT64 and
+     *       other internal-only special-use addresses.
+     * </ul>
+     */
+    public static boolean isInternalAddress(InetAddress address) {
+        if (address == null) {
+            return true;
+        }
+        if (address.isLoopbackAddress()
+                || address.isAnyLocalAddress()
+                || address.isLinkLocalAddress()
+                || address.isSiteLocalAddress()
+                || address.isMulticastAddress()) {
+            return true;
+        }
+        final byte[] b = address.getAddress();
+        if (b.length == 4) {
+            final int b0 = b[0] & 0xFF;
+            final int b1 = b[1] & 0xFF;
+            final int b2 = b[2] & 0xFF;
+            // 100.64.0.0/10 (CGNAT, RFC 6598): 100.64.0.0 - 100.127.255.255.
+            if (b0 == 100 && (b1 & 0xC0) == 0x40) {
+                return true;
+            }
+            // 192.0.0.0/24 (IETF protocol assignments, RFC 6890).
+            if (b0 == 192 && b1 == 0 && b2 == 0) {
+                return true;
+            }
+        } else if (b.length == 16) {
+            // fc00::/7 (IPv6 Unique Local Addresses, RFC 4193): first byte fc or fd.
+            if ((b[0] & 0xFE) == 0xFC) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -53,6 +53,26 @@ public class DefaultKmlUrlSanitizerTest {
     }
 
     @Test
+    public void blocksCarrierGradeNatSharedSpace() {
+        // 100.64.0.0/10 (RFC 6598) is not classified by InetAddress#isSiteLocalAddress().
+        assertNull(sanitizer.sanitizeUrl("http://100.64.0.1/x"));
+        assertNull(sanitizer.sanitizeUrl("http://100.127.255.254/x"));
+    }
+
+    @Test
+    public void blocksIetfProtocolAssignments() {
+        // 192.0.0.0/24 (RFC 6890) special-use range.
+        assertNull(sanitizer.sanitizeUrl("http://192.0.0.1/x"));
+    }
+
+    @Test
+    public void blocksIpv6UniqueLocalAddresses() {
+        // fc00::/7 (RFC 4193) is not classified by InetAddress#isSiteLocalAddress().
+        assertNull(sanitizer.sanitizeUrl("http://[fc00::1]/x"));
+        assertNull(sanitizer.sanitizeUrl("http://[fd12:3456:789a::1]/x"));
+    }
+
+    @Test
     public void blocksNonHttpSchemes() {
         assertNull(sanitizer.sanitizeUrl("file:///etc/passwd"));
         assertNull(sanitizer.sanitizeUrl("ftp://8.8.8.8/x"));
@@ -73,5 +93,14 @@ public class DefaultKmlUrlSanitizerTest {
                 sanitizer.sanitizeUrl("http://8.8.8.8/mapfiles/icon.png"));
         assertEquals("https://8.8.8.8/mapfiles/icon.png",
                 sanitizer.sanitizeUrl("https://8.8.8.8/mapfiles/icon.png"));
+    }
+
+    @Test
+    public void allowsPublicJustOutsideCarrierGradeNat() {
+        // 100.63.255.255 is just below 100.64.0.0/10 and 100.128.0.0 just above: both public.
+        assertEquals("http://100.63.255.255/icon.png",
+                sanitizer.sanitizeUrl("http://100.63.255.255/icon.png"));
+        assertEquals("http://100.128.0.1/icon.png",
+                sanitizer.sanitizeUrl("http://100.128.0.1/icon.png"));
     }
 }
