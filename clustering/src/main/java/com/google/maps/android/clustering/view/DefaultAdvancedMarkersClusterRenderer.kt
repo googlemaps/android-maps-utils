@@ -693,17 +693,11 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
          * Perform the next task. Prioritise any on-screen work.
          */
         private fun performNextTask() {
-            if (!mOnScreenRemoveMarkerTasks.isEmpty()) {
-                removeMarker(mOnScreenRemoveMarkerTasks.poll())
-            } else if (!mAnimationTasks.isEmpty()) {
-                mAnimationTasks.poll().perform()
-            } else if (!mOnScreenCreateMarkerTasks.isEmpty()) {
-                mOnScreenCreateMarkerTasks.poll().perform(this)
-            } else if (!mCreateMarkerTasks.isEmpty()) {
-                mCreateMarkerTasks.poll().perform(this)
-            } else if (!mRemoveMarkerTasks.isEmpty()) {
-                removeMarker(mRemoveMarkerTasks.poll())
-            }
+            mOnScreenRemoveMarkerTasks.poll()?.let { removeMarker(it); return }
+            mAnimationTasks.poll()?.let { it.perform(); return }
+            mOnScreenCreateMarkerTasks.poll()?.let { it.perform(this); return }
+            mCreateMarkerTasks.poll()?.let { it.perform(this); return }
+            mRemoveMarkerTasks.poll()?.let { removeMarker(it); return }
         }
 
         private fun removeMarker(m: Marker?) {
