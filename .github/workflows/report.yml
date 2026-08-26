@@ -26,8 +26,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repo
@@ -48,19 +46,27 @@ jobs:
       - name: Build modules
         run: ./gradlew build jacocoTestDebugUnitTestReport --stacktrace
 
-      - name: Jacoco Report to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@e51ce1f46f7f8b5331593f935e59cbaf44b84920 # v1.8.0
+      # Coverage reports are handed off to report-comment.yml (triggered via workflow_run) so the
+      # PR comment step runs with the base repo's permissions/secrets, which aren't available here
+      # when this workflow is triggered by a pull_request from a fork.
+      - name: Save PR info
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p pr-info
+          echo "${{ github.event.pull_request.number }}" > pr-info/pr-number.txt
+          echo "${{ github.event.pull_request.head.sha }}" > pr-info/head-sha.txt
+          echo "${{ github.event.pull_request.base.sha }}" > pr-info/base-sha.txt
+
+      - name: Upload coverage artifacts
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          paths: |
-            ${{ github.workspace }}/library/build/jacoco/jacoco.xml,
-            ${{ github.workspace }}/clustering/build/jacoco/jacoco.xml,
-            ${{ github.workspace }}/data/build/jacoco/jacoco.xml,
-            ${{ github.workspace }}/heatmaps/build/jacoco/jacoco.xml,
-            ${{ github.workspace }}/ui/build/jacoco/jacoco.xml
-          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
-          min-coverage-overall: 26
-          min-coverage-changed-files: 60
-          title: Code Coverage
-          debug-mode: false
-          update-comment: true
+          name: jacoco-reports
+          retention-days: 1
+          path: |
+            pr-info/
+            library/build/jacoco/jacoco.xml
+            clustering/build/jacoco/jacoco.xml
+            data/build/jacoco/jacoco.xml
+            heatmaps/build/jacoco/jacoco.xml
+            ui/build/jacoco/jacoco.xml
