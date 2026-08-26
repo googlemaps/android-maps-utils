@@ -16,10 +16,8 @@
 package com.google.maps.android.clustering.algo
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.ClusterItem
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -55,9 +53,9 @@ class PreCachingAlgorithmDecoratorTest {
     @Test
     fun testAddItemAndItems() {
         val item = TestItem(10.0, 10.0)
-        assertTrue("addItem should return true when adding a new item", decorator.addItem(item))
-        assertEquals("Items collection size should be 1 after adding 1 item", 1, decorator.items.size)
-        assertTrue("Items collection should contain the inserted item", decorator.items.contains(item))
+        assertThat(decorator.addItem(item)).isTrue()
+        assertThat(decorator.items).hasSize(1)
+        assertThat(decorator.items).contains(item)
     }
 
     /**
@@ -67,11 +65,11 @@ class PreCachingAlgorithmDecoratorTest {
     @Test
     fun testAddItemsAndClearItems() {
         val items = listOf(TestItem(10.0, 10.0), TestItem(20.0, 20.0))
-        assertTrue("addItems should return true when adding multiple items", decorator.addItems(items))
-        assertEquals("Items collection size should be 2", 2, decorator.items.size)
+        assertThat(decorator.addItems(items)).isTrue()
+        assertThat(decorator.items).hasSize(2)
 
         decorator.clearItems()
-        assertEquals("Items collection size should be 0 after clearItems()", 0, decorator.items.size)
+        assertThat(decorator.items).isEmpty()
     }
 
     /**
@@ -84,11 +82,11 @@ class PreCachingAlgorithmDecoratorTest {
         val item2 = TestItem(20.0, 20.0)
         decorator.addItems(listOf(item1, item2))
 
-        assertTrue("removeItem should return true when removing an existing item", decorator.removeItem(item1))
-        assertEquals("Items collection size should be 1 after removing 1 item", 1, decorator.items.size)
+        assertThat(decorator.removeItem(item1)).isTrue()
+        assertThat(decorator.items).hasSize(1)
 
-        assertTrue("removeItems should return true when removing remaining items", decorator.removeItems(listOf(item2)))
-        assertEquals("Items collection size should be 0 after removing all items", 0, decorator.items.size)
+        assertThat(decorator.removeItems(listOf(item2))).isTrue()
+        assertThat(decorator.items).isEmpty()
     }
 
     /**
@@ -99,7 +97,7 @@ class PreCachingAlgorithmDecoratorTest {
     fun testUpdateItem() {
         val item = TestItem(10.0, 10.0)
         decorator.addItem(item)
-        assertTrue("updateItem should return true when updating an existing item", decorator.updateItem(item))
+        assertThat(decorator.updateItem(item)).isTrue()
     }
 
     /**
@@ -110,7 +108,7 @@ class PreCachingAlgorithmDecoratorTest {
     @Test
     fun testMaxDistanceBetweenClusteredItems() {
         decorator.maxDistanceBetweenClusteredItems = 100
-        assertEquals("maxDistanceBetweenClusteredItems should reflect the newly assigned value", 100, decorator.maxDistanceBetweenClusteredItems)
+        assertThat(decorator.maxDistanceBetweenClusteredItems).isEqualTo(100)
     }
 
     /**
@@ -124,9 +122,9 @@ class PreCachingAlgorithmDecoratorTest {
         decorator.addItems(listOf(item1, item2))
 
         val clustersFirstCall = decorator.getClusters(10.0f)
-        assertFalse("Clusters should not be empty for nearby items at zoom level 10", clustersFirstCall.isEmpty())
+        assertThat(clustersFirstCall).isNotEmpty()
 
         val clustersSecondCall = decorator.getClusters(10.0f)
-        assertEquals("Second call to getClusters for identical zoom level should return cached cluster result", clustersFirstCall, clustersSecondCall)
+        assertThat(clustersSecondCall).isEqualTo(clustersFirstCall)
     }
 }

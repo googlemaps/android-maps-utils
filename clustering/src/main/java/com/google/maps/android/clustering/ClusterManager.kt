@@ -299,7 +299,7 @@ open class ClusterManager<T : ClusterItem>
         /**
          * Might re-cluster.
          */
-        open override fun onCameraIdle() {
+        override fun onCameraIdle() {
             if (mRenderer is OnCameraIdleListener) {
                 (mRenderer as OnCameraIdleListener).onCameraIdle()
             }
@@ -317,9 +317,9 @@ open class ClusterManager<T : ClusterItem>
             }
         }
 
-        open override fun onMarkerClick(marker: Marker): Boolean = markerManager.onMarkerClick(marker)
+        override fun onMarkerClick(marker: Marker): Boolean = markerManager.onMarkerClick(marker)
 
-        open override fun onInfoWindowClick(marker: Marker) {
+        override fun onInfoWindowClick(marker: Marker) {
             markerManager.onInfoWindowClick(marker)
         }
 

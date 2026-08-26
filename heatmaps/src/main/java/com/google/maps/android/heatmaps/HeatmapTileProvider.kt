@@ -261,13 +261,13 @@ class HeatmapTileProvider private constructor(
         }
 
         val intensity = Array(TILE_DIM + radius * 2) { DoubleArray(TILE_DIM + radius * 2) }
-        points.forEach { w ->
+        for (w in points) {
             val p = w.point
             val bucketX = ((p.x - minX) / bucketWidth).toInt()
             val bucketY = ((p.y - minY) / bucketWidth).toInt()
             intensity[bucketX][bucketY] += w.intensity
         }
-        wrappedPoints.forEach { w ->
+        for (w in wrappedPoints) {
             val p = w.point
             val bucketX = ((p.x + xOffset - minX) / bucketWidth).toInt()
             val bucketY = ((p.y - minY) / bucketWidth).toInt()
@@ -442,7 +442,7 @@ class HeatmapTileProvider private constructor(
             val scale = nBuckets / boundsDim
             val buckets = mutableMapOf<Vector, Double>()
 
-            points.forEach { l ->
+            for (l in points) {
                 val x = l.point.x
                 val y = l.point.y
                 val xBucket = ((x - minX) * scale).toInt()
