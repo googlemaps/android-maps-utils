@@ -48,8 +48,13 @@ jobs:
       - name: Build modules
         run: ./gradlew build jacocoTestDebugUnitTestReport --stacktrace
 
+      # PRs from forks don't get repo secrets on the pull_request trigger, so
+      # secrets.SYNCED_GITHUB_TOKEN_REPO is empty and this step always fails for external
+      # contributions. continue-on-error keeps that from failing the whole job/check: the
+      # build and tests above are still the real signal, this is just a best-effort comment.
       - name: Jacoco Report to PR
         id: jacoco
+        continue-on-error: true
         uses: madrapps/jacoco-report@e51ce1f46f7f8b5331593f935e59cbaf44b84920 # v1.8.0
         with:
           paths: |
