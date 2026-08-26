@@ -18,6 +18,8 @@ package com.google.maps.android.data.renderer
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.LruCache
+import com.google.maps.android.data.kml.DefaultKmlUrlSanitizer
+import com.google.maps.android.data.kml.KmlUrlSanitizer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -33,8 +35,13 @@ import java.util.concurrent.ConcurrentHashMap
  * Implementation of [IconProvider] that loads icons from URLs.
  * Uses an [LruCache] to cache loaded icons and handles "thundering herd" by deduplicating in-flight requests.
  */
-open class UrlIconProvider(
+open class UrlIconProvider @JvmOverloads constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    // Icon/overlay hrefs originate from the (frequently untrusted) KML/GeoJSON document. The
+    // sanitizer is applied before every fetch to prevent SSRF; the secure default blocks
+    // non-http(s) schemes and hosts resolving to loopback/link-local/private ranges. Pass a
+    // custom implementation to widen/narrow the policy, or `null` to disable (not recommended).
+    private val urlSanitizer: KmlUrlSanitizer? = DefaultKmlUrlSanitizer(),
 ) : IconProvider {
     private val memoryCache: LruCache<String, Bitmap>
     private val inFlight = ConcurrentHashMap<String, Deferred<Bitmap?>>()
@@ -93,15 +100,58 @@ open class UrlIconProvider(
     protected open suspend fun loadBitmapFromUrl(urlString: String): Bitmap? =
         withContext(dispatcher) {
             try {
-                val url = URL(urlString)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.doInput = true
-                connection.connect()
-                val input = connection.inputStream
-                BitmapFactory.decodeStream(input)
+                // Follow redirects manually, re-validating every hop through the sanitizer, so a
+                // 30x to an internal host cannot bypass the host check (redirect-based SSRF) while
+                // still supporting legitimate redirects (CDNs, signed S3/GCS URLs).
+                var current: String = urlString
+                var redirectsLeft = MAX_REDIRECTS
+                while (true) {
+                    // Validate the (untrusted) href before issuing any request. `null` => blocked.
+                    val safeUrl =
+                        if (urlSanitizer != null) {
+                            urlSanitizer.sanitizeUrl(current) ?: return@withContext null
+                        } else {
+                            current
+                        }
+                    val url = URL(safeUrl)
+                    val connection = url.openConnection() as HttpURLConnection
+                    try {
+                        // Do not auto-follow: we re-run each redirect target through the sanitizer.
+                        connection.instanceFollowRedirects = false
+                        connection.doInput = true
+                        connection.connect()
+                        val code = connection.responseCode
+                        when {
+                            code in 200..299 -> {
+                                return@withContext connection.inputStream.use {
+                                    BitmapFactory.decodeStream(it)
+                                }
+                            }
+                            code in 300..399 -> {
+                                if (redirectsLeft-- <= 0) return@withContext null
+                                val location =
+                                    connection.getHeaderField("Location")
+                                        ?: return@withContext null
+                                // Resolve relative redirects against the current URL; the next loop
+                                // iteration re-sanitizes the resolved absolute URL before connecting.
+                                current = URL(url, location).toString()
+                            }
+                            else -> return@withContext null
+                        }
+                    } finally {
+                        connection.disconnect()
+                    }
+                }
+                @Suppress("UNREACHABLE_CODE")
+                null
             } catch (e: Exception) {
                 e.printStackTrace()
                 null
             }
         }
+
+    private companion object {
+        /** Maximum number of redirects to follow before giving up. */
+        private const val MAX_REDIRECTS = 5
+    }
 }
