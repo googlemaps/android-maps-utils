@@ -27,7 +27,7 @@ startup-runtime = "1.2.0"
 # Versions for Jetpack Compose, Android's modern UI toolkit.
 # The Compose BOM (Bill of Materials) coordinates versions of all Compose libraries.
 activity-compose = "1.13.0"
-compose-bom = "2026.06.01"
+compose-bom = "2026.08.00"
 
 # --- Google Services (Maps) ---
 # Versions for Google Play Services libraries essential for map functionality.
