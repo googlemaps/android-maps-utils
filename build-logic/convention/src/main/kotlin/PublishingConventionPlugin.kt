@@ -83,7 +83,12 @@ class PublishingConventionPlugin : Plugin<Project> {
             )
 
             publishToMavenCentral()
-            signAllPublications()
+            if (findProperty("signing.keyId")?.toString()?.isNotBlank() == true ||
+                findProperty("signing.secretKeyRingFile")?.toString()?.isNotBlank() == true ||
+                findProperty("signingInMemoryKey")?.toString()?.isNotBlank() == true
+            ) {
+                signAllPublications()
+            }
 
             val artifactIdName = when (project.name) {
                 "maps-utils" -> "android-maps-utils"

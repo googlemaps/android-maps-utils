@@ -26,7 +26,6 @@ import com.google.maps.android.MathUtil.sinFromHav
 import com.google.maps.android.MathUtil.sinSumFromHav
 import com.google.maps.android.MathUtil.wrap
 import com.google.maps.android.SphericalUtil.computeDistanceBetween
-import kotlin.collections.ArrayDeque
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min

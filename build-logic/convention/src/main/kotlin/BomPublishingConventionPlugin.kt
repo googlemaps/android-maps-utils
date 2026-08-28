@@ -27,7 +27,12 @@ class BomPublishingConventionPlugin : Plugin<Project> {
             
             extensions.configure<MavenPublishBaseExtension> {
                 publishToMavenCentral()
-                signAllPublications()
+                if (findProperty("signing.keyId")?.toString()?.isNotBlank() == true ||
+                    findProperty("signing.secretKeyRingFile")?.toString()?.isNotBlank() == true ||
+                    findProperty("signingInMemoryKey")?.toString()?.isNotBlank() == true
+                ) {
+                    signAllPublications()
+                }
 
                 coordinates(
                     artifactId = "maps-utils-bom",
