@@ -50,7 +50,7 @@ dependencies {
     // You do not need to add a separate dependency for the Maps SDK for Android
     // since this library builds in the compatible version of the Maps SDK.
     // The aggregator artifact transitively pulls in all submodules below.
-    implementation("com.google.maps.android:android-maps-utils:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils:5.2.0") // x-release-please-version
 }
 ```
 
@@ -59,15 +59,15 @@ Alternatively, depend only on the submodules your app needs:
 ```kotlin
 dependencies {
     // Base utilities: PolyUtil, SphericalUtil, collection managers, Street View metadata
-    implementation("com.google.maps.android:android-maps-utils-core:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils-core:5.2.0") // x-release-please-version
     // Marker clustering
-    implementation("com.google.maps.android:android-maps-utils-clustering:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils-clustering:5.2.0") // x-release-please-version
     // KML and GeoJSON import
-    implementation("com.google.maps.android:android-maps-utils-data:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils-data:5.2.0") // x-release-please-version
     // Heatmaps
-    implementation("com.google.maps.android:android-maps-utils-heatmaps:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils-heatmaps:5.2.0") // x-release-please-version
     // Marker icons and animation
-    implementation("com.google.maps.android:android-maps-utils-ui:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils-ui:5.2.0") // x-release-please-version
 }
 ```
 

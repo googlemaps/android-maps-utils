@@ -14,7 +14,7 @@ Add the necessary dependency to the app-level `build.gradle.kts` file:
 ```kotlin
 dependencies {
     // Google Maps Utility Library
-    implementation("com.google.maps.android:android-maps-utils:5.1.1") // x-release-please-version
+    implementation("com.google.maps.android:android-maps-utils:5.2.0") // x-release-please-version
 }
 ```
 
