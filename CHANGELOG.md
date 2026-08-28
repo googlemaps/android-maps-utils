@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.0.0-rc02](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc01...v6.0.0-rc02) (2026-08-28)
+
+### Chores
+
+* Rebase on main branch
+* Make GPG publication signing conditional for local maven publishing
+* Update dependencies and Gradle wrapper
+
 ## [6.0.0-rc01](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v6.0.0-rc01) (2026-07-13)
 
 ### Features & Breaking Changes (KTX Consolidation)
