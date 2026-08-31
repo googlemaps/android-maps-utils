@@ -23,6 +23,9 @@ import com.android.tools.lint.detector.api.TextFormat
 
 @Suppress("UnstableApiUsage")
 class GoogleMapDetectorTest : LintDetectorTest() {
+    override fun lint(): com.android.tools.lint.checks.infrastructure.TestLintTask =
+        super.lint().allowMissingSdk()
+
     fun testSetOnMarkerDragListener() {
         lint()
             .files(

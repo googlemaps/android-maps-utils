@@ -59,4 +59,20 @@ allprojects {
             }
         }
     }
+
+    tasks.withType<Test>().configureEach {
+        val testHome = rootProject.layout.buildDirectory.dir("test-home").get().asFile
+        testHome.mkdirs()
+        val m2Link = File(testHome, ".m2")
+        if (!m2Link.exists()) {
+            val realM2 = File(System.getProperty("user.home"), ".m2")
+            if (realM2.exists()) {
+                try {
+                    java.nio.file.Files.createSymbolicLink(m2Link.toPath(), realM2.toPath())
+                } catch (_: Exception) {}
+            }
+        }
+        systemProperty("user.home", testHome.absolutePath)
+        environment("ANDROID_HOME", System.getenv("ANDROID_HOME") ?: "/usr/local/google/home/dkhawk/Android/Sdk")
+    }
 }
