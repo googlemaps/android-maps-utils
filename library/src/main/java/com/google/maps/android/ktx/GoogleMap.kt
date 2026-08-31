@@ -139,6 +139,7 @@ public fun GoogleMap.circleClickEvents(): Flow<Circle> = this.canonicalCircleCli
 @Deprecated("Moved to com.google.maps.android.groundOverlayClicks", ReplaceWith("groundOverlayClicks()", "com.google.maps.android.groundOverlayClicks"))
 public fun GoogleMap.groundOverlayClicks(): Flow<GroundOverlay> = this.canonicalGroundOverlayClicks()
 
+@Suppress("DEPRECATION")
 @Deprecated("Moved to com.google.maps.android.indoorStateChangeEvents", ReplaceWith("indoorStateChangeEvents()", "com.google.maps.android.indoorStateChangeEvents"))
 public fun GoogleMap.indoorStateChangeEvents(): Flow<IndoorChangeEvent> = this.canonicalIndoorStateChangeEvents()
 
@@ -160,6 +161,7 @@ public fun GoogleMap.mapLongClickEvents(): Flow<LatLng> = this.canonicalMapLongC
 @Deprecated("Moved to com.google.maps.android.markerClickEvents", ReplaceWith("markerClickEvents()", "com.google.maps.android.markerClickEvents"))
 public fun GoogleMap.markerClickEvents(): Flow<Marker> = this.canonicalMarkerClickEvents()
 
+@Suppress("DEPRECATION")
 @Deprecated("Moved to com.google.maps.android.markerDragEvents", ReplaceWith("markerDragEvents()", "com.google.maps.android.markerDragEvents"))
 public fun GoogleMap.markerDragEvents(): Flow<OnMarkerDragEvent> = this.canonicalMarkerDragEvents()
 
