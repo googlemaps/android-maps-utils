@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.0.0-rc03](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc02...v6.0.0-rc03) (2026-08-31)
+
+### Bug Fixes
+
+* Resolve lint detector test Android SDK requirement with `allowMissingSdk()`
+* Configure isolated test home directory for unit test execution in restricted sandboxes
+* Suppress internal deprecation warnings in legacy KTX compatibility shims
+
 ## [6.0.0-rc02](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc01...v6.0.0-rc02) (2026-08-28)
 
 ### Chores
