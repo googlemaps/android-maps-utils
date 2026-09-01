@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.2.0](https://github.com/googlemaps/android-maps-utils/compare/v5.1.1...v5.2.0) (2026-08-28)
+
+
+### Features
+
+* **clustering:** make ClusterManager and its public API open with JvmSuppressWildcards ([#1759](https://github.com/googlemaps/android-maps-utils/issues/1759)) ([bbb66c4](https://github.com/googlemaps/android-maps-utils/commit/bbb66c452fd7bf6631bcd223a2c66fa8a5c22cf1))
+* **collections,clustering:** complete Kotlin migration for core modules and apply optimizations ([#1766](https://github.com/googlemaps/android-maps-utils/issues/1766)) ([ca97025](https://github.com/googlemaps/android-maps-utils/commit/ca970251fdf3443f301c23df97737729209204a5))
+
+
+### Bug Fixes
+
+* **ci:** stop failing external PRs on missing coverage token ([#1765](https://github.com/googlemaps/android-maps-utils/issues/1765)) ([09030dc](https://github.com/googlemaps/android-maps-utils/commit/09030dca11e72627de48f9c1188068e6bbf3c027))
+* **data:** prevent SSRF from untrusted KML/GeoJSON icon and GroundOverlay href ([#1758](https://github.com/googlemaps/android-maps-utils/issues/1758)) ([9078c33](https://github.com/googlemaps/android-maps-utils/commit/9078c33f472f52631f1dfce23031d5d7a3a00c29))
+
 ## [5.1.1](https://github.com/googlemaps/android-maps-utils/compare/v5.1.0...v5.1.1) (2026-08-11)
 
 
