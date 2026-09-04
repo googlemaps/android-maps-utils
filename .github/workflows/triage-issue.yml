@@ -26,6 +26,12 @@ on:
         description: 'Mock Issue Body'
         default: 'This is a test issue description.'
 
+# One run per issue at a time; rapid re-edits cancel the in-flight run
+# instead of queueing extra Gemini API calls.
+concurrency:
+  group: triage-issue-${{ github.event.issue.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   triage:
     runs-on: ubuntu-latest
@@ -48,8 +54,10 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title || github.event.inputs.title }}
           ISSUE_BODY: ${{ github.event.issue.body || github.event.inputs.body }}
         run: |
-          labels=$(python .github/scripts/triage_issue.py)
-          echo "labels=$labels" >> $GITHUB_OUTPUT
+          # Strip newlines so untrusted script output can't inject extra
+          # keys into GITHUB_OUTPUT.
+          labels=$(python .github/scripts/triage_issue.py | tr -d '\n')
+          echo "labels=$labels" >> "$GITHUB_OUTPUT"
 
       - name: Apply Labels
         if: steps.run_script.outputs.labels != '' && (github.event.issue.number)
