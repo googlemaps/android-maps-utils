@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /**
  * Copyright 2026 Google LLC
  *
@@ -16,80 +14,16 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
+    id("org.jetbrains.kotlin.multiplatform")
+    id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.dokka")
-    id("android.maps.utils.PublishingConventionPlugin")
+    // Prototype publishing: KMP auto-creates multiplatform publications, enabling
+    // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
+    id("maven-publish")
 }
 
-android {
-    lint {
-        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
-    }
-    defaultConfig {
-        compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = libs.versions.minimumSdk.get().toInt()
-        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    resourcePrefix = "amu_"
-
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions += listOf("-d", "-t")
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-        jvmToolchain(17)
-    }
-
-    testOptions {
-        animationsDisabled = true
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
-    }
-    namespace = "com.google.maps.android"
-}
-
-dependencies {
-    api(libs.play.services.maps)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.appcompat)
-    implementation(libs.core.ktx)
-    implementation(libs.startup.runtime)
-    lintPublish(project(":lint-checks"))
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kxml2)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.truth)
-    implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
-}
-
-tasks.register("instrumentTest") {
-    dependsOn("connectedCheck")
-}
-
-if (System.getenv("JITPACK") != null) {
-    apply(plugin = "maven")
-}
+// NOTE (KMP prototype): see clustering/build.gradle.kts — release publishing (vanniktech),
+// jacoco, lint-checks and the amu_ resourcePrefix still need KMP-aware re-wiring.
 
 abstract class GenerateArtifactIdTask : DefaultTask() {
     @get:OutputDirectory
@@ -127,15 +61,59 @@ val generateArtifactIdFile = tasks.register<GenerateArtifactIdTask>("generateArt
     version.set(project.version.toString())
 }
 
-androidComponents {
-    onVariants { variant ->
-        variant.sources.java?.addGeneratedSourceDirectory(
-            generateArtifactIdFile,
-            GenerateArtifactIdTask::outputDir
-        )
+kotlin {
+    jvmToolchain(17)
+
+    androidLibrary {
+        namespace = "com.google.maps.android"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = 23
+
+        withHostTestBuilder {
+        }.configure {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
+
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":maps-model"))
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        androidMain {
+            kotlin.srcDir(generateArtifactIdFile)
+        }
+        androidMain.dependencies {
+            api(libs.play.services.maps)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.appcompat)
+            implementation(libs.core.ktx)
+            implementation(libs.startup.runtime)
+        }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.junit)
+            implementation(libs.robolectric)
+            implementation(libs.kxml2)
+            implementation(libs.mockk)
+            implementation(libs.androidx.test.core)
+            implementation(libs.truth)
+            implementation(libs.kotlinx.coroutines.test)
+        }
     }
 }
 
-tasks.named("dokkaGeneratePublicationHtml") {
-    dependsOn(generateArtifactIdFile)
+// Publish under the repo's public artifactId scheme so these coordinates conflict-resolve
+// against the AARs already on Maven Central instead of duplicating their classes.
+// This module's public artifactId is android-maps-utils-core.
+publishing {
+    publications.withType<MavenPublication>().configureEach {
+        artifactId = artifactId.replace(project.name, "android-maps-utils-core")
+    }
 }
