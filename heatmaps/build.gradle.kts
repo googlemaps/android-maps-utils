@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /**
  * Copyright 2026 Google LLC
  *
@@ -16,78 +14,66 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
-    
+    id("org.jetbrains.kotlin.multiplatform")
+    id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.dokka")
-    id("android.maps.utils.PublishingConventionPlugin")
+    // Prototype publishing: KMP auto-creates multiplatform publications, enabling
+    // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
+    id("maven-publish")
 }
 
-android {
-    lint {
-        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
-    }
-    defaultConfig {
+// NOTE (KMP prototype): see clustering/build.gradle.kts — release publishing (vanniktech),
+// jacoco, lint-checks and the amu_ resourcePrefix still need KMP-aware re-wiring.
+
+kotlin {
+    jvmToolchain(17)
+
+    androidLibrary {
+        namespace = "com.google.maps.android.heatmaps"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = 23
-        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+
+        withHostTestBuilder {
+        }.configure {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
-    resourcePrefix = "amu_"
 
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions += listOf("-d", "-t")
-    }
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
 
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":maps-model"))
+            // Quadtree, geometry and Mercator projection live in the clustering module.
+            api(project(":clustering"))
         }
-        jvmToolchain(17)
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        androidMain.dependencies {
+            implementation(project(":data"))
+            api(libs.play.services.maps)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.appcompat)
+            implementation(libs.core.ktx)
+        }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.junit)
+            implementation(libs.robolectric)
+            implementation(libs.kxml2)
+            implementation(libs.mockk)
+            implementation(libs.truth)
+        }
     }
+}
 
-    testOptions {
-        animationsDisabled = true
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
+// Publish under the repo's public artifactId scheme so these coordinates conflict-resolve
+// against the AARs already on Maven Central instead of duplicating their classes.
+publishing {
+    publications.withType<MavenPublication>().configureEach {
+        artifactId = artifactId.replace(project.name, "android-maps-utils-${project.name}")
     }
-    namespace = "com.google.maps.android.heatmaps"
-}
-
-dependencies {
-    implementation(project(":clustering"))
-    implementation(project(":data"))
-    api(libs.play.services.maps)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.appcompat)
-    implementation(libs.core.ktx)
-    lintPublish(project(":lint-checks"))
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kxml2)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.truth)
-    implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
-}
-
-tasks.register("instrumentTest") {
-    dependsOn("connectedCheck")
-}
-
-if (System.getenv("JITPACK") != null) {
-    apply(plugin = "maven")
 }
