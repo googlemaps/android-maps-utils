@@ -17,6 +17,9 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.dokka")
+    // Prototype publishing: KMP auto-creates multiplatform publications, enabling
+    // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
+    id("maven-publish")
 }
 
 // NOTE (KMP prototype): the module previously applied android.maps.utils.PublishingConventionPlugin,
