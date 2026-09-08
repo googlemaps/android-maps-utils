@@ -74,3 +74,12 @@ kotlin {
         }
     }
 }
+
+// Publish under the repo's public artifactId scheme (android-maps-utils-<module>) so these
+// coordinates conflict-resolve against the AARs already on Maven Central instead of
+// duplicating their classes under a second module identity.
+publishing {
+    publications.withType<MavenPublication>().configureEach {
+        artifactId = artifactId.replace(project.name, "android-maps-utils-${project.name}")
+    }
+}
