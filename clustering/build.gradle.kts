@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /**
  * Copyright 2026 Google LLC
  *
@@ -16,79 +14,60 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
-    
+    id("org.jetbrains.kotlin.multiplatform")
+    id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.dokka")
-    id("android.maps.utils.PublishingConventionPlugin")
 }
 
-android {
-    lint {
-        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
-    }
-    defaultConfig {
+// NOTE (KMP prototype): the module previously applied android.maps.utils.PublishingConventionPlugin,
+// which is hard-wired to com.android.library + AndroidSingleVariantLibrary publishing. A KMP-aware
+// variant (vanniktech KotlinMultiplatform() publishing + jacoco for the android target) is needed
+// before this module can be released from this branch. Lint publishing (lint-checks), the amu_
+// resourcePrefix and consumer proguard rules from the old build also need re-wiring.
+
+kotlin {
+    jvmToolchain(17)
+
+    androidLibrary {
+        namespace = "com.google.maps.android.clustering"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = 23
-        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+
+        withHostTestBuilder {
+        }.configure {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
-    resourcePrefix = "amu_"
 
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions += listOf("-d", "-t")
-    }
+    iosArm64()
+    iosSimulatorArm64()
+    iosX64()
 
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":maps-model"))
+            // androidx.collection is multiplatform; LongSparseArray/LruCache work in common code
+            implementation(libs.androidx.collection)
         }
-        jvmToolchain(17)
+        androidMain.dependencies {
+            implementation(project(":ui"))
+            implementation(project(":library"))
+            implementation(project(":data"))
+            api(libs.play.services.maps)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.appcompat)
+            implementation(libs.core.ktx)
+        }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.junit)
+            implementation(libs.robolectric)
+            implementation(libs.kxml2)
+            implementation(libs.mockk)
+            implementation(libs.kotlin.test)
+            implementation(libs.truth)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.mockito.core)
+        }
     }
-
-    testOptions {
-        animationsDisabled = true
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
-    }
-    namespace = "com.google.maps.android.clustering"
-}
-
-dependencies {
-    implementation(project(":ui"))
-    implementation(project(":library"))
-    implementation(project(":data"))
-    api(libs.play.services.maps)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.appcompat)
-    implementation(libs.core.ktx)
-    lintPublish(project(":lint-checks"))
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kxml2)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.truth)
-    implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
-}
-
-tasks.register("instrumentTest") {
-    dependsOn("connectedCheck")
-}
-
-if (System.getenv("JITPACK") != null) {
-    apply(plugin = "maven")
 }

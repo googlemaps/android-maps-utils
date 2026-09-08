@@ -66,6 +66,7 @@ serialization = "1.0.1"
 [libraries]
 # --- Core Android & Kotlin ---
 # Essential libraries for Android development, providing backwards compatibility, lifecycle management, and Kotlin support.
+androidx-collection = { module = "androidx.collection:collection", version = "1.5.0" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
