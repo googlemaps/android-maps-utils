@@ -18,6 +18,9 @@ package com.google.maps.android.collections
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlin.collections.Collection as KotlinCollection
 
 /**
@@ -71,3 +74,33 @@ open class PolylineManager(map: GoogleMap) :
         }
     }
 }
+
+/**
+ * Adds a new [Polyline] to the underlying map and to this [PolylineManager.Collection] with the
+ * provided [optionsActions].
+ */
+public inline fun PolylineManager.Collection.addPolyline(
+    optionsActions: PolylineOptions.() -> Unit
+): Polyline =
+    this.addPolyline(
+        PolylineOptions().apply(optionsActions)
+    )
+
+/**
+ * Returns a flow that emits when a polyline in this collection is clicked. Using this to observe polyline clicks
+ * will override an existing listener (if any) to [PolylineManager.Collection.setOnPolylineClickListener].
+ *
+ * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
+ * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
+ * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
+ * for multi-observer configurations.
+ */
+public fun PolylineManager.Collection.clickEvents(): Flow<Polyline> =
+    callbackFlow {
+        setOnPolylineClickListener {
+            trySend(it).isSuccess
+        }
+        awaitClose {
+            setOnPolylineClickListener(null)
+        }
+    }

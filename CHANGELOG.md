@@ -1,5 +1,30 @@
 # Changelog
 
+## [6.0.0-rc03](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc02...v6.0.0-rc03) (2026-08-31)
+
+### Bug Fixes
+
+* Resolve lint detector test Android SDK requirement with `allowMissingSdk()`
+* Configure isolated test home directory for unit test execution in restricted sandboxes
+* Suppress internal deprecation warnings in legacy KTX compatibility shims
+
+## [6.0.0-rc02](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc01...v6.0.0-rc02) (2026-08-28)
+
+### Chores
+
+* Rebase on main branch
+* Make GPG publication signing conditional for local maven publishing
+* Update dependencies and Gradle wrapper
+
+## [6.0.0-rc01](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v6.0.0-rc01) (2026-07-13)
+
+### Features & Breaking Changes (KTX Consolidation)
+
+* **Consolidated Kotlin Extensions (KTX into Utils)**: Moved all functionality from `android-maps-ktx` (`maps-ktx` and `maps-utils-ktx`) directly into `android-maps-utils`.
+  * **Canonical Non-KTX Packages**: All reactive Coroutine/Flow extensions (`awaitMap()`, `mapClickEvents()`, `cameraMoveEvents()`) and option builder DSLs (`addMarker`, `addPolyline`, `addPolygon`) now reside in canonical `android-maps-utils` packages (`com.google.maps.android.*`, `com.google.maps.android.model.*`, `com.google.maps.android.collections.*`, `com.google.maps.android.clustering.*`, `com.google.maps.android.data.geojson.*`, `com.google.maps.android.data.kml.*`, `com.google.maps.android.heatmaps.*`).
+  * **Deprecated Compatibility Layer**: To ensure full backward compatibility for existing codebases, the legacy `com.google.maps.android.ktx.*` package structure has been preserved with `@Deprecated(level = DeprecationLevel.WARNING, replaceWith = ReplaceWith(...))` forwarding wrappers and typealiases. Existing imports will continue to compile seamlessly with deprecation warnings pointing to the canonical replacements.
+  * **Demo & Test Consolidation**: Integrated full reactive extension demo (`KtxExtensionsDemoActivity`) into the `:demo` app and migrated all 18 unit test suites from `android-maps-ktx` with both canonical and shim test coverage.
+
 ## [5.2.0](https://github.com/googlemaps/android-maps-utils/compare/v5.1.1...v5.2.0) (2026-08-28)
 
 
@@ -23,11 +48,9 @@
 
 ## [5.1.0](https://github.com/googlemaps/android-maps-utils/compare/v5.0.0...v5.1.0) (2026-08-05)
 
-
 ### Features
 
 * **data:** add support for parsing GroundOverlay with LatLonQuad bounds ([#1739](https://github.com/googlemaps/android-maps-utils/issues/1739)) ([c2a165d](https://github.com/googlemaps/android-maps-utils/commit/c2a165d03b63cdd12ac8abbd06e9717c854cd4d7))
-
 
 ### Bug Fixes
 
@@ -60,6 +83,7 @@
 ### Bug Fixes
 
 * prevent StackOverflowError when parsing deeply nested KML containers and multi-geometries ([#1710](https://github.com/googlemaps/android-maps-utils/issues/1710)) ([1463cc5](https://github.com/googlemaps/android-maps-utils/commit/1463cc572da85b8a2317690fa94b0e2432995a96))
+>>>>>>> origin/main
 
 ## [4.5.1](https://github.com/googlemaps/android-maps-utils/compare/v4.5.0...v4.5.1) (2026-06-17)
 

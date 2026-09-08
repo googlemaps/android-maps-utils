@@ -18,6 +18,9 @@ package com.google.maps.android.collections
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlin.collections.Collection as KotlinCollection
 
 /**
@@ -69,3 +72,33 @@ open class PolygonManager(map: GoogleMap) :
         }
     }
 }
+
+/**
+ * Adds a new [Polygon] to the underlying map and to this [PolygonManager.Collection] with the
+ * provided [optionsActions].
+ */
+public inline fun PolygonManager.Collection.addPolygon(
+    optionsActions: PolygonOptions.() -> Unit
+): Polygon =
+    this.addPolygon(
+        PolygonOptions().apply(optionsActions)
+    )
+
+/**
+ * Returns a flow that emits when a polygon in this collection is clicked. Using this to observe polygon clicks
+ * will override an existing listener (if any) to [PolygonManager.Collection.setOnPolygonClickListener].
+ *
+ * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
+ * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
+ * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
+ * for multi-observer configurations.
+ */
+public fun PolygonManager.Collection.clickEvents(): Flow<Polygon> =
+    callbackFlow {
+        setOnPolygonClickListener {
+            trySend(it).isSuccess
+        }
+        awaitClose {
+            setOnPolygonClickListener(null)
+        }
+    }
