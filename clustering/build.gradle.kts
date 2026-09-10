@@ -17,6 +17,7 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlinx.kover")
     // Prototype publishing: KMP auto-creates multiplatform publications, enabling
     // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
     id("maven-publish")
@@ -24,9 +25,9 @@ plugins {
 
 // NOTE (KMP prototype): the module previously applied android.maps.utils.PublishingConventionPlugin,
 // which is hard-wired to com.android.library + AndroidSingleVariantLibrary publishing. A KMP-aware
-// variant (vanniktech KotlinMultiplatform() publishing + jacoco for the android target) is needed
-// before this module can be released from this branch. Lint publishing (lint-checks), the amu_
-// resourcePrefix and consumer proguard rules from the old build also need re-wiring.
+// variant (vanniktech KotlinMultiplatform() publishing) is needed before this module can be
+// released from this branch. Lint publishing (lint-checks), the amu_ resourcePrefix and consumer
+// proguard rules from the old build also need re-wiring.
 
 kotlin {
     jvmToolchain(17)

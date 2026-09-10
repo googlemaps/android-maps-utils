@@ -17,13 +17,14 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlinx.kover")
     // Prototype publishing: KMP auto-creates multiplatform publications, enabling
     // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
     id("maven-publish")
 }
 
 // NOTE (KMP prototype): see clustering/build.gradle.kts — release publishing (vanniktech),
-// jacoco, lint-checks and the amu_ resourcePrefix still need KMP-aware re-wiring.
+// lint-checks and the amu_ resourcePrefix still need KMP-aware re-wiring.
 
 abstract class GenerateArtifactIdTask : DefaultTask() {
     @get:OutputDirectory
