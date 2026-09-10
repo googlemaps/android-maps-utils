@@ -50,9 +50,8 @@ uiautomator = "2.4.0"
 
 # --- Lint & Analysis ---
 # Versions for code quality and static analysis tools.
-jacoco-android = "0.2.1"
+kover = "0.9.9"
 lint = "32.3.1"
-org-jacoco-core = "0.8.15"
 
 # --- Gradle Plugins ---
 # Versions for Gradle plugins used in the build process.
@@ -116,12 +115,11 @@ uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", versi
 
 # --- Lint & Analysis ---
 # Libraries and tools for static code analysis, linting, and coverage reporting.
-jacoco-android = { module = "com.mxalbert.gradle:jacoco-android", version.ref = "jacoco-android" }
+kover-gradle-plugin = { module = "org.jetbrains.kotlinx:kover-gradle-plugin", version.ref = "kover" }
 lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-api = { module = "com.android.tools.lint:lint-api", version.ref = "lint" }
 lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "lint" }
 lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
-org-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "org-jacoco-core" }
 serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "serialization" }
 testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 
