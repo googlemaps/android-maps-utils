@@ -57,7 +57,7 @@ org-jacoco-core = "0.8.15"
 # --- Gradle Plugins ---
 # Versions for Gradle plugins used in the build process.
 dokka-gradle-plugin = "2.2.0"
-gradle = "9.3.1"
+gradle = "9.4.0"
 gradleMavenPublishPlugin = "0.37.0"
 secrets-gradle-plugin = "2.0.1"
 serialization = "1.0.1"
@@ -66,6 +66,7 @@ serialization = "1.0.1"
 [libraries]
 # --- Core Android & Kotlin ---
 # Essential libraries for Android development, providing backwards compatibility, lifecycle management, and Kotlin support.
+androidx-collection = { module = "androidx.collection:collection", version = "1.5.0" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
