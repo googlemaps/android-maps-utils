@@ -33,7 +33,7 @@ upgrading from 4.x, see the [migration guide](MIGRATION.md).
 - **Reactive Kotlin Extensions & Builders** — coroutine suspensions (`awaitMap()`), reactive `Flow` observers (`mapClickEvents()`), and option builder DSLs (`addMarker { ... }`) consolidated directly into `com.google.maps.android.*`.
 
 > [!IMPORTANT]
-> **KTX Consolidation Notice (`v6.0.0-rc01+`)**: All Kotlin extensions (`maps-ktx` and `maps-utils-ktx` from `android-maps-ktx`) are now built directly into `android-maps-utils` under the canonical `com.google.maps.android.*` packages. Separate dependencies on `android-maps-ktx` or `maps-utils-ktx` are no longer needed and should be removed. Legacy calls to `com.google.maps.android.ktx.*` packages remain supported via `@Deprecated(level = DeprecationLevel.WARNING)` bridges that forward directly to canonical implementations.
+> **KTX Consolidation Notice (`v6.0.0+`)**: All Kotlin extensions (`maps-ktx` and `maps-utils-ktx` from `android-maps-ktx`) are now built directly into `android-maps-utils` under the canonical `com.google.maps.android.*` packages. Separate dependencies on `android-maps-ktx` or `maps-utils-ktx` are no longer needed and should be removed. Legacy calls to `com.google.maps.android.ktx.*` packages remain supported via `@Deprecated(level = DeprecationLevel.WARNING)` bridges that forward directly to canonical implementations.
 
 <p align="center"><img width="90%" vspace="20" src="https://cloud.githubusercontent.com/assets/1950036/6629704/f57bc6d8-c908-11e4-815a-0d909fe02f99.gif"></p>
 
@@ -168,11 +168,11 @@ Full guides for using the utilities are published in
 </details>
 
 <details>
-  <summary>Reactive Kotlin Extensions & Builders (Consolidated in v6.0.0-rc01)</summary>
+  <summary>Reactive Kotlin Extensions & Builders (Consolidated in v6.0.0)</summary>
 
 ### Reactive Kotlin Extensions & Builders
 
-All Kotlin extensions formerly provided by `android-maps-ktx` (`maps-ktx` and `maps-utils-ktx`) are now integrated into `android-maps-utils` (`v6.0.0-rc01+`) under canonical packages (`com.google.maps.android.*`, `com.google.maps.android.clustering.*`, etc.).
+All Kotlin extensions formerly provided by `android-maps-ktx` (`maps-ktx` and `maps-utils-ktx`) are now integrated into `android-maps-utils` (`v6.0.0+`) under canonical packages (`com.google.maps.android.*`, `com.google.maps.android.clustering.*`, etc.).
 
 #### 1. Coroutine Suspensions (`awaitMapsSdkInitialized()`, `awaitMap()`, `awaitAnimateCamera()`)
 ```kotlin
