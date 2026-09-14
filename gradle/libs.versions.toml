@@ -32,7 +32,7 @@ compose-bom = "2026.09.00"
 # --- Google Services (Maps) ---
 # Versions for Google Play Services libraries essential for map functionality.
 play-services-maps = "20.0.0"
-play-services-location = "21.3.0"
+play-services-location = "21.4.0"
 navigation-sdk = "7.9.0"
 desugar-jdk-libs = "2.1.5"
 
@@ -46,19 +46,19 @@ kxml2 = "2.3.0"
 mockito-core = "5.23.0"
 mockito-kotlin = "2.2.0"
 mockk = "1.14.11"
-robolectric = "4.16.1"
+robolectric = "4.17"
 truth = "1.4.5"
 uiautomator = "2.4.0"
 
 # --- Lint & Analysis ---
 # Versions for code quality and static analysis tools.
 kover = "0.9.9"
-lint = "32.3.1"
+lint = "32.4.0"
 
 # --- Gradle Plugins ---
 # Versions for Gradle plugins used in the build process.
 dokka-gradle-plugin = "2.2.0"
-gradle = "9.3.1"
+gradle = "9.4.0"
 gradleMavenPublishPlugin = "0.37.0"
 secrets-gradle-plugin = "2.0.1"
 serialization = "1.0.2.1"
