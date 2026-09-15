@@ -75,6 +75,7 @@
     <string name="demo_title_icon_generator">IconGenerator</string>
     <string name="demo_title_tile_provider">Generating tiles</string>
     <string name="demo_title_animation_util">AnimationUtil sample</string>
+    <string name="demo_title_reactive_extensions">Reactive Extensions &amp; Builders</string>
 
     <!-- Demo Titles: Street View -->
     <string name="demo_title_street_view">Street View Demo</string>
