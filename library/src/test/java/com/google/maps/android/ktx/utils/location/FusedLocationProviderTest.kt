@@ -1,4 +1,3 @@
-@file:Suppress("DEPRECATION")
 /*
  * Copyright 2026 Google LLC
  *
@@ -15,6 +14,7 @@
  * limitations under the License.
  *
  */
+@file:Suppress("DEPRECATION")
 
 package com.google.maps.android.ktx.utils.location
 

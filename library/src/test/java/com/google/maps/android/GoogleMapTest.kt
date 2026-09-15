@@ -15,12 +15,10 @@
  */
 package com.google.maps.android
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.location.Location
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.GroundOverlay
@@ -37,7 +35,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,11 +42,10 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Captor
 import org.mockito.Mock
-import org.mockito.MockedStatic
 import org.mockito.Mockito
-import org.mockito.Mockito.mockStatic
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+
 
 /**
  * Unit test suite for Kotlin extensions on [GoogleMap], covering reactive `Flow` event streams,
@@ -108,9 +104,6 @@ public class GoogleMapTest {
 
     @Mock
     private lateinit var bitmap: Bitmap
-
-    @Mock
-    private lateinit var context: Context
 
     @Captor
     private lateinit var cameraIdleListener: ArgumentCaptor<GoogleMap.OnCameraIdleListener>
@@ -181,23 +174,14 @@ public class GoogleMapTest {
     @Captor
     private lateinit var snapshotReadyCallback: ArgumentCaptor<GoogleMap.SnapshotReadyCallback>
 
-    private lateinit var mapsInitializerMock: MockedStatic<MapsInitializer>
-
     @Before
     public fun setUp() {
-        mapsInitializerMock = mockStatic(MapsInitializer::class.java)
-        Mockito.`when`(MapsInitializer.initialize(context)).thenReturn(0)
         Mockito.`when`(googleMap.addMarker(any())).thenReturn(marker)
         Mockito.`when`(googleMap.addPolyline(any())).thenReturn(polyline)
         Mockito.`when`(googleMap.addPolygon(any())).thenReturn(polygon)
         Mockito.`when`(googleMap.addCircle(any())).thenReturn(circle)
         Mockito.`when`(googleMap.addGroundOverlay(any())).thenReturn(groundOverlay)
         Mockito.`when`(googleMap.addTileOverlay(any())).thenReturn(tileOverlay)
-    }
-
-    @After
-    public fun tearDown() {
-        mapsInitializerMock.close()
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -211,15 +195,19 @@ public class GoogleMapTest {
      */
     @Test
     public fun testCameraIdleEvents(): Unit = runTest {
+        var eventReceived = false
         val job = launch {
-            val event = googleMap.cameraIdleEvents().first()
-            assertThat(event).isNotNull()
+            googleMap.cameraIdleEvents().first()
+            eventReceived = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraIdleListener(cameraIdleListener.capture())
         cameraIdleListener.value.onCameraIdle()
+        advanceUntilIdle()
+        assertThat(eventReceived).isTrue()
         job.cancel()
     }
+
 
     /**
      * **Purpose:** Verifies [GoogleMap.cameraMoveEvents] converts camera move callbacks into a Flow.
@@ -262,15 +250,19 @@ public class GoogleMapTest {
      */
     @Test
     public fun testCameraMoveCanceledEvents(): Unit = runTest {
+        var eventReceived = false
         val job = launch {
-            val event = googleMap.cameraMoveCanceledEvents().first()
-            assertThat(event).isNotNull()
+            googleMap.cameraMoveCanceledEvents().first()
+            eventReceived = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraMoveCanceledListener(cameraMoveCanceledListener.capture())
         cameraMoveCanceledListener.value.onCameraMoveCanceled()
+        advanceUntilIdle()
+        assertThat(eventReceived).isTrue()
         job.cancel()
     }
+
 
     /**
      * **Purpose:** Verifies [GoogleMap.mapClickEvents] emits clicked [LatLng] coordinates.
@@ -503,13 +495,16 @@ public class GoogleMapTest {
      */
     @Test
     public fun testMyLocationButtonClickEvents(): Unit = runTest {
+        var eventReceived = false
         val job = launch {
-            val event = googleMap.myLocationButtonClickEvents().first()
-            assertThat(event).isNotNull()
+            googleMap.myLocationButtonClickEvents().first()
+            eventReceived = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnMyLocationButtonClickListener(myLocationButtonClickListener.capture())
         myLocationButtonClickListener.value.onMyLocationButtonClick()
+        advanceUntilIdle()
+        assertThat(eventReceived).isTrue()
         job.cancel()
     }
 
@@ -541,12 +536,16 @@ public class GoogleMapTest {
      */
     @Test
     public fun testAwaitMapLoad(): Unit = runTest {
+        var mapLoaded = false
         val job = launch {
             googleMap.awaitMapLoad()
+            mapLoaded = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnMapLoadedCallback(loadedCallback.capture())
         loadedCallback.value.onMapLoaded()
+        advanceUntilIdle()
+        assertThat(mapLoaded).isTrue()
         job.cancel()
     }
 
@@ -557,14 +556,19 @@ public class GoogleMapTest {
      */
     @Test
     public fun testAwaitAnimateCamera(): Unit = runTest {
+        var animated = false
         val job = launch {
             googleMap.awaitAnimateCamera(cameraUpdate)
+            animated = true
         }
         advanceUntilIdle()
         verify(googleMap).animateCamera(any(CameraUpdate::class.java), Mockito.eq(3000), cancelableCallback.capture())
         cancelableCallback.value.onFinish()
+        advanceUntilIdle()
+        assertThat(animated).isTrue()
         job.cancel()
     }
+
 
     /**
      * **Purpose:** Verifies [GoogleMap.awaitSnapshot] suspends until a bitmap snapshot is ready.

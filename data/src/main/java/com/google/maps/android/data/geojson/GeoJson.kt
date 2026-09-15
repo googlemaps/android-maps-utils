@@ -15,7 +15,6 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
 package com.google.maps.android.data.geojson
 
 import android.content.Context
@@ -33,7 +32,7 @@ import org.json.JSONObject
  * Alias for the [GeoJsonLayer] constructor that provides Kotlin named parameters and default
  * values.
  */
-public inline fun geoJsonLayer(
+public fun geoJsonLayer(
     map: GoogleMap,
     geoJsonFile: JSONObject,
     markerManager: MarkerManager? = null,
@@ -53,7 +52,7 @@ public inline fun geoJsonLayer(
  * Alias for the [GeoJsonLayer] constructor that provides Kotlin named parameters and default
  * values.
  */
-public inline fun geoJsonLayer(
+public fun geoJsonLayer(
     map: GoogleMap,
     @RawRes resourceId: Int,
     context: Context,

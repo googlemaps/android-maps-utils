@@ -20,9 +20,9 @@ import android.content.Context
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.maps.MapsInitializer
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * Suspends until the Google Maps SDK is initialized and returns the [MapsInitializer.Renderer]
@@ -39,7 +39,7 @@ import kotlin.coroutines.suspendCoroutine
  * invoke the callback, it resumes with [GooglePlayServicesNotAvailableException] holding the error code.
  *
  * **Cancellation:**
- * This suspending function does not support cancellation because the underlying Maps SDK
+ * This suspending function supports standard coroutine cancellation. Note that the underlying Maps SDK
  * [MapsInitializer.initialize] operation cannot be cancelled once initiated. Only the first
  * Maps SDK initialization in an application lifecycle honors [preferredRenderer]; passing `null`
  * uses the SDK's default preference.
@@ -49,10 +49,10 @@ import kotlin.coroutines.suspendCoroutine
  * @throws GooglePlayServicesNotAvailableException if initialization returns a status other than
  * [ConnectionResult.SUCCESS] without invoking the callback
  */
-public suspend inline fun Context.awaitMapsSdkInitialized(
+public suspend fun Context.awaitMapsSdkInitialized(
     preferredRenderer: MapsInitializer.Renderer? = null
 ): MapsInitializer.Renderer =
-    suspendCoroutine { continuation ->
+    suspendCancellableCoroutine { continuation ->
         var callbackInvoked = false
         val status = MapsInitializer.initialize(this, preferredRenderer) { renderer ->
             callbackInvoked = true

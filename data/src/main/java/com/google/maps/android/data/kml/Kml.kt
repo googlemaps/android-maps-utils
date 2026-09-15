@@ -15,7 +15,6 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
 package com.google.maps.android.data.kml
 
 import android.content.Context
@@ -32,7 +31,7 @@ import java.io.InputStream
 /**
  * Alias for the [KmlLayer] constructor that provides Kotlin named parameters and default values.
  */
-public inline fun kmlLayer(
+public fun kmlLayer(
     map: GoogleMap,
     @RawRes resourceId: Int,
     context: Context,
@@ -55,7 +54,7 @@ public inline fun kmlLayer(
 /**
  * Alias for the [KmlLayer] constructor that provides Kotlin named parameters and default values.
  */
-public inline fun kmlLayer(
+public fun kmlLayer(
     map: GoogleMap,
     stream: InputStream,
     context: Context,

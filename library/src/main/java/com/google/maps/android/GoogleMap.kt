@@ -49,7 +49,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @IntDef(
     GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE,
@@ -161,8 +160,8 @@ public suspend inline fun GoogleMap.awaitAnimateCamera(
  * A suspending function that awaits for the map to be loaded. Uses
  * [GoogleMap.setOnMapLoadedCallback].
  */
-public suspend inline fun GoogleMap.awaitMapLoad(): Unit =
-    suspendCoroutine { continuation ->
+public suspend fun GoogleMap.awaitMapLoad(): Unit =
+    suspendCancellableCoroutine { continuation ->
         setOnMapLoadedCallback {
             continuation.resume(Unit)
         }
@@ -218,8 +217,8 @@ public fun GoogleMap.cameraMoveEvents(): Flow<Unit> =
  * @param bitmap an optional preallocated bitmap
  * @return the snapshot
  */
-public suspend inline fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? =
-    suspendCoroutine { continuation ->
+public suspend fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? =
+    suspendCancellableCoroutine { continuation ->
         snapshot({ continuation.resume(it) }, bitmap)
     }
 

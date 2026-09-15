@@ -32,6 +32,11 @@ import kotlinx.coroutines.flow.callbackFlow
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
  * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
  * for multi-observer configurations.
+ *
+ * **Note on event consumption**: The underlying SDK listener returns the result of `trySend().isSuccess`.
+ * When an emission is accepted by the flow buffer, the click event is considered consumed (`true`),
+ * suppressing default SDK behavior (such as zooming). Under backpressure if the buffer is full,
+ * `trySend` returns `false`, allowing default SDK click handling to proceed.
  */
 public fun <T : ClusterItem> ClusterManager<T>.clusterClickEvents(): Flow<Cluster<T>> =
     callbackFlow {
@@ -51,6 +56,11 @@ public fun <T : ClusterItem> ClusterManager<T>.clusterClickEvents(): Flow<Cluste
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
  * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
  * for multi-observer configurations.
+ *
+ * **Note on event consumption**: The underlying SDK listener returns the result of `trySend().isSuccess`.
+ * When an emission is accepted by the flow buffer, the click event is considered consumed (`true`),
+ * suppressing default SDK behavior. Under backpressure if the buffer is full, `trySend` returns `false`,
+ * allowing default SDK click handling to proceed.
  */
 public fun <T : ClusterItem> ClusterManager<T>.clusterItemClickEvents(): Flow<T> =
     callbackFlow {

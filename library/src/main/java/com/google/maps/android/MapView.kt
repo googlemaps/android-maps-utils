@@ -17,8 +17,8 @@ package com.google.maps.android
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A suspending function that provides an instance of [GoogleMap] from this [MapView]. This is
@@ -26,8 +26,8 @@ import kotlin.coroutines.suspendCoroutine
  *
  * @return the [GoogleMap] instance
  */
-public suspend inline fun MapView.awaitMap(): GoogleMap =
-    suspendCoroutine { continuation ->
+public suspend fun MapView.awaitMap(): GoogleMap =
+    suspendCancellableCoroutine { continuation ->
         getMapAsync {
             continuation.resume(it)
         }

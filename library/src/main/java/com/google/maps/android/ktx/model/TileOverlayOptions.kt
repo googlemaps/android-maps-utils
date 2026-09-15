@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -14,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.google.maps.android.ktx.model
 
 import com.google.android.gms.maps.model.TileOverlayOptions
-import com.google.maps.android.model.tileOverlayOptions as canonical_tileOverlayOptions
+import com.google.maps.android.model.tileOverlayOptions as canonicalTileOverlayOptions
 
 @Deprecated(
     message = "Use com.google.maps.android.model.tileOverlayOptions instead",
     replaceWith = ReplaceWith("tileOverlayOptions(optionsActions)", "com.google.maps.android.model.tileOverlayOptions"),
     level = DeprecationLevel.WARNING
 )
-public inline fun tileOverlayOptions(optionsActions: TileOverlayOptions.() -> Unit): TileOverlayOptions = canonical_tileOverlayOptions(optionsActions)
+public inline fun tileOverlayOptions(optionsActions: TileOverlayOptions.() -> Unit): TileOverlayOptions = canonicalTileOverlayOptions(optionsActions)
+

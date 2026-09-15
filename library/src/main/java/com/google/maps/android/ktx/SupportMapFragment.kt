@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -25,4 +24,5 @@ import com.google.maps.android.awaitMap as canonicalAwaitMap
     replaceWith = ReplaceWith("awaitMap()", "com.google.maps.android.awaitMap"),
     level = DeprecationLevel.WARNING
 )
-public suspend inline fun SupportMapFragment.awaitMap(): GoogleMap = this.canonicalAwaitMap()
+public suspend fun SupportMapFragment.awaitMap(): GoogleMap = this.canonicalAwaitMap()
+
