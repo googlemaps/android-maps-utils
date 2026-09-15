@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -34,6 +33,7 @@ import com.google.maps.android.awaitMapsSdkInitialized as canonicalAwaitMapsSdkI
     ),
     level = DeprecationLevel.WARNING
 )
-public suspend inline fun Context.awaitMapsSdkInitialized(
+public suspend fun Context.awaitMapsSdkInitialized(
     preferredRenderer: MapsInitializer.Renderer? = null
 ): MapsInitializer.Renderer = this.canonicalAwaitMapsSdkInitialized(preferredRenderer)
+

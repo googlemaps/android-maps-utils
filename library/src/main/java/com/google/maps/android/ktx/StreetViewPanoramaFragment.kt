@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -25,4 +24,5 @@ import com.google.maps.android.awaitStreetViewPanorama as canonicalAwaitStreetVi
     replaceWith = ReplaceWith("awaitStreetViewPanorama()", "com.google.maps.android.awaitStreetViewPanorama"),
     level = DeprecationLevel.WARNING
 )
-public suspend inline fun StreetViewPanoramaFragment.awaitStreetViewPanorama(): StreetViewPanorama = this.canonicalAwaitStreetViewPanorama()
+public suspend fun StreetViewPanoramaFragment.awaitStreetViewPanorama(): StreetViewPanorama = this.canonicalAwaitStreetViewPanorama()
+

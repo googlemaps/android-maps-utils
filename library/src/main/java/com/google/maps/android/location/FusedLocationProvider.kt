@@ -75,7 +75,7 @@ public fun FusedLocationProviderClient.locationEvents(
  */
 @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
 public fun FusedLocationProviderClient.fusedLocationEvents(
-    intervalMs: Long = 2000L,
+    intervalMs: Long = 2_000L,
     minUpdateDistanceM: Float = 1f,
     priority: Int = Priority.PRIORITY_HIGH_ACCURACY,
     looper: Looper = Looper.getMainLooper()

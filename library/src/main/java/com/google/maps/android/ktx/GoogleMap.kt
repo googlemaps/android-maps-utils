@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -14,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.google.maps.android.ktx
+
 
 import android.graphics.Bitmap
 import android.location.Location
@@ -116,7 +118,7 @@ public fun GoogleMap.cameraEvents(): Flow<CameraEvent> = this.canonicalCameraEve
 public suspend inline fun GoogleMap.awaitAnimateCamera(cameraUpdate: CameraUpdate, durationMs: Int = 3000): Unit = this.canonicalAwaitAnimateCamera(cameraUpdate, durationMs)
 
 @Deprecated("Moved to com.google.maps.android.awaitMapLoad", ReplaceWith("awaitMapLoad()", "com.google.maps.android.awaitMapLoad"))
-public suspend inline fun GoogleMap.awaitMapLoad(): Unit = this.canonicalAwaitMapLoad()
+public suspend fun GoogleMap.awaitMapLoad(): Unit = this.canonicalAwaitMapLoad()
 
 @Deprecated("Moved to com.google.maps.android.cameraIdleEvents", ReplaceWith("cameraIdleEvents()", "com.google.maps.android.cameraIdleEvents"))
 public fun GoogleMap.cameraIdleEvents(): Flow<Unit> = this.canonicalCameraIdleEvents()
@@ -128,7 +130,8 @@ public fun GoogleMap.cameraMoveCanceledEvents(): Flow<Unit> = this.canonicalCame
 public fun GoogleMap.cameraMoveEvents(): Flow<Unit> = this.canonicalCameraMoveEvents()
 
 @Deprecated("Moved to com.google.maps.android.awaitSnapshot", ReplaceWith("awaitSnapshot(bitmap)", "com.google.maps.android.awaitSnapshot"))
-public suspend inline fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? = this.canonicalAwaitSnapshot(bitmap)
+public suspend fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? = this.canonicalAwaitSnapshot(bitmap)
+
 
 @Deprecated("Moved to com.google.maps.android.cameraMoveStartedEvents", ReplaceWith("cameraMoveStartedEvents()", "com.google.maps.android.cameraMoveStartedEvents"))
 public fun GoogleMap.cameraMoveStartedEvents(): Flow<Int> = this.canonicalCameraMoveStartedEvents()
