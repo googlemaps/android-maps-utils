@@ -304,6 +304,16 @@ def cmd_append(args: argparse.Namespace) -> None:
     )
 
 
+def group(count: str | int) -> str:
+    """Thousands separators, so large line counts stay readable.
+
+    A comma is used rather than a dot because the tables already spell
+    percentages with a decimal point, and reusing "." for both roles would make
+    a number like 2.731 ambiguous.
+    """
+    return f"{int(count):,}"
+
+
 def bar(percentage: float, width: int = 20) -> str:
     """A fixed-width text meter, so the table scans at a glance."""
     filled = round(percentage / 100 * width)
@@ -334,10 +344,10 @@ def render_current(rows: list[dict], suite: str, heading: str, note: str) -> lis
         line_pct = float(row["line_pct"])
         lines.append(
             f"| {name} "
-            f"| {row['lines_covered']}/{row['lines_total']} "
+            f"| {group(row['lines_covered'])}/{group(row['lines_total'])} "
             f"| {line_pct:.2f}% "
             f"| `{bar(line_pct)}` "
-            f"| {row['branches_covered']}/{row['branches_total']} "
+            f"| {group(row['branches_covered'])}/{group(row['branches_total'])} "
             f"| {float(row['branch_pct']):.2f}% |"
         )
     lines.append("")
