@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `51e9e43` (#1772), recorded 2026-09-15T15:14:46Z.
+Measured at `6015319` (#1778), recorded 2026-09-15T23:03:49Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 169/834 | 20.26% |
+| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 170/834 | 20.38% |
 | `data` | 1,309/2,642 | 49.55% | `██████████░░░░░░░░░░` | 797/2,223 | 35.85% |
 | `heatmaps` | 242/275 | 88.00% | `██████████████████░░` | 120/146 | 82.19% |
 | `library` | 512/561 | 91.27% | `██████████████████░░` | 211/260 | 81.15% |
 | `ui` | 115/148 | 77.70% | `████████████████░░░░` | 43/66 | 65.15% |
-| **TOTAL** | 2,731/5,405 | 50.53% | `██████████░░░░░░░░░░` | 1,340/3,529 | 37.97% |
+| **TOTAL** | 2,731/5,405 | 50.53% | `██████████░░░░░░░░░░` | 1,341/3,529 | 38.00% |
 
 ## Trend (last 30 commits)
 
@@ -28,4 +28,5 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-15 | `6015319` | #1778 | 50.53% | 0.00 | ci: record unit test coverage history |
 | 2026-09-15 | `51e9e43` | #1772 | 50.53% | n/a | chore(ci): harden Gemini issue triage against prompt injection |
