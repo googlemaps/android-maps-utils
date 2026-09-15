@@ -1,13 +1,17 @@
 # Changelog
 
-## [6.0.0](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v6.0.0) (2026-09-14)
+## [6.0.0-rc04](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc03...v6.0.0-rc04) (2026-09-15)
 
-### Features & Breaking Changes (KTX Consolidation)
+### Bug Fixes & Refactoring
 
-* **Consolidated Kotlin Extensions (KTX into Utils)**: Moved all functionality from `android-maps-ktx` (`maps-ktx` and `maps-utils-ktx`) directly into `android-maps-utils`.
-  * **Canonical Non-KTX Packages**: All reactive Coroutine/Flow extensions (`awaitMap()`, `mapClickEvents()`, `cameraMoveEvents()`) and option builder DSLs (`addMarker`, `addPolyline`, `addPolygon`) now reside in canonical `android-maps-utils` packages (`com.google.maps.android.*`, `com.google.maps.android.model.*`, `com.google.maps.android.collections.*`, `com.google.maps.android.clustering.*`, `com.google.maps.android.data.geojson.*`, `com.google.maps.android.data.kml.*`, `com.google.maps.android.heatmaps.*`).
-  * **Deprecated Compatibility Layer**: To ensure full backward compatibility for existing codebases, the legacy `com.google.maps.android.ktx.*` package structure has been preserved with `@Deprecated(level = DeprecationLevel.WARNING, replaceWith = ReplaceWith(...))` forwarding wrappers and typealiases. Existing imports will continue to compile seamlessly with deprecation warnings pointing to the canonical replacements.
-  * **Demo & Test Consolidation**: Integrated full reactive extension demo (`KtxExtensionsDemoActivity`) into the `:demo` app and migrated all 18 unit test suites from `android-maps-ktx` with both canonical and shim test coverage.
+* Address review feedback on coroutines, inlining, and file organization:
+  * Migrate all suspension functions from `suspendCoroutine` to `suspendCancellableCoroutine` to avoid continuation leaks
+  * Remove `inline` and `@file:Suppress("NOTHING_TO_INLINE")` on non-lambda functions across core utilities and KTX shims
+  * Separate collection Flow extensions and DSL helpers into dedicated `*Flows.kt` companion files
+  * Standardize copyright headers and normalize shim alias naming to camelCase
+  * Improve `GoogleMapTest` assertions and remove unused mocks
+* Update dependencies and libraries for v6.0.0 release candidate
+
 
 ## [6.0.0-rc03](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0-rc02...v6.0.0-rc03) (2026-08-31)
 
