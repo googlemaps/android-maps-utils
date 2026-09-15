@@ -23,8 +23,8 @@ import com.google.android.gms.maps.model.StreetViewPanoramaOrientation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A suspending function that provides an instance of a [StreetViewPanorama] from this
@@ -34,8 +34,8 @@ import kotlin.coroutines.suspendCoroutine
  *
  * @return the [StreetViewPanorama] instance
  */
-public suspend inline fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama =
-    suspendCoroutine { continuation ->
+public suspend fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama =
+    suspendCancellableCoroutine { continuation ->
         getStreetViewPanoramaAsync {
             continuation.resume(it)
         }

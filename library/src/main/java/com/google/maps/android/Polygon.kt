@@ -15,7 +15,6 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
@@ -31,7 +30,7 @@ import com.google.maps.android.SphericalUtil
  *
  * @see PolyUtil.containsLocation
  */
-public inline fun Polygon.contains(latLng: LatLng): Boolean =
+public fun Polygon.contains(latLng: LatLng): Boolean =
     PolyUtil.containsLocation(latLng, this.points, this.isGeodesic)
 
 /**
@@ -44,18 +43,18 @@ public inline fun Polygon.contains(latLng: LatLng): Boolean =
  *
  * @see PolyUtil.isLocationOnEdge
  */
-public inline fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = 0.1): Boolean =
+public fun Polygon.isOnEdge(latLng: LatLng, tolerance: Double = 0.1): Boolean =
     PolyUtil.isLocationOnEdge(latLng, this.points, this.isGeodesic, tolerance)
 
 /**
  * The area of this Polygon on Earth in square meters.
  */
-public inline val Polygon.area: Double
+public val Polygon.area: Double
     get() = SphericalUtil.computeArea(this.points)
 
 /**
  * Computes the signed area under a closed path on Earth. The sign of the area may be used to
  * determine the orientation of the path.
  */
-public inline val Polygon.signedArea: Double
+public val Polygon.signedArea: Double
     get() = SphericalUtil.computeSignedArea(this.points)

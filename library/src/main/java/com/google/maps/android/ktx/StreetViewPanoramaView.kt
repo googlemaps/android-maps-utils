@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -33,7 +32,8 @@ import com.google.maps.android.longClickEvents as canonicalLongClickEvents
     replaceWith = ReplaceWith("awaitStreetViewPanorama()", "com.google.maps.android.awaitStreetViewPanorama"),
     level = DeprecationLevel.WARNING
 )
-public suspend inline fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama = this.canonicalAwaitStreetViewPanorama()
+public suspend fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama = this.canonicalAwaitStreetViewPanorama()
+
 
 @Deprecated(
     message = "Use com.google.maps.android.cameraChangeEvents instead",

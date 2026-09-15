@@ -19,8 +19,8 @@ package com.google.maps.android
 
 import com.google.android.gms.maps.StreetViewPanorama
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A suspending function that provides an instance of a [StreetViewPanorama] from this
@@ -30,8 +30,8 @@ import kotlin.coroutines.suspendCoroutine
  *
  * @return the [StreetViewPanorama]
  */
-public suspend inline fun SupportStreetViewPanoramaFragment.awaitStreetViewPanorama(): StreetViewPanorama =
-    suspendCoroutine { continuation ->
+public suspend fun SupportStreetViewPanoramaFragment.awaitStreetViewPanorama(): StreetViewPanorama =
+    suspendCancellableCoroutine { continuation ->
         getStreetViewPanoramaAsync {
             continuation.resume(it)
         }

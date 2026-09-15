@@ -23,6 +23,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import androidx.annotation.RequiresPermission
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -41,7 +42,7 @@ import kotlinx.coroutines.flow.callbackFlow
  */
 @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
 public fun LocationManager.coarseLocationEvents(
-    minTimeMs: Long = 1000L,
+    minTimeMs: Long = 1_000L,
     minDistanceM: Float = 1f
 ): Flow<Location> =
     callbackFlow {
@@ -60,7 +61,7 @@ public fun LocationManager.coarseLocationEvents(
             }
 
             override fun onProviderDisabled(provider: String) {
-                close(kotlinx.coroutines.CancellationException("Location provider $provider was disabled"))
+                close(CancellationException("Location provider $provider was disabled"))
             }
         }
 
@@ -90,7 +91,7 @@ public fun LocationManager.coarseLocationEvents(
  */
 @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
 public fun LocationManager.fineLocationEvents(
-    minTimeMs: Long = 1000L,
+    minTimeMs: Long = 1_000L,
     minDistanceM: Float = 1f
 ): Flow<Location> =
     callbackFlow {
@@ -109,7 +110,7 @@ public fun LocationManager.fineLocationEvents(
             }
 
             override fun onProviderDisabled(provider: String) {
-                close(kotlinx.coroutines.CancellationException("Location provider $provider was disabled"))
+                close(CancellationException("Location provider $provider was disabled"))
             }
         }
 

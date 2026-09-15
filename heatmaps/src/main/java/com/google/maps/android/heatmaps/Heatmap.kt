@@ -15,7 +15,6 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
 package com.google.maps.android.heatmaps
 
 import com.google.android.gms.maps.model.LatLng
@@ -26,7 +25,7 @@ import com.google.maps.android.heatmaps.WeightedLatLng
 /**
  * Converts this LatLng to a [WeightedLatLng]
  */
-public inline fun LatLng.toWeightedLatLng(
+public fun LatLng.toWeightedLatLng(
     intensity: Double = WeightedLatLng.DEFAULT_INTENSITY
 ): WeightedLatLng =
     WeightedLatLng(this, intensity)
@@ -37,7 +36,7 @@ public inline fun LatLng.toWeightedLatLng(
  * @throws IllegalStateException when [opacity] is not within the range [0, 1] or if [latLngs] is
  * empty
  */
-public inline fun heatmapTileProviderWithData(
+public fun heatmapTileProviderWithData(
     latLngs: Collection<LatLng>,
     radius: Int = HeatmapTileProvider.DEFAULT_RADIUS,
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
@@ -59,7 +58,7 @@ public inline fun heatmapTileProviderWithData(
  * @throws IllegalStateException when [opacity] is not within the range [0, 1] or if [latLngs] is
  * empty
  */
-public inline fun heatmapTileProviderWithWeightedData(
+public fun heatmapTileProviderWithWeightedData(
     latLngs: Collection<WeightedLatLng>,
     radius: Int = HeatmapTileProvider.DEFAULT_RADIUS,
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,

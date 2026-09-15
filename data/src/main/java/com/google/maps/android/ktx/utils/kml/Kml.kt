@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -29,7 +28,7 @@ import java.io.InputStream
 import com.google.maps.android.data.kml.kmlLayer as canonicalKmlLayer
 
 @Deprecated("Moved to com.google.maps.android.data.kml.kmlLayer", ReplaceWith("kmlLayer(map, resourceId, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)", "com.google.maps.android.data.kml.kmlLayer"))
-public inline fun kmlLayer(
+public fun kmlLayer(
     map: GoogleMap,
     @RawRes resourceId: Int,
     context: Context,
@@ -41,7 +40,7 @@ public inline fun kmlLayer(
 ): KmlLayer = canonicalKmlLayer(map, resourceId, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)
 
 @Deprecated("Moved to com.google.maps.android.data.kml.kmlLayer", ReplaceWith("kmlLayer(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)", "com.google.maps.android.data.kml.kmlLayer"))
-public inline fun kmlLayer(
+public fun kmlLayer(
     map: GoogleMap,
     stream: InputStream,
     context: Context,
@@ -51,3 +50,4 @@ public inline fun kmlLayer(
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
     imagesCache: Renderer.ImagesCache? = null
 ): KmlLayer = canonicalKmlLayer(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)
+

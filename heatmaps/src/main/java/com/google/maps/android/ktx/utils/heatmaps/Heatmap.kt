@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -25,12 +24,12 @@ import com.google.maps.android.heatmaps.heatmapTileProviderWithData as canonical
 import com.google.maps.android.heatmaps.heatmapTileProviderWithWeightedData as canonicalHeatmapTileProviderWithWeightedData
 
 @Deprecated("Moved to com.google.maps.android.heatmaps.toWeightedLatLng", ReplaceWith("toWeightedLatLng(intensity)", "com.google.maps.android.heatmaps.toWeightedLatLng"))
-public inline fun LatLng.toWeightedLatLng(
+public fun LatLng.toWeightedLatLng(
     intensity: Double = WeightedLatLng.DEFAULT_INTENSITY
 ): WeightedLatLng = this.canonicalToWeightedLatLng(intensity)
 
 @Deprecated("Moved to com.google.maps.android.heatmaps.heatmapTileProviderWithData", ReplaceWith("heatmapTileProviderWithData(latLngs, radius, gradient, opacity, maxIntensity)", "com.google.maps.android.heatmaps.heatmapTileProviderWithData"))
-public inline fun heatmapTileProviderWithData(
+public fun heatmapTileProviderWithData(
     latLngs: Collection<LatLng>,
     radius: Int = HeatmapTileProvider.DEFAULT_RADIUS,
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
@@ -39,10 +38,11 @@ public inline fun heatmapTileProviderWithData(
 ) : HeatmapTileProvider = canonicalHeatmapTileProviderWithData(latLngs, radius, gradient, opacity, maxIntensity)
 
 @Deprecated("Moved to com.google.maps.android.heatmaps.heatmapTileProviderWithWeightedData", ReplaceWith("heatmapTileProviderWithWeightedData(latLngs, radius, gradient, opacity, maxIntensity)", "com.google.maps.android.heatmaps.heatmapTileProviderWithWeightedData"))
-public inline fun heatmapTileProviderWithWeightedData(
+public fun heatmapTileProviderWithWeightedData(
     latLngs: Collection<WeightedLatLng>,
     radius: Int = HeatmapTileProvider.DEFAULT_RADIUS,
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
     opacity: Double = HeatmapTileProvider.DEFAULT_OPACITY,
     maxIntensity: Double = 0.0
 ) : HeatmapTileProvider = canonicalHeatmapTileProviderWithWeightedData(latLngs, radius, gradient, opacity, maxIntensity)
+

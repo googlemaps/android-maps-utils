@@ -1,4 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
 /*
  * Copyright 2026 Google LLC
  *
@@ -14,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.google.maps.android.ktx.model
 
 import com.google.android.gms.maps.model.PolygonOptions
-import com.google.maps.android.model.polygonOptions as canonical_polygonOptions
+import com.google.maps.android.model.polygonOptions as canonicalPolygonOptions
 
 @Deprecated(
     message = "Use com.google.maps.android.model.polygonOptions instead",
     replaceWith = ReplaceWith("polygonOptions(optionsActions)", "com.google.maps.android.model.polygonOptions"),
     level = DeprecationLevel.WARNING
 )
-public inline fun polygonOptions(optionsActions: PolygonOptions.() -> Unit): PolygonOptions = canonical_polygonOptions(optionsActions)
+public inline fun polygonOptions(optionsActions: PolygonOptions.() -> Unit): PolygonOptions = canonicalPolygonOptions(optionsActions)
+
