@@ -1,0 +1,7 @@
+timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,branches_covered,branches_total,branch_pct,instructions_covered,instructions_total,instruction_pct
+2026-09-15T15:14:46Z,51e9e43,1772,chore(ci): harden Gemini issue triage against prompt injection,unit,clustering,553,1779,31.08,169,834,20.26,3115,9947,31.32
+2026-09-15T15:14:46Z,51e9e43,1772,chore(ci): harden Gemini issue triage against prompt injection,unit,data,1309,2642,49.55,797,2223,35.85,9451,19410,48.69
+2026-09-15T15:14:46Z,51e9e43,1772,chore(ci): harden Gemini issue triage against prompt injection,unit,heatmaps,242,275,88.0,120,146,82.19,1685,1912,88.13
+2026-09-15T15:14:46Z,51e9e43,1772,chore(ci): harden Gemini issue triage against prompt injection,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
+2026-09-15T15:14:46Z,51e9e43,1772,chore(ci): harden Gemini issue triage against prompt injection,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
+2026-09-15T15:14:46Z,51e9e43,1772,chore(ci): harden Gemini issue triage against prompt injection,unit,TOTAL,2731,5405,50.53,1340,3529,37.97,17702,35182,50.32

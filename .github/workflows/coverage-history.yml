@@ -1,0 +1,94 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Records unit test coverage in coverage/history.csv after every merge to main,
+# so coverage can be tracked over time. Release-please commits and the
+# workflow's own commits are skipped.
+name: Record coverage history
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Serialize runs so two quick merges cannot race on pushing the history file.
+concurrency:
+  group: coverage-history
+  cancel-in-progress: false
+
+jobs:
+  record:
+    # Skip release-please's release commits and this workflow's own commits.
+    # (The commit below carries [skip ci] as well, and pushes made with
+    # GITHUB_TOKEN do not trigger workflows, so this is belt and braces.)
+    if: >-
+      !startsWith(github.event.head_commit.message, 'chore(main): release') &&
+      !startsWith(github.event.head_commit.message, 'chore: update coverage history')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # Credentials are deliberately persisted here: the final step pushes the
+      # updated history back to main, so persist-credentials must stay enabled.
+      - name: Checkout Repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO || secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Create dummy secrets.properties
+        run: echo "MAPS_API_KEY=dummy" > secrets.properties
+
+      - name: Run unit tests and generate coverage reports
+        run: ./gradlew koverXmlReportDebug --stacktrace
+
+      - name: Append to coverage history
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          SUBJECT=$(git log -1 --pretty=%s)
+          # Squash-merged PRs end their subject with "(#123)". The number is
+          # recorded in its own column, so drop it from the subject text.
+          PR=$(printf '%s' "$SUBJECT" | sed -n 's/.*(#\([0-9]\{1,\}\))$/\1/p')
+          SUBJECT=$(printf '%s' "$SUBJECT" | sed 's/ (#[0-9]\{1,\})$//')
+
+          python3 .github/scripts/coverage_history.py append --suite unit \
+            --commit "$COMMIT_SHA" --pr "$PR" --subject "$SUBJECT"
+
+          python3 .github/scripts/coverage_history.py render
+
+      - name: Commit coverage history
+        run: |
+          git config user.name 'googlemaps-bot'
+          git config user.email 'googlemaps-bot@google.com'
+          git add coverage/history.csv coverage/COVERAGE.md
+          if git diff --staged --quiet; then
+            echo "Coverage history unchanged; nothing to commit."
+            exit 0
+          fi
+          git commit -m 'chore: update coverage history [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
