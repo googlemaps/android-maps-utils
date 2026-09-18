@@ -43,14 +43,23 @@ jobs:
       - name: Create dummy secrets.properties
         run: echo "MAPS_API_KEY=dummy" > secrets.properties
 
+      # The library module is now Kotlin Multiplatform; the KMP Android library plugin
+      # does not create lintDebug/SARIF reporting tasks yet (tracked as a known gap of
+      # the KMP migration). Lint the remaining plain Android modules instead.
       - name: Run Android Lint
-        run: ./gradlew :library:lintDebug :demo:lintStandardDebug
+        run: ./gradlew :data:lintDebug :ui:lintDebug :demo:lintStandardDebug
 
-      - name: Upload SARIF for library
+      - name: Upload SARIF for data
         uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
-          sarif_file: library/build/reports/lint-results.sarif
-          category: library
+          sarif_file: data/build/reports/lint-results.sarif
+          category: data
+
+      - name: Upload SARIF for ui
+        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        with:
+          sarif_file: ui/build/reports/lint-results.sarif
+          category: ui
 
       - name: Upload SARIF for demo
         uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6

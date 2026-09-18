@@ -1,5 +1,5 @@
-/**
- * Copyright 2020 Google LLC
+/*
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-pluginManagement {
-    includeBuild("build-logic")
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
+package com.google.maps.android.model
 
-include("demo", "clustering", "maps-model", "heatmaps", "ui", "data", "lint-checks", "library", "visual-testing", "maps-utils")
+/**
+ * An immutable camera position: target location, zoom, tilt and bearing.
+ *
+ * On Android this is a typealias for [com.google.android.gms.maps.model.CameraPosition].
+ */
+expect class CameraPosition(target: LatLng, zoom: Float, tilt: Float, bearing: Float)
+
+expect val CameraPosition.target: LatLng
+
+expect val CameraPosition.zoom: Float
+
+expect val CameraPosition.tilt: Float
+
+expect val CameraPosition.bearing: Float
