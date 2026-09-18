@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.0](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v5.3.0) (2026-09-18)
+
+
+### Features
+
+* add polygon z-index support ([#1785](https://github.com/googlemaps/android-maps-utils/issues/1785)) ([9056fd9](https://github.com/googlemaps/android-maps-utils/commit/9056fd93b719dcf6a151466dc6e9f2c3db7284d3))
+
 ## [5.2.0](https://github.com/googlemaps/android-maps-utils/compare/v5.1.1...v5.2.0) (2026-08-28)
 
 
