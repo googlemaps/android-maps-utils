@@ -93,9 +93,7 @@ class GeminiVisualTestHelper {
 
         val fullPrompt = "$systemPrompt\n\nCommand: \"$prompt\"\n\nUI Hierarchy:\n$hierarchyXml"
 
-        // Use a simpler text-only model for this task as no image is involved.
-        // The user mentioned "gemini-flash 2.5" works, but we should use a standard name.
-        val modelName = "gemini-2.5-flash-lite"
+        val modelName = System.getenv("GEMINI_MODEL") ?: "gemini-3.8-flash"
         val request = GeminiRequest(contents = listOf(Content(parts = listOf(Part(text = fullPrompt)))))
 
         var attempts = 0
@@ -229,7 +227,8 @@ class GeminiVisualTestHelper {
         var response: HttpResponse? = null
         while (attempts < 3) {
             attempts++
-            response = client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=$apiKey") {
+            val model = System.getenv("GEMINI_MODEL") ?: "gemini-3.8-flash"
+            response = client.post("https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
