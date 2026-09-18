@@ -61,4 +61,38 @@ class KmlLayerOnMapTest {
         layer.removeLayerFromMap()
         assertFalse(layer.isLayerOnMap())
     }
+
+    @Test
+    fun addLayerToMap_rendersPointsLinesAndPolygons() {
+        io.mockk.mockkStatic(com.google.android.gms.maps.model.BitmapDescriptorFactory::class)
+        io.mockk.every { com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(any()) } returns io.mockk.mockk()
+        try {
+            val kml = """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <kml xmlns="http://www.opengis.net/kml/2.2">
+                  <Document>
+                    <Placemark>
+                      <Point><coordinates>10.0,20.0</coordinates></Point>
+                    </Placemark>
+                    <Placemark>
+                      <LineString><coordinates>10.0,20.0 11.0,21.0</coordinates></LineString>
+                    </Placemark>
+                    <Placemark>
+                      <Polygon>
+                        <outerBoundaryIs>
+                          <LinearRing><coordinates>0.0,0.0 1.0,0.0 1.0,1.0 0.0,0.0</coordinates></LinearRing>
+                        </outerBoundaryIs>
+                      </Polygon>
+                    </Placemark>
+                  </Document>
+                </kml>
+            """.trimIndent()
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            val layer = KmlLayer(mockk<GoogleMap>(relaxed = true), kml.byteInputStream(), context)
+            layer.addLayerToMap()
+            assertTrue(layer.isLayerOnMap())
+        } finally {
+            io.mockk.unmockkStatic(com.google.android.gms.maps.model.BitmapDescriptorFactory::class)
+        }
+    }
 }

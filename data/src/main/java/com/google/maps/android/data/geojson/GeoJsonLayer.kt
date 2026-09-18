@@ -295,6 +295,7 @@ public class GeoJsonLayer : Layer {
                         anchorU = pointStyle.getAnchorU(),
                         anchorV = pointStyle.getAnchorV(),
                         heading = pointStyle.getRotation(),
+                        zIndex = pointStyle.getZIndex(),
                     )
                 }
 
@@ -304,6 +305,7 @@ public class GeoJsonLayer : Layer {
                         color = lineStyle.color,
                         width = lineStyle.getWidth(),
                         geodesic = lineStyle.isGeodesic(),
+                        zIndex = lineStyle.getZIndex(),
                     )
                 }
 
@@ -314,6 +316,7 @@ public class GeoJsonLayer : Layer {
                         strokeColor = polygonStyle.getStrokeColor(),
                         strokeWidth = polygonStyle.getStrokeWidth(),
                         geodesic = polygonStyle.isGeodesic(),
+                        zIndex = polygonStyle.getZIndex(),
                     )
                 }
 
@@ -325,6 +328,7 @@ public class GeoJsonLayer : Layer {
                             strokeColor = polygonStyle.getStrokeColor(),
                             strokeWidth = polygonStyle.getStrokeWidth(),
                             geodesic = polygonStyle.isGeodesic(),
+                            zIndex = polygonStyle.getZIndex(),
                         )
                     } else null
                 }

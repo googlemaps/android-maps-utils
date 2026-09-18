@@ -395,6 +395,7 @@ public class KmlLayer : Layer {
                             inline?.mMarkerColor?.let { hue -> Color.HSVToColor(floatArrayOf(hue, 1f, 1f)) }
                                 ?: Color.BLACK,
                         iconUrl = inline?.getIconUrl(),
+                        zIndex = inline?.mMarkerOptions?.zIndex ?: 0f,
                     )
                 }
 
@@ -402,6 +403,8 @@ public class KmlLayer : Layer {
                     com.google.maps.android.data.renderer.model.LineStyle(
                         color = inline?.mPolylineOptions?.color ?: 0xFF000000.toInt(),
                         width = inline?.mPolylineOptions?.width ?: 1.0f,
+                        geodesic = inline?.mPolylineOptions?.isGeodesic ?: false,
+                        zIndex = inline?.mPolylineOptions?.zIndex ?: 0f,
                     )
                 }
 
@@ -410,6 +413,8 @@ public class KmlLayer : Layer {
                         fillColor = inline?.mPolygonOptions?.fillColor ?: 0x00000000,
                         strokeColor = inline?.mPolygonOptions?.strokeColor ?: 0xFF000000.toInt(),
                         strokeWidth = inline?.mPolygonOptions?.strokeWidth ?: 1.0f,
+                        geodesic = inline?.mPolygonOptions?.isGeodesic ?: false,
+                        zIndex = inline?.mPolygonOptions?.zIndex ?: 0f,
                     )
                 }
 

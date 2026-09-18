@@ -222,7 +222,7 @@ class MapViewRenderer(
                                 if (bitmap != null) {
                                     try {
                                         mapOverlay.setImage(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                        mapOverlay.isVisible = style?.visibility ?: true // Restore visibility
+                                        mapOverlay.isVisible = style.visibility // Restore visibility
                                     } catch (e: Exception) {
                                         // Overlay might be removed
                                     }
@@ -301,6 +301,7 @@ class MapViewRenderer(
             it.heading?.let { heading -> markerOptions.rotation(heading) }
             markerOptions.anchor(it.anchorU, it.anchorV)
             markerOptions.alpha(android.graphics.Color.alpha(it.color) / 255.0f)
+            markerOptions.zIndex(it.zIndex)
         }
         return markerOptions
     }
@@ -333,6 +334,7 @@ class MapViewRenderer(
                     .setBorderColor(android.graphics.Color.WHITE) // Default border
                     .build()
             markerOptions.icon(BitmapDescriptorFactory.fromPinConfig(pinConfig))
+            markerOptions.zIndex(it.zIndex)
 
             // AdvancedMarkerOptions does not support rotation directly in the same way as MarkerOptions for flat icons,
             // but it supports collision behavior etc.
@@ -345,6 +347,13 @@ class MapViewRenderer(
         return markerOptions
     }
 
+    /**
+     * Creates the [PolylineOptions] for rendering a [LineString].
+     *
+     * Applies styling properties from [LineStyle], including color, stroke width,
+     * geodesic curvature, and [LineStyle.zIndex] (which determines its draw order
+     * relative to other map features).
+     */
     private fun createPolylineOptions(
         lineString: LineString,
         style: LineStyle?,
@@ -355,10 +364,18 @@ class MapViewRenderer(
             polylineOptions.color(it.color)
             polylineOptions.width(it.width)
             polylineOptions.geodesic(it.geodesic)
+            polylineOptions.zIndex(it.zIndex)
         }
         return polylineOptions
     }
 
+    /**
+     * Creates the [PolygonOptions] for rendering a [Polygon].
+     *
+     * Applies styling properties from [PolygonStyle], including fill color, stroke color,
+     * stroke width, geodesic curvature, and [PolygonStyle.zIndex] (which determines its draw order
+     * relative to other map features).
+     */
     private fun createPolygonOptions(
         polygon: Polygon,
         style: PolygonStyle?,
