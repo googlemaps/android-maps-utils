@@ -137,6 +137,9 @@
         <activity
             android:name=".TransitLayerDemoActivity"
             android:exported="true" />
+        <activity
+            android:name=".ZIndexDemoActivity"
+            android:exported="true" />
 
     </application>
 

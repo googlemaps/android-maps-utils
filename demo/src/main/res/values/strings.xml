@@ -113,4 +113,18 @@
     <string name="cluster_text_fmt">I am a cluster of size %d</string>
     <string name="renderer_latest">The latest version of the renderer is used.</string>
     <string name="renderer_legacy">The legacy version of the renderer is used.</string>
+
+    <!-- Z-Index Demo -->
+    <string name="demo_title_zindex">Z-Index Layering</string>
+    <string name="zindex_demo_title">Z-Index Layering</string>
+    <string name="zindex_demo_subtitle">Adjust z-index to change shape stacking order</string>
+    <string name="zindex_polygon_1">Polygon 1 (Coral)</string>
+    <string name="zindex_polygon_2">Polygon 2 (Teal)</string>
+    <string name="zindex_polyline_1">Polyline 1 (Gold)</string>
+    <string name="zindex_polyline_2">Polyline 2 (Purple)</string>
+    <string name="zindex_marker">Center Marker (Green)</string>
+    <string name="zindex_value_fmt">z: %.1f</string>
+    <string name="decrement_zindex">Decrease z-index</string>
+    <string name="increment_zindex">Increase z-index</string>
+    <string name="reset_zindex">Reset z-indices</string>
 </resources>
