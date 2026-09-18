@@ -17,3 +17,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-09-16T10:07:38Z,3884f22,1783,build(deps): bump androidx.compose:compose-bom,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
 2026-09-16T10:07:38Z,3884f22,1783,build(deps): bump androidx.compose:compose-bom,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
 2026-09-16T10:07:38Z,3884f22,1783,build(deps): bump androidx.compose:compose-bom,unit,TOTAL,2731,5405,50.53,1342,3529,38.03,17702,35182,50.32
+2026-09-18T16:30:00Z,9056fd9,1785,feat: add polygon z-index support,unit,clustering,553,1779,31.08,169,834,20.26,3115,9947,31.32
+2026-09-18T16:30:00Z,9056fd9,1785,feat: add polygon z-index support,unit,data,1311,2644,49.58,797,2223,35.85,9473,19433,48.75
+2026-09-18T16:30:00Z,9056fd9,1785,feat: add polygon z-index support,unit,heatmaps,242,275,88.0,120,146,82.19,1685,1912,88.13
+2026-09-18T16:30:00Z,9056fd9,1785,feat: add polygon z-index support,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
+2026-09-18T16:30:00Z,9056fd9,1785,feat: add polygon z-index support,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
+2026-09-18T16:30:00Z,9056fd9,1785,feat: add polygon z-index support,unit,TOTAL,2733,5407,50.55,1340,3529,37.97,17724,35205,50.35
