@@ -241,7 +241,8 @@ class MapViewRendererTest {
         val style = PolygonStyle(
             fillColor = 0x3F00FF00,
             strokeColor = 0xFFFF0000.toInt(),
-            strokeWidth = 2.0f
+            strokeWidth = 2.0f,
+            zIndex = 7.5f,
         )
         val feature = Feature(geometry = multiGeometry, style = style)
 
@@ -254,6 +255,7 @@ class MapViewRendererTest {
         assertEquals(0x3F00FF00, capturedOptions.fillColor)
         assertEquals(0xFFFF0000.toInt(), capturedOptions.strokeColor)
         assertEquals(2.0f, capturedOptions.strokeWidth, 0.001f)
+        assertEquals(7.5f, capturedOptions.zIndex, 0.001f)
     }
 
     @Test

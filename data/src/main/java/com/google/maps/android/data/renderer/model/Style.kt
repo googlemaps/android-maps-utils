@@ -61,10 +61,12 @@ data class LineStyle(
  * @property strokeColor The stroke color of the polygon, as an integer (e.g., ARGB) or hex string. Defaults to black.
  * @property strokeWidth The stroke width of the polygon in pixels. Defaults to 1.0.
  * @property geodesic Indicates whether the polygon's stroke should be drawn as a geodesic (true) or a straight line (false). Defaults to false.
+ * @property zIndex The z-index of the polygon. Higher values are drawn above lower values. Defaults to 0.0.
  */
 data class PolygonStyle(
     val fillColor: Int = 0x00000000,
     val strokeColor: Int = 0xFF000000.toInt(), // Default to black
     val strokeWidth: Float = 1.0f,
     val geodesic: Boolean = false,
+    val zIndex: Float = 0.0f,
 ) : Style

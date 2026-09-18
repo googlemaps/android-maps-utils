@@ -374,6 +374,7 @@ class MapViewRenderer(
             polygonOptions.strokeColor(it.strokeColor)
             polygonOptions.strokeWidth(it.strokeWidth)
             polygonOptions.geodesic(it.geodesic)
+            polygonOptions.zIndex(it.zIndex)
         }
         return polygonOptions
     }
