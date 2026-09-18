@@ -3,8 +3,6 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "prerelease": true,
-      "prerelease-type": "rc",
       "extra-files": [
         "README.md",
         "build.gradle.kts",
