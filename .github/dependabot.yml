@@ -23,7 +23,17 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Collapse routine minor/patch bumps into a single PR per ecosystem.
+    # Majors stay on their own so they still get individual review.
+    groups:
+      gradle-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
   - package-ecosystem: "github-actions"
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    groups:
+      github-actions-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
