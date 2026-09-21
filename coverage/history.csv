@@ -29,3 +29,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-09-18T21:13:43Z,a70f257,1781,build(deps): bump actions/setup-java from 5.7.0 to 6.0.1,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
 2026-09-18T21:13:43Z,a70f257,1781,build(deps): bump actions/setup-java from 5.7.0 to 6.0.1,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
 2026-09-18T21:13:43Z,a70f257,1781,build(deps): bump actions/setup-java from 5.7.0 to 6.0.1,unit,TOTAL,2733,5407,50.55,1341,3529,38.0,17724,35205,50.35
+2026-09-21T08:20:37Z,5557301,1762,build(deps): bump com.google.android.libraries.navigation:navigation,unit,clustering,553,1779,31.08,169,834,20.26,3115,9947,31.32
+2026-09-21T08:20:37Z,5557301,1762,build(deps): bump com.google.android.libraries.navigation:navigation,unit,data,1311,2644,49.58,797,2223,35.85,9473,19433,48.75
+2026-09-21T08:20:37Z,5557301,1762,build(deps): bump com.google.android.libraries.navigation:navigation,unit,heatmaps,242,275,88.0,120,146,82.19,1685,1912,88.13
+2026-09-21T08:20:37Z,5557301,1762,build(deps): bump com.google.android.libraries.navigation:navigation,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
+2026-09-21T08:20:37Z,5557301,1762,build(deps): bump com.google.android.libraries.navigation:navigation,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
+2026-09-21T08:20:37Z,5557301,1762,build(deps): bump com.google.android.libraries.navigation:navigation,unit,TOTAL,2733,5407,50.55,1340,3529,37.97,17724,35205,50.35

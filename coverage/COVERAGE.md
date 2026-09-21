@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `a70f257` (#1781), recorded 2026-09-18T21:13:43Z.
+Measured at `5557301` (#1762), recorded 2026-09-21T08:20:37Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 170/834 | 20.38% |
+| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 169/834 | 20.26% |
 | `data` | 1,311/2,644 | 49.58% | `██████████░░░░░░░░░░` | 797/2,223 | 35.85% |
 | `heatmaps` | 242/275 | 88.00% | `██████████████████░░` | 120/146 | 82.19% |
 | `library` | 512/561 | 91.27% | `██████████████████░░` | 211/260 | 81.15% |
 | `ui` | 115/148 | 77.70% | `████████████████░░░░` | 43/66 | 65.15% |
-| **TOTAL** | 2,733/5,407 | 50.55% | `██████████░░░░░░░░░░` | 1,341/3,529 | 38.00% |
+| **TOTAL** | 2,733/5,407 | 50.55% | `██████████░░░░░░░░░░` | 1,340/3,529 | 37.97% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-21 | `5557301` | #1762 | 50.55% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-09-18 | `a70f257` | #1781 | 50.55% | 0.00 | build(deps): bump actions/setup-java from 5.7.0 to 6.0.1 |
 | 2026-09-18 | `9056fd9` | #1785 | 50.55% | +0.02 | feat: add polygon z-index support |
 | 2026-09-16 | `3884f22` | #1783 | 50.53% | 0.00 | build(deps): bump androidx.compose:compose-bom |
