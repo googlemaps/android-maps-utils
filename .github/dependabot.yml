@@ -23,6 +23,13 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Let a release sit before adopting it, narrowing the window in which a
+    # compromised or immediately-yanked version can be pulled in.
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
     # Collapse routine minor/patch bumps into a single PR per ecosystem.
     # Majors stay on their own so they still get individual review.
     groups:
@@ -33,6 +40,13 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Let a release sit before adopting it, narrowing the window in which a
+    # compromised or immediately-yanked version can be pulled in.
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
     groups:
       github-actions-minor-and-patch:
         patterns: ["*"]
