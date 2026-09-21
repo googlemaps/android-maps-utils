@@ -395,6 +395,15 @@
                     app:iconSize="18dp" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/markerNoteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/zindex_marker_note"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?android:attr/textColorSecondary" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

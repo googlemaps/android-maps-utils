@@ -127,4 +127,5 @@
     <string name="decrement_zindex">Decrease z-index</string>
     <string name="increment_zindex">Increase z-index</string>
     <string name="reset_zindex">Reset z-indices</string>
+    <string name="zindex_marker_note">Note: Markers reside in a separate z-index group and always render above other map overlays (polylines, polygons, circles, ground overlays), regardless of explicit z-index.</string>
 </resources>

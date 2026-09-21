@@ -30,11 +30,19 @@ import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.utils.demo.databinding.ActivityZindexDemoBinding
 
+// [START maps_android_utils_zindex_shape_interface]
 /**
  * Common interface representing a styled map object whose visual layering ([zIndex])
  * can be drawn or refreshed in-place on a [GoogleMap].
+ *
+ * **Note on zIndex Layering**:
+ * - When two shapes of the same type share identical [zIndex] values, the Google Maps SDK resolves
+ *   their relative stacking order based on insertion or creation order.
+ * - Markers always render above other map overlays (polylines, polygons, circles, and ground overlays),
+ *   regardless of the explicit [zIndex] value assigned to those shapes. This is because markers reside
+ *   in a separate z-index group. For more details, see the official
+ *   [Google Maps Markers Documentation](https://developers.google.com/maps/documentation/android-sdk/marker#z-index).
  */
-// [START maps_android_utils_zindex_shape_interface]
 sealed interface MapShape {
     val id: String
     val name: String
@@ -157,9 +165,15 @@ data class PolylineShape(
 /**
  * Represents a styled Marker on the map with dynamic [zIndex] control.
  *
+ * **Note on zIndex Layering**: Markers always render above other map overlays (polylines, polygons,
+ * circles, and ground overlays), regardless of the explicit [zIndex] value assigned to those shapes.
+ * This is because markers reside in a separate z-index group; setting [zIndex] on a marker only
+ * controls its stacking order relative to other markers. For more details, see the official
+ * [Google Maps Markers Documentation](https://developers.google.com/maps/documentation/android-sdk/marker#z-index).
+ *
  * @property id Unique identifier for the shape in the registry.
  * @property name Human-readable label for UI displays.
- * @property zIndex Current stacking order value (higher draws above lower).
+ * @property zIndex Current stacking order value (higher draws above lower relative to other markers).
  * @property position Geographic coordinate of the marker.
  * @property title Info window title text.
  * @property hue Marker color hue (0.0 to 360.0).
@@ -200,6 +214,7 @@ data class MarkerShape(
 }
 // [END maps_android_utils_zindex_shape_interface]
 
+// [START maps_android_utils_zindex_sample]
 /**
  * Demonstrates how to control the visual layering (z-index) of overlapping map objects
  * (polygons, polylines, and markers) using a unified [MapShape] architecture.
@@ -207,8 +222,20 @@ data class MarkerShape(
  * Each shape can draw and refresh its [zIndex] in-place without destroying and recreating
  * the underlying Google Maps SDK objects. Shapes are tracked in a [LinkedHashMap] keyed
  * by their unique object ID.
+ *
+ * **Note on zIndex Layering**: Markers always render above other map overlays (polylines,
+ * polygons, circles, and ground overlays), regardless of the explicit [zIndex] value assigned
+ * to those shapes. This is because markers reside in a separate z-index group. For more details,
+ * see the official [Google Maps Markers Documentation](https://developers.google.com/maps/documentation/android-sdk/marker#z-index).
+ *
+ * Key API calls:
+ * - [com.google.android.gms.maps.model.Polygon.setZIndex]
+ * - [com.google.android.gms.maps.model.Polyline.setZIndex]
+ * - [com.google.android.gms.maps.model.Marker.setZIndex]
+ * - [com.google.android.gms.maps.GoogleMap.addPolygon]
+ * - [com.google.android.gms.maps.GoogleMap.addPolyline]
+ * - [com.google.android.gms.maps.GoogleMap.addMarker]
  */
-// [START maps_android_utils_zindex_sample]
 class ZIndexDemoActivity : BaseDemoActivity() {
 
     private lateinit var binding: ActivityZindexDemoBinding
