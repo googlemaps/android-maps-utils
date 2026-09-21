@@ -18,8 +18,12 @@ package com.google.maps.android.data.kml
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.maps.android.data.Layer
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -64,8 +68,8 @@ class KmlLayerOnMapTest {
 
     @Test
     fun addLayerToMap_rendersPointsLinesAndPolygons() {
-        io.mockk.mockkStatic(com.google.android.gms.maps.model.BitmapDescriptorFactory::class)
-        io.mockk.every { com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(any()) } returns io.mockk.mockk()
+        mockkStatic(BitmapDescriptorFactory::class)
+        every { BitmapDescriptorFactory.defaultMarker(any()) } returns mockk()
         try {
             val kml = """
                 <?xml version="1.0" encoding="UTF-8"?>
@@ -92,7 +96,7 @@ class KmlLayerOnMapTest {
             layer.addLayerToMap()
             assertTrue(layer.isLayerOnMap())
         } finally {
-            io.mockk.unmockkStatic(com.google.android.gms.maps.model.BitmapDescriptorFactory::class)
+            unmockkStatic(BitmapDescriptorFactory::class)
         }
     }
 }

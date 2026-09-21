@@ -232,26 +232,21 @@ data class MarkerShape(
  * see the official [Google Maps Markers Documentation](https://developers.google.com/maps/documentation/android-sdk/marker#z-index).
  *
  * Key API calls:
- * - [com.google.android.gms.maps.model.Polygon.setZIndex]
- * - [com.google.android.gms.maps.model.Polyline.setZIndex]
- * - [com.google.android.gms.maps.model.Marker.setZIndex]
- * - [com.google.android.gms.maps.GoogleMap.addPolygon]
- * - [com.google.android.gms.maps.GoogleMap.addPolyline]
- * - [com.google.android.gms.maps.GoogleMap.addMarker]
+ * - [Polygon.setZIndex]
+ * - [Polyline.setZIndex]
+ * - [Marker.setZIndex]
+ * - [GoogleMap.addPolygon]
+ * - [GoogleMap.addPolyline]
+ * - [GoogleMap.addMarker]
  */
 class ZIndexDemoActivity : BaseDemoActivity() {
 
     private lateinit var binding: ActivityZindexDemoBinding
 
-    /**
-     * Registry of all active demo shapes, keyed by their unique shape ID.
-     * When a shape's z-index is modified, the updated shape replaces the previous entry here.
-     */
+    // Registry of all active demo shapes, keyed by unique shape ID
     private val shapes = LinkedHashMap<String, MapShape>()
 
-    /**
-     * Binds a shape's ID to its corresponding UI row widgets.
-     */
+    // Binds a shape's ID to its corresponding UI row widgets
     private data class ShapeRowBinding(
         val shapeId: String,
         val minusButton: View,
@@ -301,9 +296,7 @@ class ZIndexDemoActivity : BaseDemoActivity() {
         setupControls()
     }
 
-    /**
-     * Initializes the [MapShape] instances, draws them on the [map], and populates [shapes].
-     */
+    // Initializes the demo shapes, draws them on the map, and populates the registry
     private fun setupFeatures(map: GoogleMap, center: LatLng) {
         val lat = center.latitude
         val lng = center.longitude
@@ -384,9 +377,7 @@ class ZIndexDemoActivity : BaseDemoActivity() {
         }
     }
 
-    /**
-     * Binds stepper buttons and initial z-index labels for each shape.
-     */
+    // Binds stepper buttons and initial z-index labels for each shape
     private fun setupControls() {
         for (row in rowBindings) {
             val shape = shapes[row.shapeId] ?: continue
@@ -398,10 +389,7 @@ class ZIndexDemoActivity : BaseDemoActivity() {
         binding.infoButton.setOnClickListener { showInfoDialog() }
     }
 
-    /**
-     * Displays an informative pop-up dialog explaining the sample's purpose, expected behavior,
-     * marker z-index grouping, and tie-breaking rules with links to official documentation.
-     */
+    // Displays an informative pop-up dialog explaining z-index grouping and tie-breaking rules
     private fun showInfoDialog() {
         val messageHtml = HtmlCompat.fromHtml(
             getString(R.string.zindex_dialog_message),
@@ -418,9 +406,7 @@ class ZIndexDemoActivity : BaseDemoActivity() {
             LinkMovementMethod.getInstance()
     }
 
-    /**
-     * Resets all shapes to their initial default z-index values and updates the map in-place.
-     */
+    // Resets all shapes to their initial default z-index values in-place
     private fun resetZIndices() {
         val map = map ?: return
         for ((shapeId, defaultZIndex) in INITIAL_Z_INDICES) {
@@ -434,10 +420,7 @@ class ZIndexDemoActivity : BaseDemoActivity() {
     }
 
     // [START maps_android_utils_zindex_update_sample]
-    /**
-     * Updates the z-index of the shape identified by [shapeId] by [delta].
-     * Refreshes the shape on the map in-place and replaces the entry in [shapes].
-     */
+    // Updates the shape's z-index by delta and refreshes the map in-place
     private fun updateShapeZIndex(shapeId: String, delta: Float) {
         val currentShape = shapes[shapeId] ?: return
         val map = map ?: return

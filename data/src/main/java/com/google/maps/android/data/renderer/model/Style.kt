@@ -22,7 +22,6 @@ package com.google.maps.android.data.renderer.model
  */
 sealed interface Style
 
-// [START maps_android_utils_style_models]
 /**
  * A data class representing the style for a PointGeometry.
  *
@@ -75,4 +74,3 @@ data class PolygonStyle(
     val geodesic: Boolean = false,
     val zIndex: Float = 0.0f,
 ) : Style
-// [END maps_android_utils_style_models]
