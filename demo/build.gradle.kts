@@ -76,6 +76,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = "DUMMY_KEY_FOR_TESTS"
     }
 
     buildTypes {
@@ -118,6 +119,12 @@ android {
         create("navigation") {
             dimension = "sdk"
             minSdk = 24 // Navigation SDK 7.x requires API 24+
+        }
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
         }
     }
 }
@@ -163,6 +170,10 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation("com.google.android.maps.testing:golden:1.1.0")
+    testImplementation("com.google.android.maps.robolectric:shadows:1.1.0")
 
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
