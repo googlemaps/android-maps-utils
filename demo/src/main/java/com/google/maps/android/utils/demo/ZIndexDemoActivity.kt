@@ -15,9 +15,11 @@
  */
 package com.google.maps.android.utils.demo
 
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -28,6 +30,7 @@ import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.maps.android.utils.demo.databinding.ActivityZindexDemoBinding
 
 // [START maps_android_utils_zindex_shape_interface]
@@ -392,6 +395,27 @@ class ZIndexDemoActivity : BaseDemoActivity() {
             row.plusButton.setOnClickListener { updateShapeZIndex(row.shapeId, +1.0f) }
         }
         binding.resetButton.setOnClickListener { resetZIndices() }
+        binding.infoButton.setOnClickListener { showInfoDialog() }
+    }
+
+    /**
+     * Displays an informative pop-up dialog explaining the sample's purpose, expected behavior,
+     * marker z-index grouping, and tie-breaking rules with links to official documentation.
+     */
+    private fun showInfoDialog() {
+        val messageHtml = HtmlCompat.fromHtml(
+            getString(R.string.zindex_dialog_message),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.zindex_dialog_title)
+            .setMessage(messageHtml)
+            .setPositiveButton(R.string.zindex_dialog_close, null)
+            .show()
+
+        // Enable clickable HTML links inside the dialog message
+        dialog.findViewById<TextView>(android.R.id.message)?.movementMethod =
+            LinkMovementMethod.getInstance()
     }
 
     /**

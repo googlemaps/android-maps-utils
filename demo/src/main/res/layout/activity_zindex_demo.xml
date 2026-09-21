@@ -70,9 +70,20 @@
                 </LinearLayout>
 
                 <ImageButton
+                    android:id="@+id/infoButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/zindex_info_description"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_info_24"
+                    app:tint="?attr/colorControlNormal" />
+
+                <ImageButton
                     android:id="@+id/resetButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/reset_zindex"
                     android:scaleType="centerInside"
@@ -394,15 +405,6 @@
                     app:iconGravity="textStart"
                     app:iconSize="18dp" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/markerNoteText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/zindex_marker_note"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
