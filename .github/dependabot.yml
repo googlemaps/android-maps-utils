@@ -44,9 +44,6 @@ updates:
     # compromised or immediately-yanked version can be pulled in.
     cooldown:
       default-days: 7
-      semver-major-days: 14
-      semver-minor-days: 7
-      semver-patch-days: 3
     groups:
       github-actions-minor-and-patch:
         patterns: ["*"]
