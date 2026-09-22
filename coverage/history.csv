@@ -41,3 +41,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-09-22T14:48:21Z,c3fa410,1787,feat: add z-index support across geometry styles and layer mappers,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
 2026-09-22T14:48:21Z,c3fa410,1787,feat: add z-index support across geometry styles and layer mappers,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
 2026-09-22T14:48:21Z,c3fa410,1787,feat: add z-index support across geometry styles and layer mappers,unit,TOTAL,2814,5421,51.91,1378,3547,38.85,18172,35281,51.51
+2026-09-22T18:25:27Z,2e33859,1789,ci: group dependabot minor and patch updates,unit,clustering,553,1779,31.08,170,834,20.38,3115,9947,31.32
+2026-09-22T18:25:27Z,2e33859,1789,ci: group dependabot minor and patch updates,unit,data,1392,2658,52.37,834,2241,37.22,9921,19509,50.85
+2026-09-22T18:25:27Z,2e33859,1789,ci: group dependabot minor and patch updates,unit,heatmaps,242,275,88.0,120,146,82.19,1685,1912,88.13
+2026-09-22T18:25:27Z,2e33859,1789,ci: group dependabot minor and patch updates,unit,library,512,561,91.27,211,260,81.15,2890,3168,91.22
+2026-09-22T18:25:27Z,2e33859,1789,ci: group dependabot minor and patch updates,unit,ui,115,148,77.7,43,66,65.15,561,745,75.3
+2026-09-22T18:25:27Z,2e33859,1789,ci: group dependabot minor and patch updates,unit,TOTAL,2814,5421,51.91,1378,3547,38.85,18172,35281,51.51

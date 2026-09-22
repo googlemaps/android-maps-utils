@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `c3fa410` (#1787), recorded 2026-09-22T14:48:21Z.
+Measured at `2e33859` (#1789), recorded 2026-09-22T18:25:27Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-22 | `2e33859` | #1789 | 51.91% | 0.00 | ci: group dependabot minor and patch updates |
 | 2026-09-22 | `c3fa410` | #1787 | 51.91% | +1.36 | feat: add z-index support across geometry styles and layer mappers |
 | 2026-09-21 | `5557301` | #1762 | 50.55% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-09-18 | `a70f257` | #1781 | 50.55% | 0.00 | build(deps): bump actions/setup-java from 5.7.0 to 6.0.1 |
