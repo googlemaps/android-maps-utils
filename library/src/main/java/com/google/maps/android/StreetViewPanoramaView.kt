@@ -37,7 +37,9 @@ import kotlin.coroutines.resume
 public suspend fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama =
     suspendCancellableCoroutine { continuation ->
         getStreetViewPanoramaAsync {
-            continuation.resume(it)
+            if (continuation.isActive) {
+                continuation.resume(it)
+            }
         }
     }
 

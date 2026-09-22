@@ -18,6 +18,7 @@ package com.google.maps.android.utils.attribution
 import android.content.Context
 import com.google.android.gms.maps.MapsApiSettings
 import com.google.common.truth.Truth.assertThat
+import com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer as KtxAttributionIdInitializer
 import com.google.maps.android.utils.meta.AttributionId
 import org.junit.After
 import org.junit.Before
@@ -31,7 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner
 
 /**
  * Unit test suite for [AttributionIdInitializer] and its deprecated KTX compatibility shim
- * [com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer].
+ * [KtxAttributionIdInitializer].
  *
  * **Purpose:**
  * Verifies that the Jetpack App Startup `Initializer` for library usage attribution correctly
@@ -91,7 +92,7 @@ class AttributionIdInitializerTest {
 
     /**
      * **Purpose:** Tests that the deprecated KTX compatibility shim
-     * [com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer] continues to register
+     * [KtxAttributionIdInitializer] continues to register
      * usage attribution without breaking existing apps.
      *
      * **How it works:** Instantiates the KTX shim class and performs the exact same dependency
@@ -101,9 +102,10 @@ class AttributionIdInitializerTest {
      * - **Code under test:** Proves backwards-compatible KTX typealias/shim preserves identical startup behavior.
      * - **Test:** Fails if the KTX shim fails to invoke [MapsApiSettings.addInternalUsageAttributionId].
      */
+    @Suppress("DEPRECATION")
     @Test
     fun `test ktx AttributionIdInitializer create and dependencies`() {
-        val initializer = com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer()
+        val initializer = KtxAttributionIdInitializer()
         assertThat(initializer.dependencies()).isEmpty()
         initializer.create(context)
         mapsApiSettingsMock.verify {

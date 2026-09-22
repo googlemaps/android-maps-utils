@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.google.maps.android.ktx
-
 
 import android.graphics.Bitmap
 import android.location.Location
@@ -40,6 +37,19 @@ import com.google.android.gms.maps.model.TileOverlay
 import com.google.android.gms.maps.model.TileOverlayOptions
 import kotlinx.coroutines.flow.Flow
 
+import com.google.maps.android.CameraEvent as CanonicalCameraEvent
+import com.google.maps.android.CameraIdleEvent as CanonicalCameraIdleEvent
+import com.google.maps.android.CameraMoveCanceledEvent as CanonicalCameraMoveCanceledEvent
+import com.google.maps.android.CameraMoveEvent as CanonicalCameraMoveEvent
+import com.google.maps.android.CameraMoveStartedEvent as CanonicalCameraMoveStartedEvent
+import com.google.maps.android.IndoorBuildingFocusedEvent as CanonicalIndoorBuildingFocusedEvent
+import com.google.maps.android.IndoorChangeEvent as CanonicalIndoorChangeEvent
+import com.google.maps.android.IndoorLevelActivatedEvent as CanonicalIndoorLevelActivatedEvent
+import com.google.maps.android.MarkerDragEndEvent as CanonicalMarkerDragEndEvent
+import com.google.maps.android.MarkerDragEvent as CanonicalMarkerDragEvent
+import com.google.maps.android.MarkerDragStartEvent as CanonicalMarkerDragStartEvent
+import com.google.maps.android.MoveStartedReason as CanonicalMoveStartedReason
+import com.google.maps.android.OnMarkerDragEvent as CanonicalOnMarkerDragEvent
 import com.google.maps.android.cameraEvents as canonicalCameraEvents
 import com.google.maps.android.awaitAnimateCamera as canonicalAwaitAnimateCamera
 import com.google.maps.android.awaitMapLoad as canonicalAwaitMapLoad
@@ -72,50 +82,50 @@ import com.google.maps.android.addPolyline as canonicalAddPolyline
 import com.google.maps.android.addTileOverlay as canonicalAddTileOverlay
 
 @Deprecated("Moved to com.google.maps.android.MoveStartedReason", ReplaceWith("MoveStartedReason", "com.google.maps.android.MoveStartedReason"))
-public typealias MoveStartedReason = com.google.maps.android.MoveStartedReason
+public typealias MoveStartedReason = CanonicalMoveStartedReason
 
 @Deprecated("Moved to com.google.maps.android.CameraEvent", ReplaceWith("CameraEvent", "com.google.maps.android.CameraEvent"))
-public typealias CameraEvent = com.google.maps.android.CameraEvent
+public typealias CameraEvent = CanonicalCameraEvent
 
 @Deprecated("Moved to com.google.maps.android.CameraIdleEvent", ReplaceWith("CameraIdleEvent", "com.google.maps.android.CameraIdleEvent"))
-public typealias CameraIdleEvent = com.google.maps.android.CameraIdleEvent
+public typealias CameraIdleEvent = CanonicalCameraIdleEvent
 
 @Deprecated("Moved to com.google.maps.android.CameraMoveCanceledEvent", ReplaceWith("CameraMoveCanceledEvent", "com.google.maps.android.CameraMoveCanceledEvent"))
-public typealias CameraMoveCanceledEvent = com.google.maps.android.CameraMoveCanceledEvent
+public typealias CameraMoveCanceledEvent = CanonicalCameraMoveCanceledEvent
 
 @Deprecated("Moved to com.google.maps.android.CameraMoveEvent", ReplaceWith("CameraMoveEvent", "com.google.maps.android.CameraMoveEvent"))
-public typealias CameraMoveEvent = com.google.maps.android.CameraMoveEvent
+public typealias CameraMoveEvent = CanonicalCameraMoveEvent
 
 @Deprecated("Moved to com.google.maps.android.CameraMoveStartedEvent", ReplaceWith("CameraMoveStartedEvent", "com.google.maps.android.CameraMoveStartedEvent"))
-public typealias CameraMoveStartedEvent = com.google.maps.android.CameraMoveStartedEvent
+public typealias CameraMoveStartedEvent = CanonicalCameraMoveStartedEvent
 
 @Deprecated("Moved to com.google.maps.android.OnMarkerDragEvent", ReplaceWith("OnMarkerDragEvent", "com.google.maps.android.OnMarkerDragEvent"))
-public typealias OnMarkerDragEvent = com.google.maps.android.OnMarkerDragEvent
+public typealias OnMarkerDragEvent = CanonicalOnMarkerDragEvent
 
 @Deprecated("Moved to com.google.maps.android.MarkerDragEvent", ReplaceWith("MarkerDragEvent", "com.google.maps.android.MarkerDragEvent"))
-public typealias MarkerDragEvent = com.google.maps.android.MarkerDragEvent
+public typealias MarkerDragEvent = CanonicalMarkerDragEvent
 
 @Deprecated("Moved to com.google.maps.android.MarkerDragEndEvent", ReplaceWith("MarkerDragEndEvent", "com.google.maps.android.MarkerDragEndEvent"))
-public typealias MarkerDragEndEvent = com.google.maps.android.MarkerDragEndEvent
+public typealias MarkerDragEndEvent = CanonicalMarkerDragEndEvent
 
 @Deprecated("Moved to com.google.maps.android.MarkerDragStartEvent", ReplaceWith("MarkerDragStartEvent", "com.google.maps.android.MarkerDragStartEvent"))
-public typealias MarkerDragStartEvent = com.google.maps.android.MarkerDragStartEvent
+public typealias MarkerDragStartEvent = CanonicalMarkerDragStartEvent
 
 @Deprecated("Moved to com.google.maps.android.IndoorChangeEvent", ReplaceWith("IndoorChangeEvent", "com.google.maps.android.IndoorChangeEvent"))
-public typealias IndoorChangeEvent = com.google.maps.android.IndoorChangeEvent
+public typealias IndoorChangeEvent = CanonicalIndoorChangeEvent
 
 @Deprecated("Moved to com.google.maps.android.IndoorBuildingFocusedEvent", ReplaceWith("IndoorBuildingFocusedEvent", "com.google.maps.android.IndoorBuildingFocusedEvent"))
-public typealias IndoorBuildingFocusedEvent = com.google.maps.android.IndoorBuildingFocusedEvent
+public typealias IndoorBuildingFocusedEvent = CanonicalIndoorBuildingFocusedEvent
 
 @Deprecated("Moved to com.google.maps.android.IndoorLevelActivatedEvent", ReplaceWith("IndoorLevelActivatedEvent", "com.google.maps.android.IndoorLevelActivatedEvent"))
-public typealias IndoorLevelActivatedEvent = com.google.maps.android.IndoorLevelActivatedEvent
+public typealias IndoorLevelActivatedEvent = CanonicalIndoorLevelActivatedEvent
 
 @Suppress("DEPRECATION")
 @Deprecated("Use cameraIdleEvents(), cameraMoveCanceledEvents(), cameraMoveEvents() or cameraMoveStartedEvents")
 public fun GoogleMap.cameraEvents(): Flow<CameraEvent> = this.canonicalCameraEvents()
 
 @Deprecated("Moved to com.google.maps.android.awaitAnimateCamera", ReplaceWith("awaitAnimateCamera(cameraUpdate, durationMs)", "com.google.maps.android.awaitAnimateCamera"))
-public suspend inline fun GoogleMap.awaitAnimateCamera(cameraUpdate: CameraUpdate, durationMs: Int = 3000): Unit = this.canonicalAwaitAnimateCamera(cameraUpdate, durationMs)
+public suspend fun GoogleMap.awaitAnimateCamera(cameraUpdate: CameraUpdate, durationMs: Int = 3000): Unit = this.canonicalAwaitAnimateCamera(cameraUpdate, durationMs)
 
 @Deprecated("Moved to com.google.maps.android.awaitMapLoad", ReplaceWith("awaitMapLoad()", "com.google.maps.android.awaitMapLoad"))
 public suspend fun GoogleMap.awaitMapLoad(): Unit = this.canonicalAwaitMapLoad()

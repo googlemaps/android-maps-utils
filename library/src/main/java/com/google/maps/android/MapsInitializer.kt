@@ -53,12 +53,12 @@ public suspend fun Context.awaitMapsSdkInitialized(
     preferredRenderer: MapsInitializer.Renderer? = null
 ): MapsInitializer.Renderer =
     suspendCancellableCoroutine { continuation ->
-        var callbackInvoked = false
         val status = MapsInitializer.initialize(this, preferredRenderer) { renderer ->
-            callbackInvoked = true
-            continuation.resume(renderer)
+            if (continuation.isActive) {
+                continuation.resume(renderer)
+            }
         }
-        if (!callbackInvoked && status != ConnectionResult.SUCCESS) {
+        if (continuation.isActive && status != ConnectionResult.SUCCESS) {
             continuation.resumeWithException(GooglePlayServicesNotAvailableException(status))
         }
     }

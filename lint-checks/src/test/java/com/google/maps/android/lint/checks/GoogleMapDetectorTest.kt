@@ -17,13 +17,14 @@ package com.google.maps.android.lint.checks
 
 import com.android.tools.lint.checks.infrastructure.LintDetectorTest
 import com.android.tools.lint.checks.infrastructure.TestFile
+import com.android.tools.lint.checks.infrastructure.TestLintTask
 import com.android.tools.lint.detector.api.Detector
 import com.android.tools.lint.detector.api.Issue
 import com.android.tools.lint.detector.api.TextFormat
 
 @Suppress("UnstableApiUsage")
 class GoogleMapDetectorTest : LintDetectorTest() {
-    override fun lint(): com.android.tools.lint.checks.infrastructure.TestLintTask =
+    override fun lint(): TestLintTask =
         super.lint().allowMissingSdk()
 
     fun testSetOnMarkerDragListener() {
