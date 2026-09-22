@@ -31,6 +31,7 @@ sealed interface Style
  * @property anchorU The U-coordinate of the icon's anchor point, as a ratio of the icon's width (0.0 to 1.0). Defaults to 0.5 (center).
  * @property anchorV The V-coordinate of the icon's anchor point, as a ratio of the icon's height (0.0 to 1.0). Defaults to 1.0 (bottom).
  * @property scale The scale factor for the icon. Defaults to 1.0.
+ * @property zIndex The z-index of the marker. Higher values are drawn above lower values. Defaults to 0.0.
  */
 data class PointStyle(
     val color: Int = 0xFF000000.toInt(), // Default to black
@@ -39,6 +40,7 @@ data class PointStyle(
     val anchorU: Float = 0.5f,
     val anchorV: Float = 1.0f,
     val scale: Float = 1.0f,
+    val zIndex: Float = 0.0f,
 ) : Style
 
 /**
@@ -47,11 +49,13 @@ data class PointStyle(
  * @property color The color of the line, as an integer (e.g., ARGB) or hex string. Defaults to black.
  * @property width The width of the line in pixels. Defaults to 1.0.
  * @property geodesic Indicates whether the line should be drawn as a geodesic (true) or a straight line (false). Defaults to false.
+ * @property zIndex The z-index of the line. Higher values are drawn above lower values. Defaults to 0.0.
  */
 data class LineStyle(
     val color: Int = 0xFF000000.toInt(), // Default to black
     val width: Float = 1.0f,
     val geodesic: Boolean = false,
+    val zIndex: Float = 0.0f,
 ) : Style
 
 /**

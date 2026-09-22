@@ -113,4 +113,34 @@
     <string name="cluster_text_fmt">I am a cluster of size %d</string>
     <string name="renderer_latest">The latest version of the renderer is used.</string>
     <string name="renderer_legacy">The legacy version of the renderer is used.</string>
+
+    <!-- Z-Index Demo -->
+    <string name="demo_title_zindex">Z-Index Layering</string>
+    <string name="zindex_demo_title">Z-Index Layering</string>
+    <string name="zindex_demo_subtitle">Adjust z-index to change shape stacking order</string>
+    <string name="zindex_polygon_1">Polygon 1 (Coral)</string>
+    <string name="zindex_polygon_2">Polygon 2 (Teal)</string>
+    <string name="zindex_polyline_1">Polyline 1 (Gold)</string>
+    <string name="zindex_polyline_2">Polyline 2 (Purple)</string>
+    <string name="zindex_marker">Center Marker (Green)</string>
+    <string name="zindex_value_fmt">z: %.1f</string>
+    <string name="decrement_zindex">Decrease z-index</string>
+    <string name="increment_zindex">Increase z-index</string>
+    <string name="reset_zindex">Reset z-indices</string>
+    <string name="zindex_info_description">Z-Index Layering Information</string>
+    <string name="zindex_dialog_title">Z-Index Layering Guide</string>
+    <string name="zindex_dialog_close">Close</string>
+    <string name="zindex_dialog_message"><![CDATA[
+<b>Purpose:</b><br/>
+Demonstrates how to dynamically control the visual layering (stacking order) of map objects in-place on a Google Map without recreating geometries.<br/><br/>
+<b>What to Expect:</b><br/>
+• Increasing or decreasing a shape\'s z-index adjusts its draw priority relative to other overlays.<br/>
+• Raising Polygon 1 (Coral) above Polygon 2 (Teal) causes it to emerge on top in the overlapping region. Lowering it causes it to sink behind.<br/><br/>
+<b>Separate Marker Group:</b><br/>
+• Markers reside in a separate z-index group and <b>always render above other map overlays</b> (polylines, polygons, circles, and ground overlays), regardless of explicit z-index values.<br/>
+• Marker z-index only controls stacking relative to other markers.<br/>
+• See the <a href="https://developers.google.com/maps/documentation/android-sdk/marker#z-index">Google Maps Markers Documentation</a> for details.<br/><br/>
+<b>Tie Resolution:</b><br/>
+• When two shapes of the same type share identical z-index values, the Google Maps SDK resolves their stacking order based on <b>insertion (creation) order</b>.
+]]></string>
 </resources>

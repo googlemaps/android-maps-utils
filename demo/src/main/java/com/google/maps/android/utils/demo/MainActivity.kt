@@ -114,6 +114,7 @@ class MainActivity : ComponentActivity() {
                     Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
                     Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
                     Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java),
+                    Demo(R.string.demo_title_zindex, ZIndexDemoActivity::class.java),
                 ),
             ),
             DemoGroup(

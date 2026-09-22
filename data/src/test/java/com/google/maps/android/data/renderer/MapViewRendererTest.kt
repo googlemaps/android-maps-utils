@@ -17,6 +17,7 @@ package com.google.maps.android.data.renderer
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.AdvancedMarkerOptions
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -32,15 +33,20 @@ import com.google.maps.android.data.renderer.model.LineStyle
 import com.google.maps.android.data.renderer.model.MultiGeometry
 import com.google.maps.android.data.renderer.model.Point
 import com.google.maps.android.data.renderer.model.PointGeometry
+import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.data.renderer.model.Polygon
 import com.google.maps.android.data.renderer.model.PolygonStyle
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.slot
+import io.mockk.unmockkStatic
 import io.mockk.verify
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Before
 import org.junit.Test
 
 /**
@@ -48,6 +54,18 @@ import org.junit.Test
  * feature models to Google Maps SDK marker options.
  */
 class MapViewRendererTest {
+    @Before
+    fun setUp() {
+        mockkStatic(BitmapDescriptorFactory::class)
+        every { BitmapDescriptorFactory.defaultMarker(any()) } returns mockk()
+        every { BitmapDescriptorFactory.fromPinConfig(any()) } returns mockk()
+    }
+
+    @After
+    fun tearDown() {
+        unmockkStatic(BitmapDescriptorFactory::class)
+    }
+
     @Test
     fun testAddFeaturePoint_setsTitleAndSnippetFromProperties() {
         // Given
@@ -272,7 +290,7 @@ class MapViewRendererTest {
 
         val childLine = LineString(points = listOf(Point(0.0, 0.0), Point(1.0, 1.0)))
         val multiGeometry = MultiGeometry(geometries = listOf(childLine))
-        val style = LineStyle(color = 0xFF0000FF.toInt(), width = 3.0f)
+        val style = LineStyle(color = 0xFF0000FF.toInt(), width = 3.0f, zIndex = 4.2f)
         val feature = Feature(geometry = multiGeometry, style = style)
 
         // When
@@ -283,6 +301,63 @@ class MapViewRendererTest {
         val capturedOptions = optionsSlot.captured
         assertEquals(0xFF0000FF.toInt(), capturedOptions.color)
         assertEquals(3.0f, capturedOptions.width, 0.001f)
+        assertEquals(4.2f, capturedOptions.zIndex, 0.001f)
+    }
+
+    @Test
+    fun testAddFeaturePoint_legacyMarker_appliesPointStyleZIndex() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockMarker = mockk<Marker>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        val optionsSlot = slot<MarkerOptions>()
+        every { mockMap.addMarker(capture(optionsSlot)) } returns mockMarker
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+        renderer.useAdvancedMarkers = false
+
+        val feature =
+            Feature(
+                geometry = PointGeometry(Point(41.942, -111.620)),
+                style = PointStyle(zIndex = 3.5f),
+            )
+
+        // When
+        renderer.addFeature(feature)
+
+        // Then
+        verify(exactly = 1) { mockMap.addMarker(any<MarkerOptions>()) }
+        val capturedOptions = optionsSlot.captured
+        assertEquals(3.5f, capturedOptions.zIndex, 0.001f)
+    }
+
+    @Test
+    fun testAddFeaturePoint_advancedMarker_appliesPointStyleZIndex() {
+        // Given
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockMarker = mockk<Marker>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+
+        val optionsSlot = slot<AdvancedMarkerOptions>()
+        every { mockMap.addMarker(capture(optionsSlot)) } returns mockMarker
+
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+        renderer.useAdvancedMarkers = true
+
+        val feature =
+            Feature(
+                geometry = PointGeometry(Point(41.942, -111.620)),
+                style = PointStyle(zIndex = 6.0f),
+            )
+
+        // When
+        renderer.addFeature(feature)
+
+        // Then
+        verify(exactly = 1) { mockMap.addMarker(any<AdvancedMarkerOptions>()) }
+        val capturedOptions = optionsSlot.captured
+        assertEquals(6.0f, capturedOptions.zIndex, 0.001f)
     }
 
     @Test
