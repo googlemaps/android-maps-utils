@@ -22,6 +22,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -111,7 +112,7 @@ public class LocationManagerTest {
 
         // Verify that the flow threw a CancellationException and terminated cleanly
         assertThat(exceptions).hasSize(1)
-        assertThat(exceptions.first()).isInstanceOf(kotlinx.coroutines.CancellationException::class.java)
+        assertThat(exceptions.first()).isInstanceOf(CancellationException::class.java)
         assertThat(exceptions.first().message).contains("Location provider ${LocationManager.NETWORK_PROVIDER} was disabled")
 
         // Verify cleanup runs automatically on closure!

@@ -50,6 +50,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+/**
+ * Annotation indicating the reason a camera move started.
+ * See [GoogleMap.OnCameraMoveStartedListener].
+ */
 @IntDef(
     GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE,
     GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION,
@@ -58,10 +62,35 @@ import kotlin.coroutines.resume
 @Retention(AnnotationRetention.SOURCE)
 public annotation class MoveStartedReason
 
+/**
+ * Sealed hierarchy representing camera movement lifecycle events emitted by [GoogleMap.cameraEvents].
+ */
 public sealed class CameraEvent
+
+/**
+ * Emitted when camera movement has ended and the camera is idle.
+ * See [GoogleMap.OnCameraIdleListener].
+ */
 public object CameraIdleEvent : CameraEvent()
+
+/**
+ * Emitted when camera movement has been canceled or interrupted before completion.
+ * See [GoogleMap.OnCameraMoveCanceledListener].
+ */
 public object CameraMoveCanceledEvent : CameraEvent()
+
+/**
+ * Emitted repeatedly while the camera is moving.
+ * See [GoogleMap.OnCameraMoveListener].
+ */
 public object CameraMoveEvent : CameraEvent()
+
+/**
+ * Emitted when the camera starts moving, carrying the [reason] for the movement.
+ * See [GoogleMap.OnCameraMoveStartedListener].
+ *
+ * @property reason the reason the camera started moving, annotated with [MoveStartedReason]
+ */
 public data class CameraMoveStartedEvent(@param:MoveStartedReason val reason: Int) : CameraEvent()
 
 /**
@@ -140,18 +169,22 @@ public fun GoogleMap.cameraEvents(): Flow<CameraEvent> =
  * @param cameraUpdate the [CameraUpdate] to apply on the map
  * @param durationMs the duration in milliseconds of the animation. Defaults to 3 seconds.
  */
-public suspend inline fun GoogleMap.awaitAnimateCamera(
+public suspend fun GoogleMap.awaitAnimateCamera(
     cameraUpdate: CameraUpdate,
     durationMs: Int = 3000
 ): Unit =
     suspendCancellableCoroutine { continuation ->
         animateCamera(cameraUpdate, durationMs, object : GoogleMap.CancelableCallback {
             override fun onFinish() {
-                continuation.resume(Unit)
+                if (continuation.isActive) {
+                    continuation.resume(Unit)
+                }
             }
 
             override fun onCancel() {
-                continuation.cancel()
+                if (continuation.isActive) {
+                    continuation.cancel()
+                }
             }
         })
     }
@@ -163,7 +196,12 @@ public suspend inline fun GoogleMap.awaitAnimateCamera(
 public suspend fun GoogleMap.awaitMapLoad(): Unit =
     suspendCancellableCoroutine { continuation ->
         setOnMapLoadedCallback {
-            continuation.resume(Unit)
+            if (continuation.isActive) {
+                continuation.resume(Unit)
+            }
+        }
+        continuation.invokeOnCancellation {
+            setOnMapLoadedCallback(null)
         }
     }
 
@@ -219,7 +257,14 @@ public fun GoogleMap.cameraMoveEvents(): Flow<Unit> =
  */
 public suspend fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? =
     suspendCancellableCoroutine { continuation ->
-        snapshot({ continuation.resume(it) }, bitmap)
+        snapshot(
+            {
+                if (continuation.isActive) {
+                    continuation.resume(it)
+                }
+            },
+            bitmap
+        )
     }
 
 /**
@@ -495,7 +540,7 @@ public inline fun GoogleMap.addCircle(optionsActions: CircleOptions.() -> Unit):
  * Adds a [GroundOverlay] to this [GoogleMap] using the function literal with receiver
  * [optionsActions].
  *
- * @return the added [Circle]
+ * @return the added [GroundOverlay]
  */
 public inline fun GoogleMap.addGroundOverlay(optionsActions: GroundOverlayOptions.() -> Unit): GroundOverlay? =
     this.addGroundOverlay(
@@ -536,7 +581,7 @@ public inline fun GoogleMap.addPolyline(optionsActions: PolylineOptions.() -> Un
  * Adds a [TileOverlay] to this [GoogleMap] using the function literal with receiver
  * [optionsActions].
  *
- * @return the added [Polyline]
+ * @return the added [TileOverlay]
  */
 public inline fun GoogleMap.addTileOverlay(optionsActions: TileOverlayOptions.() -> Unit): TileOverlay? =
     this.addTileOverlay(

@@ -17,7 +17,10 @@
 @file:Suppress("DEPRECATION")
 
 package com.google.maps.android.ktx.utils.collection
-import com.google.maps.android.ktx.*
+
+import com.google.maps.android.ktx.MarkerDragEndEvent
+import com.google.maps.android.ktx.MarkerDragEvent
+import com.google.maps.android.ktx.MarkerDragStartEvent
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Circle

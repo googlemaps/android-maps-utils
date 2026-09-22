@@ -16,7 +16,10 @@
  */
 
 package com.google.maps.android.collections
-import com.google.maps.android.*
+
+import com.google.maps.android.MarkerDragEndEvent
+import com.google.maps.android.MarkerDragEvent
+import com.google.maps.android.MarkerDragStartEvent
 
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Circle

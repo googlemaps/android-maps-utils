@@ -29,6 +29,8 @@ import kotlin.coroutines.resume
 public suspend fun MapView.awaitMap(): GoogleMap =
     suspendCancellableCoroutine { continuation ->
         getMapAsync {
-            continuation.resume(it)
+            if (continuation.isActive) {
+                continuation.resume(it)
+            }
         }
     }

@@ -254,6 +254,7 @@ class MapFragmentExtensionsTest {
      * **How it works:** Calls KTX shim in coroutine, invokes captured `OnMapReadyCallback`, and verifies resumption.
      * **How we know it is correct:** Asserts KTX shim returns the exact `googleMap` instance without regression.
      */
+    @Suppress("DEPRECATION")
     @Test
     fun testKtxSupportMapFragmentAwaitMap() = runTest {
         var map: GoogleMap? = null
@@ -273,6 +274,7 @@ class MapFragmentExtensionsTest {
      * **How it works:** Calls KTX shim in coroutine, invokes captured `OnMapReadyCallback`, and verifies resumption.
      * **How we know it is correct:** Asserts KTX shim returns `googleMap`.
      */
+    @Suppress("DEPRECATION")
     @Test
     fun testKtxMapFragmentAwaitMap() = runTest {
         var map: GoogleMap? = null
@@ -292,6 +294,7 @@ class MapFragmentExtensionsTest {
      * **How it works:** Calls KTX shim in coroutine, invokes captured `OnMapReadyCallback`, and verifies resumption.
      * **How we know it is correct:** Asserts KTX shim returns `googleMap`.
      */
+    @Suppress("DEPRECATION")
     @Test
     fun testKtxMapViewAwaitMap() = runTest {
         var map: GoogleMap? = null
@@ -311,6 +314,7 @@ class MapFragmentExtensionsTest {
      * **How it works:** Calls KTX shim in coroutine and triggers captured SDK ready callback.
      * **How we know it is correct:** Asserts KTX shim returns `streetViewPanorama`.
      */
+    @Suppress("DEPRECATION")
     @Test
     fun testKtxSupportStreetViewPanoramaFragmentAwaitPanorama() = runTest {
         var panorama: StreetViewPanorama? = null
@@ -330,6 +334,7 @@ class MapFragmentExtensionsTest {
      * **How it works:** Calls KTX shim in coroutine and triggers captured SDK ready callback.
      * **How we know it is correct:** Asserts KTX shim returns `streetViewPanorama`.
      */
+    @Suppress("DEPRECATION")
     @Test
     fun testKtxStreetViewPanoramaFragmentAwaitPanorama() = runTest {
         var panorama: StreetViewPanorama? = null
@@ -349,6 +354,7 @@ class MapFragmentExtensionsTest {
      * **How it works:** Calls KTX shim in coroutine and triggers captured SDK ready callback.
      * **How we know it is correct:** Asserts KTX shim returns `streetViewPanorama`.
      */
+    @Suppress("DEPRECATION")
     @Test
     fun testKtxStreetViewPanoramaViewAwaitPanorama() = runTest {
         var panorama: StreetViewPanorama? = null
