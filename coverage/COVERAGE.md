@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `2e33859` (#1789), recorded 2026-09-22T18:25:27Z.
+Measured at `651c6e0` (#1791), recorded 2026-09-23T04:26:59Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-23 | `651c6e0` | #1791 | 51.91% | 0.00 | build(deps): bump org.robolectric:robolectric |
 | 2026-09-22 | `2e33859` | #1789 | 51.91% | 0.00 | ci: group dependabot minor and patch updates |
 | 2026-09-22 | `c3fa410` | #1787 | 51.91% | +1.36 | feat: add z-index support across geometry styles and layer mappers |
 | 2026-09-21 | `5557301` | #1762 | 50.55% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
