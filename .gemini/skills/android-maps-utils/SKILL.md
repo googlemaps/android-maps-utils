@@ -16,7 +16,6 @@ dependencies {
     // Google Maps Utility Library
     implementation("com.google.maps.android:android-maps-utils:5.2.0") // x-release-please-version
 }
-
 ```
 
 ## 2. Core Features & Usage Patterns

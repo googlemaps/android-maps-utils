@@ -22,16 +22,18 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Looper
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyFloat
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.eq
@@ -51,37 +53,33 @@ public class LocationManagerTest {
     @Mock
     private lateinit var location: Location
 
+    @Mock
+    private lateinit var looper: Looper
+
     @Captor
     private lateinit var locationListenerCaptor: ArgumentCaptor<LocationListener>
 
     @SuppressLint("MissingPermission")
     @Test
     public fun testCoarseLocationEvents(): Unit = runTest {
-        // Setup providers mock
         `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.NETWORK_PROVIDER))
 
-        val job = launch {
-            val event = locationManager.coarseLocationEvents(1000L, 1f).first()
-            assertThat(event).isEqualTo(location)
+        val deferred = async {
+            locationManager.coarseLocationEvents(1_000L, 1f, looper).first()
         }
         advanceUntilIdle()
 
-        // Verify registered with correct provider and capture listener
         verify(locationManager).requestLocationUpdates(
             eq(LocationManager.NETWORK_PROVIDER),
-            eq(1000L),
+            eq(1_000L),
             eq(1f),
-            locationListenerCaptor.capture()
+            locationListenerCaptor.capture(),
+            eq(looper)
         )
 
-        // Trigger event
         locationListenerCaptor.value.onLocationChanged(location)
-        advanceUntilIdle()
+        assertThat(deferred.await()).isEqualTo(location)
 
-        job.cancel()
-        advanceUntilIdle()
-
-        // Verify cleanup
         verify(locationManager).removeUpdates(eq(locationListenerCaptor.value))
     }
 
@@ -90,13 +88,8 @@ public class LocationManagerTest {
     public fun testCoarseLocationProviderDisabled(): Unit = runTest {
         `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.NETWORK_PROVIDER))
 
-        val exceptions = mutableListOf<Throwable>()
-        val job = launch {
-            try {
-                locationManager.coarseLocationEvents(1000L, 1f).collect {}
-            } catch (e: Throwable) {
-                exceptions.add(e)
-            }
+        val deferred = async {
+            locationManager.coarseLocationEvents(1_000L, 1f, looper).toList()
         }
         advanceUntilIdle()
 
@@ -104,48 +97,36 @@ public class LocationManagerTest {
             eq(LocationManager.NETWORK_PROVIDER),
             anyLong(),
             anyFloat(),
-            locationListenerCaptor.capture()
+            locationListenerCaptor.capture(),
+            any()
         )
 
-        // Simulate provider disablement!
         locationListenerCaptor.value.onProviderDisabled(LocationManager.NETWORK_PROVIDER)
         advanceUntilIdle()
 
-        // Verify that the flow threw a CancellationException and terminated cleanly
-        assertThat(exceptions).hasSize(1)
-        assertThat(exceptions.first()).isInstanceOf(CancellationException::class.java)
-        assertThat(exceptions.first().message).contains("Location provider ${LocationManager.NETWORK_PROVIDER} was disabled")
-
-        // Verify cleanup runs automatically on closure!
+        assertThat(deferred.await()).isEmpty()
         verify(locationManager).removeUpdates(eq(locationListenerCaptor.value))
-        job.cancel()
     }
 
     @SuppressLint("MissingPermission")
     @Test
     public fun testFineLocationEvents(): Unit = runTest {
-        val job = launch {
-            val event = locationManager.fineLocationEvents(2000L, 2f).first()
-            assertThat(event).isEqualTo(location)
+        val deferred = async {
+            locationManager.fineLocationEvents(2_000L, 2f, looper).first()
         }
         advanceUntilIdle()
 
-        // Verify registered with GPS provider
         verify(locationManager).requestLocationUpdates(
             eq(LocationManager.GPS_PROVIDER),
-            eq(2000L),
+            eq(2_000L),
             eq(2f),
-            locationListenerCaptor.capture()
+            locationListenerCaptor.capture(),
+            eq(looper)
         )
 
-        // Trigger event
         locationListenerCaptor.value.onLocationChanged(location)
-        advanceUntilIdle()
+        assertThat(deferred.await()).isEqualTo(location)
 
-        job.cancel()
-        advanceUntilIdle()
-
-        // Verify cleanup
         verify(locationManager).removeUpdates(eq(locationListenerCaptor.value))
     }
 }

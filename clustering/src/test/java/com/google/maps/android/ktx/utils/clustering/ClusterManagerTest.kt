@@ -23,8 +23,8 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -68,73 +68,67 @@ public class ClusterManagerTest {
 
     @Test
     public fun testClusterClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = clusterManager.clusterClickEvents().first()
-            assertThat(event).isEqualTo(cluster)
+        val deferred = async {
+            clusterManager.clusterClickEvents().first()
         }
         advanceUntilIdle()
         verify(clusterManager).setOnClusterClickListener(clusterClickListener.capture())
         clusterClickListener.value.onClusterClick(cluster)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(cluster)
     }
 
     @Test
     public fun testClusterItemClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = clusterManager.clusterItemClickEvents().first()
-            assertThat(event).isEqualTo(clusterItem)
+        val deferred = async {
+            clusterManager.clusterItemClickEvents().first()
         }
         advanceUntilIdle()
         verify(clusterManager).setOnClusterItemClickListener(clusterItemClickListener.capture())
         clusterItemClickListener.value.onClusterItemClick(clusterItem)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(clusterItem)
     }
 
     @Test
     public fun testClusterInfoWindowClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = clusterManager.clusterInfoWindowClickEvents().first()
-            assertThat(event).isEqualTo(cluster)
+        val deferred = async {
+            clusterManager.clusterInfoWindowClickEvents().first()
         }
         advanceUntilIdle()
         verify(clusterManager).setOnClusterInfoWindowClickListener(clusterInfoWindowClickListener.capture())
         clusterInfoWindowClickListener.value.onClusterInfoWindowClick(cluster)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(cluster)
     }
 
     @Test
     public fun testClusterInfoWindowLongClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = clusterManager.clusterInfoWindowLongClickEvents().first()
-            assertThat(event).isEqualTo(cluster)
+        val deferred = async {
+            clusterManager.clusterInfoWindowLongClickEvents().first()
         }
         advanceUntilIdle()
         verify(clusterManager).setOnClusterInfoWindowLongClickListener(clusterInfoWindowLongClickListener.capture())
         clusterInfoWindowLongClickListener.value.onClusterInfoWindowLongClick(cluster)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(cluster)
     }
 
     @Test
     public fun testClusterItemInfoWindowClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = clusterManager.clusterItemInfoWindowClickEvents().first()
-            assertThat(event).isEqualTo(clusterItem)
+        val deferred = async {
+            clusterManager.clusterItemInfoWindowClickEvents().first()
         }
         advanceUntilIdle()
         verify(clusterManager).setOnClusterItemInfoWindowClickListener(clusterItemInfoWindowClickListener.capture())
         clusterItemInfoWindowClickListener.value.onClusterItemInfoWindowClick(clusterItem)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(clusterItem)
     }
 
     @Test
     public fun testClusterItemInfoWindowLongClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = clusterManager.clusterItemInfoWindowLongClickEvents().first()
-            assertThat(event).isEqualTo(clusterItem)
+        val deferred = async {
+            clusterManager.clusterItemInfoWindowLongClickEvents().first()
         }
         advanceUntilIdle()
         verify(clusterManager).setOnClusterItemInfoWindowLongClickListener(clusterItemInfoWindowLongClickListener.capture())
         clusterItemInfoWindowLongClickListener.value.onClusterItemInfoWindowLongClick(clusterItem)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(clusterItem)
     }
 }

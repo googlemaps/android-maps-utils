@@ -125,7 +125,7 @@ public typealias IndoorLevelActivatedEvent = CanonicalIndoorLevelActivatedEvent
 public fun GoogleMap.cameraEvents(): Flow<CameraEvent> = this.canonicalCameraEvents()
 
 @Deprecated("Moved to com.google.maps.android.awaitAnimateCamera", ReplaceWith("awaitAnimateCamera(cameraUpdate, durationMs)", "com.google.maps.android.awaitAnimateCamera"))
-public suspend fun GoogleMap.awaitAnimateCamera(cameraUpdate: CameraUpdate, durationMs: Int = 3000): Unit = this.canonicalAwaitAnimateCamera(cameraUpdate, durationMs)
+public suspend fun GoogleMap.awaitAnimateCamera(cameraUpdate: CameraUpdate, durationMs: Int? = null): Unit = this.canonicalAwaitAnimateCamera(cameraUpdate, durationMs)
 
 @Deprecated("Moved to com.google.maps.android.awaitMapLoad", ReplaceWith("awaitMapLoad()", "com.google.maps.android.awaitMapLoad"))
 public suspend fun GoogleMap.awaitMapLoad(): Unit = this.canonicalAwaitMapLoad()

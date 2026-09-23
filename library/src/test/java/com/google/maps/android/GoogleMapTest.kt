@@ -31,8 +31,8 @@ import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.TileOverlay
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -60,7 +60,7 @@ import org.mockito.junit.MockitoJUnitRunner
  *    construct valid option objects and delegate to the underlying [GoogleMap] add-overlay methods.
  *
  * **How it works:**
- * - For **Flow tests**: Uses `runTest` and `launch` to collect the first emitted item (`flow.first()`).
+ * - For **Flow tests**: Uses `runTest` and `async` to collect the first emitted item (`flow.first()`).
  *   An [ArgumentCaptor] intercepts the SDK listener registered on [GoogleMap]. Invoking the listener's
  *   callback method (`onMapClick`, `onMarkerClick`, etc.) emits the test payload into the flow.
  * - For **Suspension tests**: Captures the SDK callback (`OnMapLoadedCallback`, `CancelableCallback`,
@@ -72,7 +72,7 @@ import org.mockito.junit.MockitoJUnitRunner
  * - **Code under test:** Correct if listener callbacks emit the exact mock instance to the Flow/coroutine,
  *   and if DSL builders delegate to the canonical [GoogleMap] overlay methods without mutation loss.
  * - **Test:** Correct because `advanceUntilIdle()` guarantees deterministic coroutine scheduling before
- *   and after callback invocation, and `assertThat(event).isEqualTo(expected)` confirms exact emission equality.
+ *   and after callback invocation, and `assertThat(deferred.await()).isEqualTo(expected)` confirms exact emission equality.
  */
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -191,39 +191,34 @@ public class GoogleMapTest {
     /**
      * **Purpose:** Verifies [GoogleMap.cameraIdleEvents] converts camera idle callbacks into a Flow.
      * **How it works:** Subscribes to `cameraIdleEvents().first()`, captures `OnCameraIdleListener`, and invokes `onCameraIdle()`.
-     * **How we know it is correct:** Test succeeds if the flow emits when `onCameraIdle()` is called.
+     * **How we know it is correct:** Test succeeds if `deferred.await()` completes when `onCameraIdle()` is called.
      */
     @Test
     public fun testCameraIdleEvents(): Unit = runTest {
-        var eventReceived = false
-        val job = launch {
+        val deferred = async {
             googleMap.cameraIdleEvents().first()
-            eventReceived = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraIdleListener(cameraIdleListener.capture())
         cameraIdleListener.value.onCameraIdle()
-        advanceUntilIdle()
-        assertThat(eventReceived).isTrue()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
 
     /**
      * **Purpose:** Verifies [GoogleMap.cameraMoveEvents] converts camera move callbacks into a Flow.
      * **How it works:** Subscribes to `cameraMoveEvents().first()`, captures `OnCameraMoveListener`, and calls `onCameraMove()`.
-     * **How we know it is correct:** Test succeeds if the flow emits when `onCameraMove()` is invoked.
+     * **How we know it is correct:** Test succeeds if `deferred.await()` returns `Unit` when `onCameraMove()` is invoked.
      */
     @Test
     public fun testCameraMoveEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.cameraMoveEvents().first()
-            assertThat(event).isNotNull()
+        val deferred = async {
+            googleMap.cameraMoveEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraMoveListener(cameraMoveListener.capture())
         cameraMoveListener.value.onCameraMove()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
     /**
@@ -233,34 +228,29 @@ public class GoogleMapTest {
      */
     @Test
     public fun testCameraMoveStartedEvents(): Unit = runTest {
-        val job = launch {
-            val reason = googleMap.cameraMoveStartedEvents().first()
-            assertThat(reason).isEqualTo(GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE)
+        val deferred = async {
+            googleMap.cameraMoveStartedEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraMoveStartedListener(cameraMoveStartedListener.capture())
         cameraMoveStartedListener.value.onCameraMoveStarted(GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE)
     }
 
     /**
      * **Purpose:** Verifies [GoogleMap.cameraMoveCanceledEvents] emits when camera movement is cancelled.
      * **How it works:** Subscribes to `cameraMoveCanceledEvents().first()`, captures listener, and calls `onCameraMoveCanceled()`.
-     * **How we know it is correct:** Asserts the flow emits a non-null Unit event upon cancellation.
+     * **How we know it is correct:** Asserts the flow emits a Unit event upon cancellation.
      */
     @Test
     public fun testCameraMoveCanceledEvents(): Unit = runTest {
-        var eventReceived = false
-        val job = launch {
+        val deferred = async {
             googleMap.cameraMoveCanceledEvents().first()
-            eventReceived = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraMoveCanceledListener(cameraMoveCanceledListener.capture())
         cameraMoveCanceledListener.value.onCameraMoveCanceled()
-        advanceUntilIdle()
-        assertThat(eventReceived).isTrue()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
 
@@ -272,14 +262,13 @@ public class GoogleMapTest {
     @Test
     public fun testMapClickEvents(): Unit = runTest {
         val target = LatLng(10.0, 20.0)
-        val job = launch {
-            val event = googleMap.mapClickEvents().first()
-            assertThat(event).isEqualTo(target)
+        val deferred = async {
+            googleMap.mapClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnMapClickListener(mapClickListener.capture())
         mapClickListener.value.onMapClick(target)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(target)
     }
 
     /**
@@ -290,14 +279,13 @@ public class GoogleMapTest {
     @Test
     public fun testMapLongClickEvents(): Unit = runTest {
         val target = LatLng(30.0, 40.0)
-        val job = launch {
-            val event = googleMap.mapLongClickEvents().first()
-            assertThat(event).isEqualTo(target)
+        val deferred = async {
+            googleMap.mapLongClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnMapLongClickListener(mapLongClickListener.capture())
         mapLongClickListener.value.onMapLongClick(target)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(target)
     }
 
     /**
@@ -307,14 +295,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testMarkerClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.markerClickEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            googleMap.markerClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnMarkerClickListener(markerClickListener.capture())
         markerClickListener.value.onMarkerClick(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     /**
@@ -324,14 +311,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testMarkerDragEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.markerDragEvents().first()
-            assertThat(event.marker).isEqualTo(marker)
+        val deferred = async {
+            googleMap.markerDragEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnMarkerDragListener(markerDragListener.capture())
         markerDragListener.value.onMarkerDragStart(marker)
-        job.cancel()
+        assertThat(deferred.await().marker).isEqualTo(marker)
     }
 
     /**
@@ -341,14 +327,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testInfoWindowClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.infoWindowClickEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            googleMap.infoWindowClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnInfoWindowClickListener(infoWindowClickListener.capture())
         infoWindowClickListener.value.onInfoWindowClick(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     /**
@@ -358,14 +343,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testInfoWindowCloseEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.infoWindowCloseEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            googleMap.infoWindowCloseEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnInfoWindowCloseListener(infoWindowCloseListener.capture())
         infoWindowCloseListener.value.onInfoWindowClose(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     /**
@@ -375,14 +359,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testInfoWindowLongClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.infoWindowLongClickEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            googleMap.infoWindowLongClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnInfoWindowLongClickListener(infoWindowLongClickListener.capture())
         infoWindowLongClickListener.value.onInfoWindowLongClick(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     /**
@@ -392,14 +375,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testPolygonClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.polygonClickEvents().first()
-            assertThat(event).isEqualTo(polygon)
+        val deferred = async {
+            googleMap.polygonClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnPolygonClickListener(polygonClickListener.capture())
         polygonClickListener.value.onPolygonClick(polygon)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(polygon)
     }
 
     /**
@@ -409,14 +391,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testPolylineClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.polylineClickEvents().first()
-            assertThat(event).isEqualTo(polyline)
+        val deferred = async {
+            googleMap.polylineClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnPolylineClickListener(polylineClickListener.capture())
         polylineClickListener.value.onPolylineClick(polyline)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(polyline)
     }
 
     /**
@@ -426,14 +407,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testCircleClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.circleClickEvents().first()
-            assertThat(event).isEqualTo(circle)
+        val deferred = async {
+            googleMap.circleClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnCircleClickListener(circleClickListener.capture())
         circleClickListener.value.onCircleClick(circle)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(circle)
     }
 
     /**
@@ -443,14 +423,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testGroundOverlayClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.groundOverlayClicks().first()
-            assertThat(event).isEqualTo(groundOverlay)
+        val deferred = async {
+            googleMap.groundOverlayClicks().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnGroundOverlayClickListener(groundOverlayClickListener.capture())
         groundOverlayClickListener.value.onGroundOverlayClick(groundOverlay)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(groundOverlay)
     }
 
     /**
@@ -461,14 +440,13 @@ public class GoogleMapTest {
     @Test
     public fun testPoiClickEvents(): Unit = runTest {
         val poi = PointOfInterest(LatLng(1.0, 2.0), "id", "name")
-        val job = launch {
-            val event = googleMap.poiClickEvents().first()
-            assertThat(event).isEqualTo(poi)
+        val deferred = async {
+            googleMap.poiClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnPoiClickListener(poiClickListener.capture())
         poiClickListener.value.onPoiClick(poi)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(poi)
     }
 
     /**
@@ -478,34 +456,29 @@ public class GoogleMapTest {
      */
     @Test
     public fun testMyLocationClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.myLocationClickEvents().first()
-            assertThat(event).isEqualTo(location)
+        val deferred = async {
+            googleMap.myLocationClickEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnMyLocationClickListener(myLocationClickListener.capture())
         myLocationClickListener.value.onMyLocationClick(location)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(location)
     }
 
     /**
      * **Purpose:** Verifies [GoogleMap.myLocationButtonClickEvents] emits when the My Location button is clicked.
      * **How it works:** Subscribes to `myLocationButtonClickEvents().first()`, captures listener, and calls `onMyLocationButtonClick()`.
-     * **How we know it is correct:** Asserts the emitted Unit event is non-null.
+     * **How we know it is correct:** Asserts the emitted Unit event is received via `deferred.await()`.
      */
     @Test
     public fun testMyLocationButtonClickEvents(): Unit = runTest {
-        var eventReceived = false
-        val job = launch {
+        val deferred = async {
             googleMap.myLocationButtonClickEvents().first()
-            eventReceived = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnMyLocationButtonClickListener(myLocationButtonClickListener.capture())
         myLocationButtonClickListener.value.onMyLocationButtonClick()
-        advanceUntilIdle()
-        assertThat(eventReceived).isTrue()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
     /**
@@ -515,14 +488,13 @@ public class GoogleMapTest {
      */
     @Test
     public fun testIndoorStateChangeEvents(): Unit = runTest {
-        val job = launch {
-            val event = googleMap.indoorStateChangeEvents().first()
-            assertThat(event).isNotNull()
+        val deferred = async {
+            googleMap.indoorStateChangeEvents().first()
         }
         advanceUntilIdle()
         verify(googleMap).setOnIndoorStateChangeListener(indoorStateChangeListener.capture())
         indoorStateChangeListener.value.onIndoorBuildingFocused()
-        job.cancel()
+        assertThat(deferred.await()).isNotNull()
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -536,37 +508,37 @@ public class GoogleMapTest {
      */
     @Test
     public fun testAwaitMapLoad(): Unit = runTest {
-        var mapLoaded = false
-        val job = launch {
+        val deferred = async {
             googleMap.awaitMapLoad()
-            mapLoaded = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnMapLoadedCallback(loadedCallback.capture())
         loadedCallback.value.onMapLoaded()
-        advanceUntilIdle()
-        assertThat(mapLoaded).isTrue()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
     /**
-     * **Purpose:** Verifies [GoogleMap.awaitAnimateCamera] suspends until camera animation finishes.
-     * **How it works:** Launches `awaitAnimateCamera(cameraUpdate)`, captures `CancelableCallback` from `animateCamera(update, 3000, callback)`, and calls `onFinish()`.
-     * **How we know it is correct:** Asserts `animateCamera` was called with default 3000ms duration and coroutine resumes upon `onFinish()`.
+     * **Purpose:** Verifies [GoogleMap.awaitAnimateCamera] suspends until camera animation finishes, delegating to 2-arg `animateCamera` when `durationMs` is omitted (`null`) and 3-arg `animateCamera` when `durationMs` is specified.
+     * **How it works:** Launches `awaitAnimateCamera(cameraUpdate)` and `awaitAnimateCamera(cameraUpdate, 500)`, captures `CancelableCallback`, and calls `onFinish()`.
+     * **How we know it is correct:** Asserts `animateCamera` was called with the appropriate 2-arg or 3-arg overload and coroutine resumes upon `onFinish()`.
      */
     @Test
     public fun testAwaitAnimateCamera(): Unit = runTest {
-        var animated = false
-        val job = launch {
+        val deferredDefault = async {
             googleMap.awaitAnimateCamera(cameraUpdate)
-            animated = true
         }
         advanceUntilIdle()
-        verify(googleMap).animateCamera(any(CameraUpdate::class.java), Mockito.eq(3000), cancelableCallback.capture())
+        verify(googleMap).animateCamera(any(CameraUpdate::class.java), cancelableCallback.capture())
         cancelableCallback.value.onFinish()
+        assertThat(deferredDefault.await()).isEqualTo(Unit)
+
+        val deferredWithDuration = async {
+            googleMap.awaitAnimateCamera(cameraUpdate, 500)
+        }
         advanceUntilIdle()
-        assertThat(animated).isTrue()
-        job.cancel()
+        verify(googleMap).animateCamera(any(CameraUpdate::class.java), Mockito.eq(500), cancelableCallback.capture())
+        cancelableCallback.value.onFinish()
+        assertThat(deferredWithDuration.await()).isEqualTo(Unit)
     }
 
 
@@ -581,13 +553,10 @@ public class GoogleMapTest {
             val cb = it.getArgument<GoogleMap.SnapshotReadyCallback>(0)
             cb.onSnapshotReady(bitmap)
         }
-        var result: Bitmap? = null
-        val job = launch {
-            result = googleMap.awaitSnapshot(bitmap)
+        val deferred = async {
+            googleMap.awaitSnapshot(bitmap)
         }
-        advanceUntilIdle()
-        assertThat(result).isEqualTo(bitmap)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(bitmap)
     }
 
     // ---------------------------------------------------------------------------------------------

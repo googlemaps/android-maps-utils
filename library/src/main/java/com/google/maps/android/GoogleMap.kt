@@ -167,14 +167,14 @@ public fun GoogleMap.cameraEvents(): Flow<CameraEvent> =
  * A suspending function that awaits the completion of the [cameraUpdate] animation.
  *
  * @param cameraUpdate the [CameraUpdate] to apply on the map
- * @param durationMs the duration in milliseconds of the animation. Defaults to 3 seconds.
+ * @param durationMs the duration in milliseconds of the animation, or `null` to use the Maps SDK default duration
  */
 public suspend fun GoogleMap.awaitAnimateCamera(
     cameraUpdate: CameraUpdate,
-    durationMs: Int = 3000
+    durationMs: Int? = null
 ): Unit =
     suspendCancellableCoroutine { continuation ->
-        animateCamera(cameraUpdate, durationMs, object : GoogleMap.CancelableCallback {
+        val callback = object : GoogleMap.CancelableCallback {
             override fun onFinish() {
                 if (continuation.isActive) {
                     continuation.resume(Unit)
@@ -186,7 +186,12 @@ public suspend fun GoogleMap.awaitAnimateCamera(
                     continuation.cancel()
                 }
             }
-        })
+        }
+        if (durationMs != null) {
+            animateCamera(cameraUpdate, durationMs, callback)
+        } else {
+            animateCamera(cameraUpdate, callback)
+        }
     }
 
 /**

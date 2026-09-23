@@ -55,7 +55,6 @@ allprojects {
     version = "5.2.0"
     // {x-release-please-end}
 
-
     plugins.withId("java") {
         configure<JavaPluginExtension> {
             toolchain {

@@ -18,7 +18,6 @@ package com.google.maps.android.utils.attribution
 import android.content.Context
 import com.google.android.gms.maps.MapsApiSettings
 import com.google.common.truth.Truth.assertThat
-import com.google.maps.android.ktx.utils.attribution.AttributionIdInitializer as KtxAttributionIdInitializer
 import com.google.maps.android.utils.meta.AttributionId
 import org.junit.After
 import org.junit.Before
@@ -31,8 +30,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 /**
- * Unit test suite for [AttributionIdInitializer] and its deprecated KTX compatibility shim
- * [KtxAttributionIdInitializer].
+ * Unit test suite for [AttributionIdInitializer].
  *
  * **Purpose:**
  * Verifies that the Jetpack App Startup `Initializer` for library usage attribution correctly
@@ -83,29 +81,6 @@ class AttributionIdInitializerTest {
     @Test
     fun `test canonical AttributionIdInitializer create and dependencies`() {
         val initializer = AttributionIdInitializer()
-        assertThat(initializer.dependencies()).isEmpty()
-        initializer.create(context)
-        mapsApiSettingsMock.verify {
-            MapsApiSettings.addInternalUsageAttributionId(context, AttributionId.VALUE)
-        }
-    }
-
-    /**
-     * **Purpose:** Tests that the deprecated KTX compatibility shim
-     * [KtxAttributionIdInitializer] continues to register
-     * usage attribution without breaking existing apps.
-     *
-     * **How it works:** Instantiates the KTX shim class and performs the exact same dependency
-     * and creation verification as the canonical initializer test.
-     *
-     * **How we know it is correct:**
-     * - **Code under test:** Proves backwards-compatible KTX typealias/shim preserves identical startup behavior.
-     * - **Test:** Fails if the KTX shim fails to invoke [MapsApiSettings.addInternalUsageAttributionId].
-     */
-    @Suppress("DEPRECATION")
-    @Test
-    fun `test ktx AttributionIdInitializer create and dependencies`() {
-        val initializer = KtxAttributionIdInitializer()
         assertThat(initializer.dependencies()).isEmpty()
         initializer.create(context)
         mapsApiSettingsMock.verify {

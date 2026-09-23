@@ -34,6 +34,7 @@ import com.google.maps.android.collections.MarkerManager
 import com.google.maps.android.collections.PolygonManager
 import com.google.maps.android.collections.PolylineManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -46,7 +47,7 @@ import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.any
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.times
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -110,7 +111,7 @@ public class CollectionManagersTest {
     public fun setUp() {
         activeMarkerClickListener = null
         // Stub setOnMarkerClickListener to track the active listener on the collection manager
-        org.mockito.Mockito.`when`(markerCollection.setOnMarkerClickListener(any())).thenAnswer { invocation ->
+        `when`(markerCollection.setOnMarkerClickListener(any())).thenAnswer { invocation ->
             activeMarkerClickListener = invocation.arguments[0] as? GoogleMap.OnMarkerClickListener
             null
         }
@@ -118,15 +119,14 @@ public class CollectionManagersTest {
 
     @Test
     public fun testMarkerCollectionClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = markerCollection.clickEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            markerCollection.clickEvents().first()
         }
         advanceUntilIdle()
         // Trigger the event via our tracked active listener slot!
         assertThat(activeMarkerClickListener).isNotNull()
         activeMarkerClickListener?.onMarkerClick(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     @Test
@@ -181,73 +181,67 @@ public class CollectionManagersTest {
 
     @Test
     public fun testMarkerCollectionInfoWindowClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = markerCollection.infoWindowClickEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            markerCollection.infoWindowClickEvents().first()
         }
         advanceUntilIdle()
         verify(markerCollection).setOnInfoWindowClickListener(infoWindowClickListener.capture())
         infoWindowClickListener.value.onInfoWindowClick(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     @Test
     public fun testMarkerCollectionInfoWindowLongClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = markerCollection.infoWindowLongClickEvents().first()
-            assertThat(event).isEqualTo(marker)
+        val deferred = async {
+            markerCollection.infoWindowLongClickEvents().first()
         }
         advanceUntilIdle()
         verify(markerCollection).setOnInfoWindowLongClickListener(infoWindowLongClickListener.capture())
         infoWindowLongClickListener.value.onInfoWindowLongClick(marker)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(marker)
     }
 
     @Test
     public fun testPolylineCollectionClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = polylineCollection.clickEvents().first()
-            assertThat(event).isEqualTo(polyline)
+        val deferred = async {
+            polylineCollection.clickEvents().first()
         }
         advanceUntilIdle()
         verify(polylineCollection).setOnPolylineClickListener(polylineClickListener.capture())
         polylineClickListener.value.onPolylineClick(polyline)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(polyline)
     }
 
     @Test
     public fun testPolygonCollectionClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = polygonCollection.clickEvents().first()
-            assertThat(event).isEqualTo(polygon)
+        val deferred = async {
+            polygonCollection.clickEvents().first()
         }
         advanceUntilIdle()
         verify(polygonCollection).setOnPolygonClickListener(polygonClickListener.capture())
         polygonClickListener.value.onPolygonClick(polygon)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(polygon)
     }
 
     @Test
     public fun testCircleCollectionClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = circleCollection.clickEvents().first()
-            assertThat(event).isEqualTo(circle)
+        val deferred = async {
+            circleCollection.clickEvents().first()
         }
         advanceUntilIdle()
         verify(circleCollection).setOnCircleClickListener(circleClickListener.capture())
         circleClickListener.value.onCircleClick(circle)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(circle)
     }
 
     @Test
     public fun testGroundOverlayCollectionClickEvents(): Unit = runTest {
-        val job = launch {
-            val event = groundOverlayCollection.clickEvents().first()
-            assertThat(event).isEqualTo(groundOverlay)
+        val deferred = async {
+            groundOverlayCollection.clickEvents().first()
         }
         advanceUntilIdle()
         verify(groundOverlayCollection).setOnGroundOverlayClickListener(groundOverlayClickListener.capture())
         groundOverlayClickListener.value.onGroundOverlayClick(groundOverlay)
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(groundOverlay)
     }
 }

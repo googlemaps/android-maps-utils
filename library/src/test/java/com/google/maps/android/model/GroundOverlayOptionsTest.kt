@@ -19,7 +19,7 @@ package com.google.maps.android.model
 
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import org.junit.Test
 
 internal class GroundOverlayOptionsTest {

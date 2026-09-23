@@ -63,13 +63,14 @@ android {
 
 dependencies {
     api(libs.play.services.maps)
-    api(libs.play.services.location)
-    api(libs.kotlinx.coroutines.android)
+    compileOnly(libs.play.services.location)
     api(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
     implementation(libs.startup.runtime)
     lintPublish(project(":lint-checks"))
+    testImplementation(libs.play.services.location)
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.kxml2)
@@ -78,11 +79,7 @@ dependencies {
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.truth)
     implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
 }
 
@@ -137,10 +134,6 @@ androidComponents {
             GenerateArtifactIdTask::outputDir
         )
     }
-}
-
-tasks.named("dokkaGeneratePublicationHtml") {
-    dependsOn(generateArtifactIdFile)
 }
 
 tasks.named("dokkaGeneratePublicationHtml") {

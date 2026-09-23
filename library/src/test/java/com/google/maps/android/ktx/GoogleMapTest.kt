@@ -21,8 +21,8 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -56,47 +56,43 @@ public class GoogleMapTest {
 
     @Test
     public fun testCameraIdleEvents(): Unit = runTest {
-        var received = false
-        val job = launch {
+        val deferred = async {
             googleMap.cameraIdleEvents().first()
-            received = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnCameraIdleListener(cameraIdleListener.capture())
         cameraIdleListener.value.onCameraIdle()
-        advanceUntilIdle()
-        assertThat(received).isTrue()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
     @Test
     public fun testAwaitMapLoad(): Unit = runTest {
-        var mapLoaded = false
-        val job = launch {
+        val deferred = async {
             googleMap.awaitMapLoad()
-            mapLoaded = true
         }
         advanceUntilIdle()
         verify(googleMap).setOnMapLoadedCallback(loadedCallback.capture())
         loadedCallback.value.onMapLoaded()
-        advanceUntilIdle()
-        assertThat(mapLoaded).isTrue()
-        job.cancel()
+        assertThat(deferred.await()).isEqualTo(Unit)
     }
 
     @Test
     public fun testAwaitAnimateCamera(): Unit = runTest {
-        var animated = false
-        val job = launch {
+        val deferredDefault = async {
             googleMap.awaitAnimateCamera(cameraUpdate)
-            animated = true
         }
         advanceUntilIdle()
-        verify(googleMap).animateCamera(any(CameraUpdate::class.java), Mockito.eq(3000), cancelableCallback.capture())
+        verify(googleMap).animateCamera(any(CameraUpdate::class.java), cancelableCallback.capture())
         cancelableCallback.value.onFinish()
+        assertThat(deferredDefault.await()).isEqualTo(Unit)
+
+        val deferredWithDuration = async {
+            googleMap.awaitAnimateCamera(cameraUpdate, 500)
+        }
         advanceUntilIdle()
-        assertThat(animated).isTrue()
-        job.cancel()
+        verify(googleMap).animateCamera(any(CameraUpdate::class.java), Mockito.eq(500), cancelableCallback.capture())
+        cancelableCallback.value.onFinish()
+        assertThat(deferredWithDuration.await()).isEqualTo(Unit)
     }
 }
 
