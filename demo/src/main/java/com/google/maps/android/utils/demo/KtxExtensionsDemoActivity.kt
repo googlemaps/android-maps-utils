@@ -33,7 +33,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,7 +45,6 @@ import com.google.maps.android.awaitMap
 import com.google.maps.android.awaitMapsSdkInitialized
 import com.google.maps.android.ktx.addCircle as deprecatedBridgeAddCircle
 import com.google.maps.android.mapClickEvents
-import kotlinx.coroutines.launch
 
 /**
  * A demo activity illustrating the consolidated reactive Coroutine/Flow/Builder extensions
@@ -89,7 +87,7 @@ class KtxExtensionsDemoActivity : ComponentActivity() {
             }
         }
 
-        LaunchedEffect(mapView) {
+        LaunchedEffect(lifecycleOwner, mapView) {
             // 1. Canonical awaitMapsSdkInitialized() coroutine suspension
             context.awaitMapsSdkInitialized(MapsInitializer.Renderer.LATEST)
 
@@ -97,7 +95,7 @@ class KtxExtensionsDemoActivity : ComponentActivity() {
             val googleMap: GoogleMap = mapView.awaitMap()
 
             val sydney = LatLng(-33.852, 151.211)
-            
+
             // 3. Canonical addMarker builder DSL
             googleMap.addMarker {
                 position(sydney)
@@ -114,16 +112,14 @@ class KtxExtensionsDemoActivity : ComponentActivity() {
             // 4. Canonical awaitAnimateCamera suspension
             googleMap.awaitAnimateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12f), 1500)
 
-            // 5. Canonical Flow observation for map clicks
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    googleMap.mapClickEvents().collect { latLng ->
-                        Toast.makeText(
-                            context,
-                            "Clicked at: ${latLng.latitude}, ${latLng.longitude}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+            // 5. Canonical Flow observation for map clicks tied to the composable & lifecycle
+            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                googleMap.mapClickEvents().collect { latLng ->
+                    Toast.makeText(
+                        context,
+                        "Clicked at: ${latLng.latitude}, ${latLng.longitude}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

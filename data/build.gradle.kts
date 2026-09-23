@@ -79,11 +79,8 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.androidx.test.core)
     implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 }
 
 tasks.register("instrumentTest") {
