@@ -44,7 +44,7 @@ junit = "4.13.2"
 kxml2 = "2.3.0"
 mockito-core = "5.23.0"
 mockk = "1.14.11"
-robolectric = "4.16.1"
+robolectric = "4.17"
 truth = "1.4.5"
 uiautomator = "2.4.0"
 
