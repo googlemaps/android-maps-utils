@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.3.0](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v5.3.0) (2026-09-24)
+
+
+### Features
+
+* add polygon z-index support ([#1785](https://github.com/googlemaps/android-maps-utils/issues/1785)) ([9056fd9](https://github.com/googlemaps/android-maps-utils/commit/9056fd93b719dcf6a151466dc6e9f2c3db7284d3))
+* add z-index support across geometry styles and layer mappers ([#1787](https://github.com/googlemaps/android-maps-utils/issues/1787)) ([c3fa410](https://github.com/googlemaps/android-maps-utils/commit/c3fa4106f55fae2703957c3b5d4ba3b43c6c09db))
+
+
+### Bug Fixes
+
+* **data:** enforce decompression limit and reject payload on KMZ directory entries ([#1792](https://github.com/googlemaps/android-maps-utils/issues/1792)) ([56b3c24](https://github.com/googlemaps/android-maps-utils/commit/56b3c2470e7e0df667b3e4320e066a459b4761b7))
+
 ## [5.2.0](https://github.com/googlemaps/android-maps-utils/compare/v5.1.1...v5.2.0) (2026-08-28)
 
 
