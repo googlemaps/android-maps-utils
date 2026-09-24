@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `51c59bf` (#1775), recorded 2026-09-23T15:47:55Z.
+Measured at `56b3c24` (#1792), recorded 2026-09-24T14:16:04Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
 | `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 170/834 | 20.38% |
-| `data` | 1,392/2,658 | 52.37% | `██████████░░░░░░░░░░` | 834/2,241 | 37.22% |
+| `data` | 1,402/2,663 | 52.65% | `███████████░░░░░░░░░` | 840/2,245 | 37.42% |
 | `heatmaps` | 242/275 | 88.00% | `██████████████████░░` | 120/146 | 82.19% |
 | `library` | 512/561 | 91.27% | `██████████████████░░` | 211/260 | 81.15% |
 | `ui` | 115/148 | 77.70% | `████████████████░░░░` | 43/66 | 65.15% |
-| **TOTAL** | 2,814/5,421 | 51.91% | `██████████░░░░░░░░░░` | 1,378/3,547 | 38.85% |
+| **TOTAL** | 2,824/5,426 | 52.05% | `██████████░░░░░░░░░░` | 1,384/3,551 | 38.97% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-24 | `56b3c24` | #1792 | 52.05% | +0.14 | fix(data): enforce decompression limit and reject payload on KMZ directory entries |
 | 2026-09-23 | `51c59bf` | #1775 | 51.91% | 0.00 | ci: support GEMINI_MODEL repository variable in triage-issue workflow |
 | 2026-09-23 | `651c6e0` | #1791 | 51.91% | 0.00 | build(deps): bump org.robolectric:robolectric |
 | 2026-09-22 | `2e33859` | #1789 | 51.91% | 0.00 | ci: group dependabot minor and patch updates |
