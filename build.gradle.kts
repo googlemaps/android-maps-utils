@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import java.nio.file.Files
+import java.util.Properties
+
 plugins {
     id("com.vanniktech.maven.publish") version libs.versions.gradleMavenPublishPlugin.get() apply false
 }
@@ -57,6 +60,29 @@ allprojects {
             toolchain {
                 languageVersion.set(JavaLanguageVersion.of(17))
             }
+        }
+    }
+
+    tasks.withType<Test>().configureEach {
+        val testHome = rootProject.layout.buildDirectory.dir("test-home").get().asFile
+        testHome.mkdirs()
+        val m2Link = File(testHome, ".m2")
+        if (!m2Link.exists()) {
+            val realM2 = File(System.getProperty("user.home"), ".m2")
+            if (realM2.exists()) {
+                try {
+                    Files.createSymbolicLink(m2Link.toPath(), realM2.toPath())
+                } catch (_: Exception) {}
+            }
+        }
+        systemProperty("user.home", testHome.absolutePath)
+        val androidSdkDir = System.getenv("ANDROID_HOME")
+            ?: System.getenv("ANDROID_SDK_ROOT")
+            ?: rootProject.file("local.properties").takeIf { it.isFile }?.let { localPropsFile ->
+                Properties().apply { localPropsFile.inputStream().use(::load) }.getProperty("sdk.dir")
+            }
+        if (androidSdkDir != null) {
+            environment("ANDROID_HOME", androidSdkDir)
         }
     }
 }
