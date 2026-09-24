@@ -91,7 +91,7 @@ class KmzParser(
         @Throws(IOException::class)
         private fun checkLimit() {
             if (mTotalBytes > mMaxBytes) {
-                throw java.io.IOException("Zip bomb detected! Uncompressed size exceeds limit of $mMaxBytes bytes.")
+                throw IOException("Zip bomb detected! Uncompressed size exceeds limit of $mMaxBytes bytes.")
             }
         }
     }
@@ -114,24 +114,31 @@ class KmzParser(
             while (entry != null) {
                 entryCount++
                 if (entryCount > maxKmzEntryCount) {
-                    throw java.io.IOException("Zip bomb detected! Max number of entries exceeded: $maxKmzEntryCount")
+                    throw IOException("Zip bomb detected! Max number of entries exceeded: $maxKmzEntryCount")
                 }
                 val name = entry.name
-                if (!entry.isDirectory) {
-                    if (name.endsWith(".kml", ignoreCase = true) && kml == null) {
-                        // Found the KML file (first one found is usually the main one in KMZ)
-                        // We need to read it into a byte array because we can't close the ZipInputStream yet
-                        val bytes = countingStream.readBytes()
-                        kml = KmlParser().parse(ByteArrayInputStream(bytes))
-                    } else {
-                        // Try to decode as image
-                        val bytes = countingStream.readBytes()
-                        val bitmap = imageDecoder.decode(bytes)
-                        if (bitmap != null) {
-                            images[name] = bitmap
-                        }
+                if (entry.isDirectory) {
+                    // Directory entries in a ZIP archive must never carry a data payload.
+                    // Reading even a single byte detects rogue payloads without decompressing large streams.
+                    if (countingStream.read() != -1) {
+                        throw IOException("Zip bomb or malformed KMZ detected: directory entry '$name' contains unexpected data payload.")
+                    }
+                } else if (name.endsWith(".kml", ignoreCase = true) && kml == null) {
+                    // Found the KML file (first one found is usually the main one in KMZ)
+                    // We need to read it into a byte array because we can't close the ZipInputStream yet
+                    val bytes = countingStream.readBytes()
+                    kml = KmlParser().parse(ByteArrayInputStream(bytes))
+                } else {
+                    // Try to decode as image
+                    val bytes = countingStream.readBytes()
+                    val bitmap = imageDecoder.decode(bytes)
+                    if (bitmap != null) {
+                        images[name] = bitmap
                     }
                 }
+                // Drain any unread bytes through countingStream before closing entry to ensure
+                // ZipInputStream.closeEntry() never bypasses cumulative byte accounting.
+                drainEntry(countingStream)
                 zipInputStream.closeEntry()
                 entry = zipInputStream.nextEntry
             }
@@ -146,7 +153,20 @@ class KmzParser(
         return kml.copy(images = images)
     }
 
+    /**
+     * Drains any remaining bytes from the current zip entry through the counting stream,
+     * ensuring all inflated bytes count towards the uncompressed size limit.
+     */
+    @Throws(IOException::class)
+    private fun drainEntry(stream: InputStream) {
+        val buffer = ByteArray(DRAIN_BUFFER_SIZE)
+        while (stream.read(buffer) != -1) {
+            // CountingInputStream counts bytes read and enforces maxKmzUncompressedTotalSize limit.
+        }
+    }
+
     companion object {
+        private const val DRAIN_BUFFER_SIZE = 8192
         val SUPPORTED_EXTENSIONS = setOf("kmz")
 
         fun canParse(header: String): Boolean {
