@@ -1,0 +1,228 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.google.android.maps.testing",
+    "module": "visual",
+    "version": "1.1.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.android.gms",
+          "module": "play-services-maps",
+          "version": {
+            "requires": "20.0.0"
+          }
+        },
+        {
+          "group": "com.google.android.maps.testing",
+          "module": "golden",
+          "version": {
+            "requires": "1.1.0-rc01"
+          }
+        },
+        {
+          "group": "androidx.test",
+          "module": "core",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "junit",
+          "module": "junit",
+          "version": {
+            "requires": "4.13.2"
+          }
+        },
+        {
+          "group": "androidx.test.ext",
+          "module": "junit",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.test.uiautomator",
+          "module": "uiautomator",
+          "version": {
+            "requires": "2.3.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "visual-1.1.0-rc01.aar",
+          "url": "visual-1.1.0-rc01.aar",
+          "size": 108793,
+          "sha512": "7730c021d509c28191ad012c0f8957b64a0cbe5ab3e382ffa8e9291d22c891814d41d1a078a60e18b1b8e3f6de1d5a91867deabda838e879ab083a4d5facae0d",
+          "sha256": "52a8d0f65393fec6ce9485b92e7517d568d38e02f5fe5367655add52be8531eb",
+          "sha1": "e04f0ee05d96680c5620b96ffc9c76dc11656493",
+          "md5": "adf3753814a858da8c03aa7415f78d84"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.18.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-json",
+          "version": {
+            "requires": "1.8.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-core",
+          "version": {
+            "requires": "3.1.0"
+          }
+        },
+        {
+          "group": "io.ktor",
+          "module": "ktor-client-cio",
+          "version": {
+            "requires": "3.1.0"
+          }
+        },
+        {
+          "group": "com.google.android.gms",
+          "module": "play-services-maps",
+          "version": {
+            "requires": "20.0.0"
+          }
+        },
+        {
+          "group": "com.google.android.maps.testing",
+          "module": "golden",
+          "version": {
+            "requires": "1.1.0-rc01"
+          }
+        },
+        {
+          "group": "androidx.test",
+          "module": "core",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "junit",
+          "module": "junit",
+          "version": {
+            "requires": "4.13.2"
+          }
+        },
+        {
+          "group": "androidx.test.ext",
+          "module": "junit",
+          "version": {
+            "requires": "1.3.0"
+          }
+        },
+        {
+          "group": "androidx.test.uiautomator",
+          "module": "uiautomator",
+          "version": {
+            "requires": "2.3.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "visual-1.1.0-rc01.aar",
+          "url": "visual-1.1.0-rc01.aar",
+          "size": 108793,
+          "sha512": "7730c021d509c28191ad012c0f8957b64a0cbe5ab3e382ffa8e9291d22c891814d41d1a078a60e18b1b8e3f6de1d5a91867deabda838e879ab083a4d5facae0d",
+          "sha256": "52a8d0f65393fec6ce9485b92e7517d568d38e02f5fe5367655add52be8531eb",
+          "sha1": "e04f0ee05d96680c5620b96ffc9c76dc11656493",
+          "md5": "adf3753814a858da8c03aa7415f78d84"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "visual-1.1.0-rc01-sources.jar",
+          "url": "visual-1.1.0-rc01-sources.jar",
+          "size": 9672,
+          "sha512": "5d67653e3edb267dfd457b11adac23b10fdf8a13954824687301ce942bce9179b493829086bcc9ec95b6994338a5fc4c74d86b81aee5cdda8b3f0d6615720f24",
+          "sha256": "18f799cee5ec6fb152268584cd4f7ed8ed61e4b5a3568e7ffcdbdeb003bd9302",
+          "sha1": "b37c55d0791cba2d86558a14b577921f7f86b8cc",
+          "md5": "b44a80248e2b39a220e6ae26e8a44818"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseJavaDocPublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "visual-1.1.0-rc01-javadoc.jar",
+          "url": "visual-1.1.0-rc01-javadoc.jar",
+          "size": 324175,
+          "sha512": "884b256156a4200ae347ee4164287f7a71c3178db033ed10ad6e663f8cb772cca5ab3ef75f32b8f96512d12a77cd14e4c2f687eb781d655eeed8ae686cce84f9",
+          "sha256": "a0414a962ae99806c164e21ff51bae664c32dd2a57d80b8bc4e08ddfcdad5b44",
+          "sha1": "f125e8de4b6cf56f77b5e8cc89880cdd48c42be7",
+          "md5": "7873fbda2e27a4d1b80893ae3280066f"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.google.android.maps.testing",
+    "module": "golden",
+    "version": "1.1.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.android.gms",
+          "module": "play-services-maps",
+          "version": {
+            "requires": "20.0.0"
+          }
+        },
+        {
+          "group": "com.google.android.maps.robolectric",
+          "module": "shadows",
+          "version": {
+            "requires": "1.1.0-rc01"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "golden-1.1.0-rc01.aar",
+          "url": "golden-1.1.0-rc01.aar",
+          "size": 33647,
+          "sha512": "59e908ea6184c0d4aa31deb4d52355eb405361eefd465bf8ef59b6cc5a308b6150af3ca7407c68faef9137c98e73af0a9fb14b9d501e115af40ddf056f9bf4f4",
+          "sha256": "e5250abe8ec586f3b578de32c0f515b86117359a6ed4a771bcaddbcd56c01ead",
+          "sha1": "61cad59684c5923d2220d01760d4d6c04aff9d2c",
+          "md5": "a84bc04a0d823f03428af582c65d2f4f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.18.0"
+          }
+        },
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2026.03.01"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-test",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "com.google.android.gms",
+          "module": "play-services-maps",
+          "version": {
+            "requires": "20.0.0"
+          }
+        },
+        {
+          "group": "com.google.android.maps.robolectric",
+          "module": "shadows",
+          "version": {
+            "requires": "1.1.0-rc01"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "golden-1.1.0-rc01.aar",
+          "url": "golden-1.1.0-rc01.aar",
+          "size": 33647,
+          "sha512": "59e908ea6184c0d4aa31deb4d52355eb405361eefd465bf8ef59b6cc5a308b6150af3ca7407c68faef9137c98e73af0a9fb14b9d501e115af40ddf056f9bf4f4",
+          "sha256": "e5250abe8ec586f3b578de32c0f515b86117359a6ed4a771bcaddbcd56c01ead",
+          "sha1": "61cad59684c5923d2220d01760d4d6c04aff9d2c",
+          "md5": "a84bc04a0d823f03428af582c65d2f4f"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "golden-1.1.0-rc01-sources.jar",
+          "url": "golden-1.1.0-rc01-sources.jar",
+          "size": 11874,
+          "sha512": "c33cba31cdb13557e58927a17ee98d67d7ce25ffcfdf2542d4ab47849670b24764e2e5f819e1a0e53137f70225a950564df27d3e12f79362dcd110b543a5efdc",
+          "sha256": "22cb8d3947ae4608dfc661aa902270b7d3490e544ae2b326059383316fdbf9cc",
+          "sha1": "b0de209b204f2ccaeed341e5a4e88ef44ce7c7bd",
+          "md5": "97eeb9eaaead0c944a21c6e8468e0a1c"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseJavaDocPublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "golden-1.1.0-rc01-javadoc.jar",
+          "url": "golden-1.1.0-rc01-javadoc.jar",
+          "size": 313348,
+          "sha512": "b19c421381eda8f5f89801b1900f6bf598556e8ccbe4937bc301d3f06cb34db82b25ae87e07602230b6cbb76c5f88c1a5865f2c34dfe433bfcc4f43051032f9d",
+          "sha256": "e1936b3a22e311f9fa711974c2b4b0c8d4e3dd6ddfc548fb3a6e5b850a4977c7",
+          "sha1": "38a597c788e785d497856c2399e2d6abf9bfb79e",
+          "md5": "6b6e841269c2865b16ed252dde9d1658"
+        }
+      ]
+    }
+  ]
+}
