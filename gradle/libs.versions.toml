@@ -43,6 +43,7 @@ androidx-test-ext-junit = "1.3.0"
 espresso-core = "3.7.0"
 junit = "4.13.2"
 kxml2 = "2.3.0"
+mapsTesting = "1.1.0-rc01"
 mockito-kotlin = "5.4.0"
 mockk = "1.14.11"
 robolectric = "4.16.1"
@@ -110,6 +111,9 @@ androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-te
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 junit = { module = "junit:junit", version.ref = "junit" }
+maps-robolectric-shadows = { module = "com.google.android.maps.robolectric:shadows", version.ref = "mapsTesting" }
+maps-testing-golden = { module = "com.google.android.maps.testing:golden", version.ref = "mapsTesting" }
+maps-testing-visual = { module = "com.google.android.maps.testing:visual", version.ref = "mapsTesting" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
