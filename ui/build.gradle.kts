@@ -79,6 +79,12 @@ dependencies {
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.maps.robolectric.shadows)
+    testImplementation(libs.maps.testing.golden)
+    testImplementation(libs.maps.testing.visual)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.activity.compose)
+    testImplementation(libs.kotlinx.serialization.json)
 }
 
 tasks.register("instrumentTest") {
