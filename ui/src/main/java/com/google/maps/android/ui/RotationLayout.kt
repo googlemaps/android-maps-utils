@@ -50,7 +50,7 @@ class RotationLayout
          * @param degrees the rotation, in degrees.
          */
         fun setViewRotation(degrees: Int) {
-            rotation = (degrees + 360) % 360 / 90
+            rotation = degrees.mod(360) / 90
         }
 
         public override fun dispatchDraw(canvas: Canvas) {

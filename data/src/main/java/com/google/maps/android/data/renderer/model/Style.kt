@@ -15,6 +15,8 @@
  */
 package com.google.maps.android.data.renderer.model
 
+import com.google.android.gms.maps.model.BitmapDescriptor
+
 /**
  * A sealed interface representing a style for a geometric object.
  *
@@ -32,6 +34,14 @@ sealed interface Style
  * @property anchorV The V-coordinate of the icon's anchor point, as a ratio of the icon's height (0.0 to 1.0). Defaults to 1.0 (bottom).
  * @property scale The scale factor for the icon. Defaults to 1.0.
  * @property zIndex The z-index of the marker. Higher values are drawn above lower values. Defaults to 0.0.
+ * @property title Optional title override for the marker.
+ * @property snippet Optional snippet override for the marker.
+ * @property draggable Whether the marker is draggable. Defaults to false.
+ * @property flat Whether the marker should be rendered flat against the map. Defaults to false.
+ * @property visible Whether the marker is visible. Defaults to true.
+ * @property iconDescriptor Optional pre-constructed [BitmapDescriptor] for the marker icon.
+ * @property infoWindowAnchorU The U-coordinate of the info window anchor point. Defaults to 0.5.
+ * @property infoWindowAnchorV The V-coordinate of the info window anchor point. Defaults to 0.0.
  */
 data class PointStyle(
     val color: Int = 0xFF000000.toInt(), // Default to black
@@ -41,6 +51,14 @@ data class PointStyle(
     val anchorV: Float = 1.0f,
     val scale: Float = 1.0f,
     val zIndex: Float = 0.0f,
+    val title: String? = null,
+    val snippet: String? = null,
+    val draggable: Boolean = false,
+    val flat: Boolean = false,
+    val visible: Boolean = true,
+    val iconDescriptor: BitmapDescriptor? = null,
+    val infoWindowAnchorU: Float = 0.5f,
+    val infoWindowAnchorV: Float = 0.0f,
 ) : Style
 
 /**
@@ -50,12 +68,16 @@ data class PointStyle(
  * @property width The width of the line in pixels. Defaults to 1.0.
  * @property geodesic Indicates whether the line should be drawn as a geodesic (true) or a straight line (false). Defaults to false.
  * @property zIndex The z-index of the line. Higher values are drawn above lower values. Defaults to 0.0.
+ * @property clickable Indicates whether the line is clickable. Defaults to true.
+ * @property visible Indicates whether the line is visible. Defaults to true.
  */
 data class LineStyle(
     val color: Int = 0xFF000000.toInt(), // Default to black
     val width: Float = 1.0f,
     val geodesic: Boolean = false,
     val zIndex: Float = 0.0f,
+    val clickable: Boolean = true,
+    val visible: Boolean = true,
 ) : Style
 
 /**
@@ -66,6 +88,8 @@ data class LineStyle(
  * @property strokeWidth The stroke width of the polygon in pixels. Defaults to 1.0.
  * @property geodesic Indicates whether the polygon's stroke should be drawn as a geodesic (true) or a straight line (false). Defaults to false.
  * @property zIndex The z-index of the polygon. Higher values are drawn above lower values. Defaults to 0.0.
+ * @property clickable Indicates whether the polygon is clickable. Defaults to true.
+ * @property visible Indicates whether the polygon is visible. Defaults to true.
  */
 data class PolygonStyle(
     val fillColor: Int = 0x00000000,
@@ -73,4 +97,15 @@ data class PolygonStyle(
     val strokeWidth: Float = 1.0f,
     val geodesic: Boolean = false,
     val zIndex: Float = 0.0f,
+    val clickable: Boolean = true,
+    val visible: Boolean = true,
+) : Style
+
+/**
+ * A composite style carrying point, line, and polygon styles for heterogeneous [MultiGeometry] features.
+ */
+data class CompositeStyle(
+    val pointStyle: PointStyle? = null,
+    val lineStyle: LineStyle? = null,
+    val polygonStyle: PolygonStyle? = null,
 ) : Style

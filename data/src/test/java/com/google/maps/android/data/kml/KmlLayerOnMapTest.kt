@@ -95,6 +95,68 @@ class KmlLayerOnMapTest {
             val layer = KmlLayer(mockk<GoogleMap>(relaxed = true), kml.byteInputStream(), context)
             layer.addLayerToMap()
             assertTrue(layer.isLayerOnMap())
+            assertTrue(layer.hasPlacemarks())
+            org.junit.Assert.assertEquals(3, layer.getPlacemarks().toList().size)
+            org.junit.Assert.assertEquals(3, layer.features.toList().size)
+        } finally {
+            unmockkStatic(BitmapDescriptorFactory::class)
+        }
+    }
+
+    @Test
+    fun removeLayerFromMap_removesGroundOverlaysAndPreservesMultiGeometryStyles() {
+        mockkStatic(BitmapDescriptorFactory::class)
+        every { BitmapDescriptorFactory.defaultMarker(any()) } returns mockk()
+        every { BitmapDescriptorFactory.fromBitmap(any()) } returns mockk()
+        try {
+            val mockMap = mockk<GoogleMap>(relaxed = true)
+            val mockGroundOverlay = mockk<com.google.android.gms.maps.model.GroundOverlay>(relaxed = true)
+            val polylineSlot = io.mockk.slot<com.google.android.gms.maps.model.PolylineOptions>()
+            every { mockMap.addGroundOverlay(any()) } returns mockGroundOverlay
+            every { mockMap.addPolyline(capture(polylineSlot)) } returns mockk(relaxed = true)
+
+            val kml =
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <kml xmlns="http://www.opengis.net/kml/2.2">
+                  <Document>
+                    <Placemark>
+                      <Style>
+                        <LineStyle>
+                          <color>ff0000ff</color>
+                          <width>12</width>
+                        </LineStyle>
+                      </Style>
+                      <MultiGeometry>
+                        <LineString>
+                          <coordinates>-122.084,37.422,0 -122.080,37.425,0</coordinates>
+                        </LineString>
+                      </MultiGeometry>
+                    </Placemark>
+                    <GroundOverlay>
+                      <name>Campus Map</name>
+                      <Icon><href>https://example.com/overlay.png</href></Icon>
+                      <LatLonBox>
+                        <north>37.43</north>
+                        <south>37.41</south>
+                        <east>-122.07</east>
+                        <west>-122.09</west>
+                      </LatLonBox>
+                    </GroundOverlay>
+                  </Document>
+                </kml>
+                """.trimIndent()
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            val layer = KmlLayer(mockMap, kml.byteInputStream(), context)
+            layer.addLayerToMap()
+
+            org.junit.Assert.assertEquals(1, layer.getGroundOverlays().toList().size)
+            assertTrue(polylineSlot.captured.isClickable)
+            org.junit.Assert.assertEquals(12.0f, polylineSlot.captured.width, 0.001f)
+            org.junit.Assert.assertEquals(0xFFFF0000.toInt(), polylineSlot.captured.color)
+
+            layer.removeLayerFromMap()
+            io.mockk.verify(exactly = 1) { mockGroundOverlay.remove() }
         } finally {
             unmockkStatic(BitmapDescriptorFactory::class)
         }

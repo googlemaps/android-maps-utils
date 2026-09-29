@@ -45,8 +45,13 @@ public class KmlLayer : Layer {
     private var mRenderer: MapViewRenderer? = null
     private var mIsLayerOnMap = false
     private val mPlacemarkMap = HashMap<KmlPlacemark, com.google.maps.android.data.renderer.model.Feature>()
+    private val mGroundOverlayMap = HashMap<KmlGroundOverlay, com.google.maps.android.data.renderer.model.Feature>()
     private val mModelToLegacyPlacemarks = HashMap<com.google.maps.android.data.renderer.model.Feature, KmlPlacemark>()
     private var mFeatureClickListener: OnFeatureClickListener? = null
+    private var mMarkerManager: MarkerManager? = null
+    private var mPolygonManager: PolygonManager? = null
+    private var mPolylineManager: PolylineManager? = null
+    private var mGroundOverlayManager: GroundOverlayManager? = null
 
     @JvmOverloads
     @Throws(XmlPullParserException::class, IOException::class)
@@ -89,7 +94,21 @@ public class KmlLayer : Layer {
         maxKmzUncompressedTotalSize: Long = 50 * 1024 * 1024,
     ) {
         mGoogleMap = map
-        mRenderer = map?.let { MapViewRenderer(it, UrlIconProvider()) }
+        mMarkerManager = markerManager
+        mPolygonManager = polygonManager
+        mPolylineManager = polylineManager
+        mGroundOverlayManager = groundOverlayManager
+        mRenderer =
+            map?.let {
+                MapViewRenderer(
+                    it,
+                    UrlIconProvider(),
+                    mMarkerManager,
+                    mPolygonManager,
+                    mPolylineManager,
+                    mGroundOverlayManager,
+                )
+            }
 
         val bis = BufferedInputStream(stream)
         bis.mark(1024)
@@ -334,7 +353,16 @@ public class KmlLayer : Layer {
             removeLayerFromMap()
             mRenderer = null
         } else {
-            mRenderer = MapViewRenderer(map, UrlIconProvider())
+            mRenderer =
+                MapViewRenderer(
+                    map,
+                    UrlIconProvider(),
+                    mMarkerManager,
+                    mPolygonManager,
+                    mPolylineManager,
+                    mGroundOverlayManager,
+                )
+            mFeatureClickListener?.let { setOnFeatureClickListener(it) }
             if (mIsLayerOnMap) {
                 addLayerToMap()
             }
@@ -375,6 +403,39 @@ public class KmlLayer : Layer {
         container.getContainers().forEach { c -> removeContainerFromMap(c, renderer) }
     }
 
+    private fun buildPointStyle(inline: KmlStyle?): com.google.maps.android.data.renderer.model.PointStyle =
+        com.google.maps.android.data.renderer.model.PointStyle(
+            // mMarkerColor is a hue (0..360), not an ARGB color — convert it before handing it to the
+            // renderer, which derives the marker's hue and alpha from an ARGB value. Passing the raw
+            // hue (or 0) made the alpha channel 0 and rendered every KML point marker invisible.
+            color =
+                inline?.mMarkerColor?.let { hue -> Color.HSVToColor(floatArrayOf(hue, 1f, 1f)) }
+                    ?: Color.BLACK,
+            iconUrl = inline?.getIconUrl(),
+            zIndex = inline?.mMarkerOptions?.zIndex ?: 0f,
+        )
+
+    private fun buildLineStyle(inline: KmlStyle?): com.google.maps.android.data.renderer.model.LineStyle =
+        com.google.maps.android.data.renderer.model.LineStyle(
+            color = inline?.mPolylineOptions?.color ?: 0xFF000000.toInt(),
+            width = inline?.mPolylineOptions?.width ?: 1.0f,
+            geodesic = inline?.mPolylineOptions?.isGeodesic ?: false,
+            zIndex = inline?.mPolylineOptions?.zIndex ?: 0f,
+            clickable = inline?.mPolylineOptions?.isClickable ?: true,
+            visible = inline?.mPolylineOptions?.isVisible ?: true,
+        )
+
+    private fun buildPolygonStyle(inline: KmlStyle?): com.google.maps.android.data.renderer.model.PolygonStyle =
+        com.google.maps.android.data.renderer.model.PolygonStyle(
+            fillColor = inline?.mPolygonOptions?.fillColor ?: 0x00000000,
+            strokeColor = inline?.mPolygonOptions?.strokeColor ?: 0xFF000000.toInt(),
+            strokeWidth = inline?.mPolygonOptions?.strokeWidth ?: 1.0f,
+            geodesic = inline?.mPolygonOptions?.isGeodesic ?: false,
+            zIndex = inline?.mPolygonOptions?.zIndex ?: 0f,
+            clickable = inline?.mPolygonOptions?.isClickable ?: true,
+            visible = inline?.mPolygonOptions?.isVisible ?: true,
+        )
+
     private fun toModelFeature(placemark: KmlPlacemark): com.google.maps.android.data.renderer.model.Feature {
         val existing = mPlacemarkMap[placemark]
         if (existing != null) return existing
@@ -386,41 +447,16 @@ public class KmlLayer : Layer {
         val inline = placemark.getInlineStyle()
         val style =
             when (modelGeometry) {
-                is com.google.maps.android.data.renderer.model.PointGeometry -> {
-                    com.google.maps.android.data.renderer.model.PointStyle(
-                        // mMarkerColor is a hue (0..360), not an ARGB color — convert it before handing it to the
-                        // renderer, which derives the marker's hue and alpha from an ARGB value. Passing the raw
-                        // hue (or 0) made the alpha channel 0 and rendered every KML point marker invisible.
-                        color =
-                            inline?.mMarkerColor?.let { hue -> Color.HSVToColor(floatArrayOf(hue, 1f, 1f)) }
-                                ?: Color.BLACK,
-                        iconUrl = inline?.getIconUrl(),
-                        zIndex = inline?.mMarkerOptions?.zIndex ?: 0f,
+                is com.google.maps.android.data.renderer.model.PointGeometry -> buildPointStyle(inline)
+                is com.google.maps.android.data.renderer.model.LineString -> buildLineStyle(inline)
+                is com.google.maps.android.data.renderer.model.Polygon -> buildPolygonStyle(inline)
+                is com.google.maps.android.data.renderer.model.MultiGeometry ->
+                    com.google.maps.android.data.renderer.model.CompositeStyle(
+                        pointStyle = buildPointStyle(inline),
+                        lineStyle = buildLineStyle(inline),
+                        polygonStyle = buildPolygonStyle(inline),
                     )
-                }
-
-                is com.google.maps.android.data.renderer.model.LineString -> {
-                    com.google.maps.android.data.renderer.model.LineStyle(
-                        color = inline?.mPolylineOptions?.color ?: 0xFF000000.toInt(),
-                        width = inline?.mPolylineOptions?.width ?: 1.0f,
-                        geodesic = inline?.mPolylineOptions?.isGeodesic ?: false,
-                        zIndex = inline?.mPolylineOptions?.zIndex ?: 0f,
-                    )
-                }
-
-                is com.google.maps.android.data.renderer.model.Polygon -> {
-                    com.google.maps.android.data.renderer.model.PolygonStyle(
-                        fillColor = inline?.mPolygonOptions?.fillColor ?: 0x00000000,
-                        strokeColor = inline?.mPolygonOptions?.strokeColor ?: 0xFF000000.toInt(),
-                        strokeWidth = inline?.mPolygonOptions?.strokeWidth ?: 1.0f,
-                        geodesic = inline?.mPolygonOptions?.isGeodesic ?: false,
-                        zIndex = inline?.mPolygonOptions?.zIndex ?: 0f,
-                    )
-                }
-
-                else -> {
-                    null
-                }
+                else -> null
             }
 
         val modelFeature =
@@ -432,6 +468,9 @@ public class KmlLayer : Layer {
     }
 
     private fun toModelFeature(groundOverlay: KmlGroundOverlay): com.google.maps.android.data.renderer.model.Feature {
+        val existing = mGroundOverlayMap[groundOverlay]
+        if (existing != null) return existing
+
         val bounds = groundOverlay.getLatLngBox()
         val modelGeometry =
             com.google.maps.android.data.renderer.model.GroundOverlay(
@@ -448,8 +487,11 @@ public class KmlLayer : Layer {
                 visibility = groundOverlay.getGroundOverlayOptions().isVisible,
             )
         val properties = groundOverlay.getProperties().associateWith { groundOverlay.getProperty(it) as Any }
-        return com.google.maps.android.data.renderer.model
-            .Feature(modelGeometry, style, properties)
+        val modelFeature =
+            com.google.maps.android.data.renderer.model
+                .Feature(modelGeometry, style, properties)
+        mGroundOverlayMap[groundOverlay] = modelFeature
+        return modelFeature
     }
 
     private fun toModelGeometry(geometry: Geometry): com.google.maps.android.data.renderer.model.Geometry =
@@ -501,43 +543,92 @@ public class KmlLayer : Layer {
             }
         }
 
-    public fun hasPlacemarks(): Boolean = mPlacemarks.isNotEmpty()
+    private fun collectPlacemarks(
+        container: KmlContainer,
+        out: MutableList<KmlPlacemark>,
+    ) {
+        out.addAll(container.getPlacemarks())
+        container.getContainers().forEach { collectPlacemarks(it, out) }
+    }
 
-    public fun getPlacemarks(): Iterable<KmlPlacemark> = mPlacemarks
+    private fun getAllPlacemarks(): List<KmlPlacemark> {
+        val all = ArrayList<KmlPlacemark>(mPlacemarks)
+        mContainers.forEach { collectPlacemarks(it, all) }
+        return all
+    }
+
+    private fun collectGroundOverlays(
+        container: KmlContainer,
+        out: MutableList<KmlGroundOverlay>,
+    ) {
+        out.addAll(container.getGroundOverlays())
+        container.getContainers().forEach { collectGroundOverlays(it, out) }
+    }
+
+    private fun getAllGroundOverlays(): List<KmlGroundOverlay> {
+        val all = ArrayList<KmlGroundOverlay>(mGroundOverlays)
+        mContainers.forEach { collectGroundOverlays(it, all) }
+        return all
+    }
+
+    public fun hasPlacemarks(): Boolean = getAllPlacemarks().isNotEmpty()
+
+    public fun getPlacemarks(): Iterable<KmlPlacemark> = getAllPlacemarks()
 
     public fun hasContainers(): Boolean = mContainers.isNotEmpty()
 
     public fun getContainers(): Iterable<KmlContainer> = mContainers
 
-    public fun getGroundOverlays(): Iterable<KmlGroundOverlay> = mGroundOverlays
+    public fun getGroundOverlays(): Iterable<KmlGroundOverlay> = getAllGroundOverlays()
 
     override val features: Iterable<KmlPlacemark>
-        get() = mPlacemarks
+        get() = getAllPlacemarks()
 
     override fun isLayerOnMap(): Boolean = mIsLayerOnMap
 
     override fun setOnFeatureClickListener(listener: OnFeatureClickListener) {
         mFeatureClickListener = listener
-        mGoogleMap?.let { map ->
-            map.setOnMarkerClickListener { marker ->
+        val renderer = mRenderer
+        val map = mGoogleMap ?: return
+
+        val markerClickListener =
+            GoogleMap.OnMarkerClickListener { marker ->
                 val feature = findLegacyFeatureForMapObject(marker)
                 if (feature != null) {
                     mFeatureClickListener?.onFeatureClick(feature)
                 }
                 false
             }
-            map.setOnPolygonClickListener { polygon ->
+        if (renderer?.markerCollection != null) {
+            renderer.markerCollection.setOnMarkerClickListener(markerClickListener)
+        } else {
+            map.setOnMarkerClickListener(markerClickListener)
+        }
+
+        val polygonClickListener =
+            GoogleMap.OnPolygonClickListener { polygon ->
                 val feature = findLegacyFeatureForMapObject(polygon)
                 if (feature != null) {
                     mFeatureClickListener?.onFeatureClick(feature)
                 }
             }
-            map.setOnPolylineClickListener { polyline ->
+        if (renderer?.polygonCollection != null) {
+            renderer.polygonCollection.setOnPolygonClickListener(polygonClickListener)
+        } else {
+            map.setOnPolygonClickListener(polygonClickListener)
+        }
+
+        val polylineClickListener =
+            GoogleMap.OnPolylineClickListener { polyline ->
                 val feature = findLegacyFeatureForMapObject(polyline)
                 if (feature != null) {
                     mFeatureClickListener?.onFeatureClick(feature)
                 }
             }
+        if (renderer?.polylineCollection != null) {
+            renderer.polylineCollection.setOnPolylineClickListener(polylineClickListener)
+        } else {
+            map.setOnPolylineClickListener(polylineClickListener)
         }
     }
 

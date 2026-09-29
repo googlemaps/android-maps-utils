@@ -133,7 +133,7 @@ class IconGenerator(private val context: Context) {
      * @param degrees the amount the icon should be rotated, as a multiple of 90 degrees.
      */
     fun setRotation(degrees: Int) {
-        rotation = (degrees + 360) % 360 / 90
+        rotation = degrees.mod(360) / 90
     }
 
     /**

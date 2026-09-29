@@ -42,6 +42,10 @@ object AnimationUtil {
         finalPosition: LatLng,
         durationInMs: Long = 2000,
     ) {
+        if (durationInMs <= 0L) {
+            marker.position = finalPosition
+            return
+        }
         val latLngInterpolator = LatLngInterpolator.Linear()
         val startPosition = marker.position
         val handler = Handler(Looper.getMainLooper())
@@ -52,12 +56,13 @@ object AnimationUtil {
             object : Runnable {
                 override fun run() {
                     val elapsed = SystemClock.uptimeMillis() - start
-                    val t = elapsed / durationInMs.toFloat()
+                    val rawT = elapsed / durationInMs.toFloat()
+                    val t = rawT.coerceIn(0f, 1f)
                     val v = interpolator.getInterpolation(t)
                     marker.position = latLngInterpolator.interpolate(v, startPosition, finalPosition)
 
                     // Repeat till progress is complete.
-                    if (t < 1) {
+                    if (rawT < 1f) {
                         // Post again 16ms later.
                         handler.postDelayed(this, 16)
                     }

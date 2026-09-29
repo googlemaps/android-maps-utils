@@ -137,4 +137,67 @@ class HeatmapTileProviderTest {
         val tile = provider.getTile(1, 1, 20)
         assertThat(tile).isEqualTo(TileProvider.NO_TILE)
     }
+
+    @Test
+    fun testGetTile_zoomLevel22DoesNotThrowOutOfBounds() {
+        val data = listOf(LatLng(0.0, 0.0))
+        val provider = HeatmapTileProvider.Builder().data(data).build()
+        val numTiles = 1 shl 22
+        val centerTile = numTiles / 2
+        val tile = provider.getTile(centerTile, centerTile, 22)
+        assertThat(tile).isNotNull()
+        assertThat(tile).isNotEqualTo(TileProvider.NO_TILE)
+    }
+
+    @Test
+    fun testGetTile_upperBoundaryPointDoesNotThrowOutOfBounds() {
+        val data = listOf(LatLng(0.0, 0.0), LatLng(10.0, 10.0))
+        val provider = HeatmapTileProvider.Builder().data(data).radius(20).build()
+        val zoom = 2
+        val numTiles = 1 shl zoom
+        val padding = (1.0 / numTiles) * 20 / 512.0
+        val exactMaxX = 2 * (1.0 / numTiles) + padding
+        val exactLng = (exactMaxX - 0.5) * 360.0
+        provider.updateLatLngs(listOf(LatLng(0.0, 0.0), LatLng(0.0, exactLng)))
+        val tile = provider.getTile(1, 1, zoom)
+        assertThat(tile).isNotNull()
+    }
+
+    @Test
+    fun testGetTile_antimeridianWrappedPointsAreRendered() {
+        val pointNearEastDateLine = LatLng(0.0, 179.99)
+        val provider =
+            HeatmapTileProvider
+                .Builder()
+                .data(listOf(pointNearEastDateLine))
+                .radius(50)
+                .build()
+        val tile = provider.getTile(0, 1, 1)
+        assertThat(tile).isNotEqualTo(TileProvider.NO_TILE)
+    }
+
+    @Test
+    fun testSetRadiusAndSetOpacity_validateBounds() {
+        val provider = HeatmapTileProvider.Builder().data(listOf(LatLng(0.0, 0.0))).build()
+        try {
+            provider.setRadius(0)
+            fail("Should have thrown IllegalArgumentException")
+        } catch (_: IllegalArgumentException) {
+        }
+        try {
+            provider.setRadius(100)
+            fail("Should have thrown IllegalArgumentException")
+        } catch (_: IllegalArgumentException) {
+        }
+        try {
+            provider.setOpacity(-0.5)
+            fail("Should have thrown IllegalArgumentException")
+        } catch (_: IllegalArgumentException) {
+        }
+        try {
+            provider.setOpacity(1.5)
+            fail("Should have thrown IllegalArgumentException")
+        } catch (_: IllegalArgumentException) {
+        }
+    }
 }

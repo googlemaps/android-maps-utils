@@ -835,29 +835,25 @@ open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads constructor(
         marker: Marker,
     ) {
         var changed = false
-        // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
-        if (item.title != null && item.snippet != null) {
-            if (item.title != marker.title) {
-                marker.title = item.title
-                changed = true
-            }
-            if (item.snippet != marker.snippet) {
-                marker.snippet = item.snippet
-                changed = true
-            }
-        } else if (item.snippet != null && item.snippet != marker.title) {
-            marker.title = item.snippet
+        // Update marker text if the item text changed - same logic as adding marker in onBeforeClusterItemRendered()
+        val expectedTitle = item.title ?: item.snippet
+        val expectedSnippet = if (item.title != null) item.snippet else null
+        if (marker.title != expectedTitle) {
+            marker.title = expectedTitle
             changed = true
-        } else if (item.title != null && item.title != marker.title) {
-            marker.title = item.title
+        }
+        if (marker.snippet != expectedSnippet) {
+            marker.snippet = expectedSnippet
             changed = true
         }
         // Update marker position if the item changed position
         if (marker.position != item.position) {
             marker.position = item.position
-            if (item.zIndex != null) {
-                marker.zIndex = item.zIndex!!
-            }
+            changed = true
+        }
+        val itemZIndex = item.zIndex
+        if (itemZIndex != null && marker.zIndex != itemZIndex) {
+            marker.zIndex = itemZIndex
             changed = true
         }
         if (changed && marker.isInfoWindowShown) {

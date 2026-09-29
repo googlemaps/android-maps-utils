@@ -24,8 +24,13 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PinConfig
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.collections.GroundOverlayManager
+import com.google.maps.android.collections.MarkerManager
+import com.google.maps.android.collections.PolygonManager
+import com.google.maps.android.collections.PolylineManager
 import com.google.maps.android.data.renderer.DataRenderer
 import com.google.maps.android.data.renderer.IconProvider
+import com.google.maps.android.data.renderer.model.CompositeStyle
 import com.google.maps.android.data.renderer.model.DataLayer
 import com.google.maps.android.data.renderer.model.DataScene
 import com.google.maps.android.data.renderer.model.Feature
@@ -55,10 +60,19 @@ import java.util.IdentityHashMap
  *
  * @property map The [GoogleMap] instance to render features on.
  */
-class MapViewRenderer(
+class MapViewRenderer @JvmOverloads constructor(
     private val map: GoogleMap,
     private val iconProvider: IconProvider,
+    markerManager: MarkerManager? = null,
+    polygonManager: PolygonManager? = null,
+    polylineManager: PolylineManager? = null,
+    groundOverlayManager: GroundOverlayManager? = null,
 ) : DataRenderer {
+    internal val markerCollection: MarkerManager.Collection? = markerManager?.newCollection()
+    internal val polygonCollection: PolygonManager.Collection? = polygonManager?.newCollection()
+    internal val polylineCollection: PolylineManager.Collection? = polylineManager?.newCollection()
+    internal val groundOverlayCollection: GroundOverlayManager.Collection? = groundOverlayManager?.newCollection()
+
     // Scope for all coroutines launched by this renderer.
     // Using SupervisorJob so that failure of one icon load doesn't cancel others.
     private val rendererScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -131,10 +145,10 @@ class MapViewRenderer(
         when (geometry) {
             is PointGeometry -> {
                 val point = geometry.point
-                val style = feature.style as? PointStyle
+                val style = (feature.style as? PointStyle) ?: (feature.style as? CompositeStyle)?.pointStyle
                 if (useAdvancedMarkers) {
                     val markerOptions = createAdvancedMarkerOptions(point, style, feature.properties)
-                    val marker = map.addMarker(markerOptions)!!
+                    val marker = (markerCollection?.addMarker(markerOptions) ?: map.addMarker(markerOptions))!!
                     mapObjects.add(marker)
                     style?.iconUrl?.let { url ->
                         val localBitmap = localImages[url]
@@ -155,7 +169,7 @@ class MapViewRenderer(
                     }
                 } else {
                     val markerOptions = createMarkerOptions(point, style, feature.properties)
-                    val marker = map.addMarker(markerOptions)!!
+                    val marker = (markerCollection?.addMarker(markerOptions) ?: map.addMarker(markerOptions))!!
                     mapObjects.add(marker)
                     style?.iconUrl?.let { url ->
                         val localBitmap = localImages[url]
@@ -178,15 +192,17 @@ class MapViewRenderer(
             }
 
             is LineString -> {
-                val style = feature.style as? LineStyle
+                val style = (feature.style as? LineStyle) ?: (feature.style as? CompositeStyle)?.lineStyle
                 val polylineOptions = createPolylineOptions(geometry, style)
-                mapObjects.add(map.addPolyline(polylineOptions))
+                val polyline = polylineCollection?.addPolyline(polylineOptions) ?: map.addPolyline(polylineOptions)
+                mapObjects.add(polyline)
             }
 
             is Polygon -> {
-                val style = feature.style as? PolygonStyle
+                val style = (feature.style as? PolygonStyle) ?: (feature.style as? CompositeStyle)?.polygonStyle
                 val polygonOptions = createPolygonOptions(geometry, style)
-                mapObjects.add(map.addPolygon(polygonOptions))
+                val polygon = polygonCollection?.addPolygon(polygonOptions) ?: map.addPolygon(polygonOptions)
+                mapObjects.add(polygon)
             }
 
             is MultiGeometry -> {
@@ -204,7 +220,7 @@ class MapViewRenderer(
                     val localBitmap = localImages[url]
                     if (localBitmap != null) {
                         options.image(BitmapDescriptorFactory.fromBitmap(localBitmap))
-                        val mapOverlay = map.addGroundOverlay(options)
+                        val mapOverlay = groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
                         if (mapOverlay != null) {
                             mapObjects.add(mapOverlay)
                         }
@@ -214,7 +230,7 @@ class MapViewRenderer(
                         options.image(BitmapDescriptorFactory.fromBitmap(TRANSPARENT_BITMAP))
                         options.visible(false) // Hide until loaded
 
-                        val mapOverlay = map.addGroundOverlay(options)
+                        val mapOverlay = groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
                         if (mapOverlay != null) {
                             mapObjects.add(mapOverlay)
                             rendererScope.launch {
@@ -232,7 +248,7 @@ class MapViewRenderer(
                     }
                 } ?: run {
                     // No iconUrl, add directly
-                    val mapOverlay = map.addGroundOverlay(options)
+                    val mapOverlay = groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
                     if (mapOverlay != null) {
                         mapObjects.add(mapOverlay)
                     }
@@ -243,12 +259,7 @@ class MapViewRenderer(
 
     override fun removeFeature(feature: Feature) {
         renderedFeatures[feature]?.forEach { mapObject ->
-            when (mapObject) {
-                is com.google.android.gms.maps.model.Marker -> mapObject.remove()
-                is com.google.android.gms.maps.model.Polyline -> mapObject.remove()
-                is com.google.android.gms.maps.model.Polygon -> mapObject.remove()
-                is com.google.android.gms.maps.model.GroundOverlay -> mapObject.remove()
-            }
+            removeMapObject(mapObject)
         }
         renderedFeatures.remove(feature)
     }
@@ -265,14 +276,34 @@ class MapViewRenderer(
     override fun clear() {
         rendererScope.cancel()
         renderedFeatures.values.flatten().forEach { mapObject ->
-            when (mapObject) {
-                is com.google.android.gms.maps.model.Marker -> mapObject.remove()
-                is com.google.android.gms.maps.model.Polyline -> mapObject.remove()
-                is com.google.android.gms.maps.model.Polygon -> mapObject.remove()
-                is com.google.android.gms.maps.model.GroundOverlay -> mapObject.remove()
-            }
+            removeMapObject(mapObject)
         }
         renderedFeatures.clear()
+    }
+
+    private fun removeMapObject(mapObject: Any) {
+        when (mapObject) {
+            is com.google.android.gms.maps.model.Marker -> {
+                if (markerCollection == null || !markerCollection.remove(mapObject)) {
+                    mapObject.remove()
+                }
+            }
+            is com.google.android.gms.maps.model.Polyline -> {
+                if (polylineCollection == null || !polylineCollection.remove(mapObject)) {
+                    mapObject.remove()
+                }
+            }
+            is com.google.android.gms.maps.model.Polygon -> {
+                if (polygonCollection == null || !polygonCollection.remove(mapObject)) {
+                    mapObject.remove()
+                }
+            }
+            is com.google.android.gms.maps.model.GroundOverlay -> {
+                if (groundOverlayCollection == null || !groundOverlayCollection.remove(mapObject)) {
+                    mapObject.remove()
+                }
+            }
+        }
     }
 
     /**
@@ -289,19 +320,23 @@ class MapViewRenderer(
     ): MarkerOptions {
         val markerOptions = MarkerOptions().position(LatLng(point.lat, point.lng))
 
-        // Sniff out title and description from properties to enable click interaction/Info Window
-        val title = (properties["title"] ?: properties["name"])?.toString()
-        val snippet = (properties["description"] ?: properties["snippet"])?.toString()
+        // Sniff out title and description from style or properties to enable click interaction/Info Window
+        val title = style?.title ?: (properties["title"] ?: properties["name"])?.toString()
+        val snippet = style?.snippet ?: (properties["description"] ?: properties["snippet"])?.toString()
         title?.let { markerOptions.title(it) }
         snippet?.let { markerOptions.snippet(it) }
 
         style?.let {
-            // Default icon if not loaded yet
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(hueFromColor(it.color)))
+            // Use custom icon descriptor if provided, otherwise default marker hue
+            markerOptions.icon(it.iconDescriptor ?: BitmapDescriptorFactory.defaultMarker(hueFromColor(it.color)))
             it.heading?.let { heading -> markerOptions.rotation(heading) }
             markerOptions.anchor(it.anchorU, it.anchorV)
+            markerOptions.infoWindowAnchor(it.infoWindowAnchorU, it.infoWindowAnchorV)
             markerOptions.alpha(android.graphics.Color.alpha(it.color) / 255.0f)
             markerOptions.zIndex(it.zIndex)
+            markerOptions.draggable(it.draggable)
+            markerOptions.flat(it.flat)
+            markerOptions.visible(it.visible)
         }
         return markerOptions
     }
@@ -319,9 +354,9 @@ class MapViewRenderer(
     ): AdvancedMarkerOptions {
         val markerOptions = AdvancedMarkerOptions().position(LatLng(point.lat, point.lng))
 
-        // Sniff out title and description from properties to enable click interaction/Info Window
-        val title = (properties["title"] ?: properties["name"])?.toString()
-        val snippet = (properties["description"] ?: properties["snippet"])?.toString()
+        // Sniff out title and description from style or properties to enable click interaction/Info Window
+        val title = style?.title ?: (properties["title"] ?: properties["name"])?.toString()
+        val snippet = style?.snippet ?: (properties["description"] ?: properties["snippet"])?.toString()
         title?.let { markerOptions.title(it) }
         snippet?.let { markerOptions.snippet(it) }
 
@@ -333,8 +368,12 @@ class MapViewRenderer(
                     .setBackgroundColor(it.color)
                     .setBorderColor(android.graphics.Color.WHITE) // Default border
                     .build()
-            markerOptions.icon(BitmapDescriptorFactory.fromPinConfig(pinConfig))
+            markerOptions.icon(it.iconDescriptor ?: BitmapDescriptorFactory.fromPinConfig(pinConfig))
             markerOptions.zIndex(it.zIndex)
+            markerOptions.draggable(it.draggable)
+            markerOptions.flat(it.flat)
+            markerOptions.visible(it.visible)
+            markerOptions.infoWindowAnchor(it.infoWindowAnchorU, it.infoWindowAnchorV)
 
             // AdvancedMarkerOptions does not support rotation directly in the same way as MarkerOptions for flat icons,
             // but it supports collision behavior etc.
@@ -360,11 +399,13 @@ class MapViewRenderer(
     ): PolylineOptions {
         val polylineOptions = PolylineOptions()
         lineString.points.map { LatLng(it.lat, it.lng) }.forEach { polylineOptions.add(it) }
+        polylineOptions.clickable(style?.clickable ?: true)
         style?.let {
             polylineOptions.color(it.color)
             polylineOptions.width(it.width)
             polylineOptions.geodesic(it.geodesic)
             polylineOptions.zIndex(it.zIndex)
+            polylineOptions.visible(it.visible)
         }
         return polylineOptions
     }
@@ -386,12 +427,14 @@ class MapViewRenderer(
         polygon.innerBoundaries.forEach { innerBoundary ->
             polygonOptions.addHole(innerBoundary.map { LatLng(it.lat, it.lng) })
         }
+        polygonOptions.clickable(style?.clickable ?: true)
         style?.let {
             polygonOptions.fillColor(it.fillColor)
             polygonOptions.strokeColor(it.strokeColor)
             polygonOptions.strokeWidth(it.strokeWidth)
             polygonOptions.geodesic(it.geodesic)
             polygonOptions.zIndex(it.zIndex)
+            polygonOptions.visible(it.visible)
         }
         return polygonOptions
     }
