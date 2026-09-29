@@ -29,12 +29,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 /**
- * Returns a cold flow that emits the device's coarse location updates using [LocationManager.NETWORK_PROVIDER]
- * (or [LocationManager.PASSIVE_PROVIDER] if network provider is not available).
+ * Returns a cold flow that emits the device's coarse location updates using [LocationManager.NETWORK_PROVIDER].
  *
  * The location updates start streaming ONLY when the flow is collected, and stop streaming immediately
- * when the collector cancels or closes the subscription. When the underlying location provider is disabled,
- * the flow completes normally.
+ * when the collector cancels or closes the subscription. When the underlying location provider is unavailable
+ * or disabled, the flow completes normally.
  *
  * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
@@ -48,6 +47,11 @@ public fun LocationManager.coarseLocationEvents(
     looper: Looper = Looper.getMainLooper()
 ): Flow<Location> =
     callbackFlow {
+        if (!allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+            close()
+            return@callbackFlow
+        }
+
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 trySend(location)
@@ -67,13 +71,13 @@ public fun LocationManager.coarseLocationEvents(
             }
         }
 
-        val provider = if (allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
-            LocationManager.NETWORK_PROVIDER
-        } else {
-            LocationManager.PASSIVE_PROVIDER
-        }
-
-        requestLocationUpdates(provider, minTimeMs, minDistanceM, listener, looper)
+        requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER,
+            minTimeMs,
+            minDistanceM,
+            listener,
+            looper
+        )
 
         awaitClose {
             removeUpdates(listener)
@@ -84,8 +88,8 @@ public fun LocationManager.coarseLocationEvents(
  * Returns a cold flow that emits the device's fine location updates using [LocationManager.GPS_PROVIDER].
  *
  * The location updates start streaming ONLY when the flow is collected, and stop streaming immediately
- * when the collector cancels or closes the subscription. When the underlying location provider is disabled,
- * the flow completes normally.
+ * when the collector cancels or closes the subscription. When the underlying location provider is unavailable
+ * or disabled, the flow completes normally.
  *
  * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
@@ -99,6 +103,11 @@ public fun LocationManager.fineLocationEvents(
     looper: Looper = Looper.getMainLooper()
 ): Flow<Location> =
     callbackFlow {
+        if (!allProviders.contains(LocationManager.GPS_PROVIDER)) {
+            close()
+            return@callbackFlow
+        }
+
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 trySend(location)
@@ -118,7 +127,13 @@ public fun LocationManager.fineLocationEvents(
             }
         }
 
-        requestLocationUpdates(LocationManager.GPS_PROVIDER, minTimeMs, minDistanceM, listener, looper)
+        requestLocationUpdates(
+            LocationManager.GPS_PROVIDER,
+            minTimeMs,
+            minDistanceM,
+            listener,
+            looper
+        )
 
         awaitClose {
             removeUpdates(listener)

@@ -40,6 +40,7 @@ import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -110,7 +111,26 @@ public class LocationManagerTest {
 
     @SuppressLint("MissingPermission")
     @Test
+    public fun testCoarseLocationProviderMissing(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.PASSIVE_PROVIDER))
+
+        val events = locationManager.coarseLocationEvents(1_000L, 1f, looper).toList()
+
+        assertThat(events).isEmpty()
+        verify(locationManager, never()).requestLocationUpdates(
+            any(),
+            anyLong(),
+            anyFloat(),
+            any<LocationListener>(),
+            any<Looper>()
+        )
+    }
+
+    @SuppressLint("MissingPermission")
+    @Test
     public fun testFineLocationEvents(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.GPS_PROVIDER))
+
         val deferred = async {
             locationManager.fineLocationEvents(2_000L, 2f, looper).first()
         }
@@ -128,5 +148,22 @@ public class LocationManagerTest {
         assertThat(deferred.await()).isEqualTo(location)
 
         verify(locationManager).removeUpdates(eq(locationListenerCaptor.value))
+    }
+
+    @SuppressLint("MissingPermission")
+    @Test
+    public fun testFineLocationProviderMissing(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(emptyList())
+
+        val events = locationManager.fineLocationEvents(2_000L, 2f, looper).toList()
+
+        assertThat(events).isEmpty()
+        verify(locationManager, never()).requestLocationUpdates(
+            any(),
+            anyLong(),
+            anyFloat(),
+            any<LocationListener>(),
+            any<Looper>()
+        )
     }
 }
