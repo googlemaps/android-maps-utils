@@ -16,8 +16,8 @@
 package com.google.maps.android
 
 import com.google.android.gms.maps.model.LatLng
+import kotlin.math.abs
 import kotlin.math.pow
-import kotlin.math.round
 
 /**
  * The kind of optional third value carried by every point of a flexible polyline.
@@ -347,21 +347,34 @@ object FlexiblePolylineUtil {
     ): Long =
         ((thirdDimensionPrecision shl 7) or (thirdDimension.value shl 4) or precision).toLong()
 
-    /** Scales a coordinate to the fixed point integer the format stores. */
+    /**
+     * Scales a coordinate to the fixed point integer the format stores.
+     *
+     * Ties round half away from zero, as the reference implementation does, so that values
+     * such as `2.5` at precision `0` encode to the same string as other encoders.
+     */
     private fun scale(
         value: Double,
         multiplier: Double,
-    ): Long = round(value * multiplier).toLong()
+    ): Long {
+        val scaled = value * multiplier
+        val magnitude = Math.round(abs(scaled))
+        return if (scaled < 0) -magnitude else magnitude
+    }
 
-    /** Appends [value] as an unsigned varint over five bit groups, least significant first. */
+    /**
+     * Appends [value] as an unsigned varint over five bit groups, least significant first.
+     *
+     * [value] is treated as unsigned, so a zigzag value with the top bit set still encodes.
+     */
     private fun encodeUnsignedVarint(
         value: Long,
         result: StringBuilder,
     ) {
         var remaining = value
-        while (remaining > VALUE_MASK) {
+        while ((remaining and VALUE_MASK.inv()) != 0L) {
             result.append(ENCODING_TABLE[((remaining and VALUE_MASK) or CONTINUATION_BIT).toInt()])
-            remaining = remaining shr 5
+            remaining = remaining ushr 5
         }
         result.append(ENCODING_TABLE[remaining.toInt()])
     }
@@ -394,7 +407,7 @@ object FlexiblePolylineUtil {
     /** Reads one zigzag mapped varint, advancing [cursor] past it. */
     private fun decodeSignedVarint(cursor: Cursor): Long {
         val zigzag = decodeUnsignedVarint(cursor)
-        return if ((zigzag and 1L) == 1L) (zigzag shr 1).inv() else (zigzag shr 1)
+        return if ((zigzag and 1L) == 1L) (zigzag ushr 1).inv() else (zigzag ushr 1)
     }
 
     /** Tracks the read position while decoding, and validates the alphabet. */
