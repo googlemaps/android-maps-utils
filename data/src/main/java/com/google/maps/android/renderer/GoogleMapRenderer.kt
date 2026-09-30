@@ -30,7 +30,7 @@ import com.google.maps.android.renderer.model.Polyline
 /**
  * A [Renderer] implementation that draws to a [GoogleMap].
  */
-class GoogleMapRenderer(
+public class GoogleMapRenderer public constructor(
     private val map: GoogleMap,
 ) : Renderer {
     private val layers = mutableSetOf<Layer>()
@@ -38,7 +38,7 @@ class GoogleMapRenderer(
     // Map to keep track of the GoogleMap SDK objects created for each MapObject
     private val renderedObjects = mutableMapOf<MapObject, Any>()
 
-    override fun addLayer(layer: Layer) {
+    public override fun addLayer(layer: Layer) {
         if (layers.add(layer)) {
             for (mapObject in layer.mapObjects) {
                 renderObject(mapObject)
@@ -46,7 +46,7 @@ class GoogleMapRenderer(
         }
     }
 
-    override fun removeLayer(layer: Layer): Boolean {
+    public override fun removeLayer(layer: Layer): Boolean {
         if (layers.remove(layer)) {
             for (mapObject in layer.mapObjects) {
                 removeRenderedObject(mapObject)
@@ -56,9 +56,9 @@ class GoogleMapRenderer(
         return false
     }
 
-    override fun getLayers(): Collection<Layer> = layers
+    public override fun getLayers(): Collection<Layer> = layers
 
-    override fun clear() {
+    public override fun clear() {
         for (layer in layers) {
             for (mapObject in layer.mapObjects) {
                 removeRenderedObject(mapObject)

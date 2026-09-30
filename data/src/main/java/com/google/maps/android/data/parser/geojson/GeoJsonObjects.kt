@@ -26,7 +26,7 @@ package com.google.maps.android.data.parser.geojson
  * @property lng The longitude of the coordinate.
  * @property alt The altitude of the coordinate, in meters. Optional.
  */
-data class Coordinates(val lat: Double, val lng: Double, val alt: Double? = null) {
+public data class Coordinates(public val lat: Double, public val lng: Double, public val alt: Double? = null) {
     init {
         require(lat.isFinite() && lng.isFinite() && (alt == null || alt.isFinite())) {
             "GeoJSON coordinate contains a non-finite value"
@@ -35,65 +35,65 @@ data class Coordinates(val lat: Double, val lng: Double, val alt: Double? = null
 }
 
 // Using a sealed interface for all GeoJSON objects
-sealed interface GeoJsonObject {
-    val type: String
+public sealed interface GeoJsonObject {
+    public val type: String
 }
 
 // Sealed interface for Geometry objects
-sealed interface GeoJsonGeometry : GeoJsonObject
+public sealed interface GeoJsonGeometry : GeoJsonObject
 
-data class GeoJsonPoint(
-    val coordinates: Coordinates
+public data class GeoJsonPoint(
+    public val coordinates: Coordinates
 ) : GeoJsonGeometry {
-    override val type: String = "Point"
+    public override val type: String = "Point"
 }
 
-data class GeoJsonMultiPoint(
-    val coordinates: List<Coordinates>
+public data class GeoJsonMultiPoint(
+    public val coordinates: List<Coordinates>
 ) : GeoJsonGeometry {
-    override val type: String = "MultiPoint"
+    public override val type: String = "MultiPoint"
 }
 
-data class GeoJsonLineString(
-    val coordinates: List<Coordinates>
+public data class GeoJsonLineString(
+    public val coordinates: List<Coordinates>
 ) : GeoJsonGeometry {
-    override val type: String = "LineString"
+    public override val type: String = "LineString"
 }
 
-data class GeoJsonMultiLineString(
-    val coordinates: List<List<Coordinates>>
+public data class GeoJsonMultiLineString(
+    public val coordinates: List<List<Coordinates>>
 ) : GeoJsonGeometry {
-    override val type: String = "MultiLineString"
+    public override val type: String = "MultiLineString"
 }
 
-data class GeoJsonPolygon(
-    val coordinates: List<List<Coordinates>>
+public data class GeoJsonPolygon(
+    public val coordinates: List<List<Coordinates>>
 ) : GeoJsonGeometry {
-    override val type: String = "Polygon"
+    public override val type: String = "Polygon"
 }
 
-data class GeoJsonMultiPolygon(
-    val coordinates: List<List<List<Coordinates>>>
+public data class GeoJsonMultiPolygon(
+    public val coordinates: List<List<List<Coordinates>>>
 ) : GeoJsonGeometry {
-    override val type: String = "MultiPolygon"
+    public override val type: String = "MultiPolygon"
 }
 
-data class GeoJsonGeometryCollection(
-    val geometries: List<GeoJsonGeometry>
+public data class GeoJsonGeometryCollection(
+    public val geometries: List<GeoJsonGeometry>
 ) : GeoJsonGeometry {
-    override val type: String = "GeometryCollection"
+    public override val type: String = "GeometryCollection"
 }
 
-data class GeoJsonFeature(
-    val geometry: GeoJsonGeometry?,
-    val properties: Map<String, String?>?,
-    val id: String? = null // id is optional and can be string or number
+public data class GeoJsonFeature(
+    public val geometry: GeoJsonGeometry?,
+    public val properties: Map<String, String?>?,
+    public val id: String? = null // id is optional and can be string or number
 ) : GeoJsonObject {
-    override val type: String = "Feature"
+    public override val type: String = "Feature"
 }
 
-data class GeoJsonFeatureCollection(
-    val features: List<GeoJsonFeature>
+public data class GeoJsonFeatureCollection(
+    public val features: List<GeoJsonFeature>
 ) : GeoJsonObject {
-    override val type: String = "FeatureCollection"
+    public override val type: String = "FeatureCollection"
 }

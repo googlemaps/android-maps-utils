@@ -127,15 +127,15 @@ public class MapViewRenderer
         // Track rendered map objects for each feature so we can remove them later
         private val renderedFeatures = IdentityHashMap<Feature, MutableList<Any>>()
 
-        override fun render(scene: DataScene) {
+        public override fun render(scene: DataScene) {
             scene.layers.forEach { renderLayer(it) }
         }
 
-        override fun addLayer(layer: DataLayer) {
+        public override fun addLayer(layer: DataLayer) {
             renderLayer(layer)
         }
 
-        override fun removeLayer(layer: DataLayer) {
+        public override fun removeLayer(layer: DataLayer) {
             layer.features.forEach { removeFeature(it) }
         }
 
@@ -145,7 +145,7 @@ public class MapViewRenderer
             }
         }
 
-        override fun addFeature(feature: Feature) {
+        public override fun addFeature(feature: Feature) {
             removeFeature(feature)
             val mapObjects = mutableListOf<Any>()
             addGeometry(feature.geometry, feature, mapObjects)
@@ -282,7 +282,7 @@ public class MapViewRenderer
         }
     }
 
-    override fun removeFeature(feature: Feature) {
+    public override fun removeFeature(feature: Feature) {
         renderedFeatures[feature]?.forEach { mapObject ->
             removeMapObject(mapObject)
         }
@@ -298,7 +298,7 @@ public class MapViewRenderer
                 entry.value.contains(mapObject)
             }?.key
 
-    override fun clear() {
+    public override fun clear() {
         rendererScope.cancel()
         renderedFeatures.values.flatten().forEach { mapObject ->
             removeMapObject(mapObject)

@@ -23,14 +23,14 @@ import com.google.maps.android.geometry.Point
  * See http://en.wikipedia.org/wiki/Quadtree for details on the data structure.
  * This class is not thread safe.
  */
-class PointQuadTree<T : PointQuadTree.Item>
+public class PointQuadTree<T : PointQuadTree.Item>
     @JvmOverloads
-    constructor(
+    public constructor(
         private val mBounds: Bounds,
         private val mDepth: Int = 0,
     ) {
-        interface Item {
-            val point: Point
+        public interface Item {
+            public val point: Point
         }
 
         /**
@@ -43,13 +43,13 @@ class PointQuadTree<T : PointQuadTree.Item>
          */
         private var mChildren: MutableList<PointQuadTree<T>>? = null
 
-        constructor(minX: Double, maxX: Double, minY: Double, maxY: Double) :
+        public constructor(minX: Double, maxX: Double, minY: Double, maxY: Double) :
             this(Bounds(minX, maxX, minY, maxY))
 
         /**
          * Insert an item.
          */
-        fun add(item: T) {
+        public fun add(item: T) {
             val point = item.point
             if (this.mBounds.contains(point.x, point.y)) {
                 insert(point.x, point.y, item)
@@ -112,7 +112,7 @@ class PointQuadTree<T : PointQuadTree.Item>
          *
          * @return whether the item was removed.
          */
-        fun remove(item: T): Boolean {
+        public fun remove(item: T): Boolean {
             val point = item.point
             return if (this.mBounds.contains(point.x, point.y)) {
                 remove(point.x, point.y, item)
@@ -151,7 +151,7 @@ class PointQuadTree<T : PointQuadTree.Item>
         /**
          * Removes all points from the quadTree
          */
-        fun clear() {
+        public fun clear() {
             mChildren = null
             if (mItems != null) {
                 mItems!!.clear()
@@ -161,7 +161,7 @@ class PointQuadTree<T : PointQuadTree.Item>
         /**
          * Search for all items within a given bounds.
          */
-        fun search(searchBounds: Bounds): Collection<T> {
+        public fun search(searchBounds: Bounds): Collection<T> {
             val results: MutableList<T> = ArrayList()
             search(searchBounds, results)
             return results
@@ -192,7 +192,7 @@ class PointQuadTree<T : PointQuadTree.Item>
             }
         }
 
-        companion object {
+        public companion object {
             /**
              * Maximum number of elements to store in a quad before splitting.
              */

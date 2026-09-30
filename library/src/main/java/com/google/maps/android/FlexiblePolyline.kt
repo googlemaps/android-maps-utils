@@ -24,8 +24,8 @@ import kotlin.math.round
  *
  * @property value The numeric type identifier used on the wire.
  */
-enum class ThirdDimension(
-    val value: Int,
+public enum class ThirdDimension(
+    public val value: Int,
 ) {
     /** No third value is present; the polyline is purely two dimensional. */
     ABSENT(0),
@@ -75,19 +75,19 @@ enum class ThirdDimension(
  * @property thirdDimensionValue The third value for this point, or `null` when the polyline
  * carries no third dimension. The unit is defined by the polyline's [ThirdDimension].
  */
-data class FlexiblePoint
+public data class FlexiblePoint
     @JvmOverloads
-    constructor(
-        val latitude: Double,
-        val longitude: Double,
-        val thirdDimensionValue: Double? = null,
+    public constructor(
+        public val latitude: Double,
+        public val longitude: Double,
+        public val thirdDimensionValue: Double? = null,
     ) {
         /**
          * Returns this point as a [LatLng], discarding [thirdDimensionValue].
          *
          * @return The two dimensional position of this point.
          */
-        fun toLatLng(): LatLng = LatLng(latitude, longitude)
+        public fun toLatLng(): LatLng = LatLng(latitude, longitude)
     }
 
 /**
@@ -99,11 +99,11 @@ data class FlexiblePoint
  * @property thirdDimensionPrecision The number of decimal places preserved for the third
  * value, or `0` when [thirdDimension] is [ThirdDimension.ABSENT].
  */
-data class FlexiblePolyline(
-    val points: List<FlexiblePoint>,
-    val precision: Int,
-    val thirdDimension: ThirdDimension,
-    val thirdDimensionPrecision: Int,
+public data class FlexiblePolyline(
+    public val points: List<FlexiblePoint>,
+    public val precision: Int,
+    public val thirdDimension: ThirdDimension,
+    public val thirdDimensionPrecision: Int,
 ) {
     /**
      * Returns the decoded points as [LatLng] values ready to pass to
@@ -111,7 +111,7 @@ data class FlexiblePolyline(
      *
      * @return The two dimensional path described by this polyline.
      */
-    fun toLatLngs(): List<LatLng> = points.map(FlexiblePoint::toLatLng)
+    public fun toLatLngs(): List<LatLng> = points.map(FlexiblePoint::toLatLng)
 }
 
 /**
@@ -131,7 +131,7 @@ data class FlexiblePolyline(
  *
  * Written from the published specification.
  */
-object FlexiblePolylineUtil {
+public object FlexiblePolylineUtil {
     /** The format version written to, and expected in, the header. */
     private const val FORMAT_VERSION = 1L
 
@@ -165,7 +165,7 @@ object FlexiblePolylineUtil {
      */
     @JvmStatic
     @JvmOverloads
-    fun encodeLatLngs(
+    public fun encodeLatLngs(
         path: List<LatLng>,
         precision: Int = 7,
     ): String =
@@ -196,7 +196,7 @@ object FlexiblePolylineUtil {
      */
     @JvmStatic
     @JvmOverloads
-    fun encode(
+    public fun encode(
         points: List<FlexiblePoint>,
         precision: Int = 7,
         thirdDimension: ThirdDimension = ThirdDimension.ABSENT,
@@ -263,7 +263,7 @@ object FlexiblePolylineUtil {
      * version, contains a character outside the alphabet, or ends part way through a point.
      */
     @JvmStatic
-    fun decode(encoded: String): FlexiblePolyline {
+    public fun decode(encoded: String): FlexiblePolyline {
         require(encoded.isNotEmpty()) { "encoded polyline must not be empty" }
 
         val cursor = Cursor(encoded)
@@ -319,7 +319,7 @@ object FlexiblePolylineUtil {
      * @throws IllegalArgumentException if [encoded] is not a well formed flexible polyline.
      */
     @JvmStatic
-    fun decodeToLatLngs(encoded: String): List<LatLng> = decode(encoded).toLatLngs()
+    public fun decodeToLatLngs(encoded: String): List<LatLng> = decode(encoded).toLatLngs()
 
     /**
      * Returns the third dimension declared by an encoded polyline without decoding its points.
@@ -329,7 +329,7 @@ object FlexiblePolylineUtil {
      * @throws IllegalArgumentException if [encoded] has no readable header.
      */
     @JvmStatic
-    fun getThirdDimension(encoded: String): ThirdDimension {
+    public fun getThirdDimension(encoded: String): ThirdDimension {
         require(encoded.isNotEmpty()) { "encoded polyline must not be empty" }
         val cursor = Cursor(encoded)
         val version = decodeUnsignedVarint(cursor)

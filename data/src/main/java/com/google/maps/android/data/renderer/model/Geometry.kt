@@ -20,8 +20,8 @@ package com.google.maps.android.data.renderer.model
  *
  * This is a platform-agnostic representation of a shape that can be rendered on a map.
  */
-sealed interface Geometry {
-    val type: String
+public sealed interface Geometry {
+    public val type: String
 }
 
 /**
@@ -29,10 +29,10 @@ sealed interface Geometry {
  *
  * @property point The Point object representing the location.
  */
-data class PointGeometry(
-    val point: Point,
+public data class PointGeometry(
+    public val point: Point,
 ) : Geometry {
-    override val type: String = "Point"
+    public override val type: String = "Point"
 }
 
 /**
@@ -40,10 +40,10 @@ data class PointGeometry(
  *
  * @property points The list of Points that make up the line.
  */
-data class LineString(
-    val points: List<Point>,
+public data class LineString(
+    public val points: List<Point>,
 ) : Geometry {
-    override val type: String = "LineString"
+    public override val type: String = "LineString"
 }
 
 /**
@@ -52,11 +52,11 @@ data class LineString(
  * @property outerBoundary The list of Points that define the outer boundary of the polygon.
  * @property innerBoundaries The list of lists of Points that define the inner boundaries (holes) of the polygon. Defaults to an empty list.
  */
-data class Polygon(
-    val outerBoundary: List<Point>,
-    val innerBoundaries: List<List<Point>> = emptyList(),
+public data class Polygon(
+    public val outerBoundary: List<Point>,
+    public val innerBoundaries: List<List<Point>> = emptyList(),
 ) : Geometry {
-    override val type: String = "Polygon"
+    public override val type: String = "Polygon"
 }
 
 /**
@@ -64,8 +64,8 @@ data class Polygon(
  *
  * @property geometries The list of Geometry objects.
  */
-data class MultiGeometry(
-    val geometries: List<Geometry>,
+public data class MultiGeometry(
+    public val geometries: List<Geometry>,
 ) : Geometry {
-    override val type: String = "MultiGeometry"
+    public override val type: String = "MultiGeometry"
 }

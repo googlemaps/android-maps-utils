@@ -22,12 +22,12 @@ import kotlinx.coroutines.Job
  * Interface for providing icons to the renderer.
  * Implementations can load icons from URLs, assets, or other sources.
  */
-interface IconProvider {
+public interface IconProvider {
     /**
      * Loads an icon from the given URL.
      *
      * @param url The URL of the icon to load.
      * @return The loaded [Bitmap], or null if loading failed.
      */
-    suspend fun loadIcon(url: String): Bitmap?
+    public suspend fun loadIcon(url: String): Bitmap?
 }

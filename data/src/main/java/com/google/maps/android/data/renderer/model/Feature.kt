@@ -24,8 +24,8 @@ package com.google.maps.android.data.renderer.model
  * @property style The style to be applied to the feature. Can be null if no specific style is defined for the feature.
  * @property properties A map of arbitrary properties associated with the feature. Defaults to an empty map.
  */
-data class Feature(
-    val geometry: Geometry,
-    val style: Style? = null,
-    val properties: Map<String, Any> = emptyMap(),
+public data class Feature(
+    public val geometry: Geometry,
+    public val style: Style? = null,
+    public val properties: Map<String, Any> = emptyMap(),
 )

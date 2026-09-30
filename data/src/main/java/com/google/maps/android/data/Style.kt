@@ -76,7 +76,7 @@ public abstract class Style : Observable() {
         mPolygonOptions.fillColor(fillColor)
     }
 
-    companion object {
+    public companion object {
         private const val LOG_TAG = "Style"
     }
 }

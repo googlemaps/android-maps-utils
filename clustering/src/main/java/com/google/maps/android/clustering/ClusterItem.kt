@@ -20,24 +20,24 @@ import com.google.android.gms.maps.model.LatLng
 /**
  * ClusterItem represents a marker on the map.
  */
-interface ClusterItem {
+public interface ClusterItem {
     /**
      * The position of this marker. This must always return the same value.
      */
-    val position: LatLng
+    public val position: LatLng
 
     /**
      * The title of this marker.
      */
-    val title: String?
+    public val title: String?
 
     /**
      * The description of this marker.
      */
-    val snippet: String?
+    public val snippet: String?
 
     /**
      * The z-index of this marker.
      */
-    val zIndex: Float?
+    public val zIndex: Float?
 }

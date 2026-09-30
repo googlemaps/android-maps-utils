@@ -31,7 +31,7 @@ import java.util.HashSet
  *
  * @param <T> the type of cluster item
 </T> */
-open class CentroidNonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : NonHierarchicalDistanceBasedAlgorithm<T>() {
+public open class CentroidNonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : NonHierarchicalDistanceBasedAlgorithm<T>() {
     /**
      * Computes the centroid (average latitude and longitude) of a collection of cluster items.
      *

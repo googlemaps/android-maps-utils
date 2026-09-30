@@ -39,18 +39,18 @@ import com.google.android.gms.maps.model.LatLngBounds
  *
  * @property layers The list of [Layer] objects contained within this scene. Defaults to an empty list.
  */
-data class DataScene(val layers: List<DataLayer> = emptyList()) {
-    
-    companion object {
-        fun fromFeatures(features: List<Feature>): DataScene {
+public data class DataScene(public val layers: List<DataLayer> = emptyList()) {
+
+    public companion object {
+        public fun fromFeatures(features: List<Feature>): DataScene {
             return DataScene(listOf(DataLayer(features)))
         }
     }
 
-    val features: List<Feature>
+    public val features: List<Feature>
         get() = layers.flatMap { it.features }
 
-    val boundingBox: LatLngBounds? by lazy {
+    public val boundingBox: LatLngBounds? by lazy {
         val boundsBuilder = LatLngBounds.builder()
         var hasPoints = false
         layers.forEach { layer ->

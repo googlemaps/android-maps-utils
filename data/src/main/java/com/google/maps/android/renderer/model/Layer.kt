@@ -25,7 +25,7 @@ import java.util.Collections
  * or a specific dataset. Layers can be added to and removed from a
  * [com.google.maps.android.renderer.Renderer].
  */
-class Layer {
+public class Layer public constructor() {
     private val _mapObjects = mutableListOf<MapObject>()
 
     /**
@@ -33,7 +33,7 @@ class Layer {
      *
      * @return An unmodifiable view of the map objects.
      */
-    val mapObjects: Collection<MapObject>
+    public val mapObjects: Collection<MapObject>
         get() = Collections.unmodifiableCollection(_mapObjects)
 
     /**
@@ -41,7 +41,7 @@ class Layer {
      *
      * @param mapObject The map object to add.
      */
-    fun addMapObject(mapObject: MapObject) {
+    public fun addMapObject(mapObject: MapObject) {
         _mapObjects.add(mapObject)
     }
 
@@ -50,7 +50,7 @@ class Layer {
      *
      * @param mapObjects The collection of map objects to add.
      */
-    fun addMapObjects(mapObjects: Collection<MapObject>) {
+    public fun addMapObjects(mapObjects: Collection<MapObject>) {
         _mapObjects.addAll(mapObjects)
     }
 
@@ -60,12 +60,12 @@ class Layer {
      * @param mapObject The map object to remove.
      * @return True if the object was removed, false otherwise.
      */
-    fun removeMapObject(mapObject: MapObject): Boolean = _mapObjects.remove(mapObject)
+    public fun removeMapObject(mapObject: MapObject): Boolean = _mapObjects.remove(mapObject)
 
     /**
      * Clears all map objects from the layer.
      */
-    fun clear() {
+    public fun clear() {
         _mapObjects.clear()
     }
 }

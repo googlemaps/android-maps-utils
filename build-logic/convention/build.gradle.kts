@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.kover.gradle.plugin)
     implementation(libs.gradle.maven.publish.plugin)
+    implementation(libs.binary.compatibility.validator)
 }
 
 gradlePlugin {

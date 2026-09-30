@@ -37,7 +37,7 @@ import androidx.core.widget.TextViewCompat
  *
  * This class is not thread safe.
  */
-class IconGenerator(private val context: Context) {
+public class IconGenerator(private val context: Context) {
     private val container: ViewGroup
     private val rotationLayout: RotationLayout
     private var textView: TextView? = null
@@ -62,7 +62,7 @@ class IconGenerator(private val context: Context) {
      *
      * @param text the text content to display inside the icon.
      */
-    fun makeIcon(text: CharSequence?): Bitmap {
+    public fun makeIcon(text: CharSequence?): Bitmap {
         if (textView != null) {
             textView!!.text = text
         }
@@ -76,7 +76,7 @@ class IconGenerator(private val context: Context) {
      * applicable.
      */
     @Suppress("UseKtx")
-    fun makeIcon(): Bitmap {
+    public fun makeIcon(): Bitmap {
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         container.measure(measureSpec, measureSpec)
         var measuredWidth = container.measuredWidth
@@ -110,7 +110,7 @@ class IconGenerator(private val context: Context) {
      *
      * If the view contains a [TextView] with the id "text", operations such as [setTextAppearance] and [makeIcon] will operate upon that [TextView].
      */
-    fun setContentView(contentView: View) {
+    public fun setContentView(contentView: View) {
         rotationLayout.removeAllViews()
         rotationLayout.addView(contentView)
         this.contentView = contentView
@@ -123,7 +123,7 @@ class IconGenerator(private val context: Context) {
      *
      * @param degrees the amount the contents should be rotated, as a multiple of 90 degrees.
      */
-    fun setContentRotation(degrees: Int) {
+    public fun setContentRotation(degrees: Int) {
         rotationLayout.setViewRotation(degrees)
     }
 
@@ -132,21 +132,21 @@ class IconGenerator(private val context: Context) {
      *
      * @param degrees the amount the icon should be rotated, as a multiple of 90 degrees.
      */
-    fun setRotation(degrees: Int) {
+    public fun setRotation(degrees: Int) {
         rotation = degrees.mod(360) / 90
     }
 
     /**
      * @return u coordinate of the anchor, with rotation applied.
      */
-    fun getAnchorU(): Float {
+    public fun getAnchorU(): Float {
         return rotateAnchor(anchorU, anchorV)
     }
 
     /**
      * @return v coordinate of the anchor, with rotation applied.
      */
-    fun getAnchorV(): Float {
+    public fun getAnchorV(): Float {
         return rotateAnchor(anchorV, anchorU)
     }
 
@@ -169,7 +169,7 @@ class IconGenerator(private val context: Context) {
      *
      * @param resid the identifier of the resource.
      */
-    fun setTextAppearance(context: Context, resid: Int) {
+    public fun setTextAppearance(context: Context, resid: Int) {
         textView?.let { TextViewCompat.setTextAppearance(it, resid) }
     }
 
@@ -179,14 +179,14 @@ class IconGenerator(private val context: Context) {
      *
      * @param resid the identifier of the resource.
      */
-    fun setTextAppearance(resid: Int) {
+    public fun setTextAppearance(resid: Int) {
         setTextAppearance(context, resid)
     }
 
     /**
      * Sets the style of the icon. The style consists of a background and text appearance.
      */
-    fun setStyle(style: Int) {
+    public fun setStyle(style: Int) {
         setColor(getStyleColor(style))
         setTextAppearance(context, getTextStyle(style))
     }
@@ -196,7 +196,7 @@ class IconGenerator(private val context: Context) {
      *
      * @param color the color for the background tint.
      */
-    fun setColor(color: Int) {
+    public fun setColor(color: Int) {
         bubbleDrawable.setColor(color)
         setBackground(bubbleDrawable)
     }
@@ -206,7 +206,7 @@ class IconGenerator(private val context: Context) {
      *
      * @param background the Drawable to use as the background, or null to remove the background.
      */
-    fun setBackground(background: Drawable?) {
+    public fun setBackground(background: Drawable?) {
         ViewCompat.setBackground(container, background)
 
         // Force setting of padding.
@@ -229,18 +229,18 @@ class IconGenerator(private val context: Context) {
      * @param right  the right padding in pixels.
      * @param bottom the bottom padding in pixels.
      */
-    fun setContentPadding(left: Int, top: Int, right: Int, bottom: Int) {
+    public fun setContentPadding(left: Int, top: Int, right: Int, bottom: Int) {
         contentView?.setPadding(left, top, right, bottom)
     }
 
-    companion object {
-        const val STYLE_DEFAULT = 1
-        const val STYLE_WHITE = 2
-        const val STYLE_RED = 3
-        const val STYLE_BLUE = 4
-        const val STYLE_GREEN = 5
-        const val STYLE_PURPLE = 6
-        const val STYLE_ORANGE = 7
+    public companion object {
+        public const val STYLE_DEFAULT: Int = 1
+        public const val STYLE_WHITE: Int = 2
+        public const val STYLE_RED: Int = 3
+        public const val STYLE_BLUE: Int = 4
+        public const val STYLE_GREEN: Int = 5
+        public const val STYLE_PURPLE: Int = 6
+        public const val STYLE_ORANGE: Int = 7
 
         private fun getStyleColor(style: Int): Int {
             return when (style) {

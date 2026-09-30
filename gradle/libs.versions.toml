@@ -56,6 +56,7 @@ lint = "32.3.1"
 
 # --- Gradle Plugins ---
 # Versions for Gradle plugins used in the build process.
+binary-compatibility-validator = "0.18.2"
 dokka-gradle-plugin = "2.2.0"
 gradle = "9.3.1"
 gradleMavenPublishPlugin = "0.37.0"
@@ -127,6 +128,7 @@ testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 
 # --- Gradle Plugins ---
 # Dependencies for custom or third-party Gradle plugins used in the build.
+binary-compatibility-validator = { module = "org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "binary-compatibility-validator" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
@@ -135,4 +137,5 @@ secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.se
 
 [plugins]
 # --- Core Gradle Plugins ---
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

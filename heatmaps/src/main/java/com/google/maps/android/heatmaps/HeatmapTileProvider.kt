@@ -31,7 +31,7 @@ import kotlin.math.pow
 /**
  * Tile provider that creates heatmap tiles.
  */
-class HeatmapTileProvider private constructor(
+public class HeatmapTileProvider private constructor(
     builder: Builder,
 ) : TileProvider {
     private var data: Collection<WeightedLatLng>
@@ -62,7 +62,7 @@ class HeatmapTileProvider private constructor(
     /**
      * Builder class for the HeatmapTileProvider.
      */
-    class Builder {
+    public class Builder public constructor() {
         internal var weightedData: Collection<WeightedLatLng>? = null
         internal var radius = DEFAULT_RADIUS
         internal var gradient = DEFAULT_GRADIENT
@@ -75,7 +75,7 @@ class HeatmapTileProvider private constructor(
          * @param latLngs A collection of LatLngs.
          * @return This builder.
          */
-        fun data(latLngs: Collection<LatLng>): Builder {
+        public fun data(latLngs: Collection<LatLng>): Builder {
             weightedData(wrapData(latLngs))
             require(weightedData?.isNotEmpty() == true) { "No input points." }
             return this
@@ -87,7 +87,7 @@ class HeatmapTileProvider private constructor(
          * @param weightedData A collection of WeightedLatLngs.
          * @return This builder.
          */
-        fun weightedData(weightedData: Collection<WeightedLatLng>): Builder {
+        public fun weightedData(weightedData: Collection<WeightedLatLng>): Builder {
             this.weightedData = weightedData
             require(this.weightedData?.isNotEmpty() == true) { "No input points." }
             return this
@@ -99,7 +99,7 @@ class HeatmapTileProvider private constructor(
          * @param radius The radius. Must be between 10 and 50, inclusive.
          * @return This builder.
          */
-        fun radius(radius: Int): Builder {
+        public fun radius(radius: Int): Builder {
             this.radius = radius
             require(this.radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
             return this
@@ -111,7 +111,7 @@ class HeatmapTileProvider private constructor(
          * @param gradient The gradient to use.
          * @return This builder.
          */
-        fun gradient(gradient: Gradient): Builder {
+        public fun gradient(gradient: Gradient): Builder {
             this.gradient = gradient
             return this
         }
@@ -122,7 +122,7 @@ class HeatmapTileProvider private constructor(
          * @param opacity The opacity. Must be between 0 and 1, inclusive.
          * @return This builder.
          */
-        fun opacity(opacity: Double): Builder {
+        public fun opacity(opacity: Double): Builder {
             this.opacity = opacity
             require(this.opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
             return this
@@ -134,7 +134,7 @@ class HeatmapTileProvider private constructor(
          * @param intensity The maximum intensity.
          * @return This builder.
          */
-        fun maxIntensity(intensity: Double): Builder {
+        public fun maxIntensity(intensity: Double): Builder {
             this.intensity = intensity
             return this
         }
@@ -144,7 +144,7 @@ class HeatmapTileProvider private constructor(
          *
          * @return A new HeatmapTileProvider.
          */
-        fun build(): HeatmapTileProvider {
+        public fun build(): HeatmapTileProvider {
             require(
                 this.weightedData?.isNotEmpty() == true,
             ) { "No input data: you must use either .data or .weightedData before building." }
@@ -153,7 +153,7 @@ class HeatmapTileProvider private constructor(
     }
 
     @Deprecated("Use updateData(Collection<WeightedLatLng>) instead.", ReplaceWith("updateData(data)"))
-    fun setWeightedData(data: Collection<WeightedLatLng>) {
+    public fun setWeightedData(data: Collection<WeightedLatLng>) {
         updateData(data)
     }
 
@@ -166,7 +166,7 @@ class HeatmapTileProvider private constructor(
      *
      * @param data The new collection of [WeightedLatLng] points.
      */
-    fun updateData(data: Collection<WeightedLatLng>) {
+    public fun updateData(data: Collection<WeightedLatLng>) {
         this.data = data
         require(this.data.isNotEmpty()) { "No input points." }
         this.bounds = getBounds(this.data)
@@ -178,7 +178,7 @@ class HeatmapTileProvider private constructor(
     }
 
     @Deprecated("Use updateLatLngs(Collection<LatLng>) instead.", ReplaceWith("updateLatLngs(latLngs)"))
-    fun setData(latLngs: Collection<LatLng>) {
+    public fun setData(latLngs: Collection<LatLng>) {
         updateLatLngs(latLngs)
     }
 
@@ -191,34 +191,34 @@ class HeatmapTileProvider private constructor(
      *
      * @param latLngs The new collection of [LatLng] points.
      */
-    fun updateLatLngs(latLngs: Collection<LatLng>) {
+    public fun updateLatLngs(latLngs: Collection<LatLng>) {
         updateData(wrapData(latLngs))
     }
 
-    fun setGradient(gradient: Gradient) {
+    public fun setGradient(gradient: Gradient) {
         this.gradient = gradient
         this.colorMap = gradient.generateColorMap(this.opacity)
     }
 
-    fun setRadius(radius: Int) {
+    public fun setRadius(radius: Int) {
         require(radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
         this.radius = radius
         this.kernel = generateKernel(this.radius, this.radius / 3.0)
         this.maxIntensity = getMaxIntensities(this.radius)
     }
 
-    fun setOpacity(opacity: Double) {
+    public fun setOpacity(opacity: Double) {
         require(opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
         this.opacity = opacity
         setGradient(this.gradient)
     }
 
-    fun setMaxIntensity(intensity: Double) {
+    public fun setMaxIntensity(intensity: Double) {
         this.customMaxIntensity = intensity
         updateData(this.data)
     }
 
-    override fun getTile(
+    public override fun getTile(
         x: Int,
         y: Int,
         zoom: Int,
@@ -302,22 +302,22 @@ class HeatmapTileProvider private constructor(
         return maxIntensityArray
     }
 
-    companion object {
-        const val DEFAULT_RADIUS = 20
-        const val DEFAULT_OPACITY = 0.7
+    public companion object {
+        public const val DEFAULT_RADIUS: Int = 20
+        public const val DEFAULT_OPACITY: Double = 0.7
         private val DEFAULT_GRADIENT_COLORS = intArrayOf(Color.rgb(102, 225, 0), Color.rgb(255, 0, 0))
         private val DEFAULT_GRADIENT_START_POINTS = floatArrayOf(0.2f, 1f)
 
         @JvmField
-        val DEFAULT_GRADIENT = Gradient(DEFAULT_GRADIENT_COLORS, DEFAULT_GRADIENT_START_POINTS)
+        public val DEFAULT_GRADIENT: Gradient = Gradient(DEFAULT_GRADIENT_COLORS, DEFAULT_GRADIENT_START_POINTS)
         internal const val WORLD_WIDTH = 1.0
         private const val TILE_DIM = 512
         private const val SCREEN_SIZE = 1280
         private const val DEFAULT_MIN_ZOOM = 5
         private const val DEFAULT_MAX_ZOOM = 11
         private const val MAX_ZOOM_LEVEL = 22
-        const val MIN_RADIUS = 10
-        const val MAX_RADIUS = 50
+        public const val MIN_RADIUS: Int = 10
+        public const val MAX_RADIUS: Int = 50
 
         private data class Vector(
             val x: Int,
@@ -334,7 +334,7 @@ class HeatmapTileProvider private constructor(
         }
 
         @JvmStatic
-        fun getBounds(points: Collection<WeightedLatLng>): Bounds {
+        public fun getBounds(points: Collection<WeightedLatLng>): Bounds {
             val firstPoint = points.first().point
             var minX = firstPoint.x
             var maxX = firstPoint.x
@@ -353,7 +353,7 @@ class HeatmapTileProvider private constructor(
         }
 
         @JvmStatic
-        fun generateKernel(
+        public fun generateKernel(
             radius: Int,
             sd: Double,
         ): DoubleArray {
@@ -365,7 +365,7 @@ class HeatmapTileProvider private constructor(
         }
 
         @JvmStatic
-        fun convolve(
+        public fun convolve(
             grid: Array<DoubleArray>,
             kernel: DoubleArray,
         ): Array<DoubleArray> {
