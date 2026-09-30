@@ -74,4 +74,22 @@ class AnimationUtilTest {
         assertEquals(10.0, currentPosition.latitude, 0.5) // 0.5 tolerance
         assertEquals(10.0, currentPosition.longitude, 0.5) // 0.5 tolerance
     }
+
+    @Test
+    fun `animateMarkerTo with zero duration snaps directly to final position without NaN`() {
+        val finalPosition = LatLng(37.7749, -122.4194)
+        AnimationUtil.animateMarkerTo(marker, finalPosition, 0L)
+        assertEquals(37.7749, currentPosition.latitude, 1e-6)
+        assertEquals(-122.4194, currentPosition.longitude, 1e-6)
+    }
+
+    @Test
+    fun `animateMarkerTo clamps elapsed time overshoot to final position`() {
+        val finalPosition = LatLng(10.0, 20.0)
+        AnimationUtil.animateMarkerTo(marker, finalPosition, 100L)
+        val mainLooper = Shadows.shadowOf(android.os.Looper.getMainLooper())
+        mainLooper.idleFor(160, TimeUnit.MILLISECONDS)
+        assertEquals(10.0, currentPosition.latitude, 1e-6)
+        assertEquals(20.0, currentPosition.longitude, 1e-6)
+    }
 }

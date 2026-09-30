@@ -73,7 +73,7 @@ import kotlin.math.sign
 /**
  * The default view for a ClusterManager. Markers are animated in and out of clusters.
  */
-open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads constructor(
+public open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads public constructor(
     context: Context,
     private val mMap: GoogleMap,
     private val mClusterManager: ClusterManager<T>,
@@ -90,7 +90,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
     // Default interpolator
     private var animationInterp: TimeInterpolator = DecelerateInterpolator()
 
-    enum class AnimationType {
+    public enum class AnimationType {
         LINEAR,
         EASE_IN,
         EASE_OUT,
@@ -101,7 +101,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
         DECELERATE,
     }
 
-    fun setAnimationType(type: AnimationType) {
+    public fun setAnimationType(type: AnimationType) {
         animationInterp =
             when (type) {
                 AnimationType.LINEAR -> LinearInterpolator()
@@ -118,7 +118,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
      *
      * @param interpolator the interpolator to use for the animation.
      */
-    fun setAnimationInterpolator(interpolator: TimeInterpolator) {
+    public fun setAnimationInterpolator(interpolator: TimeInterpolator) {
         animationInterp = interpolator
     }
 
@@ -140,7 +140,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
     /**
      * If cluster size is less than this size, display individual markers.
      */
-    var minClusterSize: Int = 2
+    public open var minClusterSize: Int = 2
 
     /**
      * The currently displayed set of clusters.
@@ -263,7 +263,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
      *
      * @param enabled `true` to enable logging; `false` to disable it.
      */
-    fun setLoggingEnabled(enabled: Boolean) {
+    public fun setLoggingEnabled(enabled: Boolean) {
         RendererLogger.setEnabled(enabled)
     }
 
@@ -577,7 +577,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
         mAnimationDurationMs = animationDurationMs
     }
 
-    fun stopAnimation() {
+    public fun stopAnimation() {
         for (animation in ongoingAnimations) {
             animation.cancel()
         }
@@ -904,7 +904,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
         marker: Marker,
     ) {
         var changed = false
-        // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
+        // Update marker text if the item text changed - same logic as adding marker in onBeforeClusterItemRendered()
         if (item.title != null && item.snippet != null) {
             if (item.title != marker.title) {
                 marker.title = item.title
@@ -914,19 +914,33 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
                 marker.snippet = item.snippet
                 changed = true
             }
-        } else if (item.snippet != null && item.snippet != marker.title) {
-            marker.title = item.snippet
-            changed = true
-        } else if (item.title != null && item.title != marker.title) {
-            marker.title = item.title
-            changed = true
+        } else if (item.snippet != null) {
+            if (item.snippet != marker.title) {
+                marker.title = item.snippet
+                changed = true
+            }
+            if (marker.snippet != null) {
+                marker.snippet = null
+                changed = true
+            }
+        } else if (item.title != null) {
+            if (item.title != marker.title) {
+                marker.title = item.title
+                changed = true
+            }
+            if (marker.snippet != null) {
+                marker.snippet = null
+                changed = true
+            }
         }
         // Update marker position if the item changed position
         if (marker.position != item.position) {
             marker.position = item.position
-            if (item.zIndex != null) {
-                marker.zIndex = item.zIndex!!
-            }
+            changed = true
+        }
+        val itemZIndex = item.zIndex
+        if (itemZIndex != null && marker.zIndex != itemZIndex) {
+            marker.zIndex = itemZIndex
             changed = true
         }
         if (changed && marker.isInfoWindowShown) {
@@ -1034,7 +1048,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
      * @param clusterItem ClusterItem which you will obtain its marker
      * @return a marker from a ClusterItem or null if it does not exists
      */
-    fun getMarker(clusterItem: T): Marker? = mMarkerCache[clusterItem]
+    public open fun getMarker(clusterItem: T): Marker? = mMarkerCache[clusterItem]
 
     /**
      * Get the ClusterItem from a marker
@@ -1042,7 +1056,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
      * @param marker which you will obtain its ClusterItem
      * @return a ClusterItem from a marker or null if it does not exists
      */
-    fun getClusterItem(marker: Marker): T? = mMarkerCache[marker]
+    public open fun getClusterItem(marker: Marker): T? = mMarkerCache[marker]
 
     /**
      * Get the marker from a Cluster
@@ -1050,7 +1064,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
      * @param cluster which you will obtain its marker
      * @return a marker from a cluster or null if it does not exists
      */
-    fun getMarker(cluster: Cluster<T>): Marker? = mClusterMarkerCache[cluster]
+    public open fun getMarker(cluster: Cluster<T>): Marker? = mClusterMarkerCache[cluster]
 
     /**
      * Get the Cluster from a marker
@@ -1058,7 +1072,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
      * @param marker which you will obtain its Cluster
      * @return a Cluster from a marker or null if it does not exists
      */
-    fun getCluster(marker: Marker): Cluster<T>? = mClusterMarkerCache[marker]
+    public open fun getCluster(marker: Marker): Cluster<T>? = mClusterMarkerCache[marker]
 
     /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
@@ -1259,7 +1273,7 @@ open class ClusterRendererMultipleItems<T : ClusterItem> @JvmOverloads construct
         }
     }
 
-    companion object {
+    public companion object {
         private val BUCKETS = intArrayOf(10, 20, 50, 100, 200, 500, 1000)
         private const val RUN_TASK = 0
         private const val TASK_FINISHED = 1

@@ -40,13 +40,13 @@ import java.util.LinkedHashSet
  *
  * Clusters have the center of the first element (not the centroid of the items within it).
  */
-open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
+public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     /**
      * Any modifications should be synchronized on mQuadTree.
      */
     @JvmField
     protected val mItems: MutableCollection<QuadItem<T>> = LinkedHashSet()
-    protected val mItemMap = HashMap<T, QuadItem<T>>()
+    protected val mItemMap: MutableMap<T, QuadItem<T>> = HashMap()
 
     /**
      * Any modifications should be synchronized on mQuadTree.
@@ -230,7 +230,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
     }
 
     protected class QuadItem<T : ClusterItem>(
-        @JvmField val mClusterItem: T,
+        @JvmField public val mClusterItem: T,
     ) : PointQuadTree.Item,
         Cluster<T> {
         private val mPoint: Point = PROJECTION.toPoint(mClusterItem.position)
@@ -260,7 +260,7 @@ open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgo
         }
     }
 
-    companion object {
+    public companion object {
         private const val DEFAULT_MAX_DISTANCE_AT_ZOOM = 100 // essentially 100 dp.
 
         private val PROJECTION = SphericalMercatorProjection(1.0)

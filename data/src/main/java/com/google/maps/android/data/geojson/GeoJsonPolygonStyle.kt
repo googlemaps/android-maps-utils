@@ -27,7 +27,7 @@ import com.google.maps.android.data.Style
 public class GeoJsonPolygonStyle :
     Style(),
     GeoJsonStyle {
-    override fun getGeometryType(): Array<String> = GEOMETRY_TYPE
+    public override fun getGeometryType(): Array<String> = GEOMETRY_TYPE
 
     public var fillColor: Int
         get() = mPolygonOptions.fillColor
@@ -126,7 +126,7 @@ public class GeoJsonPolygonStyle :
 
     public fun isClickable(): Boolean = mPolygonOptions.isClickable
 
-    companion object {
+    public companion object {
         private val GEOMETRY_TYPE = arrayOf("Polygon", "MultiPolygon", "GeometryCollection")
     }
 }

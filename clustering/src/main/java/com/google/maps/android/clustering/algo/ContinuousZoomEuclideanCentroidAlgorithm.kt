@@ -31,7 +31,7 @@ import kotlin.math.pow
  *
  * @param <T> the type of cluster item
  */
-class ContinuousZoomEuclideanCentroidAlgorithm<T : ClusterItem> : CentroidNonHierarchicalDistanceBasedAlgorithm<T>() {
+public open class ContinuousZoomEuclideanCentroidAlgorithm<T : ClusterItem> : CentroidNonHierarchicalDistanceBasedAlgorithm<T>() {
     override fun getClusters(zoom: Float): Set<Cluster<T>> {
         // Continuous zoom — no casting to int
         val zoomSpecificSpan = maxDistanceBetweenClusteredItems.toDouble() / 2.0.pow(zoom.toDouble()) / 256.0

@@ -29,7 +29,7 @@ import kotlin.collections.Collection as KotlinCollection
  * All marker operations (adds and removes) should occur via its collection class. That is, don't
  * add a marker via a collection, then remove it via Marker.remove()
  */
-open class MarkerManager(map: GoogleMap) :
+public open class MarkerManager(map: GoogleMap) :
     MapObjectManager<Marker, MarkerManager.Collection>(map),
     GoogleMap.OnInfoWindowClickListener,
     GoogleMap.OnMarkerClickListener,
@@ -45,84 +45,84 @@ open class MarkerManager(map: GoogleMap) :
         mMap.setInfoWindowAdapter(this)
     }
 
-    override fun newCollection(): Collection = Collection()
+    public override fun newCollection(): Collection = Collection()
 
-    override fun getInfoWindow(marker: Marker): View? =
+    public override fun getInfoWindow(marker: Marker): View? =
         mAllObjects[marker]?.mInfoWindowAdapter?.getInfoWindow(marker)
 
-    override fun getInfoContents(marker: Marker): View? =
+    public override fun getInfoContents(marker: Marker): View? =
         mAllObjects[marker]?.mInfoWindowAdapter?.getInfoContents(marker)
 
-    override fun onInfoWindowClick(marker: Marker) {
+    public override fun onInfoWindowClick(marker: Marker) {
         mAllObjects[marker]?.mInfoWindowClickListener?.onInfoWindowClick(marker)
     }
 
-    override fun onInfoWindowLongClick(marker: Marker) {
+    public override fun onInfoWindowLongClick(marker: Marker) {
         mAllObjects[marker]?.mInfoWindowLongClickListener?.onInfoWindowLongClick(marker)
     }
 
-    override fun onMarkerClick(marker: Marker): Boolean =
+    public override fun onMarkerClick(marker: Marker): Boolean =
         mAllObjects[marker]?.mMarkerClickListener?.onMarkerClick(marker) ?: false
 
-    override fun onMarkerDragStart(marker: Marker) {
+    public override fun onMarkerDragStart(marker: Marker) {
         mAllObjects[marker]?.mMarkerDragListener?.onMarkerDragStart(marker)
     }
 
-    override fun onMarkerDrag(marker: Marker) {
+    public override fun onMarkerDrag(marker: Marker) {
         mAllObjects[marker]?.mMarkerDragListener?.onMarkerDrag(marker)
     }
 
-    override fun onMarkerDragEnd(marker: Marker) {
+    public override fun onMarkerDragEnd(marker: Marker) {
         mAllObjects[marker]?.mMarkerDragListener?.onMarkerDragEnd(marker)
     }
 
-    override fun removeObjectFromMap(marker: Marker) {
+    public override fun removeObjectFromMap(marker: Marker) {
         marker.remove()
     }
 
-    override fun setVisible(mapObject: Marker, visible: Boolean) {
+    public override fun setVisible(mapObject: Marker, visible: Boolean) {
         mapObject.isVisible = visible
     }
 
     /** A collection of [Marker]s on the map with its own set of listeners. */
-    open inner class Collection : MapObjectManager<Marker, Collection>.Collection() {
+    public open inner class Collection : MapObjectManager<Marker, Collection>.Collection() {
         internal var mInfoWindowClickListener: GoogleMap.OnInfoWindowClickListener? = null
         internal var mInfoWindowLongClickListener: GoogleMap.OnInfoWindowLongClickListener? = null
         internal var mMarkerClickListener: GoogleMap.OnMarkerClickListener? = null
         internal var mMarkerDragListener: GoogleMap.OnMarkerDragListener? = null
         internal var mInfoWindowAdapter: GoogleMap.InfoWindowAdapter? = null
 
-        open fun addMarker(opts: MarkerOptions): Marker =
+        public open fun addMarker(opts: MarkerOptions): Marker =
             checkAndAdd(mMap.addMarker(opts), "Marker")
 
-        open fun addMarker(opts: AdvancedMarkerOptions): Marker =
+        public open fun addMarker(opts: AdvancedMarkerOptions): Marker =
             checkAndAdd(mMap.addMarker(opts), "AdvancedMarker")
 
-        open fun addAll(opts: KotlinCollection<MarkerOptions>) =
+        public open fun addAll(opts: KotlinCollection<MarkerOptions>): Unit =
             addAll(opts, ::addMarker)
 
-        open fun addAll(opts: KotlinCollection<MarkerOptions>, defaultVisible: Boolean) =
+        public open fun addAll(opts: KotlinCollection<MarkerOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addMarker)
 
-        open fun getMarkers(): KotlinCollection<Marker> = getObjects()
+        public open fun getMarkers(): KotlinCollection<Marker> = getObjects()
 
-        open fun setOnInfoWindowClickListener(infoWindowClickListener: GoogleMap.OnInfoWindowClickListener?) {
+        public open fun setOnInfoWindowClickListener(infoWindowClickListener: GoogleMap.OnInfoWindowClickListener?) {
             mInfoWindowClickListener = infoWindowClickListener
         }
 
-        open fun setOnInfoWindowLongClickListener(infoWindowLongClickListener: GoogleMap.OnInfoWindowLongClickListener?) {
+        public open fun setOnInfoWindowLongClickListener(infoWindowLongClickListener: GoogleMap.OnInfoWindowLongClickListener?) {
             mInfoWindowLongClickListener = infoWindowLongClickListener
         }
 
-        open fun setOnMarkerClickListener(markerClickListener: GoogleMap.OnMarkerClickListener?) {
+        public open fun setOnMarkerClickListener(markerClickListener: GoogleMap.OnMarkerClickListener?) {
             mMarkerClickListener = markerClickListener
         }
 
-        open fun setOnMarkerDragListener(markerDragListener: GoogleMap.OnMarkerDragListener?) {
+        public open fun setOnMarkerDragListener(markerDragListener: GoogleMap.OnMarkerDragListener?) {
             mMarkerDragListener = markerDragListener
         }
 
-        open fun setInfoWindowAdapter(infoWindowAdapter: GoogleMap.InfoWindowAdapter?) {
+        public open fun setInfoWindowAdapter(infoWindowAdapter: GoogleMap.InfoWindowAdapter?) {
             mInfoWindowAdapter = infoWindowAdapter
         }
     }

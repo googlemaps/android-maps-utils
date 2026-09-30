@@ -27,15 +27,15 @@ import java.util.zip.ZipInputStream
 /**
  * Interface for decoding images, allowing for easier testing.
  */
-interface ImageDecoder {
-    fun decode(bytes: ByteArray): Bitmap?
+public interface ImageDecoder {
+    public fun decode(bytes: ByteArray): Bitmap?
 }
 
 /**
  * Default implementation using Android's BitmapFactory.
  */
-class AndroidImageDecoder : ImageDecoder {
-    override fun decode(bytes: ByteArray): Bitmap? = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+public class AndroidImageDecoder public constructor() : ImageDecoder {
+    public override fun decode(bytes: ByteArray): Bitmap? = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 }
 
 /**
@@ -43,7 +43,7 @@ class AndroidImageDecoder : ImageDecoder {
  *
  * Extracts the main KML file and any associated images from the Zip stream.
  */
-class KmzParser(
+public class KmzParser @JvmOverloads public constructor(
     private val imageDecoder: ImageDecoder = AndroidImageDecoder(),
     private val maxKmzEntryCount: Int = 200,
     private val maxKmzUncompressedTotalSize: Long = 50 * 1024 * 1024,
@@ -102,7 +102,7 @@ class KmzParser(
      * @param inputStream The InputStream of the KMZ file.
      * @return The parsed KML object, including extracted images.
      */
-    fun parse(inputStream: InputStream): Kml {
+    public fun parse(inputStream: InputStream): Kml {
         val images = mutableMapOf<String, Bitmap>()
         var kml: Kml? = null
         val zipInputStream = ZipInputStream(BufferedInputStream(inputStream))
@@ -165,11 +165,11 @@ class KmzParser(
         }
     }
 
-    companion object {
+    public companion object {
         private const val DRAIN_BUFFER_SIZE = 8192
-        val SUPPORTED_EXTENSIONS = setOf("kmz")
+        public val SUPPORTED_EXTENSIONS: Set<String> = setOf("kmz")
 
-        fun canParse(header: String): Boolean {
+        public fun canParse(header: String): Boolean {
             return header.startsWith("PK") // Zip file signature
         }
     }

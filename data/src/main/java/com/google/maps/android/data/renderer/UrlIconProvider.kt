@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Implementation of [IconProvider] that loads icons from URLs.
  * Uses an [LruCache] to cache loaded icons and handles "thundering herd" by deduplicating in-flight requests.
  */
-open class UrlIconProvider @JvmOverloads constructor(
+public open class UrlIconProvider @JvmOverloads public constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     // Icon/overlay hrefs originate from the (frequently untrusted) KML/GeoJSON document. The
     // sanitizer is applied before every fetch to prevent SSRF; the secure default blocks

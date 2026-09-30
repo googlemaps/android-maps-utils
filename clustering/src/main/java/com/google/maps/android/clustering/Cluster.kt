@@ -20,10 +20,10 @@ import com.google.android.gms.maps.model.LatLng
 /**
  * A collection of ClusterItems that are nearby each other.
  */
-interface Cluster<T : ClusterItem> {
-    val position: LatLng
+public interface Cluster<T : ClusterItem> {
+    public val position: LatLng
 
-    val items: Collection<T>
+    public val items: Collection<T>
 
-    val size: Int
+    public val size: Int
 }

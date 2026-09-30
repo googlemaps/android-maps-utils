@@ -48,6 +48,7 @@ android {
     }
 
     kotlin {
+        explicitApi()
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -77,11 +78,8 @@ dependencies {
     testImplementation(libs.kotlin.test)
     testImplementation(libs.truth)
     implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 }
 
 tasks.register("instrumentTest") {

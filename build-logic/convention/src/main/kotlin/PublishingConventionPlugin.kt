@@ -18,8 +18,11 @@
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
+import kotlinx.validation.KotlinApiBuildTask
+import kotlinx.validation.KotlinApiCompareTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.*
 
 class PublishingConventionPlugin : Plugin<Project> {
@@ -28,6 +31,7 @@ class PublishingConventionPlugin : Plugin<Project> {
             applyPlugins()
             configureKover()
             configureVanniktechPublishing()
+            configureBinaryCompatibilityValidator()
         }
     }
 
@@ -103,6 +107,67 @@ class PublishingConventionPlugin : Plugin<Project> {
                     name.set("Google Inc")
                     url.set("http://developers.google.com/maps")
                 }
+            }
+        }
+    }
+
+    private fun Project.configureBinaryCompatibilityValidator() {
+        val ignoredProjects = setOf("demo", "visual-testing", "lint-checks", "maps-utils")
+        if (name in ignoredProjects) return
+
+        val projectName = name
+        val apiFile = layout.projectDirectory.file("api/$projectName.api")
+        val buildApiFile = layout.buildDirectory.file("api/$projectName.api")
+
+        afterEvaluate {
+            val bundleTask = tasks.findByName("bundleLibCompileToJarRelease") ?: return@afterEvaluate
+            val classesJar = layout.buildDirectory.file(
+                "intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar"
+            )
+
+            val apiBuild = tasks.register<KotlinApiBuildTask>("apiBuild") {
+                group = "verification"
+                description = "Builds public API declaration for $projectName."
+                inputJar.set(classesJar)
+                outputApiFile.set(buildApiFile)
+                ignoredClasses.addAll(
+                    "com.google.maps.android.R",
+                    "com.google.maps.android.clustering.R",
+                    "com.google.maps.android.data.R",
+                    "com.google.maps.android.heatmaps.R",
+                    "com.google.maps.android.ui.R",
+                    "com.google.maps.android.BuildConfig",
+                    "com.google.maps.android.clustering.BuildConfig",
+                    "com.google.maps.android.data.BuildConfig",
+                    "com.google.maps.android.heatmaps.BuildConfig",
+                    "com.google.maps.android.ui.BuildConfig",
+                )
+                dependsOn(bundleTask)
+            }
+
+            val apiDump = tasks.register<Copy>("apiDump") {
+                group = "verification"
+                description = "Syncs public API declarations of $projectName to the project api/ directory."
+                from(apiBuild.flatMap { it.outputApiFile })
+                into(apiFile.asFile.parentFile)
+                dependsOn(apiBuild)
+            }
+
+            val apiCheck = tasks.register<KotlinApiCompareTask>("apiCheck") {
+                group = "verification"
+                description = "Checks public API declarations of $projectName against the committed api/$projectName.api."
+                projectApiFile.set(apiFile)
+                generatedApiFile.set(apiBuild.flatMap { it.outputApiFile })
+                dependsOn(apiBuild)
+            }
+
+            tasks.findByName("check")?.dependsOn(apiCheck)
+
+            rootProject.tasks.matching { it.name == "apiDump" }.configureEach {
+                dependsOn(apiDump)
+            }
+            rootProject.tasks.matching { it.name == "apiCheck" }.configureEach {
+                dependsOn(apiCheck)
             }
         }
     }

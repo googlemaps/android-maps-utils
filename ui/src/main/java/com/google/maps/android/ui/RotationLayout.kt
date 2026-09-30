@@ -25,9 +25,9 @@ import android.widget.FrameLayout
  *
  * May not work with padding.
  */
-class RotationLayout
+public class RotationLayout
     @JvmOverloads
-    constructor(
+    public constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
@@ -49,8 +49,8 @@ class RotationLayout
         /**
          * @param degrees the rotation, in degrees.
          */
-        fun setViewRotation(degrees: Int) {
-            rotation = (degrees + 360) % 360 / 90
+        public fun setViewRotation(degrees: Int) {
+            rotation = degrees.mod(360) / 90
         }
 
         public override fun dispatchDraw(canvas: Canvas) {

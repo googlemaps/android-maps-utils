@@ -21,22 +21,22 @@ import com.google.maps.android.clustering.ClusterItem
 /**
  * Logic for computing clusters
  */
-interface Algorithm<T : ClusterItem> {
+public interface Algorithm<T : ClusterItem> {
     /**
      * Adds an item to the algorithm
      * @param item the item to be added
      * @return true if the algorithm contents changed as a result of the call
      */
-    fun addItem(item: T): Boolean
+    public fun addItem(item: T): Boolean
 
     /**
      * Adds a collection of items to the algorithm
      * @param items the items to be added
      * @return true if the algorithm contents changed as a result of the call
      */
-    fun addItems(items: Collection<T>): Boolean
+    public fun addItems(items: Collection<T>): Boolean
 
-    fun clearItems()
+    public fun clearItems()
 
     /**
      * Removes an item from the algorithm
@@ -44,7 +44,7 @@ interface Algorithm<T : ClusterItem> {
      * @return true if this algorithm contained the specified element (or equivalently, if this
      * algorithm changed as a result of the call).
      */
-    fun removeItem(item: T): Boolean
+    public fun removeItem(item: T): Boolean
 
     /**
      * Updates the provided item in the algorithm
@@ -52,22 +52,22 @@ interface Algorithm<T : ClusterItem> {
      * @return true if the item existed in the algorithm and was updated, or false if the item did
      * not exist in the algorithm and the algorithm contents remain unchanged.
      */
-    fun updateItem(item: T): Boolean
+    public fun updateItem(item: T): Boolean
 
     /**
      * Removes a collection of items from the algorithm
      * @param items the items to be removed
      * @return true if this algorithm contents changed as a result of the call
      */
-    fun removeItems(items: Collection<T>): Boolean
+    public fun removeItems(items: Collection<T>): Boolean
 
-    fun getClusters(zoom: Float): Set<Cluster<T>>
+    public fun getClusters(zoom: Float): Set<Cluster<T>>
 
-    val items: Collection<T>
+    public val items: Collection<T>
 
-    var maxDistanceBetweenClusteredItems: Int
+    public var maxDistanceBetweenClusteredItems: Int
 
-    fun lock()
+    public fun lock()
 
-    fun unlock()
+    public fun unlock()
 }

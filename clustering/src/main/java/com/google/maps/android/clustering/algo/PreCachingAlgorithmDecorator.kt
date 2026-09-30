@@ -27,7 +27,7 @@ import kotlin.concurrent.withLock
 /**
  * Optimistically fetch clusters for adjacent zoom levels, caching them as necessary.
  */
-class PreCachingAlgorithmDecorator<T : ClusterItem>(
+public open class PreCachingAlgorithmDecorator<T : ClusterItem> public constructor(
     private val algorithm: Algorithm<T>,
 ) : AbstractAlgorithm<T>() {
     // TODO: evaluate maxSize parameter for LruCache.

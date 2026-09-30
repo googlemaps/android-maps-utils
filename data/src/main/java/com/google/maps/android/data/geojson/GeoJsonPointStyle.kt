@@ -27,7 +27,7 @@ import com.google.maps.android.data.Style
 public class GeoJsonPointStyle :
     Style(),
     GeoJsonStyle {
-    override fun getGeometryType(): Array<String> = GEOMETRY_TYPE
+    public override fun getGeometryType(): Array<String> = GEOMETRY_TYPE
 
     public fun getAlpha(): Float = mMarkerOptions.alpha
 
@@ -155,7 +155,7 @@ public class GeoJsonPointStyle :
                 append("\n}\n")
             }.toString()
 
-    companion object {
+    public companion object {
         private val GEOMETRY_TYPE = arrayOf("Point", "MultiPoint", "GeometryCollection")
     }
 }
