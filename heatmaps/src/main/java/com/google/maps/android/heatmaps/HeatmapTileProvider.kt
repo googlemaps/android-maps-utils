@@ -201,12 +201,14 @@ class HeatmapTileProvider private constructor(
     }
 
     fun setRadius(radius: Int) {
+        require(radius in MIN_RADIUS..MAX_RADIUS) { "Radius not within bounds." }
         this.radius = radius
         this.kernel = generateKernel(this.radius, this.radius / 3.0)
         this.maxIntensity = getMaxIntensities(this.radius)
     }
 
     fun setOpacity(opacity: Double) {
+        require(opacity in 0.0..1.0) { "Opacity must be in range [0, 1]" }
         this.opacity = opacity
         setGradient(this.gradient)
     }
@@ -224,7 +226,8 @@ class HeatmapTileProvider private constructor(
         val tileWidth = WORLD_WIDTH / 2.0.pow(zoom.toDouble())
         val padding = tileWidth * radius / TILE_DIM
         val tileWidthPadded = tileWidth + 2 * padding
-        val bucketWidth = tileWidthPadded / (TILE_DIM + radius * 2)
+        val gridDim = TILE_DIM + radius * 2
+        val bucketWidth = tileWidthPadded / gridDim
         val minX = x * tileWidth - padding
         val maxX = (x + 1) * tileWidth + padding
         val minY = y * tileWidth - padding
@@ -251,31 +254,31 @@ class HeatmapTileProvider private constructor(
                 bounds.minY - padding,
                 bounds.maxY + padding,
             )
-        if (!tileBounds.intersects(paddedBounds)) {
+        if (!tileBounds.intersects(paddedBounds) && wrappedPoints.isEmpty()) {
             return TileProvider.NO_TILE
         }
 
         val points = tree.search(tileBounds)
-        if (points.isEmpty()) {
+        if (points.isEmpty() && wrappedPoints.isEmpty()) {
             return TileProvider.NO_TILE
         }
 
-        val intensity = Array(TILE_DIM + radius * 2) { DoubleArray(TILE_DIM + radius * 2) }
+        val intensity = Array(gridDim) { DoubleArray(gridDim) }
         for (w in points) {
             val p = w.point
-            val bucketX = ((p.x - minX) / bucketWidth).toInt()
-            val bucketY = ((p.y - minY) / bucketWidth).toInt()
+            val bucketX = ((p.x - minX) / bucketWidth).toInt().coerceIn(0, gridDim - 1)
+            val bucketY = ((p.y - minY) / bucketWidth).toInt().coerceIn(0, gridDim - 1)
             intensity[bucketX][bucketY] += w.intensity
         }
         for (w in wrappedPoints) {
             val p = w.point
-            val bucketX = ((p.x + xOffset - minX) / bucketWidth).toInt()
-            val bucketY = ((p.y - minY) / bucketWidth).toInt()
+            val bucketX = ((p.x + xOffset - minX) / bucketWidth).toInt().coerceIn(0, gridDim - 1)
+            val bucketY = ((p.y - minY) / bucketWidth).toInt().coerceIn(0, gridDim - 1)
             intensity[bucketX][bucketY] += w.intensity
         }
 
         val convolved = convolve(intensity, kernel)
-        val bitmap = colorize(convolved, colorMap, maxIntensity[zoom])
+        val bitmap = colorize(convolved, colorMap, maxIntensity[zoom.coerceIn(0, maxIntensity.lastIndex)])
         return convertBitmap(bitmap)
     }
 

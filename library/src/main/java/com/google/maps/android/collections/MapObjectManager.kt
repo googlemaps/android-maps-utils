@@ -39,8 +39,13 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
     protected val mAllObjects: MutableMap<O, C> = mutableMapOf()
 
     init {
-        Handler(Looper.getMainLooper()).post {
+        val mainLooper = Looper.getMainLooper()
+        if (mainLooper == null || Looper.myLooper() == mainLooper) {
             setListenersOnUiThread()
+        } else {
+            Handler(mainLooper).post {
+                setListenersOnUiThread()
+            }
         }
     }
 

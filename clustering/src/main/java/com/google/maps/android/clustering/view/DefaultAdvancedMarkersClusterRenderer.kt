@@ -833,7 +833,7 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
         marker: Marker,
     ) {
         var changed = false
-        // Update marker text if the item text changed - same logic as adding marker in CreateMarkerTask.perform()
+        // Update marker text if the item text changed - same logic as adding marker in onBeforeClusterItemRendered()
         if (item.title != null && item.snippet != null) {
             if (item.title != marker.title) {
                 marker.title = item.title
@@ -843,19 +843,33 @@ open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOverloads 
                 marker.snippet = item.snippet
                 changed = true
             }
-        } else if (item.snippet != null && item.snippet != marker.title) {
-            marker.title = item.snippet
-            changed = true
-        } else if (item.title != null && item.title != marker.title) {
-            marker.title = item.title
-            changed = true
+        } else if (item.snippet != null) {
+            if (item.snippet != marker.title) {
+                marker.title = item.snippet
+                changed = true
+            }
+            if (marker.snippet != null) {
+                marker.snippet = null
+                changed = true
+            }
+        } else if (item.title != null) {
+            if (item.title != marker.title) {
+                marker.title = item.title
+                changed = true
+            }
+            if (marker.snippet != null) {
+                marker.snippet = null
+                changed = true
+            }
         }
         // Update marker position if the item changed position
         if (marker.position != item.position) {
             marker.position = item.position
-            if (item.zIndex != null) {
-                marker.zIndex = item.zIndex!!
-            }
+            changed = true
+        }
+        val itemZIndex = item.zIndex
+        if (itemZIndex != null && marker.zIndex != itemZIndex) {
+            marker.zIndex = itemZIndex
             changed = true
         }
         if (changed && marker.isInfoWindowShown) {
