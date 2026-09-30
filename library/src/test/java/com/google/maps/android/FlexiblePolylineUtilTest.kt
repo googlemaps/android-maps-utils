@@ -182,6 +182,66 @@ class FlexiblePolylineUtilTest {
     }
 
     @Test
+    fun `encode rounds ties half away from zero like the reference implementation`() {
+        // 2.5 and -2.5 at precision 0 round to 3 and -3, whose zigzag values 6 and 5 are 'G'
+        // and 'F'. Rounding half to even would give 2 and -2, encoded as "BAED".
+        val encoded = FlexiblePolylineUtil.encode(listOf(FlexiblePoint(2.5, -2.5)), precision = 0)
+
+        assertThat(encoded).isEqualTo("BAGF")
+    }
+
+    @Test
+    fun `encode rounds third dimension ties half away from zero`() {
+        // 12.345 * 100 is exactly 1234.5 in double arithmetic, so ordinary decimal input
+        // lands on a tie as well.
+        val decoded =
+            FlexiblePolylineUtil.decode(
+                FlexiblePolylineUtil.encode(
+                    points =
+                        listOf(
+                            FlexiblePoint(12.345, -12.345, 10.5),
+                            FlexiblePoint(0.0, 0.0, -10.5),
+                        ),
+                    precision = 2,
+                    thirdDimension = ThirdDimension.ALTITUDE,
+                    thirdDimensionPrecision = 0,
+                ),
+            )
+
+        assertThat(decoded.points[0].latitude).isWithin(EPSILON).of(12.35)
+        assertThat(decoded.points[0].longitude).isWithin(EPSILON).of(-12.35)
+        assertThat(decoded.points.map { it.thirdDimensionValue })
+            .containsExactly(11.0, -11.0)
+            .inOrder()
+    }
+
+    @Test
+    fun `encode and decode round trip deltas whose zigzag value sets the top bit`() {
+        // A delta of magnitude 2^62 or more zigzags to a value with bit 63 set, which must be
+        // handled as unsigned on both sides. The second delta overflows a Long and relies on
+        // the decoder wrapping the same way the encoder did.
+        val points =
+            listOf(
+                FlexiblePoint(0.0, 0.0, 5e18),
+                FlexiblePoint(0.0, 0.0, -5e18),
+            )
+
+        val decoded =
+            FlexiblePolylineUtil.decode(
+                FlexiblePolylineUtil.encode(
+                    points = points,
+                    precision = 0,
+                    thirdDimension = ThirdDimension.CUSTOM1,
+                    thirdDimensionPrecision = 0,
+                ),
+            )
+
+        assertThat(decoded.points.map { it.thirdDimensionValue })
+            .containsExactly(5e18, -5e18)
+            .inOrder()
+    }
+
+    @Test
     fun `encoded strings use only url safe characters`() {
         val encoded =
             FlexiblePolylineUtil.encode(
