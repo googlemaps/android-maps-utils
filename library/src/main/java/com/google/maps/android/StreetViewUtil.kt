@@ -86,8 +86,8 @@ public class StreetViewUtils {
     }
 }
 
-internal data class ResponseStreetView(
-    val status: Status,
+public data class ResponseStreetView(
+    public val status: Status,
 )
 
 public enum class Status {

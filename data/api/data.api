@@ -379,6 +379,8 @@ public final class com/google/maps/android/data/kml/KmlLayer : com/google/maps/a
 	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;IJ)V
 	public synthetic fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addLayerToMap ()V
+	public final fun getAllGroundOverlays ()Ljava/util/List;
+	public final fun getAllPlacemarks ()Ljava/util/List;
 	public final fun getContainers ()Ljava/lang/Iterable;
 	public fun getFeatures ()Ljava/lang/Iterable;
 	public final fun getGroundOverlays ()Ljava/lang/Iterable;
@@ -1994,6 +1996,11 @@ public final class com/google/maps/android/data/renderer/mapper/KmlMapperKt {
 public final class com/google/maps/android/data/renderer/mapview/MapViewRenderer : com/google/maps/android/data/renderer/DataRenderer {
 	public static final field Companion Lcom/google/maps/android/data/renderer/mapview/MapViewRenderer$Companion;
 	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;Lcom/google/maps/android/collections/MarkerManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addFeature (Lcom/google/maps/android/data/renderer/model/Feature;)V
 	public fun addLayer (Lcom/google/maps/android/data/renderer/model/DataLayer;)V
 	public final fun cacheImageData (Ljava/lang/String;Landroid/graphics/Bitmap;)V
@@ -2007,6 +2014,23 @@ public final class com/google/maps/android/data/renderer/mapview/MapViewRenderer
 }
 
 public final class com/google/maps/android/data/renderer/mapview/MapViewRenderer$Companion {
+}
+
+public final class com/google/maps/android/data/renderer/model/CompositeStyle : com/google/maps/android/data/renderer/model/Style {
+	public fun <init> ()V
+	public fun <init> (Lcom/google/maps/android/data/renderer/model/PointStyle;Lcom/google/maps/android/data/renderer/model/LineStyle;Lcom/google/maps/android/data/renderer/model/PolygonStyle;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/renderer/model/PointStyle;Lcom/google/maps/android/data/renderer/model/LineStyle;Lcom/google/maps/android/data/renderer/model/PolygonStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/renderer/model/PointStyle;
+	public final fun component2 ()Lcom/google/maps/android/data/renderer/model/LineStyle;
+	public final fun component3 ()Lcom/google/maps/android/data/renderer/model/PolygonStyle;
+	public final fun copy (Lcom/google/maps/android/data/renderer/model/PointStyle;Lcom/google/maps/android/data/renderer/model/LineStyle;Lcom/google/maps/android/data/renderer/model/PolygonStyle;)Lcom/google/maps/android/data/renderer/model/CompositeStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/CompositeStyle;Lcom/google/maps/android/data/renderer/model/PointStyle;Lcom/google/maps/android/data/renderer/model/LineStyle;Lcom/google/maps/android/data/renderer/model/PolygonStyle;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/CompositeStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLineStyle ()Lcom/google/maps/android/data/renderer/model/LineStyle;
+	public final fun getPointStyle ()Lcom/google/maps/android/data/renderer/model/PointStyle;
+	public final fun getPolygonStyle ()Lcom/google/maps/android/data/renderer/model/PolygonStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/google/maps/android/data/renderer/model/DataLayer {
@@ -2119,17 +2143,21 @@ public final class com/google/maps/android/data/renderer/model/LineString : com/
 
 public final class com/google/maps/android/data/renderer/model/LineStyle : com/google/maps/android/data/renderer/model/Style {
 	public fun <init> ()V
-	public fun <init> (IFZF)V
-	public synthetic fun <init> (IFZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (IFZFZZ)V
+	public synthetic fun <init> (IFZFZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
 	public final fun component2 ()F
 	public final fun component3 ()Z
 	public final fun component4 ()F
-	public final fun copy (IFZF)Lcom/google/maps/android/data/renderer/model/LineStyle;
-	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/LineStyle;IFZFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/LineStyle;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun copy (IFZFZZ)Lcom/google/maps/android/data/renderer/model/LineStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/LineStyle;IFZFZZILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/LineStyle;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClickable ()Z
 	public final fun getColor ()I
 	public final fun getGeodesic ()Z
+	public final fun getVisible ()Z
 	public final fun getWidth ()F
 	public final fun getZIndex ()F
 	public fun hashCode ()I
@@ -2178,24 +2206,38 @@ public final class com/google/maps/android/data/renderer/model/PointGeometry : c
 
 public final class com/google/maps/android/data/renderer/model/PointStyle : com/google/maps/android/data/renderer/model/Style {
 	public fun <init> ()V
-	public fun <init> (ILjava/lang/String;Ljava/lang/Float;FFFF)V
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/Float;FFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ILjava/lang/String;Ljava/lang/Float;FFFFLjava/lang/String;Ljava/lang/String;ZZZFF)V
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/Float;FFFFLjava/lang/String;Ljava/lang/String;ZZZFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
+	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()Z
+	public final fun component13 ()F
+	public final fun component14 ()F
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/Float;
 	public final fun component4 ()F
 	public final fun component5 ()F
 	public final fun component6 ()F
 	public final fun component7 ()F
-	public final fun copy (ILjava/lang/String;Ljava/lang/Float;FFFF)Lcom/google/maps/android/data/renderer/model/PointStyle;
-	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PointStyle;ILjava/lang/String;Ljava/lang/Float;FFFFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PointStyle;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (ILjava/lang/String;Ljava/lang/Float;FFFFLjava/lang/String;Ljava/lang/String;ZZZFF)Lcom/google/maps/android/data/renderer/model/PointStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PointStyle;ILjava/lang/String;Ljava/lang/Float;FFFFLjava/lang/String;Ljava/lang/String;ZZZFFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PointStyle;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAnchorU ()F
 	public final fun getAnchorV ()F
 	public final fun getColor ()I
+	public final fun getDraggable ()Z
+	public final fun getFlat ()Z
 	public final fun getHeading ()Ljava/lang/Float;
 	public final fun getIconUrl ()Ljava/lang/String;
+	public final fun getInfoWindowAnchorU ()F
+	public final fun getInfoWindowAnchorV ()F
 	public final fun getScale ()F
+	public final fun getSnippet ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getVisible ()Z
 	public final fun getZIndex ()F
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -2218,20 +2260,24 @@ public final class com/google/maps/android/data/renderer/model/Polygon : com/goo
 
 public final class com/google/maps/android/data/renderer/model/PolygonStyle : com/google/maps/android/data/renderer/model/Style {
 	public fun <init> ()V
-	public fun <init> (IIFZF)V
-	public synthetic fun <init> (IIFZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (IIFZFZZ)V
+	public synthetic fun <init> (IIFZFZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()I
 	public final fun component2 ()I
 	public final fun component3 ()F
 	public final fun component4 ()Z
 	public final fun component5 ()F
-	public final fun copy (IIFZF)Lcom/google/maps/android/data/renderer/model/PolygonStyle;
-	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PolygonStyle;IIFZFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PolygonStyle;
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun copy (IIFZFZZ)Lcom/google/maps/android/data/renderer/model/PolygonStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PolygonStyle;IIFZFZZILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PolygonStyle;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClickable ()Z
 	public final fun getFillColor ()I
 	public final fun getGeodesic ()Z
 	public final fun getStrokeColor ()I
 	public final fun getStrokeWidth ()F
+	public final fun getVisible ()Z
 	public final fun getZIndex ()F
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

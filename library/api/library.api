@@ -24,6 +24,57 @@ public final class com/google/maps/android/CameraMoveStartedEvent : com/google/m
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/google/maps/android/FlexiblePoint {
+	public fun <init> (DD)V
+	public fun <init> (DDLjava/lang/Double;)V
+	public synthetic fun <init> (DDLjava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun copy (DDLjava/lang/Double;)Lcom/google/maps/android/FlexiblePoint;
+	public static synthetic fun copy$default (Lcom/google/maps/android/FlexiblePoint;DDLjava/lang/Double;ILjava/lang/Object;)Lcom/google/maps/android/FlexiblePoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLatitude ()D
+	public final fun getLongitude ()D
+	public final fun getThirdDimensionValue ()Ljava/lang/Double;
+	public fun hashCode ()I
+	public final fun toLatLng ()Lcom/google/android/gms/maps/model/LatLng;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/FlexiblePolyline {
+	public fun <init> (Ljava/util/List;ILcom/google/maps/android/ThirdDimension;I)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()Lcom/google/maps/android/ThirdDimension;
+	public final fun component4 ()I
+	public final fun copy (Ljava/util/List;ILcom/google/maps/android/ThirdDimension;I)Lcom/google/maps/android/FlexiblePolyline;
+	public static synthetic fun copy$default (Lcom/google/maps/android/FlexiblePolyline;Ljava/util/List;ILcom/google/maps/android/ThirdDimension;IILjava/lang/Object;)Lcom/google/maps/android/FlexiblePolyline;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPoints ()Ljava/util/List;
+	public final fun getPrecision ()I
+	public final fun getThirdDimension ()Lcom/google/maps/android/ThirdDimension;
+	public final fun getThirdDimensionPrecision ()I
+	public fun hashCode ()I
+	public final fun toLatLngs ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/FlexiblePolylineUtil {
+	public static final field INSTANCE Lcom/google/maps/android/FlexiblePolylineUtil;
+	public static final fun decode (Ljava/lang/String;)Lcom/google/maps/android/FlexiblePolyline;
+	public static final fun decodeToLatLngs (Ljava/lang/String;)Ljava/util/List;
+	public static final fun encode (Ljava/util/List;)Ljava/lang/String;
+	public static final fun encode (Ljava/util/List;I)Ljava/lang/String;
+	public static final fun encode (Ljava/util/List;ILcom/google/maps/android/ThirdDimension;)Ljava/lang/String;
+	public static final fun encode (Ljava/util/List;ILcom/google/maps/android/ThirdDimension;I)Ljava/lang/String;
+	public static synthetic fun encode$default (Ljava/util/List;ILcom/google/maps/android/ThirdDimension;IILjava/lang/Object;)Ljava/lang/String;
+	public static final fun encodeLatLngs (Ljava/util/List;)Ljava/lang/String;
+	public static final fun encodeLatLngs (Ljava/util/List;I)Ljava/lang/String;
+	public static synthetic fun encodeLatLngs$default (Ljava/util/List;IILjava/lang/Object;)Ljava/lang/String;
+	public static final fun getThirdDimension (Ljava/lang/String;)Lcom/google/maps/android/ThirdDimension;
+}
+
 public final class com/google/maps/android/GoogleMapKt {
 	public static final fun addCircle (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Circle;
 	public static final fun addGroundOverlay (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlay;
@@ -207,6 +258,17 @@ public final class com/google/maps/android/PolylineKt {
 	public static final fun getSphericalPathLength (Lcom/google/android/gms/maps/model/Polyline;)D
 }
 
+public final class com/google/maps/android/ResponseStreetView {
+	public fun <init> (Lcom/google/maps/android/Status;)V
+	public final fun component1 ()Lcom/google/maps/android/Status;
+	public final fun copy (Lcom/google/maps/android/Status;)Lcom/google/maps/android/ResponseStreetView;
+	public static synthetic fun copy$default (Lcom/google/maps/android/ResponseStreetView;Lcom/google/maps/android/Status;ILjava/lang/Object;)Lcom/google/maps/android/ResponseStreetView;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStatus ()Lcom/google/maps/android/Status;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/google/maps/android/Source : java/lang/Enum {
 	public static final field DEFAULT Lcom/google/maps/android/Source;
 	public static final field OUTDOOR Lcom/google/maps/android/Source;
@@ -284,6 +346,21 @@ public final class com/google/maps/android/SupportMapFragmentKt {
 
 public final class com/google/maps/android/SupportStreetViewPanoramaFragmentKt {
 	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/SupportStreetViewPanoramaFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/ThirdDimension : java/lang/Enum {
+	public static final field ABSENT Lcom/google/maps/android/ThirdDimension;
+	public static final field ALTITUDE Lcom/google/maps/android/ThirdDimension;
+	public static final field CUSTOM1 Lcom/google/maps/android/ThirdDimension;
+	public static final field CUSTOM2 Lcom/google/maps/android/ThirdDimension;
+	public static final field ELEVATION Lcom/google/maps/android/ThirdDimension;
+	public static final field LEVEL Lcom/google/maps/android/ThirdDimension;
+	public static final field RESERVED1 Lcom/google/maps/android/ThirdDimension;
+	public static final field RESERVED2 Lcom/google/maps/android/ThirdDimension;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()I
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/ThirdDimension;
+	public static fun values ()[Lcom/google/maps/android/ThirdDimension;
 }
 
 public class com/google/maps/android/collections/CircleManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$OnCircleClickListener {
