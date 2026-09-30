@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `f805f5e` (#1803), recorded 2026-09-30T20:26:06Z.
+Measured at `657fc55` (#1802), recorded 2026-09-30T22:24:57Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 171/834 | 20.50% |
+| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 170/834 | 20.38% |
 | `data` | 1,402/2,663 | 52.65% | `███████████░░░░░░░░░` | 840/2,245 | 37.42% |
 | `heatmaps` | 242/275 | 88.00% | `██████████████████░░` | 120/146 | 82.19% |
 | `library` | 651/704 | 92.47% | `██████████████████░░` | 276/336 | 82.14% |
 | `ui` | 115/148 | 77.70% | `████████████████░░░░` | 43/66 | 65.15% |
-| **TOTAL** | 2,963/5,569 | 53.21% | `███████████░░░░░░░░░` | 1,450/3,627 | 39.98% |
+| **TOTAL** | 2,963/5,569 | 53.21% | `███████████░░░░░░░░░` | 1,449/3,627 | 39.95% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-30 | `657fc55` | #1802 | 53.21% | 0.00 | build(deps): update AGP, Android Lint, Kover, Ktor, and core-ktx to latest stable versions |
 | 2026-09-30 | `f805f5e` | #1803 | 53.21% | +0.02 | fix(library): match reference rounding and unsigned varints in flexible polyline |
 | 2026-09-30 | `50e88c9` | #1801 | 53.19% | +1.14 | feat(library): add flexible polyline encoding and decoding |
 | 2026-09-24 | `56b3c24` | #1792 | 52.05% | +0.14 | fix(data): enforce decompression limit and reject payload on KMZ directory entries |
