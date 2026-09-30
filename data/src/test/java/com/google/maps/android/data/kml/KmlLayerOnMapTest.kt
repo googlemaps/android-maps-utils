@@ -95,9 +95,10 @@ class KmlLayerOnMapTest {
             val layer = KmlLayer(mockk<GoogleMap>(relaxed = true), kml.byteInputStream(), context)
             layer.addLayerToMap()
             assertTrue(layer.isLayerOnMap())
-            assertTrue(layer.hasPlacemarks())
-            org.junit.Assert.assertEquals(3, layer.getPlacemarks().toList().size)
-            org.junit.Assert.assertEquals(3, layer.features.toList().size)
+            org.junit.Assert.assertFalse(layer.hasPlacemarks())
+            org.junit.Assert.assertEquals(0, layer.getPlacemarks().toList().size)
+            org.junit.Assert.assertEquals(0, layer.features.toList().size)
+            org.junit.Assert.assertEquals(3, layer.getAllPlacemarks().size)
         } finally {
             unmockkStatic(BitmapDescriptorFactory::class)
         }
@@ -150,7 +151,8 @@ class KmlLayerOnMapTest {
             val layer = KmlLayer(mockMap, kml.byteInputStream(), context)
             layer.addLayerToMap()
 
-            org.junit.Assert.assertEquals(1, layer.getGroundOverlays().toList().size)
+            org.junit.Assert.assertEquals(0, layer.getGroundOverlays().toList().size)
+            org.junit.Assert.assertEquals(1, layer.getAllGroundOverlays().size)
             assertTrue(polylineSlot.captured.isClickable)
             org.junit.Assert.assertEquals(12.0f, polylineSlot.captured.width, 0.001f)
             org.junit.Assert.assertEquals(0xFFFF0000.toInt(), polylineSlot.captured.color)

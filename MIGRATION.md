@@ -109,3 +109,13 @@ geoJsonLayer.setOnFeatureClickListener { feature ->
 }
 ```
 Unlike the previous version, this SAM conversion is fully supported for native Kotlin callers without requiring anonymous object syntax (`object : Layer.OnFeatureClickListener { ... }`).
+
+---
+
+## 4. Data Renderer Model Style Updates (v6.0.0)
+
+In `v6.0.0`, the `com.google.maps.android.data.renderer.model.Style` hierarchy was expanded to support complete feature styling and heterogeneous multi-geometries:
+
+- **`PointStyle`**, **`LineStyle`**, and **`PolygonStyle`**: Added default-valued constructor properties (`title`, `snippet`, `draggable`, `flat`, `visible`, `infoWindowAnchorU`, and `infoWindowAnchorV` on `PointStyle`; `clickable` and `visible` on `LineStyle` and `PolygonStyle`). Source calls with named or positional arguments continue to compile unchanged, though recompilation is required against the updated data class `copy()` and constructor signatures.
+- **`CompositeStyle`**: Added `CompositeStyle(pointStyle, lineStyle, polygonStyle)` as a new subtype of the `sealed interface Style` to support heterogeneous `MultiGeometry` features. Exhaustive `when (style)` expressions over `Style` in consumer code should add a `is CompositeStyle ->` branch (or an `else ->` branch).
+

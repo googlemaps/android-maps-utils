@@ -15,14 +15,12 @@
  */
 package com.google.maps.android.data.renderer.model
 
-import com.google.android.gms.maps.model.BitmapDescriptor
-
 /**
  * A sealed interface representing a style for a geometric object.
  *
  * This is a platform-agnostic representation of styling that can be applied to a rendered shape.
  */
-sealed interface Style
+public sealed interface Style
 
 /**
  * A data class representing the style for a PointGeometry.
@@ -39,26 +37,24 @@ sealed interface Style
  * @property draggable Whether the marker is draggable. Defaults to false.
  * @property flat Whether the marker should be rendered flat against the map. Defaults to false.
  * @property visible Whether the marker is visible. Defaults to true.
- * @property iconDescriptor Optional pre-constructed [BitmapDescriptor] for the marker icon.
  * @property infoWindowAnchorU The U-coordinate of the info window anchor point. Defaults to 0.5.
  * @property infoWindowAnchorV The V-coordinate of the info window anchor point. Defaults to 0.0.
  */
-data class PointStyle(
-    val color: Int = 0xFF000000.toInt(), // Default to black
-    val iconUrl: String? = null,
-    val heading: Float? = null,
-    val anchorU: Float = 0.5f,
-    val anchorV: Float = 1.0f,
-    val scale: Float = 1.0f,
-    val zIndex: Float = 0.0f,
-    val title: String? = null,
-    val snippet: String? = null,
-    val draggable: Boolean = false,
-    val flat: Boolean = false,
-    val visible: Boolean = true,
-    val iconDescriptor: BitmapDescriptor? = null,
-    val infoWindowAnchorU: Float = 0.5f,
-    val infoWindowAnchorV: Float = 0.0f,
+public data class PointStyle(
+    public val color: Int = 0xFF000000.toInt(), // Default to black
+    public val iconUrl: String? = null,
+    public val heading: Float? = null,
+    public val anchorU: Float = 0.5f,
+    public val anchorV: Float = 1.0f,
+    public val scale: Float = 1.0f,
+    public val zIndex: Float = 0.0f,
+    public val title: String? = null,
+    public val snippet: String? = null,
+    public val draggable: Boolean = false,
+    public val flat: Boolean = false,
+    public val visible: Boolean = true,
+    public val infoWindowAnchorU: Float = 0.5f,
+    public val infoWindowAnchorV: Float = 0.0f,
 ) : Style
 
 /**
@@ -71,13 +67,13 @@ data class PointStyle(
  * @property clickable Indicates whether the line is clickable. Defaults to true.
  * @property visible Indicates whether the line is visible. Defaults to true.
  */
-data class LineStyle(
-    val color: Int = 0xFF000000.toInt(), // Default to black
-    val width: Float = 1.0f,
-    val geodesic: Boolean = false,
-    val zIndex: Float = 0.0f,
-    val clickable: Boolean = true,
-    val visible: Boolean = true,
+public data class LineStyle(
+    public val color: Int = 0xFF000000.toInt(), // Default to black
+    public val width: Float = 1.0f,
+    public val geodesic: Boolean = false,
+    public val zIndex: Float = 0.0f,
+    public val clickable: Boolean = true,
+    public val visible: Boolean = true,
 ) : Style
 
 /**
@@ -91,21 +87,21 @@ data class LineStyle(
  * @property clickable Indicates whether the polygon is clickable. Defaults to true.
  * @property visible Indicates whether the polygon is visible. Defaults to true.
  */
-data class PolygonStyle(
-    val fillColor: Int = 0x00000000,
-    val strokeColor: Int = 0xFF000000.toInt(), // Default to black
-    val strokeWidth: Float = 1.0f,
-    val geodesic: Boolean = false,
-    val zIndex: Float = 0.0f,
-    val clickable: Boolean = true,
-    val visible: Boolean = true,
+public data class PolygonStyle(
+    public val fillColor: Int = 0x00000000,
+    public val strokeColor: Int = 0xFF000000.toInt(), // Default to black
+    public val strokeWidth: Float = 1.0f,
+    public val geodesic: Boolean = false,
+    public val zIndex: Float = 0.0f,
+    public val clickable: Boolean = true,
+    public val visible: Boolean = true,
 ) : Style
 
 /**
  * A composite style carrying point, line, and polygon styles for heterogeneous [MultiGeometry] features.
  */
-data class CompositeStyle(
-    val pointStyle: PointStyle? = null,
-    val lineStyle: LineStyle? = null,
-    val polygonStyle: PolygonStyle? = null,
+public data class CompositeStyle(
+    public val pointStyle: PointStyle? = null,
+    public val lineStyle: LineStyle? = null,
+    public val polygonStyle: PolygonStyle? = null,
 ) : Style

@@ -71,6 +71,12 @@ public class GeoJsonLayer : Layer {
     private var mPolygonManager: PolygonManager? = null
     private var mPolylineManager: PolylineManager? = null
     private var mGroundOverlayManager: GroundOverlayManager? = null
+    private var mManagersMap: GoogleMap? = null
+    private var mMarkerCollection: MarkerManager.Collection? = null
+    private var mPolygonCollection: PolygonManager.Collection? = null
+    private var mPolylineCollection: PolylineManager.Collection? = null
+    private var mGroundOverlayCollection: GroundOverlayManager.Collection? = null
+    private val mCachedDescriptors = HashMap<String, com.google.android.gms.maps.model.BitmapDescriptor>()
 
     private var mFeatureClickListener: OnFeatureClickListener? = null
     private val mFeatureObserver = Observer { observable, _ ->
@@ -170,17 +176,32 @@ public class GeoJsonLayer : Layer {
     }
 
     private fun initializeRenderer(map: GoogleMap?) {
-        mRenderer =
-            map?.let {
-                MapViewRenderer(
-                    it,
-                    UrlIconProvider(),
-                    mMarkerManager,
-                    mPolygonManager,
-                    mPolylineManager,
-                    mGroundOverlayManager,
-                )
-            }
+        if (map == null) {
+            mRenderer = null
+            return
+        }
+        if (mManagersMap == null &&
+            (mMarkerManager != null || mPolygonManager != null || mPolylineManager != null || mGroundOverlayManager != null)
+        ) {
+            mManagersMap = map
+            mMarkerCollection = mMarkerManager?.newCollection()
+            mPolygonCollection = mPolygonManager?.newCollection()
+            mPolylineCollection = mPolylineManager?.newCollection()
+            mGroundOverlayCollection = mGroundOverlayManager?.newCollection()
+        }
+        val renderer =
+            MapViewRenderer(
+                map = map,
+                iconProvider = UrlIconProvider(),
+                markerCollection = mMarkerCollection,
+                polygonCollection = mPolygonCollection,
+                polylineCollection = mPolylineCollection,
+                groundOverlayCollection = mGroundOverlayCollection,
+            )
+        mCachedDescriptors.forEach { (key, descriptor) ->
+            renderer.cacheIconDescriptor(key, descriptor)
+        }
+        mRenderer = renderer
     }
 
     private fun toLegacyGeometry(geometry: ParserGeoJsonGeometry): Geometry =
@@ -270,14 +291,28 @@ public class GeoJsonLayer : Layer {
     override fun getMap(): GoogleMap? = mGoogleMap
 
     override fun setMap(map: GoogleMap?) {
+        val wasLayerOnMap = mIsLayerOnMap
+        if (wasLayerOnMap) {
+            removeLayerFromMap()
+        }
+        if (map != null && mManagersMap != null && map !== mManagersMap) {
+            mMarkerManager = null
+            mPolygonManager = null
+            mPolylineManager = null
+            mGroundOverlayManager = null
+            mMarkerCollection = null
+            mPolygonCollection = null
+            mPolylineCollection = null
+            mGroundOverlayCollection = null
+            mManagersMap = null
+        }
         mGoogleMap = map
         if (map == null) {
-            removeLayerFromMap()
             mRenderer = null
         } else {
             initializeRenderer(map)
             mFeatureClickListener?.let { setOnFeatureClickListener(it) }
-            if (mIsLayerOnMap) {
+            if (wasLayerOnMap) {
                 addLayerToMap()
             }
         }
@@ -301,11 +336,19 @@ public class GeoJsonLayer : Layer {
 
     private fun buildPointStyle(feature: GeoJsonFeature): ModelPointStyle {
         val pointStyle = feature.pointStyle ?: mDefaultPointStyle
+        val iconUrl =
+            pointStyle.getIcon()?.let { descriptor ->
+                val key = "geojson-descriptor://${System.identityHashCode(descriptor)}"
+                mCachedDescriptors[key] = descriptor
+                mRenderer?.cacheIconDescriptor(key, descriptor)
+                key
+            }
         return ModelPointStyle(
             // The renderer derives the marker's alpha from the color's alpha channel, so encode the
             // legacy style's alpha into an otherwise-black color (hue 0 keeps the default marker look).
             // A transparent color here (e.g. 0) would render the marker invisible.
             color = Color.argb((pointStyle.getAlpha() * 255).toInt().coerceIn(0, 255), 0, 0, 0),
+            iconUrl = iconUrl,
             anchorU = pointStyle.getAnchorU(),
             anchorV = pointStyle.getAnchorV(),
             heading = pointStyle.getRotation(),
@@ -315,7 +358,6 @@ public class GeoJsonLayer : Layer {
             draggable = pointStyle.isDraggable(),
             flat = pointStyle.isFlat(),
             visible = pointStyle.isVisible(),
-            iconDescriptor = pointStyle.getIcon(),
             infoWindowAnchorU = pointStyle.getInfoWindowAnchorU(),
             infoWindowAnchorV = pointStyle.getInfoWindowAnchorV(),
         )

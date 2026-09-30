@@ -52,6 +52,12 @@ public class KmlLayer : Layer {
     private var mPolygonManager: PolygonManager? = null
     private var mPolylineManager: PolylineManager? = null
     private var mGroundOverlayManager: GroundOverlayManager? = null
+    private var mManagersMap: GoogleMap? = null
+    private var mMarkerCollection: MarkerManager.Collection? = null
+    private var mPolygonCollection: PolygonManager.Collection? = null
+    private var mPolylineCollection: PolylineManager.Collection? = null
+    private var mGroundOverlayCollection: GroundOverlayManager.Collection? = null
+    private val mCachedImages = HashMap<String, android.graphics.Bitmap>()
 
     @JvmOverloads
     @Throws(XmlPullParserException::class, IOException::class)
@@ -98,17 +104,7 @@ public class KmlLayer : Layer {
         mPolygonManager = polygonManager
         mPolylineManager = polylineManager
         mGroundOverlayManager = groundOverlayManager
-        mRenderer =
-            map?.let {
-                MapViewRenderer(
-                    it,
-                    UrlIconProvider(),
-                    mMarkerManager,
-                    mPolygonManager,
-                    mPolylineManager,
-                    mGroundOverlayManager,
-                )
-            }
+        initializeRenderer(map)
 
         val bis = BufferedInputStream(stream)
         bis.mark(1024)
@@ -129,6 +125,7 @@ public class KmlLayer : Layer {
 
         // Register KMZ cached images to renderer if any
         kmlObj.images.forEach { (name, bitmap) ->
+            mCachedImages[name] = bitmap
             mRenderer?.cacheImageData(name, bitmap)
         }
 
@@ -345,25 +342,60 @@ public class KmlLayer : Layer {
         return (a shl 24) or (r shl 16) or (g shl 8) or b
     }
 
+    private fun initializeRenderer(map: GoogleMap?) {
+        if (map == null) {
+            mRenderer = null
+            return
+        }
+        if (mManagersMap == null &&
+            (mMarkerManager != null || mPolygonManager != null || mPolylineManager != null || mGroundOverlayManager != null)
+        ) {
+            mManagersMap = map
+            mMarkerCollection = mMarkerManager?.newCollection()
+            mPolygonCollection = mPolygonManager?.newCollection()
+            mPolylineCollection = mPolylineManager?.newCollection()
+            mGroundOverlayCollection = mGroundOverlayManager?.newCollection()
+        }
+        val renderer =
+            MapViewRenderer(
+                map = map,
+                iconProvider = UrlIconProvider(),
+                markerCollection = mMarkerCollection,
+                polygonCollection = mPolygonCollection,
+                polylineCollection = mPolylineCollection,
+                groundOverlayCollection = mGroundOverlayCollection,
+            )
+        mCachedImages.forEach { (name, bitmap) ->
+            renderer.cacheImageData(name, bitmap)
+        }
+        mRenderer = renderer
+    }
+
     override fun getMap(): GoogleMap? = mGoogleMap
 
     override fun setMap(map: GoogleMap?) {
+        val wasLayerOnMap = mIsLayerOnMap
+        if (wasLayerOnMap) {
+            removeLayerFromMap()
+        }
+        if (map != null && mManagersMap != null && map !== mManagersMap) {
+            mMarkerManager = null
+            mPolygonManager = null
+            mPolylineManager = null
+            mGroundOverlayManager = null
+            mMarkerCollection = null
+            mPolygonCollection = null
+            mPolylineCollection = null
+            mGroundOverlayCollection = null
+            mManagersMap = null
+        }
         mGoogleMap = map
         if (map == null) {
-            removeLayerFromMap()
             mRenderer = null
         } else {
-            mRenderer =
-                MapViewRenderer(
-                    map,
-                    UrlIconProvider(),
-                    mMarkerManager,
-                    mPolygonManager,
-                    mPolylineManager,
-                    mGroundOverlayManager,
-                )
+            initializeRenderer(map)
             mFeatureClickListener?.let { setOnFeatureClickListener(it) }
-            if (mIsLayerOnMap) {
+            if (wasLayerOnMap) {
                 addLayerToMap()
             }
         }
@@ -551,7 +583,11 @@ public class KmlLayer : Layer {
         container.getContainers().forEach { collectPlacemarks(it, out) }
     }
 
-    private fun getAllPlacemarks(): List<KmlPlacemark> {
+    /**
+     * Returns all [KmlPlacemark] objects in this layer, including both top-level placemarks
+     * and placemarks nested inside `<Document>` and `<Folder>` [KmlContainer]s.
+     */
+    public fun getAllPlacemarks(): List<KmlPlacemark> {
         val all = ArrayList<KmlPlacemark>(mPlacemarks)
         mContainers.forEach { collectPlacemarks(it, all) }
         return all
@@ -565,24 +601,28 @@ public class KmlLayer : Layer {
         container.getContainers().forEach { collectGroundOverlays(it, out) }
     }
 
-    private fun getAllGroundOverlays(): List<KmlGroundOverlay> {
+    /**
+     * Returns all [KmlGroundOverlay] objects in this layer, including both top-level ground overlays
+     * and ground overlays nested inside `<Document>` and `<Folder>` [KmlContainer]s.
+     */
+    public fun getAllGroundOverlays(): List<KmlGroundOverlay> {
         val all = ArrayList<KmlGroundOverlay>(mGroundOverlays)
         mContainers.forEach { collectGroundOverlays(it, all) }
         return all
     }
 
-    public fun hasPlacemarks(): Boolean = getAllPlacemarks().isNotEmpty()
+    public fun hasPlacemarks(): Boolean = mPlacemarks.isNotEmpty()
 
-    public fun getPlacemarks(): Iterable<KmlPlacemark> = getAllPlacemarks()
+    public fun getPlacemarks(): Iterable<KmlPlacemark> = mPlacemarks
 
     public fun hasContainers(): Boolean = mContainers.isNotEmpty()
 
     public fun getContainers(): Iterable<KmlContainer> = mContainers
 
-    public fun getGroundOverlays(): Iterable<KmlGroundOverlay> = getAllGroundOverlays()
+    public fun getGroundOverlays(): Iterable<KmlGroundOverlay> = mGroundOverlays
 
     override val features: Iterable<KmlPlacemark>
-        get() = getAllPlacemarks()
+        get() = mPlacemarks
 
     override fun isLayerOnMap(): Boolean = mIsLayerOnMap
 
