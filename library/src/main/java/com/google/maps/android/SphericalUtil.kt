@@ -29,7 +29,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 
-object SphericalUtil {
+public object SphericalUtil {
     /**
      * Returns the heading from one LatLng to another LatLng. Headings are
      * expressed in degrees clockwise from North within the range [-180,180).
@@ -37,7 +37,7 @@ object SphericalUtil {
      * @return The heading in degrees clockwise from north.
      */
     @JvmStatic
-    fun computeHeading(
+    public fun computeHeading(
         from: LatLng,
         to: LatLng,
     ): Double {
@@ -64,7 +64,7 @@ object SphericalUtil {
      * @param heading  The heading in degrees clockwise from north.
      */
     @JvmStatic
-    fun computeOffset(
+    public fun computeOffset(
         from: LatLng,
         distance: Double,
         heading: Double,
@@ -100,7 +100,7 @@ object SphericalUtil {
      * @param heading  The heading in degrees clockwise from north.
      */
     @JvmStatic
-    fun computeOffsetOrigin(
+    public fun computeOffsetOrigin(
         to: LatLng,
         distance: Double,
         heading: Double,
@@ -152,7 +152,7 @@ object SphericalUtil {
      * @return The interpolated LatLng.
      */
     @JvmStatic
-    fun interpolate(
+    public fun interpolate(
         from: LatLng,
         to: LatLng,
         fraction: Double,
@@ -203,7 +203,7 @@ object SphericalUtil {
      * on the unit sphere.
      */
     @JvmStatic
-    fun computeAngleBetween(
+    public fun computeAngleBetween(
         from: LatLng,
         to: LatLng,
     ): Double =
@@ -218,7 +218,7 @@ object SphericalUtil {
      * Returns the distance between two LatLngs, in meters.
      */
     @JvmStatic
-    fun computeDistanceBetween(
+    public fun computeDistanceBetween(
         from: LatLng,
         to: LatLng,
     ): Double = computeAngleBetween(from, to) * EARTH_RADIUS
@@ -227,7 +227,7 @@ object SphericalUtil {
      * Returns the length of the given path, in meters, on Earth.
      */
     @JvmStatic
-    fun computeLength(path: List<LatLng>): Double {
+    public fun computeLength(path: List<LatLng>): Double {
         if (path.size < 2) {
             return 0.0
         }
@@ -253,7 +253,7 @@ object SphericalUtil {
      * @return The path's area in square meters.
      */
     @JvmStatic
-    fun computeArea(path: List<LatLng>): Double = abs(computeSignedArea(path))
+    public fun computeArea(path: List<LatLng>): Double = abs(computeSignedArea(path))
 
     /**
      * Returns the signed area of a closed path on Earth. The sign of the area may be used to
@@ -264,7 +264,7 @@ object SphericalUtil {
      * @return The loop's area in square meters.
      */
     @JvmStatic
-    fun computeSignedArea(path: List<LatLng>): Double = computeSignedArea(path, EARTH_RADIUS)
+    public fun computeSignedArea(path: List<LatLng>): Double = computeSignedArea(path, EARTH_RADIUS)
 
     /**
      * Returns the signed area of a closed path on a sphere of given radius.
@@ -272,7 +272,7 @@ object SphericalUtil {
      * Used by SphericalUtilTest.
      */
     @JvmStatic
-    fun computeSignedArea(
+    public fun computeSignedArea(
         path: List<LatLng>,
         radius: Double,
     ): Double {
@@ -324,7 +324,7 @@ object SphericalUtil {
      * the percentage is outside the range [0, 1]
      */
     @JvmStatic
-    fun getPointOnPolyline(
+    public fun getPointOnPolyline(
         polyline: List<LatLng>,
         percentage: Double,
     ): LatLng? = getPolylinePrefix(polyline, percentage).lastOrNull()
@@ -342,7 +342,7 @@ object SphericalUtil {
      * is empty or the percentage is outside the range [0, 1]
      */
     @JvmStatic
-    fun getPolylinePrefix(
+    public fun getPolylinePrefix(
         polyline: List<LatLng>,
         percentage: Double,
     ): List<LatLng> {

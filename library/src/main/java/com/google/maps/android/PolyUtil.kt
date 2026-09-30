@@ -43,8 +43,8 @@ import kotlin.math.tan
  * and they operate on {@link LatLng} objects. The calculations can be performed
  * using either geodesic (great circle) or rhumb (loxodromic) paths.
  */
-object PolyUtil {
-    const val DEFAULT_TOLERANCE = 0.1 // meters
+public object PolyUtil {
+    public const val DEFAULT_TOLERANCE: Double = 0.1 // meters
 
     /**
      * Computes whether the given point lies inside the specified polygon.
@@ -60,7 +60,7 @@ object PolyUtil {
      * @return `true` if the point is inside the polygon, `false` otherwise.
      */
     @JvmStatic
-    fun containsLocation(
+    public fun containsLocation(
         point: LatLng,
         polygon: List<LatLng>,
         geodesic: Boolean,
@@ -71,7 +71,7 @@ object PolyUtil {
      * longitude as separate arguments.
      */
     @JvmStatic
-    fun containsLocation(
+    public fun containsLocation(
         latitude: Double,
         longitude: Double,
         polygon: List<LatLng>,
@@ -120,7 +120,7 @@ object PolyUtil {
      */
     @JvmStatic
     @JvmOverloads
-    fun isLocationOnEdge(
+    public fun isLocationOnEdge(
         point: LatLng,
         polygon: List<LatLng>,
         geodesic: Boolean,
@@ -141,7 +141,7 @@ object PolyUtil {
      */
     @JvmStatic
     @JvmOverloads
-    fun isLocationOnPath(
+    public fun isLocationOnPath(
         point: LatLng,
         polyline: List<LatLng>,
         geodesic: Boolean,
@@ -177,7 +177,7 @@ object PolyUtil {
      */
     @JvmStatic
     @JvmOverloads
-    fun locationIndexOnPath(
+    public fun locationIndexOnPath(
         point: LatLng,
         poly: List<LatLng>,
         geodesic: Boolean,
@@ -201,7 +201,7 @@ object PolyUtil {
      * poly.size()-2 if between poly[poly.size() - 2] and poly[poly.size() - 1]
      */
     @JvmStatic
-    fun locationIndexOnEdgeOrPath(
+    public fun locationIndexOnEdgeOrPath(
         point: LatLng,
         poly: List<LatLng>,
         closed: Boolean,
@@ -294,7 +294,7 @@ object PolyUtil {
      * @return a simplified poly produced by the Douglas-Peucker algorithm
      */
     @JvmStatic
-    fun simplify(
+    public fun simplify(
         poly: List<LatLng>,
         tolerance: Double,
     ): List<LatLng> {
@@ -399,7 +399,7 @@ object PolyUtil {
      * points are the same), and false if it is not
      */
     @JvmStatic
-    fun isClosedPolygon(poly: List<LatLng>): Boolean = poly.isNotEmpty() && poly.first() == poly.last()
+    public fun isClosedPolygon(poly: List<LatLng>): Boolean = poly.isNotEmpty() && poly.first() == poly.last()
 
     /**
      * Computes the distance on the sphere between the point p and the line segment start to end.
@@ -410,7 +410,7 @@ object PolyUtil {
      * @return the distance in meters (assuming spherical earth)
      */
     @JvmStatic
-    fun distanceToLine(
+    public fun distanceToLine(
         p: LatLng,
         start: LatLng,
         end: LatLng,
@@ -452,7 +452,7 @@ object PolyUtil {
      * Decodes an encoded path string into a sequence of LatLngs.
      */
     @JvmStatic
-    fun decode(encodedPath: String): List<LatLng> {
+    public fun decode(encodedPath: String): List<LatLng> {
         val len = encodedPath.length
         val path = mutableListOf<LatLng>()
         var index = 0
@@ -489,7 +489,7 @@ object PolyUtil {
      * Encodes a sequence of LatLngs into an encoded path string.
      */
     @JvmStatic
-    fun encode(path: List<LatLng>): String {
+    public fun encode(path: List<LatLng>): String {
         var lastLat: Long = 0
         var lastLng: Long = 0
         val result = StringBuilder()

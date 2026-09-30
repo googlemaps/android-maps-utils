@@ -1,0 +1,2472 @@
+public final class com/google/maps/android/data/DataLayerLoader {
+	public fun <init> (Landroid/content/Context;Lkotlinx/coroutines/CoroutineDispatcher;)V
+	public synthetic fun <init> (Landroid/content/Context;Lkotlinx/coroutines/CoroutineDispatcher;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun loadAsset (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun loadInputStream (Ljava/io/InputStream;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/google/maps/android/data/DataPolygon : com/google/maps/android/data/Geometry {
+	public abstract fun getInnerBoundaryCoordinates ()Ljava/util/List;
+	public abstract fun getOuterBoundaryCoordinates ()Ljava/util/List;
+}
+
+public class com/google/maps/android/data/Feature : java/util/Observable {
+	public fun <init> (Lcom/google/maps/android/data/Geometry;Ljava/lang/String;Ljava/util/Map;)V
+	public final fun getGeometry ()Lcom/google/maps/android/data/Geometry;
+	public final fun getId ()Ljava/lang/String;
+	protected final fun getMId ()Ljava/lang/String;
+	public final fun getProperties ()Ljava/lang/Iterable;
+	public final fun getProperty (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getPropertyKeys ()Ljava/lang/Iterable;
+	public final fun hasGeometry ()Z
+	public final fun hasProperties ()Z
+	public final fun hasProperty (Ljava/lang/String;)Z
+	protected fun removeProperty (Ljava/lang/String;)Ljava/lang/String;
+	protected fun setGeometry (Lcom/google/maps/android/data/Geometry;)V
+	protected final fun setMId (Ljava/lang/String;)V
+	protected fun setProperty (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/Geometry {
+	public abstract fun getGeometryObject ()Ljava/lang/Object;
+	public abstract fun getGeometryType ()Ljava/lang/String;
+}
+
+public abstract class com/google/maps/android/data/Layer {
+	public fun <init> ()V
+	public abstract fun addLayerToMap ()V
+	public fun getDefaultLineStringStyle ()Lcom/google/maps/android/data/geojson/GeoJsonLineStringStyle;
+	public fun getDefaultPointStyle ()Lcom/google/maps/android/data/geojson/GeoJsonPointStyle;
+	public fun getDefaultPolygonStyle ()Lcom/google/maps/android/data/geojson/GeoJsonPolygonStyle;
+	public abstract fun getFeatures ()Ljava/lang/Iterable;
+	protected final fun getMDefaultLineStringStyle ()Lcom/google/maps/android/data/geojson/GeoJsonLineStringStyle;
+	protected final fun getMDefaultPointStyle ()Lcom/google/maps/android/data/geojson/GeoJsonPointStyle;
+	protected final fun getMDefaultPolygonStyle ()Lcom/google/maps/android/data/geojson/GeoJsonPolygonStyle;
+	protected final fun getMGoogleMap ()Lcom/google/android/gms/maps/GoogleMap;
+	public abstract fun getMap ()Lcom/google/android/gms/maps/GoogleMap;
+	public abstract fun isLayerOnMap ()Z
+	public abstract fun removeLayerFromMap ()V
+	protected final fun setMDefaultLineStringStyle (Lcom/google/maps/android/data/geojson/GeoJsonLineStringStyle;)V
+	protected final fun setMDefaultPointStyle (Lcom/google/maps/android/data/geojson/GeoJsonPointStyle;)V
+	protected final fun setMDefaultPolygonStyle (Lcom/google/maps/android/data/geojson/GeoJsonPolygonStyle;)V
+	protected final fun setMGoogleMap (Lcom/google/android/gms/maps/GoogleMap;)V
+	public abstract fun setMap (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun setOnFeatureClickListener (Lcom/google/maps/android/data/Layer$OnFeatureClickListener;)V
+}
+
+public abstract interface class com/google/maps/android/data/Layer$OnFeatureClickListener {
+	public abstract fun onFeatureClick (Lcom/google/maps/android/data/Feature;)V
+}
+
+public class com/google/maps/android/data/LineString : com/google/maps/android/data/Geometry {
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryObject ()Ljava/util/List;
+	public fun getGeometryType ()Ljava/lang/String;
+}
+
+public class com/google/maps/android/data/MultiGeometry : com/google/maps/android/data/Geometry {
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryObject ()Ljava/util/List;
+	public fun getGeometryType ()Ljava/lang/String;
+	public final fun setGeometryType (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public class com/google/maps/android/data/Point : com/google/maps/android/data/Geometry {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;)V
+	public fun getGeometryObject ()Lcom/google/android/gms/maps/model/LatLng;
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryType ()Ljava/lang/String;
+}
+
+public class com/google/maps/android/data/Renderer {
+	public fun <init> ()V
+}
+
+public final class com/google/maps/android/data/Renderer$ImagesCache {
+	public fun <init> ()V
+}
+
+public final class com/google/maps/android/data/RendererLogger {
+	public static final field INSTANCE Lcom/google/maps/android/data/RendererLogger;
+	public static final fun d (Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun e (Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun setEnabled (Z)V
+}
+
+public abstract class com/google/maps/android/data/Style : java/util/Observable {
+	public static final field Companion Lcom/google/maps/android/data/Style$Companion;
+	public fun <init> ()V
+	public fun getRotation ()F
+	public fun setLineStringWidth (F)V
+	public fun setMarkerHotSpot (FFLjava/lang/String;Ljava/lang/String;)V
+	public fun setMarkerRotation (F)V
+	public fun setPolygonFillColor (I)V
+	public fun setPolygonStrokeWidth (F)V
+}
+
+public final class com/google/maps/android/data/Style$Companion {
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonFeature : com/google/maps/android/data/Feature, java/util/Observer {
+	public fun <init> (Lcom/google/maps/android/data/Geometry;Ljava/lang/String;Ljava/util/Map;Lcom/google/android/gms/maps/model/LatLngBounds;)V
+	public final fun getBoundingBox ()Lcom/google/android/gms/maps/model/LatLngBounds;
+	public final fun getLineStringStyle ()Lcom/google/maps/android/data/geojson/GeoJsonLineStringStyle;
+	public final fun getMarkerOptions ()Lcom/google/android/gms/maps/model/MarkerOptions;
+	public final fun getPointStyle ()Lcom/google/maps/android/data/geojson/GeoJsonPointStyle;
+	public final fun getPolygonOptions ()Lcom/google/android/gms/maps/model/PolygonOptions;
+	public final fun getPolygonStyle ()Lcom/google/maps/android/data/geojson/GeoJsonPolygonStyle;
+	public final fun getPolylineOptions ()Lcom/google/android/gms/maps/model/PolylineOptions;
+	public final fun setLineStringStyle (Lcom/google/maps/android/data/geojson/GeoJsonLineStringStyle;)V
+	public final fun setPointStyle (Lcom/google/maps/android/data/geojson/GeoJsonPointStyle;)V
+	public final fun setPolygonStyle (Lcom/google/maps/android/data/geojson/GeoJsonPolygonStyle;)V
+	public fun toString ()Ljava/lang/String;
+	public fun update (Ljava/util/Observable;Ljava/lang/Object;)V
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonGeometryCollection : com/google/maps/android/data/MultiGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getGeometries ()Ljava/util/List;
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonKt {
+	public static final fun geoJsonLayer (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+	public static final fun geoJsonLayer (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+	public static synthetic fun geoJsonLayer$default (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILjava/lang/Object;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+	public static synthetic fun geoJsonLayer$default (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILjava/lang/Object;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonLayer : com/google/maps/android/data/Layer {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun addFeature (Lcom/google/maps/android/data/geojson/GeoJsonFeature;)V
+	public fun addLayerToMap ()V
+	public final fun getBoundingBox ()Lcom/google/android/gms/maps/model/LatLngBounds;
+	public fun getFeatures ()Ljava/lang/Iterable;
+	public fun getMap ()Lcom/google/android/gms/maps/GoogleMap;
+	public fun isLayerOnMap ()Z
+	public final fun removeFeature (Lcom/google/maps/android/data/geojson/GeoJsonFeature;)V
+	public fun removeLayerFromMap ()V
+	public fun setMap (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun setOnFeatureClickListener (Lcom/google/maps/android/data/Layer$OnFeatureClickListener;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/geojson/GeoJsonLayer$GeoJsonOnFeatureClickListener : com/google/maps/android/data/Layer$OnFeatureClickListener {
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonLineString : com/google/maps/android/data/LineString {
+	public fun <init> (Ljava/util/List;)V
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAltitudes ()Ljava/util/List;
+	public final fun getCoordinates ()Ljava/util/List;
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonLineStringStyle : com/google/maps/android/data/Style, com/google/maps/android/data/geojson/GeoJsonStyle {
+	public static final field Companion Lcom/google/maps/android/data/geojson/GeoJsonLineStringStyle$Companion;
+	public fun <init> ()V
+	public final fun getColor ()I
+	public final fun getEndCap ()Lcom/google/android/gms/maps/model/Cap;
+	public fun getGeometryType ()[Ljava/lang/String;
+	public final fun getPattern ()Ljava/util/List;
+	public final fun getStartCap ()Lcom/google/android/gms/maps/model/Cap;
+	public final fun getWidth ()F
+	public final fun getZIndex ()F
+	public final fun isClickable ()Z
+	public final fun isGeodesic ()Z
+	public fun isVisible ()Z
+	public final fun setClickable (Z)V
+	public final fun setColor (I)V
+	public final fun setEndCap (Lcom/google/android/gms/maps/model/Cap;)V
+	public final fun setGeodesic (Z)V
+	public final fun setPattern (Ljava/util/List;)V
+	public final fun setStartCap (Lcom/google/android/gms/maps/model/Cap;)V
+	public fun setVisible (Z)V
+	public final fun setWidth (F)V
+	public final fun setZIndex (F)V
+	public final fun toPolylineOptions ()Lcom/google/android/gms/maps/model/PolylineOptions;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonLineStringStyle$Companion {
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonMultiLineString : com/google/maps/android/data/MultiGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getLineStrings ()Ljava/util/List;
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonMultiPoint : com/google/maps/android/data/MultiGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getPoints ()Ljava/util/List;
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonMultiPolygon : com/google/maps/android/data/MultiGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getPolygons ()Ljava/util/List;
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPoint : com/google/maps/android/data/Point {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;)V
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/Double;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAltitude ()Ljava/lang/Double;
+	public final fun getCoordinates ()Lcom/google/android/gms/maps/model/LatLng;
+	public final fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPointStyle : com/google/maps/android/data/Style, com/google/maps/android/data/geojson/GeoJsonStyle {
+	public static final field Companion Lcom/google/maps/android/data/geojson/GeoJsonPointStyle$Companion;
+	public fun <init> ()V
+	public final fun getAlpha ()F
+	public final fun getAnchorU ()F
+	public final fun getAnchorV ()F
+	public fun getGeometryType ()[Ljava/lang/String;
+	public final fun getIcon ()Lcom/google/android/gms/maps/model/BitmapDescriptor;
+	public final fun getInfoWindowAnchorU ()F
+	public final fun getInfoWindowAnchorV ()F
+	public fun getRotation ()F
+	public final fun getSnippet ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getZIndex ()F
+	public final fun isDraggable ()Z
+	public final fun isFlat ()Z
+	public fun isVisible ()Z
+	public final fun setAlpha (F)V
+	public final fun setAnchor (FF)V
+	public final fun setDraggable (Z)V
+	public final fun setFlat (Z)V
+	public final fun setIcon (Lcom/google/android/gms/maps/model/BitmapDescriptor;)V
+	public final fun setInfoWindowAnchor (FF)V
+	public final fun setRotation (F)V
+	public final fun setSnippet (Ljava/lang/String;)V
+	public final fun setTitle (Ljava/lang/String;)V
+	public fun setVisible (Z)V
+	public final fun setZIndex (F)V
+	public final fun toMarkerOptions ()Lcom/google/android/gms/maps/model/MarkerOptions;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPointStyle$Companion {
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPolygon : com/google/maps/android/data/DataPolygon {
+	public static final field Companion Lcom/google/maps/android/data/geojson/GeoJsonPolygon$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun getCoordinates ()Ljava/util/List;
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryObject ()Ljava/util/List;
+	public fun getGeometryType ()Ljava/lang/String;
+	public fun getInnerBoundaryCoordinates ()Ljava/util/List;
+	public fun getOuterBoundaryCoordinates ()Ljava/util/List;
+	public final fun getType ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPolygon$Companion {
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPolygonStyle : com/google/maps/android/data/Style, com/google/maps/android/data/geojson/GeoJsonStyle {
+	public static final field Companion Lcom/google/maps/android/data/geojson/GeoJsonPolygonStyle$Companion;
+	public fun <init> ()V
+	public final fun getFillColor ()I
+	public fun getGeometryType ()[Ljava/lang/String;
+	public final fun getStrokeColor ()I
+	public final fun getStrokeJointType ()I
+	public final fun getStrokePattern ()Ljava/util/List;
+	public final fun getStrokeWidth ()F
+	public final fun getZIndex ()F
+	public final fun isClickable ()Z
+	public final fun isGeodesic ()Z
+	public fun isVisible ()Z
+	public final fun setClickable (Z)V
+	public final fun setFillColor (I)V
+	public final fun setGeodesic (Z)V
+	public final fun setStrokeColor (I)V
+	public final fun setStrokeJointType (I)V
+	public final fun setStrokePattern (Ljava/util/List;)V
+	public final fun setStrokeWidth (F)V
+	public fun setVisible (Z)V
+	public final fun setZIndex (F)V
+	public final fun toPolygonOptions ()Lcom/google/android/gms/maps/model/PolygonOptions;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/geojson/GeoJsonPolygonStyle$Companion {
+}
+
+public abstract interface class com/google/maps/android/data/geojson/GeoJsonStyle {
+	public abstract fun getGeometryType ()[Ljava/lang/String;
+	public abstract fun isVisible ()Z
+	public abstract fun setVisible (Z)V
+}
+
+public class com/google/maps/android/data/kml/DefaultKmlUrlSanitizer : com/google/maps/android/data/kml/KmlUrlSanitizer {
+	public fun <init> ()V
+	public static fun isInternalAddress (Ljava/net/InetAddress;)Z
+	public fun sanitizeUrl (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlContainer {
+	public fun <init> (Ljava/util/HashMap;Ljava/util/HashMap;Ljava/util/HashMap;Ljava/util/HashMap;Ljava/util/ArrayList;Ljava/util/HashMap;Ljava/lang/String;)V
+	public final fun getContainerId ()Ljava/lang/String;
+	public final fun getContainers ()Ljava/lang/Iterable;
+	public final fun getGroundOverlays ()Ljava/lang/Iterable;
+	public final fun getPlacemarks ()Ljava/lang/Iterable;
+	public final fun getProperties ()Ljava/lang/Iterable;
+	public final fun getProperty (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getStyle (Ljava/lang/String;)Lcom/google/maps/android/data/kml/KmlStyle;
+	public final fun getStyleIdFromMap (Ljava/lang/String;)Ljava/lang/String;
+	public final fun hasContainers ()Z
+	public final fun hasPlacemarks ()Z
+	public final fun hasProperties ()Z
+	public final fun hasProperty (Ljava/lang/String;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlGroundOverlay {
+	public fun <init> (Ljava/lang/String;Lcom/google/android/gms/maps/model/LatLngBounds;FILjava/util/Map;F)V
+	public final fun getImageUrl ()Ljava/lang/String;
+	public final fun getLatLngBox ()Lcom/google/android/gms/maps/model/LatLngBounds;
+	public final fun getProperties ()Ljava/lang/Iterable;
+	public final fun getProperty (Ljava/lang/String;)Ljava/lang/String;
+	public final fun hasProperty (Ljava/lang/String;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlKt {
+	public static final fun kmlLayer (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;)Lcom/google/maps/android/data/kml/KmlLayer;
+	public static final fun kmlLayer (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;)Lcom/google/maps/android/data/kml/KmlLayer;
+	public static synthetic fun kmlLayer$default (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;ILjava/lang/Object;)Lcom/google/maps/android/data/kml/KmlLayer;
+	public static synthetic fun kmlLayer$default (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;ILjava/lang/Object;)Lcom/google/maps/android/data/kml/KmlLayer;
+}
+
+public final class com/google/maps/android/data/kml/KmlLayer : com/google/maps/android/data/Layer {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;I)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;IJ)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;I)V
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;IJ)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addLayerToMap ()V
+	public final fun getContainers ()Ljava/lang/Iterable;
+	public fun getFeatures ()Ljava/lang/Iterable;
+	public final fun getGroundOverlays ()Ljava/lang/Iterable;
+	public fun getMap ()Lcom/google/android/gms/maps/GoogleMap;
+	public final fun getPlacemarks ()Ljava/lang/Iterable;
+	public final fun hasContainers ()Z
+	public final fun hasPlacemarks ()Z
+	public fun isLayerOnMap ()Z
+	public fun removeLayerFromMap ()V
+	public fun setMap (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun setOnFeatureClickListener (Lcom/google/maps/android/data/Layer$OnFeatureClickListener;)V
+}
+
+public final class com/google/maps/android/data/kml/KmlLineString : com/google/maps/android/data/LineString {
+	public fun <init> (Ljava/util/ArrayList;)V
+	public fun <init> (Ljava/util/ArrayList;Ljava/util/ArrayList;)V
+	public synthetic fun <init> (Ljava/util/ArrayList;Ljava/util/ArrayList;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAltitudes ()Ljava/util/ArrayList;
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryObject ()Ljava/util/ArrayList;
+	public synthetic fun getGeometryObject ()Ljava/util/List;
+}
+
+public final class com/google/maps/android/data/kml/KmlMultiGeometry : com/google/maps/android/data/MultiGeometry {
+	public fun <init> (Ljava/util/ArrayList;)V
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryObject ()Ljava/util/ArrayList;
+	public synthetic fun getGeometryObject ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlPlacemark : com/google/maps/android/data/Feature {
+	public fun <init> (Lcom/google/maps/android/data/Geometry;Ljava/lang/String;Lcom/google/maps/android/data/kml/KmlStyle;Ljava/util/Map;)V
+	public final fun getInlineStyle ()Lcom/google/maps/android/data/kml/KmlStyle;
+	public final fun getMarkerOptions ()Lcom/google/android/gms/maps/model/MarkerOptions;
+	public final fun getPolygonOptions ()Lcom/google/android/gms/maps/model/PolygonOptions;
+	public final fun getPolylineOptions ()Lcom/google/android/gms/maps/model/PolylineOptions;
+	public final fun getStyleId ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlPoint : com/google/maps/android/data/Point {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;)V
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/Double;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAltitude ()Ljava/lang/Double;
+}
+
+public final class com/google/maps/android/data/kml/KmlPolygon : com/google/maps/android/data/DataPolygon {
+	public static final field Companion Lcom/google/maps/android/data/kml/KmlPolygon$Companion;
+	public static final field GEOMETRY_TYPE Ljava/lang/String;
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun getGeometryObject ()Ljava/lang/Object;
+	public fun getGeometryObject ()Ljava/util/List;
+	public fun getGeometryType ()Ljava/lang/String;
+	public fun getInnerBoundaryCoordinates ()Ljava/util/List;
+	public fun getOuterBoundaryCoordinates ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlPolygon$Companion {
+}
+
+public final class com/google/maps/android/data/kml/KmlStyle : com/google/maps/android/data/Style {
+	public static final field Companion Lcom/google/maps/android/data/kml/KmlStyle$Companion;
+	public fun <init> ()V
+	public final fun getBalloonOptions ()Ljava/util/HashMap;
+	public final fun getIconScale ()D
+	public final fun getIconUrl ()Ljava/lang/String;
+	public final fun getMarkerOptions ()Lcom/google/android/gms/maps/model/MarkerOptions;
+	public final fun getPolygonOptions ()Lcom/google/android/gms/maps/model/PolygonOptions;
+	public final fun getPolylineOptions ()Lcom/google/android/gms/maps/model/PolylineOptions;
+	public final fun getStyleId ()Ljava/lang/String;
+	public final fun hasBalloonStyle ()Z
+	public final fun hasFill ()Z
+	public final fun hasOutline ()Z
+	public final fun isIconRandomColorMode ()Z
+	public final fun isLineRandomColorMode ()Z
+	public final fun isPolyRandomColorMode ()Z
+	public final fun isStyleSet (Ljava/lang/String;)Z
+	public final fun setFill (Z)V
+	public final fun setFillColor (Ljava/lang/String;)V
+	public final fun setHeading (F)V
+	public final fun setHotSpot (FFLjava/lang/String;Ljava/lang/String;)V
+	public final fun setIconColorMode (Ljava/lang/String;)V
+	public final fun setIconScale (D)V
+	public final fun setIconUrl (Ljava/lang/String;)V
+	public final fun setInfoWindowText (Ljava/lang/String;)V
+	public final fun setLineColorMode (Ljava/lang/String;)V
+	public final fun setMarkerColor (Ljava/lang/String;)V
+	public final fun setOutline (Z)V
+	public final fun setOutlineColor (Ljava/lang/String;)V
+	public final fun setPolyColorMode (Ljava/lang/String;)V
+	public final fun setStyleId (Ljava/lang/String;)V
+	public final fun setWidth (F)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/kml/KmlStyle$Companion {
+	public final fun computeRandomColor (I)I
+}
+
+public abstract interface class com/google/maps/android/data/kml/KmlUrlSanitizer {
+	public abstract fun sanitizeUrl (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/Feature {
+	public fun <init> (Lcom/google/maps/android/data/parser/Geometry;Ljava/util/Map;Lcom/google/maps/android/data/parser/kml/Style;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/Geometry;Ljava/util/Map;Lcom/google/maps/android/data/parser/kml/Style;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/Geometry;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Lcom/google/maps/android/data/parser/kml/Style;
+	public final fun copy (Lcom/google/maps/android/data/parser/Geometry;Ljava/util/Map;Lcom/google/maps/android/data/parser/kml/Style;)Lcom/google/maps/android/data/parser/Feature;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/Feature;Lcom/google/maps/android/data/parser/Geometry;Ljava/util/Map;Lcom/google/maps/android/data/parser/kml/Style;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/Feature;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGeometry ()Lcom/google/maps/android/data/parser/Geometry;
+	public final fun getProperties ()Ljava/util/Map;
+	public final fun getStyle ()Lcom/google/maps/android/data/parser/kml/Style;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/GeoData {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/GeoData;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/GeoData;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/GeoData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFeatures ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/parser/GeoFileParser {
+}
+
+public abstract interface class com/google/maps/android/data/parser/Geometry {
+}
+
+public final class com/google/maps/android/data/parser/Geometry$GeometryCollection : com/google/maps/android/data/parser/Geometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/Geometry$GeometryCollection;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/Geometry$GeometryCollection;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/Geometry$GeometryCollection;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGeometries ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/Geometry$LineString : com/google/maps/android/data/parser/Geometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/Geometry$LineString;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/Geometry$LineString;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/Geometry$LineString;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPoints ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/Geometry$Point : com/google/maps/android/data/parser/Geometry {
+	public fun <init> (DDLjava/lang/Double;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun copy (DDLjava/lang/Double;)Lcom/google/maps/android/data/parser/Geometry$Point;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/Geometry$Point;DDLjava/lang/Double;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/Geometry$Point;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Ljava/lang/Double;
+	public final fun getLat ()D
+	public final fun getLon ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/Geometry$Polygon : com/google/maps/android/data/parser/Geometry {
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Lcom/google/maps/android/data/parser/Geometry$Polygon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/Geometry$Polygon;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/Geometry$Polygon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHoles ()Ljava/util/List;
+	public final fun getShell ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/Style {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Float;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Float;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Float;Ljava/lang/String;)Lcom/google/maps/android/data/parser/Style;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/Style;Ljava/lang/String;Ljava/lang/Float;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/Style;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFillColor ()Ljava/lang/String;
+	public final fun getStrokeColor ()Ljava/lang/String;
+	public final fun getStrokeWidth ()Ljava/lang/Float;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/Coordinates {
+	public fun <init> (DDLjava/lang/Double;)V
+	public synthetic fun <init> (DDLjava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun copy (DDLjava/lang/Double;)Lcom/google/maps/android/data/parser/geojson/Coordinates;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/Coordinates;DDLjava/lang/Double;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/Coordinates;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Ljava/lang/Double;
+	public final fun getLat ()D
+	public final fun getLng ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonFeature : com/google/maps/android/data/parser/geojson/GeoJsonObject {
+	public fun <init> (Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometry;Ljava/util/Map;Ljava/lang/String;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometry;Ljava/util/Map;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometry;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometry;Ljava/util/Map;Ljava/lang/String;)Lcom/google/maps/android/data/parser/geojson/GeoJsonFeature;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonFeature;Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometry;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonFeature;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGeometry ()Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometry;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getProperties ()Ljava/util/Map;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonFeatureCollection : com/google/maps/android/data/parser/geojson/GeoJsonObject {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonFeatureCollection;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonFeatureCollection;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonFeatureCollection;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFeatures ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/parser/geojson/GeoJsonGeometry : com/google/maps/android/data/parser/geojson/GeoJsonObject {
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonGeometryCollection : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometryCollection;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometryCollection;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonGeometryCollection;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGeometries ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonLineString : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonLineString;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonLineString;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonLineString;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonMultiLineString : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiLineString;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiLineString;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiLineString;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonMultiPoint : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiPoint;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiPoint;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiPoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonMultiPolygon : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiPolygon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiPolygon;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonMultiPolygon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/parser/geojson/GeoJsonObject {
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonParser {
+	public static final field Companion Lcom/google/maps/android/data/parser/geojson/GeoJsonParser$Companion;
+	public static final field DEFAULT_MAX_INPUT_SIZE J
+	public static final field DEFAULT_MAX_STRUCTURAL_DEPTH I
+	public static final field MAX_GEOMETRY_DEPTH I
+	public fun <init> ()V
+	public fun <init> (J)V
+	public fun <init> (JI)V
+	public synthetic fun <init> (JIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun parse (Ljava/io/InputStream;)Lcom/google/maps/android/data/parser/geojson/GeoJsonObject;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonParser$Companion {
+	public final fun canParse (Ljava/lang/String;)Z
+	public final fun getSUPPORTED_EXTENSIONS ()Ljava/util/Set;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonPoint : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Lcom/google/maps/android/data/parser/geojson/Coordinates;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/geojson/Coordinates;
+	public final fun copy (Lcom/google/maps/android/data/parser/geojson/Coordinates;)Lcom/google/maps/android/data/parser/geojson/GeoJsonPoint;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonPoint;Lcom/google/maps/android/data/parser/geojson/Coordinates;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonPoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Lcom/google/maps/android/data/parser/geojson/Coordinates;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/geojson/GeoJsonPolygon : com/google/maps/android/data/parser/geojson/GeoJsonGeometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/geojson/GeoJsonPolygon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/geojson/GeoJsonPolygon;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/geojson/GeoJsonPolygon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Gpx {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/Gpx$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/gpx/Metadata;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/gpx/Metadata;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/google/maps/android/data/parser/gpx/Metadata;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/gpx/Metadata;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/google/maps/android/data/parser/gpx/Gpx;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/gpx/Gpx;Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/gpx/Metadata;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/gpx/Gpx;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCreator ()Ljava/lang/String;
+	public final fun getMetadata ()Lcom/google/maps/android/data/parser/gpx/Metadata;
+	public final fun getRoutes ()Ljava/util/List;
+	public final fun getTracks ()Ljava/util/List;
+	public final fun getVersion ()Ljava/lang/String;
+	public final fun getWaypoints ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/gpx/Gpx$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/gpx/Gpx$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/gpx/Gpx;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/gpx/Gpx;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Gpx$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/GpxParser {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/GpxParser$Companion;
+	public fun <init> ()V
+	public final fun parse (Ljava/io/InputStream;)Lcom/google/maps/android/data/parser/gpx/Gpx;
+}
+
+public final class com/google/maps/android/data/parser/gpx/GpxParser$Companion {
+	public final fun canParse (Ljava/lang/String;)Z
+	public final fun getSUPPORTED_EXTENSIONS ()Ljava/util/Set;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Metadata {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/Metadata$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/google/maps/android/data/parser/gpx/Metadata;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/gpx/Metadata;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/gpx/Metadata;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDesc ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/gpx/Metadata$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/gpx/Metadata$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/gpx/Metadata;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/gpx/Metadata;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Metadata$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Rte {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/Rte$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/google/maps/android/data/parser/gpx/Rte;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/gpx/Rte;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/gpx/Rte;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDesc ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getRoutePoints ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/gpx/Rte$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/gpx/Rte$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/gpx/Rte;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/gpx/Rte;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Rte$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Trk {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/Trk$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/google/maps/android/data/parser/gpx/Trk;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/gpx/Trk;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/gpx/Trk;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDesc ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getTrackSegments ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/gpx/Trk$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/gpx/Trk$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/gpx/Trk;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/gpx/Trk;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Trk$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/TrkSeg {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/TrkSeg$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/gpx/TrkSeg;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/gpx/TrkSeg;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/gpx/TrkSeg;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getTrackPoints ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/gpx/TrkSeg$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/gpx/TrkSeg$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/gpx/TrkSeg;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/gpx/TrkSeg;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/TrkSeg$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Wpt {
+	public static final field Companion Lcom/google/maps/android/data/parser/gpx/Wpt$Companion;
+	public fun <init> (DDLjava/lang/Double;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (DDLjava/lang/Double;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (DDLjava/lang/Double;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/google/maps/android/data/parser/gpx/Wpt;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/gpx/Wpt;DDLjava/lang/Double;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/gpx/Wpt;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDesc ()Ljava/lang/String;
+	public final fun getEle ()Ljava/lang/Double;
+	public final fun getElevation ()Ljava/lang/Double;
+	public final fun getLat ()D
+	public final fun getLon ()D
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSym ()Ljava/lang/String;
+	public final fun getTime ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/gpx/Wpt$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/gpx/Wpt$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/gpx/Wpt;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/gpx/Wpt;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/gpx/Wpt$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/AltitudeMode : java/lang/Enum {
+	public static final field ABSOLUTE Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public static final field CLAMP_TO_GROUND Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public static final field CLAMP_TO_SEA_FLOOR Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/AltitudeMode$Companion;
+	public static final field RELATIVE_TO_GROUND Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public static final field RELATIVE_TO_SEA_FLOOR Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public static fun values ()[Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+}
+
+public final class com/google/maps/android/data/parser/kml/AltitudeMode$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/AndroidImageDecoder : com/google/maps/android/data/parser/kml/ImageDecoder {
+	public fun <init> ()V
+	public fun decode ([B)Landroid/graphics/Bitmap;
+}
+
+public final class com/google/maps/android/data/parser/kml/BalloonVisibility {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/BalloonVisibility$Companion;
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun copy (I)Lcom/google/maps/android/data/parser/kml/BalloonVisibility;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/BalloonVisibility;IILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/BalloonVisibility;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/BalloonVisibility$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/BalloonVisibility$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/BalloonVisibility;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/BalloonVisibility;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/BalloonVisibility$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Boundary {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Boundary$Companion;
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/LinearRing;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/kml/LinearRing;
+	public final fun copy (Lcom/google/maps/android/data/parser/kml/LinearRing;)Lcom/google/maps/android/data/parser/kml/Boundary;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Boundary;Lcom/google/maps/android/data/parser/kml/LinearRing;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Boundary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLinearRing ()Lcom/google/maps/android/data/parser/kml/LinearRing;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Boundary$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Boundary$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Boundary;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Boundary;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Boundary$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Data {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Data$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/google/maps/android/data/parser/kml/Data;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Data;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Data;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Data$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Data$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Data;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Data;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Data$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Document : com/google/maps/android/data/parser/kml/KmlFeature {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Document$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/Document;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Document;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Document;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getFolders ()Ljava/util/List;
+	public final fun getGroundOverlays ()Ljava/util/List;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPlacemarks ()Ljava/util/List;
+	public final fun getStyleMaps ()Ljava/util/List;
+	public final fun getStyles ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Document$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Document$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Document;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Document;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Document$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/ExtendedData {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/ExtendedData$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/ExtendedData;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/ExtendedData;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/ExtendedData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/ExtendedData$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/ExtendedData$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/ExtendedData;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/ExtendedData;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/ExtendedData$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Folder : com/google/maps/android/data/parser/kml/KmlFeature {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Folder$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/Folder;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Folder;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Folder;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getFolders ()Ljava/util/List;
+	public final fun getGroundOverlays ()Ljava/util/List;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPlacemarks ()Ljava/util/List;
+	public final fun getVisibility ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Folder$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Folder$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Folder;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Folder;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Folder$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/GroundOverlay {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/GroundOverlay$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;ZLjava/lang/Integer;Lcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/LatLonBox;Lcom/google/maps/android/data/parser/kml/LatLonQuad;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;ZLjava/lang/Integer;Lcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/LatLonBox;Lcom/google/maps/android/data/parser/kml/LatLonQuad;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Z
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun component5 ()Lcom/google/maps/android/data/parser/kml/Icon;
+	public final fun component6 ()Lcom/google/maps/android/data/parser/kml/LatLonBox;
+	public final fun component7 ()Lcom/google/maps/android/data/parser/kml/LatLonQuad;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;ZLjava/lang/Integer;Lcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/LatLonBox;Lcom/google/maps/android/data/parser/kml/LatLonQuad;)Lcom/google/maps/android/data/parser/kml/GroundOverlay;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/GroundOverlay;Ljava/lang/String;Ljava/lang/Integer;ZLjava/lang/Integer;Lcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/LatLonBox;Lcom/google/maps/android/data/parser/kml/LatLonQuad;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/GroundOverlay;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()Ljava/lang/Integer;
+	public final fun getDrawOrder ()Ljava/lang/Integer;
+	public final fun getIcon ()Lcom/google/maps/android/data/parser/kml/Icon;
+	public final fun getLatLonBox ()Lcom/google/maps/android/data/parser/kml/LatLonBox;
+	public final fun getLatLonQuad ()Lcom/google/maps/android/data/parser/kml/LatLonQuad;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getVisibility ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/GroundOverlay$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/GroundOverlay$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/GroundOverlay;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/GroundOverlay;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/GroundOverlay$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/HotSpot {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/HotSpot$Companion;
+	public fun <init> ()V
+	public fun <init> (DDLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (DDLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (DDLjava/lang/String;Ljava/lang/String;)Lcom/google/maps/android/data/parser/kml/HotSpot;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/HotSpot;DDLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/HotSpot;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getX ()D
+	public final fun getXunits ()Ljava/lang/String;
+	public final fun getY ()D
+	public final fun getYunits ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/HotSpot$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/HotSpot$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/HotSpot;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/HotSpot;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/HotSpot$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Icon {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Icon$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/google/maps/android/data/parser/kml/Icon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Icon;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Icon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHref ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Icon$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Icon$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Icon;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Icon;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Icon$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/IconStyle {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/IconStyle$Companion;
+	public fun <init> ()V
+	public fun <init> (FLcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/HotSpot;)V
+	public synthetic fun <init> (FLcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/HotSpot;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()Lcom/google/maps/android/data/parser/kml/Icon;
+	public final fun component3 ()Lcom/google/maps/android/data/parser/kml/HotSpot;
+	public final fun copy (FLcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/HotSpot;)Lcom/google/maps/android/data/parser/kml/IconStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/IconStyle;FLcom/google/maps/android/data/parser/kml/Icon;Lcom/google/maps/android/data/parser/kml/HotSpot;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/IconStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHotSpot ()Lcom/google/maps/android/data/parser/kml/HotSpot;
+	public final fun getIcon ()Lcom/google/maps/android/data/parser/kml/Icon;
+	public final fun getScale ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/IconStyle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/IconStyle$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/IconStyle;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/IconStyle;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/IconStyle$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class com/google/maps/android/data/parser/kml/ImageDecoder {
+	public abstract fun decode ([B)Landroid/graphics/Bitmap;
+}
+
+public final class com/google/maps/android/data/parser/kml/Kml {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Kml$Companion;
+	public fun <init> ()V
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/Document;Lcom/google/maps/android/data/parser/kml/Folder;Lcom/google/maps/android/data/parser/kml/Placemark;Lcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/StyleMap;Lcom/google/maps/android/data/parser/kml/GroundOverlay;Ljava/util/Map;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/kml/Document;Lcom/google/maps/android/data/parser/kml/Folder;Lcom/google/maps/android/data/parser/kml/Placemark;Lcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/StyleMap;Lcom/google/maps/android/data/parser/kml/GroundOverlay;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/kml/Document;
+	public final fun component2 ()Lcom/google/maps/android/data/parser/kml/Folder;
+	public final fun component3 ()Lcom/google/maps/android/data/parser/kml/Placemark;
+	public final fun component4 ()Lcom/google/maps/android/data/parser/kml/Style;
+	public final fun component5 ()Lcom/google/maps/android/data/parser/kml/StyleMap;
+	public final fun component6 ()Lcom/google/maps/android/data/parser/kml/GroundOverlay;
+	public final fun component7 ()Ljava/util/Map;
+	public final fun copy (Lcom/google/maps/android/data/parser/kml/Document;Lcom/google/maps/android/data/parser/kml/Folder;Lcom/google/maps/android/data/parser/kml/Placemark;Lcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/StyleMap;Lcom/google/maps/android/data/parser/kml/GroundOverlay;Ljava/util/Map;)Lcom/google/maps/android/data/parser/kml/Kml;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Kml;Lcom/google/maps/android/data/parser/kml/Document;Lcom/google/maps/android/data/parser/kml/Folder;Lcom/google/maps/android/data/parser/kml/Placemark;Lcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/StyleMap;Lcom/google/maps/android/data/parser/kml/GroundOverlay;Ljava/util/Map;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Kml;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDocument ()Lcom/google/maps/android/data/parser/kml/Document;
+	public final fun getFolder ()Lcom/google/maps/android/data/parser/kml/Folder;
+	public final fun getGroundOverlay ()Lcom/google/maps/android/data/parser/kml/GroundOverlay;
+	public final fun getImages ()Ljava/util/Map;
+	public final fun getPlacemark ()Lcom/google/maps/android/data/parser/kml/Placemark;
+	public final fun getStyle ()Lcom/google/maps/android/data/parser/kml/Style;
+	public final fun getStyleMap ()Lcom/google/maps/android/data/parser/kml/StyleMap;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Kml$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Kml$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Kml;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Kml;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Kml$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class com/google/maps/android/data/parser/kml/KmlFeature {
+}
+
+public final class com/google/maps/android/data/parser/kml/KmlModelKt {
+	public static final fun findByPlacemarksById (Lcom/google/maps/android/data/parser/kml/Kml;Ljava/lang/String;)Ljava/util/List;
+}
+
+public final class com/google/maps/android/data/parser/kml/KmlParser {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/KmlParser$Companion;
+	public static final field MAX_ELEMENT_DEPTH I
+	public fun <init> ()V
+	public final fun parse (Ljava/io/InputStream;)Lcom/google/maps/android/data/parser/kml/Kml;
+	public final fun parseAsKml (Ljava/io/InputStream;)Lcom/google/maps/android/data/parser/kml/Kml;
+}
+
+public final class com/google/maps/android/data/parser/kml/KmlParser$Companion {
+	public final fun canParse (Ljava/lang/String;)Z
+	public final fun getSUPPORTED_EXTENSIONS ()Ljava/util/Set;
+}
+
+public final class com/google/maps/android/data/parser/kml/KmzParser {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/KmzParser$Companion;
+	public fun <init> ()V
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/ImageDecoder;)V
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/ImageDecoder;I)V
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/ImageDecoder;IJ)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/kml/ImageDecoder;IJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun parse (Ljava/io/InputStream;)Lcom/google/maps/android/data/parser/kml/Kml;
+}
+
+public final class com/google/maps/android/data/parser/kml/KmzParser$Companion {
+	public final fun canParse (Ljava/lang/String;)Z
+	public final fun getSUPPORTED_EXTENSIONS ()Ljava/util/Set;
+}
+
+public final class com/google/maps/android/data/parser/kml/LabelStyle {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LabelStyle$Companion;
+	public fun <init> ()V
+	public fun <init> (FLjava/lang/Integer;)V
+	public synthetic fun <init> (FLjava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun copy (FLjava/lang/Integer;)Lcom/google/maps/android/data/parser/kml/LabelStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LabelStyle;FLjava/lang/Integer;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LabelStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()Ljava/lang/Integer;
+	public final fun getScale ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/LabelStyle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/LabelStyle$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/LabelStyle;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/LabelStyle;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LabelStyle$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LatLngAlt {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LatLngAlt$Companion;
+	public fun <init> (DDLjava/lang/Double;)V
+	public synthetic fun <init> (DDLjava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun copy (DDLjava/lang/Double;)Lcom/google/maps/android/data/parser/kml/LatLngAlt;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LatLngAlt;DDLjava/lang/Double;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LatLngAlt;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAltitude ()Ljava/lang/Double;
+	public final fun getLatitude ()D
+	public final fun getLongitude ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/parser/kml/LatLngAlt$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LatLonBox {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LatLonBox$Companion;
+	public fun <init> (DDDDLjava/lang/Double;)V
+	public synthetic fun <init> (DDDDLjava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()D
+	public final fun component4 ()D
+	public final fun component5 ()Ljava/lang/Double;
+	public final fun copy (DDDDLjava/lang/Double;)Lcom/google/maps/android/data/parser/kml/LatLonBox;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LatLonBox;DDDDLjava/lang/Double;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LatLonBox;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEast ()D
+	public final fun getNorth ()D
+	public final fun getRotation ()Ljava/lang/Double;
+	public final fun getSouth ()D
+	public final fun getWest ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/LatLonBox$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/LatLonBox$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/LatLonBox;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/LatLonBox;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LatLonBox$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LatLonQuad {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LatLonQuad$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/LatLonQuad;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LatLonQuad;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LatLonQuad;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/LatLonQuad$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/LatLonQuad$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/LatLonQuad;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/LatLonQuad;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LatLonQuad$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LineString {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LineString$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/LineString;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LineString;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LineString;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/LineString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/LineString$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/LineString;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/LineString;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LineString$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LineStyle {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LineStyle$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/Float;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Float;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/Float;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/Float;)Lcom/google/maps/android/data/parser/kml/LineStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LineStyle;Ljava/lang/Integer;Ljava/lang/Float;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LineStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()Ljava/lang/Integer;
+	public final fun getWidth ()Ljava/lang/Float;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/LineStyle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/LineStyle$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/LineStyle;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/LineStyle;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LineStyle$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LinearRing {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/LinearRing$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/LinearRing;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/LinearRing;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/LinearRing;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCoordinates ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/LinearRing$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/LinearRing$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/LinearRing;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/LinearRing;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/LinearRing$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/MultiGeometry {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/MultiGeometry$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/MultiGeometry;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/MultiGeometry;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/MultiGeometry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLineStrings ()Ljava/util/List;
+	public final fun getMultiGeometries ()Ljava/util/List;
+	public final fun getPoints ()Ljava/util/List;
+	public final fun getPolygons ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/MultiGeometry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/MultiGeometry$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/MultiGeometry;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/MultiGeometry;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/MultiGeometry$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/MultiTrack {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/MultiTrack$Companion;
+	public fun <init> ()V
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/AltitudeMode;Ljava/util/List;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/kml/AltitudeMode;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Lcom/google/maps/android/data/parser/kml/AltitudeMode;Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/MultiTrack;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/MultiTrack;Lcom/google/maps/android/data/parser/kml/AltitudeMode;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/MultiTrack;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAltitudeMode ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun getTracks ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/MultiTrack$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/MultiTrack$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/MultiTrack;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/MultiTrack;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/MultiTrack$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Pair {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Pair$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/google/maps/android/data/parser/kml/Pair;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Pair;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Pair;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getStyleUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Pair$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Pair$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Pair;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Pair;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Pair$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Placemark : com/google/maps/android/data/parser/kml/KmlFeature {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Placemark$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/Point;Lcom/google/maps/android/data/parser/kml/LineString;Lcom/google/maps/android/data/parser/kml/Polygon;Lcom/google/maps/android/data/parser/kml/MultiGeometry;Lcom/google/maps/android/data/parser/kml/Track;Lcom/google/maps/android/data/parser/kml/MultiTrack;ILcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/ExtendedData;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/Point;Lcom/google/maps/android/data/parser/kml/LineString;Lcom/google/maps/android/data/parser/kml/Polygon;Lcom/google/maps/android/data/parser/kml/MultiGeometry;Lcom/google/maps/android/data/parser/kml/Track;Lcom/google/maps/android/data/parser/kml/MultiTrack;ILcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/ExtendedData;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lcom/google/maps/android/data/parser/kml/MultiTrack;
+	public final fun component11 ()I
+	public final fun component12 ()Lcom/google/maps/android/data/parser/kml/Style;
+	public final fun component13 ()Lcom/google/maps/android/data/parser/kml/ExtendedData;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/google/maps/android/data/parser/kml/Point;
+	public final fun component6 ()Lcom/google/maps/android/data/parser/kml/LineString;
+	public final fun component7 ()Lcom/google/maps/android/data/parser/kml/Polygon;
+	public final fun component8 ()Lcom/google/maps/android/data/parser/kml/MultiGeometry;
+	public final fun component9 ()Lcom/google/maps/android/data/parser/kml/Track;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/Point;Lcom/google/maps/android/data/parser/kml/LineString;Lcom/google/maps/android/data/parser/kml/Polygon;Lcom/google/maps/android/data/parser/kml/MultiGeometry;Lcom/google/maps/android/data/parser/kml/Track;Lcom/google/maps/android/data/parser/kml/MultiTrack;ILcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/ExtendedData;)Lcom/google/maps/android/data/parser/kml/Placemark;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Placemark;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/Point;Lcom/google/maps/android/data/parser/kml/LineString;Lcom/google/maps/android/data/parser/kml/Polygon;Lcom/google/maps/android/data/parser/kml/MultiGeometry;Lcom/google/maps/android/data/parser/kml/Track;Lcom/google/maps/android/data/parser/kml/MultiTrack;ILcom/google/maps/android/data/parser/kml/Style;Lcom/google/maps/android/data/parser/kml/ExtendedData;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Placemark;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBalloonVisibility ()I
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getExtendedData ()Lcom/google/maps/android/data/parser/kml/ExtendedData;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLineString ()Lcom/google/maps/android/data/parser/kml/LineString;
+	public final fun getMultiGeometry ()Lcom/google/maps/android/data/parser/kml/MultiGeometry;
+	public final fun getMultiTrack ()Lcom/google/maps/android/data/parser/kml/MultiTrack;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPoint ()Lcom/google/maps/android/data/parser/kml/Point;
+	public final fun getPolygon ()Lcom/google/maps/android/data/parser/kml/Polygon;
+	public final fun getStyle ()Lcom/google/maps/android/data/parser/kml/Style;
+	public final fun getStyleUrl ()Ljava/lang/String;
+	public final fun getTrack ()Lcom/google/maps/android/data/parser/kml/Track;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Placemark$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Placemark$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Placemark;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Placemark;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Placemark$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Point {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Point$Companion;
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/LatLngAlt;Lcom/google/maps/android/data/parser/kml/AltitudeMode;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/kml/LatLngAlt;Lcom/google/maps/android/data/parser/kml/AltitudeMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/kml/LatLngAlt;
+	public final fun component2 ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun copy (Lcom/google/maps/android/data/parser/kml/LatLngAlt;Lcom/google/maps/android/data/parser/kml/AltitudeMode;)Lcom/google/maps/android/data/parser/kml/Point;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Point;Lcom/google/maps/android/data/parser/kml/LatLngAlt;Lcom/google/maps/android/data/parser/kml/AltitudeMode;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Point;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAltitudeMode ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun getCoordinates ()Lcom/google/maps/android/data/parser/kml/LatLngAlt;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Point$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Point$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Point;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Point;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Point$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/PolyStyle {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/PolyStyle$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;ZZ)V
+	public synthetic fun <init> (Ljava/lang/Integer;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/Integer;ZZ)Lcom/google/maps/android/data/parser/kml/PolyStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/PolyStyle;Ljava/lang/Integer;ZZILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/PolyStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()Ljava/lang/Integer;
+	public final fun getFill ()Z
+	public final fun getOutline ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/PolyStyle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/PolyStyle$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/PolyStyle;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/PolyStyle;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/PolyStyle$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Polygon {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Polygon$Companion;
+	public fun <init> (Lcom/google/maps/android/data/parser/kml/Boundary;Ljava/util/List;ZLcom/google/maps/android/data/parser/kml/AltitudeMode;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/parser/kml/Boundary;Ljava/util/List;ZLcom/google/maps/android/data/parser/kml/AltitudeMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/parser/kml/Boundary;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Z
+	public final fun component4 ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun copy (Lcom/google/maps/android/data/parser/kml/Boundary;Ljava/util/List;ZLcom/google/maps/android/data/parser/kml/AltitudeMode;)Lcom/google/maps/android/data/parser/kml/Polygon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Polygon;Lcom/google/maps/android/data/parser/kml/Boundary;Ljava/util/List;ZLcom/google/maps/android/data/parser/kml/AltitudeMode;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Polygon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAltitudeMode ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun getExtrude ()Z
+	public final fun getInnerBoundaryIs ()Ljava/util/List;
+	public final fun getOuterBoundaryIs ()Lcom/google/maps/android/data/parser/kml/Boundary;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Polygon$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Polygon$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Polygon;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Polygon;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Polygon$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Style : com/google/maps/android/data/parser/kml/KmlFeature {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Style$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/IconStyle;Lcom/google/maps/android/data/parser/kml/LabelStyle;Lcom/google/maps/android/data/parser/kml/LineStyle;Lcom/google/maps/android/data/parser/kml/PolyStyle;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/IconStyle;Lcom/google/maps/android/data/parser/kml/LabelStyle;Lcom/google/maps/android/data/parser/kml/LineStyle;Lcom/google/maps/android/data/parser/kml/PolyStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/google/maps/android/data/parser/kml/IconStyle;
+	public final fun component3 ()Lcom/google/maps/android/data/parser/kml/LabelStyle;
+	public final fun component4 ()Lcom/google/maps/android/data/parser/kml/LineStyle;
+	public final fun component5 ()Lcom/google/maps/android/data/parser/kml/PolyStyle;
+	public final fun copy (Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/IconStyle;Lcom/google/maps/android/data/parser/kml/LabelStyle;Lcom/google/maps/android/data/parser/kml/LineStyle;Lcom/google/maps/android/data/parser/kml/PolyStyle;)Lcom/google/maps/android/data/parser/kml/Style;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Style;Ljava/lang/String;Lcom/google/maps/android/data/parser/kml/IconStyle;Lcom/google/maps/android/data/parser/kml/LabelStyle;Lcom/google/maps/android/data/parser/kml/LineStyle;Lcom/google/maps/android/data/parser/kml/PolyStyle;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Style;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIconStyle ()Lcom/google/maps/android/data/parser/kml/IconStyle;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLabelStyle ()Lcom/google/maps/android/data/parser/kml/LabelStyle;
+	public final fun getLineStyle ()Lcom/google/maps/android/data/parser/kml/LineStyle;
+	public final fun getPolyStyle ()Lcom/google/maps/android/data/parser/kml/PolyStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Style$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Style$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Style;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Style;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Style$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/StyleMap : com/google/maps/android/data/parser/kml/KmlFeature {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/StyleMap$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lcom/google/maps/android/data/parser/kml/StyleMap;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/StyleMap;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/StyleMap;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getPairs ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/StyleMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/StyleMap$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/StyleMap;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/StyleMap;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/StyleMap$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Track {
+	public static final field Companion Lcom/google/maps/android/data/parser/kml/Track$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Lcom/google/maps/android/data/parser/kml/AltitudeMode;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Lcom/google/maps/android/data/parser/kml/AltitudeMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Lcom/google/maps/android/data/parser/kml/AltitudeMode;)Lcom/google/maps/android/data/parser/kml/Track;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/parser/kml/Track;Ljava/util/List;Ljava/util/List;Lcom/google/maps/android/data/parser/kml/AltitudeMode;ILjava/lang/Object;)Lcom/google/maps/android/data/parser/kml/Track;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAltitudeMode ()Lcom/google/maps/android/data/parser/kml/AltitudeMode;
+	public final fun getCoords ()Ljava/util/List;
+	public final fun getWhens ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/google/maps/android/data/parser/kml/Track$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/google/maps/android/data/parser/kml/Track$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/google/maps/android/data/parser/kml/Track;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/google/maps/android/data/parser/kml/Track;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/google/maps/android/data/parser/kml/Track$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class com/google/maps/android/data/renderer/DataRenderer {
+	public abstract fun addFeature (Lcom/google/maps/android/data/renderer/model/Feature;)V
+	public abstract fun addLayer (Lcom/google/maps/android/data/renderer/model/DataLayer;)V
+	public abstract fun clear ()V
+	public abstract fun removeFeature (Lcom/google/maps/android/data/renderer/model/Feature;)V
+	public abstract fun removeLayer (Lcom/google/maps/android/data/renderer/model/DataLayer;)V
+	public abstract fun render (Lcom/google/maps/android/data/renderer/model/DataScene;)V
+}
+
+public abstract interface class com/google/maps/android/data/renderer/IconProvider {
+	public abstract fun loadIcon (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public class com/google/maps/android/data/renderer/UrlIconProvider : com/google/maps/android/data/renderer/IconProvider {
+	public fun <init> ()V
+	public fun <init> (Lkotlinx/coroutines/CoroutineDispatcher;)V
+	public fun <init> (Lkotlinx/coroutines/CoroutineDispatcher;Lcom/google/maps/android/data/kml/KmlUrlSanitizer;)V
+	public synthetic fun <init> (Lkotlinx/coroutines/CoroutineDispatcher;Lcom/google/maps/android/data/kml/KmlUrlSanitizer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected fun loadBitmapFromUrl (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun loadIcon (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/data/renderer/mapper/GeoJsonMapper {
+	public static final field INSTANCE Lcom/google/maps/android/data/renderer/mapper/GeoJsonMapper;
+	public final fun toLayer (Lcom/google/maps/android/data/parser/geojson/GeoJsonObject;)Lcom/google/maps/android/data/renderer/model/DataLayer;
+	public final fun toScene (Lcom/google/maps/android/data/parser/geojson/GeoJsonObject;)Lcom/google/maps/android/data/renderer/model/DataScene;
+}
+
+public final class com/google/maps/android/data/renderer/mapper/GeoJsonMapperKt {
+	public static final fun toLayer (Lcom/google/maps/android/data/parser/geojson/GeoJsonObject;)Lcom/google/maps/android/data/renderer/model/DataLayer;
+}
+
+public final class com/google/maps/android/data/renderer/mapper/GpxMapper {
+	public static final field INSTANCE Lcom/google/maps/android/data/renderer/mapper/GpxMapper;
+	public final fun toScene (Lcom/google/maps/android/data/parser/gpx/Gpx;)Lcom/google/maps/android/data/renderer/model/DataScene;
+}
+
+public final class com/google/maps/android/data/renderer/mapper/GpxMapperKt {
+	public static final fun toLayer (Lcom/google/maps/android/data/parser/gpx/Gpx;)Lcom/google/maps/android/data/renderer/model/DataLayer;
+}
+
+public final class com/google/maps/android/data/renderer/mapper/KmlMapper {
+	public static final field INSTANCE Lcom/google/maps/android/data/renderer/mapper/KmlMapper;
+	public final fun toScene (Lcom/google/maps/android/data/parser/kml/Kml;)Lcom/google/maps/android/data/renderer/model/DataScene;
+}
+
+public final class com/google/maps/android/data/renderer/mapper/KmlMapperKt {
+	public static final fun toLayer (Lcom/google/maps/android/data/parser/kml/Kml;)Lcom/google/maps/android/data/renderer/model/DataLayer;
+}
+
+public final class com/google/maps/android/data/renderer/mapview/MapViewRenderer : com/google/maps/android/data/renderer/DataRenderer {
+	public static final field Companion Lcom/google/maps/android/data/renderer/mapview/MapViewRenderer$Companion;
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/data/renderer/IconProvider;)V
+	public fun addFeature (Lcom/google/maps/android/data/renderer/model/Feature;)V
+	public fun addLayer (Lcom/google/maps/android/data/renderer/model/DataLayer;)V
+	public final fun cacheImageData (Ljava/lang/String;Landroid/graphics/Bitmap;)V
+	public fun clear ()V
+	public final fun getFeatureForMapObject (Ljava/lang/Object;)Lcom/google/maps/android/data/renderer/model/Feature;
+	public final fun getUseAdvancedMarkers ()Z
+	public fun removeFeature (Lcom/google/maps/android/data/renderer/model/Feature;)V
+	public fun removeLayer (Lcom/google/maps/android/data/renderer/model/DataLayer;)V
+	public fun render (Lcom/google/maps/android/data/renderer/model/DataScene;)V
+	public final fun setUseAdvancedMarkers (Z)V
+}
+
+public final class com/google/maps/android/data/renderer/mapview/MapViewRenderer$Companion {
+}
+
+public final class com/google/maps/android/data/renderer/model/DataLayer {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/google/maps/android/data/renderer/model/DataLayer;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/DataLayer;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/DataLayer;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBoundingBox ()Lcom/google/android/gms/maps/model/LatLngBounds;
+	public final fun getFeatures ()Ljava/util/List;
+	public final fun getProperties ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/DataScene {
+	public static final field Companion Lcom/google/maps/android/data/renderer/model/DataScene$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/renderer/model/DataScene;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/DataScene;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/DataScene;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBoundingBox ()Lcom/google/android/gms/maps/model/LatLngBounds;
+	public final fun getFeatures ()Ljava/util/List;
+	public final fun getLayers ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/DataScene$Companion {
+	public final fun fromFeatures (Ljava/util/List;)Lcom/google/maps/android/data/renderer/model/DataScene;
+}
+
+public final class com/google/maps/android/data/renderer/model/Feature {
+	public fun <init> (Lcom/google/maps/android/data/renderer/model/Geometry;Lcom/google/maps/android/data/renderer/model/Style;Ljava/util/Map;)V
+	public synthetic fun <init> (Lcom/google/maps/android/data/renderer/model/Geometry;Lcom/google/maps/android/data/renderer/model/Style;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/maps/android/data/renderer/model/Geometry;
+	public final fun component2 ()Lcom/google/maps/android/data/renderer/model/Style;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun copy (Lcom/google/maps/android/data/renderer/model/Geometry;Lcom/google/maps/android/data/renderer/model/Style;Ljava/util/Map;)Lcom/google/maps/android/data/renderer/model/Feature;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/Feature;Lcom/google/maps/android/data/renderer/model/Geometry;Lcom/google/maps/android/data/renderer/model/Style;Ljava/util/Map;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/Feature;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGeometry ()Lcom/google/maps/android/data/renderer/model/Geometry;
+	public final fun getProperties ()Ljava/util/Map;
+	public final fun getStyle ()Lcom/google/maps/android/data/renderer/model/Style;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/renderer/model/Geometry {
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/GroundOverlay : com/google/maps/android/data/renderer/model/Geometry {
+	public fun <init> (DDDDF)V
+	public synthetic fun <init> (DDDDFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()D
+	public final fun component4 ()D
+	public final fun component5 ()F
+	public final fun copy (DDDDF)Lcom/google/maps/android/data/renderer/model/GroundOverlay;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/GroundOverlay;DDDDFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/GroundOverlay;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEast ()D
+	public final fun getLatLngBounds ()Lcom/google/android/gms/maps/model/LatLngBounds;
+	public final fun getNorth ()D
+	public final fun getRotation ()F
+	public final fun getSouth ()D
+	public fun getType ()Ljava/lang/String;
+	public final fun getWest ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/GroundOverlayStyle : com/google/maps/android/data/renderer/model/Style {
+	public fun <init> (Ljava/lang/String;FFZ)V
+	public synthetic fun <init> (Ljava/lang/String;FFZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()F
+	public final fun component3 ()F
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;FFZ)Lcom/google/maps/android/data/renderer/model/GroundOverlayStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/GroundOverlayStyle;Ljava/lang/String;FFZILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/GroundOverlayStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIconUrl ()Ljava/lang/String;
+	public final fun getTransparency ()F
+	public final fun getVisibility ()Z
+	public final fun getZIndex ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/LineString : com/google/maps/android/data/renderer/model/Geometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/renderer/model/LineString;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/LineString;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/LineString;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPoints ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/LineStyle : com/google/maps/android/data/renderer/model/Style {
+	public fun <init> ()V
+	public fun <init> (IFZF)V
+	public synthetic fun <init> (IFZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()F
+	public final fun component3 ()Z
+	public final fun component4 ()F
+	public final fun copy (IFZF)Lcom/google/maps/android/data/renderer/model/LineStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/LineStyle;IFZFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/LineStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()I
+	public final fun getGeodesic ()Z
+	public final fun getWidth ()F
+	public final fun getZIndex ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/MultiGeometry : com/google/maps/android/data/renderer/model/Geometry {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/google/maps/android/data/renderer/model/MultiGeometry;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/MultiGeometry;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/MultiGeometry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGeometries ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/Point {
+	public fun <init> (DDLjava/lang/Double;)V
+	public synthetic fun <init> (DDLjava/lang/Double;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()Ljava/lang/Double;
+	public final fun copy (DDLjava/lang/Double;)Lcom/google/maps/android/data/renderer/model/Point;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/Point;DDLjava/lang/Double;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/Point;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Ljava/lang/Double;
+	public final fun getLat ()D
+	public final fun getLng ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/PointGeometry : com/google/maps/android/data/renderer/model/Geometry {
+	public fun <init> (Lcom/google/maps/android/data/renderer/model/Point;)V
+	public final fun component1 ()Lcom/google/maps/android/data/renderer/model/Point;
+	public final fun copy (Lcom/google/maps/android/data/renderer/model/Point;)Lcom/google/maps/android/data/renderer/model/PointGeometry;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PointGeometry;Lcom/google/maps/android/data/renderer/model/Point;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PointGeometry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPoint ()Lcom/google/maps/android/data/renderer/model/Point;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/PointStyle : com/google/maps/android/data/renderer/model/Style {
+	public fun <init> ()V
+	public fun <init> (ILjava/lang/String;Ljava/lang/Float;FFFF)V
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/Float;FFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Float;
+	public final fun component4 ()F
+	public final fun component5 ()F
+	public final fun component6 ()F
+	public final fun component7 ()F
+	public final fun copy (ILjava/lang/String;Ljava/lang/Float;FFFF)Lcom/google/maps/android/data/renderer/model/PointStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PointStyle;ILjava/lang/String;Ljava/lang/Float;FFFFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PointStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnchorU ()F
+	public final fun getAnchorV ()F
+	public final fun getColor ()I
+	public final fun getHeading ()Ljava/lang/Float;
+	public final fun getIconUrl ()Ljava/lang/String;
+	public final fun getScale ()F
+	public final fun getZIndex ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/Polygon : com/google/maps/android/data/renderer/model/Geometry {
+	public fun <init> (Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;)Lcom/google/maps/android/data/renderer/model/Polygon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/Polygon;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/Polygon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInnerBoundaries ()Ljava/util/List;
+	public final fun getOuterBoundary ()Ljava/util/List;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/data/renderer/model/PolygonStyle : com/google/maps/android/data/renderer/model/Style {
+	public fun <init> ()V
+	public fun <init> (IIFZF)V
+	public synthetic fun <init> (IIFZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()F
+	public final fun component4 ()Z
+	public final fun component5 ()F
+	public final fun copy (IIFZF)Lcom/google/maps/android/data/renderer/model/PolygonStyle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/data/renderer/model/PolygonStyle;IIFZFILjava/lang/Object;)Lcom/google/maps/android/data/renderer/model/PolygonStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFillColor ()I
+	public final fun getGeodesic ()Z
+	public final fun getStrokeColor ()I
+	public final fun getStrokeWidth ()F
+	public final fun getZIndex ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/data/renderer/model/Style {
+}
+
+public final class com/google/maps/android/ktx/utils/geojson/GeoJsonKt {
+	public static final fun geoJsonLayer (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+	public static final fun geoJsonLayer (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+	public static synthetic fun geoJsonLayer$default (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILjava/lang/Object;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+	public static synthetic fun geoJsonLayer$default (Lcom/google/android/gms/maps/GoogleMap;Lorg/json/JSONObject;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;ILjava/lang/Object;)Lcom/google/maps/android/data/geojson/GeoJsonLayer;
+}
+
+public final class com/google/maps/android/ktx/utils/kml/KmlKt {
+	public static final fun kmlLayer (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;)Lcom/google/maps/android/data/kml/KmlLayer;
+	public static final fun kmlLayer (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;)Lcom/google/maps/android/data/kml/KmlLayer;
+	public static synthetic fun kmlLayer$default (Lcom/google/android/gms/maps/GoogleMap;ILandroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;ILjava/lang/Object;)Lcom/google/maps/android/data/kml/KmlLayer;
+	public static synthetic fun kmlLayer$default (Lcom/google/android/gms/maps/GoogleMap;Ljava/io/InputStream;Landroid/content/Context;Lcom/google/maps/android/collections/MarkerManager;Lcom/google/maps/android/collections/PolygonManager;Lcom/google/maps/android/collections/PolylineManager;Lcom/google/maps/android/collections/GroundOverlayManager;Lcom/google/maps/android/data/Renderer$ImagesCache;ILjava/lang/Object;)Lcom/google/maps/android/data/kml/KmlLayer;
+}
+
+public final class com/google/maps/android/renderer/GoogleMapRenderer : com/google/maps/android/renderer/Renderer {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun addLayer (Lcom/google/maps/android/renderer/model/Layer;)V
+	public fun clear ()V
+	public fun getLayers ()Ljava/util/Collection;
+	public fun removeLayer (Lcom/google/maps/android/renderer/model/Layer;)Z
+}
+
+public abstract interface class com/google/maps/android/renderer/Renderer {
+	public abstract fun addLayer (Lcom/google/maps/android/renderer/model/Layer;)V
+	public abstract fun clear ()V
+	public abstract fun getLayers ()Ljava/util/Collection;
+	public abstract fun removeLayer (Lcom/google/maps/android/renderer/model/Layer;)Z
+}
+
+public final class com/google/maps/android/renderer/model/Circle : com/google/maps/android/renderer/model/MapObject {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;DFIIZZFLjava/util/List;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/model/LatLng;DFIIZZFLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/android/gms/maps/model/LatLng;
+	public final fun component2 ()D
+	public final fun component3 ()F
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()F
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (Lcom/google/android/gms/maps/model/LatLng;DFIIZZFLjava/util/List;)Lcom/google/maps/android/renderer/model/Circle;
+	public static synthetic fun copy$default (Lcom/google/maps/android/renderer/model/Circle;Lcom/google/android/gms/maps/model/LatLng;DFIIZZFLjava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/renderer/model/Circle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCenter ()Lcom/google/android/gms/maps/model/LatLng;
+	public final fun getFillColor ()I
+	public final fun getRadius ()D
+	public final fun getStrokeColor ()I
+	public final fun getStrokePattern ()Ljava/util/List;
+	public final fun getStrokeWidth ()F
+	public fun getType ()Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public fun getZIndex ()F
+	public fun hashCode ()I
+	public final fun isClickable ()Z
+	public fun isVisible ()Z
+	public final fun setCenter (Lcom/google/android/gms/maps/model/LatLng;)V
+	public final fun setClickable (Z)V
+	public final fun setFillColor (I)V
+	public final fun setRadius (D)V
+	public final fun setStrokeColor (I)V
+	public final fun setStrokePattern (Ljava/util/List;)V
+	public final fun setStrokeWidth (F)V
+	public fun setVisible (Z)V
+	public fun setZIndex (F)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/renderer/model/Layer {
+	public fun <init> ()V
+	public final fun addMapObject (Lcom/google/maps/android/renderer/model/MapObject;)V
+	public final fun addMapObjects (Ljava/util/Collection;)V
+	public final fun clear ()V
+	public final fun getMapObjects ()Ljava/util/Collection;
+	public final fun removeMapObject (Lcom/google/maps/android/renderer/model/MapObject;)Z
+}
+
+public abstract interface class com/google/maps/android/renderer/model/MapObject {
+	public abstract fun getType ()Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public abstract fun getZIndex ()F
+	public abstract fun isVisible ()Z
+	public abstract fun setVisible (Z)V
+	public abstract fun setZIndex (F)V
+}
+
+public final class com/google/maps/android/renderer/model/MapObject$Type : java/lang/Enum {
+	public static final field CIRCLE Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public static final field MARKER Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public static final field POLYGON Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public static final field POLYLINE Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public static fun values ()[Lcom/google/maps/android/renderer/model/MapObject$Type;
+}
+
+public final class com/google/maps/android/renderer/model/Marker : com/google/maps/android/renderer/model/MapObject {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Ljava/lang/String;Lcom/google/android/gms/maps/model/BitmapDescriptor;FFFFZZZF)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Ljava/lang/String;Lcom/google/android/gms/maps/model/BitmapDescriptor;FFFFZZZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/google/android/gms/maps/model/LatLng;
+	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()F
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lcom/google/android/gms/maps/model/BitmapDescriptor;
+	public final fun component5 ()F
+	public final fun component6 ()F
+	public final fun component7 ()F
+	public final fun component8 ()F
+	public final fun component9 ()Z
+	public final fun copy (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Ljava/lang/String;Lcom/google/android/gms/maps/model/BitmapDescriptor;FFFFZZZF)Lcom/google/maps/android/renderer/model/Marker;
+	public static synthetic fun copy$default (Lcom/google/maps/android/renderer/model/Marker;Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Ljava/lang/String;Lcom/google/android/gms/maps/model/BitmapDescriptor;FFFFZZZFILjava/lang/Object;)Lcom/google/maps/android/renderer/model/Marker;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlpha ()F
+	public final fun getAnchorU ()F
+	public final fun getAnchorV ()F
+	public final fun getDraggable ()Z
+	public final fun getFlat ()Z
+	public final fun getIcon ()Lcom/google/android/gms/maps/model/BitmapDescriptor;
+	public final fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
+	public final fun getRotation ()F
+	public final fun getSnippet ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun getType ()Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public fun getZIndex ()F
+	public fun hashCode ()I
+	public fun isVisible ()Z
+	public final fun setAlpha (F)V
+	public final fun setAnchorU (F)V
+	public final fun setAnchorV (F)V
+	public final fun setDraggable (Z)V
+	public final fun setFlat (Z)V
+	public final fun setIcon (Lcom/google/android/gms/maps/model/BitmapDescriptor;)V
+	public final fun setPosition (Lcom/google/android/gms/maps/model/LatLng;)V
+	public final fun setRotation (F)V
+	public final fun setSnippet (Ljava/lang/String;)V
+	public final fun setTitle (Ljava/lang/String;)V
+	public fun setVisible (Z)V
+	public fun setZIndex (F)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/renderer/model/Polygon : com/google/maps/android/renderer/model/MapObject {
+	public fun <init> (Ljava/util/List;Ljava/util/List;FIIZZZFILjava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;FIIZZZFILjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun addHole (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component10 ()I
+	public final fun component11 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()F
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()F
+	public final fun copy (Ljava/util/List;Ljava/util/List;FIIZZZFILjava/util/List;)Lcom/google/maps/android/renderer/model/Polygon;
+	public static synthetic fun copy$default (Lcom/google/maps/android/renderer/model/Polygon;Ljava/util/List;Ljava/util/List;FIIZZZFILjava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/renderer/model/Polygon;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFillColor ()I
+	public final fun getHoles ()Ljava/util/List;
+	public final fun getPoints ()Ljava/util/List;
+	public final fun getStrokeColor ()I
+	public final fun getStrokeJointType ()I
+	public final fun getStrokePattern ()Ljava/util/List;
+	public final fun getStrokeWidth ()F
+	public fun getType ()Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public fun getZIndex ()F
+	public fun hashCode ()I
+	public final fun isClickable ()Z
+	public final fun isGeodesic ()Z
+	public fun isVisible ()Z
+	public final fun setClickable (Z)V
+	public final fun setFillColor (I)V
+	public final fun setGeodesic (Z)V
+	public final fun setHoles (Ljava/util/List;)V
+	public final fun setPoints (Ljava/util/List;)V
+	public final fun setStrokeColor (I)V
+	public final fun setStrokeJointType (I)V
+	public final fun setStrokePattern (Ljava/util/List;)V
+	public final fun setStrokeWidth (F)V
+	public fun setVisible (Z)V
+	public fun setZIndex (F)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/renderer/model/Polyline : com/google/maps/android/renderer/model/MapObject {
+	public fun <init> (Ljava/util/List;FIZZZFLcom/google/android/gms/maps/model/Cap;Lcom/google/android/gms/maps/model/Cap;ILjava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;FIZZZFLcom/google/android/gms/maps/model/Cap;Lcom/google/android/gms/maps/model/Cap;ILjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component10 ()I
+	public final fun component11 ()Ljava/util/List;
+	public final fun component2 ()F
+	public final fun component3 ()I
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()F
+	public final fun component8 ()Lcom/google/android/gms/maps/model/Cap;
+	public final fun component9 ()Lcom/google/android/gms/maps/model/Cap;
+	public final fun copy (Ljava/util/List;FIZZZFLcom/google/android/gms/maps/model/Cap;Lcom/google/android/gms/maps/model/Cap;ILjava/util/List;)Lcom/google/maps/android/renderer/model/Polyline;
+	public static synthetic fun copy$default (Lcom/google/maps/android/renderer/model/Polyline;Ljava/util/List;FIZZZFLcom/google/android/gms/maps/model/Cap;Lcom/google/android/gms/maps/model/Cap;ILjava/util/List;ILjava/lang/Object;)Lcom/google/maps/android/renderer/model/Polyline;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()I
+	public final fun getEndCap ()Lcom/google/android/gms/maps/model/Cap;
+	public final fun getJointType ()I
+	public final fun getPattern ()Ljava/util/List;
+	public final fun getPoints ()Ljava/util/List;
+	public final fun getStartCap ()Lcom/google/android/gms/maps/model/Cap;
+	public fun getType ()Lcom/google/maps/android/renderer/model/MapObject$Type;
+	public final fun getWidth ()F
+	public fun getZIndex ()F
+	public fun hashCode ()I
+	public final fun isClickable ()Z
+	public final fun isGeodesic ()Z
+	public fun isVisible ()Z
+	public final fun setClickable (Z)V
+	public final fun setColor (I)V
+	public final fun setEndCap (Lcom/google/android/gms/maps/model/Cap;)V
+	public final fun setGeodesic (Z)V
+	public final fun setJointType (I)V
+	public final fun setPattern (Ljava/util/List;)V
+	public final fun setPoints (Ljava/util/List;)V
+	public final fun setStartCap (Lcom/google/android/gms/maps/model/Cap;)V
+	public fun setVisible (Z)V
+	public final fun setWidth (F)V
+	public fun setZIndex (F)V
+	public fun toString ()Ljava/lang/String;
+}
+

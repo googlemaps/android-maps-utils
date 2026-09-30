@@ -29,9 +29,9 @@ public abstract class Layer {
     protected var mGoogleMap: GoogleMap? = null
 
     // Default styles
-    protected var mDefaultPointStyle = GeoJsonPointStyle()
-    protected var mDefaultLineStringStyle = GeoJsonLineStringStyle()
-    protected var mDefaultPolygonStyle = GeoJsonPolygonStyle()
+    protected var mDefaultPointStyle: GeoJsonPointStyle = GeoJsonPointStyle()
+    protected var mDefaultLineStringStyle: GeoJsonLineStringStyle = GeoJsonLineStringStyle()
+    protected var mDefaultPolygonStyle: GeoJsonPolygonStyle = GeoJsonPolygonStyle()
 
     public abstract fun getMap(): GoogleMap?
 

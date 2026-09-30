@@ -27,7 +27,7 @@ import kotlin.math.sign
 /**
  * Animation utilities for markers with Maps API.
  */
-object AnimationUtil {
+public object AnimationUtil {
     /**
      * Animates a marker from its current position to the provided finalPosition.
      *
@@ -37,7 +37,7 @@ object AnimationUtil {
      */
     @JvmOverloads
     @JvmStatic
-    fun animateMarkerTo(
+    public fun animateMarkerTo(
         marker: Marker,
         finalPosition: LatLng,
         durationInMs: Long = 2000,
@@ -74,15 +74,15 @@ object AnimationUtil {
     /**
      * For other LatLngInterpolator interpolators, see [link here](https://gist.github.com/broady/6314689)
      */
-    interface LatLngInterpolator {
-        fun interpolate(
+    public interface LatLngInterpolator {
+        public fun interpolate(
             fraction: Float,
             a: LatLng,
             b: LatLng,
         ): LatLng
 
-        class Linear : LatLngInterpolator {
-            override fun interpolate(
+        public class Linear : LatLngInterpolator {
+            public override fun interpolate(
                 fraction: Float,
                 a: LatLng,
                 b: LatLng,

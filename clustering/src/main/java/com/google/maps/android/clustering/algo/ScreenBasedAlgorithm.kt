@@ -25,8 +25,8 @@ import com.google.maps.android.clustering.ClusterItem
  *
  * @param <T> The {@link ClusterItem} type
  */
-interface ScreenBasedAlgorithm<T : ClusterItem> : Algorithm<T> {
-    fun shouldReclusterOnMapMovement(): Boolean
+public interface ScreenBasedAlgorithm<T : ClusterItem> : Algorithm<T> {
+    public fun shouldReclusterOnMapMovement(): Boolean
 
-    fun onCameraChange(position: CameraPosition)
+    public fun onCameraChange(position: CameraPosition)
 }

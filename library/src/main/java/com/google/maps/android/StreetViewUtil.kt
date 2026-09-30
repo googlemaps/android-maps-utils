@@ -28,8 +28,8 @@ import java.net.URL
 /**
  * Utility functions for StreetView
  */
-class StreetViewUtils {
-    companion object {
+public class StreetViewUtils {
+    public companion object {
         /**
          * This function will check whether a location is available on StreetView or not.
          *
@@ -41,7 +41,7 @@ class StreetViewUtils {
          * @return A Status value specifying if the location is available on Street View or not,
          * whether the used key is a right one, or any other error.
          */
-        suspend fun fetchStreetViewData(
+        public suspend fun fetchStreetViewData(
             latLng: LatLng,
             apiKey: String,
             source: Source = Source.DEFAULT,
@@ -86,11 +86,11 @@ class StreetViewUtils {
     }
 }
 
-data class ResponseStreetView(
+internal data class ResponseStreetView(
     val status: Status,
 )
 
-enum class Status {
+public enum class Status {
     OK,
     ZERO_RESULTS,
     NOT_FOUND,
@@ -100,8 +100,8 @@ enum class Status {
     UNKNOWN_ERROR,
 }
 
-enum class Source(
-    var value: String,
+public enum class Source(
+    public var value: String,
 ) {
     DEFAULT("default"),
     OUTDOOR("outdoor"),

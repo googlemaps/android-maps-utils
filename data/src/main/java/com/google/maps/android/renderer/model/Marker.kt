@@ -21,20 +21,20 @@ import com.google.android.gms.maps.model.LatLng
 /**
  * A data model representing a marker on the map.
  */
-data class Marker(
-    var position: LatLng,
-    var title: String? = null,
-    var snippet: String? = null,
-    var icon: BitmapDescriptor? = null,
-    var alpha: Float = 1.0f,
-    var anchorU: Float = 0.5f,
-    var anchorV: Float = 1.0f,
-    var rotation: Float = 0.0f,
-    var flat: Boolean = false,
-    var draggable: Boolean = false,
-    override var isVisible: Boolean = true,
-    override var zIndex: Float = 0.0f,
+public data class Marker(
+    public var position: LatLng,
+    public var title: String? = null,
+    public var snippet: String? = null,
+    public var icon: BitmapDescriptor? = null,
+    public var alpha: Float = 1.0f,
+    public var anchorU: Float = 0.5f,
+    public var anchorV: Float = 1.0f,
+    public var rotation: Float = 0.0f,
+    public var flat: Boolean = false,
+    public var draggable: Boolean = false,
+    public override var isVisible: Boolean = true,
+    public override var zIndex: Float = 0.0f,
 ) : MapObject {
-    override val type: MapObject.Type
+    public override val type: MapObject.Type
         get() = MapObject.Type.MARKER
 }

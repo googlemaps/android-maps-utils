@@ -19,6 +19,21 @@ import java.util.Properties
 
 plugins {
     id("com.vanniktech.maven.publish") version libs.versions.gradleMavenPublishPlugin.get() apply false
+    alias(libs.plugins.binary.compatibility.validator)
+}
+
+apiValidation {
+    ignoredProjects += listOf("demo", "visual-testing", "lint-checks", "maps-utils")
+}
+
+val apiDump = tasks.register("apiDump") {
+    group = "verification"
+    description = "Dumps public API declarations for all library modules."
+}
+
+val apiCheck = tasks.register("apiCheck") {
+    group = "verification"
+    description = "Checks that public API declarations match the committed .api files."
 }
 
 buildscript {

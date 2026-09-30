@@ -1,0 +1,691 @@
+public abstract class com/google/maps/android/CameraEvent {
+}
+
+public final class com/google/maps/android/CameraIdleEvent : com/google/maps/android/CameraEvent {
+	public static final field INSTANCE Lcom/google/maps/android/CameraIdleEvent;
+}
+
+public final class com/google/maps/android/CameraMoveCanceledEvent : com/google/maps/android/CameraEvent {
+	public static final field INSTANCE Lcom/google/maps/android/CameraMoveCanceledEvent;
+}
+
+public final class com/google/maps/android/CameraMoveEvent : com/google/maps/android/CameraEvent {
+	public static final field INSTANCE Lcom/google/maps/android/CameraMoveEvent;
+}
+
+public final class com/google/maps/android/CameraMoveStartedEvent : com/google/maps/android/CameraEvent {
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lcom/google/maps/android/CameraMoveStartedEvent;
+	public static synthetic fun copy$default (Lcom/google/maps/android/CameraMoveStartedEvent;IILjava/lang/Object;)Lcom/google/maps/android/CameraMoveStartedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReason ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/GoogleMapKt {
+	public static final fun addCircle (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Circle;
+	public static final fun addGroundOverlay (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlay;
+	public static final fun addMarker (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Marker;
+	public static final fun addPolygon (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polygon;
+	public static final fun addPolyline (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polyline;
+	public static final fun addTileOverlay (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/TileOverlay;
+	public static final fun awaitAnimateCamera (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/android/gms/maps/CameraUpdate;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitAnimateCamera$default (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/android/gms/maps/CameraUpdate;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun awaitMapLoad (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun awaitSnapshot (Lcom/google/android/gms/maps/GoogleMap;Landroid/graphics/Bitmap;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitSnapshot$default (Lcom/google/android/gms/maps/GoogleMap;Landroid/graphics/Bitmap;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun buildGoogleMapOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/GoogleMapOptions;
+	public static final fun cameraEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraIdleEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraMoveCanceledEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraMoveEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraMoveStartedEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun circleClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun groundOverlayClicks (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun indoorStateChangeEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowCloseEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowLongClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun mapClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun mapLongClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun markerClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun markerDragEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun myLocationButtonClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun myLocationClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun poiClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun polygonClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun polylineClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/IndoorBuildingFocusedEvent : com/google/maps/android/IndoorChangeEvent {
+	public static final field INSTANCE Lcom/google/maps/android/IndoorBuildingFocusedEvent;
+}
+
+public abstract class com/google/maps/android/IndoorChangeEvent {
+}
+
+public final class com/google/maps/android/IndoorLevelActivatedEvent : com/google/maps/android/IndoorChangeEvent {
+	public fun <init> (Lcom/google/android/gms/maps/model/IndoorBuilding;)V
+	public final fun component1 ()Lcom/google/android/gms/maps/model/IndoorBuilding;
+	public final fun copy (Lcom/google/android/gms/maps/model/IndoorBuilding;)Lcom/google/maps/android/IndoorLevelActivatedEvent;
+	public static synthetic fun copy$default (Lcom/google/maps/android/IndoorLevelActivatedEvent;Lcom/google/android/gms/maps/model/IndoorBuilding;ILjava/lang/Object;)Lcom/google/maps/android/IndoorLevelActivatedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBuilding ()Lcom/google/android/gms/maps/model/IndoorBuilding;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/LatLngKt {
+	public static final fun component1 (Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun component2 (Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun computeSphericalOffsetOrigin (Lcom/google/android/gms/maps/model/LatLng;DD)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun containsLocation (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;Z)Z
+	public static final fun isClosedPolygon (Ljava/util/List;)Z
+	public static final fun isLocationOnPath (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZD)Z
+	public static synthetic fun isLocationOnPath$default (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZDILjava/lang/Object;)Z
+	public static final fun isOnEdge (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZD)Z
+	public static synthetic fun isOnEdge$default (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZDILjava/lang/Object;)Z
+	public static final fun latLngListEncode (Ljava/util/List;)Ljava/lang/String;
+	public static final fun simplify (Ljava/util/List;D)Ljava/util/List;
+	public static final fun sphericalDistance (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun sphericalHeading (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun sphericalPathLength (Ljava/util/List;)D
+	public static final fun sphericalPolygonArea (Ljava/util/List;)D
+	public static final fun sphericalPolygonSignedArea (Ljava/util/List;)D
+	public static final fun toLatLngList (Ljava/lang/String;)Ljava/util/List;
+	public static final fun withSphericalLinearInterpolation (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;D)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun withSphericalOffset (Lcom/google/android/gms/maps/model/LatLng;DD)Lcom/google/android/gms/maps/model/LatLng;
+}
+
+public final class com/google/maps/android/MapFragmentKt {
+	public static final fun awaitMap (Lcom/google/android/gms/maps/MapFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/MapViewKt {
+	public static final fun awaitMap (Lcom/google/android/gms/maps/MapView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface annotation class com/google/maps/android/MapsExperimentalFeature : java/lang/annotation/Annotation {
+}
+
+public final class com/google/maps/android/MapsInitializerKt {
+	public static final fun awaitMapsSdkInitialized (Landroid/content/Context;Lcom/google/android/gms/maps/MapsInitializer$Renderer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitMapsSdkInitialized$default (Landroid/content/Context;Lcom/google/android/gms/maps/MapsInitializer$Renderer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/MarkerDragEndEvent : com/google/maps/android/OnMarkerDragEvent {
+	public fun <init> (Lcom/google/android/gms/maps/model/Marker;)V
+	public final fun component1 ()Lcom/google/android/gms/maps/model/Marker;
+	public final fun copy (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/MarkerDragEndEvent;
+	public static synthetic fun copy$default (Lcom/google/maps/android/MarkerDragEndEvent;Lcom/google/android/gms/maps/model/Marker;ILjava/lang/Object;)Lcom/google/maps/android/MarkerDragEndEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMarker ()Lcom/google/android/gms/maps/model/Marker;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/MarkerDragEvent : com/google/maps/android/OnMarkerDragEvent {
+	public fun <init> (Lcom/google/android/gms/maps/model/Marker;)V
+	public final fun component1 ()Lcom/google/android/gms/maps/model/Marker;
+	public final fun copy (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/MarkerDragEvent;
+	public static synthetic fun copy$default (Lcom/google/maps/android/MarkerDragEvent;Lcom/google/android/gms/maps/model/Marker;ILjava/lang/Object;)Lcom/google/maps/android/MarkerDragEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMarker ()Lcom/google/android/gms/maps/model/Marker;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/MarkerDragStartEvent : com/google/maps/android/OnMarkerDragEvent {
+	public fun <init> (Lcom/google/android/gms/maps/model/Marker;)V
+	public final fun component1 ()Lcom/google/android/gms/maps/model/Marker;
+	public final fun copy (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/MarkerDragStartEvent;
+	public static synthetic fun copy$default (Lcom/google/maps/android/MarkerDragStartEvent;Lcom/google/android/gms/maps/model/Marker;ILjava/lang/Object;)Lcom/google/maps/android/MarkerDragStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMarker ()Lcom/google/android/gms/maps/model/Marker;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/MathUtil {
+	public static final field EARTH_RADIUS D
+	public static final field INSTANCE Lcom/google/maps/android/MathUtil;
+	public static final fun arcHav (D)D
+	public static final fun clamp (DDD)D
+	public static final fun hav (D)D
+	public static final fun havDistance (DDD)D
+	public static final fun havFromSin (D)D
+	public static final fun inverseMercator (D)D
+	public static final fun mercator (D)D
+	public static final fun mod (DD)D
+	public static final fun sinFromHav (D)D
+	public static final fun sinSumFromHav (DD)D
+	public static final fun wrap (DDD)D
+}
+
+public abstract interface annotation class com/google/maps/android/MoveStartedReason : java/lang/annotation/Annotation {
+}
+
+public abstract class com/google/maps/android/OnMarkerDragEvent {
+	public abstract fun getMarker ()Lcom/google/android/gms/maps/model/Marker;
+}
+
+public final class com/google/maps/android/PolyUtil {
+	public static final field DEFAULT_TOLERANCE D
+	public static final field INSTANCE Lcom/google/maps/android/PolyUtil;
+	public static final fun containsLocation (DDLjava/util/List;Z)Z
+	public static final fun containsLocation (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;Z)Z
+	public static final fun decode (Ljava/lang/String;)Ljava/util/List;
+	public static final fun distanceToLine (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun encode (Ljava/util/List;)Ljava/lang/String;
+	public static final fun isClosedPolygon (Ljava/util/List;)Z
+	public static final fun isLocationOnEdge (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;Z)Z
+	public static final fun isLocationOnEdge (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZD)Z
+	public static synthetic fun isLocationOnEdge$default (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZDILjava/lang/Object;)Z
+	public static final fun isLocationOnPath (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;Z)Z
+	public static final fun isLocationOnPath (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZD)Z
+	public static synthetic fun isLocationOnPath$default (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZDILjava/lang/Object;)Z
+	public static final fun locationIndexOnEdgeOrPath (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZZD)I
+	public static final fun locationIndexOnPath (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;Z)I
+	public static final fun locationIndexOnPath (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZD)I
+	public static synthetic fun locationIndexOnPath$default (Lcom/google/android/gms/maps/model/LatLng;Ljava/util/List;ZDILjava/lang/Object;)I
+	public static final fun simplify (Ljava/util/List;D)Ljava/util/List;
+}
+
+public final class com/google/maps/android/PolygonKt {
+	public static final fun contains (Lcom/google/android/gms/maps/model/Polygon;Lcom/google/android/gms/maps/model/LatLng;)Z
+	public static final fun getArea (Lcom/google/android/gms/maps/model/Polygon;)D
+	public static final fun getSignedArea (Lcom/google/android/gms/maps/model/Polygon;)D
+	public static final fun isOnEdge (Lcom/google/android/gms/maps/model/Polygon;Lcom/google/android/gms/maps/model/LatLng;D)Z
+	public static synthetic fun isOnEdge$default (Lcom/google/android/gms/maps/model/Polygon;Lcom/google/android/gms/maps/model/LatLng;DILjava/lang/Object;)Z
+}
+
+public final class com/google/maps/android/PolylineKt {
+	public static final fun contains (Lcom/google/android/gms/maps/model/Polyline;Lcom/google/android/gms/maps/model/LatLng;D)Z
+	public static synthetic fun contains$default (Lcom/google/android/gms/maps/model/Polyline;Lcom/google/android/gms/maps/model/LatLng;DILjava/lang/Object;)Z
+	public static final fun getSphericalPathLength (Lcom/google/android/gms/maps/model/Polyline;)D
+}
+
+public final class com/google/maps/android/Source : java/lang/Enum {
+	public static final field DEFAULT Lcom/google/maps/android/Source;
+	public static final field OUTDOOR Lcom/google/maps/android/Source;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public final fun setValue (Ljava/lang/String;)V
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/Source;
+	public static fun values ()[Lcom/google/maps/android/Source;
+}
+
+public final class com/google/maps/android/SphericalUtil {
+	public static final field INSTANCE Lcom/google/maps/android/SphericalUtil;
+	public static final fun computeAngleBetween (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun computeArea (Ljava/util/List;)D
+	public static final fun computeDistanceBetween (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun computeHeading (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun computeLength (Ljava/util/List;)D
+	public static final fun computeOffset (Lcom/google/android/gms/maps/model/LatLng;DD)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun computeOffsetOrigin (Lcom/google/android/gms/maps/model/LatLng;DD)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun computeSignedArea (Ljava/util/List;)D
+	public static final fun computeSignedArea (Ljava/util/List;D)D
+	public static final fun getPointOnPolyline (Ljava/util/List;D)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun getPolylinePrefix (Ljava/util/List;D)Ljava/util/List;
+	public static final fun interpolate (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;D)Lcom/google/android/gms/maps/model/LatLng;
+}
+
+public final class com/google/maps/android/Status : java/lang/Enum {
+	public static final field INVALID_REQUEST Lcom/google/maps/android/Status;
+	public static final field NOT_FOUND Lcom/google/maps/android/Status;
+	public static final field OK Lcom/google/maps/android/Status;
+	public static final field OVER_QUERY_LIMIT Lcom/google/maps/android/Status;
+	public static final field REQUEST_DENIED Lcom/google/maps/android/Status;
+	public static final field UNKNOWN_ERROR Lcom/google/maps/android/Status;
+	public static final field ZERO_RESULTS Lcom/google/maps/android/Status;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/Status;
+	public static fun values ()[Lcom/google/maps/android/Status;
+}
+
+public final class com/google/maps/android/StreetViewJavaHelper {
+	public static final field INSTANCE Lcom/google/maps/android/StreetViewJavaHelper;
+	public static final fun fetchStreetViewData (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Lcom/google/maps/android/StreetViewJavaHelper$StreetViewCallback;)V
+}
+
+public abstract interface class com/google/maps/android/StreetViewJavaHelper$StreetViewCallback {
+	public abstract fun onStreetViewError (Ljava/lang/Exception;)V
+	public abstract fun onStreetViewResult (Lcom/google/maps/android/Status;)V
+}
+
+public final class com/google/maps/android/StreetViewPanoramaFragmentKt {
+	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/StreetViewPanoramaFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/StreetViewPanoramaViewKt {
+	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/StreetViewPanoramaView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun cameraChangeEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun changeEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clickEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun longClickEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/StreetViewUtils {
+	public static final field Companion Lcom/google/maps/android/StreetViewUtils$Companion;
+	public fun <init> ()V
+}
+
+public final class com/google/maps/android/StreetViewUtils$Companion {
+	public final fun fetchStreetViewData (Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Lcom/google/maps/android/Source;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun fetchStreetViewData$default (Lcom/google/maps/android/StreetViewUtils$Companion;Lcom/google/android/gms/maps/model/LatLng;Ljava/lang/String;Lcom/google/maps/android/Source;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/SupportMapFragmentKt {
+	public static final fun awaitMap (Lcom/google/android/gms/maps/SupportMapFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/SupportStreetViewPanoramaFragmentKt {
+	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/SupportStreetViewPanoramaFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public class com/google/maps/android/collections/CircleManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$OnCircleClickListener {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun newCollection ()Lcom/google/maps/android/collections/CircleManager$Collection;
+	public synthetic fun newCollection ()Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun onCircleClick (Lcom/google/android/gms/maps/model/Circle;)V
+	public fun removeObjectFromMap (Lcom/google/android/gms/maps/model/Circle;)V
+	public synthetic fun removeObjectFromMap (Ljava/lang/Object;)V
+	public fun setVisible (Lcom/google/android/gms/maps/model/Circle;Z)V
+	public synthetic fun setVisible (Ljava/lang/Object;Z)V
+}
+
+public class com/google/maps/android/collections/CircleManager$Collection : com/google/maps/android/collections/MapObjectManager$Collection {
+	public fun <init> (Lcom/google/maps/android/collections/CircleManager;)V
+	public fun addAll (Ljava/util/Collection;)V
+	public fun addAll (Ljava/util/Collection;Z)V
+	public fun addCircle (Lcom/google/android/gms/maps/model/CircleOptions;)Lcom/google/android/gms/maps/model/Circle;
+	public fun getCircles ()Ljava/util/Collection;
+	public fun setOnCircleClickListener (Lcom/google/android/gms/maps/GoogleMap$OnCircleClickListener;)V
+}
+
+public final class com/google/maps/android/collections/CircleManagerFlowsKt {
+	public static final fun addCircle (Lcom/google/maps/android/collections/CircleManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Circle;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/CircleManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public class com/google/maps/android/collections/GroundOverlayManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$OnGroundOverlayClickListener {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun newCollection ()Lcom/google/maps/android/collections/GroundOverlayManager$Collection;
+	public synthetic fun newCollection ()Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun onGroundOverlayClick (Lcom/google/android/gms/maps/model/GroundOverlay;)V
+	public fun removeObjectFromMap (Lcom/google/android/gms/maps/model/GroundOverlay;)V
+	public synthetic fun removeObjectFromMap (Ljava/lang/Object;)V
+	public fun setVisible (Lcom/google/android/gms/maps/model/GroundOverlay;Z)V
+	public synthetic fun setVisible (Ljava/lang/Object;Z)V
+}
+
+public class com/google/maps/android/collections/GroundOverlayManager$Collection : com/google/maps/android/collections/MapObjectManager$Collection {
+	public fun <init> (Lcom/google/maps/android/collections/GroundOverlayManager;)V
+	public fun addAll (Ljava/util/Collection;)V
+	public fun addAll (Ljava/util/Collection;Z)V
+	public fun addGroundOverlay (Lcom/google/android/gms/maps/model/GroundOverlayOptions;)Lcom/google/android/gms/maps/model/GroundOverlay;
+	public fun getGroundOverlays ()Ljava/util/Collection;
+	public fun setOnGroundOverlayClickListener (Lcom/google/android/gms/maps/GoogleMap$OnGroundOverlayClickListener;)V
+}
+
+public final class com/google/maps/android/collections/GroundOverlayManagerFlowsKt {
+	public static final fun addGroundOverlay (Lcom/google/maps/android/collections/GroundOverlayManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlay;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/GroundOverlayManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public abstract class com/google/maps/android/collections/MapObjectManager {
+	protected final field mAllObjects Ljava/util/Map;
+	protected final field mMap Lcom/google/android/gms/maps/GoogleMap;
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun getCollection (Ljava/lang/String;)Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public abstract fun newCollection ()Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun newCollection (Ljava/lang/String;)Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun remove (Ljava/lang/Object;)Z
+	protected abstract fun removeObjectFromMap (Ljava/lang/Object;)V
+	protected fun setVisible (Ljava/lang/Object;Z)V
+}
+
+public class com/google/maps/android/collections/MapObjectManager$Collection {
+	public fun <init> (Lcom/google/maps/android/collections/MapObjectManager;)V
+	protected fun add (Ljava/lang/Object;)V
+	protected fun addAll (Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)V
+	protected fun addAll (Ljava/util/Collection;ZLkotlin/jvm/functions/Function1;)V
+	protected fun checkAndAdd (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+	public fun clear ()V
+	protected fun getObjects ()Ljava/util/Collection;
+	public fun hideAll ()V
+	public fun remove (Ljava/lang/Object;)Z
+	public fun showAll ()V
+}
+
+public class com/google/maps/android/collections/MarkerManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$InfoWindowAdapter, com/google/android/gms/maps/GoogleMap$OnInfoWindowClickListener, com/google/android/gms/maps/GoogleMap$OnInfoWindowLongClickListener, com/google/android/gms/maps/GoogleMap$OnMarkerClickListener, com/google/android/gms/maps/GoogleMap$OnMarkerDragListener {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun getInfoContents (Lcom/google/android/gms/maps/model/Marker;)Landroid/view/View;
+	public fun getInfoWindow (Lcom/google/android/gms/maps/model/Marker;)Landroid/view/View;
+	public synthetic fun newCollection ()Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun newCollection ()Lcom/google/maps/android/collections/MarkerManager$Collection;
+	public fun onInfoWindowClick (Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onInfoWindowLongClick (Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onMarkerClick (Lcom/google/android/gms/maps/model/Marker;)Z
+	public fun onMarkerDrag (Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onMarkerDragEnd (Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onMarkerDragStart (Lcom/google/android/gms/maps/model/Marker;)V
+	public fun removeObjectFromMap (Lcom/google/android/gms/maps/model/Marker;)V
+	public synthetic fun removeObjectFromMap (Ljava/lang/Object;)V
+	public fun setVisible (Lcom/google/android/gms/maps/model/Marker;Z)V
+	public synthetic fun setVisible (Ljava/lang/Object;Z)V
+}
+
+public class com/google/maps/android/collections/MarkerManager$Collection : com/google/maps/android/collections/MapObjectManager$Collection {
+	public fun <init> (Lcom/google/maps/android/collections/MarkerManager;)V
+	public fun addAll (Ljava/util/Collection;)V
+	public fun addAll (Ljava/util/Collection;Z)V
+	public fun addMarker (Lcom/google/android/gms/maps/model/AdvancedMarkerOptions;)Lcom/google/android/gms/maps/model/Marker;
+	public fun addMarker (Lcom/google/android/gms/maps/model/MarkerOptions;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMarkers ()Ljava/util/Collection;
+	public fun setInfoWindowAdapter (Lcom/google/android/gms/maps/GoogleMap$InfoWindowAdapter;)V
+	public fun setOnInfoWindowClickListener (Lcom/google/android/gms/maps/GoogleMap$OnInfoWindowClickListener;)V
+	public fun setOnInfoWindowLongClickListener (Lcom/google/android/gms/maps/GoogleMap$OnInfoWindowLongClickListener;)V
+	public fun setOnMarkerClickListener (Lcom/google/android/gms/maps/GoogleMap$OnMarkerClickListener;)V
+	public fun setOnMarkerDragListener (Lcom/google/android/gms/maps/GoogleMap$OnMarkerDragListener;)V
+}
+
+public final class com/google/maps/android/collections/MarkerManagerFlowsKt {
+	public static final fun addMarker (Lcom/google/maps/android/collections/MarkerManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Marker;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/MarkerManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowClickEvents (Lcom/google/maps/android/collections/MarkerManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowLongClickEvents (Lcom/google/maps/android/collections/MarkerManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public class com/google/maps/android/collections/PolygonManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$OnPolygonClickListener {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public synthetic fun newCollection ()Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun newCollection ()Lcom/google/maps/android/collections/PolygonManager$Collection;
+	public fun onPolygonClick (Lcom/google/android/gms/maps/model/Polygon;)V
+	public fun removeObjectFromMap (Lcom/google/android/gms/maps/model/Polygon;)V
+	public synthetic fun removeObjectFromMap (Ljava/lang/Object;)V
+	public fun setVisible (Lcom/google/android/gms/maps/model/Polygon;Z)V
+	public synthetic fun setVisible (Ljava/lang/Object;Z)V
+}
+
+public class com/google/maps/android/collections/PolygonManager$Collection : com/google/maps/android/collections/MapObjectManager$Collection {
+	public fun <init> (Lcom/google/maps/android/collections/PolygonManager;)V
+	public fun addAll (Ljava/util/Collection;)V
+	public fun addAll (Ljava/util/Collection;Z)V
+	public fun addPolygon (Lcom/google/android/gms/maps/model/PolygonOptions;)Lcom/google/android/gms/maps/model/Polygon;
+	public fun getPolygons ()Ljava/util/Collection;
+	public fun setOnPolygonClickListener (Lcom/google/android/gms/maps/GoogleMap$OnPolygonClickListener;)V
+}
+
+public final class com/google/maps/android/collections/PolygonManagerFlowsKt {
+	public static final fun addPolygon (Lcom/google/maps/android/collections/PolygonManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polygon;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/PolygonManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public class com/google/maps/android/collections/PolylineManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$OnPolylineClickListener {
+	public fun <init> (Lcom/google/android/gms/maps/GoogleMap;)V
+	public synthetic fun newCollection ()Lcom/google/maps/android/collections/MapObjectManager$Collection;
+	public fun newCollection ()Lcom/google/maps/android/collections/PolylineManager$Collection;
+	public fun onPolylineClick (Lcom/google/android/gms/maps/model/Polyline;)V
+	public fun removeObjectFromMap (Lcom/google/android/gms/maps/model/Polyline;)V
+	public synthetic fun removeObjectFromMap (Ljava/lang/Object;)V
+	public fun setVisible (Lcom/google/android/gms/maps/model/Polyline;Z)V
+	public synthetic fun setVisible (Ljava/lang/Object;Z)V
+}
+
+public class com/google/maps/android/collections/PolylineManager$Collection : com/google/maps/android/collections/MapObjectManager$Collection {
+	public fun <init> (Lcom/google/maps/android/collections/PolylineManager;)V
+	public fun addAll (Ljava/util/Collection;)V
+	public fun addAll (Ljava/util/Collection;Z)V
+	public fun addPolyline (Lcom/google/android/gms/maps/model/PolylineOptions;)Lcom/google/android/gms/maps/model/Polyline;
+	public fun getPolylines ()Ljava/util/Collection;
+	public fun setOnPolylineClickListener (Lcom/google/android/gms/maps/GoogleMap$OnPolylineClickListener;)V
+}
+
+public final class com/google/maps/android/collections/PolylineManagerFlowsKt {
+	public static final fun addPolyline (Lcom/google/maps/android/collections/PolylineManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polyline;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/PolylineManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/GoogleMapKt {
+	public static final fun addCircle (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Circle;
+	public static final fun addGroundOverlay (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlay;
+	public static final fun addMarker (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Marker;
+	public static final fun addPolygon (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polygon;
+	public static final fun addPolyline (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polyline;
+	public static final fun addTileOverlay (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/TileOverlay;
+	public static final fun awaitAnimateCamera (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/android/gms/maps/CameraUpdate;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitAnimateCamera$default (Lcom/google/android/gms/maps/GoogleMap;Lcom/google/android/gms/maps/CameraUpdate;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun awaitMapLoad (Lcom/google/android/gms/maps/GoogleMap;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun awaitSnapshot (Lcom/google/android/gms/maps/GoogleMap;Landroid/graphics/Bitmap;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitSnapshot$default (Lcom/google/android/gms/maps/GoogleMap;Landroid/graphics/Bitmap;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun buildGoogleMapOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/GoogleMapOptions;
+	public static final fun cameraEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraIdleEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraMoveCanceledEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraMoveEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun cameraMoveStartedEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun circleClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun groundOverlayClicks (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun indoorStateChangeEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowCloseEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowLongClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun mapClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun mapLongClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun markerClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun markerDragEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun myLocationButtonClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun myLocationClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun poiClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun polygonClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun polylineClickEvents (Lcom/google/android/gms/maps/GoogleMap;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/MapFragmentKt {
+	public static final fun awaitMap (Lcom/google/android/gms/maps/MapFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/ktx/MapViewKt {
+	public static final fun awaitMap (Lcom/google/android/gms/maps/MapView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface annotation class com/google/maps/android/ktx/MapsExperimentalFeature : java/lang/annotation/Annotation {
+}
+
+public final class com/google/maps/android/ktx/MapsInitializerKt {
+	public static final fun awaitMapsSdkInitialized (Landroid/content/Context;Lcom/google/android/gms/maps/MapsInitializer$Renderer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun awaitMapsSdkInitialized$default (Landroid/content/Context;Lcom/google/android/gms/maps/MapsInitializer$Renderer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/ktx/StreetViewPanoramaFragmentKt {
+	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/StreetViewPanoramaFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/ktx/StreetViewPanoramaViewKt {
+	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/StreetViewPanoramaView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun cameraChangeEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun changeEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clickEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun longClickEvents (Lcom/google/android/gms/maps/StreetViewPanorama;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/SupportMapFragmentKt {
+	public static final fun awaitMap (Lcom/google/android/gms/maps/SupportMapFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/ktx/SupportStreetViewPanoramaFragmentKt {
+	public static final fun awaitStreetViewPanorama (Lcom/google/android/gms/maps/SupportStreetViewPanoramaFragment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/google/maps/android/ktx/model/CameraPositionKt {
+	public static final fun cameraPosition (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/CameraPosition;
+}
+
+public final class com/google/maps/android/ktx/model/CircleOptionsKt {
+	public static final fun circleOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/CircleOptions;
+}
+
+public final class com/google/maps/android/ktx/model/GroundOverlayOptionsKt {
+	public static final fun groundOverlayOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlayOptions;
+}
+
+public final class com/google/maps/android/ktx/model/MarkerOptionsKt {
+	public static final fun markerOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/MarkerOptions;
+}
+
+public final class com/google/maps/android/ktx/model/PolygonOptionsKt {
+	public static final fun polygonOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/PolygonOptions;
+}
+
+public final class com/google/maps/android/ktx/model/PolylineOptionsKt {
+	public static final fun polylineOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/PolylineOptions;
+}
+
+public final class com/google/maps/android/ktx/model/StreetViewPanoramaCameraKt {
+	public static final fun streetViewPanoramaCamera (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/StreetViewPanoramaCamera;
+}
+
+public final class com/google/maps/android/ktx/model/StreetViewPanoramaOrientationKt {
+	public static final fun streetViewPanoramaOrientation (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/StreetViewPanoramaOrientation;
+}
+
+public final class com/google/maps/android/ktx/model/TileOverlayOptionsKt {
+	public static final fun tileOverlayOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/TileOverlayOptions;
+}
+
+public final class com/google/maps/android/ktx/utils/LatLngKt {
+	public static final fun component1 (Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun component2 (Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun computeSphericalOffsetOrigin (Lcom/google/android/gms/maps/model/LatLng;DD)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun containsLocation (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;Z)Z
+	public static final fun isClosedPolygon (Ljava/util/List;)Z
+	public static final fun isLocationOnPath (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZD)Z
+	public static synthetic fun isLocationOnPath$default (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZDILjava/lang/Object;)Z
+	public static final fun isOnEdge (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZD)Z
+	public static synthetic fun isOnEdge$default (Ljava/util/List;Lcom/google/android/gms/maps/model/LatLng;ZDILjava/lang/Object;)Z
+	public static final fun latLngListEncode (Ljava/util/List;)Ljava/lang/String;
+	public static final fun simplify (Ljava/util/List;D)Ljava/util/List;
+	public static final fun sphericalDistance (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun sphericalHeading (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun sphericalPathLength (Ljava/util/List;)D
+	public static final fun sphericalPolygonArea (Ljava/util/List;)D
+	public static final fun sphericalPolygonSignedArea (Ljava/util/List;)D
+	public static final fun toLatLngList (Ljava/lang/String;)Ljava/util/List;
+	public static final fun withSphericalLinearInterpolation (Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;D)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun withSphericalOffset (Lcom/google/android/gms/maps/model/LatLng;DD)Lcom/google/android/gms/maps/model/LatLng;
+}
+
+public final class com/google/maps/android/ktx/utils/PolygonKt {
+	public static final fun contains (Lcom/google/android/gms/maps/model/Polygon;Lcom/google/android/gms/maps/model/LatLng;)Z
+	public static final fun getArea (Lcom/google/android/gms/maps/model/Polygon;)D
+	public static final fun getSignedArea (Lcom/google/android/gms/maps/model/Polygon;)D
+	public static final fun isOnEdge (Lcom/google/android/gms/maps/model/Polygon;Lcom/google/android/gms/maps/model/LatLng;D)Z
+	public static synthetic fun isOnEdge$default (Lcom/google/android/gms/maps/model/Polygon;Lcom/google/android/gms/maps/model/LatLng;DILjava/lang/Object;)Z
+}
+
+public final class com/google/maps/android/ktx/utils/PolylineKt {
+	public static final fun contains (Lcom/google/android/gms/maps/model/Polyline;Lcom/google/android/gms/maps/model/LatLng;D)Z
+	public static synthetic fun contains$default (Lcom/google/android/gms/maps/model/Polyline;Lcom/google/android/gms/maps/model/LatLng;DILjava/lang/Object;)Z
+	public static final fun getSphericalPathLength (Lcom/google/android/gms/maps/model/Polyline;)D
+}
+
+public final class com/google/maps/android/ktx/utils/collection/CircleManagerKt {
+	public static final fun addCircle (Lcom/google/maps/android/collections/CircleManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Circle;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/CircleManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/collection/GroundOverlayManagerKt {
+	public static final fun addGroundOverlay (Lcom/google/maps/android/collections/GroundOverlayManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlay;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/GroundOverlayManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/collection/MarkerManagerKt {
+	public static final fun addMarker (Lcom/google/maps/android/collections/MarkerManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Marker;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/MarkerManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowClickEvents (Lcom/google/maps/android/collections/MarkerManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun infoWindowLongClickEvents (Lcom/google/maps/android/collections/MarkerManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/collection/PolygonManagerKt {
+	public static final fun addPolygon (Lcom/google/maps/android/collections/PolygonManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polygon;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/PolygonManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/collection/PolylineManagerKt {
+	public static final fun addPolyline (Lcom/google/maps/android/collections/PolylineManager$Collection;Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/Polyline;
+	public static final fun clickEvents (Lcom/google/maps/android/collections/PolylineManager$Collection;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/location/FusedLocationProviderKt {
+	public static final fun fusedLocationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun fusedLocationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun locationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun locationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/location/LocationManagerKt {
+	public static final fun coarseLocationEvents (Landroid/location/LocationManager;JFLandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun coarseLocationEvents$default (Landroid/location/LocationManager;JFLandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun fineLocationEvents (Landroid/location/LocationManager;JFLandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun fineLocationEvents$default (Landroid/location/LocationManager;JFLandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/location/FusedLocationProviderKt {
+	public static final fun fusedLocationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun fusedLocationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun locationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun locationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/location/LocationManagerKt {
+	public static final fun coarseLocationEvents (Landroid/location/LocationManager;JFLandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun coarseLocationEvents$default (Landroid/location/LocationManager;JFLandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun fineLocationEvents (Landroid/location/LocationManager;JFLandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun fineLocationEvents$default (Landroid/location/LocationManager;JFLandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/model/CameraPositionKt {
+	public static final fun cameraPosition (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/CameraPosition;
+}
+
+public final class com/google/maps/android/model/CircleOptionsKt {
+	public static final fun circleOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/CircleOptions;
+}
+
+public final class com/google/maps/android/model/GroundOverlayOptionsKt {
+	public static final fun groundOverlayOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/GroundOverlayOptions;
+}
+
+public final class com/google/maps/android/model/MarkerOptionsKt {
+	public static final fun markerOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/MarkerOptions;
+}
+
+public final class com/google/maps/android/model/PolygonOptionsKt {
+	public static final fun polygonOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/PolygonOptions;
+}
+
+public final class com/google/maps/android/model/PolylineOptionsKt {
+	public static final fun polylineOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/PolylineOptions;
+}
+
+public final class com/google/maps/android/model/StreetViewPanoramaCameraKt {
+	public static final fun streetViewPanoramaCamera (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/StreetViewPanoramaCamera;
+}
+
+public final class com/google/maps/android/model/StreetViewPanoramaOrientationKt {
+	public static final fun streetViewPanoramaOrientation (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/StreetViewPanoramaOrientation;
+}
+
+public final class com/google/maps/android/model/TileOverlayOptionsKt {
+	public static final fun tileOverlayOptions (Lkotlin/jvm/functions/Function1;)Lcom/google/android/gms/maps/model/TileOverlayOptions;
+}
+
+public final class com/google/maps/android/utils/meta/AttributionId {
+	public static final field INSTANCE Lcom/google/maps/android/utils/meta/AttributionId;
+	public static final field VALUE Ljava/lang/String;
+}
+

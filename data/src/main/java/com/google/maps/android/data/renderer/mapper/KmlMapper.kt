@@ -54,8 +54,8 @@ import com.google.maps.android.data.renderer.model.Polygon as RendererPolygon
  * - GroundOverlays
  * - Styles (resolving StyleUrls and StyleMaps)
  */
-object KmlMapper {
-    fun toScene(kml: Kml): DataScene = DataScene(listOf(toLayer(kml)))
+public object KmlMapper {
+    public fun toScene(kml: Kml): DataScene = DataScene(listOf(toLayer(kml)))
 
     internal fun toLayer(kml: Kml): DataLayer {
         val styles = mutableMapOf<String, KmlStyle>()
@@ -115,7 +115,7 @@ object KmlMapper {
     }
 }
 
-fun Kml.toLayer(): DataLayer = KmlMapper.toLayer(this)
+public fun Kml.toLayer(): DataLayer = KmlMapper.toLayer(this)
 
 private fun Placemark.toRendererFeature(
     styles: Map<String, KmlStyle>,

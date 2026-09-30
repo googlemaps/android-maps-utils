@@ -31,12 +31,12 @@ import kotlin.math.pow
  *
  * @param <T> The [ClusterItem] type
 </T> */
-class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
+public open class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
 /**
  * @param screenWidth  map width in dp
  * @param screenHeight map height in dp
  */
-    (private var mViewWidth: Int, private var mViewHeight: Int) : NonHierarchicalDistanceBasedAlgorithm<T>(), ScreenBasedAlgorithm<T> {
+    public constructor(private var mViewWidth: Int, private var mViewHeight: Int) : NonHierarchicalDistanceBasedAlgorithm<T>(), ScreenBasedAlgorithm<T> {
 
     private var mMapCenter: LatLng? = null
 
@@ -75,7 +75,7 @@ class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
      * @param width  map width in dp
      * @param height map height in dp
      */
-    fun updateViewSize(width: Int, height: Int) {
+    public fun updateViewSize(width: Int, height: Int) {
         mViewWidth = width
         mViewHeight = height
     }
@@ -96,7 +96,7 @@ class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
         )
     }
 
-    companion object {
+    public companion object {
         private val PROJECTION = SphericalMercatorProjection(1.0)
     }
 }

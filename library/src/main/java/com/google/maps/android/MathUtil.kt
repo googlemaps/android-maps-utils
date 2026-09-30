@@ -28,18 +28,18 @@ import kotlin.math.tan
 /**
  * Utility functions that are used my both PolyUtil and SphericalUtil.
  */
-object MathUtil {
+public object MathUtil {
     /**
      * The earth's radius, in meters.
      * Mean radius as defined by IUGG.
      */
-    const val EARTH_RADIUS = 6_371_009.0
+    public const val EARTH_RADIUS: Double = 6_371_009.0
 
     /**
      * Restrict x to the range [low, high].
      */
     @JvmStatic
-    fun clamp(
+    public fun clamp(
         x: Double,
         low: Double,
         high: Double,
@@ -60,7 +60,7 @@ object MathUtil {
      * @param max The maximum.
      */
     @JvmStatic
-    fun wrap(
+    public fun wrap(
         n: Double,
         min: Double,
         max: Double,
@@ -73,7 +73,7 @@ object MathUtil {
      * @param m The modulus.
      */
     @JvmStatic
-    fun mod(
+    public fun mod(
         x: Double,
         m: Double,
     ): Double = (x % m + m) % m
@@ -83,7 +83,7 @@ object MathUtil {
      * See http://en.wikipedia.org/wiki/Mercator_projection .
      */
     @JvmStatic
-    fun mercator(lat: Double): Double {
+    public fun mercator(lat: Double): Double {
         if (lat > Math.PI / 2 - 1e-9) {
             return Double.POSITIVE_INFINITY
         }
@@ -97,14 +97,14 @@ object MathUtil {
      * Returns latitude from mercator Y.
      */
     @JvmStatic
-    fun inverseMercator(y: Double): Double = 2 * atan(exp(y)) - PI / 2
+    public fun inverseMercator(y: Double): Double = 2 * atan(exp(y)) - PI / 2
 
     /**
      * Returns haversine(angle-in-radians).
      * hav(x) == (1 - cos(x)) / 2 == sin(x / 2)^2.
      */
     @JvmStatic
-    fun hav(x: Double): Double {
+    public fun hav(x: Double): Double {
         val sinHalf = sin(x * 0.5)
         return sinHalf * sinHalf
     }
@@ -115,22 +115,22 @@ object MathUtil {
      * The argument must be in [0, 1], and the result is positive.
      */
     @JvmStatic
-    fun arcHav(x: Double): Double = 2 * asin(sqrt(x))
+    public fun arcHav(x: Double): Double = 2 * asin(sqrt(x))
 
     // Given h==hav(x), returns sin(abs(x)).
     @JvmStatic
-    fun sinFromHav(h: Double): Double = 2 * sqrt(h * (1 - h))
+    public fun sinFromHav(h: Double): Double = 2 * sqrt(h * (1 - h))
 
     // Returns hav(asin(x)).
     @JvmStatic
-    fun havFromSin(x: Double): Double {
+    public fun havFromSin(x: Double): Double {
         val x2 = x * x
         return x2 / (1 + sqrt(1 - x2)) * .5
     }
 
     // Returns sin(arcHav(x) + arcHav(y)).
     @JvmStatic
-    fun sinSumFromHav(
+    public fun sinSumFromHav(
         x: Double,
         y: Double,
     ): Double {
@@ -143,7 +143,7 @@ object MathUtil {
      * Returns hav() of distance from (lat1, lng1) to (lat2, lng2) on the unit sphere.
      */
     @JvmStatic
-    fun havDistance(
+    public fun havDistance(
         lat1: Double,
         lat2: Double,
         dLng: Double,
