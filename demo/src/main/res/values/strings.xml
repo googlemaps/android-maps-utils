@@ -15,7 +15,7 @@
  limitations under the License.
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Maps Utils Demo</string>
     <string name="input_text">Looking for…</string>
     <string name="button_send">Go!</string>
@@ -53,6 +53,30 @@
     <string name="demo_title_clustering_diff">Clustering: Diff</string>
     <string name="demo_title_clustering_2k">Clustering: 2K markers</string>
     <string name="demo_title_clustering_20k">Clustering: 20K only visible markers</string>
+    <string name="demo_title_clustering_supercluster_100k">Clustering: 100K / 1M markers (Supercluster)</string>
+    <string name="dataset_100k_label">100K (SF)</string>
+    <string name="dataset_1m_label">1M (USA)</string>
+    <string name="clustering_settings_dataset_title">Dataset Size</string>
+    <string name="clustering_settings_dataset_desc">Switch between 100,000 markers in California and 1,000,000 markers across the USA</string>
+    <string name="clustering_settings_dataset_100k">100,000 Markers (SF Bay Area)</string>
+    <string name="clustering_settings_dataset_1m">1,000,000 Markers (United States)</string>
+    <string name="loading_100k_markers">Generating and indexing 100,000 markers in SF Bay Area…</string>
+    <string name="loading_1m_markers">Generating and indexing 1,000,000 markers across the United States…</string>
+    <string name="clustering_settings_title">Cluster Settings</string>
+    <string name="clustering_settings_radius_format">Cluster Radius: %1$d px</string>
+    <string name="clustering_settings_radius_desc">Controls cluster density on screen (higher radius merges larger areas)</string>
+    <string name="clustering_settings_minsize_format" tools:ignore="PluralsCandidate">Min Cluster Size: %1$d items</string>
+    <string name="clustering_settings_minsize_desc">Groups smaller than this threshold render as individual gremlins</string>
+    <string name="clustering_settings_digits_format">Non-Zero Digits: %1$d</string>
+    <string name="clustering_settings_digits_desc">Controls precision of rounded labels (e.g. 10+, 50+, 100+, 1k+)</string>
+    <string name="clustering_settings_exact_counts">Show Exact Counts</string>
+    <string name="clustering_settings_exact_counts_desc">Display exact item counts on badges instead of rounded values</string>
+    <string name="clustering_settings_compact_notation">Compact SI Notation (k / m)</string>
+    <string name="clustering_settings_compact_notation_desc">Format thousands as \'k\' and millions as \'m\'</string>
+    <string name="clustering_settings_uppercase_units">Uppercase Units (K / M)</string>
+    <string name="clustering_settings_uppercase_units_desc">Display capital \'K\' and \'M\' rather than lowercase \'k\' and \'m\'</string>
+    <string name="clustering_settings_apply">Apply Settings</string>
+    <string name="clustering_settings_reset">Reset Defaults</string>
     <string name="demo_title_clustering_viewmodel">Clustering: ViewModel</string>
     <string name="demo_title_clustering_force_zoom">Clustering: Force on Zoom</string>
 
