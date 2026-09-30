@@ -56,12 +56,16 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
+import java.util.Locale
 import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sign
@@ -103,6 +107,71 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * If cluster size is less than this size, display individual markers.
      */
     public open var minClusterSize: Int = 4
+        set(value) {
+            field = value
+            forceRecluster = true
+        }
+
+    /**
+     * Whether to format cluster bucket numbers using compact SI notation ('K' for thousands, 'M' for millions).
+     * For example, 1,000 becomes "1K+", 2,500 becomes "2.5K+", and 1,000,000 becomes "1M+".
+     * Default is false.
+     */
+    public open var useCompactNumberFormatting: Boolean = false
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * If true, displays the exact item count on the cluster icon instead of rounding to
+     * non-zero digits with a '+' suffix. Default is false.
+     */
+    public open var showExactCount: Boolean = false
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * Controls the maximum number of non-zero (significant) digits displayed on cluster badges
+     * when [showExactCount] is false.
+     * Default is 1.
+     */
+    public open var maxNonZeroDigits: Int = 1
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * Whether compact SI unit suffixes should be uppercase ('K', 'M') or lowercase ('k', 'm').
+     * Default is false ('k', 'm').
+     */
+    public open var compactUnitUppercase: Boolean = false
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * If true, forces the next render pass to redraw clusters regardless of whether the cluster set changed.
+     */
+    @Volatile
+    public open var forceRecluster: Boolean = false
+
+    /**
+     * Clears cached cluster icon BitmapDescriptors and marks clusters to be redrawn on the next pass.
+     */
+    public open fun clearIconCache() {
+        mIcons.clear()
+        forceRecluster = true
+    }
+
+    /**
+     * The cluster size buckets used to group clusters into badge increments.
+     */
+    public open var buckets: IntArray = DEFAULT_BUCKETS
 
     /**
      * The currently displayed set of clusters.
@@ -213,10 +282,72 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
         return R.style.amu_ClusterIcon_TextAppearance // Default value
     }
 
-    protected open fun getClusterText(bucket: Int): String = if (bucket < BUCKETS[0]) {
-        bucket.toString()
-    } else {
-        "$bucket+"
+    protected open fun getClusterText(bucketOrSize: Int): String {
+        if (showExactCount) {
+            if (useCompactNumberFormatting) {
+                return formatCompactNumber(bucketOrSize)
+            }
+            return String.format(Locale.US, "%,d", bucketOrSize)
+        }
+        if (bucketOrSize < 10) {
+            return bucketOrSize.toString()
+        }
+
+        val digits = maxNonZeroDigits.coerceAtLeast(1)
+        val m = floor(log10(bucketOrSize.toDouble())).toInt()
+        val p = max(0, m - digits + 1)
+        val divisor = 10.0.pow(p.toDouble()).toInt()
+        val rounded = (bucketOrSize / divisor) * divisor
+
+        val kSuffix = if (compactUnitUppercase) "K" else "k"
+        val mSuffix = if (compactUnitUppercase) "M" else "m"
+
+        if (useCompactNumberFormatting) {
+            if (rounded >= 1_000_000) {
+                val millions = rounded / 1_000_000.0
+                val formatted = if (millions % 1.0 == 0.0) {
+                    "${millions.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", millions)
+                }
+                return "$formatted$mSuffix+"
+            } else if (rounded >= 1_000) {
+                val thousands = rounded / 1_000.0
+                val formatted = if (thousands % 1.0 == 0.0) {
+                    "${thousands.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", thousands)
+                }
+                return "$formatted$kSuffix+"
+            }
+        }
+        return "$rounded+"
+    }
+
+    private fun formatCompactNumber(number: Int): String {
+        val kSuffix = if (compactUnitUppercase) "K" else "k"
+        val mSuffix = if (compactUnitUppercase) "M" else "m"
+        return when {
+            number >= 1_000_000 -> {
+                val millions = number / 1_000_000.0
+                val formatted = if (millions % 1.0 == 0.0) {
+                    "${millions.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", millions)
+                }
+                "$formatted$mSuffix"
+            }
+            number >= 1_000 -> {
+                val thousands = number / 1_000.0
+                val formatted = if (thousands % 1.0 == 0.0) {
+                    "${thousands.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", thousands)
+                }
+                "$formatted$kSuffix"
+            }
+            else -> number.toString()
+        }
     }
 
     /**
@@ -225,15 +356,16 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      */
     protected open fun getBucket(cluster: Cluster<T>): Int {
         val size = cluster.size
-        if (size <= BUCKETS[0]) {
+        val currentBuckets = buckets
+        if (currentBuckets.isEmpty() || size <= currentBuckets[0]) {
             return size
         }
-        for (i in 0 until BUCKETS.size - 1) {
-            if (size < BUCKETS[i + 1]) {
-                return BUCKETS[i]
+        for (i in 0 until currentBuckets.size - 1) {
+            if (size < currentBuckets[i + 1]) {
+                return currentBuckets[i]
             }
         }
-        return BUCKETS[BUCKETS.size - 1]
+        return currentBuckets[currentBuckets.size - 1]
     }
 
     /**
@@ -323,8 +455,16 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * method is primarily for optimization of performance, and the default implementation simply
      * checks if the new clusters are equal to the old clusters, and if so, it returns false.
      */
-    protected open fun shouldRender(oldClusters: Set<Cluster<T>>, newClusters: Set<Cluster<T>>): Boolean =
-        newClusters != oldClusters
+    protected open fun shouldRender(
+        oldClusters: Set<Cluster<T>>,
+        newClusters: Set<Cluster<T>>,
+    ): Boolean {
+        if (forceRecluster) {
+            forceRecluster = false
+            return true
+        }
+        return newClusters != oldClusters
+    }
 
     /**
      * Transforms the current view (represented by DefaultAdvancedMarkersClusterRenderer.mClusters and DefaultAdvancedMarkersClusterRenderer.mZoom) to a
@@ -350,7 +490,9 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * When zooming in, markers are animated out from the nearest existing cluster. When zooming
      * out, existing clusters are animated to the nearest new cluster.
      */
-    private inner class RenderTask(val clusters: Set<Cluster<T>>) : Runnable {
+    private inner class RenderTask(
+        val clusters: Set<Cluster<T>>,
+    ) : Runnable {
         private var mCallback: Runnable? = null
         private var mProjection: Projection? = null
         private var mSphericalMercatorProjection: SphericalMercatorProjection? = null
@@ -379,11 +521,7 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
 
         @SuppressLint("NewApi")
         override fun run() {
-            if (!shouldRender(
-                    immutableOf(this@DefaultAdvancedMarkersClusterRenderer.mClusters),
-                    immutableOf(clusters),
-                )
-            ) {
+            if (!shouldRender(immutableOf(this@DefaultAdvancedMarkersClusterRenderer.mClusters), immutableOf(clusters))) {
                 mCallback!!.run()
                 return
             }
@@ -507,9 +645,7 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
         mInfoWindowClickListener = listener
     }
 
-    override fun setOnClusterInfoWindowLongClickListener(
-        listener: ClusterManager.OnClusterInfoWindowLongClickListener<T>?,
-    ) {
+    override fun setOnClusterInfoWindowLongClickListener(listener: ClusterManager.OnClusterInfoWindowLongClickListener<T>?) {
         mInfoWindowLongClickListener = listener
     }
 
@@ -517,15 +653,11 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
         mItemClickListener = listener
     }
 
-    override fun setOnClusterItemInfoWindowClickListener(
-        listener: ClusterManager.OnClusterItemInfoWindowClickListener<T>?,
-    ) {
+    override fun setOnClusterItemInfoWindowClickListener(listener: ClusterManager.OnClusterItemInfoWindowClickListener<T>?) {
         mItemInfoWindowClickListener = listener
     }
 
-    override fun setOnClusterItemInfoWindowLongClickListener(
-        listener: ClusterManager.OnClusterItemInfoWindowLongClickListener<T>?,
-    ) {
+    override fun setOnClusterItemInfoWindowLongClickListener(listener: ClusterManager.OnClusterItemInfoWindowLongClickListener<T>?) {
         mItemInfoWindowLongClickListener = listener
     }
 
@@ -542,15 +674,12 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
         mAnimationDurationMs = animationDurationMs
     }
 
-    private fun immutableOf(clusters: Set<Cluster<T>>?): Set<Cluster<T>> = if (clusters !=
-        null
-    ) {
-        Collections.unmodifiableSet(clusters)
-    } else {
-        Collections.emptySet()
-    }
+    private fun immutableOf(clusters: Set<Cluster<T>>?): Set<Cluster<T>> = if (clusters != null) Collections.unmodifiableSet(clusters) else Collections.emptySet()
 
-    private fun findClosestCluster(markers: List<Point>?, point: Point): Point? {
+    private fun findClosestCluster(
+        markers: List<Point>?,
+        point: Point,
+    ): Point? {
         if (markers == null || markers.isEmpty()) return null
 
         val maxDistance = mClusterManager.algorithm.maxDistanceBetweenClusteredItems
@@ -594,7 +723,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
          *
          * @param priority whether this operation should have priority.
          */
-        fun add(priority: Boolean, c: CreateMarkerTask) {
+        fun add(
+            priority: Boolean,
+            c: CreateMarkerTask,
+        ) {
             lock.lock()
             sendEmptyMessage(BLANK)
             if (priority) {
@@ -611,7 +743,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
          * @param priority whether this operation should have priority.
          * @param m        the markerWithPosition to remove.
          */
-        fun remove(priority: Boolean, m: Marker) {
+        fun remove(
+            priority: Boolean,
+            m: Marker,
+        ) {
             lock.lock()
             sendEmptyMessage(BLANK)
             if (priority) {
@@ -629,7 +764,11 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
-        fun animate(marker: MarkerWithPosition, from: LatLng, to: LatLng) {
+        fun animate(
+            marker: MarkerWithPosition,
+            from: LatLng,
+            to: LatLng,
+        ) {
             lock.lock()
             mAnimationTasks.add(AnimationTask(marker, from, to))
             lock.unlock()
@@ -643,7 +782,11 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
          * @param from   the position to animate from.
          * @param to     the position to animate to.
          */
-        fun animateThenRemove(marker: MarkerWithPosition, from: LatLng, to: LatLng) {
+        fun animateThenRemove(
+            marker: MarkerWithPosition,
+            from: LatLng,
+            to: LatLng,
+        ) {
             lock.lock()
             val animationTask = AnimationTask(marker, from, to)
             animationTask.removeOnAnimationComplete(mClusterManager.markerManager)
@@ -687,26 +830,11 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
          * Perform the next task. Prioritise any on-screen work.
          */
         private fun performNextTask() {
-            mOnScreenRemoveMarkerTasks.poll()?.let {
-                removeMarker(it)
-                return
-            }
-            mAnimationTasks.poll()?.let {
-                it.perform()
-                return
-            }
-            mOnScreenCreateMarkerTasks.poll()?.let {
-                it.perform(this)
-                return
-            }
-            mCreateMarkerTasks.poll()?.let {
-                it.perform(this)
-                return
-            }
-            mRemoveMarkerTasks.poll()?.let {
-                removeMarker(it)
-                return
-            }
+            mOnScreenRemoveMarkerTasks.poll()?.let { removeMarker(it); return }
+            mAnimationTasks.poll()?.let { it.perform(); return }
+            mOnScreenCreateMarkerTasks.poll()?.let { it.perform(this); return }
+            mCreateMarkerTasks.poll()?.let { it.perform(this); return }
+            mRemoveMarkerTasks.poll()?.let { removeMarker(it); return }
         }
 
         private fun removeMarker(m: Marker?) {
@@ -726,7 +854,7 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
                         mCreateMarkerTasks.isEmpty() && mOnScreenCreateMarkerTasks.isEmpty() &&
                             mOnScreenRemoveMarkerTasks.isEmpty() && mRemoveMarkerTasks.isEmpty() &&
                             mAnimationTasks.isEmpty()
-                        )
+                    )
                 } finally {
                     lock.unlock()
                 }
@@ -772,7 +900,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
 
         operator fun get(m: Marker): T? = mCacheReverse[m]
 
-        fun put(item: T, m: Marker) {
+        fun put(
+            item: T,
+            m: Marker,
+        ) {
             mCache[item] = m
             mCacheReverse[m] = item
         }
@@ -801,7 +932,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * @param item   item to be rendered
      * @param advancedMarkerOptions the AdvancedMarkerOptions representing the provided item
      */
-    protected open fun onBeforeClusterItemRendered(item: T, advancedMarkerOptions: AdvancedMarkerOptions) {
+    protected open fun onBeforeClusterItemRendered(
+        item: T,
+        advancedMarkerOptions: AdvancedMarkerOptions,
+    ) {
         if (item.title != null && item.snippet != null) {
             advancedMarkerOptions.title(item.title)
             advancedMarkerOptions.snippet(item.snippet)
@@ -831,7 +965,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * @param item   item being updated
      * @param marker cached marker that contains a potentially previous state of the item.
      */
-    protected open fun onClusterItemUpdated(item: T, marker: Marker) {
+    protected open fun onClusterItemUpdated(
+        item: T,
+        marker: Marker,
+    ) {
         var changed = false
         // Update marker text if the item text changed - same logic as adding marker in onBeforeClusterItemRendered()
         if (item.title != null && item.snippet != null) {
@@ -893,7 +1030,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * @param cluster       cluster to be rendered
      * @param advancedMarkerOptions markerOptions representing the provided cluster
      */
-    protected open fun onBeforeClusterRendered(cluster: Cluster<T>, advancedMarkerOptions: AdvancedMarkerOptions) {
+    protected open fun onBeforeClusterRendered(
+        cluster: Cluster<T>,
+        advancedMarkerOptions: AdvancedMarkerOptions,
+    ) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         advancedMarkerOptions.icon(getDescriptorForCluster(cluster))
     }
@@ -909,13 +1049,26 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * count of the number of items.
      */
     protected open fun getDescriptorForCluster(cluster: Cluster<T>): BitmapDescriptor {
-        val bucket = getBucket(cluster)
-        var descriptor = mIcons[bucket]
+        val key = if (showExactCount) {
+            cluster.size
+        } else {
+            val size = cluster.size
+            if (size < 10) {
+                size
+            } else {
+                val digits = maxNonZeroDigits.coerceAtLeast(1)
+                val m = floor(log10(size.toDouble())).toInt()
+                val p = max(0, m - digits + 1)
+                val divisor = 10.0.pow(p.toDouble()).toInt()
+                (size / divisor) * divisor
+            }
+        }
+        var descriptor = mIcons[key]
         if (descriptor == null) {
-            mColoredCircleBackground!!.paint.color = getColor(bucket)
-            mIconGenerator.setTextAppearance(getClusterTextAppearance(bucket))
-            descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)))
-            mIcons.put(bucket, descriptor)
+            mColoredCircleBackground!!.paint.color = getColor(key)
+            mIconGenerator.setTextAppearance(getClusterTextAppearance(key))
+            descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(key)))
+            mIcons.put(key, descriptor)
         }
         return descriptor
     }
@@ -926,7 +1079,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * @param cluster the cluster that was just added to the map
      * @param marker  the marker representing the cluster that was just added to the map
      */
-    protected open fun onClusterRendered(cluster: Cluster<T>, marker: Marker) {}
+    protected open fun onClusterRendered(
+        cluster: Cluster<T>,
+        marker: Marker,
+    ) {}
 
     /**
      * Called when a cached marker for a Cluster already exists on the map so the marker may
@@ -946,7 +1102,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * @param cluster cluster being updated
      * @param marker  cached marker that contains a potentially previous state of the cluster
      */
-    protected open fun onClusterUpdated(cluster: Cluster<T>, marker: AdvancedMarker) {
+    protected open fun onClusterUpdated(
+        cluster: Cluster<T>,
+        marker: AdvancedMarker,
+    ) {
         // TODO: consider adding anchor(.5, .5) (Individual markers will overlap more often)
         marker.setIcon(getDescriptorForCluster(cluster))
     }
@@ -957,7 +1116,10 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * @param clusterItem the item that was just added to the map
      * @param marker      the marker representing the item that was just added to the map
      */
-    protected open fun onClusterItemRendered(clusterItem: T, marker: Marker) {}
+    protected open fun onClusterItemRendered(
+        clusterItem: T,
+        marker: Marker,
+    ) {}
 
     /**
      * Get the marker from a ClusterItem
@@ -1016,9 +1178,7 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
                             }
                         }
                         onBeforeClusterItemRendered(item, advancedMarkerOptions)
-                        val newMarker = mClusterManager.markerCollection.addMarker(
-                            advancedMarkerOptions,
-                        ) as AdvancedMarker
+                        val newMarker = mClusterManager.markerCollection.addMarker(advancedMarkerOptions) as AdvancedMarker
                         marker = newMarker
                         markerWithPosition = MarkerWithPosition(newMarker)
                         mMarkerCache.put(item, newMarker)
@@ -1040,9 +1200,7 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
             if (marker == null) {
                 val advancedMarkerOptions = AdvancedMarkerOptions().position(animateFrom ?: cluster.position)
                 onBeforeClusterRendered(cluster, advancedMarkerOptions)
-                val newMarker = mClusterManager.clusterMarkerCollection.addMarker(
-                    advancedMarkerOptions,
-                ) as AdvancedMarker
+                val newMarker = mClusterManager.clusterMarkerCollection.addMarker(advancedMarkerOptions) as AdvancedMarker
                 marker = newMarker
                 mClusterMarkerCache.put(cluster, newMarker)
                 markerWithPosition = MarkerWithPosition(newMarker)
@@ -1062,14 +1220,17 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * A Marker and its position. [Marker.getPosition] must be called from the UI thread, so this
      * object allows lookup from other threads.
      */
-    private class MarkerWithPosition(val marker: Marker) {
+    private class MarkerWithPosition(
+        val marker: Marker,
+    ) {
         var position: LatLng = marker.position
 
-        override fun equals(other: Any?): Boolean = if (other is MarkerWithPosition) {
-            marker == other.marker
-        } else {
-            false
-        }
+        override fun equals(other: Any?): Boolean =
+            if (other is MarkerWithPosition) {
+                marker == other.marker
+            } else {
+                false
+            }
 
         override fun hashCode(): Int = marker.hashCode()
     }
@@ -1127,12 +1288,16 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
     }
 
     public companion object {
-        private val BUCKETS = intArrayOf(10, 20, 50, 100, 200, 500, 1000)
+        public val DEFAULT_BUCKETS: IntArray = intArrayOf(10, 20, 50, 100, 200, 500, 1000)
+        private val BUCKETS = DEFAULT_BUCKETS
         private val ANIMATION_INTERP: TimeInterpolator = DecelerateInterpolator()
         private const val RUN_TASK = 0
         private const val TASK_FINISHED = 1
         private const val BLANK = 0
 
-        private fun distanceSquared(a: Point, b: Point): Double = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
+        private fun distanceSquared(
+            a: Point,
+            b: Point,
+        ): Double = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
     }
 }
