@@ -69,6 +69,7 @@
     <string name="demo_title_poly_decode">PolyUtil.decode</string>
     <string name="demo_title_poly_simplify">PolyUtil.simplify</string>
     <string name="demo_title_polyline_progress">Polyline Progress</string>
+    <string name="demo_title_flexible_polyline">FlexiblePolylineUtil.decode</string>
     <string name="demo_title_spherical_distance">SphericalUtil.computeDistanceBetween</string>
 
     <!-- Demo Titles: Utilities -->
@@ -143,4 +144,7 @@ Demonstrates how to dynamically control the visual layering (stacking order) of 
 <b>Tie Resolution:</b><br/>
 • When two shapes of the same type share identical z-index values, the Google Maps SDK resolves their stacking order based on <b>insertion (creation) order</b>.
 ]]></string>
+
+    <!-- Flexible Polyline demo -->
+    <string name="flexible_polyline_summary">Decoded points: %1$d</string>
 </resources>

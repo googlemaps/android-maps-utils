@@ -121,6 +121,7 @@ class MainActivity : ComponentActivity() {
                 R.string.category_geometry,
                 listOf(
                     Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
+                    Demo(R.string.demo_title_flexible_polyline, FlexiblePolylineDemoActivity::class.java),
                     Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
                     Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
                     Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java),
