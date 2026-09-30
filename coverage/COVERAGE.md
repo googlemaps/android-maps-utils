@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `657fc55` (#1802), recorded 2026-09-30T22:24:57Z.
+Measured at `de264f8` (#1716), recorded 2026-09-30T23:40:41Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 553/1,779 | 31.08% | `██████░░░░░░░░░░░░░░` | 170/834 | 20.38% |
-| `data` | 1,402/2,663 | 52.65% | `███████████░░░░░░░░░` | 840/2,245 | 37.42% |
-| `heatmaps` | 242/275 | 88.00% | `██████████████████░░` | 120/146 | 82.19% |
-| `library` | 651/704 | 92.47% | `██████████████████░░` | 276/336 | 82.14% |
-| `ui` | 115/148 | 77.70% | `████████████████░░░░` | 43/66 | 65.15% |
-| **TOTAL** | 2,963/5,569 | 53.21% | `███████████░░░░░░░░░` | 1,449/3,627 | 39.95% |
+| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 180/852 | 21.13% |
+| `data` | 1,678/2,938 | 57.11% | `███████████░░░░░░░░░` | 946/2,445 | 38.69% |
+| `heatmaps` | 257/314 | 81.85% | `████████████████░░░░` | 134/162 | 82.72% |
+| `library` | 1,023/1,172 | 87.29% | `█████████████████░░░` | 311/374 | 83.16% |
+| `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
+| **TOTAL** | 3,687/6,424 | 57.39% | `███████████░░░░░░░░░` | 1,619/3,901 | 41.50% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-09-30 | `de264f8` | #1716 | 57.39% | +4.18 | feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0) |
 | 2026-09-30 | `657fc55` | #1802 | 53.21% | 0.00 | build(deps): update AGP, Android Lint, Kover, Ktor, and core-ktx to latest stable versions |
 | 2026-09-30 | `f805f5e` | #1803 | 53.21% | +0.02 | fix(library): match reference rounding and unsigned varints in flexible polyline |
 | 2026-09-30 | `50e88c9` | #1801 | 53.19% | +1.14 | feat(library): add flexible polyline encoding and decoding |
