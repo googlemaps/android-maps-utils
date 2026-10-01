@@ -40,6 +40,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
+        android:largeHeap="true"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
 
@@ -93,6 +94,9 @@
             android:exported="true" />
         <activity
             android:name=".VisibleClusteringDemoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SuperCluster100kDemoActivity"
             android:exported="true" />
         <activity
             android:name=".CustomMarkerClusteringDemoActivity"

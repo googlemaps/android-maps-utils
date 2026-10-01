@@ -56,12 +56,16 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
 import java.util.LinkedList
+import java.util.Locale
 import java.util.Queue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sign
@@ -103,6 +107,71 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * If cluster size is less than this size, display individual markers.
      */
     public open var minClusterSize: Int = 4
+        set(value) {
+            field = value
+            forceRecluster = true
+        }
+
+    /**
+     * Whether to format cluster bucket numbers using compact SI notation ('K' for thousands, 'M' for millions).
+     * For example, 1,000 becomes "1K+", 2,500 becomes "2.5K+", and 1,000,000 becomes "1M+".
+     * Default is false.
+     */
+    public open var useCompactNumberFormatting: Boolean = false
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * If true, displays the exact item count on the cluster icon instead of rounding to
+     * non-zero digits with a '+' suffix. Default is false.
+     */
+    public open var showExactCount: Boolean = false
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * Controls the maximum number of non-zero (significant) digits displayed on cluster badges
+     * when [showExactCount] is false.
+     * Default is 1.
+     */
+    public open var maxNonZeroDigits: Int = 1
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * Whether compact SI unit suffixes should be uppercase ('K', 'M') or lowercase ('k', 'm').
+     * Default is false ('k', 'm').
+     */
+    public open var compactUnitUppercase: Boolean = false
+        set(value) {
+            field = value
+            clearIconCache()
+        }
+
+    /**
+     * If true, forces the next render pass to redraw clusters regardless of whether the cluster set changed.
+     */
+    @Volatile
+    public open var forceRecluster: Boolean = false
+
+    /**
+     * Clears cached cluster icon BitmapDescriptors and marks clusters to be redrawn on the next pass.
+     */
+    public open fun clearIconCache() {
+        mIcons.clear()
+        forceRecluster = true
+    }
+
+    /**
+     * The cluster size buckets used to group clusters into badge increments.
+     */
+    public open var buckets: IntArray = DEFAULT_BUCKETS
 
     /**
      * The currently displayed set of clusters.
@@ -213,12 +282,73 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
         return R.style.amu_ClusterIcon_TextAppearance // Default value
     }
 
-    protected open fun getClusterText(bucket: Int): String =
-        if (bucket < BUCKETS[0]) {
-            bucket.toString()
-        } else {
-            "$bucket+"
+    protected open fun getClusterText(bucketOrSize: Int): String {
+        if (showExactCount) {
+            if (useCompactNumberFormatting) {
+                return formatCompactNumber(bucketOrSize)
+            }
+            return String.format(Locale.US, "%,d", bucketOrSize)
         }
+        if (bucketOrSize < 10) {
+            return bucketOrSize.toString()
+        }
+
+        val digits = maxNonZeroDigits.coerceAtLeast(1)
+        val m = floor(log10(bucketOrSize.toDouble())).toInt()
+        val p = max(0, m - digits + 1)
+        val divisor = 10.0.pow(p.toDouble()).toInt()
+        val rounded = (bucketOrSize / divisor) * divisor
+
+        val kSuffix = if (compactUnitUppercase) "K" else "k"
+        val mSuffix = if (compactUnitUppercase) "M" else "m"
+
+        if (useCompactNumberFormatting) {
+            if (rounded >= 1_000_000) {
+                val millions = rounded / 1_000_000.0
+                val formatted = if (millions % 1.0 == 0.0) {
+                    "${millions.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", millions)
+                }
+                return "$formatted$mSuffix+"
+            } else if (rounded >= 1_000) {
+                val thousands = rounded / 1_000.0
+                val formatted = if (thousands % 1.0 == 0.0) {
+                    "${thousands.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", thousands)
+                }
+                return "$formatted$kSuffix+"
+            }
+        }
+        return "$rounded+"
+    }
+
+    private fun formatCompactNumber(number: Int): String {
+        val kSuffix = if (compactUnitUppercase) "K" else "k"
+        val mSuffix = if (compactUnitUppercase) "M" else "m"
+        return when {
+            number >= 1_000_000 -> {
+                val millions = number / 1_000_000.0
+                val formatted = if (millions % 1.0 == 0.0) {
+                    "${millions.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", millions)
+                }
+                "$formatted$mSuffix"
+            }
+            number >= 1_000 -> {
+                val thousands = number / 1_000.0
+                val formatted = if (thousands % 1.0 == 0.0) {
+                    "${thousands.toInt()}"
+                } else {
+                    String.format(Locale.US, "%.1f", thousands)
+                }
+                "$formatted$kSuffix"
+            }
+            else -> number.toString()
+        }
+    }
 
     /**
      * Gets the "bucket" for a particular cluster. By default, uses the number of points within the
@@ -226,15 +356,16 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      */
     protected open fun getBucket(cluster: Cluster<T>): Int {
         val size = cluster.size
-        if (size <= BUCKETS[0]) {
+        val currentBuckets = buckets
+        if (currentBuckets.isEmpty() || size <= currentBuckets[0]) {
             return size
         }
-        for (i in 0 until BUCKETS.size - 1) {
-            if (size < BUCKETS[i + 1]) {
-                return BUCKETS[i]
+        for (i in 0 until currentBuckets.size - 1) {
+            if (size < currentBuckets[i + 1]) {
+                return currentBuckets[i]
             }
         }
-        return BUCKETS[BUCKETS.size - 1]
+        return currentBuckets[currentBuckets.size - 1]
     }
 
     /**
@@ -327,7 +458,13 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
     protected open fun shouldRender(
         oldClusters: Set<Cluster<T>>,
         newClusters: Set<Cluster<T>>,
-    ): Boolean = newClusters != oldClusters
+    ): Boolean {
+        if (forceRecluster) {
+            forceRecluster = false
+            return true
+        }
+        return newClusters != oldClusters
+    }
 
     /**
      * Transforms the current view (represented by DefaultAdvancedMarkersClusterRenderer.mClusters and DefaultAdvancedMarkersClusterRenderer.mZoom) to a
@@ -912,13 +1049,26 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
      * count of the number of items.
      */
     protected open fun getDescriptorForCluster(cluster: Cluster<T>): BitmapDescriptor {
-        val bucket = getBucket(cluster)
-        var descriptor = mIcons[bucket]
+        val key = if (showExactCount) {
+            cluster.size
+        } else {
+            val size = cluster.size
+            if (size < 10) {
+                size
+            } else {
+                val digits = maxNonZeroDigits.coerceAtLeast(1)
+                val m = floor(log10(size.toDouble())).toInt()
+                val p = max(0, m - digits + 1)
+                val divisor = 10.0.pow(p.toDouble()).toInt()
+                (size / divisor) * divisor
+            }
+        }
+        var descriptor = mIcons[key]
         if (descriptor == null) {
-            mColoredCircleBackground!!.paint.color = getColor(bucket)
-            mIconGenerator.setTextAppearance(getClusterTextAppearance(bucket))
-            descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(bucket)))
-            mIcons.put(bucket, descriptor)
+            mColoredCircleBackground!!.paint.color = getColor(key)
+            mIconGenerator.setTextAppearance(getClusterTextAppearance(key))
+            descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(key)))
+            mIcons.put(key, descriptor)
         }
         return descriptor
     }
@@ -1138,7 +1288,8 @@ public open class DefaultAdvancedMarkersClusterRenderer<T : ClusterItem> @JvmOve
     }
 
     public companion object {
-        private val BUCKETS = intArrayOf(10, 20, 50, 100, 200, 500, 1000)
+        public val DEFAULT_BUCKETS: IntArray = intArrayOf(10, 20, 50, 100, 200, 500, 1000)
+        private val BUCKETS = DEFAULT_BUCKETS
         private val ANIMATION_INTERP: TimeInterpolator = DecelerateInterpolator()
         private const val RUN_TASK = 0
         private const val TASK_FINISHED = 1
