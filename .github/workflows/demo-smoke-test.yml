@@ -75,9 +75,9 @@ jobs:
       if: steps.key.outputs.available == 'true'
       uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
       with:
-        # Emulators never update Google Play services, so the image's bundled version decides the
-        # maps renderer. API 34 images bundle 23.18, which only loads the legacy renderer, and
-        # adding advanced markers there crashes inside Play services.
+        # Emulators never update Google Play services, so the image's bundled version is what the
+        # maps run on. API 34 images bundle 23.18, where adding advanced markers crashes inside
+        # Play services. API 36 images bundle 25.26, which works.
         api-level: 36
         target: google_apis
         arch: x86_64
