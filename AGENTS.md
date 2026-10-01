@@ -70,6 +70,21 @@ or commit API keys.
   prefix causes a wrong release bump.
 - **PR Title Validation**: Ensure PR titles strictly conform to Conventional Commits (e.g., `fix: stale QuadItem removal` instead of `Fix stale QuadItem removal`). When PRs are squash-merged into `main`, GitHub uses the PR title as the default commit header; a non-conforming title prevents release-please from accurately categorizing changes in CHANGELOG.md or calculating semantic version increments.
 - Never edit CHANGELOG.md or `.release-please-manifest.json` by hand.
+- **Several changes in one PR**: a squash merge keeps only the PR title, so
+  release-please would list one entry. When a PR contains several changes that
+  belong in the changelog separately (for example several bug fixes), add a
+  commit override block at the end of the PR description, one Conventional
+  Commit per line. release-please uses these lines instead of the PR title:
+
+  ```
+  BEGIN_COMMIT_OVERRIDE
+  fix(data): apply styles referenced through a KML StyleMap
+  fix(data): do not crash on a KML Style or StyleMap without an id
+  END_COMMIT_OVERRIDE
+  ```
+
+  The PR title still has to be a valid Conventional Commit. Each line counts
+  for the version bump, so a `feat:` or `!` line bumps accordingly.
 - Every behavior change needs a unit test in the affected module.
 - All pull requests are to be created as drafts (`gh pr create --draft`) until authorization is explicitly given to mark them ready for review. Always inform the user that the PR was created as a draft.
 - Run the module's tests and `lint` before declaring work done, and report
