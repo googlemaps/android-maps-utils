@@ -40,6 +40,9 @@ public class KmlStyle : Style() {
     private var mPolyRandomColorMode = false
     internal var mMarkerColor = 0f
 
+    // The ARGB color behind mMarkerColor, which is only a hue. KML's default color is white.
+    private var mMarkerArgb = Color.WHITE
+
     public fun setInfoWindowText(text: String) {
         mBalloonOptions["text"] = text
     }
@@ -89,6 +92,7 @@ public class KmlStyle : Style() {
 
     public fun setMarkerColor(color: String) {
         val integerColor = Color.parseColor("#" + convertColor(color))
+        mMarkerArgb = integerColor
         mMarkerColor = getHueValue(integerColor)
         mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(mMarkerColor))
         mStylesSet.add("markerColor")
@@ -149,7 +153,7 @@ public class KmlStyle : Style() {
         newMarkerOption.rotation(mMarkerOptions.rotation)
         newMarkerOption.anchor(mMarkerOptions.anchorU, mMarkerOptions.anchorV)
         if (mIconRandomColorMode) {
-            val hue = getHueValue(computeRandomColor(mMarkerColor.toInt()))
+            val hue = getHueValue(computeRandomColor(mMarkerArgb))
             mMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(hue))
         }
         newMarkerOption.icon(mMarkerOptions.icon)

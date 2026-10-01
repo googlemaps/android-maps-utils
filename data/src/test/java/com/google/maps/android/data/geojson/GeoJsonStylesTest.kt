@@ -23,7 +23,6 @@ import com.google.android.gms.maps.model.RoundCap
 import com.google.android.gms.maps.model.SquareCap
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -143,11 +142,9 @@ class GeoJsonStylesTest {
     }
 
     /**
-     * Inside `PolylineOptions().apply { }`, toPolylineOptions calls getPattern(), getStartCap()
-     * and getEndCap() unqualified, which resolve to the new PolylineOptions' own getters rather
-     * than the style's. The pattern and caps of a GeoJSON line style are therefore never drawn.
+     * Regression test: toPolylineOptions used to call getPattern() and the cap getters inside
+     * `PolylineOptions().apply { }`, which resolved to the new options instead of the style.
      */
-    @Ignore("Known bug: toPolylineOptions drops the pattern and the start and end caps")
     @Test
     fun `polyline options carry the pattern and caps`() {
         val style = GeoJsonLineStringStyle()

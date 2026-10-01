@@ -22,7 +22,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -180,12 +179,9 @@ class KmlLayerParsingTest {
     }
 
     /**
-     * Style maps store the normal styleUrl with its leading '#' ("#red"), but shared styles are
-     * keyed by bare id ("red"). Resolving a placemark through a StyleMap therefore looks up
-     * "#red", finds nothing and leaves the placemark unstyled. Google Earth exports put a
-     * StyleMap on almost every placemark.
+     * Regression test: style maps keep the '#' of their normal styleUrl ("#red") while shared
+     * styles are keyed by bare id, so placemarks styled through a StyleMap used to be unstyled.
      */
-    @Ignore("Known bug: styles referenced through a StyleMap are never applied")
     @Test
     fun `style map resolves to the normal shared style`() {
         val layer = layerOf(
@@ -326,10 +322,8 @@ class KmlLayerParsingTest {
     }
 
     /**
-     * Shared styles are indexed with `it.id!!`. A shared Style without an id is unusual but
-     * valid KML, and it makes the KmlLayer constructor throw a NullPointerException.
+     * Regression test: a shared Style without an id used to throw a NullPointerException.
      */
-    @Ignore("Known bug: a shared Style without an id crashes KmlLayer")
     @Test
     fun `shared style without an id is ignored`() {
         val layer = layerOf(
@@ -347,10 +341,9 @@ class KmlLayerParsingTest {
     }
 
     /**
-     * Ground overlays read `latLonBox!!`. Overlays positioned with gx:LatLonQuad, which Google
-     * Earth writes for rotated overlays, have no LatLonBox and make the constructor throw.
+     * Regression test: overlays without a LatLonBox (gx:LatLonQuad, written by Google Earth for
+     * rotated overlays) used to throw a NullPointerException. They are now skipped.
      */
-    @Ignore("Known bug: a ground overlay without a LatLonBox crashes KmlLayer")
     @Test
     fun `ground overlay without a LatLonBox does not crash the layer`() {
         val layer = layerOf(
