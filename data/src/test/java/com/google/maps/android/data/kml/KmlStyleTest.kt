@@ -26,7 +26,6 @@ import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -247,12 +246,9 @@ class KmlStyleTest {
     }
 
     /**
-     * In random icon color mode, getMarkerOptions passes the marker's hue (0..360) to
-     * computeRandomColor, which expects an ARGB color. A green marker (hue 120) is treated as
-     * the color 0x00000078, so the random marker is always blue (hue 240) or black (hue 0)
-     * instead of a random shade of the style's green.
+     * Random icon color mode applies a random scale to the marker's ARGB color, so a green
+     * marker stays a shade of green (or black, once scaled to zero).
      */
-    @Ignore("Known bug: random icon color mode randomizes the hue value instead of the color")
     @Test
     fun `random icon color mode keeps the marker hue`() {
         val style = KmlStyle()
