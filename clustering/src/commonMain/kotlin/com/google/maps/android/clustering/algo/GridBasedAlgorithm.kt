@@ -34,7 +34,7 @@ import kotlin.math.pow
  *
  * @param <T> The type of {@link ClusterItem} to be clustered.
  */
-class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
+public open class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     private var mGridSize = DEFAULT_GRID_SIZE
     private val mItemsLock = PlatformLock()
     private val mItems: MutableSet<T> = HashSet()
@@ -103,7 +103,7 @@ class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     override val items: Collection<T>
         get() = mItemsLock.withLock { mItems.toSet() }
 
-    companion object {
+    public companion object {
         private const val DEFAULT_GRID_SIZE = 100
 
         private fun getCoord(

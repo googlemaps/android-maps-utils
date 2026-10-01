@@ -25,8 +25,8 @@ package com.google.maps.android.data.renderer.model
  * @property lng The longitude of the point.
  * @property alt The altitude of the point, in meters. Optional.
  */
-data class Point(
-    val lat: Double,
-    val lng: Double,
-    val alt: Double? = null,
+public data class Point(
+    public val lat: Double,
+    public val lng: Double,
+    public val alt: Double? = null,
 )

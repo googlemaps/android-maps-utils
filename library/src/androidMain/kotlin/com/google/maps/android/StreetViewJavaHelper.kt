@@ -23,24 +23,24 @@ import kotlinx.coroutines.launch
 /**
  * A helper object to call the suspend function `fetchStreetViewData` from Java.
  */
-object StreetViewJavaHelper {
+public object StreetViewJavaHelper {
     /**
      * A callback interface to receive the result of the Street View data fetch.
      */
-    interface StreetViewCallback {
+    public interface StreetViewCallback {
         /**
          * Called when the Street View data is fetched successfully.
          *
          * @param status The status of the Street View data.
          */
-        fun onStreetViewResult(status: Status)
+        public fun onStreetViewResult(status: Status)
 
         /**
          * Called when there is an error fetching the Street View data.
          *
          * @param e The exception that occurred.
          */
-        fun onStreetViewError(e: Exception)
+        public fun onStreetViewError(e: Exception)
     }
 
     /**
@@ -51,7 +51,7 @@ object StreetViewJavaHelper {
      * @param callback The callback to receive the result.
      */
     @JvmStatic
-    fun fetchStreetViewData(
+    public fun fetchStreetViewData(
         latLng: LatLng,
         apiKey: String,
         callback: StreetViewCallback,

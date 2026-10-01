@@ -43,7 +43,7 @@ import com.google.maps.android.data.renderer.model.PolygonStyle
  * A mapper class responsible for transforming GeoJSON objects into the platform-agnostic
  * [DataScene] model.
  */
-object GeoJsonMapper {
+public object GeoJsonMapper {
 
     /**
      * Converts a [GeoJsonObject] into a [DataScene].
@@ -51,17 +51,11 @@ object GeoJsonMapper {
      * @param geoJsonObject The GeoJSON object to convert.
      * @return A [DataScene] representation of the GeoJSON object.
      */
-    /**
-     * Converts a [GeoJsonObject] into a [DataScene].
-     *
-     * @param geoJsonObject The GeoJSON object to convert.
-     * @return A [DataScene] representation of the GeoJSON object.
-     */
-    fun toScene(geoJsonObject: GeoJsonObject): DataScene {
+    public fun toScene(geoJsonObject: GeoJsonObject): DataScene {
         return DataScene(listOf(toLayer(geoJsonObject)))
     }
 
-    fun toLayer(geoJsonObject: GeoJsonObject): DataLayer {
+    public fun toLayer(geoJsonObject: GeoJsonObject): DataLayer {
         val features = mutableListOf<Feature>()
 
         when (geoJsonObject) {
@@ -223,6 +217,6 @@ object GeoJsonMapper {
     }
 }
 
-fun GeoJsonObject.toLayer(): DataLayer {
+public fun GeoJsonObject.toLayer(): DataLayer {
     return GeoJsonMapper.toLayer(this)
 }

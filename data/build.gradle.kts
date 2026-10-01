@@ -20,7 +20,6 @@ plugins {
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
     id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
-    id("jacoco")
 }
 
 android {
@@ -48,6 +47,7 @@ android {
     resourcePrefix = "amu_"
 
     kotlin {
+        explicitApi()
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -80,11 +80,8 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.androidx.test.core)
     implementation(libs.kotlin.stdlib.jdk8)
-
-    testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 }
 
 tasks.register("instrumentTest") {
@@ -93,19 +90,4 @@ tasks.register("instrumentTest") {
 
 if (System.getenv("JITPACK") != null) {
     apply(plugin = "maven")
-}
-
-tasks.register<JacocoReport>("jacocoDebugReport") {
-    dependsOn("testDebugUnitTest")
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-    val debugTree = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug")) {
-        exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*", "android/**/*.*")
-    }
-    val mainSrc = layout.projectDirectory.dir("src/main/java")
-    sourceDirectories.setFrom(files(mainSrc))
-    classDirectories.setFrom(files(debugTree))
-    executionData.setFrom(files(layout.buildDirectory.file("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")))
 }

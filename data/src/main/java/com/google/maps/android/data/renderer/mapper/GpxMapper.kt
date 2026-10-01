@@ -37,8 +37,8 @@ import com.google.maps.android.data.renderer.model.PointGeometry
  * - Routes (mapped to LineStrings)
  * - Tracks (mapped to MultiGeometries or LineStrings)
  */
-object GpxMapper {
-    fun toScene(gpx: Gpx): DataScene = DataScene(listOf(toLayer(gpx)))
+public object GpxMapper {
+    public fun toScene(gpx: Gpx): DataScene = DataScene(listOf(toLayer(gpx)))
 
     internal fun toLayer(gpx: Gpx): DataLayer {
         val features = mutableListOf<Feature>()
@@ -59,7 +59,7 @@ object GpxMapper {
     }
 }
 
-fun Gpx.toLayer(): DataLayer = GpxMapper.toLayer(this)
+public fun Gpx.toLayer(): DataLayer = GpxMapper.toLayer(this)
 
 private fun Wpt.toFeature(): Feature {
     val point = Point(lat, lon, ele)

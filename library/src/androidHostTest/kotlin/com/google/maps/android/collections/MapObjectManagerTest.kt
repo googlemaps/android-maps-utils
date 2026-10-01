@@ -154,4 +154,26 @@ class MapObjectManagerTest {
             assertThat(obj.isVisible).isFalse()
         }
     }
+
+    @Test
+    fun testSynchronousListenerRegistrationOnUiThread() {
+        var listenersRegistered = false
+        val syncManager =
+            object : MapObjectManager<TestObject, ConcreteManager.Collection>(map) {
+                override fun setListenersOnUiThread() {
+                    listenersRegistered = true
+                }
+
+                override fun newCollection(): ConcreteManager.Collection = manager.newCollection()
+
+                override fun removeObjectFromMap(mapObject: TestObject) {}
+
+                override fun setVisible(
+                    mapObject: TestObject,
+                    visible: Boolean,
+                ) {}
+            }
+        assertThat(syncManager).isNotNull()
+        assertThat(listenersRegistered).isTrue()
+    }
 }

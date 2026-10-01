@@ -23,14 +23,14 @@ import com.google.android.gms.maps.model.LatLngBounds
  * @property latLonBox The bounding box of the overlay.
  * @property rotation The rotation of the overlay in degrees clockwise from north.
  */
-data class GroundOverlay(
-    val north: Double,
-    val south: Double,
-    val east: Double,
-    val west: Double,
-    val rotation: Float = 0f,
+public data class GroundOverlay(
+    public val north: Double,
+    public val south: Double,
+    public val east: Double,
+    public val west: Double,
+    public val rotation: Float = 0f,
 ) : Geometry {
-    val latLngBounds: LatLngBounds
+    public val latLngBounds: LatLngBounds
         get() =
             LatLngBounds(
                 com.google.android.gms.maps.model
@@ -39,5 +39,5 @@ data class GroundOverlay(
                     .LatLng(north, east),
             )
 
-    override val type: String = "GroundOverlay"
+    public override val type: String = "GroundOverlay"
 }

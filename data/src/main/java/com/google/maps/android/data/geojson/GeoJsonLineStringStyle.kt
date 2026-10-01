@@ -28,7 +28,7 @@ import com.google.maps.android.data.Style
 public class GeoJsonLineStringStyle :
     Style(),
     GeoJsonStyle {
-    override fun getGeometryType(): Array<String> = GEOMETRY_TYPE
+    public override fun getGeometryType(): Array<String> = GEOMETRY_TYPE
 
     public var color: Int
         get() = mPolylineOptions.color
@@ -127,7 +127,7 @@ public class GeoJsonLineStringStyle :
 
     public fun getEndCap(): Cap = mPolylineOptions.endCap
 
-    companion object {
+    public companion object {
         private val GEOMETRY_TYPE = arrayOf("LineString", "MultiLineString", "GeometryCollection")
     }
 }

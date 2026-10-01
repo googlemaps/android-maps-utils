@@ -23,19 +23,19 @@ import com.google.android.gms.maps.model.RoundCap
 /**
  * A data model representing a polyline on the map.
  */
-data class Polyline(
-    var points: List<LatLng>,
-    var width: Float = 10.0f,
-    var color: Int = -0x1000000, // Black
-    var isClickable: Boolean = false,
-    var isGeodesic: Boolean = false,
-    override var isVisible: Boolean = true,
-    override var zIndex: Float = 0.0f,
-    var startCap: Cap = RoundCap(),
-    var endCap: Cap = RoundCap(),
-    var jointType: Int = 0, // JointType.DEFAULT
-    var pattern: List<PatternItem>? = null,
+public data class Polyline(
+    public var points: List<LatLng>,
+    public var width: Float = 10.0f,
+    public var color: Int = -0x1000000, // Black
+    public var isClickable: Boolean = false,
+    public var isGeodesic: Boolean = false,
+    public override var isVisible: Boolean = true,
+    public override var zIndex: Float = 0.0f,
+    public var startCap: Cap = RoundCap(),
+    public var endCap: Cap = RoundCap(),
+    public var jointType: Int = 0, // JointType.DEFAULT
+    public var pattern: List<PatternItem>? = null,
 ) : MapObject {
-    override val type: MapObject.Type
+    public override val type: MapObject.Type
         get() = MapObject.Type.POLYLINE
 }

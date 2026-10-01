@@ -1,0 +1,86 @@
+public final class com/google/maps/android/ui/AnimationUtil {
+	public static final field INSTANCE Lcom/google/maps/android/ui/AnimationUtil;
+	public static final fun animateMarkerTo (Lcom/google/android/gms/maps/model/Marker;Lcom/google/android/gms/maps/model/LatLng;)V
+	public static final fun animateMarkerTo (Lcom/google/android/gms/maps/model/Marker;Lcom/google/android/gms/maps/model/LatLng;J)V
+	public static synthetic fun animateMarkerTo$default (Lcom/google/android/gms/maps/model/Marker;Lcom/google/android/gms/maps/model/LatLng;JILjava/lang/Object;)V
+}
+
+public abstract interface class com/google/maps/android/ui/AnimationUtil$LatLngInterpolator {
+	public abstract fun interpolate (FLcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)Lcom/google/android/gms/maps/model/LatLng;
+}
+
+public final class com/google/maps/android/ui/AnimationUtil$LatLngInterpolator$Linear : com/google/maps/android/ui/AnimationUtil$LatLngInterpolator {
+	public fun <init> ()V
+	public fun interpolate (FLcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)Lcom/google/android/gms/maps/model/LatLng;
+}
+
+public final class com/google/maps/android/ui/IconGenerator {
+	public static final field Companion Lcom/google/maps/android/ui/IconGenerator$Companion;
+	public static final field STYLE_BLUE I
+	public static final field STYLE_DEFAULT I
+	public static final field STYLE_GREEN I
+	public static final field STYLE_ORANGE I
+	public static final field STYLE_PURPLE I
+	public static final field STYLE_RED I
+	public static final field STYLE_WHITE I
+	public fun <init> (Landroid/content/Context;)V
+	public final fun getAnchorU ()F
+	public final fun getAnchorV ()F
+	public final fun makeIcon ()Landroid/graphics/Bitmap;
+	public final fun makeIcon (Ljava/lang/CharSequence;)Landroid/graphics/Bitmap;
+	public final fun setBackground (Landroid/graphics/drawable/Drawable;)V
+	public final fun setColor (I)V
+	public final fun setContentPadding (IIII)V
+	public final fun setContentRotation (I)V
+	public final fun setContentView (Landroid/view/View;)V
+	public final fun setRotation (I)V
+	public final fun setStyle (I)V
+	public final fun setTextAppearance (I)V
+	public final fun setTextAppearance (Landroid/content/Context;I)V
+}
+
+public final class com/google/maps/android/ui/IconGenerator$Companion {
+}
+
+public final class com/google/maps/android/ui/R$drawable {
+	public static field amu_bubble_mask I
+	public static field amu_bubble_shadow I
+}
+
+public final class com/google/maps/android/ui/R$id {
+	public static field amu_text I
+	public static field webview I
+	public static field window I
+}
+
+public final class com/google/maps/android/ui/R$layout {
+	public static field amu_info_window I
+	public static field amu_text_bubble I
+	public static field amu_webview I
+}
+
+public final class com/google/maps/android/ui/R$style {
+	public static field amu_Bubble_TextAppearance_Dark I
+	public static field amu_Bubble_TextAppearance_Light I
+	public static field amu_ClusterIcon_TextAppearance I
+}
+
+public final class com/google/maps/android/ui/RotationLayout : android/widget/FrameLayout {
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
+	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun dispatchDraw (Landroid/graphics/Canvas;)V
+	public fun onMeasure (II)V
+	public final fun setViewRotation (I)V
+}
+
+public final class com/google/maps/android/ui/SquareTextView : android/widget/TextView {
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
+	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun draw (Landroid/graphics/Canvas;)V
+	public fun onMeasure (II)V
+}
+

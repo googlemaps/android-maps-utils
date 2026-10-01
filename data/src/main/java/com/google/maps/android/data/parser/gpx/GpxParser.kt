@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets
  * Uses the `pdvrieze/xmlutil` library for XML parsing.
  * Supports parsing GPX 1.0 and 1.1 formats (normalizing 1.0 to 1.1).
  */
-class GpxParser {
+public class GpxParser public constructor() {
     private val xml =
         XML {
             defaultPolicy {
@@ -35,7 +35,7 @@ class GpxParser {
             isCollectingNSAttributes = true
         }
 
-    fun parse(inputStream: InputStream): Gpx {
+    public fun parse(inputStream: InputStream): Gpx {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
         // Normalize GPX 1.0 namespace to 1.1 to allow parsing with the same model
         // (The structure for waypoints and tracks is compatible enough for our needs)
@@ -43,9 +43,9 @@ class GpxParser {
         return xml.decodeFromString<Gpx>(normalizedXml)
     }
 
-    companion object {
-        val SUPPORTED_EXTENSIONS = setOf("gpx")
+    public companion object {
+        public val SUPPORTED_EXTENSIONS: Set<String> = setOf("gpx")
 
-        fun canParse(header: String): Boolean = header.contains("<gpx")
+        public fun canParse(header: String): Boolean = header.contains("<gpx")
     }
 }

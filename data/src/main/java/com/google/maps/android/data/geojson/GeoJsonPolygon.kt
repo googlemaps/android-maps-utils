@@ -34,13 +34,13 @@ public class GeoJsonPolygon(
 
     public fun getCoordinates(): List<List<LatLng>> = coordinates
 
-    override fun getGeometryObject(): List<List<LatLng>> = getCoordinates()
+    public override fun getGeometryObject(): List<List<LatLng>> = getCoordinates()
 
-    override fun getGeometryType(): String = getType()
+    public override fun getGeometryType(): String = getType()
 
-    override fun getOuterBoundaryCoordinates(): List<LatLng> = coordinates[POLYGON_OUTER_COORDINATE_INDEX]
+    public override fun getOuterBoundaryCoordinates(): List<LatLng> = coordinates[POLYGON_OUTER_COORDINATE_INDEX]
 
-    override fun getInnerBoundaryCoordinates(): List<List<LatLng>> {
+    public override fun getInnerBoundaryCoordinates(): List<List<LatLng>> {
         val innerBoundary = ArrayList<List<LatLng>>()
         for (i in POLYGON_INNER_COORDINATE_INDEX until coordinates.size) {
             innerBoundary.add(coordinates[i])
@@ -48,14 +48,14 @@ public class GeoJsonPolygon(
         return innerBoundary
     }
 
-    override fun toString(): String {
+    public override fun toString(): String {
         val sb = StringBuilder(GEOMETRY_TYPE).append("{")
         sb.append("\n coordinates=").append(coordinates)
         sb.append("\n}\n")
         return sb.toString()
     }
 
-    companion object {
+    public companion object {
         private const val GEOMETRY_TYPE = "Polygon"
         private const val POLYGON_OUTER_COORDINATE_INDEX = 0
         private const val POLYGON_INNER_COORDINATE_INDEX = 1

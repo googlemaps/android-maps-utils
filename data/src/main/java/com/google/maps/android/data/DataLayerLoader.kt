@@ -37,7 +37,7 @@ import java.nio.charset.StandardCharsets
  * Handles loading from assets or streams, determining the correct parser based on
  * file extension or content sniffing.
  */
-class DataLayerLoader(
+public class DataLayerLoader(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -48,7 +48,7 @@ class DataLayerLoader(
      * @param assetName The name of the asset file.
      * @return The loaded DataLayer, or null if loading failed.
      */
-    suspend fun loadAsset(assetName: String): DataLayer? =
+    public suspend fun loadAsset(assetName: String): DataLayer? =
         withContext(dispatcher) {
             try {
                 val inputStream = context.assets.open(assetName)
@@ -66,7 +66,7 @@ class DataLayerLoader(
      * @param fileName The name of the file (optional), used for extension matching.
      * @return The loaded DataLayer, or null if loading failed.
      */
-    suspend fun loadInputStream(
+    public suspend fun loadInputStream(
         inputStream: InputStream,
         fileName: String?,
     ): DataLayer? {

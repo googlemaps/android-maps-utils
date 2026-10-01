@@ -23,37 +23,37 @@ private const val GPX_NAMESPACE = "http://www.topografix.com/GPX/1/1"
 
 @Serializable
 @XmlSerialName("gpx", namespace = GPX_NAMESPACE, prefix = "")
-data class Gpx(
+public data class Gpx(
     @XmlSerialName("version")
-    val version: String = "1.1",
+    public val version: String = "1.1",
     @XmlSerialName("creator")
-    val creator: String? = null,
+    public val creator: String? = null,
     @XmlElement(true)
     @XmlSerialName("metadata", namespace = GPX_NAMESPACE, prefix = "")
-    val metadata: Metadata? = null,
+    public val metadata: Metadata? = null,
     @XmlElement(true)
     @XmlSerialName("wpt", namespace = GPX_NAMESPACE, prefix = "")
-    val waypoints: List<Wpt> = emptyList(),
+    public val waypoints: List<Wpt> = emptyList(),
     @XmlElement(true)
     @XmlSerialName("rte", namespace = GPX_NAMESPACE, prefix = "")
-    val routes: List<Rte> = emptyList(),
+    public val routes: List<Rte> = emptyList(),
     @XmlElement(true)
     @XmlSerialName("trk", namespace = GPX_NAMESPACE, prefix = "")
-    val tracks: List<Trk> = emptyList(),
+    public val tracks: List<Trk> = emptyList(),
 )
 
 @Serializable
 @XmlSerialName("metadata", namespace = GPX_NAMESPACE, prefix = "")
-data class Metadata(
+public data class Metadata(
     @XmlElement(true)
     @XmlSerialName("name", namespace = GPX_NAMESPACE, prefix = "")
-    val name: String? = null,
+    public val name: String? = null,
     @XmlElement(true)
     @XmlSerialName("desc", namespace = GPX_NAMESPACE, prefix = "")
-    val desc: String? = null,
+    public val desc: String? = null,
     @XmlElement(true)
     @XmlSerialName("time", namespace = GPX_NAMESPACE, prefix = "")
-    val time: String? = null,
+    public val time: String? = null,
 )
 
 /**
@@ -69,31 +69,31 @@ data class Metadata(
  */
 @Serializable
 @XmlSerialName("wpt", namespace = GPX_NAMESPACE, prefix = "")
-data class Wpt(
+public data class Wpt(
     @XmlSerialName("lat")
-    val lat: Double,
+    public val lat: Double,
     @XmlSerialName("lon")
-    val lon: Double,
+    public val lon: Double,
     @XmlElement(true)
     @XmlSerialName("ele", namespace = GPX_NAMESPACE, prefix = "")
-    val ele: Double? = null,
+    public val ele: Double? = null,
     @XmlElement(true)
     @XmlSerialName("time", namespace = GPX_NAMESPACE, prefix = "")
-    val time: String? = null,
+    public val time: String? = null,
     @XmlElement(true)
     @XmlSerialName("name", namespace = GPX_NAMESPACE, prefix = "")
-    val name: String? = null,
+    public val name: String? = null,
     @XmlElement(true)
     @XmlSerialName("desc", namespace = GPX_NAMESPACE, prefix = "")
-    val desc: String? = null,
+    public val desc: String? = null,
     @XmlElement(true)
     @XmlSerialName("sym", namespace = GPX_NAMESPACE, prefix = "")
-    val sym: String? = null,
+    public val sym: String? = null,
 ) {
     /**
      * Descriptive alias for [ele] (elevation in meters).
      */
-    val elevation: Double?
+    public val elevation: Double?
         get() = ele
 
     init {
@@ -105,36 +105,36 @@ data class Wpt(
 
 @Serializable
 @XmlSerialName("rte", namespace = GPX_NAMESPACE, prefix = "")
-data class Rte(
+public data class Rte(
     @XmlElement(true)
     @XmlSerialName("name", namespace = GPX_NAMESPACE, prefix = "")
-    val name: String? = null,
+    public val name: String? = null,
     @XmlElement(true)
     @XmlSerialName("desc", namespace = GPX_NAMESPACE, prefix = "")
-    val desc: String? = null,
+    public val desc: String? = null,
     @XmlElement(true)
     @XmlSerialName("rtept", namespace = GPX_NAMESPACE, prefix = "")
-    val routePoints: List<Wpt> = emptyList(),
+    public val routePoints: List<Wpt> = emptyList(),
 )
 
 @Serializable
 @XmlSerialName("trk", namespace = GPX_NAMESPACE, prefix = "")
-data class Trk(
+public data class Trk(
     @XmlElement(true)
     @XmlSerialName("name", namespace = GPX_NAMESPACE, prefix = "")
-    val name: String? = null,
+    public val name: String? = null,
     @XmlElement(true)
     @XmlSerialName("desc", namespace = GPX_NAMESPACE, prefix = "")
-    val desc: String? = null,
+    public val desc: String? = null,
     @XmlElement(true)
     @XmlSerialName("trkseg", namespace = GPX_NAMESPACE, prefix = "")
-    val trackSegments: List<TrkSeg> = emptyList(),
+    public val trackSegments: List<TrkSeg> = emptyList(),
 )
 
 @Serializable
 @XmlSerialName("trkseg", namespace = GPX_NAMESPACE, prefix = "")
-data class TrkSeg(
+public data class TrkSeg(
     @XmlElement(true)
     @XmlSerialName("trkpt", namespace = GPX_NAMESPACE, prefix = "")
-    val trackPoints: List<Wpt> = emptyList(),
+    public val trackPoints: List<Wpt> = emptyList(),
 )

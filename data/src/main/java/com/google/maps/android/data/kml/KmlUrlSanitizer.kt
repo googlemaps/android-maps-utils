@@ -19,12 +19,12 @@ package com.google.maps.android.data.kml
  * Interface for sanitizing URLs in KML documents.
  * Developers can implement this to control which external resources (images, etc.) are loaded.
  */
-fun interface KmlUrlSanitizer {
+public fun interface KmlUrlSanitizer {
     /**
      * Sanitizes a URL before it is used to fetch a resource.
      *
      * @param url The raw URL from the KML.
      * @return A safe, validated URL string, or null to block this resource.
      */
-    fun sanitizeUrl(url: String): String?
+    public fun sanitizeUrl(url: String): String?
 }

@@ -27,7 +27,7 @@ import kotlin.math.sign
 /**
  * Animation utilities for markers with Maps API.
  */
-object AnimationUtil {
+public object AnimationUtil {
     /**
      * Animates a marker from its current position to the provided finalPosition.
      *
@@ -37,11 +37,15 @@ object AnimationUtil {
      */
     @JvmOverloads
     @JvmStatic
-    fun animateMarkerTo(
+    public fun animateMarkerTo(
         marker: Marker,
         finalPosition: LatLng,
         durationInMs: Long = 2000,
     ) {
+        if (durationInMs <= 0L) {
+            marker.position = finalPosition
+            return
+        }
         val latLngInterpolator = LatLngInterpolator.Linear()
         val startPosition = marker.position
         val handler = Handler(Looper.getMainLooper())
@@ -52,12 +56,13 @@ object AnimationUtil {
             object : Runnable {
                 override fun run() {
                     val elapsed = SystemClock.uptimeMillis() - start
-                    val t = elapsed / durationInMs.toFloat()
+                    val rawT = elapsed / durationInMs.toFloat()
+                    val t = rawT.coerceIn(0f, 1f)
                     val v = interpolator.getInterpolation(t)
                     marker.position = latLngInterpolator.interpolate(v, startPosition, finalPosition)
 
                     // Repeat till progress is complete.
-                    if (t < 1) {
+                    if (rawT < 1f) {
                         // Post again 16ms later.
                         handler.postDelayed(this, 16)
                     }
@@ -69,15 +74,15 @@ object AnimationUtil {
     /**
      * For other LatLngInterpolator interpolators, see [link here](https://gist.github.com/broady/6314689)
      */
-    interface LatLngInterpolator {
-        fun interpolate(
+    public interface LatLngInterpolator {
+        public fun interpolate(
             fraction: Float,
             a: LatLng,
             b: LatLng,
         ): LatLng
 
-        class Linear : LatLngInterpolator {
-            override fun interpolate(
+        public class Linear : LatLngInterpolator {
+            public override fun interpolate(
                 fraction: Float,
                 a: LatLng,
                 b: LatLng,

@@ -46,17 +46,17 @@ import kotlin.jvm.JvmSuppressWildcards
  * - [com.google.android.gms.maps.GoogleMap.OnCameraIdleListener]
  * - [com.google.android.gms.maps.GoogleMap.OnMarkerClickListener]
  */
-open class ClusterManager<T : ClusterItem>
+public open class ClusterManager<T : ClusterItem>
     @JvmOverloads
-    constructor(
+    public constructor(
         context: Context,
         private val mMap: GoogleMap,
-        val markerManager: MarkerManager = MarkerManager(mMap),
+        public val markerManager: MarkerManager = MarkerManager(mMap),
     ) : OnCameraIdleListener,
         OnMarkerClickListener,
         OnInfoWindowClickListener {
-        val markerCollection: MarkerManager.Collection = markerManager.newCollection()
-        val clusterMarkerCollection: MarkerManager.Collection = markerManager.newCollection()
+        public val markerCollection: MarkerManager.Collection = markerManager.newCollection()
+        public val clusterMarkerCollection: MarkerManager.Collection = markerManager.newCollection()
 
         private var mAlgorithm: ScreenBasedAlgorithm<T>
         private var mRenderer: ClusterRenderer<T>
@@ -85,7 +85,7 @@ open class ClusterManager<T : ClusterItem>
             mRenderer.onAdd()
         }
 
-        open var renderer: ClusterRenderer<T>
+        public open var renderer: ClusterRenderer<T>
             get() = mRenderer
             set(value) {
                 mRenderer.setOnClusterClickListener(null)
@@ -104,7 +104,7 @@ open class ClusterManager<T : ClusterItem>
                 cluster()
             }
 
-        open var algorithm: Algorithm<T>
+        public open var algorithm: Algorithm<T>
             get() = mAlgorithm
             set(value) {
                 if (value is ScreenBasedAlgorithm<*>) {
@@ -114,7 +114,7 @@ open class ClusterManager<T : ClusterItem>
                 }
             }
 
-        open fun setAlgorithm(algorithm: ScreenBasedAlgorithm<T>) {
+        public open fun setAlgorithm(algorithm: ScreenBasedAlgorithm<T>) {
             algorithm.lock()
             try {
                 val oldAlgorithm = this.algorithm
@@ -137,7 +137,7 @@ open class ClusterManager<T : ClusterItem>
             cluster()
         }
 
-        open fun setAnimation(animate: Boolean) {
+        public open fun setAnimation(animate: Boolean) {
             mRenderer.setAnimation(animate)
         }
 
@@ -145,7 +145,7 @@ open class ClusterManager<T : ClusterItem>
          * Removes all items from the cluster manager. After calling this method you must invoke
          * [.cluster] for the map to be cleared.
          */
-        open fun clearItems() {
+        public open fun clearItems() {
             val algorithm = algorithm
             algorithm.lock()
             try {
@@ -161,7 +161,7 @@ open class ClusterManager<T : ClusterItem>
          * @param items items to add to clusters
          * @return true if the cluster manager contents changed as a result of the call
          */
-        open fun addItems(items: Collection<@JvmSuppressWildcards T>?): Boolean {
+        public open fun addItems(items: Collection<@JvmSuppressWildcards T>?): Boolean {
             val algorithm = algorithm
             algorithm.lock()
             try {
@@ -177,7 +177,7 @@ open class ClusterManager<T : ClusterItem>
          * @param myItem item to add to clusters
          * @return true if the cluster manager contents changed as a result of the call
          */
-        open fun addItem(myItem: T): Boolean {
+        public open fun addItem(myItem: T): Boolean {
             val algorithm = algorithm
             algorithm.lock()
             try {
@@ -187,7 +187,7 @@ open class ClusterManager<T : ClusterItem>
             }
         }
 
-        open fun diff(
+        public open fun diff(
             add: Collection<@JvmSuppressWildcards T>?,
             remove: Collection<@JvmSuppressWildcards T>?,
             modify: Collection<@JvmSuppressWildcards T>?,
@@ -224,7 +224,7 @@ open class ClusterManager<T : ClusterItem>
          * @param items items to remove from clusters
          * @return true if the cluster manager contents changed as a result of the call
          */
-        open fun removeItems(items: Collection<@JvmSuppressWildcards T>?): Boolean {
+        public open fun removeItems(items: Collection<@JvmSuppressWildcards T>?): Boolean {
             val algorithm = algorithm
             algorithm.lock()
             try {
@@ -240,7 +240,7 @@ open class ClusterManager<T : ClusterItem>
          * @param item item to remove from clusters
          * @return true if the item was removed from the cluster manager as a result of this call
          */
-        open fun removeItem(item: T): Boolean {
+        public open fun removeItem(item: T): Boolean {
             val algorithm = algorithm
             algorithm.lock()
             try {
@@ -257,7 +257,7 @@ open class ClusterManager<T : ClusterItem>
          * @return true if the item was updated in the cluster manager, false if the item is not
          * contained within the cluster manager and the cluster manager contents are unchanged
          */
-        open fun updateItem(item: T): Boolean {
+        public open fun updateItem(item: T): Boolean {
             val algorithm = algorithm
             algorithm.lock()
             try {
@@ -271,7 +271,7 @@ open class ClusterManager<T : ClusterItem>
          * Force a re-cluster on the map. You should call this after adding, removing, updating,
          * or clearing item(s).
          */
-        open fun cluster() {
+        public open fun cluster() {
             mClusterTaskLock.writeLock().lock()
             try {
                 // Attempt to cancel the in-flight request.
@@ -327,7 +327,7 @@ open class ClusterManager<T : ClusterItem>
          * Sets a callback that's invoked when a Cluster is tapped. Note: For this listener to function,
          * the ClusterManager must be added as a click listener to the map.
          */
-        open fun setOnClusterClickListener(listener: OnClusterClickListener<T>?) {
+        public open fun setOnClusterClickListener(listener: OnClusterClickListener<T>?) {
             mOnClusterClickListener = listener
             mRenderer.setOnClusterClickListener(listener)
         }
@@ -336,7 +336,7 @@ open class ClusterManager<T : ClusterItem>
          * Sets a callback that's invoked when a Cluster info window is tapped. Note: For this listener to function,
          * the ClusterManager must be added as a info window click listener to the map.
          */
-        open fun setOnClusterInfoWindowClickListener(listener: OnClusterInfoWindowClickListener<T>?) {
+        public open fun setOnClusterInfoWindowClickListener(listener: OnClusterInfoWindowClickListener<T>?) {
             mOnClusterInfoWindowClickListener = listener
             mRenderer.setOnClusterInfoWindowClickListener(listener)
         }
@@ -345,7 +345,7 @@ open class ClusterManager<T : ClusterItem>
          * Sets a callback that's invoked when a Cluster info window is long-pressed. Note: For this listener to function,
          * the ClusterManager must be added as a info window click listener to the map.
          */
-        open fun setOnClusterInfoWindowLongClickListener(listener: OnClusterInfoWindowLongClickListener<T>?) {
+        public open fun setOnClusterInfoWindowLongClickListener(listener: OnClusterInfoWindowLongClickListener<T>?) {
             mOnClusterInfoWindowLongClickListener = listener
             mRenderer.setOnClusterInfoWindowLongClickListener(listener)
         }
@@ -354,7 +354,7 @@ open class ClusterManager<T : ClusterItem>
          * Sets a callback that's invoked when an individual ClusterItem is tapped. Note: For this
          * listener to function, the ClusterManager must be added as a click listener to the map.
          */
-        open fun setOnClusterItemClickListener(listener: OnClusterItemClickListener<T>?) {
+        public open fun setOnClusterItemClickListener(listener: OnClusterItemClickListener<T>?) {
             mOnClusterItemClickListener = listener
             mRenderer.setOnClusterItemClickListener(listener)
         }
@@ -363,7 +363,7 @@ open class ClusterManager<T : ClusterItem>
          * Sets a callback that's invoked when an individual ClusterItem's Info Window is tapped. Note: For this
          * listener to function, the ClusterManager must be added as a info window click listener to the map.
          */
-        open fun setOnClusterItemInfoWindowClickListener(listener: OnClusterItemInfoWindowClickListener<T>?) {
+        public open fun setOnClusterItemInfoWindowClickListener(listener: OnClusterItemInfoWindowClickListener<T>?) {
             mOnClusterItemInfoWindowClickListener = listener
             mRenderer.setOnClusterItemInfoWindowClickListener(listener)
         }
@@ -372,7 +372,7 @@ open class ClusterManager<T : ClusterItem>
          * Sets a callback that's invoked when an individual ClusterItem's Info Window is long-pressed. Note: For this
          * listener to function, the ClusterManager must be added as a info window click listener to the map.
          */
-        open fun setOnClusterItemInfoWindowLongClickListener(listener: OnClusterItemInfoWindowLongClickListener<T>?) {
+        public open fun setOnClusterItemInfoWindowLongClickListener(listener: OnClusterItemInfoWindowLongClickListener<T>?) {
             mOnClusterItemInfoWindowLongClickListener = listener
             mRenderer.setOnClusterItemInfoWindowLongClickListener(listener)
         }
@@ -380,33 +380,33 @@ open class ClusterManager<T : ClusterItem>
         /**
          * Called when a Cluster is clicked.
          */
-        fun interface OnClusterClickListener<T : ClusterItem> {
+        public fun interface OnClusterClickListener<T : ClusterItem> {
             /**
-             * Called when cluster is clicked.
-             * Return true if click has been handled
-             * Return false and the click will dispatched to the next listener
-             */
-            fun onClusterClick(cluster: Cluster<T>): Boolean
+              * Called when cluster is clicked.
+              * Return true if click has been handled
+              * Return false and the click will dispatched to the next listener
+              */
+            public fun onClusterClick(cluster: Cluster<T>): Boolean
         }
 
         /**
          * Called when a Cluster's Info Window is clicked.
          */
-        fun interface OnClusterInfoWindowClickListener<T : ClusterItem> {
-            fun onClusterInfoWindowClick(cluster: Cluster<T>)
+        public fun interface OnClusterInfoWindowClickListener<T : ClusterItem> {
+            public fun onClusterInfoWindowClick(cluster: Cluster<T>)
         }
 
         /**
          * Called when a Cluster's Info Window is long clicked.
          */
-        fun interface OnClusterInfoWindowLongClickListener<T : ClusterItem> {
-            fun onClusterInfoWindowLongClick(cluster: Cluster<T>)
+        public fun interface OnClusterInfoWindowLongClickListener<T : ClusterItem> {
+            public fun onClusterInfoWindowLongClick(cluster: Cluster<T>)
         }
 
         /**
          * Called when an individual ClusterItem is clicked.
          */
-        fun interface OnClusterItemClickListener<T : ClusterItem> {
+        public fun interface OnClusterItemClickListener<T : ClusterItem> {
             /**
              * Called when `item` is clicked.
              *
@@ -416,20 +416,20 @@ open class ClusterManager<T : ClusterItem>
              * occur), false otherwise (i.e. the default behavior should occur).  The default behavior
              * is for the camera to move to the marker and an info window to appear.
              */
-            fun onClusterItemClick(item: T): Boolean
+            public fun onClusterItemClick(item: T): Boolean
         }
 
         /**
          * Called when an individual ClusterItem's Info Window is clicked.
          */
-        fun interface OnClusterItemInfoWindowClickListener<T : ClusterItem> {
-            fun onClusterItemInfoWindowClick(item: T)
+        public fun interface OnClusterItemInfoWindowClickListener<T : ClusterItem> {
+            public fun onClusterItemInfoWindowClick(item: T)
         }
 
         /**
          * Called when an individual ClusterItem's Info Window is long clicked.
          */
-        fun interface OnClusterItemInfoWindowLongClickListener<T : ClusterItem> {
-            fun onClusterItemInfoWindowLongClick(item: T)
+        public fun interface OnClusterItemInfoWindowLongClickListener<T : ClusterItem> {
+            public fun onClusterItemInfoWindowLongClick(item: T)
         }
     }

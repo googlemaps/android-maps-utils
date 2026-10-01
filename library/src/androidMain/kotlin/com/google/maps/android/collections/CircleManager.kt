@@ -27,7 +27,7 @@ import kotlin.collections.Collection as KotlinCollection
  * All circle operations (adds and removes) should occur via its collection class. That is, don't
  * add a circle via a collection, then remove it via Circle.remove()
  */
-open class CircleManager(map: GoogleMap) :
+public open class CircleManager(map: GoogleMap) :
     MapObjectManager<Circle, CircleManager.Collection>(map),
     GoogleMap.OnCircleClickListener {
 
@@ -35,36 +35,36 @@ open class CircleManager(map: GoogleMap) :
         mMap.setOnCircleClickListener(this)
     }
 
-    override fun newCollection(): Collection = Collection()
+    public override fun newCollection(): Collection = Collection()
 
-    override fun removeObjectFromMap(circle: Circle) {
+    public override fun removeObjectFromMap(circle: Circle) {
         circle.remove()
     }
 
-    override fun setVisible(mapObject: Circle, visible: Boolean) {
+    public override fun setVisible(mapObject: Circle, visible: Boolean) {
         mapObject.isVisible = visible
     }
 
-    override fun onCircleClick(circle: Circle) {
+    public override fun onCircleClick(circle: Circle) {
         mAllObjects[circle]?.mCircleClickListener?.onCircleClick(circle)
     }
 
     /** A collection of [Circle]s on the map with its own set of listeners. */
-    open inner class Collection : MapObjectManager<Circle, Collection>.Collection() {
+    public open inner class Collection : MapObjectManager<Circle, Collection>.Collection() {
         internal var mCircleClickListener: GoogleMap.OnCircleClickListener? = null
 
-        open fun addCircle(opts: CircleOptions): Circle =
+        public open fun addCircle(opts: CircleOptions): Circle =
             checkAndAdd(mMap.addCircle(opts), "Circle")
 
-        open fun addAll(opts: KotlinCollection<CircleOptions>) =
+        public open fun addAll(opts: KotlinCollection<CircleOptions>): Unit =
             addAll(opts, ::addCircle)
 
-        open fun addAll(opts: KotlinCollection<CircleOptions>, defaultVisible: Boolean) =
+        public open fun addAll(opts: KotlinCollection<CircleOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addCircle)
 
-        open fun getCircles(): KotlinCollection<Circle> = getObjects()
+        public open fun getCircles(): KotlinCollection<Circle> = getObjects()
 
-        open fun setOnCircleClickListener(circleClickListener: GoogleMap.OnCircleClickListener?) {
+        public open fun setOnCircleClickListener(circleClickListener: GoogleMap.OnCircleClickListener?) {
             mCircleClickListener = circleClickListener
         }
     }

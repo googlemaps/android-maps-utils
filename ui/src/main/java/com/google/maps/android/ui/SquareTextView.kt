@@ -27,9 +27,9 @@ import kotlin.math.max
  * not, depending on the Inspection Settings. It's not really an error, just a warning.
  */
 @SuppressLint("AppCompatCustomView")
-class SquareTextView
+public class SquareTextView
     @JvmOverloads
-    constructor(
+    public constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0,
@@ -37,7 +37,7 @@ class SquareTextView
         private var offsetTop = 0
         private var offsetLeft = 0
 
-        override fun onMeasure(
+        public override fun onMeasure(
             widthMeasureSpec: Int,
             heightMeasureSpec: Int,
         ) {
@@ -55,7 +55,7 @@ class SquareTextView
             setMeasuredDimension(dimension, dimension)
         }
 
-        override fun draw(canvas: Canvas) {
+        public override fun draw(canvas: Canvas) {
             canvas.translate(offsetLeft / 2f, offsetTop / 2f)
             super.draw(canvas)
         }

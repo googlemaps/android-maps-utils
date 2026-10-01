@@ -21,23 +21,23 @@ import com.google.android.gms.maps.model.PatternItem
 /**
  * A data model representing a polygon on the map.
  */
-data class Polygon(
-    var points: List<LatLng>,
-    var holes: MutableList<List<LatLng>> = mutableListOf(),
-    var strokeWidth: Float = 10.0f,
-    var strokeColor: Int = -0x1000000, // Black
-    var fillColor: Int = 0x00000000, // Transparent
-    var isClickable: Boolean = false,
-    var isGeodesic: Boolean = false,
-    override var isVisible: Boolean = true,
-    override var zIndex: Float = 0.0f,
-    var strokeJointType: Int = 0, // JointType.DEFAULT
-    var strokePattern: List<PatternItem>? = null,
+public data class Polygon(
+    public var points: List<LatLng>,
+    public var holes: MutableList<List<LatLng>> = mutableListOf(),
+    public var strokeWidth: Float = 10.0f,
+    public var strokeColor: Int = -0x1000000, // Black
+    public var fillColor: Int = 0x00000000, // Transparent
+    public var isClickable: Boolean = false,
+    public var isGeodesic: Boolean = false,
+    public override var isVisible: Boolean = true,
+    public override var zIndex: Float = 0.0f,
+    public var strokeJointType: Int = 0, // JointType.DEFAULT
+    public var strokePattern: List<PatternItem>? = null,
 ) : MapObject {
-    override val type: MapObject.Type
+    public override val type: MapObject.Type
         get() = MapObject.Type.POLYGON
 
-    fun addHole(hole: List<LatLng>) {
+    public fun addHole(hole: List<LatLng>) {
         holes.add(hole)
     }
 }

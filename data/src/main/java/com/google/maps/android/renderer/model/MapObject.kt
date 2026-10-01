@@ -25,28 +25,28 @@ package com.google.maps.android.renderer.model
  * hold references to Android SDK objects (like
  * [com.google.android.gms.maps.model.Marker]).
  */
-interface MapObject {
+public interface MapObject {
     /**
      * Gets the type of the map object.
      *
      * @return The type of the map object.
      */
-    val type: Type
+    public val type: Type
 
     /**
      * Gets and sets the visibility of the map object.
      */
-    var isVisible: Boolean
+    public var isVisible: Boolean
 
     /**
      * Gets and sets the z-index of the map object.
      */
-    var zIndex: Float
+    public var zIndex: Float
 
     /**
      * Enum representing the type of map object.
      */
-    enum class Type {
+    public enum class Type {
         MARKER,
         POLYLINE,
         POLYGON,

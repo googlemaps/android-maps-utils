@@ -19,9 +19,9 @@ package com.google.maps.android.model
  * Mirrors the clamping/wrapping behavior of the Play Services LatLng constructor so that
  * algorithms behave identically across platforms.
  */
-actual class LatLng actual constructor(latitude: Double, longitude: Double) {
-    val latitude: Double = latitude.coerceIn(-90.0, 90.0)
-    val longitude: Double =
+public actual class LatLng actual constructor(latitude: Double, longitude: Double) {
+    public val latitude: Double = latitude.coerceIn(-90.0, 90.0)
+    public val longitude: Double =
         if (longitude in -180.0..180.0) {
             if (longitude == 180.0) -180.0 else longitude
         } else {
@@ -40,21 +40,21 @@ actual class LatLng actual constructor(latitude: Double, longitude: Double) {
     override fun toString(): String = "lat/lng: ($latitude,$longitude)"
 }
 
-actual val LatLng.latitude: Double get() = this.latitude
+public actual val LatLng.latitude: Double get() = this.latitude
 
-actual val LatLng.longitude: Double get() = this.longitude
+public actual val LatLng.longitude: Double get() = this.longitude
 
-actual class CameraPosition actual constructor(
-    val target: LatLng,
-    val zoom: Float,
-    val tilt: Float,
-    val bearing: Float
+public actual class CameraPosition actual constructor(
+    public val target: LatLng,
+    public val zoom: Float,
+    public val tilt: Float,
+    public val bearing: Float
 )
 
-actual val CameraPosition.target: LatLng get() = this.target
+public actual val CameraPosition.target: LatLng get() = this.target
 
-actual val CameraPosition.zoom: Float get() = this.zoom
+public actual val CameraPosition.zoom: Float get() = this.zoom
 
-actual val CameraPosition.tilt: Float get() = this.tilt
+public actual val CameraPosition.tilt: Float get() = this.tilt
 
-actual val CameraPosition.bearing: Float get() = this.bearing
+public actual val CameraPosition.bearing: Float get() = this.bearing

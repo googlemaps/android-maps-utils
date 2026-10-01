@@ -25,14 +25,14 @@ import com.google.maps.android.renderer.model.Layer
  * contained in a layer to a specific map target (e.g., GoogleMap, GoogleMap
  * Compose, etc.).
  */
-interface Renderer {
+public interface Renderer {
     /**
      * Adds a layer to the renderer. The layer's contents should be drawn on the
      * map.
      *
      * @param layer The layer to add.
      */
-    fun addLayer(layer: Layer)
+    public fun addLayer(layer: Layer)
 
     /**
      * Removes a layer from the renderer. The layer's contents should be removed
@@ -41,17 +41,17 @@ interface Renderer {
      * @param layer The layer to remove.
      * @return True if the layer was removed, false otherwise.
      */
-    fun removeLayer(layer: Layer): Boolean
+    public fun removeLayer(layer: Layer): Boolean
 
     /**
      * Gets all layers currently managed by the renderer.
      *
      * @return A collection of layers.
      */
-    fun getLayers(): Collection<Layer>
+    public fun getLayers(): Collection<Layer>
 
     /**
      * Clears all layers from the renderer and removes their contents from the map.
      */
-    fun clear()
+    public fun clear()
 }

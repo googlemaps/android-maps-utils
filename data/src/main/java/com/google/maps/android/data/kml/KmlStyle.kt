@@ -177,7 +177,7 @@ public class KmlStyle : Style() {
             clickable(mPolygonOptions.isClickable)
         }
 
-    override fun toString(): String =
+    public override fun toString(): String =
         StringBuilder("Style")
             .apply {
                 append("{")
@@ -190,7 +190,7 @@ public class KmlStyle : Style() {
                 append("\n}\n")
             }.toString()
 
-    companion object {
+    public companion object {
         private const val HSV_VALUES = 3
         private const val HUE_VALUE = 0
 

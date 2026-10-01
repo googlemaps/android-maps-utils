@@ -29,7 +29,7 @@ import kotlin.collections.Collection as KotlinCollection
  * All object operations (adds and removes) should occur via its collection class. That is, don't
  * add an object via a collection, then remove it via Object.remove()
  */
-abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
+public abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
     @JvmField
     protected val mMap: GoogleMap,
 ) {
@@ -39,21 +39,26 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
     protected val mAllObjects: MutableMap<O, C> = mutableMapOf()
 
     init {
-        Handler(Looper.getMainLooper()).post {
+        val mainLooper = Looper.getMainLooper()
+        if (mainLooper == null || Looper.myLooper() == mainLooper) {
             setListenersOnUiThread()
+        } else {
+            Handler(mainLooper).post {
+                setListenersOnUiThread()
+            }
         }
     }
 
     internal abstract fun setListenersOnUiThread()
 
-    abstract fun newCollection(): C
+    public abstract fun newCollection(): C
 
     /**
      * Create a new named collection, which can later be looked up by [getCollection]
      *
      * @param id a unique id for this collection.
      */
-    open fun newCollection(id: String): C {
+    public open fun newCollection(id: String): C {
         require(mNamedCollections[id] == null) { "collection id is not unique: $id" }
         val collection = newCollection()
         mNamedCollections[id] = collection
@@ -65,7 +70,7 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
      *
      * @param id the unique id for this collection.
      */
-    open fun getCollection(id: String): C? = mNamedCollections[id]
+    public open fun getCollection(id: String): C? = mNamedCollections[id]
 
     /**
      * Removes an object from its collection.
@@ -73,14 +78,14 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
      * @param mapObject the object to remove.
      * @return true if the object was removed.
      */
-    open fun remove(mapObject: O?): Boolean =
+    public open fun remove(mapObject: O?): Boolean =
         mapObject != null && mAllObjects[mapObject]?.remove(mapObject) == true
 
     protected abstract fun removeObjectFromMap(mapObject: O)
 
     protected open fun setVisible(mapObject: O, visible: Boolean) {}
 
-    open inner class Collection {
+    public open inner class Collection {
         private val mObjects: MutableSet<O> = mutableSetOf()
 
         // Safe unchecked cast: this inner collection is an instance of subclass C.
@@ -93,13 +98,13 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
         protected open fun checkAndAdd(mapObject: O?, typeName: String): O =
             checkNotNull(mapObject) { "Failed to add $typeName to GoogleMap" }.also { add(it) }
 
-        open fun showAll() {
+        public open fun showAll() {
             for (mapObject in mObjects) {
                 setVisible(mapObject, true)
             }
         }
 
-        open fun hideAll() {
+        public open fun hideAll() {
             for (mapObject in mObjects) {
                 setVisible(mapObject, false)
             }
@@ -118,7 +123,7 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
             }
         }
 
-        open fun remove(mapObject: O?): Boolean {
+        public open fun remove(mapObject: O?): Boolean {
             if (mapObject == null) return false
             if (mObjects.remove(mapObject)) {
                 mAllObjects.remove(mapObject)
@@ -128,7 +133,7 @@ abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Collection>(
             return false
         }
 
-        open fun clear() {
+        public open fun clear() {
             for (mapObject in mObjects) {
                 removeObjectFromMap(mapObject)
                 mAllObjects.remove(mapObject)

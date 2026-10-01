@@ -305,4 +305,14 @@ class IconGeneratorTest {
         val bitmap = iconGenerator.makeIcon("Color Test")
         assertNotNull(bitmap)
     }
+
+    @Test
+    fun testNegativeMultiTurnRotation() {
+        iconGenerator.setRotation(-450)
+        iconGenerator.setContentRotation(-450)
+        assertEquals(1.0f, iconGenerator.getAnchorU(), 0.001f)
+        assertEquals(0.5f, iconGenerator.getAnchorV(), 0.001f)
+        val bitmap = iconGenerator.makeIcon("Negative Rotation")
+        assertNotNull(bitmap)
+    }
 }

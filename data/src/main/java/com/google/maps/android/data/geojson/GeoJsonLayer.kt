@@ -40,6 +40,7 @@ import com.google.maps.android.data.parser.geojson.GeoJsonPoint as ParserGeoJson
 import com.google.maps.android.data.parser.geojson.GeoJsonPolygon as ParserGeoJsonPolygon
 import com.google.maps.android.data.renderer.UrlIconProvider
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
+import com.google.maps.android.data.renderer.model.CompositeStyle as ModelCompositeStyle
 import com.google.maps.android.data.renderer.model.Feature as ModelFeature
 import com.google.maps.android.data.renderer.model.Geometry as ModelGeometry
 import com.google.maps.android.data.renderer.model.LineString as ModelLineString
@@ -66,6 +67,16 @@ public class GeoJsonLayer : Layer {
     private var mIsLayerOnMap = false
     private val mFeatureMap = HashMap<GeoJsonFeature, ModelFeature>()
     private val mModelToLegacyFeatures = IdentityHashMap<ModelFeature, GeoJsonFeature>()
+    private var mMarkerManager: MarkerManager? = null
+    private var mPolygonManager: PolygonManager? = null
+    private var mPolylineManager: PolylineManager? = null
+    private var mGroundOverlayManager: GroundOverlayManager? = null
+    private var mManagersMap: GoogleMap? = null
+    private var mMarkerCollection: MarkerManager.Collection? = null
+    private var mPolygonCollection: PolygonManager.Collection? = null
+    private var mPolylineCollection: PolylineManager.Collection? = null
+    private var mGroundOverlayCollection: GroundOverlayManager.Collection? = null
+    private val mCachedDescriptors = HashMap<String, com.google.android.gms.maps.model.BitmapDescriptor>()
 
     private var mFeatureClickListener: OnFeatureClickListener? = null
     private val mFeatureObserver = Observer { observable, _ ->
@@ -85,6 +96,10 @@ public class GeoJsonLayer : Layer {
         groundOverlayManager: GroundOverlayManager? = null,
     ) {
         mGoogleMap = map
+        mMarkerManager = markerManager
+        mPolygonManager = polygonManager
+        mPolylineManager = polylineManager
+        mGroundOverlayManager = groundOverlayManager
         val stream = geoJsonFile.toString().byteInputStream()
         parseGeoJson(stream)
         initializeRenderer(map)
@@ -102,6 +117,10 @@ public class GeoJsonLayer : Layer {
         groundOverlayManager: GroundOverlayManager? = null,
     ) {
         mGoogleMap = map
+        mMarkerManager = markerManager
+        mPolygonManager = polygonManager
+        mPolylineManager = polylineManager
+        mGroundOverlayManager = groundOverlayManager
         val stream = context.resources.openRawResource(resourceId)
         parseGeoJson(stream)
         initializeRenderer(map)
@@ -157,7 +176,32 @@ public class GeoJsonLayer : Layer {
     }
 
     private fun initializeRenderer(map: GoogleMap?) {
-        mRenderer = map?.let { MapViewRenderer(it, UrlIconProvider()) }
+        if (map == null) {
+            mRenderer = null
+            return
+        }
+        if (mManagersMap == null &&
+            (mMarkerManager != null || mPolygonManager != null || mPolylineManager != null || mGroundOverlayManager != null)
+        ) {
+            mManagersMap = map
+            mMarkerCollection = mMarkerManager?.newCollection()
+            mPolygonCollection = mPolygonManager?.newCollection()
+            mPolylineCollection = mPolylineManager?.newCollection()
+            mGroundOverlayCollection = mGroundOverlayManager?.newCollection()
+        }
+        val renderer =
+            MapViewRenderer(
+                map = map,
+                iconProvider = UrlIconProvider(),
+                markerCollection = mMarkerCollection,
+                polygonCollection = mPolygonCollection,
+                polylineCollection = mPolylineCollection,
+                groundOverlayCollection = mGroundOverlayCollection,
+            )
+        mCachedDescriptors.forEach { (key, descriptor) ->
+            renderer.cacheIconDescriptor(key, descriptor)
+        }
+        mRenderer = renderer
     }
 
     private fun toLegacyGeometry(geometry: ParserGeoJsonGeometry): Geometry =
@@ -247,13 +291,28 @@ public class GeoJsonLayer : Layer {
     override fun getMap(): GoogleMap? = mGoogleMap
 
     override fun setMap(map: GoogleMap?) {
+        val wasLayerOnMap = mIsLayerOnMap
+        if (wasLayerOnMap) {
+            removeLayerFromMap()
+        }
+        if (map != null && mManagersMap != null && map !== mManagersMap) {
+            mMarkerManager = null
+            mPolygonManager = null
+            mPolylineManager = null
+            mGroundOverlayManager = null
+            mMarkerCollection = null
+            mPolygonCollection = null
+            mPolylineCollection = null
+            mGroundOverlayCollection = null
+            mManagersMap = null
+        }
         mGoogleMap = map
         if (map == null) {
-            removeLayerFromMap()
             mRenderer = null
         } else {
-            mRenderer = MapViewRenderer(map, UrlIconProvider())
-            if (mIsLayerOnMap) {
+            initializeRenderer(map)
+            mFeatureClickListener?.let { setOnFeatureClickListener(it) }
+            if (wasLayerOnMap) {
                 addLayerToMap()
             }
         }
@@ -275,6 +334,60 @@ public class GeoJsonLayer : Layer {
         mIsLayerOnMap = false
     }
 
+    private fun buildPointStyle(feature: GeoJsonFeature): ModelPointStyle {
+        val pointStyle = feature.pointStyle ?: mDefaultPointStyle
+        val iconUrl =
+            pointStyle.getIcon()?.let { descriptor ->
+                val key = "geojson-descriptor://${System.identityHashCode(descriptor)}"
+                mCachedDescriptors[key] = descriptor
+                mRenderer?.cacheIconDescriptor(key, descriptor)
+                key
+            }
+        return ModelPointStyle(
+            // The renderer derives the marker's alpha from the color's alpha channel, so encode the
+            // legacy style's alpha into an otherwise-black color (hue 0 keeps the default marker look).
+            // A transparent color here (e.g. 0) would render the marker invisible.
+            color = Color.argb((pointStyle.getAlpha() * 255).toInt().coerceIn(0, 255), 0, 0, 0),
+            iconUrl = iconUrl,
+            anchorU = pointStyle.getAnchorU(),
+            anchorV = pointStyle.getAnchorV(),
+            heading = pointStyle.getRotation(),
+            zIndex = pointStyle.getZIndex(),
+            title = pointStyle.getTitle(),
+            snippet = pointStyle.getSnippet(),
+            draggable = pointStyle.isDraggable(),
+            flat = pointStyle.isFlat(),
+            visible = pointStyle.isVisible(),
+            infoWindowAnchorU = pointStyle.getInfoWindowAnchorU(),
+            infoWindowAnchorV = pointStyle.getInfoWindowAnchorV(),
+        )
+    }
+
+    private fun buildLineStyle(feature: GeoJsonFeature): ModelLineStyle {
+        val lineStyle = feature.lineStringStyle ?: mDefaultLineStringStyle
+        return ModelLineStyle(
+            color = lineStyle.color,
+            width = lineStyle.getWidth(),
+            geodesic = lineStyle.isGeodesic(),
+            zIndex = lineStyle.getZIndex(),
+            clickable = lineStyle.isClickable(),
+            visible = lineStyle.isVisible(),
+        )
+    }
+
+    private fun buildPolygonStyle(feature: GeoJsonFeature): ModelPolygonStyle {
+        val polygonStyle = feature.polygonStyle ?: mDefaultPolygonStyle
+        return ModelPolygonStyle(
+            fillColor = polygonStyle.fillColor,
+            strokeColor = polygonStyle.getStrokeColor(),
+            strokeWidth = polygonStyle.getStrokeWidth(),
+            geodesic = polygonStyle.isGeodesic(),
+            zIndex = polygonStyle.getZIndex(),
+            clickable = polygonStyle.isClickable(),
+            visible = polygonStyle.isVisible(),
+        )
+    }
+
     private fun toModelFeature(feature: GeoJsonFeature): ModelFeature {
         val existing = mFeatureMap[feature]
         if (existing != null) return existing
@@ -285,53 +398,23 @@ public class GeoJsonLayer : Layer {
 
         val style =
             when (modelGeometry) {
-                is ModelPointGeometry -> {
-                    val pointStyle = feature.pointStyle ?: mDefaultPointStyle
-                    ModelPointStyle(
-                        // The renderer derives the marker's alpha from the color's alpha channel, so encode the
-                        // legacy style's alpha into an otherwise-black color (hue 0 keeps the default marker look).
-                        // A transparent color here (e.g. 0) would render the marker invisible.
-                        color = Color.argb((pointStyle.getAlpha() * 255).toInt().coerceIn(0, 255), 0, 0, 0),
-                        anchorU = pointStyle.getAnchorU(),
-                        anchorV = pointStyle.getAnchorV(),
-                        heading = pointStyle.getRotation(),
-                    )
-                }
-
-                is ModelLineString -> {
-                    val lineStyle = feature.lineStringStyle ?: mDefaultLineStringStyle
-                    ModelLineStyle(
-                        color = lineStyle.color,
-                        width = lineStyle.getWidth(),
-                        geodesic = lineStyle.isGeodesic(),
-                    )
-                }
-
-                is ModelPolygon -> {
-                    val polygonStyle = feature.polygonStyle ?: mDefaultPolygonStyle
-                    ModelPolygonStyle(
-                        fillColor = polygonStyle.fillColor,
-                        strokeColor = polygonStyle.getStrokeColor(),
-                        strokeWidth = polygonStyle.getStrokeWidth(),
-                        geodesic = polygonStyle.isGeodesic(),
-                    )
-                }
-
+                is ModelPointGeometry -> buildPointStyle(feature)
+                is ModelLineString -> buildLineStyle(feature)
+                is ModelPolygon -> buildPolygonStyle(feature)
                 is ModelMultiGeometry -> {
-                    if (geometry is GeoJsonMultiPolygon) {
-                        val polygonStyle = feature.polygonStyle ?: mDefaultPolygonStyle
-                        ModelPolygonStyle(
-                            fillColor = polygonStyle.fillColor,
-                            strokeColor = polygonStyle.getStrokeColor(),
-                            strokeWidth = polygonStyle.getStrokeWidth(),
-                            geodesic = polygonStyle.isGeodesic(),
-                        )
-                    } else null
+                    when (geometry) {
+                        is GeoJsonMultiPolygon -> buildPolygonStyle(feature)
+                        is GeoJsonMultiLineString -> buildLineStyle(feature)
+                        is GeoJsonMultiPoint -> buildPointStyle(feature)
+                        else ->
+                            ModelCompositeStyle(
+                                pointStyle = buildPointStyle(feature),
+                                lineStyle = buildLineStyle(feature),
+                                polygonStyle = buildPolygonStyle(feature),
+                            )
+                    }
                 }
-
-                else -> {
-                    null
-                }
+                else -> null
             }
 
         val modelFeature = ModelFeature(modelGeometry, style, properties)
@@ -426,26 +509,47 @@ public class GeoJsonLayer : Layer {
 
     override fun setOnFeatureClickListener(listener: OnFeatureClickListener) {
         mFeatureClickListener = listener
-        mGoogleMap?.let { map ->
-            map.setOnMarkerClickListener { marker ->
+        val renderer = mRenderer
+        val map = mGoogleMap ?: return
+
+        val markerClickListener =
+            GoogleMap.OnMarkerClickListener { marker ->
                 val feature = findLegacyFeatureForMapObject(marker)
                 if (feature != null) {
                     mFeatureClickListener?.onFeatureClick(feature)
                 }
                 false
             }
-            map.setOnPolygonClickListener { polygon ->
+        if (renderer?.markerCollection != null) {
+            renderer.markerCollection.setOnMarkerClickListener(markerClickListener)
+        } else {
+            map.setOnMarkerClickListener(markerClickListener)
+        }
+
+        val polygonClickListener =
+            GoogleMap.OnPolygonClickListener { polygon ->
                 val feature = findLegacyFeatureForMapObject(polygon)
                 if (feature != null) {
                     mFeatureClickListener?.onFeatureClick(feature)
                 }
             }
-            map.setOnPolylineClickListener { polyline ->
+        if (renderer?.polygonCollection != null) {
+            renderer.polygonCollection.setOnPolygonClickListener(polygonClickListener)
+        } else {
+            map.setOnPolygonClickListener(polygonClickListener)
+        }
+
+        val polylineClickListener =
+            GoogleMap.OnPolylineClickListener { polyline ->
                 val feature = findLegacyFeatureForMapObject(polyline)
                 if (feature != null) {
                     mFeatureClickListener?.onFeatureClick(feature)
                 }
             }
+        if (renderer?.polylineCollection != null) {
+            renderer.polylineCollection.setOnPolylineClickListener(polylineClickListener)
+        } else {
+            map.setOnPolylineClickListener(polylineClickListener)
         }
     }
 

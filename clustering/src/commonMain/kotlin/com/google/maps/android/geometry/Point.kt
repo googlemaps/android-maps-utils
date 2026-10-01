@@ -17,9 +17,9 @@ package com.google.maps.android.geometry
 
 import kotlin.jvm.JvmField
 
-open class Point(
-    @JvmField val x: Double,
-    @JvmField val y: Double,
+public open class Point(
+    @JvmField public val x: Double,
+    @JvmField public val y: Double,
 ) {
     override fun toString(): String = "Point(x=$x, y=$y)"
 
@@ -41,7 +41,7 @@ open class Point(
         return result
     }
 
-    fun copy(
+    public fun copy(
         x: Double = this.x,
         y: Double = this.y,
     ): Point = Point(x, y)

@@ -27,7 +27,7 @@ import kotlin.collections.Collection as KotlinCollection
  * All ground overlay operations (adds and removes) should occur via its collection class. That
  * is, don't add a ground overlay via a collection, then remove it via GroundOverlay.remove()
  */
-open class GroundOverlayManager(map: GoogleMap) :
+public open class GroundOverlayManager(map: GoogleMap) :
     MapObjectManager<GroundOverlay, GroundOverlayManager.Collection>(map),
     GoogleMap.OnGroundOverlayClickListener {
 
@@ -35,37 +35,37 @@ open class GroundOverlayManager(map: GoogleMap) :
         mMap.setOnGroundOverlayClickListener(this)
     }
 
-    override fun newCollection(): Collection = Collection()
+    public override fun newCollection(): Collection = Collection()
 
-    override fun removeObjectFromMap(groundOverlay: GroundOverlay) {
+    public override fun removeObjectFromMap(groundOverlay: GroundOverlay) {
         groundOverlay.remove()
     }
 
-    override fun setVisible(mapObject: GroundOverlay, visible: Boolean) {
+    public override fun setVisible(mapObject: GroundOverlay, visible: Boolean) {
         mapObject.isVisible = visible
     }
 
-    override fun onGroundOverlayClick(groundOverlay: GroundOverlay) {
+    public override fun onGroundOverlayClick(groundOverlay: GroundOverlay) {
         mAllObjects[groundOverlay]?.mGroundOverlayClickListener?.onGroundOverlayClick(groundOverlay)
     }
 
     /** A collection of [GroundOverlay]s on the map with its own set of listeners. */
-    open inner class Collection :
+    public open inner class Collection :
         MapObjectManager<GroundOverlay, Collection>.Collection() {
         internal var mGroundOverlayClickListener: GoogleMap.OnGroundOverlayClickListener? = null
 
-        open fun addGroundOverlay(opts: GroundOverlayOptions): GroundOverlay =
+        public open fun addGroundOverlay(opts: GroundOverlayOptions): GroundOverlay =
             checkAndAdd(mMap.addGroundOverlay(opts), "GroundOverlay")
 
-        open fun addAll(opts: KotlinCollection<GroundOverlayOptions>) =
+        public open fun addAll(opts: KotlinCollection<GroundOverlayOptions>): Unit =
             addAll(opts, ::addGroundOverlay)
 
-        open fun addAll(opts: KotlinCollection<GroundOverlayOptions>, defaultVisible: Boolean) =
+        public open fun addAll(opts: KotlinCollection<GroundOverlayOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addGroundOverlay)
 
-        open fun getGroundOverlays(): KotlinCollection<GroundOverlay> = getObjects()
+        public open fun getGroundOverlays(): KotlinCollection<GroundOverlay> = getObjects()
 
-        open fun setOnGroundOverlayClickListener(
+        public open fun setOnGroundOverlayClickListener(
             groundOverlayClickListener: GoogleMap.OnGroundOverlayClickListener?,
         ) {
             mGroundOverlayClickListener = groundOverlayClickListener

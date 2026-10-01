@@ -23,9 +23,9 @@ package com.google.maps.android.data.renderer.model
  * @property transparency The transparency of the overlay (0.0 to 1.0).
  * @property visibility Whether the overlay is visible.
  */
-data class GroundOverlayStyle(
-    val iconUrl: String?,
-    val zIndex: Float = 0f,
-    val transparency: Float = 0f,
-    val visibility: Boolean = true,
+public data class GroundOverlayStyle(
+    public val iconUrl: String?,
+    public val zIndex: Float = 0f,
+    public val transparency: Float = 0f,
+    public val visibility: Boolean = true,
 ) : Style

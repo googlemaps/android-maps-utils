@@ -114,12 +114,14 @@ class MainActivity : ComponentActivity() {
                     Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
                     Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
                     Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java),
+                    Demo(R.string.demo_title_zindex, ZIndexDemoActivity::class.java),
                 ),
             ),
             DemoGroup(
                 R.string.category_geometry,
                 listOf(
                     Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
+                    Demo(R.string.demo_title_flexible_polyline, FlexiblePolylineDemoActivity::class.java),
                     Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
                     Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
                     Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java),
@@ -131,6 +133,7 @@ class MainActivity : ComponentActivity() {
                     Demo(R.string.demo_title_icon_generator, IconGeneratorDemoActivity::class.java),
                     Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
                     Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java),
+                    Demo(R.string.demo_title_reactive_extensions, KtxExtensionsDemoActivity::class.java),
                 ),
             ),
             DemoGroup(

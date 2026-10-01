@@ -24,7 +24,7 @@ import nl.adaptivity.xmlutil.xmlStreaming
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
-class KmlParser {
+public class KmlParser public constructor() {
     private val xml =
         XML {
             defaultPolicy {
@@ -33,17 +33,17 @@ class KmlParser {
             isCollectingNSAttributes = true
         }
 
-    fun parseAsKml(inputStream: InputStream): Kml {
+    public fun parseAsKml(inputStream: InputStream): Kml {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
         return DepthLimitingReader(xmlStreaming.newReader(xmlContent)).use { reader ->
             xml.decodeFromReader(Kml.serializer(), reader)
         }
     }
 
-    fun parse(inputStream: InputStream): Kml = parseAsKml(inputStream)
+    public fun parse(inputStream: InputStream): Kml = parseAsKml(inputStream)
 
-    companion object {
-        val SUPPORTED_EXTENSIONS = setOf("kml")
+    public companion object {
+        public val SUPPORTED_EXTENSIONS: Set<String> = setOf("kml")
 
         /**
          * Maximum element nesting depth accepted when parsing. The generated serializers
@@ -51,9 +51,9 @@ class KmlParser {
          * in `<MultiGeometry>`), so without a bound a maliciously deep document causes a
          * StackOverflowError. Legitimate KML stays far below this limit.
          */
-        const val MAX_ELEMENT_DEPTH = 50
+        public const val MAX_ELEMENT_DEPTH: Int = 50
 
-        fun canParse(header: String): Boolean = header.contains("<kml")
+        public fun canParse(header: String): Boolean = header.contains("<kml")
     }
 }
 

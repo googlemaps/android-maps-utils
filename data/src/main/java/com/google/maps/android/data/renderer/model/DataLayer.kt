@@ -26,11 +26,11 @@ import com.google.android.gms.maps.model.LatLngBounds
  * @property features The list of [Feature] objects contained within this layer.
  * @property properties Arbitrary properties associated with the layer.
  */
-data class DataLayer(
-    val features: List<Feature> = emptyList(),
-    val properties: Map<String, Any> = emptyMap(),
+public data class DataLayer(
+    public val features: List<Feature> = emptyList(),
+    public val properties: Map<String, Any> = emptyMap(),
 ) {
-    val boundingBox: LatLngBounds? by lazy {
+    public val boundingBox: LatLngBounds? by lazy {
         val boundsBuilder = LatLngBounds.builder()
         var hasPoints = false
         features.forEach { feature ->

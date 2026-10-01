@@ -28,54 +28,54 @@ import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindow
 /**
  * Renders clusters.
  */
-interface ClusterRenderer<T : ClusterItem> {
+public interface ClusterRenderer<T : ClusterItem> {
     /**
      * Called when the view needs to be updated because new clusters need to be displayed.
      *
      * @param clusters the clusters to be displayed.
      */
-    fun onClustersChanged(clusters: Set<Cluster<T>>)
+    public fun onClustersChanged(clusters: Set<Cluster<T>>)
 
-    fun setOnClusterClickListener(listener: OnClusterClickListener<T>?)
+    public fun setOnClusterClickListener(listener: OnClusterClickListener<T>?)
 
-    fun setOnClusterInfoWindowClickListener(listener: OnClusterInfoWindowClickListener<T>?)
+    public fun setOnClusterInfoWindowClickListener(listener: OnClusterInfoWindowClickListener<T>?)
 
-    fun setOnClusterInfoWindowLongClickListener(listener: OnClusterInfoWindowLongClickListener<T>?)
+    public fun setOnClusterInfoWindowLongClickListener(listener: OnClusterInfoWindowLongClickListener<T>?)
 
-    fun setOnClusterItemClickListener(listener: OnClusterItemClickListener<T>?)
+    public fun setOnClusterItemClickListener(listener: OnClusterItemClickListener<T>?)
 
-    fun setOnClusterItemInfoWindowClickListener(listener: OnClusterItemInfoWindowClickListener<T>?)
+    public fun setOnClusterItemInfoWindowClickListener(listener: OnClusterItemInfoWindowClickListener<T>?)
 
-    fun setOnClusterItemInfoWindowLongClickListener(listener: OnClusterItemInfoWindowLongClickListener<T>?)
+    public fun setOnClusterItemInfoWindowLongClickListener(listener: OnClusterItemInfoWindowLongClickListener<T>?)
 
     /**
      * Called to set animation on or off
      */
-    fun setAnimation(animate: Boolean)
+    public fun setAnimation(animate: Boolean)
 
     /**
      * Sets the length of the animation in milliseconds.
      */
-    fun setAnimationDuration(animationDurationMs: Long)
+    public fun setAnimationDuration(animationDurationMs: Long)
 
     /**
      * Called when the view is added.
      */
-    fun onAdd()
+    public fun onAdd()
 
     /**
      * Called when the view is removed.
      */
-    fun onRemove()
+    public fun onRemove()
 
     /**
      * Called to determine the color of a Cluster.
      */
-    fun getColor(clusterSize: Int): Int
+    public fun getColor(clusterSize: Int): Int
 
     /**
      * Called to determine the text appearance of a cluster.
      */
     @StyleRes
-    fun getClusterTextAppearance(clusterSize: Int): Int
+    public fun getClusterTextAppearance(clusterSize: Int): Int
 }

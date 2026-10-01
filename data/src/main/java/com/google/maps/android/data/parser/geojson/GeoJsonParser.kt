@@ -25,11 +25,11 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.InputStream
 
-class GeoJsonParser(
+public class GeoJsonParser @JvmOverloads public constructor(
     private val maxInputSize: Long = DEFAULT_MAX_INPUT_SIZE,
     private val maxStructuralDepth: Int = DEFAULT_MAX_STRUCTURAL_DEPTH,
 ) {
-    fun parse(inputStream: InputStream): GeoJsonObject? {
+    public fun parse(inputStream: InputStream): GeoJsonObject? {
         // Bound the untrusted input *before* materialising it. [Json.parseToJsonElement] reads the
         // whole document into an in-memory tree, so without these guards a hostile document can
         // exhaust memory (a wide document) or overflow the parser's stack (a deeply nested one)
@@ -59,8 +59,8 @@ class GeoJsonParser(
         }
     }
 
-    companion object {
-        const val MAX_GEOMETRY_DEPTH = 20
+    public companion object {
+        public const val MAX_GEOMETRY_DEPTH: Int = 20
 
         /**
          * Maximum number of characters read from an untrusted document. [Json.parseToJsonElement]
@@ -69,7 +69,7 @@ class GeoJsonParser(
          * above any realistic layer (~60x the largest bundled sample); raise it via the constructor
          * for trusted large sources.
          */
-        const val DEFAULT_MAX_INPUT_SIZE = 10L * 1024 * 1024
+        public const val DEFAULT_MAX_INPUT_SIZE: Long = 10L * 1024 * 1024
 
         /**
          * Maximum raw structural nesting (`{`/`[`) accepted. [Json.parseToJsonElement] parses nested
@@ -78,11 +78,11 @@ class GeoJsonParser(
          * safe on small Android thread stacks while remaining far above any legitimate GeoJSON, whose
          * structural depth is well under 100 even with maximally nested geometries.
          */
-        const val DEFAULT_MAX_STRUCTURAL_DEPTH = 512
+        public const val DEFAULT_MAX_STRUCTURAL_DEPTH: Int = 512
 
-        val SUPPORTED_EXTENSIONS = setOf("json", "geojson")
+        public val SUPPORTED_EXTENSIONS: Set<String> = setOf("json", "geojson")
 
-        fun canParse(header: String): Boolean = header.trimStart().startsWith("{")
+        public fun canParse(header: String): Boolean = header.trimStart().startsWith("{")
     }
 }
 

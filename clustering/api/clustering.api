@@ -1,0 +1,449 @@
+public abstract interface class com/google/maps/android/clustering/Cluster {
+	public abstract fun getItems ()Ljava/util/Collection;
+	public abstract fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
+	public abstract fun getSize ()I
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterItem {
+	public abstract fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
+	public abstract fun getSnippet ()Ljava/lang/String;
+	public abstract fun getTitle ()Ljava/lang/String;
+	public abstract fun getZIndex ()Ljava/lang/Float;
+}
+
+public class com/google/maps/android/clustering/ClusterManager : com/google/android/gms/maps/GoogleMap$OnCameraIdleListener, com/google/android/gms/maps/GoogleMap$OnInfoWindowClickListener, com/google/android/gms/maps/GoogleMap$OnMarkerClickListener {
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;)V
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/collections/MarkerManager;)V
+	public synthetic fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/collections/MarkerManager;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun addItems (Ljava/util/Collection;)Z
+	public fun clearItems ()V
+	public fun cluster ()V
+	public fun diff (Ljava/util/Collection;Ljava/util/Collection;Ljava/util/Collection;)V
+	public fun getAlgorithm ()Lcom/google/maps/android/clustering/algo/Algorithm;
+	public final fun getClusterMarkerCollection ()Lcom/google/maps/android/collections/MarkerManager$Collection;
+	public final fun getMarkerCollection ()Lcom/google/maps/android/collections/MarkerManager$Collection;
+	public final fun getMarkerManager ()Lcom/google/maps/android/collections/MarkerManager;
+	public fun getRenderer ()Lcom/google/maps/android/clustering/view/ClusterRenderer;
+	public fun onCameraIdle ()V
+	public fun onInfoWindowClick (Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onMarkerClick (Lcom/google/android/gms/maps/model/Marker;)Z
+	public fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun removeItems (Ljava/util/Collection;)Z
+	public fun setAlgorithm (Lcom/google/maps/android/clustering/algo/Algorithm;)V
+	public fun setAlgorithm (Lcom/google/maps/android/clustering/algo/ScreenBasedAlgorithm;)V
+	public fun setAnimation (Z)V
+	public fun setOnClusterClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterClickListener;)V
+	public fun setOnClusterInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener;)V
+	public fun setOnClusterInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener;)V
+	public fun setOnClusterItemClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemClickListener;)V
+	public fun setOnClusterItemInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowClickListener;)V
+	public fun setOnClusterItemInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowLongClickListener;)V
+	public fun setRenderer (Lcom/google/maps/android/clustering/view/ClusterRenderer;)V
+	public fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterManager$OnClusterClickListener {
+	public abstract fun onClusterClick (Lcom/google/maps/android/clustering/Cluster;)Z
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener {
+	public abstract fun onClusterInfoWindowClick (Lcom/google/maps/android/clustering/Cluster;)V
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener {
+	public abstract fun onClusterInfoWindowLongClick (Lcom/google/maps/android/clustering/Cluster;)V
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterManager$OnClusterItemClickListener {
+	public abstract fun onClusterItemClick (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowClickListener {
+	public abstract fun onClusterItemInfoWindowClick (Lcom/google/maps/android/clustering/ClusterItem;)V
+}
+
+public abstract interface class com/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowLongClickListener {
+	public abstract fun onClusterItemInfoWindowLongClick (Lcom/google/maps/android/clustering/ClusterItem;)V
+}
+
+public final class com/google/maps/android/clustering/ClusterManagerFlowsKt {
+	public static final fun clusterClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterInfoWindowClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterInfoWindowLongClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterItemClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterItemInfoWindowClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterItemInfoWindowLongClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public abstract class com/google/maps/android/clustering/algo/AbstractAlgorithm : com/google/maps/android/clustering/algo/Algorithm {
+	public fun <init> ()V
+	public fun lock ()V
+	public fun unlock ()V
+}
+
+public abstract interface class com/google/maps/android/clustering/algo/Algorithm {
+	public abstract fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public abstract fun addItems (Ljava/util/Collection;)Z
+	public abstract fun clearItems ()V
+	public abstract fun getClusters (F)Ljava/util/Set;
+	public abstract fun getItems ()Ljava/util/Collection;
+	public abstract fun getMaxDistanceBetweenClusteredItems ()I
+	public abstract fun lock ()V
+	public abstract fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public abstract fun removeItems (Ljava/util/Collection;)Z
+	public abstract fun setMaxDistanceBetweenClusteredItems (I)V
+	public abstract fun unlock ()V
+	public abstract fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public class com/google/maps/android/clustering/algo/CentroidNonHierarchicalDistanceBasedAlgorithm : com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm {
+	public fun <init> ()V
+	protected final fun computeCentroid (Ljava/util/Collection;)Lcom/google/android/gms/maps/model/LatLng;
+	public fun getClusters (F)Ljava/util/Set;
+}
+
+public class com/google/maps/android/clustering/algo/ContinuousZoomEuclideanCentroidAlgorithm : com/google/maps/android/clustering/algo/CentroidNonHierarchicalDistanceBasedAlgorithm {
+	public fun <init> ()V
+	public fun getClusters (F)Ljava/util/Set;
+}
+
+public class com/google/maps/android/clustering/algo/GridBasedAlgorithm : com/google/maps/android/clustering/algo/AbstractAlgorithm {
+	public static final field Companion Lcom/google/maps/android/clustering/algo/GridBasedAlgorithm$Companion;
+	public fun <init> ()V
+	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun addItems (Ljava/util/Collection;)Z
+	public fun clearItems ()V
+	public fun getClusters (F)Ljava/util/Set;
+	public fun getItems ()Ljava/util/Collection;
+	public fun getMaxDistanceBetweenClusteredItems ()I
+	public fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun removeItems (Ljava/util/Collection;)Z
+	public fun setMaxDistanceBetweenClusteredItems (I)V
+	public fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public final class com/google/maps/android/clustering/algo/GridBasedAlgorithm$Companion {
+}
+
+public class com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm : com/google/maps/android/clustering/algo/AbstractAlgorithm {
+	public static final field Companion Lcom/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm$Companion;
+	protected final field mItems Ljava/util/Collection;
+	protected final field mQuadTree Lcom/google/maps/android/quadtree/PointQuadTree;
+	public fun <init> ()V
+	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun addItems (Ljava/util/Collection;)Z
+	public fun clearItems ()V
+	protected final fun createBoundsFromSpan (Lcom/google/maps/android/geometry/Point;D)Lcom/google/maps/android/geometry/Bounds;
+	protected final fun distanceSquared (Lcom/google/maps/android/geometry/Point;Lcom/google/maps/android/geometry/Point;)D
+	protected fun getClusteringItems (Lcom/google/maps/android/quadtree/PointQuadTree;F)Ljava/util/Collection;
+	public fun getClusters (F)Ljava/util/Set;
+	public fun getItems ()Ljava/util/Collection;
+	protected final fun getMItemMap ()Ljava/util/Map;
+	public fun getMaxDistanceBetweenClusteredItems ()I
+	public fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun removeItems (Ljava/util/Collection;)Z
+	public fun setMaxDistanceBetweenClusteredItems (I)V
+	public fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public final class com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm$Companion {
+}
+
+protected final class com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm$QuadItem : com/google/maps/android/clustering/Cluster, com/google/maps/android/quadtree/PointQuadTree$Item {
+	public final field mClusterItem Lcom/google/maps/android/clustering/ClusterItem;
+	public fun <init> (Lcom/google/maps/android/clustering/ClusterItem;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getItems ()Ljava/util/Collection;
+	public fun getPoint ()Lcom/google/maps/android/geometry/Point;
+	public fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
+	public fun getSize ()I
+	public fun hashCode ()I
+}
+
+public class com/google/maps/android/clustering/algo/NonHierarchicalViewBasedAlgorithm : com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm, com/google/maps/android/clustering/algo/ScreenBasedAlgorithm {
+	public static final field Companion Lcom/google/maps/android/clustering/algo/NonHierarchicalViewBasedAlgorithm$Companion;
+	public fun <init> (II)V
+	protected fun getClusteringItems (Lcom/google/maps/android/quadtree/PointQuadTree;F)Ljava/util/Collection;
+	public fun onCameraChange (Lcom/google/android/gms/maps/model/CameraPosition;)V
+	public fun shouldReclusterOnMapMovement ()Z
+	public final fun updateViewSize (II)V
+}
+
+public final class com/google/maps/android/clustering/algo/NonHierarchicalViewBasedAlgorithm$Companion {
+}
+
+public class com/google/maps/android/clustering/algo/PreCachingAlgorithmDecorator : com/google/maps/android/clustering/algo/AbstractAlgorithm {
+	public fun <init> (Lcom/google/maps/android/clustering/algo/Algorithm;)V
+	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun addItems (Ljava/util/Collection;)Z
+	public fun clearItems ()V
+	public fun getClusters (F)Ljava/util/Set;
+	public fun getItems ()Ljava/util/Collection;
+	public fun getMaxDistanceBetweenClusteredItems ()I
+	public fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun removeItems (Ljava/util/Collection;)Z
+	public fun setMaxDistanceBetweenClusteredItems (I)V
+	public fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public abstract interface class com/google/maps/android/clustering/algo/ScreenBasedAlgorithm : com/google/maps/android/clustering/algo/Algorithm {
+	public abstract fun onCameraChange (Lcom/google/android/gms/maps/model/CameraPosition;)V
+	public abstract fun shouldReclusterOnMapMovement ()Z
+}
+
+public class com/google/maps/android/clustering/algo/ScreenBasedAlgorithmAdapter : com/google/maps/android/clustering/algo/AbstractAlgorithm, com/google/maps/android/clustering/algo/ScreenBasedAlgorithm {
+	public fun <init> (Lcom/google/maps/android/clustering/algo/Algorithm;)V
+	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun addItems (Ljava/util/Collection;)Z
+	public fun clearItems ()V
+	public fun getClusters (F)Ljava/util/Set;
+	public fun getItems ()Ljava/util/Collection;
+	public fun getMaxDistanceBetweenClusteredItems ()I
+	public fun onCameraChange (Lcom/google/android/gms/maps/model/CameraPosition;)V
+	public fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun removeItems (Ljava/util/Collection;)Z
+	public fun setMaxDistanceBetweenClusteredItems (I)V
+	public fun shouldReclusterOnMapMovement ()Z
+	public fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public class com/google/maps/android/clustering/algo/StaticCluster : com/google/maps/android/clustering/Cluster {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;)V
+	public final fun add (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getItems ()Ljava/util/Collection;
+	public fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
+	public fun getSize ()I
+	public fun hashCode ()I
+	public final fun remove (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/clustering/view/ClusterRenderer {
+	public abstract fun getClusterTextAppearance (I)I
+	public abstract fun getColor (I)I
+	public abstract fun onAdd ()V
+	public abstract fun onClustersChanged (Ljava/util/Set;)V
+	public abstract fun onRemove ()V
+	public abstract fun setAnimation (Z)V
+	public abstract fun setAnimationDuration (J)V
+	public abstract fun setOnClusterClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterClickListener;)V
+	public abstract fun setOnClusterInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener;)V
+	public abstract fun setOnClusterInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener;)V
+	public abstract fun setOnClusterItemClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemClickListener;)V
+	public abstract fun setOnClusterItemInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowClickListener;)V
+	public abstract fun setOnClusterItemInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowLongClickListener;)V
+}
+
+public class com/google/maps/android/clustering/view/ClusterRendererMultipleItems : com/google/maps/android/clustering/view/ClusterRenderer {
+	public static final field Companion Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$Companion;
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;)V
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;Ljava/util/concurrent/Executor;)V
+	public synthetic fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;Ljava/util/concurrent/Executor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected final fun getBucket (Lcom/google/maps/android/clustering/Cluster;)I
+	public fun getCluster (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/clustering/Cluster;
+	public fun getClusterItem (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/clustering/ClusterItem;
+	protected final fun getClusterText (I)Ljava/lang/String;
+	public fun getClusterTextAppearance (I)I
+	public fun getColor (I)I
+	protected final fun getDescriptorForCluster (Lcom/google/maps/android/clustering/Cluster;)Lcom/google/android/gms/maps/model/BitmapDescriptor;
+	public fun getMarker (Lcom/google/maps/android/clustering/Cluster;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMarker (Lcom/google/maps/android/clustering/ClusterItem;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMinClusterSize ()I
+	public fun onAdd ()V
+	protected fun onBeforeClusterItemRendered (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/MarkerOptions;)V
+	protected fun onBeforeClusterRendered (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/MarkerOptions;)V
+	protected final fun onClusterItemRendered (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterItemUpdated (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/Marker;)V
+	protected final fun onClusterRendered (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterUpdated (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onClustersChanged (Ljava/util/Set;)V
+	public fun onRemove ()V
+	public fun setAnimation (Z)V
+	public fun setAnimationDuration (J)V
+	public final fun setAnimationInterpolator (Landroid/animation/TimeInterpolator;)V
+	public final fun setAnimationType (Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;)V
+	public final fun setLoggingEnabled (Z)V
+	public fun setMinClusterSize (I)V
+	public fun setOnClusterClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterClickListener;)V
+	public fun setOnClusterInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener;)V
+	public fun setOnClusterInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener;)V
+	public fun setOnClusterItemClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemClickListener;)V
+	public fun setOnClusterItemInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowClickListener;)V
+	public fun setOnClusterItemInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowLongClickListener;)V
+	protected fun shouldRenderAsCluster (Lcom/google/maps/android/clustering/Cluster;)Z
+	public final fun stopAnimation ()V
+}
+
+public final class com/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType : java/lang/Enum {
+	public static final field ACCELERATE Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field BOUNCE Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field DECELERATE Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field EASE_IN Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field EASE_IN_OUT Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field EASE_OUT Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field FAST_OUT_SLOW_IN Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static final field LINEAR Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+	public static fun values ()[Lcom/google/maps/android/clustering/view/ClusterRendererMultipleItems$AnimationType;
+}
+
+public final class com/google/maps/android/clustering/view/ClusterRendererMultipleItems$Companion {
+}
+
+public class com/google/maps/android/clustering/view/DefaultAdvancedMarkersClusterRenderer : com/google/maps/android/clustering/view/ClusterRenderer {
+	public static final field Companion Lcom/google/maps/android/clustering/view/DefaultAdvancedMarkersClusterRenderer$Companion;
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;)V
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;Ljava/util/concurrent/Executor;)V
+	public synthetic fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;Ljava/util/concurrent/Executor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected fun getBucket (Lcom/google/maps/android/clustering/Cluster;)I
+	public fun getCluster (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/clustering/Cluster;
+	public fun getClusterItem (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/clustering/ClusterItem;
+	protected fun getClusterText (I)Ljava/lang/String;
+	public fun getClusterTextAppearance (I)I
+	public fun getColor (I)I
+	protected fun getDescriptorForCluster (Lcom/google/maps/android/clustering/Cluster;)Lcom/google/android/gms/maps/model/BitmapDescriptor;
+	public fun getMarker (Lcom/google/maps/android/clustering/Cluster;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMarker (Lcom/google/maps/android/clustering/ClusterItem;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMinClusterSize ()I
+	public fun onAdd ()V
+	protected fun onBeforeClusterItemRendered (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/AdvancedMarkerOptions;)V
+	protected fun onBeforeClusterRendered (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/AdvancedMarkerOptions;)V
+	protected fun onClusterItemRendered (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterItemUpdated (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterRendered (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterUpdated (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/AdvancedMarker;)V
+	public fun onClustersChanged (Ljava/util/Set;)V
+	public fun onRemove ()V
+	public fun setAnimation (Z)V
+	public fun setAnimationDuration (J)V
+	public fun setMinClusterSize (I)V
+	public fun setOnClusterClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterClickListener;)V
+	public fun setOnClusterInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener;)V
+	public fun setOnClusterInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener;)V
+	public fun setOnClusterItemClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemClickListener;)V
+	public fun setOnClusterItemInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowClickListener;)V
+	public fun setOnClusterItemInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowLongClickListener;)V
+	protected fun shouldRender (Ljava/util/Set;Ljava/util/Set;)Z
+	protected fun shouldRenderAsCluster (Lcom/google/maps/android/clustering/Cluster;)Z
+}
+
+public final class com/google/maps/android/clustering/view/DefaultAdvancedMarkersClusterRenderer$Companion {
+}
+
+public class com/google/maps/android/clustering/view/DefaultClusterRenderer : com/google/maps/android/clustering/view/ClusterRenderer {
+	public static final field Companion Lcom/google/maps/android/clustering/view/DefaultClusterRenderer$Companion;
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;)V
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;Ljava/util/concurrent/Executor;)V
+	public synthetic fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/clustering/ClusterManager;Ljava/util/concurrent/Executor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected fun getBucket (Lcom/google/maps/android/clustering/Cluster;)I
+	public fun getCluster (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/clustering/Cluster;
+	public fun getClusterItem (Lcom/google/android/gms/maps/model/Marker;)Lcom/google/maps/android/clustering/ClusterItem;
+	protected fun getClusterText (I)Ljava/lang/String;
+	public fun getClusterTextAppearance (I)I
+	public fun getColor (I)I
+	protected fun getDescriptorForCluster (Lcom/google/maps/android/clustering/Cluster;)Lcom/google/android/gms/maps/model/BitmapDescriptor;
+	public fun getMarker (Lcom/google/maps/android/clustering/Cluster;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMarker (Lcom/google/maps/android/clustering/ClusterItem;)Lcom/google/android/gms/maps/model/Marker;
+	public fun getMinClusterSize ()I
+	public fun onAdd ()V
+	protected fun onBeforeClusterItemRendered (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/MarkerOptions;)V
+	protected fun onBeforeClusterRendered (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/MarkerOptions;)V
+	protected fun onClusterItemRendered (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterItemUpdated (Lcom/google/maps/android/clustering/ClusterItem;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterRendered (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/Marker;)V
+	protected fun onClusterUpdated (Lcom/google/maps/android/clustering/Cluster;Lcom/google/android/gms/maps/model/Marker;)V
+	public fun onClustersChanged (Ljava/util/Set;)V
+	public fun onRemove ()V
+	public fun setAnimation (Z)V
+	public fun setAnimationDuration (J)V
+	public fun setMinClusterSize (I)V
+	public fun setOnClusterClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterClickListener;)V
+	public fun setOnClusterInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener;)V
+	public fun setOnClusterInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener;)V
+	public fun setOnClusterItemClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemClickListener;)V
+	public fun setOnClusterItemInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowClickListener;)V
+	public fun setOnClusterItemInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterItemInfoWindowLongClickListener;)V
+	protected fun shouldRender (Ljava/util/Set;Ljava/util/Set;)Z
+	protected fun shouldRenderAsCluster (Lcom/google/maps/android/clustering/Cluster;)Z
+}
+
+public final class com/google/maps/android/clustering/view/DefaultClusterRenderer$Companion {
+}
+
+public final class com/google/maps/android/geometry/Bounds {
+	public final field maxX D
+	public final field maxY D
+	public final field midX D
+	public final field midY D
+	public final field minX D
+	public final field minY D
+	public fun <init> (DDDD)V
+	public final fun contains (DD)Z
+	public final fun contains (Lcom/google/maps/android/geometry/Bounds;)Z
+	public final fun contains (Lcom/google/maps/android/geometry/Point;)Z
+	public final fun intersects (DDDD)Z
+	public final fun intersects (Lcom/google/maps/android/geometry/Bounds;)Z
+}
+
+public class com/google/maps/android/geometry/Point {
+	public final field x D
+	public final field y D
+	public fun <init> (DD)V
+	public final fun copy (DD)Lcom/google/maps/android/geometry/Point;
+	public static synthetic fun copy$default (Lcom/google/maps/android/geometry/Point;DDILjava/lang/Object;)Lcom/google/maps/android/geometry/Point;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/google/maps/android/geometry/PointExtensionsKt {
+	public static final fun component1 (Lcom/google/maps/android/geometry/Point;)D
+	public static final fun component2 (Lcom/google/maps/android/geometry/Point;)D
+}
+
+public final class com/google/maps/android/ktx/utils/clustering/ClusterManagerKt {
+	public static final fun clusterClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterInfoWindowClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterInfoWindowLongClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterItemClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterItemInfoWindowClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun clusterItemInfoWindowLongClickEvents (Lcom/google/maps/android/clustering/ClusterManager;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/ktx/utils/geometry/PointKt {
+	public static final fun component1 (Lcom/google/maps/android/geometry/Point;)D
+	public static final fun component2 (Lcom/google/maps/android/geometry/Point;)D
+}
+
+public final class com/google/maps/android/projection/Point : com/google/maps/android/geometry/Point {
+	public fun <init> (DD)V
+}
+
+public final class com/google/maps/android/projection/SphericalMercatorProjection {
+	public fun <init> (D)V
+	public final fun toLatLng (Lcom/google/maps/android/geometry/Point;)Lcom/google/android/gms/maps/model/LatLng;
+	public final fun toPoint (Lcom/google/android/gms/maps/model/LatLng;)Lcom/google/maps/android/geometry/Point;
+}
+
+public final class com/google/maps/android/quadtree/PointQuadTree {
+	public static final field Companion Lcom/google/maps/android/quadtree/PointQuadTree$Companion;
+	public fun <init> (DDDD)V
+	public fun <init> (Lcom/google/maps/android/geometry/Bounds;)V
+	public fun <init> (Lcom/google/maps/android/geometry/Bounds;I)V
+	public synthetic fun <init> (Lcom/google/maps/android/geometry/Bounds;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun add (Lcom/google/maps/android/quadtree/PointQuadTree$Item;)V
+	public final fun clear ()V
+	public final fun remove (Lcom/google/maps/android/quadtree/PointQuadTree$Item;)Z
+	public final fun search (Lcom/google/maps/android/geometry/Bounds;)Ljava/util/Collection;
+}
+
+public final class com/google/maps/android/quadtree/PointQuadTree$Companion {
+}
+
+public abstract interface class com/google/maps/android/quadtree/PointQuadTree$Item {
+	public abstract fun getPoint ()Lcom/google/maps/android/geometry/Point;
+}
+
