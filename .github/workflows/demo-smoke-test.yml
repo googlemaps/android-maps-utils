@@ -76,7 +76,9 @@ jobs:
       uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
       with:
         api-level: 34
-        target: google_apis
+        # The Play Store image ships Google Play services recent enough for the latest maps
+        # renderer, which advanced markers need. The plain google_apis image only has the legacy one.
+        target: google_apis_playstore
         arch: x86_64
         disable-animations: true
         script: >-
