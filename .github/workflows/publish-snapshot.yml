@@ -12,25 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Publish
+# Publishes a -SNAPSHOT build of every module to the Maven Central snapshot repository
+# (https://central.sonatype.com/repository/maven-snapshots/). Snapshots are not signed
+# releases and never go through release-please; nothing is tagged or committed.
+name: Publish snapshot
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Snapshot version, must end with -SNAPSHOT (e.g. 6.1.0-SNAPSHOT)'
+        required: true
 
 permissions:
   contents: read
 
 jobs:
-  publish:
+  publish-snapshot:
     # The Kotlin Multiplatform modules publish iOS klibs, which can only be built on macOS.
     runs-on: macos-latest
     steps:
+      - name: Check version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          case "$VERSION" in
+            *-SNAPSHOT) ;;
+            *) echo "::error::Snapshot versions must end with -SNAPSHOT, got '$VERSION'"; exit 1 ;;
+          esac
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
+          persist-credentials: false
 
       - name: Set up JDK 21
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
@@ -41,19 +55,23 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
-      - name: Create .gpg key
+      - name: Set snapshot version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          sed -i.bak 's/version = "[^"]*"/version = "'"$VERSION"'"/' build.gradle.kts
+          grep -n 'version = ' build.gradle.kts
+
+      - name: Configure Maven Central credentials and signing
         run: |
           echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
           gpg --quiet --output $GITHUB_WORKSPACE/release.gpg --dearmor ./release.asc
-
-          echo "Build and publish"
           sed -i.bak -e "s,mavenCentralUsername=,mavenCentralUsername=$SONATYPE_TOKEN_USERNAME,g" gradle.properties
           SONATYPE_TOKEN_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_TOKEN_PASSWORD" | sed -e 's/[\/&]/\\&/g')
           sed -i.bak -e "s,mavenCentralPassword=,mavenCentralPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
           sed -i.bak -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
           sed -i.bak -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
           sed -i.bak -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
-
         env:
           GPG_KEY_ARMOR: ${{ secrets.SYNCED_GPG_KEY_ARMOR }}
           GPG_KEY_ID: ${{ secrets.SYNCED_GPG_KEY_ID }}
@@ -61,5 +79,5 @@ jobs:
           SONATYPE_TOKEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
           SONATYPE_TOKEN_USERNAME: ${{ secrets.SONATYPE_TOKEN }}
 
-      - name: Publish to MavenCentral
-        run: ./gradlew publishToMavenCentral --warn --stacktrace
+      - name: Publish snapshot
+        run: ./gradlew publishToMavenCentral --stacktrace
