@@ -20,12 +20,12 @@ package com.google.maps.android.model
  *
  * On Android this is a typealias for [com.google.android.gms.maps.model.CameraPosition].
  */
-expect class CameraPosition(target: LatLng, zoom: Float, tilt: Float, bearing: Float)
+public expect class CameraPosition(target: LatLng, zoom: Float, tilt: Float, bearing: Float)
 
-expect val CameraPosition.target: LatLng
+public expect val CameraPosition.target: LatLng
 
-expect val CameraPosition.zoom: Float
+public expect val CameraPosition.zoom: Float
 
-expect val CameraPosition.tilt: Float
+public expect val CameraPosition.tilt: Float
 
-expect val CameraPosition.bearing: Float
+public expect val CameraPosition.bearing: Float

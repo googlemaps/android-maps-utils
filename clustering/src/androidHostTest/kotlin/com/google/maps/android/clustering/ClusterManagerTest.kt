@@ -117,4 +117,51 @@ class ClusterManagerTest {
         clusterManager.setOnClusterInfoWindowClickListener(clusterInfoClickListener)
         clusterManager.setOnClusterItemInfoWindowClickListener(itemInfoClickListener)
     }
+
+    private class MutableTestItem(
+        override var position: LatLng,
+        override var title: String?,
+        override var snippet: String?,
+        override var zIndex: Float?,
+    ) : ClusterItem
+
+    private class TestableDefaultClusterRenderer(
+        context: Context,
+        map: GoogleMap,
+        clusterManager: ClusterManager<MutableTestItem>,
+    ) : com.google.maps.android.clustering.view.DefaultClusterRenderer<MutableTestItem>(context, map, clusterManager) {
+        fun invokeOnClusterItemUpdated(
+            item: MutableTestItem,
+            marker: Marker,
+        ) {
+            onClusterItemUpdated(item, marker)
+        }
+    }
+
+    @Test
+    fun testOnClusterItemUpdated_clearsNullSnippetAndUpdatesZIndex() {
+        val mutableClusterManager = ClusterManager<MutableTestItem>(context, map, markerManager)
+        val renderer = TestableDefaultClusterRenderer(context, map, mutableClusterManager)
+        val mockMarker = mockk<Marker>(relaxed = true)
+        var markerPosition = LatLng(37.7749, -122.4194)
+        var markerTitle: String? = "Initial Title"
+        var markerSnippet: String? = "Initial Snippet"
+        var markerZIndex = 1.0f
+
+        every { mockMarker.position } answers { markerPosition }
+        every { mockMarker.setPosition(any()) } answers { markerPosition = firstArg() }
+        every { mockMarker.title } answers { markerTitle }
+        every { mockMarker.setTitle(any()) } answers { markerTitle = firstArg() }
+        every { mockMarker.snippet } answers { markerSnippet }
+        every { mockMarker.setSnippet(any()) } answers { markerSnippet = firstArg() }
+        every { mockMarker.zIndex } answers { markerZIndex }
+        every { mockMarker.setZIndex(any()) } answers { markerZIndex = firstArg() }
+        every { mockMarker.isInfoWindowShown } returns false
+
+        val item = MutableTestItem(LatLng(37.7749, -122.4194), "Initial Title", null, 10.0f)
+        renderer.invokeOnClusterItemUpdated(item, mockMarker)
+
+        assertThat(markerSnippet).isNull()
+        assertThat(markerZIndex).isEqualTo(10.0f)
+    }
 }

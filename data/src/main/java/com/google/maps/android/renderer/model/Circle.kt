@@ -21,17 +21,17 @@ import com.google.android.gms.maps.model.PatternItem
 /**
  * A data model representing a circle on the map.
  */
-data class Circle(
-    var center: LatLng,
-    var radius: Double,
-    var strokeWidth: Float = 10.0f,
-    var strokeColor: Int = -0x1000000, // Black
-    var fillColor: Int = 0x00000000, // Transparent
-    var isClickable: Boolean = false,
-    override var isVisible: Boolean = true,
-    override var zIndex: Float = 0.0f,
-    var strokePattern: List<PatternItem>? = null,
+public data class Circle(
+    public var center: LatLng,
+    public var radius: Double,
+    public var strokeWidth: Float = 10.0f,
+    public var strokeColor: Int = -0x1000000, // Black
+    public var fillColor: Int = 0x00000000, // Transparent
+    public var isClickable: Boolean = false,
+    public override var isVisible: Boolean = true,
+    public override var zIndex: Float = 0.0f,
+    public var strokePattern: List<PatternItem>? = null,
 ) : MapObject {
-    override val type: MapObject.Type
+    public override val type: MapObject.Type
         get() = MapObject.Type.CIRCLE
 }

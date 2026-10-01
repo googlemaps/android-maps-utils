@@ -20,7 +20,7 @@ import com.google.maps.android.clustering.ClusterItem
 /**
  * Base Algorithm class that implements lock/unlock functionality.
  */
-abstract class AbstractAlgorithm<T : ClusterItem> : Algorithm<T> {
+public abstract class AbstractAlgorithm<T : ClusterItem> : Algorithm<T> {
     private val mLock = PlatformLock()
 
     override fun lock() {

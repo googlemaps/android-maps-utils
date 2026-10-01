@@ -20,9 +20,9 @@ package com.google.maps.android.heatmaps
  * They were historically defined on HeatmapTileProvider, which remains Android-only; its
  * companion aliases these values to preserve the public API.
  */
-object HeatmapConstants {
+internal object HeatmapConstants {
     /** Default opacity of heatmap overlay. */
-    const val DEFAULT_OPACITY: Double = 0.7
+    internal const val DEFAULT_OPACITY: Double = 0.7
 
     /** Width of the world (in the Mercator projection used by the heatmap quadtree). */
     internal const val WORLD_WIDTH: Double = 1.0

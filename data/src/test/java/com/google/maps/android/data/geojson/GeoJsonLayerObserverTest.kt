@@ -16,25 +16,45 @@
 package com.google.maps.android.data.geojson
 
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.data.Feature
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.slot
+import io.mockk.unmockkStatic
 import io.mockk.verify
 import org.json.JSONObject
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class GeoJsonLayerObserverTest {
+    @Before
+    fun setUp() {
+        mockkStatic(BitmapDescriptorFactory::class)
+        every { BitmapDescriptorFactory.defaultMarker(any()) } returns mockk()
+    }
+
+    @After
+    fun tearDown() {
+        unmockkStatic(BitmapDescriptorFactory::class)
+    }
+
     @Test
     fun addedPolygonStyleChange_removesAndRedrawsFeature() {
         val map = mockk<GoogleMap>(relaxed = true)
@@ -196,6 +216,52 @@ class GeoJsonLayerObserverTest {
         assertSame(secondFeature, clickedFeature)
     }
 
+    @Test
+    fun addedPointStyle_appliesZIndexToMarker() {
+        val map = mockk<GoogleMap>(relaxed = true)
+        val marker = mockk<Marker>(relaxed = true)
+        val options = mutableListOf<MarkerOptions>()
+        every { map.addMarker(capture(options)) } returns marker
+        val layer = emptyLayer(map)
+        val (feature, _) = pointFeature(8.5f)
+
+        layer.addLayerToMap()
+        layer.addFeature(feature)
+
+        assertEquals(8.5f, options.single().zIndex, 0.001f)
+    }
+
+    @Test
+    fun addedLineStringStyle_appliesZIndexToPolyline() {
+        val map = mockk<GoogleMap>(relaxed = true)
+        val polyline = mockk<Polyline>(relaxed = true)
+        val options = mutableListOf<PolylineOptions>()
+        every { map.addPolyline(capture(options)) } returns polyline
+        val layer = emptyLayer(map)
+        val (feature, _) = lineStringFeature(4.5f)
+
+        layer.addLayerToMap()
+        layer.addFeature(feature)
+
+        assertEquals(4.5f, options.single().zIndex, 0.001f)
+    }
+
+    @Test
+    fun addedPolygonStyle_appliesZIndexToPolygon() {
+        val map = mockk<GoogleMap>(relaxed = true)
+        val polygon = mockk<Polygon>(relaxed = true)
+        val options = mutableListOf<PolygonOptions>()
+        every { map.addPolygon(capture(options)) } returns polygon
+        val layer = emptyLayer(map)
+        val (feature, style) = polygonFeature(INITIAL_COLOR)
+        style.setZIndex(3.5f)
+
+        layer.addLayerToMap()
+        layer.addFeature(feature)
+
+        assertEquals(3.5f, options.single().zIndex, 0.001f)
+    }
+
     private fun emptyLayer(map: GoogleMap): GeoJsonLayer =
         GeoJsonLayer(
             map,
@@ -216,6 +282,18 @@ class GeoJsonLayerObserverTest {
             )
         val style = GeoJsonPolygonStyle().apply { this.fillColor = fillColor }
         return GeoJsonFeature(geometry, null, null, null).also { it.polygonStyle = style } to style
+    }
+
+    private fun pointFeature(zIndex: Float): Pair<GeoJsonFeature, GeoJsonPointStyle> {
+        val geometry = GeoJsonPoint(LatLng(10.0, 20.0))
+        val style = GeoJsonPointStyle().apply { setZIndex(zIndex) }
+        return GeoJsonFeature(geometry, null, null, null).also { it.pointStyle = style } to style
+    }
+
+    private fun lineStringFeature(zIndex: Float): Pair<GeoJsonFeature, GeoJsonLineStringStyle> {
+        val geometry = GeoJsonLineString(listOf(LatLng(0.0, 0.0), LatLng(1.0, 1.0)))
+        val style = GeoJsonLineStringStyle().apply { setZIndex(zIndex) }
+        return GeoJsonFeature(geometry, null, null, null).also { it.lineStringStyle = style } to style
     }
 
     private fun multiPolygonFeature(fillColor: Int): Pair<GeoJsonFeature, GeoJsonPolygonStyle> {

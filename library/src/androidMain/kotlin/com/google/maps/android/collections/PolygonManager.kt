@@ -27,7 +27,7 @@ import kotlin.collections.Collection as KotlinCollection
  * All polygon operations (adds and removes) should occur via its collection class. That is,
  * don't add a polygon via a collection, then remove it via Polygon.remove()
  */
-open class PolygonManager(map: GoogleMap) :
+public open class PolygonManager(map: GoogleMap) :
     MapObjectManager<Polygon, PolygonManager.Collection>(map),
     GoogleMap.OnPolygonClickListener {
 
@@ -35,36 +35,36 @@ open class PolygonManager(map: GoogleMap) :
         mMap.setOnPolygonClickListener(this)
     }
 
-    override fun newCollection(): Collection = Collection()
+    public override fun newCollection(): Collection = Collection()
 
-    override fun removeObjectFromMap(polygon: Polygon) {
+    public override fun removeObjectFromMap(polygon: Polygon) {
         polygon.remove()
     }
 
-    override fun setVisible(mapObject: Polygon, visible: Boolean) {
+    public override fun setVisible(mapObject: Polygon, visible: Boolean) {
         mapObject.isVisible = visible
     }
 
-    override fun onPolygonClick(polygon: Polygon) {
+    public override fun onPolygonClick(polygon: Polygon) {
         mAllObjects[polygon]?.mPolygonClickListener?.onPolygonClick(polygon)
     }
 
     /** A collection of [Polygon]s on the map with its own set of listeners. */
-    open inner class Collection : MapObjectManager<Polygon, Collection>.Collection() {
+    public open inner class Collection : MapObjectManager<Polygon, Collection>.Collection() {
         internal var mPolygonClickListener: GoogleMap.OnPolygonClickListener? = null
 
-        open fun addPolygon(opts: PolygonOptions): Polygon =
+        public open fun addPolygon(opts: PolygonOptions): Polygon =
             checkAndAdd(mMap.addPolygon(opts), "Polygon")
 
-        open fun addAll(opts: KotlinCollection<PolygonOptions>) =
+        public open fun addAll(opts: KotlinCollection<PolygonOptions>): Unit =
             addAll(opts, ::addPolygon)
 
-        open fun addAll(opts: KotlinCollection<PolygonOptions>, defaultVisible: Boolean) =
+        public open fun addAll(opts: KotlinCollection<PolygonOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addPolygon)
 
-        open fun getPolygons(): KotlinCollection<Polygon> = getObjects()
+        public open fun getPolygons(): KotlinCollection<Polygon> = getObjects()
 
-        open fun setOnPolygonClickListener(polygonClickListener: GoogleMap.OnPolygonClickListener?) {
+        public open fun setOnPolygonClickListener(polygonClickListener: GoogleMap.OnPolygonClickListener?) {
             mPolygonClickListener = polygonClickListener
         }
     }

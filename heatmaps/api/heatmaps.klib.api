@@ -1,0 +1,49 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.google.maps.android:heatmaps>
+final class com.google.maps.android.heatmaps/Gradient { // com.google.maps.android.heatmaps/Gradient|null[0]
+    constructor <init>(kotlin/IntArray, kotlin/FloatArray, kotlin/Int = ...) // com.google.maps.android.heatmaps/Gradient.<init>|<init>(kotlin.IntArray;kotlin.FloatArray;kotlin.Int){}[0]
+
+    final val colorMapSize // com.google.maps.android.heatmaps/Gradient.colorMapSize|{}colorMapSize[0]
+        final fun <get-colorMapSize>(): kotlin/Int // com.google.maps.android.heatmaps/Gradient.colorMapSize.<get-colorMapSize>|<get-colorMapSize>(){}[0]
+    final val colors // com.google.maps.android.heatmaps/Gradient.colors|{}colors[0]
+        final fun <get-colors>(): kotlin/IntArray // com.google.maps.android.heatmaps/Gradient.colors.<get-colors>|<get-colors>(){}[0]
+    final val startPoints // com.google.maps.android.heatmaps/Gradient.startPoints|{}startPoints[0]
+        final fun <get-startPoints>(): kotlin/FloatArray // com.google.maps.android.heatmaps/Gradient.startPoints.<get-startPoints>|<get-startPoints>(){}[0]
+
+    final fun generateColorMap(kotlin/Double = ...): kotlin/IntArray // com.google.maps.android.heatmaps/Gradient.generateColorMap|generateColorMap(kotlin.Double){}[0]
+
+    final object Companion { // com.google.maps.android.heatmaps/Gradient.Companion|null[0]
+        final fun interpolateColor(kotlin/Int, kotlin/Int, kotlin/Float): kotlin/Int // com.google.maps.android.heatmaps/Gradient.Companion.interpolateColor|interpolateColor(kotlin.Int;kotlin.Int;kotlin.Float){}[0]
+    }
+}
+
+final class com.google.maps.android.heatmaps/WeightedLatLng : com.google.maps.android.quadtree/PointQuadTree.Item { // com.google.maps.android.heatmaps/WeightedLatLng|null[0]
+    constructor <init>(com.google.maps.android.model/LatLng, com.google.maps.android.geometry/Point, kotlin/Double) // com.google.maps.android.heatmaps/WeightedLatLng.<init>|<init>(com.google.maps.android.model.LatLng;com.google.maps.android.geometry.Point;kotlin.Double){}[0]
+    constructor <init>(com.google.maps.android.model/LatLng, kotlin/Double = ...) // com.google.maps.android.heatmaps/WeightedLatLng.<init>|<init>(com.google.maps.android.model.LatLng;kotlin.Double){}[0]
+
+    final val intensity // com.google.maps.android.heatmaps/WeightedLatLng.intensity|{}intensity[0]
+        final fun <get-intensity>(): kotlin/Double // com.google.maps.android.heatmaps/WeightedLatLng.intensity.<get-intensity>|<get-intensity>(){}[0]
+    final val latLng // com.google.maps.android.heatmaps/WeightedLatLng.latLng|{}latLng[0]
+        final fun <get-latLng>(): com.google.maps.android.model/LatLng // com.google.maps.android.heatmaps/WeightedLatLng.latLng.<get-latLng>|<get-latLng>(){}[0]
+    final val point // com.google.maps.android.heatmaps/WeightedLatLng.point|{}point[0]
+        final fun <get-point>(): com.google.maps.android.geometry/Point // com.google.maps.android.heatmaps/WeightedLatLng.point.<get-point>|<get-point>(){}[0]
+
+    final fun component1(): com.google.maps.android.model/LatLng // com.google.maps.android.heatmaps/WeightedLatLng.component1|component1(){}[0]
+    final fun component2(): com.google.maps.android.geometry/Point // com.google.maps.android.heatmaps/WeightedLatLng.component2|component2(){}[0]
+    final fun component3(): kotlin/Double // com.google.maps.android.heatmaps/WeightedLatLng.component3|component3(){}[0]
+    final fun copy(com.google.maps.android.model/LatLng = ..., com.google.maps.android.geometry/Point = ..., kotlin/Double = ...): com.google.maps.android.heatmaps/WeightedLatLng // com.google.maps.android.heatmaps/WeightedLatLng.copy|copy(com.google.maps.android.model.LatLng;com.google.maps.android.geometry.Point;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.google.maps.android.heatmaps/WeightedLatLng.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.google.maps.android.heatmaps/WeightedLatLng.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.google.maps.android.heatmaps/WeightedLatLng.toString|toString(){}[0]
+
+    final object Companion { // com.google.maps.android.heatmaps/WeightedLatLng.Companion|null[0]
+        final const val DEFAULT_INTENSITY // com.google.maps.android.heatmaps/WeightedLatLng.Companion.DEFAULT_INTENSITY|{}DEFAULT_INTENSITY[0]
+            final fun <get-DEFAULT_INTENSITY>(): kotlin/Double // com.google.maps.android.heatmaps/WeightedLatLng.Companion.DEFAULT_INTENSITY.<get-DEFAULT_INTENSITY>|<get-DEFAULT_INTENSITY>(){}[0]
+    }
+}

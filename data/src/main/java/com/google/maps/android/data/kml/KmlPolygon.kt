@@ -31,9 +31,9 @@ public class KmlPolygon(
         requireNotNull(outerBoundaryCoordinates) { "Outer boundary coordinates cannot be null" }
     }
 
-    override fun getGeometryType(): String = GEOMETRY_TYPE
+    public override fun getGeometryType(): String = GEOMETRY_TYPE
 
-    override fun getGeometryObject(): List<List<LatLng>> {
+    public override fun getGeometryObject(): List<List<LatLng>> {
         val coordinates = ArrayList<List<LatLng>>()
         coordinates.add(outerBoundaryCoordinates)
         if (innerBoundaryCoordinates != null) {
@@ -42,11 +42,11 @@ public class KmlPolygon(
         return coordinates
     }
 
-    override fun getOuterBoundaryCoordinates(): List<LatLng> = outerBoundaryCoordinates
+    public override fun getOuterBoundaryCoordinates(): List<LatLng> = outerBoundaryCoordinates
 
-    override fun getInnerBoundaryCoordinates(): List<List<LatLng>> = innerBoundaryCoordinates ?: emptyList()
+    public override fun getInnerBoundaryCoordinates(): List<List<LatLng>> = innerBoundaryCoordinates ?: emptyList()
 
-    override fun toString(): String =
+    public override fun toString(): String =
         StringBuilder(GEOMETRY_TYPE)
             .apply {
                 append("{")
@@ -55,7 +55,7 @@ public class KmlPolygon(
                 append("\n}\n")
             }.toString()
 
-    companion object {
-        public const val GEOMETRY_TYPE = "Polygon"
+    public companion object {
+        public const val GEOMETRY_TYPE: String = "Polygon"
     }
 }

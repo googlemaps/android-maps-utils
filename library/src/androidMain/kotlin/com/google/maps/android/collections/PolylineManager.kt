@@ -27,7 +27,7 @@ import kotlin.collections.Collection as KotlinCollection
  * All polyline operations (adds and removes) should occur via its collection class. That is,
  * don't add a polyline via a collection, then remove it via Polyline.remove()
  */
-open class PolylineManager(map: GoogleMap) :
+public open class PolylineManager(map: GoogleMap) :
     MapObjectManager<Polyline, PolylineManager.Collection>(map),
     GoogleMap.OnPolylineClickListener {
 
@@ -35,36 +35,36 @@ open class PolylineManager(map: GoogleMap) :
         mMap.setOnPolylineClickListener(this)
     }
 
-    override fun newCollection(): Collection = Collection()
+    public override fun newCollection(): Collection = Collection()
 
-    override fun removeObjectFromMap(polyline: Polyline) {
+    public override fun removeObjectFromMap(polyline: Polyline) {
         polyline.remove()
     }
 
-    override fun setVisible(mapObject: Polyline, visible: Boolean) {
+    public override fun setVisible(mapObject: Polyline, visible: Boolean) {
         mapObject.isVisible = visible
     }
 
-    override fun onPolylineClick(polyline: Polyline) {
+    public override fun onPolylineClick(polyline: Polyline) {
         mAllObjects[polyline]?.mPolylineClickListener?.onPolylineClick(polyline)
     }
 
     /** A collection of [Polyline]s on the map with its own set of listeners. */
-    open inner class Collection : MapObjectManager<Polyline, Collection>.Collection() {
+    public open inner class Collection : MapObjectManager<Polyline, Collection>.Collection() {
         internal var mPolylineClickListener: GoogleMap.OnPolylineClickListener? = null
 
-        open fun addPolyline(opts: PolylineOptions): Polyline =
+        public open fun addPolyline(opts: PolylineOptions): Polyline =
             checkAndAdd(mMap.addPolyline(opts), "Polyline")
 
-        open fun addAll(opts: KotlinCollection<PolylineOptions>) =
+        public open fun addAll(opts: KotlinCollection<PolylineOptions>): Unit =
             addAll(opts, ::addPolyline)
 
-        open fun addAll(opts: KotlinCollection<PolylineOptions>, defaultVisible: Boolean) =
+        public open fun addAll(opts: KotlinCollection<PolylineOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addPolyline)
 
-        open fun getPolylines(): KotlinCollection<Polyline> = getObjects()
+        public open fun getPolylines(): KotlinCollection<Polyline> = getObjects()
 
-        open fun setOnPolylineClickListener(
+        public open fun setOnPolylineClickListener(
             polylineClickListener: GoogleMap.OnPolylineClickListener?,
         ) {
             mPolylineClickListener = polylineClickListener

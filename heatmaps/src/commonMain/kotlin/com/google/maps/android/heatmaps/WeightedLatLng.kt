@@ -21,10 +21,10 @@ import com.google.maps.android.geometry.Point
 import com.google.maps.android.projection.SphericalMercatorProjection
 import com.google.maps.android.quadtree.PointQuadTree
 
-data class WeightedLatLng(
-    val latLng: LatLng,
+public data class WeightedLatLng(
+    public val latLng: LatLng,
     override val point: Point,
-    val intensity: Double,
+    public val intensity: Double,
 ) : PointQuadTree.Item {
     /**
      * Constructor that uses default value for intensity
@@ -32,14 +32,14 @@ data class WeightedLatLng(
      * @param latLng LatLng to add to wrapper
      */
     @JvmOverloads
-    constructor(latLng: LatLng, intensity: Double = DEFAULT_INTENSITY) : this(
+    public constructor(latLng: LatLng, intensity: Double = DEFAULT_INTENSITY) : this(
         latLng,
         sProjection.toPoint(latLng),
         if (intensity >= 0) intensity else DEFAULT_INTENSITY,
     )
 
-    companion object {
-        const val DEFAULT_INTENSITY = 1.0
+    public companion object {
+        public const val DEFAULT_INTENSITY: Double = 1.0
         private val sProjection = SphericalMercatorProjection(HeatmapConstants.WORLD_WIDTH)
     }
 }

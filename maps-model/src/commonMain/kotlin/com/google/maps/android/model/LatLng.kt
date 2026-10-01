@@ -28,8 +28,8 @@ package com.google.maps.android.model
  * member properties. On each platform, member resolution wins over these extensions, so
  * platform code binds directly to the underlying field/property with no indirection.
  */
-expect class LatLng(latitude: Double, longitude: Double)
+public expect class LatLng(latitude: Double, longitude: Double)
 
-expect val LatLng.latitude: Double
+public expect val LatLng.latitude: Double
 
-expect val LatLng.longitude: Double
+public expect val LatLng.longitude: Double

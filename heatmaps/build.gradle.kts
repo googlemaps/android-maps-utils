@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
-    id("com.android.kotlin.multiplatform.library")
-    id("org.jetbrains.dokka")
-    // Prototype publishing: KMP auto-creates multiplatform publications, enabling
-    // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
-    id("maven-publish")
+    id("android.maps.utils.KmpPublishingConventionPlugin")
 }
 
-// NOTE (KMP prototype): see clustering/build.gradle.kts — release publishing (vanniktech),
-// jacoco, lint-checks and the amu_ resourcePrefix still need KMP-aware re-wiring.
-
 kotlin {
-    jvmToolchain(17)
-
     androidLibrary {
         namespace = "com.google.maps.android.heatmaps"
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = 23
+        minSdk = libs.versions.minimumSdk.get().toInt()
 
         withHostTestBuilder {
         }.configure {
@@ -39,10 +29,6 @@ kotlin {
             isReturnDefaultValues = true
         }
     }
-
-    iosArm64()
-    iosSimulatorArm64()
-    iosX64()
 
     sourceSets {
         commonMain.dependencies {
@@ -65,15 +51,14 @@ kotlin {
             implementation(libs.robolectric)
             implementation(libs.kxml2)
             implementation(libs.mockk)
+            implementation(libs.kotlin.test)
             implementation(libs.truth)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.mockito.kotlin)
         }
     }
 }
 
-// Publish under the repo's public artifactId scheme so these coordinates conflict-resolve
-// against the AARs already on Maven Central instead of duplicating their classes.
-publishing {
-    publications.withType<MavenPublication>().configureEach {
-        artifactId = artifactId.replace(project.name, "android-maps-utils-${project.name}")
-    }
+dependencies {
+    lintPublish(project(":lint-checks"))
 }

@@ -18,10 +18,10 @@ package com.google.maps.android.data.parser.kml
 import kotlinx.serialization.Serializable
 
 @Serializable(with = LatLngAltSerializer::class)
-data class LatLngAlt(
-    val latitude: Double,
-    val longitude: Double,
-    val altitude: Double? = null,
+public data class LatLngAlt(
+    public val latitude: Double,
+    public val longitude: Double,
+    public val altitude: Double? = null,
 ) {
     init {
         require(latitude.isFinite() && longitude.isFinite() && (altitude == null || altitude.isFinite())) {

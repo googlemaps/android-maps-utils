@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
-    id("com.android.kotlin.multiplatform.library")
-    // Prototype publishing: KMP auto-creates multiplatform publications, enabling
-    // publishToMavenLocal so android-maps-compose can consume this via -PuseMavenLocal=true.
-    id("maven-publish")
+    id("android.maps.utils.KmpPublishingConventionPlugin")
 }
 
 kotlin {
-    jvmToolchain(17)
-
     androidLibrary {
         namespace = "com.google.maps.android.model"
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = 23
+        minSdk = libs.versions.minimumSdk.get().toInt()
     }
-
-    iosArm64()
-    iosSimulatorArm64()
-    iosX64()
 
     sourceSets {
         androidMain.dependencies {
@@ -40,14 +30,5 @@ kotlin {
             // this must be api(): consumers see GMS LatLng in our public API.
             api(libs.play.services.maps)
         }
-    }
-}
-
-// Publish under the repo's public artifactId scheme (android-maps-utils-<module>) so these
-// coordinates conflict-resolve against the AARs already on Maven Central instead of
-// duplicating their classes under a second module identity.
-publishing {
-    publications.withType<MavenPublication>().configureEach {
-        artifactId = artifactId.replace(project.name, "android-maps-utils-${project.name}")
     }
 }

@@ -17,57 +17,39 @@
 // buildSrc/src/main/kotlin/PublishingConventionPlugin.kt
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
+import kotlinx.validation.KotlinApiBuildTask
+import kotlinx.validation.KotlinApiCompareTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.*
-import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
-import org.gradle.api.tasks.testing.Test
-import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
-import org.gradle.testing.jacoco.tasks.JacocoReport
 
 class PublishingConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.run {
             applyPlugins()
-            configureJacoco()
+            configureKover()
             configureVanniktechPublishing()
+            configureBinaryCompatibilityValidator()
         }
     }
 
     private fun Project.applyPlugins() {
         apply(plugin = "com.android.library")
-        apply(plugin = "com.mxalbert.gradle.jacoco-android")
+        apply(plugin = "org.jetbrains.kotlinx.kover")
         apply(plugin = "org.jetbrains.dokka")
         apply(plugin = "com.vanniktech.maven.publish")
     }
 
-    private fun Project.configureJacoco() {
-        configure<JacocoPluginExtension> {
-            toolVersion = "0.8.12"
-        }
-
-        tasks.withType<Test>().configureEach {
-            extensions.configure(JacocoTaskExtension::class.java) {
-                isIncludeNoLocationClasses = true
-                excludes = listOf("jdk.internal.*")
-            }
-        }
-
-        // com.mxalbert.gradle.jacoco-android (last released for AGP 8.x) auto-detects
-        // classDirectories using paths that predate AGP's built-in Kotlin compiler, so it
-        // only finds javac output and silently misses every Kotlin-compiled class. Point the
-        // debug report tasks at both compiler outputs directly so Kotlin sources are covered.
-        tasks.withType<JacocoReport>().configureEach {
-            if (name.contains("Debug")) {
-                classDirectories.setFrom(
-                    fileTree(layout.buildDirectory.dir("intermediates/javac/debug")) {
-                        include("**/classes/**")
-                        exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.class")
-                    },
-                    fileTree(layout.buildDirectory.dir("intermediates/built_in_kotlinc/debug")) {
-                        include("**/classes/**")
+    private fun Project.configureKover() {
+        configure<KoverProjectExtension> {
+            reports {
+                filters {
+                    excludes {
+                        androidGeneratedClasses()
                     }
-                )
+                }
             }
         }
     }
@@ -82,49 +64,67 @@ class PublishingConventionPlugin : Plugin<Project> {
                 )
             )
 
-            publishToMavenCentral()
-            if (findProperty("signing.keyId")?.toString()?.isNotBlank() == true ||
-                findProperty("signing.secretKeyRingFile")?.toString()?.isNotBlank() == true ||
-                findProperty("signingInMemoryKey")?.toString()?.isNotBlank() == true
-            ) {
-                signAllPublications()
-            }
+            configureMapsUtilsPublishing(project)
+        }
+    }
 
-            val artifactIdName = when (project.name) {
-                "maps-utils" -> "android-maps-utils"
-                "library" -> "android-maps-utils-core"
-                else -> "android-maps-utils-${project.name}"
-            }
-            coordinates(
-                artifactId = artifactIdName,
+    private fun Project.configureBinaryCompatibilityValidator() {
+        val ignoredProjects = setOf("demo", "visual-testing", "lint-checks", "maps-utils")
+        if (name in ignoredProjects) return
+
+        val projectName = name
+        val apiFile = layout.projectDirectory.file("api/$projectName.api")
+        val buildApiFile = layout.buildDirectory.file("api/$projectName.api")
+
+        afterEvaluate {
+            val bundleTask = tasks.findByName("bundleLibCompileToJarRelease") ?: return@afterEvaluate
+            val classesJar = layout.buildDirectory.file(
+                "intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar"
             )
 
-            pom {
-                name.set("android-maps-utils")
-                description.set("Handy extensions to the Google Maps Android API.")
-                url.set("https://github.com/googlemaps/android-maps-utils")
-                licenses {
-                    license {
-                        name.set("The Apache Software License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        distribution.set("repo")
-                    }
-                }
-                scm {
-                    connection.set("scm:git@github.com:googlemaps/android-maps-utils.git")
-                    developerConnection.set("scm:git@github.com:googlemaps/android-maps-utils.git")
-                    url.set("https://github.com/googlemaps/android-maps-utils")
-                }
-                developers {
-                    developer {
-                        id.set("google")
-                        name.set("Google LLC")
-                    }
-                }
-                organization {
-                    name.set("Google Inc")
-                    url.set("http://developers.google.com/maps")
-                }
+            val apiBuild = tasks.register<KotlinApiBuildTask>("apiBuild") {
+                group = "verification"
+                description = "Builds public API declaration for $projectName."
+                inputJar.set(classesJar)
+                outputApiFile.set(buildApiFile)
+                ignoredClasses.addAll(
+                    "com.google.maps.android.R",
+                    "com.google.maps.android.clustering.R",
+                    "com.google.maps.android.data.R",
+                    "com.google.maps.android.heatmaps.R",
+                    "com.google.maps.android.ui.R",
+                    "com.google.maps.android.BuildConfig",
+                    "com.google.maps.android.clustering.BuildConfig",
+                    "com.google.maps.android.data.BuildConfig",
+                    "com.google.maps.android.heatmaps.BuildConfig",
+                    "com.google.maps.android.ui.BuildConfig",
+                )
+                dependsOn(bundleTask)
+            }
+
+            val apiDump = tasks.register<Copy>("apiDump") {
+                group = "verification"
+                description = "Syncs public API declarations of $projectName to the project api/ directory."
+                from(apiBuild.flatMap { it.outputApiFile })
+                into(apiFile.asFile.parentFile)
+                dependsOn(apiBuild)
+            }
+
+            val apiCheck = tasks.register<KotlinApiCompareTask>("apiCheck") {
+                group = "verification"
+                description = "Checks public API declarations of $projectName against the committed api/$projectName.api."
+                projectApiFile.set(apiFile)
+                generatedApiFile.set(apiBuild.flatMap { it.outputApiFile })
+                dependsOn(apiBuild)
+            }
+
+            tasks.findByName("check")?.dependsOn(apiCheck)
+
+            rootProject.tasks.matching { it.name == "apiDump" }.configureEach {
+                dependsOn(apiDump)
+            }
+            rootProject.tasks.matching { it.name == "apiCheck" }.configureEach {
+                dependsOn(apiCheck)
             }
         }
     }

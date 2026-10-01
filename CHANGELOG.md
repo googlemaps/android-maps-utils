@@ -1,5 +1,25 @@
 # Changelog
 
+## [6.0.0](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v6.0.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate android-maps-ktx into android-maps-utils (v6.0.0) ([#1716](https://github.com/googlemaps/android-maps-utils/issues/1716))
+
+### Features
+
+* add polygon z-index support ([#1785](https://github.com/googlemaps/android-maps-utils/issues/1785)) ([9056fd9](https://github.com/googlemaps/android-maps-utils/commit/9056fd93b719dcf6a151466dc6e9f2c3db7284d3))
+* add z-index support across geometry styles and layer mappers ([#1787](https://github.com/googlemaps/android-maps-utils/issues/1787)) ([c3fa410](https://github.com/googlemaps/android-maps-utils/commit/c3fa4106f55fae2703957c3b5d4ba3b43c6c09db))
+* **library:** add flexible polyline encoding and decoding ([#1801](https://github.com/googlemaps/android-maps-utils/issues/1801)) ([50e88c9](https://github.com/googlemaps/android-maps-utils/commit/50e88c9b3a56077fab638ccb63fb617ceb5dfc96))
+* migrate android-maps-ktx into android-maps-utils (v6.0.0) ([#1716](https://github.com/googlemaps/android-maps-utils/issues/1716)) ([de264f8](https://github.com/googlemaps/android-maps-utils/commit/de264f8c1866e9694183bc03eab6aeb850d55959))
+
+
+### Bug Fixes
+
+* **data:** enforce decompression limit and reject payload on KMZ directory entries ([#1792](https://github.com/googlemaps/android-maps-utils/issues/1792)) ([56b3c24](https://github.com/googlemaps/android-maps-utils/commit/56b3c2470e7e0df667b3e4320e066a459b4761b7))
+* **library:** match reference rounding and unsigned varints in flexible polyline ([#1803](https://github.com/googlemaps/android-maps-utils/issues/1803)) ([f805f5e](https://github.com/googlemaps/android-maps-utils/commit/f805f5ede925032dfc20fdd65496a51e9ac3c06e))
+
 ## [5.2.0](https://github.com/googlemaps/android-maps-utils/compare/v5.1.1...v5.2.0) (2026-08-28)
 
 

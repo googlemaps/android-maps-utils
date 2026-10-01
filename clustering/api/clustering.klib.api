@@ -1,0 +1,257 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.google.maps.android:clustering>
+abstract interface <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/Algorithm { // com.google.maps.android.clustering.algo/Algorithm|null[0]
+    abstract val items // com.google.maps.android.clustering.algo/Algorithm.items|{}items[0]
+        abstract fun <get-items>(): kotlin.collections/Collection<#A> // com.google.maps.android.clustering.algo/Algorithm.items.<get-items>|<get-items>(){}[0]
+
+    abstract var maxDistanceBetweenClusteredItems // com.google.maps.android.clustering.algo/Algorithm.maxDistanceBetweenClusteredItems|{}maxDistanceBetweenClusteredItems[0]
+        abstract fun <get-maxDistanceBetweenClusteredItems>(): kotlin/Int // com.google.maps.android.clustering.algo/Algorithm.maxDistanceBetweenClusteredItems.<get-maxDistanceBetweenClusteredItems>|<get-maxDistanceBetweenClusteredItems>(){}[0]
+        abstract fun <set-maxDistanceBetweenClusteredItems>(kotlin/Int) // com.google.maps.android.clustering.algo/Algorithm.maxDistanceBetweenClusteredItems.<set-maxDistanceBetweenClusteredItems>|<set-maxDistanceBetweenClusteredItems>(kotlin.Int){}[0]
+
+    abstract fun addItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/Algorithm.addItem|addItem(1:0){}[0]
+    abstract fun addItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/Algorithm.addItems|addItems(kotlin.collections.Collection<1:0>){}[0]
+    abstract fun clearItems() // com.google.maps.android.clustering.algo/Algorithm.clearItems|clearItems(){}[0]
+    abstract fun getClusters(kotlin/Float): kotlin.collections/Set<com.google.maps.android.clustering/Cluster<#A>> // com.google.maps.android.clustering.algo/Algorithm.getClusters|getClusters(kotlin.Float){}[0]
+    abstract fun lock() // com.google.maps.android.clustering.algo/Algorithm.lock|lock(){}[0]
+    abstract fun removeItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/Algorithm.removeItem|removeItem(1:0){}[0]
+    abstract fun removeItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/Algorithm.removeItems|removeItems(kotlin.collections.Collection<1:0>){}[0]
+    abstract fun unlock() // com.google.maps.android.clustering.algo/Algorithm.unlock|unlock(){}[0]
+    abstract fun updateItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/Algorithm.updateItem|updateItem(1:0){}[0]
+}
+
+abstract interface <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/ScreenBasedAlgorithm : com.google.maps.android.clustering.algo/Algorithm<#A> { // com.google.maps.android.clustering.algo/ScreenBasedAlgorithm|null[0]
+    abstract fun onCameraChange(com.google.maps.android.model/CameraPosition) // com.google.maps.android.clustering.algo/ScreenBasedAlgorithm.onCameraChange|onCameraChange(com.google.maps.android.model.CameraPosition){}[0]
+    abstract fun shouldReclusterOnMapMovement(): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithm.shouldReclusterOnMapMovement|shouldReclusterOnMapMovement(){}[0]
+}
+
+abstract interface <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering/Cluster { // com.google.maps.android.clustering/Cluster|null[0]
+    abstract val items // com.google.maps.android.clustering/Cluster.items|{}items[0]
+        abstract fun <get-items>(): kotlin.collections/Collection<#A> // com.google.maps.android.clustering/Cluster.items.<get-items>|<get-items>(){}[0]
+    abstract val position // com.google.maps.android.clustering/Cluster.position|{}position[0]
+        abstract fun <get-position>(): com.google.maps.android.model/LatLng // com.google.maps.android.clustering/Cluster.position.<get-position>|<get-position>(){}[0]
+    abstract val size // com.google.maps.android.clustering/Cluster.size|{}size[0]
+        abstract fun <get-size>(): kotlin/Int // com.google.maps.android.clustering/Cluster.size.<get-size>|<get-size>(){}[0]
+}
+
+abstract interface com.google.maps.android.clustering/ClusterItem { // com.google.maps.android.clustering/ClusterItem|null[0]
+    abstract val position // com.google.maps.android.clustering/ClusterItem.position|{}position[0]
+        abstract fun <get-position>(): com.google.maps.android.model/LatLng // com.google.maps.android.clustering/ClusterItem.position.<get-position>|<get-position>(){}[0]
+    abstract val snippet // com.google.maps.android.clustering/ClusterItem.snippet|{}snippet[0]
+        abstract fun <get-snippet>(): kotlin/String? // com.google.maps.android.clustering/ClusterItem.snippet.<get-snippet>|<get-snippet>(){}[0]
+    abstract val title // com.google.maps.android.clustering/ClusterItem.title|{}title[0]
+        abstract fun <get-title>(): kotlin/String? // com.google.maps.android.clustering/ClusterItem.title.<get-title>|<get-title>(){}[0]
+    abstract val zIndex // com.google.maps.android.clustering/ClusterItem.zIndex|{}zIndex[0]
+        abstract fun <get-zIndex>(): kotlin/Float? // com.google.maps.android.clustering/ClusterItem.zIndex.<get-zIndex>|<get-zIndex>(){}[0]
+}
+
+abstract class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/AbstractAlgorithm : com.google.maps.android.clustering.algo/Algorithm<#A> { // com.google.maps.android.clustering.algo/AbstractAlgorithm|null[0]
+    constructor <init>() // com.google.maps.android.clustering.algo/AbstractAlgorithm.<init>|<init>(){}[0]
+
+    open fun lock() // com.google.maps.android.clustering.algo/AbstractAlgorithm.lock|lock(){}[0]
+    open fun unlock() // com.google.maps.android.clustering.algo/AbstractAlgorithm.unlock|unlock(){}[0]
+}
+
+final class <#A: com.google.maps.android.quadtree/PointQuadTree.Item> com.google.maps.android.quadtree/PointQuadTree { // com.google.maps.android.quadtree/PointQuadTree|null[0]
+    constructor <init>(com.google.maps.android.geometry/Bounds, kotlin/Int = ...) // com.google.maps.android.quadtree/PointQuadTree.<init>|<init>(com.google.maps.android.geometry.Bounds;kotlin.Int){}[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double) // com.google.maps.android.quadtree/PointQuadTree.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final fun add(#A) // com.google.maps.android.quadtree/PointQuadTree.add|add(1:0){}[0]
+    final fun clear() // com.google.maps.android.quadtree/PointQuadTree.clear|clear(){}[0]
+    final fun remove(#A): kotlin/Boolean // com.google.maps.android.quadtree/PointQuadTree.remove|remove(1:0){}[0]
+    final fun search(com.google.maps.android.geometry/Bounds): kotlin.collections/Collection<#A> // com.google.maps.android.quadtree/PointQuadTree.search|search(com.google.maps.android.geometry.Bounds){}[0]
+
+    abstract interface Item { // com.google.maps.android.quadtree/PointQuadTree.Item|null[0]
+        abstract val point // com.google.maps.android.quadtree/PointQuadTree.Item.point|{}point[0]
+            abstract fun <get-point>(): com.google.maps.android.geometry/Point // com.google.maps.android.quadtree/PointQuadTree.Item.point.<get-point>|<get-point>(){}[0]
+    }
+
+    final object Companion // com.google.maps.android.quadtree/PointQuadTree.Companion|null[0]
+}
+
+final class com.google.maps.android.geometry/Bounds { // com.google.maps.android.geometry/Bounds|null[0]
+    constructor <init>(kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double) // com.google.maps.android.geometry/Bounds.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+
+    final val maxX // com.google.maps.android.geometry/Bounds.maxX|{}maxX[0]
+        final fun <get-maxX>(): kotlin/Double // com.google.maps.android.geometry/Bounds.maxX.<get-maxX>|<get-maxX>(){}[0]
+    final val maxY // com.google.maps.android.geometry/Bounds.maxY|{}maxY[0]
+        final fun <get-maxY>(): kotlin/Double // com.google.maps.android.geometry/Bounds.maxY.<get-maxY>|<get-maxY>(){}[0]
+    final val midX // com.google.maps.android.geometry/Bounds.midX|{}midX[0]
+        final fun <get-midX>(): kotlin/Double // com.google.maps.android.geometry/Bounds.midX.<get-midX>|<get-midX>(){}[0]
+    final val midY // com.google.maps.android.geometry/Bounds.midY|{}midY[0]
+        final fun <get-midY>(): kotlin/Double // com.google.maps.android.geometry/Bounds.midY.<get-midY>|<get-midY>(){}[0]
+    final val minX // com.google.maps.android.geometry/Bounds.minX|{}minX[0]
+        final fun <get-minX>(): kotlin/Double // com.google.maps.android.geometry/Bounds.minX.<get-minX>|<get-minX>(){}[0]
+    final val minY // com.google.maps.android.geometry/Bounds.minY|{}minY[0]
+        final fun <get-minY>(): kotlin/Double // com.google.maps.android.geometry/Bounds.minY.<get-minY>|<get-minY>(){}[0]
+
+    final fun contains(com.google.maps.android.geometry/Bounds): kotlin/Boolean // com.google.maps.android.geometry/Bounds.contains|contains(com.google.maps.android.geometry.Bounds){}[0]
+    final fun contains(com.google.maps.android.geometry/Point): kotlin/Boolean // com.google.maps.android.geometry/Bounds.contains|contains(com.google.maps.android.geometry.Point){}[0]
+    final fun contains(kotlin/Double, kotlin/Double): kotlin/Boolean // com.google.maps.android.geometry/Bounds.contains|contains(kotlin.Double;kotlin.Double){}[0]
+    final fun intersects(com.google.maps.android.geometry/Bounds): kotlin/Boolean // com.google.maps.android.geometry/Bounds.intersects|intersects(com.google.maps.android.geometry.Bounds){}[0]
+    final fun intersects(kotlin/Double, kotlin/Double, kotlin/Double, kotlin/Double): kotlin/Boolean // com.google.maps.android.geometry/Bounds.intersects|intersects(kotlin.Double;kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+}
+
+final class com.google.maps.android.projection/Point : com.google.maps.android.geometry/Point { // com.google.maps.android.projection/Point|null[0]
+    constructor <init>(kotlin/Double, kotlin/Double) // com.google.maps.android.projection/Point.<init>|<init>(kotlin.Double;kotlin.Double){}[0]
+}
+
+final class com.google.maps.android.projection/SphericalMercatorProjection { // com.google.maps.android.projection/SphericalMercatorProjection|null[0]
+    constructor <init>(kotlin/Double) // com.google.maps.android.projection/SphericalMercatorProjection.<init>|<init>(kotlin.Double){}[0]
+
+    final fun toLatLng(com.google.maps.android.geometry/Point): com.google.maps.android.model/LatLng // com.google.maps.android.projection/SphericalMercatorProjection.toLatLng|toLatLng(com.google.maps.android.geometry.Point){}[0]
+    final fun toPoint(com.google.maps.android.model/LatLng): com.google.maps.android.geometry/Point // com.google.maps.android.projection/SphericalMercatorProjection.toPoint|toPoint(com.google.maps.android.model.LatLng){}[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/CentroidNonHierarchicalDistanceBasedAlgorithm : com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm<#A> { // com.google.maps.android.clustering.algo/CentroidNonHierarchicalDistanceBasedAlgorithm|null[0]
+    constructor <init>() // com.google.maps.android.clustering.algo/CentroidNonHierarchicalDistanceBasedAlgorithm.<init>|<init>(){}[0]
+
+    final fun computeCentroid(kotlin.collections/Collection<#A>): com.google.maps.android.model/LatLng // com.google.maps.android.clustering.algo/CentroidNonHierarchicalDistanceBasedAlgorithm.computeCentroid|computeCentroid(kotlin.collections.Collection<1:0>){}[0]
+    open fun getClusters(kotlin/Float): kotlin.collections/Set<com.google.maps.android.clustering/Cluster<#A>> // com.google.maps.android.clustering.algo/CentroidNonHierarchicalDistanceBasedAlgorithm.getClusters|getClusters(kotlin.Float){}[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/ContinuousZoomEuclideanCentroidAlgorithm : com.google.maps.android.clustering.algo/CentroidNonHierarchicalDistanceBasedAlgorithm<#A> { // com.google.maps.android.clustering.algo/ContinuousZoomEuclideanCentroidAlgorithm|null[0]
+    constructor <init>() // com.google.maps.android.clustering.algo/ContinuousZoomEuclideanCentroidAlgorithm.<init>|<init>(){}[0]
+
+    open fun getClusters(kotlin/Float): kotlin.collections/Set<com.google.maps.android.clustering/Cluster<#A>> // com.google.maps.android.clustering.algo/ContinuousZoomEuclideanCentroidAlgorithm.getClusters|getClusters(kotlin.Float){}[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/GridBasedAlgorithm : com.google.maps.android.clustering.algo/AbstractAlgorithm<#A> { // com.google.maps.android.clustering.algo/GridBasedAlgorithm|null[0]
+    constructor <init>() // com.google.maps.android.clustering.algo/GridBasedAlgorithm.<init>|<init>(){}[0]
+
+    open val items // com.google.maps.android.clustering.algo/GridBasedAlgorithm.items|{}items[0]
+        open fun <get-items>(): kotlin.collections/Collection<#A> // com.google.maps.android.clustering.algo/GridBasedAlgorithm.items.<get-items>|<get-items>(){}[0]
+
+    open var maxDistanceBetweenClusteredItems // com.google.maps.android.clustering.algo/GridBasedAlgorithm.maxDistanceBetweenClusteredItems|{}maxDistanceBetweenClusteredItems[0]
+        open fun <get-maxDistanceBetweenClusteredItems>(): kotlin/Int // com.google.maps.android.clustering.algo/GridBasedAlgorithm.maxDistanceBetweenClusteredItems.<get-maxDistanceBetweenClusteredItems>|<get-maxDistanceBetweenClusteredItems>(){}[0]
+        open fun <set-maxDistanceBetweenClusteredItems>(kotlin/Int) // com.google.maps.android.clustering.algo/GridBasedAlgorithm.maxDistanceBetweenClusteredItems.<set-maxDistanceBetweenClusteredItems>|<set-maxDistanceBetweenClusteredItems>(kotlin.Int){}[0]
+
+    open fun addItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/GridBasedAlgorithm.addItem|addItem(1:0){}[0]
+    open fun addItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/GridBasedAlgorithm.addItems|addItems(kotlin.collections.Collection<1:0>){}[0]
+    open fun clearItems() // com.google.maps.android.clustering.algo/GridBasedAlgorithm.clearItems|clearItems(){}[0]
+    open fun getClusters(kotlin/Float): kotlin.collections/Set<com.google.maps.android.clustering/Cluster<#A>> // com.google.maps.android.clustering.algo/GridBasedAlgorithm.getClusters|getClusters(kotlin.Float){}[0]
+    open fun removeItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/GridBasedAlgorithm.removeItem|removeItem(1:0){}[0]
+    open fun removeItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/GridBasedAlgorithm.removeItems|removeItems(kotlin.collections.Collection<1:0>){}[0]
+    open fun updateItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/GridBasedAlgorithm.updateItem|updateItem(1:0){}[0]
+
+    final object Companion // com.google.maps.android.clustering.algo/GridBasedAlgorithm.Companion|null[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm : com.google.maps.android.clustering.algo/AbstractAlgorithm<#A> { // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm|null[0]
+    constructor <init>() // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.<init>|<init>(){}[0]
+
+    final val mItemMap // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.mItemMap|{}mItemMap[0]
+        final fun <get-mItemMap>(): kotlin.collections/MutableMap<#A, com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.mItemMap.<get-mItemMap>|<get-mItemMap>(){}[0]
+    final val mItems // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.mItems|{}mItems[0]
+        final fun <get-mItems>(): kotlin.collections/MutableCollection<com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.mItems.<get-mItems>|<get-mItems>(){}[0]
+    final val mQuadTree // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.mQuadTree|{}mQuadTree[0]
+        final fun <get-mQuadTree>(): com.google.maps.android.quadtree/PointQuadTree<com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.mQuadTree.<get-mQuadTree>|<get-mQuadTree>(){}[0]
+    open val items // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.items|{}items[0]
+        open fun <get-items>(): kotlin.collections/Collection<#A> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.items.<get-items>|<get-items>(){}[0]
+
+    open var maxDistanceBetweenClusteredItems // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.maxDistanceBetweenClusteredItems|{}maxDistanceBetweenClusteredItems[0]
+        open fun <get-maxDistanceBetweenClusteredItems>(): kotlin/Int // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.maxDistanceBetweenClusteredItems.<get-maxDistanceBetweenClusteredItems>|<get-maxDistanceBetweenClusteredItems>(){}[0]
+        open fun <set-maxDistanceBetweenClusteredItems>(kotlin/Int) // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.maxDistanceBetweenClusteredItems.<set-maxDistanceBetweenClusteredItems>|<set-maxDistanceBetweenClusteredItems>(kotlin.Int){}[0]
+
+    final fun createBoundsFromSpan(com.google.maps.android.geometry/Point, kotlin/Double): com.google.maps.android.geometry/Bounds // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.createBoundsFromSpan|createBoundsFromSpan(com.google.maps.android.geometry.Point;kotlin.Double){}[0]
+    final fun distanceSquared(com.google.maps.android.geometry/Point, com.google.maps.android.geometry/Point): kotlin/Double // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.distanceSquared|distanceSquared(com.google.maps.android.geometry.Point;com.google.maps.android.geometry.Point){}[0]
+    open fun addItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.addItem|addItem(1:0){}[0]
+    open fun addItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.addItems|addItems(kotlin.collections.Collection<1:0>){}[0]
+    open fun clearItems() // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.clearItems|clearItems(){}[0]
+    open fun getClusteringItems(com.google.maps.android.quadtree/PointQuadTree<com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>>, kotlin/Float): kotlin.collections/Collection<com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.getClusteringItems|getClusteringItems(com.google.maps.android.quadtree.PointQuadTree<com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.QuadItem<1:0>>;kotlin.Float){}[0]
+    open fun getClusters(kotlin/Float): kotlin.collections/Set<com.google.maps.android.clustering/Cluster<#A>> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.getClusters|getClusters(kotlin.Float){}[0]
+    open fun removeItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.removeItem|removeItem(1:0){}[0]
+    open fun removeItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.removeItems|removeItems(kotlin.collections.Collection<1:0>){}[0]
+    open fun updateItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.updateItem|updateItem(1:0){}[0]
+
+    final class <#A1: com.google.maps.android.clustering/ClusterItem> QuadItem : com.google.maps.android.clustering/Cluster<#A1>, com.google.maps.android.quadtree/PointQuadTree.Item { // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem|null[0]
+        constructor <init>(#A1) // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.<init>|<init>(1:0){}[0]
+
+        final val items // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.items|{}items[0]
+            final fun <get-items>(): kotlin.collections/Collection<#A1> // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.items.<get-items>|<get-items>(){}[0]
+        final val mClusterItem // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.mClusterItem|{}mClusterItem[0]
+            final fun <get-mClusterItem>(): #A1 // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.mClusterItem.<get-mClusterItem>|<get-mClusterItem>(){}[0]
+        final val point // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.point|{}point[0]
+            final fun <get-point>(): com.google.maps.android.geometry/Point // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.point.<get-point>|<get-point>(){}[0]
+        final val position // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.position|{}position[0]
+            final fun <get-position>(): com.google.maps.android.model/LatLng // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.position.<get-position>|<get-position>(){}[0]
+        final val size // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.size|{}size[0]
+            final fun <get-size>(): kotlin/Int // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.size.<get-size>|<get-size>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem.hashCode|hashCode(){}[0]
+    }
+
+    final object Companion // com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.Companion|null[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm : com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm<#A>, com.google.maps.android.clustering.algo/ScreenBasedAlgorithm<#A> { // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int) // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final fun updateViewSize(kotlin/Int, kotlin/Int) // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm.updateViewSize|updateViewSize(kotlin.Int;kotlin.Int){}[0]
+    open fun getClusteringItems(com.google.maps.android.quadtree/PointQuadTree<com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>>, kotlin/Float): kotlin.collections/Collection<com.google.maps.android.clustering.algo/NonHierarchicalDistanceBasedAlgorithm.QuadItem<#A>> // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm.getClusteringItems|getClusteringItems(com.google.maps.android.quadtree.PointQuadTree<com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm.QuadItem<1:0>>;kotlin.Float){}[0]
+    open fun onCameraChange(com.google.maps.android.model/CameraPosition) // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm.onCameraChange|onCameraChange(com.google.maps.android.model.CameraPosition){}[0]
+    open fun shouldReclusterOnMapMovement(): kotlin/Boolean // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm.shouldReclusterOnMapMovement|shouldReclusterOnMapMovement(){}[0]
+
+    final object Companion // com.google.maps.android.clustering.algo/NonHierarchicalViewBasedAlgorithm.Companion|null[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter : com.google.maps.android.clustering.algo/AbstractAlgorithm<#A>, com.google.maps.android.clustering.algo/ScreenBasedAlgorithm<#A> { // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter|null[0]
+    constructor <init>(com.google.maps.android.clustering.algo/Algorithm<#A>) // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.<init>|<init>(com.google.maps.android.clustering.algo.Algorithm<1:0>){}[0]
+
+    open val items // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.items|{}items[0]
+        open fun <get-items>(): kotlin.collections/Collection<#A> // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.items.<get-items>|<get-items>(){}[0]
+
+    open var maxDistanceBetweenClusteredItems // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.maxDistanceBetweenClusteredItems|{}maxDistanceBetweenClusteredItems[0]
+        open fun <get-maxDistanceBetweenClusteredItems>(): kotlin/Int // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.maxDistanceBetweenClusteredItems.<get-maxDistanceBetweenClusteredItems>|<get-maxDistanceBetweenClusteredItems>(){}[0]
+        open fun <set-maxDistanceBetweenClusteredItems>(kotlin/Int) // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.maxDistanceBetweenClusteredItems.<set-maxDistanceBetweenClusteredItems>|<set-maxDistanceBetweenClusteredItems>(kotlin.Int){}[0]
+
+    open fun addItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.addItem|addItem(1:0){}[0]
+    open fun addItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.addItems|addItems(kotlin.collections.Collection<1:0>){}[0]
+    open fun clearItems() // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.clearItems|clearItems(){}[0]
+    open fun getClusters(kotlin/Float): kotlin.collections/Set<com.google.maps.android.clustering/Cluster<#A>> // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.getClusters|getClusters(kotlin.Float){}[0]
+    open fun onCameraChange(com.google.maps.android.model/CameraPosition) // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.onCameraChange|onCameraChange(com.google.maps.android.model.CameraPosition){}[0]
+    open fun removeItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.removeItem|removeItem(1:0){}[0]
+    open fun removeItems(kotlin.collections/Collection<#A>): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.removeItems|removeItems(kotlin.collections.Collection<1:0>){}[0]
+    open fun shouldReclusterOnMapMovement(): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.shouldReclusterOnMapMovement|shouldReclusterOnMapMovement(){}[0]
+    open fun updateItem(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/ScreenBasedAlgorithmAdapter.updateItem|updateItem(1:0){}[0]
+}
+
+open class <#A: com.google.maps.android.clustering/ClusterItem> com.google.maps.android.clustering.algo/StaticCluster : com.google.maps.android.clustering/Cluster<#A> { // com.google.maps.android.clustering.algo/StaticCluster|null[0]
+    constructor <init>(com.google.maps.android.model/LatLng) // com.google.maps.android.clustering.algo/StaticCluster.<init>|<init>(com.google.maps.android.model.LatLng){}[0]
+
+    open val items // com.google.maps.android.clustering.algo/StaticCluster.items|{}items[0]
+        open fun <get-items>(): kotlin.collections/Collection<#A> // com.google.maps.android.clustering.algo/StaticCluster.items.<get-items>|<get-items>(){}[0]
+    open val position // com.google.maps.android.clustering.algo/StaticCluster.position|{}position[0]
+        open fun <get-position>(): com.google.maps.android.model/LatLng // com.google.maps.android.clustering.algo/StaticCluster.position.<get-position>|<get-position>(){}[0]
+    open val size // com.google.maps.android.clustering.algo/StaticCluster.size|{}size[0]
+        open fun <get-size>(): kotlin/Int // com.google.maps.android.clustering.algo/StaticCluster.size.<get-size>|<get-size>(){}[0]
+
+    final fun add(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/StaticCluster.add|add(1:0){}[0]
+    final fun remove(#A): kotlin/Boolean // com.google.maps.android.clustering.algo/StaticCluster.remove|remove(1:0){}[0]
+    open fun equals(kotlin/Any?): kotlin/Boolean // com.google.maps.android.clustering.algo/StaticCluster.equals|equals(kotlin.Any?){}[0]
+    open fun hashCode(): kotlin/Int // com.google.maps.android.clustering.algo/StaticCluster.hashCode|hashCode(){}[0]
+    open fun toString(): kotlin/String // com.google.maps.android.clustering.algo/StaticCluster.toString|toString(){}[0]
+}
+
+open class com.google.maps.android.geometry/Point { // com.google.maps.android.geometry/Point|null[0]
+    constructor <init>(kotlin/Double, kotlin/Double) // com.google.maps.android.geometry/Point.<init>|<init>(kotlin.Double;kotlin.Double){}[0]
+
+    final val x // com.google.maps.android.geometry/Point.x|{}x[0]
+        final fun <get-x>(): kotlin/Double // com.google.maps.android.geometry/Point.x.<get-x>|<get-x>(){}[0]
+    final val y // com.google.maps.android.geometry/Point.y|{}y[0]
+        final fun <get-y>(): kotlin/Double // com.google.maps.android.geometry/Point.y.<get-y>|<get-y>(){}[0]
+
+    final fun copy(kotlin/Double = ..., kotlin/Double = ...): com.google.maps.android.geometry/Point // com.google.maps.android.geometry/Point.copy|copy(kotlin.Double;kotlin.Double){}[0]
+    open fun equals(kotlin/Any?): kotlin/Boolean // com.google.maps.android.geometry/Point.equals|equals(kotlin.Any?){}[0]
+    open fun hashCode(): kotlin/Int // com.google.maps.android.geometry/Point.hashCode|hashCode(){}[0]
+    open fun toString(): kotlin/String // com.google.maps.android.geometry/Point.toString|toString(){}[0]
+}
+
+final fun (com.google.maps.android.geometry/Point).com.google.maps.android.geometry/component1(): kotlin/Double // com.google.maps.android.geometry/component1|component1@com.google.maps.android.geometry.Point(){}[0]
+final fun (com.google.maps.android.geometry/Point).com.google.maps.android.geometry/component2(): kotlin/Double // com.google.maps.android.geometry/component2|component2@com.google.maps.android.geometry.Point(){}[0]

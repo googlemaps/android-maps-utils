@@ -1,0 +1,56 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.google.maps.android:library>
+final object com.google.maps.android/MathUtil { // com.google.maps.android/MathUtil|null[0]
+    final const val EARTH_RADIUS // com.google.maps.android/MathUtil.EARTH_RADIUS|{}EARTH_RADIUS[0]
+        final fun <get-EARTH_RADIUS>(): kotlin/Double // com.google.maps.android/MathUtil.EARTH_RADIUS.<get-EARTH_RADIUS>|<get-EARTH_RADIUS>(){}[0]
+
+    final fun arcHav(kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.arcHav|arcHav(kotlin.Double){}[0]
+    final fun clamp(kotlin/Double, kotlin/Double, kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.clamp|clamp(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun hav(kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.hav|hav(kotlin.Double){}[0]
+    final fun havDistance(kotlin/Double, kotlin/Double, kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.havDistance|havDistance(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+    final fun havFromSin(kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.havFromSin|havFromSin(kotlin.Double){}[0]
+    final fun inverseMercator(kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.inverseMercator|inverseMercator(kotlin.Double){}[0]
+    final fun mercator(kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.mercator|mercator(kotlin.Double){}[0]
+    final fun mod(kotlin/Double, kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.mod|mod(kotlin.Double;kotlin.Double){}[0]
+    final fun sinFromHav(kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.sinFromHav|sinFromHav(kotlin.Double){}[0]
+    final fun sinSumFromHav(kotlin/Double, kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.sinSumFromHav|sinSumFromHav(kotlin.Double;kotlin.Double){}[0]
+    final fun wrap(kotlin/Double, kotlin/Double, kotlin/Double): kotlin/Double // com.google.maps.android/MathUtil.wrap|wrap(kotlin.Double;kotlin.Double;kotlin.Double){}[0]
+}
+
+final object com.google.maps.android/PolyUtil { // com.google.maps.android/PolyUtil|null[0]
+    final const val DEFAULT_TOLERANCE // com.google.maps.android/PolyUtil.DEFAULT_TOLERANCE|{}DEFAULT_TOLERANCE[0]
+        final fun <get-DEFAULT_TOLERANCE>(): kotlin/Double // com.google.maps.android/PolyUtil.DEFAULT_TOLERANCE.<get-DEFAULT_TOLERANCE>|<get-DEFAULT_TOLERANCE>(){}[0]
+
+    final fun containsLocation(com.google.maps.android.model/LatLng, kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Boolean): kotlin/Boolean // com.google.maps.android/PolyUtil.containsLocation|containsLocation(com.google.maps.android.model.LatLng;kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Boolean){}[0]
+    final fun containsLocation(kotlin/Double, kotlin/Double, kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Boolean): kotlin/Boolean // com.google.maps.android/PolyUtil.containsLocation|containsLocation(kotlin.Double;kotlin.Double;kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Boolean){}[0]
+    final fun decode(kotlin/String): kotlin.collections/List<com.google.maps.android.model/LatLng> // com.google.maps.android/PolyUtil.decode|decode(kotlin.String){}[0]
+    final fun distanceToLine(com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng): kotlin/Double // com.google.maps.android/PolyUtil.distanceToLine|distanceToLine(com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng){}[0]
+    final fun encode(kotlin.collections/List<com.google.maps.android.model/LatLng>): kotlin/String // com.google.maps.android/PolyUtil.encode|encode(kotlin.collections.List<com.google.maps.android.model.LatLng>){}[0]
+    final fun isClosedPolygon(kotlin.collections/List<com.google.maps.android.model/LatLng>): kotlin/Boolean // com.google.maps.android/PolyUtil.isClosedPolygon|isClosedPolygon(kotlin.collections.List<com.google.maps.android.model.LatLng>){}[0]
+    final fun isLocationOnEdge(com.google.maps.android.model/LatLng, kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Boolean, kotlin/Double = ...): kotlin/Boolean // com.google.maps.android/PolyUtil.isLocationOnEdge|isLocationOnEdge(com.google.maps.android.model.LatLng;kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Boolean;kotlin.Double){}[0]
+    final fun isLocationOnPath(com.google.maps.android.model/LatLng, kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Boolean, kotlin/Double = ...): kotlin/Boolean // com.google.maps.android/PolyUtil.isLocationOnPath|isLocationOnPath(com.google.maps.android.model.LatLng;kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Boolean;kotlin.Double){}[0]
+    final fun locationIndexOnEdgeOrPath(com.google.maps.android.model/LatLng, kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Boolean, kotlin/Boolean, kotlin/Double): kotlin/Int // com.google.maps.android/PolyUtil.locationIndexOnEdgeOrPath|locationIndexOnEdgeOrPath(com.google.maps.android.model.LatLng;kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Boolean;kotlin.Boolean;kotlin.Double){}[0]
+    final fun locationIndexOnPath(com.google.maps.android.model/LatLng, kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Boolean, kotlin/Double = ...): kotlin/Int // com.google.maps.android/PolyUtil.locationIndexOnPath|locationIndexOnPath(com.google.maps.android.model.LatLng;kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Boolean;kotlin.Double){}[0]
+    final fun simplify(kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Double): kotlin.collections/List<com.google.maps.android.model/LatLng> // com.google.maps.android/PolyUtil.simplify|simplify(kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Double){}[0]
+}
+
+final object com.google.maps.android/SphericalUtil { // com.google.maps.android/SphericalUtil|null[0]
+    final fun computeAngleBetween(com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng): kotlin/Double // com.google.maps.android/SphericalUtil.computeAngleBetween|computeAngleBetween(com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng){}[0]
+    final fun computeArea(kotlin.collections/List<com.google.maps.android.model/LatLng>): kotlin/Double // com.google.maps.android/SphericalUtil.computeArea|computeArea(kotlin.collections.List<com.google.maps.android.model.LatLng>){}[0]
+    final fun computeDistanceBetween(com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng): kotlin/Double // com.google.maps.android/SphericalUtil.computeDistanceBetween|computeDistanceBetween(com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng){}[0]
+    final fun computeHeading(com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng): kotlin/Double // com.google.maps.android/SphericalUtil.computeHeading|computeHeading(com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng){}[0]
+    final fun computeLength(kotlin.collections/List<com.google.maps.android.model/LatLng>): kotlin/Double // com.google.maps.android/SphericalUtil.computeLength|computeLength(kotlin.collections.List<com.google.maps.android.model.LatLng>){}[0]
+    final fun computeOffset(com.google.maps.android.model/LatLng, kotlin/Double, kotlin/Double): com.google.maps.android.model/LatLng // com.google.maps.android/SphericalUtil.computeOffset|computeOffset(com.google.maps.android.model.LatLng;kotlin.Double;kotlin.Double){}[0]
+    final fun computeOffsetOrigin(com.google.maps.android.model/LatLng, kotlin/Double, kotlin/Double): com.google.maps.android.model/LatLng? // com.google.maps.android/SphericalUtil.computeOffsetOrigin|computeOffsetOrigin(com.google.maps.android.model.LatLng;kotlin.Double;kotlin.Double){}[0]
+    final fun computeSignedArea(kotlin.collections/List<com.google.maps.android.model/LatLng>): kotlin/Double // com.google.maps.android/SphericalUtil.computeSignedArea|computeSignedArea(kotlin.collections.List<com.google.maps.android.model.LatLng>){}[0]
+    final fun computeSignedArea(kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Double): kotlin/Double // com.google.maps.android/SphericalUtil.computeSignedArea|computeSignedArea(kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Double){}[0]
+    final fun getPointOnPolyline(kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Double): com.google.maps.android.model/LatLng? // com.google.maps.android/SphericalUtil.getPointOnPolyline|getPointOnPolyline(kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Double){}[0]
+    final fun getPolylinePrefix(kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Double): kotlin.collections/List<com.google.maps.android.model/LatLng> // com.google.maps.android/SphericalUtil.getPolylinePrefix|getPolylinePrefix(kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Double){}[0]
+    final fun interpolate(com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng, kotlin/Double): com.google.maps.android.model/LatLng // com.google.maps.android/SphericalUtil.interpolate|interpolate(com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng;kotlin.Double){}[0]
+}

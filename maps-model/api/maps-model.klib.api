@@ -1,0 +1,46 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.google.maps.android:maps-model>
+final class com.google.maps.android.model/CameraPosition { // com.google.maps.android.model/CameraPosition|null[0]
+    constructor <init>(com.google.maps.android.model/LatLng, kotlin/Float, kotlin/Float, kotlin/Float) // com.google.maps.android.model/CameraPosition.<init>|<init>(com.google.maps.android.model.LatLng;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+
+    final val bearing // com.google.maps.android.model/CameraPosition.bearing|{}bearing[0]
+        final fun <get-bearing>(): kotlin/Float // com.google.maps.android.model/CameraPosition.bearing.<get-bearing>|<get-bearing>(){}[0]
+    final val target // com.google.maps.android.model/CameraPosition.target|{}target[0]
+        final fun <get-target>(): com.google.maps.android.model/LatLng // com.google.maps.android.model/CameraPosition.target.<get-target>|<get-target>(){}[0]
+    final val tilt // com.google.maps.android.model/CameraPosition.tilt|{}tilt[0]
+        final fun <get-tilt>(): kotlin/Float // com.google.maps.android.model/CameraPosition.tilt.<get-tilt>|<get-tilt>(){}[0]
+    final val zoom // com.google.maps.android.model/CameraPosition.zoom|{}zoom[0]
+        final fun <get-zoom>(): kotlin/Float // com.google.maps.android.model/CameraPosition.zoom.<get-zoom>|<get-zoom>(){}[0]
+}
+
+final class com.google.maps.android.model/LatLng { // com.google.maps.android.model/LatLng|null[0]
+    constructor <init>(kotlin/Double, kotlin/Double) // com.google.maps.android.model/LatLng.<init>|<init>(kotlin.Double;kotlin.Double){}[0]
+
+    final val latitude // com.google.maps.android.model/LatLng.latitude|{}latitude[0]
+        final fun <get-latitude>(): kotlin/Double // com.google.maps.android.model/LatLng.latitude.<get-latitude>|<get-latitude>(){}[0]
+    final val longitude // com.google.maps.android.model/LatLng.longitude|{}longitude[0]
+        final fun <get-longitude>(): kotlin/Double // com.google.maps.android.model/LatLng.longitude.<get-longitude>|<get-longitude>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.google.maps.android.model/LatLng.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.google.maps.android.model/LatLng.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.google.maps.android.model/LatLng.toString|toString(){}[0]
+}
+
+final val com.google.maps.android.model/bearing // com.google.maps.android.model/bearing|@com.google.maps.android.model.CameraPosition{}bearing[0]
+    final fun (com.google.maps.android.model/CameraPosition).<get-bearing>(): kotlin/Float // com.google.maps.android.model/bearing.<get-bearing>|<get-bearing>@com.google.maps.android.model.CameraPosition(){}[0]
+final val com.google.maps.android.model/latitude // com.google.maps.android.model/latitude|@com.google.maps.android.model.LatLng{}latitude[0]
+    final fun (com.google.maps.android.model/LatLng).<get-latitude>(): kotlin/Double // com.google.maps.android.model/latitude.<get-latitude>|<get-latitude>@com.google.maps.android.model.LatLng(){}[0]
+final val com.google.maps.android.model/longitude // com.google.maps.android.model/longitude|@com.google.maps.android.model.LatLng{}longitude[0]
+    final fun (com.google.maps.android.model/LatLng).<get-longitude>(): kotlin/Double // com.google.maps.android.model/longitude.<get-longitude>|<get-longitude>@com.google.maps.android.model.LatLng(){}[0]
+final val com.google.maps.android.model/target // com.google.maps.android.model/target|@com.google.maps.android.model.CameraPosition{}target[0]
+    final fun (com.google.maps.android.model/CameraPosition).<get-target>(): com.google.maps.android.model/LatLng // com.google.maps.android.model/target.<get-target>|<get-target>@com.google.maps.android.model.CameraPosition(){}[0]
+final val com.google.maps.android.model/tilt // com.google.maps.android.model/tilt|@com.google.maps.android.model.CameraPosition{}tilt[0]
+    final fun (com.google.maps.android.model/CameraPosition).<get-tilt>(): kotlin/Float // com.google.maps.android.model/tilt.<get-tilt>|<get-tilt>@com.google.maps.android.model.CameraPosition(){}[0]
+final val com.google.maps.android.model/zoom // com.google.maps.android.model/zoom|@com.google.maps.android.model.CameraPosition{}zoom[0]
+    final fun (com.google.maps.android.model/CameraPosition).<get-zoom>(): kotlin/Float // com.google.maps.android.model/zoom.<get-zoom>|<get-zoom>@com.google.maps.android.model.CameraPosition(){}[0]
