@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `ad2ba13` (#1810), recorded 2026-10-01T18:10:13Z.
+Measured at `145d2fa` (#1807), recorded 2026-10-01T18:14:55Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-01 | `145d2fa` | #1807 | 57.39% | 0.00 | ci: add a workflow to publish snapshot builds |
 | 2026-10-01 | `ad2ba13` | #1810 | 57.39% | 0.00 | docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes |
 | 2026-10-01 | `48d3371` | #1805 | 57.39% | 0.00 | test: add end-to-end demo smoke test |
 | 2026-10-01 | `2bd91d5` | #1806 | 57.39% | 0.00 | ci: merge generated docs PRs from the docs workflow |
