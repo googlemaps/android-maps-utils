@@ -40,6 +40,7 @@ desugar-jdk-libs = "2.1.5"
 # Versions for unit and instrumented testing libraries.
 androidx-test-core = "1.7.0"
 androidx-test-ext-junit = "1.3.0"
+androidx-test-orchestrator = "1.6.1"
 espresso-core = "3.7.0"
 junit = "4.13.2"
 kxml2 = "2.3.0"
@@ -95,6 +96,8 @@ ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 
 # --- Google Services (Maps) ---
@@ -108,6 +111,7 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs_nio", version.
 # Tools for running implementation validation and user interface tests.
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.ref = "androidx-test-orchestrator" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 junit = { module = "junit:junit", version.ref = "junit" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }

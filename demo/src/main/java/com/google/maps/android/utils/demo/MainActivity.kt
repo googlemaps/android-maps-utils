@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
                 // automatically handling system bars and insets.
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     DemoList(
-                        groups = getDemoGroups(),
+                        groups = demoGroups(),
                         contentPadding = innerPadding,
                         onDemoClick = { activityClass ->
                             startActivity(Intent(this, activityClass))
@@ -81,70 +82,78 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    /**
-     * Returns the static list of demo groups.
-     *
-     * In a real production app, this might come from a ViewModel or a resource file,
-     * but for a self-contained demo, hardcoding the hierarchy here is simple and clear.
-     */
-    private fun getDemoGroups(): List<DemoGroup> =
-        listOf(
-            DemoGroup(
-                R.string.category_clustering,
-                listOf(
-                    Demo(R.string.demo_title_clustering_advanced, CustomAdvancedMarkerClusteringDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_algorithms, ClusterAlgorithmsDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_default, ClusteringDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_custom_look, CustomMarkerClusteringDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_diff, ClusteringDiffDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_2k, BigClusteringDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_20k, VisibleClusteringDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_viewmodel, ClusteringViewModelDemoActivity::class.java),
-                    Demo(R.string.demo_title_clustering_force_zoom, ZoomClusteringDemoActivity::class.java),
-                ),
-            ),
-            DemoGroup(
-                R.string.category_data_layers,
-                listOf(
-                    Demo(R.string.demo_title_geojson, GeoJsonDemoActivity::class.java),
-                    Demo(R.string.demo_title_kml, KmlDemoActivity::class.java),
-                    Demo(R.string.demo_title_heatmaps, HeatmapsDemoActivity::class.java),
-                    Demo(R.string.demo_title_heatmaps_places, HeatmapsPlacesDemoActivity::class.java),
-                    Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
-                    Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
-                    Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java),
-                    Demo(R.string.demo_title_zindex, ZIndexDemoActivity::class.java),
-                ),
-            ),
-            DemoGroup(
-                R.string.category_geometry,
-                listOf(
-                    Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
-                    Demo(R.string.demo_title_flexible_polyline, FlexiblePolylineDemoActivity::class.java),
-                    Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
-                    Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
-                    Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java),
-                ),
-            ),
-            DemoGroup(
-                R.string.category_utilities,
-                listOf(
-                    Demo(R.string.demo_title_icon_generator, IconGeneratorDemoActivity::class.java),
-                    Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
-                    Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java),
-                    Demo(R.string.demo_title_reactive_extensions, KtxExtensionsDemoActivity::class.java),
-                ),
-            ),
-            DemoGroup(
-                R.string.category_street_view,
-                listOf(
-                    Demo(R.string.demo_title_street_view, StreetViewDemoActivity::class.java),
-                    Demo(R.string.demo_title_street_view_java, StreetViewDemoJavaActivity::class.java),
-                ),
-            ),
-        )
 }
+
+/**
+ * Returns the static list of demo groups.
+ *
+ * In a real production app, this might come from a ViewModel or a resource file,
+ * but for a self-contained demo, hardcoding the hierarchy here is simple and clear.
+ *
+ * This is also the source of truth for `DemoSmokeTest`, which opens every demo listed here.
+ */
+internal fun demoGroups(): List<DemoGroup> =
+    listOf(
+        DemoGroup(
+            R.string.category_clustering,
+            listOf(
+                Demo(R.string.demo_title_clustering_advanced, CustomAdvancedMarkerClusteringDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_algorithms, ClusterAlgorithmsDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_default, ClusteringDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_custom_look, CustomMarkerClusteringDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_diff, ClusteringDiffDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_2k, BigClusteringDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_20k, VisibleClusteringDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_viewmodel, ClusteringViewModelDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_force_zoom, ZoomClusteringDemoActivity::class.java),
+            ),
+        ),
+        DemoGroup(
+            R.string.category_data_layers,
+            listOf(
+                Demo(R.string.demo_title_geojson, GeoJsonDemoActivity::class.java),
+                Demo(R.string.demo_title_kml, KmlDemoActivity::class.java),
+                Demo(R.string.demo_title_heatmaps, HeatmapsDemoActivity::class.java),
+                Demo(R.string.demo_title_heatmaps_places, HeatmapsPlacesDemoActivity::class.java),
+                Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
+                Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
+                Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java),
+                Demo(R.string.demo_title_zindex, ZIndexDemoActivity::class.java),
+            ),
+        ),
+        DemoGroup(
+            R.string.category_geometry,
+            listOf(
+                Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
+                Demo(R.string.demo_title_flexible_polyline, FlexiblePolylineDemoActivity::class.java),
+                Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
+                Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
+                Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java),
+            ),
+        ),
+        DemoGroup(
+            R.string.category_utilities,
+            listOf(
+                Demo(R.string.demo_title_icon_generator, IconGeneratorDemoActivity::class.java),
+                Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
+                Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java),
+                Demo(R.string.demo_title_reactive_extensions, KtxExtensionsDemoActivity::class.java),
+            ),
+        ),
+        DemoGroup(
+            R.string.category_street_view,
+            listOf(
+                Demo(R.string.demo_title_street_view, StreetViewDemoActivity::class.java),
+                Demo(R.string.demo_title_street_view_java, StreetViewDemoJavaActivity::class.java),
+            ),
+        ),
+    )
+
+/** Test tag for a group header in [DemoList], used by the instrumented smoke test. */
+internal fun groupTestTag(group: DemoGroup): String = "group:${group.titleResId}"
+
+/** Test tag for a demo row in [DemoList], used by the instrumented smoke test. */
+internal fun demoTestTag(demo: Demo): String = "demo:${demo.activityClass.name}"
 
 /**
  * Renders the list of demo groups.
@@ -203,6 +212,7 @@ fun DemoGroupItem(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .testTag(groupTestTag(group))
                     .clickable(onClick = onHeaderClick)
                     .background(MaterialTheme.colorScheme.surfaceVariant) // Use semantic color
                     .padding(dimensionResource(id = R.dimen.padding_medium)),
@@ -235,6 +245,7 @@ fun DemoGroupItem(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
+                                .testTag(demoTestTag(demo))
                                 .clickable { onDemoClick(demo.activityClass) }
                                 .padding(
                                     horizontal = dimensionResource(id = R.dimen.padding_large),
