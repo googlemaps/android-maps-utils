@@ -89,3 +89,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-09-30T23:40:41Z,de264f8,1716,feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0),unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
 2026-09-30T23:40:41Z,de264f8,1716,feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0),unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
 2026-09-30T23:40:41Z,de264f8,1716,feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0),unit,TOTAL,3687,6424,57.39,1619,3901,41.5,23084,40531,56.95
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
