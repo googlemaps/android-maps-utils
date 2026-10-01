@@ -43,6 +43,11 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <!-- Needed by the Maps SDK when targeting API 28+ on devices with older Google Play services. -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <!--
         To add your Maps API key to this project:
             1. Open the file local.properties under the root project
