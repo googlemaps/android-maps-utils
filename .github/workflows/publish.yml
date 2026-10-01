@@ -24,7 +24,8 @@ permissions:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    # The Kotlin Multiplatform modules publish iOS klibs, which can only be built on macOS.
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -46,12 +47,12 @@ jobs:
           gpg --quiet --output $GITHUB_WORKSPACE/release.gpg --dearmor ./release.asc
 
           echo "Build and publish"
-          sed -i -e "s,mavenCentralUsername=,mavenCentralUsername=$SONATYPE_TOKEN_USERNAME,g" gradle.properties
+          sed -i.bak -e "s,mavenCentralUsername=,mavenCentralUsername=$SONATYPE_TOKEN_USERNAME,g" gradle.properties
           SONATYPE_TOKEN_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_TOKEN_PASSWORD" | sed -e 's/[\/&]/\\&/g')
-          sed -i -e "s,mavenCentralPassword=,mavenCentralPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
-          sed -i -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
-          sed -i -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
-          sed -i -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
+          sed -i.bak -e "s,mavenCentralPassword=,mavenCentralPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
+          sed -i.bak -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
+          sed -i.bak -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
+          sed -i.bak -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
 
         env:
           GPG_KEY_ARMOR: ${{ secrets.SYNCED_GPG_KEY_ARMOR }}
