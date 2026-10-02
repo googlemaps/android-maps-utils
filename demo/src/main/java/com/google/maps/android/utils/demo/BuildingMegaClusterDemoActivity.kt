@@ -152,11 +152,8 @@ class BuildingMegaClusterDemoActivity : BaseDemoActivity() {
             BitmapDescriptorFactory.fromResource(R.drawable.candy_house_marker)
 
         override fun shouldRenderAsCluster(cluster: Cluster<BuildingClusterItem>): Boolean {
-            // When an entry represents an aggregated count without a leaf item, always render as badge
-            if (cluster.items.isEmpty()) {
-                return true
-            }
-            return cluster.size >= minClusterSize
+            // A cluster badge must ALWAYS represent at least 2 items (never a badge labeled "1")
+            return cluster.size >= minClusterSize.coerceAtLeast(2)
         }
 
         override fun onBeforeClusterItemRendered(

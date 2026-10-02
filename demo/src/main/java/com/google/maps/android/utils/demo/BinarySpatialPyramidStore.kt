@@ -18,7 +18,10 @@ import java.nio.channels.FileChannel
  * Implements [AreaClusterProvider] to serve clusters and individual markers on-demand based on the
  * visible map camera bounds and zoom level.
  *
- * Enforces zoom thresholds and viewport density limits to prevent marker clutter on screen.
+ * Enforces zoom thresholds and viewport density limits so that:
+ * 1. Clusters ALWAYS represent 2 or more items (never a cluster of "1").
+ * 2. Individual leaf markers (candy houses) only appear at street level (zoom >= minZoomForLeafMarkers).
+ * 3. Isolated single buildings are omitted at regional zoom levels where single houses are sub-pixel noise.
  */
 public class BinarySpatialPyramidStore(
     context: Context,
@@ -122,16 +125,17 @@ public class BinarySpatialPyramidStore(
                     val clusterSize = buffer.getInt(entryOffset + 8)
                     val pos = LatLng(lat.toDouble(), lng.toDouble())
 
-                    // Only permit individual leaf markers when zoomed in past minZoomForLeafMarkers
-                    // AND below the maxMarkersPerViewport threshold
-                    if (clusterSize == 1 && zoom >= minZoomForLeafMarkers && leafMarkerCount < maxMarkersPerViewport) {
+                    if (clusterSize >= 2) {
+                        // Genuine cluster of 2 or more items: always a cluster badge
+                        results.add(AreaCluster(pos, clusterSize, null))
+                    } else if (zoom >= minZoomForLeafMarkers && leafMarkerCount < maxMarkersPerViewport) {
+                        // Single item at street level: individual candy house marker
                         val item = BuildingClusterItem(lat.toDouble(), lng.toDouble(), idx)
                         results.add(AreaCluster(pos, 1, item))
                         leafMarkerCount++
-                    } else {
-                        // Keep as a cluster badge (preserves count without leaf clutter)
-                        results.add(AreaCluster(pos, clusterSize, null))
                     }
+                    // If clusterSize == 1 and zoom < minZoomForLeafMarkers:
+                    // Omit from low zoom views. A single building is not a cluster and is sub-pixel noise.
                 }
                 idx++
             }
@@ -152,8 +156,6 @@ public class BinarySpatialPyramidStore(
                         val item = BuildingClusterItem(lat.toDouble(), lng.toDouble(), idx)
                         results.add(AreaCluster(pos, 1, item))
                         leafMarkerCount++
-                    } else {
-                        results.add(AreaCluster(pos, 1, null))
                     }
                 }
                 idx++
