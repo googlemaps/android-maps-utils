@@ -27,6 +27,7 @@ import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgor
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithm
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter
+import com.google.maps.android.clustering.algo.AreaClusterProviderAlgorithm
 import com.google.maps.android.clustering.algo.SuperClusterAlgorithm
 import com.google.maps.android.clustering.view.ClusterRenderer
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
@@ -289,6 +290,27 @@ public open class ClusterManager<T : ClusterItem>
         }
 
         /**
+         * Sets an [AreaClusterProvider] to dynamically query clusters and individual markers based on the
+         * visible map viewport and zoom level.
+         *
+         * @param provider The provider callback, or `null` to clear.
+         */
+        public open fun setAreaClusterProvider(provider: AreaClusterProvider<T>?) {
+            if (provider != null) {
+                val algo = AreaClusterProviderAlgorithm(provider)
+                val currentBounds = try {
+                    mMap.projection.visibleRegion.latLngBounds
+                } catch (e: Exception) {
+                    null
+                }
+                if (currentBounds != null) {
+                    algo.setVisibleBounds(currentBounds)
+                }
+                algorithm = algo
+            }
+        }
+
+        /**
          * Force a re-cluster on the map. You should call this after adding, removing, updating,
          * or clearing item(s).
          */
@@ -297,6 +319,15 @@ public open class ClusterManager<T : ClusterItem>
             try {
                 // Attempt to cancel the in-flight request.
                 mClusterTask?.cancel()
+                val currentBounds = try {
+                    mMap.projection.visibleRegion.latLngBounds
+                } catch (e: Exception) {
+                    null
+                }
+                if (currentBounds != null && mAlgorithm is AreaClusterProviderAlgorithm<*>) {
+                    @Suppress("UNCHECKED_CAST")
+                    (mAlgorithm as AreaClusterProviderAlgorithm<T>).setVisibleBounds(currentBounds)
+                }
                 mClusterTask =
                     scope.launch {
                         val param = mMap.cameraPosition.zoom
