@@ -27,76 +27,99 @@
         android:padding="20dp">
 
         <!-- 0. Dataset Size Selection -->
-        <TextView
-            android:id="@+id/text_dataset_title"
+        <LinearLayout
+            android:id="@+id/section_dataset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/clustering_settings_dataset_title"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="@string/clustering_settings_dataset_desc"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="?android:attr/textColorSecondary" />
-
-        <RadioGroup
-            android:id="@+id/radio_group_dataset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/radio_dataset_100k"
+            <TextView
+                android:id="@+id/text_dataset_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/clustering_settings_dataset_100k"
-                android:checked="true" />
+                android:text="@string/clustering_settings_dataset_title"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/radio_dataset_1m"
+            <TextView
+                android:id="@+id/text_dataset_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/clustering_settings_dataset_1m" />
-        </RadioGroup>
+                android:layout_marginTop="2dp"
+                android:text="@string/clustering_settings_dataset_desc"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?android:attr/textColorSecondary" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="?android:attr/listDivider" />
+            <RadioGroup
+                android:id="@+id/radio_group_dataset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radio_dataset_100k"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clustering_settings_dataset_100k"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_dataset_1m"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clustering_settings_dataset_1m" />
+            </RadioGroup>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="?android:attr/listDivider" />
+        </LinearLayout>
 
         <!-- 1. Cluster Radius (Density) -->
-        <TextView
-            android:id="@+id/text_radius_title"
+        <LinearLayout
+            android:id="@+id/section_radius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/clustering_settings_radius_format"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="@string/clustering_settings_radius_desc"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:textColor="?android:attr/textColorSecondary" />
+            <TextView
+                android:id="@+id/text_radius_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clustering_settings_radius_format"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textStyle="bold" />
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/slider_radius"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:valueFrom="40.0"
-            android:valueTo="200.0"
-            android:stepSize="20.0"
-            android:value="140.0" />
+            <TextView
+                android:id="@+id/text_radius_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/clustering_settings_radius_desc"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?android:attr/textColorSecondary" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider_radius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:valueFrom="40.0"
+                android:valueTo="200.0"
+                android:stepSize="20.0"
+                android:value="140.0" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="?android:attr/listDivider" />
+        </LinearLayout>
 
         <!-- 2. Min Cluster Size -->
         <TextView
