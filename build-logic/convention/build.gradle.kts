@@ -39,6 +39,10 @@ gradlePlugin {
             id = "android.maps.utils.PublishingConventionPlugin"
             implementationClass = "PublishingConventionPlugin"
         }
+        register("kmpPublishingConventionPlugin") {
+            id = "android.maps.utils.KmpPublishingConventionPlugin"
+            implementationClass = "KmpPublishingConventionPlugin"
+        }
         register("bomPublishingConventionPlugin") {
             id = "android.maps.utils.BomPublishingConventionPlugin"
             implementationClass = "BomPublishingConventionPlugin"

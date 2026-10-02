@@ -24,6 +24,12 @@ plugins {
 
 apiValidation {
     ignoredProjects += listOf("demo", "visual-testing", "lint-checks", "maps-utils")
+
+    // Validate the iOS klib ABI of the Kotlin Multiplatform modules (api/<module>.klib.api).
+    @OptIn(kotlinx.validation.ExperimentalBCVApi::class)
+    klib {
+        enabled = true
+    }
 }
 
 val apiDump = tasks.register("apiDump") {

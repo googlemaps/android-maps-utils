@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /**
  * Copyright 2026 Google LLC
  *
@@ -15,81 +13,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
-    id("org.jetbrains.dokka")
-    id("android.maps.utils.PublishingConventionPlugin")
-}
-
-android {
-    lint {
-        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
-    }
-    defaultConfig {
-        compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = libs.versions.minimumSdk.get().toInt()
-        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    resourcePrefix = "amu_"
-
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions += listOf("-d", "-t")
-    }
-
-    kotlin {
-        explicitApi()
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-        jvmToolchain(17)
-    }
-
-    testOptions {
-        animationsDisabled = true
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
-    }
-    namespace = "com.google.maps.android"
-}
-
-dependencies {
-    api(libs.play.services.maps)
-    compileOnly(libs.play.services.location)
-    api(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.appcompat)
-    implementation(libs.core.ktx)
-    implementation(libs.startup.runtime)
-    lintPublish(project(":lint-checks"))
-    testImplementation(libs.play.services.location)
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kxml2)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.androidx.test.core)
-    testImplementation(libs.truth)
-    implementation(libs.kotlin.stdlib.jdk8)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockito.kotlin)
-}
-
-tasks.register("instrumentTest") {
-    dependsOn("connectedCheck")
-}
-
-if (System.getenv("JITPACK") != null) {
-    apply(plugin = "maven")
+    id("android.maps.utils.KmpPublishingConventionPlugin")
 }
 
 abstract class GenerateArtifactIdTask : DefaultTask() {
@@ -128,13 +54,60 @@ val generateArtifactIdFile = tasks.register<GenerateArtifactIdTask>("generateArt
     version.set(project.version.toString())
 }
 
-androidComponents {
-    onVariants { variant ->
-        variant.sources.java?.addGeneratedSourceDirectory(
-            generateArtifactIdFile,
-            GenerateArtifactIdTask::outputDir
-        )
+kotlin {
+    androidLibrary {
+        namespace = "com.google.maps.android"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minimumSdk.get().toInt()
+
+        optimization {
+            consumerKeepRules.publish = true
+            consumerKeepRules.file("consumer-rules.pro")
+        }
+
+        withHostTestBuilder {
+        }.configure {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
     }
+
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":maps-model"))
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        androidMain {
+            kotlin.srcDir(generateArtifactIdFile)
+        }
+        androidMain.dependencies {
+            api(libs.play.services.maps)
+            compileOnly(libs.play.services.location)
+            api(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.appcompat)
+            implementation(libs.core.ktx)
+            implementation(libs.startup.runtime)
+        }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.play.services.location)
+            implementation(libs.junit)
+            implementation(libs.robolectric)
+            implementation(libs.kxml2)
+            implementation(libs.mockk)
+            implementation(libs.kotlin.test)
+            implementation(libs.androidx.test.core)
+            implementation(libs.truth)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.mockito.kotlin)
+        }
+    }
+}
+
+dependencies {
+    lintPublish(project(":lint-checks"))
 }
 
 tasks.named("dokkaGeneratePublicationHtml") {

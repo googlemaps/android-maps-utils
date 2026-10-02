@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /**
  * Copyright 2026 Google LLC
  *
@@ -16,76 +14,51 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * limitations under the License.
  */
 plugins {
-    
-    id("org.jetbrains.dokka")
-    id("android.maps.utils.PublishingConventionPlugin")
+    id("android.maps.utils.KmpPublishingConventionPlugin")
 }
 
-android {
-    lint {
-        sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
-    }
-    defaultConfig {
+kotlin {
+    androidLibrary {
+        namespace = "com.google.maps.android.heatmaps"
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = 23
-        testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
-        consumerProguardFiles("consumer-rules.pro")
-    }
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        minSdk = libs.versions.minimumSdk.get().toInt()
+
+        withHostTestBuilder {
+        }.configure {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
-    resourcePrefix = "amu_"
 
-    installation {
-        timeOutInMs = 10 * 60 * 1000 // 10 minutes
-        installOptions += listOf("-d", "-t")
-    }
-
-    kotlin {
-        explicitApi()
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":maps-model"))
+            // Quadtree, geometry and Mercator projection live in the clustering module.
+            api(project(":clustering"))
         }
-        jvmToolchain(17)
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        androidMain.dependencies {
+            implementation(project(":data"))
+            api(libs.play.services.maps)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.appcompat)
+            implementation(libs.core.ktx)
+        }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.junit)
+            implementation(libs.robolectric)
+            implementation(libs.kxml2)
+            implementation(libs.mockk)
+            implementation(libs.kotlin.test)
+            implementation(libs.truth)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.mockito.kotlin)
+        }
     }
-
-    testOptions {
-        animationsDisabled = true
-        unitTests.isIncludeAndroidResources = true
-        unitTests.isReturnDefaultValues = true
-    }
-    namespace = "com.google.maps.android.heatmaps"
 }
 
 dependencies {
-    implementation(project(":clustering"))
-    implementation(project(":data"))
-    api(libs.play.services.maps)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.appcompat)
-    implementation(libs.core.ktx)
     lintPublish(project(":lint-checks"))
-    testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.kxml2)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlin.test)
-    testImplementation(libs.truth)
-    implementation(libs.kotlin.stdlib.jdk8)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockito.kotlin)
-}
-
-tasks.register("instrumentTest") {
-    dependsOn("connectedCheck")
-}
-
-if (System.getenv("JITPACK") != null) {
-    apply(plugin = "maven")
 }

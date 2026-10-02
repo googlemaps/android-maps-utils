@@ -64,50 +64,7 @@ class PublishingConventionPlugin : Plugin<Project> {
                 )
             )
 
-            publishToMavenCentral()
-            if (findProperty("signing.keyId")?.toString()?.isNotBlank() == true ||
-                findProperty("signing.secretKeyRingFile")?.toString()?.isNotBlank() == true ||
-                findProperty("signingInMemoryKey")?.toString()?.isNotBlank() == true
-            ) {
-                signAllPublications()
-            }
-
-            val artifactIdName = when (project.name) {
-                "maps-utils" -> "android-maps-utils"
-                "library" -> "android-maps-utils-core"
-                else -> "android-maps-utils-${project.name}"
-            }
-            coordinates(
-                artifactId = artifactIdName,
-            )
-
-            pom {
-                name.set("android-maps-utils")
-                description.set("Handy extensions to the Google Maps Android API.")
-                url.set("https://github.com/googlemaps/android-maps-utils")
-                licenses {
-                    license {
-                        name.set("The Apache Software License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        distribution.set("repo")
-                    }
-                }
-                scm {
-                    connection.set("scm:git@github.com:googlemaps/android-maps-utils.git")
-                    developerConnection.set("scm:git@github.com:googlemaps/android-maps-utils.git")
-                    url.set("https://github.com/googlemaps/android-maps-utils")
-                }
-                developers {
-                    developer {
-                        id.set("google")
-                        name.set("Google LLC")
-                    }
-                }
-                organization {
-                    name.set("Google Inc")
-                    url.set("http://developers.google.com/maps")
-                }
-            }
+            configureMapsUtilsPublishing(project)
         }
     }
 

@@ -83,6 +83,25 @@ configurations.all {
 }
 ```
 
+### Kotlin Multiplatform (experimental)
+
+`android-maps-utils-core`, `android-maps-utils-clustering` and `android-maps-utils-heatmaps`
+are also published as Kotlin Multiplatform libraries for iOS (`iosArm64`,
+`iosSimulatorArm64`, `iosX64`). The platform-independent parts are available from common
+code: `PolyUtil`, `SphericalUtil` and `MathUtil`, the clustering algorithms, and the heatmap
+`Gradient` and `WeightedLatLng`, on top of a common `LatLng` and `CameraPosition` from
+`android-maps-utils-maps-model`. On Android those are the Maps SDK types, so Android apps
+are not affected. Rendering (`ClusterManager`, `HeatmapTileProvider`, the data layers and UI
+helpers) stays Android-only.
+
+Snapshot builds are published to the Maven Central snapshot repository:
+
+```kotlin
+repositories {
+    maven("https://central.sonatype.com/repository/maven-snapshots/")
+}
+```
+
 ## Sample App
 
 <img src="https://developers.google.com/maps/documentation/android-sdk/images/utility-markercluster.png" width="150" align=right>
