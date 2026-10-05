@@ -1,3 +1,19 @@
+public final class com/google/maps/android/clustering/AreaCluster : com/google/maps/android/clustering/Cluster {
+	public fun <init> (Lcom/google/android/gms/maps/model/LatLng;ILcom/google/maps/android/clustering/ClusterItem;)V
+	public synthetic fun <init> (Lcom/google/android/gms/maps/model/LatLng;ILcom/google/maps/android/clustering/ClusterItem;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getItems ()Ljava/util/Collection;
+	public final fun getLeafItem ()Lcom/google/maps/android/clustering/ClusterItem;
+	public fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
+	public fun getSize ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/google/maps/android/clustering/AreaClusterProvider {
+	public abstract fun getClustersForArea (Lcom/google/android/gms/maps/model/LatLngBounds;F)Ljava/util/Collection;
+}
+
 public abstract interface class com/google/maps/android/clustering/Cluster {
 	public abstract fun getItems ()Ljava/util/Collection;
 	public abstract fun getPosition ()Lcom/google/android/gms/maps/model/LatLng;
@@ -34,6 +50,7 @@ public class com/google/maps/android/clustering/ClusterManager : com/google/andr
 	public fun setAlgorithm (Lcom/google/maps/android/clustering/algo/Algorithm;)V
 	public fun setAlgorithm (Lcom/google/maps/android/clustering/algo/ScreenBasedAlgorithm;)V
 	public fun setAnimation (Z)V
+	public fun setAreaClusterProvider (Lcom/google/maps/android/clustering/AreaClusterProvider;)V
 	public fun setOnClusterClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterClickListener;)V
 	public fun setOnClusterInfoWindowClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowClickListener;)V
 	public fun setOnClusterInfoWindowLongClickListener (Lcom/google/maps/android/clustering/ClusterManager$OnClusterInfoWindowLongClickListener;)V
@@ -101,6 +118,27 @@ public abstract interface class com/google/maps/android/clustering/algo/Algorith
 	public abstract fun setMaxDistanceBetweenClusteredItems (I)V
 	public abstract fun unlock ()V
 	public abstract fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+}
+
+public final class com/google/maps/android/clustering/algo/AreaClusterProviderAlgorithm : com/google/maps/android/clustering/algo/AbstractAlgorithm, com/google/maps/android/clustering/algo/ScreenBasedAlgorithm {
+	public fun <init> ()V
+	public fun <init> (Lcom/google/maps/android/clustering/AreaClusterProvider;)V
+	public synthetic fun <init> (Lcom/google/maps/android/clustering/AreaClusterProvider;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun addItems (Ljava/util/Collection;)Z
+	public fun clearItems ()V
+	public fun getClusters (F)Ljava/util/Set;
+	public fun getItems ()Ljava/util/Collection;
+	public fun getMaxDistanceBetweenClusteredItems ()I
+	public final fun getProvider ()Lcom/google/maps/android/clustering/AreaClusterProvider;
+	public fun onCameraChange (Lcom/google/android/gms/maps/model/CameraPosition;)V
+	public fun removeItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
+	public fun removeItems (Ljava/util/Collection;)Z
+	public fun setMaxDistanceBetweenClusteredItems (I)V
+	public final fun setProvider (Lcom/google/maps/android/clustering/AreaClusterProvider;)V
+	public final fun setVisibleBounds (Lcom/google/android/gms/maps/model/LatLngBounds;)V
+	public fun shouldReclusterOnMapMovement ()Z
+	public fun updateItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
 }
 
 public class com/google/maps/android/clustering/algo/CentroidNonHierarchicalDistanceBasedAlgorithm : com/google/maps/android/clustering/algo/NonHierarchicalDistanceBasedAlgorithm {
