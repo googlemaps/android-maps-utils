@@ -19,9 +19,13 @@ package com.google.maps.android.utils.demo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
 import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -64,14 +68,87 @@ class BuildingMegaClusterDemoActivity : BaseDemoActivity() {
 
     override fun getLayoutId(): Int = R.layout.activity_building_megacluster
 
+    public companion object {
+        public const val ACTION_MAP_CONTROL: String =
+            "com.google.maps.android.utils.demo.ACTION_MAP_CONTROL"
+    }
+
+    private val mapControlReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val map = map ?: return
+            val lat = intent.getDoubleExtra("lat", Double.NaN)
+            val lng = intent.getDoubleExtra("lng", Double.NaN)
+            val zoom = intent.getFloatExtra("zoom", -1f)
+            val duration = intent.getIntExtra("duration", 2000)
+            val mapType = intent.getStringExtra("map_type")
+
+            if (mapType != null) {
+                val toggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.toggle_map_type_group)
+                when (mapType.lowercase()) {
+                    "normal", "map" -> {
+                        map.mapType = GoogleMap.MAP_TYPE_NORMAL
+                        toggleGroup?.check(R.id.btn_map_type_normal)
+                    }
+                    "satellite" -> {
+                        map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                        toggleGroup?.check(R.id.btn_map_type_satellite)
+                    }
+                    "hybrid" -> {
+                        map.mapType = GoogleMap.MAP_TYPE_HYBRID
+                        toggleGroup?.check(R.id.btn_map_type_hybrid)
+                    }
+                }
+            }
+
+            if (!lat.isNaN() && !lng.isNaN() && zoom > 0) {
+                val update = CameraUpdateFactory.newLatLngZoom(LatLng(lat, lng), zoom)
+                map.animateCamera(update, duration, null)
+            } else if (!lat.isNaN() && !lng.isNaN()) {
+                val update = CameraUpdateFactory.newLatLng(LatLng(lat, lng))
+                map.animateCamera(update, duration, null)
+            } else if (zoom > 0) {
+                val update = CameraUpdateFactory.zoomTo(zoom)
+                map.animateCamera(update, duration, null)
+            }
+        }
+    }
+
     @SuppressLint("PotentialBehaviorOverride")
     override fun startDemo(isRestore: Boolean) {
         val map = map ?: return
 
         textStats = findViewById(R.id.text_stats)
 
-        // Initial camera center over the San Diego / Baja California / Mexicali corridor
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(32.55, -116.2), 9f))
+        // Read initial camera and map type from intent if provided
+        val startLat = intent.getDoubleExtra("extra_lat", 32.55)
+        val startLng = intent.getDoubleExtra("extra_lng", -116.2)
+        val startZoom = intent.getFloatExtra("extra_zoom", 9f)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(startLat, startLng), startZoom))
+
+        val startMapType = intent.getStringExtra("extra_map_type")
+        if (startMapType != null) {
+            when (startMapType.lowercase()) {
+                "satellite" -> {
+                    map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                    findViewById<MaterialButtonToggleGroup>(R.id.toggle_map_type_group)?.check(R.id.btn_map_type_satellite)
+                }
+                "hybrid" -> {
+                    map.mapType = GoogleMap.MAP_TYPE_HYBRID
+                    findViewById<MaterialButtonToggleGroup>(R.id.toggle_map_type_group)?.check(R.id.btn_map_type_hybrid)
+                }
+                else -> {
+                    map.mapType = GoogleMap.MAP_TYPE_NORMAL
+                    findViewById<MaterialButtonToggleGroup>(R.id.toggle_map_type_group)?.check(R.id.btn_map_type_normal)
+                }
+            }
+        }
+
+        ContextCompat.registerReceiver(
+            this,
+            mapControlReceiver,
+            IntentFilter(ACTION_MAP_CONTROL),
+            ContextCompat.RECEIVER_EXPORTED,
+        )
 
         lifecycleScope.launch(Dispatchers.Default) {
             val store = BinarySpatialPyramidStore(this@BuildingMegaClusterDemoActivity)
@@ -94,6 +171,13 @@ class BuildingMegaClusterDemoActivity : BaseDemoActivity() {
                 R.id.btn_map_type_hybrid -> map.mapType = GoogleMap.MAP_TYPE_HYBRID
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unregisterReceiver(mapControlReceiver)
+        } catch (_: Exception) {}
     }
 
     private fun setupClusterManager(map: GoogleMap, store: BinarySpatialPyramidStore) {
