@@ -113,3 +113,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
 2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
 2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,clustering,607,1849,32.83,182,852,21.36,3410,10253,33.26
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,TOTAL,3687,6424,57.39,1621,3901,41.55,23084,40531,56.95
