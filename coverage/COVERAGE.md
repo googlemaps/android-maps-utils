@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `bbdbe83` (#1796), recorded 2026-10-05T08:48:05Z.
+Measured at `6d222ff` (#1812), recorded 2026-10-08T16:16:44Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 182/852 | 21.36% |
+| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 181/852 | 21.24% |
 | `data` | 1,678/2,938 | 57.11% | `███████████░░░░░░░░░` | 946/2,445 | 38.69% |
 | `heatmaps` | 257/314 | 81.85% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,023/1,172 | 87.29% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 3,687/6,424 | 57.39% | `███████████░░░░░░░░░` | 1,621/3,901 | 41.55% |
+| **TOTAL** | 3,687/6,424 | 57.39% | `███████████░░░░░░░░░` | 1,620/3,901 | 41.53% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-08 | `6d222ff` | #1812 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
 | 2026-10-05 | `bbdbe83` | #1796 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 5 updates |
 | 2026-10-01 | `145d2fa` | #1807 | 57.39% | 0.00 | ci: add a workflow to publish snapshot builds |
 | 2026-10-01 | `ad2ba13` | #1810 | 57.39% | 0.00 | docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes |
