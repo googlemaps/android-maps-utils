@@ -27,6 +27,8 @@ format change. This repository runs no emulator tests in CI today, so only the
 
   summary  print the parsed coverage as JSON (debugging / ad-hoc use)
   append   append one row per module to the append-only history CSV
+  merge    re-apply locally added rows onto a refreshed history CSV, used
+           when a push to the coverage-history branch is rejected
   render   regenerate the human-readable COVERAGE.md from that CSV
   compare  render a markdown coverage diff against the last recorded entry,
            for posting on a pull request
@@ -354,6 +356,37 @@ def render_current(rows: list[dict], suite: str, heading: str, note: str) -> lis
     return lines
 
 
+def row_key(row: dict) -> tuple[str, str, str]:
+    """Identity of a history row: one module, one suite, one commit."""
+    return (row.get("commit", ""), row.get("suite", ""), row.get("module", ""))
+
+
+def cmd_merge(args: argparse.Namespace) -> None:
+    """Re-apply locally added rows on top of a refreshed history file.
+
+    Two runs appending to the end of the CSV cannot be merged by git: both
+    touch the same region and the rebase conflicts. The rows are independent
+    records, though, so the correct resolution is simply "keep both". This
+    reads the rows we added, rebases them onto whatever is now on the branch,
+    and drops any that are already there.
+    """
+    base = read_history(args.csv)
+    ours = read_history(args.ours)
+
+    present = {row_key(row) for row in base}
+    added = [row for row in ours if row_key(row) not in present]
+    if not added:
+        print("No local rows to re-apply.")
+        return
+
+    with open(args.csv, "a", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS, lineterminator="\n")
+        if not base:
+            writer.writeheader()
+        writer.writerows(added)
+    print(f"Re-applied {len(added)} row(s) onto {args.csv}")
+
+
 def cmd_render(args: argparse.Namespace) -> None:
     rows = read_history(args.csv)
     if not rows:
@@ -508,7 +541,7 @@ def cmd_compare(args: argparse.Namespace) -> None:
     lines += [
         "",
         f"<sub>Line and branch coverage from {args.suite} test reports. History "
-        f"is recorded in `coverage/history.csv` after each merge to "
+        f"is recorded on the `coverage-history` branch after each merge to "
         f"`{args.base}`.</sub>",
         "",
     ]
@@ -562,6 +595,13 @@ def main() -> None:
         help="skip quietly instead of failing when no reports are present",
     )
     append.set_defaults(func=cmd_append)
+
+    merge = subparsers.add_parser(
+        "merge", help="re-apply locally added rows onto a refreshed history CSV"
+    )
+    merge.add_argument("--csv", default=DEFAULT_CSV, help="refreshed file to merge into")
+    merge.add_argument("--ours", required=True, help="our copy, holding the new rows")
+    merge.set_defaults(func=cmd_merge)
 
     render = subparsers.add_parser("render", help="regenerate COVERAGE.md from the CSV")
     render.add_argument("--csv", default=DEFAULT_CSV)

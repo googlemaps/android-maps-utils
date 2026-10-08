@@ -12,9 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Records unit test coverage in coverage/history.csv after every merge to main,
-# so coverage can be tracked over time. Release-please commits and the
-# workflow's own commits are skipped.
+# Records unit test coverage after every merge to main.
+#
+# The history is written to the "coverage-history" branch, never to main.
+# Branch protection on main uses strict required status checks, so any commit
+# pushed to main marks every open pull request out-of-date and forces
+# contributors to update their branch and re-run CI. Keeping the data on its
+# own branch means recording coverage costs contributors nothing.
+#
+# The first run creates the branch, seeded with the history that used to live
+# in coverage/ on main, so the trend stays continuous.
 name: Record coverage history
 
 on:
@@ -25,30 +32,116 @@ on:
 permissions:
   contents: read
 
-# Serialize runs so two quick merges cannot race on pushing the history file.
+# Serialize runs so two merges cannot race on pushing the history branch.
 concurrency:
   group: coverage-history
   cancel-in-progress: false
 
+env:
+  # Branch holding history.csv and COVERAGE.md.
+  DATA_BRANCH: coverage-history
+
 jobs:
   record:
-    # Skip release-please's release commits and this workflow's own commits.
-    # (The commit below carries [skip ci] as well, and pushes made with
-    # GITHUB_TOKEN do not trigger workflows, so this is belt and braces.)
+    # Skip release-please's release commits. The history no longer lands on
+    # main, so this workflow cannot retrigger itself.
     if: >-
-      !startsWith(github.event.head_commit.message, 'chore(main): release') &&
-      !startsWith(github.event.head_commit.message, 'chore: update coverage history')
+      !startsWith(github.event.head_commit.message, 'chore(main): release')
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      # Credentials are deliberately persisted here: the final step pushes the
-      # updated history back to main, so persist-credentials must stay enabled.
       - name: Checkout Repo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
+
+      - name: Check for the coverage history branch
+        id: branch
+        run: |
+          set +e
+          git ls-remote --exit-code --heads origin "$DATA_BRANCH" > /dev/null
+          STATUS=$?
+          set -e
+          case "$STATUS" in
+            0) echo "exists=true" >> "$GITHUB_OUTPUT" ;;
+            2) echo "exists=false" >> "$GITHUB_OUTPUT"
+               echo "$DATA_BRANCH does not exist yet; it will be created." ;;
+            *) echo "Could not query $DATA_BRANCH (git exit $STATUS)." >&2
+               exit 1 ;;
+          esac
+
+      # Credentials are deliberately persisted on this checkout only: the steps
+      # below push the updated history to the data branch.
+      - name: Checkout coverage history branch
+        if: steps.branch.outputs.exists == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.DATA_BRANCH }}
+          path: coverage-data
           token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO || secrets.GITHUB_TOKEN }}
+
+      # First run only. Full history is fetched so the seed step can find the
+      # last version of coverage/ on main, even after it has been removed there.
+      - name: Checkout main to seed the coverage history branch
+        if: steps.branch.outputs.exists == 'false'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: coverage-data
+          fetch-depth: 0
+          token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO || secrets.GITHUB_TOKEN }}
+
+      - name: Seed the coverage history branch from main
+        if: steps.branch.outputs.exists == 'false'
+        working-directory: coverage-data
+        run: |
+          # The newest commit that touched coverage/history.csv. If that commit
+          # removed the file, its parent holds the last version.
+          SOURCE=$(git rev-list -1 HEAD -- coverage/history.csv)
+          if [ -n "$SOURCE" ] && ! git cat-file -e "$SOURCE:coverage/history.csv" 2>/dev/null; then
+            SOURCE="$SOURCE^"
+          fi
+
+          git checkout --orphan "$DATA_BRANCH"
+          git rm -rfq .
+          git clean -fdxq
+
+          if [ -n "$SOURCE" ]; then
+            echo "Seeding from coverage/ at $(git rev-parse --short "$SOURCE")."
+            git show "$SOURCE:coverage/history.csv" > history.csv
+            git show "$SOURCE:coverage/COVERAGE.md" > COVERAGE.md 2>/dev/null || rm -f COVERAGE.md
+          else
+            echo "No earlier coverage history found; starting empty."
+          fi
+
+          cat > README.md <<'README'
+          # Coverage history
+
+          Generated data. Do not edit by hand, and do not open pull requests against
+          this branch.
+
+          | File | Contents |
+          | --- | --- |
+          | `history.csv` | One row per module per merged commit (unit tests). |
+          | `COVERAGE.md` | Human-readable report, regenerated from `history.csv`. |
+
+          Both are written by `.github/scripts/coverage_history.py` on `main`, run by the
+          `Record coverage history` workflow after every merge to `main`.
+
+          This data lives on its own branch rather than on `main` on purpose. Branch
+          protection on `main` uses strict required status checks, so every commit
+          pushed there marks all open pull requests out-of-date and forces contributors
+          to update their branch and re-run CI. Keeping coverage data here means
+          recording it costs contributors nothing.
+          README
+
+          git config user.name 'googlemaps-bot'
+          git config user.email 'googlemaps-bot@google.com'
+          git add -- README.md
+          [ -f history.csv ] && git add -- history.csv
+          [ -f COVERAGE.md ] && git add -- COVERAGE.md
+          git commit -qm 'chore: seed coverage history from main'
 
       - name: Set up JDK 21
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
@@ -62,33 +155,36 @@ jobs:
       - name: Create dummy secrets.properties
         run: echo "MAPS_API_KEY=dummy" > secrets.properties
 
-      - name: Run unit tests and generate coverage reports
-        run: ./gradlew koverXmlReportDebug --stacktrace
-
-      - name: Append to coverage history
-        env:
-          COMMIT_SHA: ${{ github.sha }}
+      - name: Resolve commit metadata
+        id: meta
         run: |
           SUBJECT=$(git log -1 --pretty=%s)
           # Squash-merged PRs end their subject with "(#123)". The number is
           # recorded in its own column, so drop it from the subject text.
           PR=$(printf '%s' "$SUBJECT" | sed -n 's/.*(#\([0-9]\{1,\}\))$/\1/p')
           SUBJECT=$(printf '%s' "$SUBJECT" | sed 's/ (#[0-9]\{1,\})$//')
+          {
+            echo "pr=$PR"
+            echo "subject<<EOF"
+            echo "$SUBJECT"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
-          python3 .github/scripts/coverage_history.py append --suite unit \
-            --commit "$COMMIT_SHA" --pr "$PR" --subject "$SUBJECT"
+      - name: Run unit tests and generate coverage reports
+        run: ./gradlew koverXmlReportDebug --stacktrace
 
-          python3 .github/scripts/coverage_history.py render
-
-      - name: Commit coverage history
+      - name: Record unit coverage
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          PR_NUMBER: ${{ steps.meta.outputs.pr }}
+          SUBJECT: ${{ steps.meta.outputs.subject }}
         run: |
-          git config user.name 'googlemaps-bot'
-          git config user.email 'googlemaps-bot@google.com'
-          git add coverage/history.csv coverage/COVERAGE.md
-          if git diff --staged --quiet; then
-            echo "Coverage history unchanged; nothing to commit."
-            exit 0
-          fi
-          git commit -m 'chore: update coverage history [skip ci]'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          python3 .github/scripts/coverage_history.py append --suite unit \
+            --csv coverage-data/history.csv \
+            --commit "$COMMIT_SHA" --pr "$PR_NUMBER" --subject "$SUBJECT"
+          python3 .github/scripts/coverage_history.py render \
+            --csv coverage-data/history.csv --out coverage-data/COVERAGE.md
+
+      - name: Push unit coverage
+        run: |
+          .github/scripts/push_coverage_history.sh 'chore: record unit coverage'
