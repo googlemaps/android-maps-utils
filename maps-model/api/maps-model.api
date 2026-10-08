@@ -1,0 +1,9 @@
+public final class com/google/maps/android/model/Model_androidKt {
+	public static final fun getBearing (Lcom/google/android/gms/maps/model/CameraPosition;)F
+	public static final fun getLatitude (Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun getLongitude (Lcom/google/android/gms/maps/model/LatLng;)D
+	public static final fun getTarget (Lcom/google/android/gms/maps/model/CameraPosition;)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun getTilt (Lcom/google/android/gms/maps/model/CameraPosition;)F
+	public static final fun getZoom (Lcom/google/android/gms/maps/model/CameraPosition;)F
+}
+
