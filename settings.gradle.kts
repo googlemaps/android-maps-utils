@@ -31,3 +31,18 @@ pluginManagement {
 }
 
 include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library", "visual-testing", "maps-utils")
+
+listOf(
+    file("../../android-maps-robolectric/main"),
+    file("../android-maps-robolectric/main"),
+    file("../android-maps-robolectric"),
+).firstOrNull { it.resolve("settings.gradle.kts").exists() }?.let { mapsRobolectricDir ->
+    includeBuild(mapsRobolectricDir) {
+        dependencySubstitution {
+            substitute(module("com.google.android.maps.testing:golden"))
+                .using(project(":golden-testing"))
+            substitute(module("com.google.android.maps.robolectric:shadows"))
+                .using(project(":robolectric-testing"))
+        }
+    }
+}
