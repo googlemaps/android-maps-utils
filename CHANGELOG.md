@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.1](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0...v6.0.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **data:** apply StyleMap styles and fix four KML and GeoJSON style bugs ([#1809](https://github.com/googlemaps/android-maps-utils/issues/1809)) ([ab87997](https://github.com/googlemaps/android-maps-utils/commit/ab87997a96f6cef567b568919aa5c283bd1ae7f0))
+
 ## [6.0.0](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v6.0.0) (2026-09-30)
 
 
