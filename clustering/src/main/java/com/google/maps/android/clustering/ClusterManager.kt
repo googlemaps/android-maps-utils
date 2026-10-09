@@ -27,6 +27,7 @@ import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgor
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithm
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter
+import com.google.maps.android.clustering.algo.SuperClusterAlgorithm
 import com.google.maps.android.clustering.view.ClusterRenderer
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.collections.MarkerManager
@@ -130,12 +131,32 @@ public open class ClusterManager<T : ClusterItem>
                 algorithm.unlock()
             }
 
+            val algo = mAlgorithm
+            if (algo is SuperClusterAlgorithm<*>) {
+                algo.onProgressListener = mOnClusteringProgressListener
+            }
+
             if (mAlgorithm.shouldReclusterOnMapMovement()) {
                 mAlgorithm.onCameraChange(mMap.cameraPosition)
             }
 
             cluster()
         }
+
+        private var mOnClusteringProgressListener: OnClusteringProgressListener? = null
+
+        /**
+         * Optional progress listener invoked during intensive spatial indexing passes (e.g. [SuperClusterAlgorithm]).
+         */
+        public open var onClusteringProgressListener: OnClusteringProgressListener?
+            get() = mOnClusteringProgressListener
+            set(value) {
+                mOnClusteringProgressListener = value
+                val algo = mAlgorithm
+                if (algo is SuperClusterAlgorithm<*>) {
+                    algo.onProgressListener = value
+                }
+            }
 
         public open fun setAnimation(animate: Boolean) {
             mRenderer.setAnimation(animate)
@@ -431,5 +452,16 @@ public open class ClusterManager<T : ClusterItem>
          */
         public fun interface OnClusterItemInfoWindowLongClickListener<T : ClusterItem> {
             public fun onClusterItemInfoWindowLongClick(item: T)
+        }
+
+        /**
+         * Called during intensive spatial indexing or clustering passes to report progress.
+         */
+        public fun interface OnClusteringProgressListener {
+            /**
+             * @param progress Progress ratio between 0.0f and 1.0f (or -1.0f if indeterminate).
+             * @param status Human-readable description of current clustering stage (e.g. "Indexing zoom level 12").
+             */
+            public fun onClusteringProgress(progress: Float, status: String)
         }
     }

@@ -104,6 +104,7 @@ internal fun demoGroups(): List<DemoGroup> =
                 Demo(R.string.demo_title_clustering_diff, ClusteringDiffDemoActivity::class.java),
                 Demo(R.string.demo_title_clustering_2k, BigClusteringDemoActivity::class.java),
                 Demo(R.string.demo_title_clustering_20k, VisibleClusteringDemoActivity::class.java),
+                Demo(R.string.demo_title_clustering_supercluster_100k, SuperCluster100kDemoActivity::class.java),
                 Demo(R.string.demo_title_clustering_viewmodel, ClusteringViewModelDemoActivity::class.java),
                 Demo(R.string.demo_title_clustering_force_zoom, ZoomClusteringDemoActivity::class.java),
             ),
