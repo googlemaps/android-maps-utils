@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `ab87997` (#1809), recorded 2026-10-08T20:28:57Z.
+Measured at `466bfa5`, recorded 2026-10-09T21:49:19Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 180/852 | 21.13% |
+| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 181/852 | 21.24% |
 | `data` | 1,964/2,950 | 66.58% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 257/314 | 81.85% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,023/1,172 | 87.29% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 3,973/6,436 | 61.73% | `████████████░░░░░░░░` | 1,687/3,917 | 43.07% |
+| **TOTAL** | 3,973/6,436 | 61.73% | `████████████░░░░░░░░` | 1,688/3,917 | 43.09% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-09 | `466bfa5` | n/a | 61.73% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates |
 | 2026-10-08 | `ab87997` | #1809 | 61.73% | +4.34 | fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs |
 | 2026-10-08 | `6d222ff` | #1812 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
 | 2026-10-05 | `bbdbe83` | #1796 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 5 updates |
