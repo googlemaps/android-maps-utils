@@ -1,0 +1,116 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.google.android.maps.robolectric",
+    "module": "shadows",
+    "version": "1.1.0-rc01",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.1.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shadows-1.1.0-rc01.aar",
+          "url": "shadows-1.1.0-rc01.aar",
+          "size": 51964,
+          "sha512": "46f8c6a2216729bdd15fb60b9643e8e515b658df7decf92d9dfad27bcaeeb6292fba4459b75ea9077da0085649210c688d3746f7158ac7d93c7ddc98f36fa296",
+          "sha256": "75eb6623783caeb4a291e247fbd5211db868ccb6a5e84dd772ce19a8ee3a8126",
+          "sha1": "1fcc65220d79e051a7608106a60bac31699fe4b2",
+          "md5": "15879a02e2b11661fe48349b7c0932cf"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.3.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "shadows-1.1.0-rc01.aar",
+          "url": "shadows-1.1.0-rc01.aar",
+          "size": 51964,
+          "sha512": "46f8c6a2216729bdd15fb60b9643e8e515b658df7decf92d9dfad27bcaeeb6292fba4459b75ea9077da0085649210c688d3746f7158ac7d93c7ddc98f36fa296",
+          "sha256": "75eb6623783caeb4a291e247fbd5211db868ccb6a5e84dd772ce19a8ee3a8126",
+          "sha1": "1fcc65220d79e051a7608106a60bac31699fe4b2",
+          "md5": "15879a02e2b11661fe48349b7c0932cf"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "shadows-1.1.0-rc01-sources.jar",
+          "url": "shadows-1.1.0-rc01-sources.jar",
+          "size": 33662,
+          "sha512": "0caceea78565a16cb86bc6dec74a15e433e46cb89b3f3f53707267eaece243d877bb9e6c4f2aca15c3fcdcba99e76ed4c4b20d5d31d3cd79255001e51ff17519",
+          "sha256": "15df543fcf57dae223cd63b5ae227bce0674c11bc662b7a7542e3bfdf1636794",
+          "sha1": "91a4429a454eda8cdc2af345c77e1d79dc520afc",
+          "md5": "c3a81a1b425bdad71954519252100df9"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseJavaDocPublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "shadows-1.1.0-rc01-javadoc.jar",
+          "url": "shadows-1.1.0-rc01-javadoc.jar",
+          "size": 359599,
+          "sha512": "715f7ac94e6443cb5a64c789357d36f70a825d0f52b792e524b98b38f13b8324c2646526c2500d0fa360abdce991e03ca956adc7d9f05fa5643d7443bec0d915",
+          "sha256": "b9b50c47916dd4b5d46be76a9ed618e5f992eea3b21f943480c170425c248d5e",
+          "sha1": "971546518033f61a9c9075df42b898bee83fac68",
+          "md5": "12095bc01021785b919bab830d6c1a6e"
+        }
+      ]
+    }
+  ]
+}
