@@ -107,6 +107,9 @@ public fun CLLocationManager.locationEvents(
     desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
 ): Flow<Location> = callbackFlow {
     val currentStatus = authorizationStatus
+    // TODO(https://github.com/googlemaps/android-maps-utils/issues/1818): Consider invoking
+    //  requestWhenInUseAuthorization() automatically when currentStatus is
+    //  kCLAuthorizationStatusNotDetermined so collecting the flow prompts for permission on iOS.
     if (currentStatus == kCLAuthorizationStatusDenied ||
         currentStatus == kCLAuthorizationStatusRestricted
     ) {

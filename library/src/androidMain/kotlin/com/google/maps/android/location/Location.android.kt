@@ -84,6 +84,9 @@ public actual val Location.timestampMillis: Long
  * [LocationPriority.BALANCED_POWER_ACCURACY] and [LocationPriority.LOW_POWER] delegate to
  * [coarseLocationEvents] (`NETWORK_PROVIDER`).
  */
+// TODO(https://github.com/googlemaps/android-maps-utils/issues/1818): Emit the freshest cached
+//  lastKnownLocation on collection start and merge coarseLocationEvents as an indoor / coarse-only
+//  permission fallback for HIGH_ACCURACY so Android callers match iOS CLLocationManager semantics.
 @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
 public fun LocationManager.asLocationSource(
     looper: Looper = Looper.getMainLooper()
