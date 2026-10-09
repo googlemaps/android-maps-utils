@@ -712,10 +712,18 @@ public final class com/google/maps/android/ktx/utils/location/LocationManagerKt 
 }
 
 public final class com/google/maps/android/location/FusedLocationProviderKt {
+	public static final fun asLocationSource (Lcom/google/android/gms/location/FusedLocationProviderClient;Landroid/os/Looper;)Lcom/google/maps/android/location/LocationSource;
+	public static synthetic fun asLocationSource$default (Lcom/google/android/gms/location/FusedLocationProviderClient;Landroid/os/Looper;ILjava/lang/Object;)Lcom/google/maps/android/location/LocationSource;
 	public static final fun fusedLocationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun fusedLocationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun locationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun locationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/location/LocationKt {
+	public static final fun getLatLng (Landroid/location/Location;)Lcom/google/android/gms/maps/model/LatLng;
+	public static final fun locationEvents (Lcom/google/maps/android/location/LocationSource;JFLcom/google/maps/android/location/LocationPriority;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun locationEvents$default (Lcom/google/maps/android/location/LocationSource;JFLcom/google/maps/android/location/LocationPriority;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/google/maps/android/location/LocationManagerKt {
@@ -723,6 +731,31 @@ public final class com/google/maps/android/location/LocationManagerKt {
 	public static synthetic fun coarseLocationEvents$default (Landroid/location/LocationManager;JFLandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun fineLocationEvents (Landroid/location/LocationManager;JFLandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun fineLocationEvents$default (Landroid/location/LocationManager;JFLandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/location/LocationPriority : java/lang/Enum {
+	public static final field BALANCED_POWER_ACCURACY Lcom/google/maps/android/location/LocationPriority;
+	public static final field HIGH_ACCURACY Lcom/google/maps/android/location/LocationPriority;
+	public static final field LOW_POWER Lcom/google/maps/android/location/LocationPriority;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/location/LocationPriority;
+	public static fun values ()[Lcom/google/maps/android/location/LocationPriority;
+}
+
+public abstract interface class com/google/maps/android/location/LocationSource {
+	public abstract fun locationEvents (JFLcom/google/maps/android/location/LocationPriority;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/google/maps/android/location/Location_androidKt {
+	public static final fun asLocationSource (Landroid/location/LocationManager;Landroid/os/Looper;)Lcom/google/maps/android/location/LocationSource;
+	public static synthetic fun asLocationSource$default (Landroid/location/LocationManager;Landroid/os/Looper;ILjava/lang/Object;)Lcom/google/maps/android/location/LocationSource;
+	public static final fun getAccuracyMeters (Landroid/location/Location;)F
+	public static final fun getAltitudeMeters (Landroid/location/Location;)D
+	public static final fun getBearingDegrees (Landroid/location/Location;)F
+	public static final fun getLatitude (Landroid/location/Location;)D
+	public static final fun getLongitude (Landroid/location/Location;)D
+	public static final fun getSpeedMetersPerSecond (Landroid/location/Location;)F
+	public static final fun getTimestampMillis (Landroid/location/Location;)J
 }
 
 public final class com/google/maps/android/model/CameraPositionKt {

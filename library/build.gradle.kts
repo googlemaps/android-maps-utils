@@ -75,9 +75,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(project(":maps-model"))
+            api(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
         androidMain {
             kotlin.srcDir(generateArtifactIdFile)
@@ -85,7 +87,6 @@ kotlin {
         androidMain.dependencies {
             api(libs.play.services.maps)
             compileOnly(libs.play.services.location)
-            api(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.appcompat)
             implementation(libs.core.ktx)

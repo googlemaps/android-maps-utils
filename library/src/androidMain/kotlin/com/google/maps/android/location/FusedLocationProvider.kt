@@ -58,10 +58,21 @@ public fun FusedLocationProviderClient.locationEvents(
             }
         }
 
-        requestLocationUpdates(locationRequest, callback, looper)
+        try {
+            requestLocationUpdates(locationRequest, callback, looper)
+            Unit
+        } catch (_: SecurityException) {
+            close()
+            return@callbackFlow
+        }
 
         awaitClose {
-            removeLocationUpdates(callback)
+            try {
+                removeLocationUpdates(callback)
+                Unit
+            } catch (_: SecurityException) {
+                // Ignore if location permission was revoked while the flow was active.
+            }
         }
     }
 
@@ -84,4 +95,25 @@ public fun FusedLocationProviderClient.fusedLocationEvents(
         .setMinUpdateDistanceMeters(minUpdateDistanceM)
         .build()
     return locationEvents(request, looper)
+}
+
+/**
+ * Adapts a Google Play Services [FusedLocationProviderClient] into a multiplatform
+ * [LocationSource] that can be consumed from shared `commonMain` code.
+ */
+@RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+public fun FusedLocationProviderClient.asLocationSource(
+    looper: Looper = Looper.getMainLooper()
+): LocationSource = LocationSource { intervalMs, minUpdateDistanceM, priority ->
+    val playPriority = when (priority) {
+        LocationPriority.HIGH_ACCURACY -> Priority.PRIORITY_HIGH_ACCURACY
+        LocationPriority.BALANCED_POWER_ACCURACY -> Priority.PRIORITY_BALANCED_POWER_ACCURACY
+        LocationPriority.LOW_POWER -> Priority.PRIORITY_LOW_POWER
+    }
+    fusedLocationEvents(
+        intervalMs = intervalMs,
+        minUpdateDistanceM = minUpdateDistanceM,
+        priority = playPriority,
+        looper = looper
+    )
 }
