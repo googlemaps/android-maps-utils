@@ -58,10 +58,21 @@ public fun FusedLocationProviderClient.locationEvents(
             }
         }
 
-        requestLocationUpdates(locationRequest, callback, looper)
+        try {
+            requestLocationUpdates(locationRequest, callback, looper)
+            Unit
+        } catch (_: SecurityException) {
+            close()
+            return@callbackFlow
+        }
 
         awaitClose {
-            removeLocationUpdates(callback)
+            try {
+                removeLocationUpdates(callback)
+                Unit
+            } catch (_: SecurityException) {
+                // Ignore if location permission was revoked while the flow was active.
+            }
         }
     }
 

@@ -166,4 +166,42 @@ public class LocationManagerTest {
             any<Looper>()
         )
     }
+
+    @SuppressLint("MissingPermission")
+    @Test
+    public fun testCoarseLocationPermissionRevokedClosesCleanly(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.NETWORK_PROVIDER))
+        `when`(
+            locationManager.requestLocationUpdates(
+                eq(LocationManager.NETWORK_PROVIDER),
+                anyLong(),
+                anyFloat(),
+                any<LocationListener>(),
+                any<Looper>()
+            )
+        ).thenThrow(SecurityException("Location permission denied"))
+
+        val events = locationManager.coarseLocationEvents(1_000L, 1f, looper).toList()
+
+        assertThat(events).isEmpty()
+    }
+
+    @SuppressLint("MissingPermission")
+    @Test
+    public fun testFineLocationPermissionRevokedClosesCleanly(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.GPS_PROVIDER))
+        `when`(
+            locationManager.requestLocationUpdates(
+                eq(LocationManager.GPS_PROVIDER),
+                anyLong(),
+                anyFloat(),
+                any<LocationListener>(),
+                any<Looper>()
+            )
+        ).thenThrow(SecurityException("Location permission denied"))
+
+        val events = locationManager.fineLocationEvents(2_000L, 2f, looper).toList()
+
+        assertThat(events).isEmpty()
+    }
 }
