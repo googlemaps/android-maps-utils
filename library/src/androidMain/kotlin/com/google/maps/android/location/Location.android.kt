@@ -20,8 +20,6 @@ import android.Manifest
 import android.location.LocationManager
 import android.os.Looper
 import androidx.annotation.RequiresPermission
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.Priority
 
 /**
  * On Android, [Location] is a direct `typealias` for [android.location.Location].
@@ -103,25 +101,4 @@ public fun LocationManager.asLocationSource(
             looper = looper
         )
     }
-}
-
-/**
- * Adapts a Google Play Services [FusedLocationProviderClient] into a multiplatform
- * [LocationSource] that can be consumed from shared `commonMain` code.
- */
-@RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
-public fun FusedLocationProviderClient.asLocationSource(
-    looper: Looper = Looper.getMainLooper()
-): LocationSource = LocationSource { intervalMs, minUpdateDistanceM, priority ->
-    val playPriority = when (priority) {
-        LocationPriority.HIGH_ACCURACY -> Priority.PRIORITY_HIGH_ACCURACY
-        LocationPriority.BALANCED_POWER_ACCURACY -> Priority.PRIORITY_BALANCED_POWER_ACCURACY
-        LocationPriority.LOW_POWER -> Priority.PRIORITY_LOW_POWER
-    }
-    fusedLocationEvents(
-        intervalMs = intervalMs,
-        minUpdateDistanceM = minUpdateDistanceM,
-        priority = playPriority,
-        looper = looper
-    )
 }

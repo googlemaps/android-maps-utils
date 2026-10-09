@@ -712,6 +712,8 @@ public final class com/google/maps/android/ktx/utils/location/LocationManagerKt 
 }
 
 public final class com/google/maps/android/location/FusedLocationProviderKt {
+	public static final fun asLocationSource (Lcom/google/android/gms/location/FusedLocationProviderClient;Landroid/os/Looper;)Lcom/google/maps/android/location/LocationSource;
+	public static synthetic fun asLocationSource$default (Lcom/google/android/gms/location/FusedLocationProviderClient;Landroid/os/Looper;ILjava/lang/Object;)Lcom/google/maps/android/location/LocationSource;
 	public static final fun fusedLocationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun fusedLocationEvents$default (Lcom/google/android/gms/location/FusedLocationProviderClient;JFILandroid/os/Looper;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun locationEvents (Lcom/google/android/gms/location/FusedLocationProviderClient;Lcom/google/android/gms/location/LocationRequest;Landroid/os/Looper;)Lkotlinx/coroutines/flow/Flow;
@@ -746,9 +748,7 @@ public abstract interface class com/google/maps/android/location/LocationSource 
 
 public final class com/google/maps/android/location/Location_androidKt {
 	public static final fun asLocationSource (Landroid/location/LocationManager;Landroid/os/Looper;)Lcom/google/maps/android/location/LocationSource;
-	public static final fun asLocationSource (Lcom/google/android/gms/location/FusedLocationProviderClient;Landroid/os/Looper;)Lcom/google/maps/android/location/LocationSource;
 	public static synthetic fun asLocationSource$default (Landroid/location/LocationManager;Landroid/os/Looper;ILjava/lang/Object;)Lcom/google/maps/android/location/LocationSource;
-	public static synthetic fun asLocationSource$default (Lcom/google/android/gms/location/FusedLocationProviderClient;Landroid/os/Looper;ILjava/lang/Object;)Lcom/google/maps/android/location/LocationSource;
 	public static final fun getAccuracyMeters (Landroid/location/Location;)F
 	public static final fun getAltitudeMeters (Landroid/location/Location;)D
 	public static final fun getBearingDegrees (Landroid/location/Location;)F
