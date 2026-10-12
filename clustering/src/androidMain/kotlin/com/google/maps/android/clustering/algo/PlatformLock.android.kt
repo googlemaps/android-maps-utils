@@ -24,3 +24,7 @@ internal actual class PlatformLock {
 
     actual fun unlock(): Unit = delegate.unlock()
 }
+
+internal actual class MonitorLock actual constructor(internal val monitor: Any)
+
+internal actual inline fun <T> MonitorLock.withLock(block: () -> T): T = synchronized(monitor, block)
