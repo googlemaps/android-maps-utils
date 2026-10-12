@@ -89,3 +89,51 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-09-30T23:40:41Z,de264f8,1716,feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0),unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
 2026-09-30T23:40:41Z,de264f8,1716,feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0),unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
 2026-09-30T23:40:41Z,de264f8,1716,feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0),unit,TOTAL,3687,6424,57.39,1619,3901,41.5,23084,40531,56.95
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-01T13:00:26Z,2bd91d5,1806,ci: merge generated docs PRs from the docs workflow,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
+2026-10-01T17:32:40Z,48d3371,1805,test: add end-to-end demo smoke test,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-01T17:32:40Z,48d3371,1805,test: add end-to-end demo smoke test,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-01T17:32:40Z,48d3371,1805,test: add end-to-end demo smoke test,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-01T17:32:40Z,48d3371,1805,test: add end-to-end demo smoke test,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-01T17:32:40Z,48d3371,1805,test: add end-to-end demo smoke test,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-01T17:32:40Z,48d3371,1805,test: add end-to-end demo smoke test,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
+2026-10-01T18:10:13Z,ad2ba13,1810,docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-01T18:10:13Z,ad2ba13,1810,docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-01T18:10:13Z,ad2ba13,1810,docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-01T18:10:13Z,ad2ba13,1810,docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-01T18:10:13Z,ad2ba13,1810,docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-01T18:10:13Z,ad2ba13,1810,docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
+2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-01T18:14:55Z,145d2fa,1807,ci: add a workflow to publish snapshot builds,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,clustering,607,1849,32.83,182,852,21.36,3410,10253,33.26
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-05T08:48:05Z,bbdbe83,1796,build(deps): bump the gradle-minor-and-patch group with 5 updates,unit,TOTAL,3687,6424,57.39,1621,3901,41.55,23084,40531,56.95
+2026-10-08T16:16:44Z,6d222ff,1812,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-08T16:16:44Z,6d222ff,1812,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,data,1678,2938,57.11,946,2445,38.69,11325,20860,54.29
+2026-10-08T16:16:44Z,6d222ff,1812,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-08T16:16:44Z,6d222ff,1812,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-08T16:16:44Z,6d222ff,1812,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-08T16:16:44Z,6d222ff,1812,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,TOTAL,3687,6424,57.39,1620,3901,41.53,23084,40531,56.95
+2026-10-08T20:28:57Z,ab87997,1809,fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs,unit,clustering,607,1849,32.83,180,852,21.13,3410,10253,33.26
+2026-10-08T20:28:57Z,ab87997,1809,fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs,unit,data,1964,2950,66.58,1014,2461,41.2,12838,20923,61.36
+2026-10-08T20:28:57Z,ab87997,1809,fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-08T20:28:57Z,ab87997,1809,fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-08T20:28:57Z,ab87997,1809,fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-08T20:28:57Z,ab87997,1809,fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs,unit,TOTAL,3973,6436,61.73,1687,3917,43.07,24597,40594,60.59
+2026-10-09T21:49:19Z,466bfa5,,build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates,unit,clustering,607,1849,32.83,181,852,21.24,3410,10253,33.26
+2026-10-09T21:49:19Z,466bfa5,,build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates,unit,data,1964,2950,66.58,1014,2461,41.2,12838,20923,61.36
+2026-10-09T21:49:19Z,466bfa5,,build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates,unit,heatmaps,257,314,81.85,134,162,82.72,1830,2065,88.62
+2026-10-09T21:49:19Z,466bfa5,,build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
+2026-10-09T21:49:19Z,466bfa5,,build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
+2026-10-09T21:49:19Z,466bfa5,,build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates,unit,TOTAL,3973,6436,61.73,1688,3917,43.09,24597,40594,60.59

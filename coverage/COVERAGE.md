@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `de264f8` (#1716), recorded 2026-09-30T23:40:41Z.
+Measured at `466bfa5`, recorded 2026-10-09T21:49:19Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 180/852 | 21.13% |
-| `data` | 1,678/2,938 | 57.11% | `███████████░░░░░░░░░` | 946/2,445 | 38.69% |
+| `clustering` | 607/1,849 | 32.83% | `███████░░░░░░░░░░░░░` | 181/852 | 21.24% |
+| `data` | 1,964/2,950 | 66.58% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 257/314 | 81.85% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,023/1,172 | 87.29% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 3,687/6,424 | 57.39% | `███████████░░░░░░░░░` | 1,619/3,901 | 41.50% |
+| **TOTAL** | 3,973/6,436 | 61.73% | `████████████░░░░░░░░` | 1,688/3,917 | 43.09% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,14 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-09 | `466bfa5` | n/a | 61.73% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates |
+| 2026-10-08 | `ab87997` | #1809 | 61.73% | +4.34 | fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs |
+| 2026-10-08 | `6d222ff` | #1812 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
+| 2026-10-05 | `bbdbe83` | #1796 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 5 updates |
+| 2026-10-01 | `145d2fa` | #1807 | 57.39% | 0.00 | ci: add a workflow to publish snapshot builds |
+| 2026-10-01 | `ad2ba13` | #1810 | 57.39% | 0.00 | docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes |
+| 2026-10-01 | `48d3371` | #1805 | 57.39% | 0.00 | test: add end-to-end demo smoke test |
+| 2026-10-01 | `2bd91d5` | #1806 | 57.39% | 0.00 | ci: merge generated docs PRs from the docs workflow |
 | 2026-09-30 | `de264f8` | #1716 | 57.39% | +4.18 | feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0) |
 | 2026-09-30 | `657fc55` | #1802 | 53.21% | 0.00 | build(deps): update AGP, Android Lint, Kover, Ktor, and core-ktx to latest stable versions |
 | 2026-09-30 | `f805f5e` | #1803 | 53.21% | +0.02 | fix(library): match reference rounding and unsigned varints in flexible polyline |

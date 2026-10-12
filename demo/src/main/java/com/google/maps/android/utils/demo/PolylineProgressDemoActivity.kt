@@ -17,11 +17,13 @@ package com.google.maps.android.utils.demo
 
 import android.graphics.Canvas
 import android.graphics.Color
+import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.toColorInt
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -115,7 +117,10 @@ class PolylineProgressDemoActivity :
                 .apply {
                     polylinePoints.forEach { include(it) }
                 }.build()
-        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+        // newLatLngBounds needs the map's size, so wait until the map container has been laid out.
+        findViewById<View>(R.id.map).doOnLayout {
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+        }
     }
 
     private fun setupUI() {

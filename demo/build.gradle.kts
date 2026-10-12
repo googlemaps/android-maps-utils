@@ -76,6 +76,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Start every instrumented test from a clean app state.
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     buildTypes {
@@ -86,6 +88,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    testOptions {
+        // Each test runs in its own process, so a crashing demo does not abort the rest of the run.
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
     buildFeatures {
@@ -167,6 +174,9 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.truth)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestUtil(libs.androidx.test.orchestrator)
 
     implementation(project(":visual-testing"))
     implementation(libs.uiautomator)
@@ -179,6 +189,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.material.icons.core)
     debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
     // [END_EXCLUDE]
 }
 // [END maps_android_utils_install_snippet]

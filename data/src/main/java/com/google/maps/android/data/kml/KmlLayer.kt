@@ -17,6 +17,7 @@ package com.google.maps.android.data.kml
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -36,6 +37,8 @@ import java.io.BufferedInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
+
+private const val LOG_TAG = "KmlLayer"
 
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class KmlLayer : Layer {
@@ -131,8 +134,16 @@ public class KmlLayer : Layer {
 
         // Parse Document
         kmlObj.document?.let { doc ->
-            val styles = doc.styles.associate { it.id!! to toLegacyStyle(it) }
-            val styleMaps = doc.styleMaps.associate { it.id!! to (it.pairs.firstOrNull { p -> p.key == "normal" }?.styleUrl ?: "") }
+            // Shared styles and style maps can only be referenced by id, so ones without an id
+            // are skipped rather than failing the whole layer.
+            val styles = doc.styles.mapNotNull { style -> style.id?.let { it to toLegacyStyle(style) } }.toMap()
+            val styleMaps =
+                doc.styleMaps
+                    .mapNotNull { styleMap ->
+                        styleMap.id?.let { id ->
+                            id to (styleMap.pairs.firstOrNull { p -> p.key == "normal" }?.styleUrl ?: "")
+                        }
+                    }.toMap()
 
             val placemarksMap = HashMap<KmlPlacemark, Any?>()
             doc.placemarks.forEach { p ->
@@ -146,7 +157,7 @@ public class KmlLayer : Layer {
 
             val groundOverlaysMap = HashMap<KmlGroundOverlay, com.google.android.gms.maps.model.GroundOverlay?>()
             doc.groundOverlays.forEach { g ->
-                groundOverlaysMap[toLegacyGroundOverlay(g)] = null
+                toLegacyGroundOverlay(g)?.let { groundOverlaysMap[it] = null }
             }
 
             val properties = HashMap<String, String>()
@@ -171,7 +182,7 @@ public class KmlLayer : Layer {
         if (kmlObj.document == null) {
             kmlObj.placemark?.let { mPlacemarks.add(toLegacyPlacemark(it, emptyMap(), emptyMap())) }
             kmlObj.folder?.let { mContainers.add(toLegacyContainer(it, emptyMap(), emptyMap())) }
-            kmlObj.groundOverlay?.let { mGroundOverlays.add(toLegacyGroundOverlay(it)) }
+            kmlObj.groundOverlay?.let { overlay -> toLegacyGroundOverlay(overlay)?.let { mGroundOverlays.add(it) } }
         }
     }
 
@@ -213,7 +224,9 @@ public class KmlLayer : Layer {
         }
 
         val styleUrl = placemark.styleUrl?.substringAfter("#") ?: ""
-        val resolvedStyleUrl = styleMaps[styleUrl] ?: styleUrl
+        // Style map entries keep the '#' of their normal styleUrl, while shared styles are keyed
+        // by bare id.
+        val resolvedStyleUrl = styleMaps[styleUrl]?.substringAfter("#") ?: styleUrl
         val inlineStyle = placemark.style?.let { toLegacyStyle(it) } ?: styles[resolvedStyleUrl]
 
         return KmlPlacemark(geometry, resolvedStyleUrl, inlineStyle, properties)
@@ -240,7 +253,7 @@ public class KmlLayer : Layer {
 
         val groundOverlaysMap = HashMap<KmlGroundOverlay, com.google.android.gms.maps.model.GroundOverlay?>()
         folder.groundOverlays.forEach { g ->
-            groundOverlaysMap[toLegacyGroundOverlay(g)] = null
+            toLegacyGroundOverlay(g)?.let { groundOverlaysMap[it] = null }
         }
 
         return KmlContainer(
@@ -254,14 +267,23 @@ public class KmlLayer : Layer {
         )
     }
 
-    private fun toLegacyGroundOverlay(groundOverlay: com.google.maps.android.data.parser.kml.GroundOverlay): KmlGroundOverlay {
+    /**
+     * Returns null for overlays without a LatLonBox, such as those positioned with gx:LatLonQuad,
+     * which a ground overlay on the map cannot represent.
+     */
+    private fun toLegacyGroundOverlay(groundOverlay: com.google.maps.android.data.parser.kml.GroundOverlay): KmlGroundOverlay? {
+        val latLonBox = groundOverlay.latLonBox
+        if (latLonBox == null) {
+            Log.w(LOG_TAG, "Skipping GroundOverlay ${groundOverlay.name ?: ""} without a LatLonBox")
+            return null
+        }
         val properties = mutableMapOf<String, String>()
         groundOverlay.name?.let { properties["name"] = it }
 
         val bounds =
             LatLngBounds(
-                LatLng(groundOverlay.latLonBox!!.south, groundOverlay.latLonBox.west),
-                LatLng(groundOverlay.latLonBox.north, groundOverlay.latLonBox.east),
+                LatLng(latLonBox.south, latLonBox.west),
+                LatLng(latLonBox.north, latLonBox.east),
             )
 
         return KmlGroundOverlay(
@@ -270,7 +292,7 @@ public class KmlLayer : Layer {
             drawOrder = groundOverlay.drawOrder?.toFloat() ?: 0f,
             visibility = if (groundOverlay.visibility) 1 else 0,
             properties = properties,
-            rotation = groundOverlay.latLonBox.rotation?.toFloat() ?: 0f,
+            rotation = latLonBox.rotation?.toFloat() ?: 0f,
         )
     }
 
