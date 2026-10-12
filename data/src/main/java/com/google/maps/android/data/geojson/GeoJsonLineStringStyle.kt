@@ -85,9 +85,11 @@ public class GeoJsonLineStringStyle :
             visible(mPolylineOptions.isVisible)
             width(mPolylineOptions.width)
             zIndex(mPolylineOptions.zIndex)
-            pattern(getPattern())
-            startCap(getStartCap())
-            endCap(getEndCap())
+            // Read from mPolylineOptions: inside apply, getPattern() and the cap getters would
+            // resolve to the new PolylineOptions instead of this style.
+            pattern(mPolylineOptions.pattern)
+            startCap(mPolylineOptions.startCap)
+            endCap(mPolylineOptions.endCap)
         }
 
     override fun toString(): String =
