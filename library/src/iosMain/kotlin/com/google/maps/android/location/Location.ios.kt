@@ -64,10 +64,11 @@ public actual val Location.accuracyMeters: Float
     get() = horizontalAccuracy.toFloat()
 
 /**
- * Returns `CLLocation.altitude` in meters above the WGS 84 reference ellipsoid.
+ * Returns `CLLocation.ellipsoidalAltitude` in meters above the WGS 84 reference ellipsoid, matching
+ * Android's `Location.getAltitude()`. (`CLLocation.altitude` is above mean sea level instead.)
  */
 public actual val Location.altitudeMeters: Double
-    get() = altitude
+    get() = ellipsoidalAltitude
 
 /**
  * Returns `CLLocation.course` in degrees East of true North (negative when course is invalid).
@@ -97,6 +98,12 @@ public actual val Location.timestampMillis: Long
  * Objective-C declares `CLLocationManager.delegate` as an `assign` / `weak` reference. Capturing
  * the Kotlin `delegate` instance inside `awaitClose` ensures Kotlin/Native's garbage collector
  * keeps the delegate alive for the entire lifetime of the active flow subscription.
+ *
+ * **Warning**: [CLLocationManager] has a single delegate. While the flow is collected it replaces
+ * any delegate already set on this manager, which gets no callbacks until the collector cancels
+ * and the previous delegate is restored. Concurrently collecting several flows from the same
+ * manager is not supported, and cancelling any of them stops location updates. Share the flow
+ * (e.g. using [kotlinx.coroutines.flow.shareIn]) for multi-observer configurations.
  *
  * @param minDistanceM Minimum horizontal displacement in meters before a new fix is emitted.
  * @param desiredAccuracy Desired CoreLocation accuracy constant (for example,
@@ -143,13 +150,14 @@ public fun CLLocationManager.locationEvents(
 
     this@locationEvents.desiredAccuracy = desiredAccuracy
     this@locationEvents.distanceFilter = minDistanceM.toDouble()
+    val previousDelegate = this@locationEvents.delegate
     this@locationEvents.delegate = delegate
     startUpdatingLocation()
 
     awaitClose {
         stopUpdatingLocation()
         if (this@locationEvents.delegate === delegate) {
-            this@locationEvents.delegate = null
+            this@locationEvents.delegate = previousDelegate
         }
     }
 }

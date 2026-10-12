@@ -34,7 +34,8 @@ import kotlinx.coroutines.flow.callbackFlow
  * Returns a cold flow that emits device location updates using [FusedLocationProviderClient.requestLocationUpdates].
  *
  * The location updates start streaming ONLY when the flow is collected, and stop streaming immediately
- * when the collector cancels or closes the subscription.
+ * when the collector cancels or closes the subscription. Without location permission the flow fails
+ * with a [SecurityException].
  *
  * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
@@ -61,8 +62,8 @@ public fun FusedLocationProviderClient.locationEvents(
         try {
             requestLocationUpdates(locationRequest, callback, looper)
             Unit
-        } catch (_: SecurityException) {
-            close()
+        } catch (e: SecurityException) {
+            close(e)
             return@callbackFlow
         }
 

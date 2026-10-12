@@ -24,7 +24,9 @@ import com.google.maps.android.model.longitude
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNotSame
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -35,6 +37,7 @@ import kotlinx.coroutines.test.runTest
 import platform.CoreLocation.CLLocation
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.CoreLocation.CLLocationManager
+import platform.CoreLocation.CLLocationManagerDelegateProtocol
 import platform.CoreLocation.kCLErrorDenied
 import platform.CoreLocation.kCLErrorDomain
 import platform.CoreLocation.kCLLocationAccuracyBest
@@ -42,6 +45,7 @@ import platform.CoreLocation.kCLLocationAccuracyHundredMeters
 import platform.Foundation.NSDate
 import platform.Foundation.NSError
 import platform.Foundation.dateWithTimeIntervalSince1970
+import platform.darwin.NSObject
 
 class CLLocationManagerTest {
 
@@ -64,7 +68,9 @@ class CLLocationManagerTest {
         assertEquals(-0.1278, location.longitude, 1e-6)
         assertEquals(LatLng(51.5074, -0.1278), location.latLng)
         assertEquals(4.5f, location.accuracyMeters, 1e-4f)
-        assertEquals(35.5, location.altitudeMeters, 1e-6)
+        // CLLocation has no initializer for ellipsoidalAltitude, so a constructed fix reports 0.
+        // altitudeMeters must still read it rather than the mean sea level `altitude` (35.5).
+        assertEquals(clLocation.ellipsoidalAltitude, location.altitudeMeters)
         assertEquals(180.0f, location.bearingDegrees, 1e-4f)
         assertEquals(12.25f, location.speedMetersPerSecond, 1e-4f)
         assertEquals(1_728_500_000_000L, location.timestampMillis)
@@ -90,6 +96,24 @@ class CLLocationManagerTest {
         assertEquals(37.4220, emitted.latLng.latitude, 1e-6)
         assertEquals(-122.0841, emitted.latLng.longitude, 1e-6)
         assertNull(manager.delegate, "Cancelling the flow collector should detach the delegate")
+    }
+
+    @Test
+    fun collectingRestoresThePreviousDelegate() = runTest(UnconfinedTestDispatcher()) {
+        val manager = CLLocationManager()
+        val appDelegate = object : NSObject(), CLLocationManagerDelegateProtocol {}
+        manager.delegate = appDelegate
+
+        val deferred = async {
+            manager.fineLocationEvents().first()
+        }
+
+        val flowDelegate = assertNotNull(manager.delegate)
+        assertNotSame<Any>(appDelegate, flowDelegate)
+        flowDelegate.locationManager(manager, didUpdateLocations = listOf(CLLocation(latitude = 1.0, longitude = 2.0)))
+        deferred.await()
+
+        assertSame<Any?>(appDelegate, manager.delegate, "Cancelling the flow should restore the app's delegate")
     }
 
     @Test

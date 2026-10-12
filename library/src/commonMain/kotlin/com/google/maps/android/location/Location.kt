@@ -114,6 +114,9 @@ public fun interface LocationSource {
      * Returns a cold [Flow] that starts streaming [Location] updates when collected and
      * automatically unregisters the underlying platform listener when the collector cancels.
      *
+     * Without location permission, the Android sources fail with a `SecurityException`, while
+     * the iOS source completes without emitting.
+     *
      * @param intervalMs Desired interval between updates in milliseconds (used by Android providers;
      *   iOS `CLLocationManager` filters primarily by [minUpdateDistanceM] and [priority]).
      * @param minUpdateDistanceM Minimum displacement in meters before a new update is emitted.

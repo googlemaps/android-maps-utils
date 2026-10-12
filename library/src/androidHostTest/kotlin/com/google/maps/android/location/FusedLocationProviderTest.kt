@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
 import com.google.common.truth.Truth.assertThat
+import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
@@ -118,7 +119,7 @@ public class FusedLocationProviderTest {
 
     @SuppressLint("MissingPermission")
     @Test
-    public fun testLocationEventsPermissionRevokedClosesCleanly(): Unit = runTest {
+    public fun testLocationEventsPermissionDeniedFailsWithSecurityException(): Unit = runTest {
         val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L).build()
         `when`(
             fusedLocationClient.requestLocationUpdates(
@@ -128,8 +129,8 @@ public class FusedLocationProviderTest {
             )
         ).thenThrow(SecurityException("Location permission denied"))
 
-        val events = fusedLocationClient.locationEvents(request, looper).toList()
-
-        assertThat(events).isEmpty()
+        assertFailsWith<SecurityException> {
+            fusedLocationClient.locationEvents(request, looper).toList()
+        }
     }
 }
