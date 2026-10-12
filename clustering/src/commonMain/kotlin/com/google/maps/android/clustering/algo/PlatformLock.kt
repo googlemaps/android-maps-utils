@@ -41,3 +41,13 @@ internal inline fun <T> PlatformLock.withLock(block: () -> T): T {
         unlock()
     }
 }
+
+/**
+ * A reentrant lock tied to [monitor]. On Android it synchronizes on [monitor] itself, so it
+ * excludes any `synchronized(monitor)` block in code outside this module, which is how
+ * subclasses were told to guard shared state before the multiplatform migration. On other
+ * platforms it is a plain [PlatformLock].
+ */
+internal expect class MonitorLock(monitor: Any)
+
+internal expect inline fun <T> MonitorLock.withLock(block: () -> T): T

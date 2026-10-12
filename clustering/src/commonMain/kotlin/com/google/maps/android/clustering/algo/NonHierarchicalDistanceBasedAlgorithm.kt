@@ -40,23 +40,25 @@ import kotlin.math.pow
  */
 public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     /**
-     * Guards [mItems], [mItemMap] and [mQuadTree]. Replaces the pre-multiplatform
-     * `synchronized(mQuadTree)` blocks; reentrant so nested locking keeps working.
-     */
-    internal val quadTreeLock = PlatformLock()
-
-    /**
-     * Any modifications must hold [quadTreeLock].
+     * Any modifications should be synchronized on mQuadTree.
      */
     @JvmField
     protected val mItems: MutableCollection<QuadItem<T>> = LinkedHashSet()
     protected val mItemMap: MutableMap<T, QuadItem<T>> = HashMap()
 
     /**
-     * Any modifications must hold [quadTreeLock].
+     * Any modifications should be synchronized on mQuadTree. On Android, subclasses can keep
+     * using `synchronized(mQuadTree)`: this class holds the same monitor.
      */
     @JvmField
     protected val mQuadTree: PointQuadTree<QuadItem<T>> = PointQuadTree(0.0, 1.0, 0.0, 1.0)
+
+    /**
+     * Guards [mItems], [mItemMap] and [mQuadTree]. On Android it synchronizes on [mQuadTree],
+     * as this class did before the multiplatform migration. Declared after [mQuadTree] so the
+     * monitor is initialized.
+     */
+    internal val quadTreeLock = MonitorLock(mQuadTree)
 
     override var maxDistanceBetweenClusteredItems: Int = DEFAULT_MAX_DISTANCE_AT_ZOOM
 
