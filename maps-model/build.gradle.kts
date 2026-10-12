@@ -22,6 +22,11 @@ kotlin {
         namespace = "com.google.maps.android.model"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minimumSdk.get().toInt()
+
+        withHostTestBuilder {
+        }.configure {
+            isReturnDefaultValues = true
+        }
     }
 
     sourceSets {
@@ -29,6 +34,9 @@ kotlin {
             // The Android actuals are typealiases to the Play Services types, so
             // this must be api(): consumers see GMS LatLng in our public API.
             api(libs.play.services.maps)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }
