@@ -17,6 +17,10 @@ final class com.google.maps.android.model/CameraPosition { // com.google.maps.an
         final fun <get-tilt>(): kotlin/Float // com.google.maps.android.model/CameraPosition.tilt.<get-tilt>|<get-tilt>(){}[0]
     final val zoom // com.google.maps.android.model/CameraPosition.zoom|{}zoom[0]
         final fun <get-zoom>(): kotlin/Float // com.google.maps.android.model/CameraPosition.zoom.<get-zoom>|<get-zoom>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.google.maps.android.model/CameraPosition.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.google.maps.android.model/CameraPosition.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.google.maps.android.model/CameraPosition.toString|toString(){}[0]
 }
 
 final class com.google.maps.android.model/LatLng { // com.google.maps.android.model/LatLng|null[0]

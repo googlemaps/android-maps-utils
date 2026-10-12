@@ -49,7 +49,27 @@ public actual class CameraPosition actual constructor(
     public val zoom: Float,
     public val tilt: Float,
     public val bearing: Float
-)
+) {
+    // Value semantics matching the Play Services CameraPosition: floats compare by bits, as
+    // Float.floatToIntBits does there.
+    override fun equals(other: Any?): Boolean =
+        other is CameraPosition &&
+            target == other.target &&
+            zoom.toBits() == other.zoom.toBits() &&
+            tilt.toBits() == other.tilt.toBits() &&
+            bearing.toBits() == other.bearing.toBits()
+
+    override fun hashCode(): Int {
+        var result = 31 + target.hashCode()
+        result = 31 * result + zoom.toBits()
+        result = 31 * result + tilt.toBits()
+        result = 31 * result + bearing.toBits()
+        return result
+    }
+
+    override fun toString(): String =
+        "CameraPosition{target=$target, zoom=$zoom, tilt=$tilt, bearing=$bearing}"
+}
 
 public actual val CameraPosition.target: LatLng get() = this.target
 
