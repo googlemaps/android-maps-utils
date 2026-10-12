@@ -23,6 +23,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Looper
 import com.google.common.truth.Truth.assertThat
+import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -165,5 +166,43 @@ public class LocationManagerTest {
             any<LocationListener>(),
             any<Looper>()
         )
+    }
+
+    @SuppressLint("MissingPermission")
+    @Test
+    public fun testCoarseLocationPermissionDeniedFailsWithSecurityException(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.NETWORK_PROVIDER))
+        `when`(
+            locationManager.requestLocationUpdates(
+                eq(LocationManager.NETWORK_PROVIDER),
+                anyLong(),
+                anyFloat(),
+                any<LocationListener>(),
+                any<Looper>()
+            )
+        ).thenThrow(SecurityException("Location permission denied"))
+
+        assertFailsWith<SecurityException> {
+            locationManager.coarseLocationEvents(1_000L, 1f, looper).toList()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Test
+    public fun testFineLocationPermissionDeniedFailsWithSecurityException(): Unit = runTest {
+        `when`(locationManager.allProviders).thenReturn(listOf(LocationManager.GPS_PROVIDER))
+        `when`(
+            locationManager.requestLocationUpdates(
+                eq(LocationManager.GPS_PROVIDER),
+                anyLong(),
+                anyFloat(),
+                any<LocationListener>(),
+                any<Looper>()
+            )
+        ).thenThrow(SecurityException("Location permission denied"))
+
+        assertFailsWith<SecurityException> {
+            locationManager.fineLocationEvents(2_000L, 2f, looper).toList()
+        }
     }
 }

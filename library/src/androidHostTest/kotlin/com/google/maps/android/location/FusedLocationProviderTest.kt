@@ -26,8 +26,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
 import com.google.common.truth.Truth.assertThat
+import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -38,6 +40,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -112,5 +115,22 @@ public class FusedLocationProviderTest {
         advanceUntilIdle()
 
         verify(fusedLocationClient).removeLocationUpdates(eq(locationCallbackCaptor.value))
+    }
+
+    @SuppressLint("MissingPermission")
+    @Test
+    public fun testLocationEventsPermissionDeniedFailsWithSecurityException(): Unit = runTest {
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L).build()
+        `when`(
+            fusedLocationClient.requestLocationUpdates(
+                eq(request),
+                any(LocationCallback::class.java),
+                eq(looper)
+            )
+        ).thenThrow(SecurityException("Location permission denied"))
+
+        assertFailsWith<SecurityException> {
+            fusedLocationClient.locationEvents(request, looper).toList()
+        }
     }
 }
