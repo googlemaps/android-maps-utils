@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `466bfa5`, recorded 2026-10-09T21:49:19Z.
+Measured at `5440784` (#1815), recorded 2026-10-12T18:41:15Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-12 | `5440784` | #1815 | 61.73% | 0.00 | ci: move coverage history off main and retry pushes |
 | 2026-10-09 | `466bfa5` | n/a | 61.73% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates |
 | 2026-10-08 | `ab87997` | #1809 | 61.73% | +4.34 | fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs |
 | 2026-10-08 | `6d222ff` | #1812 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
