@@ -34,7 +34,8 @@ import kotlinx.coroutines.flow.callbackFlow
  * Returns a cold flow that emits device location updates using [FusedLocationProviderClient.requestLocationUpdates].
  *
  * The location updates start streaming ONLY when the flow is collected, and stop streaming immediately
- * when the collector cancels or closes the subscription.
+ * when the collector cancels or closes the subscription. Without location permission the flow fails
+ * with a [SecurityException].
  *
  * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
@@ -58,10 +59,21 @@ public fun FusedLocationProviderClient.locationEvents(
             }
         }
 
-        requestLocationUpdates(locationRequest, callback, looper)
+        try {
+            requestLocationUpdates(locationRequest, callback, looper)
+            Unit
+        } catch (e: SecurityException) {
+            close(e)
+            return@callbackFlow
+        }
 
         awaitClose {
-            removeLocationUpdates(callback)
+            try {
+                removeLocationUpdates(callback)
+                Unit
+            } catch (_: SecurityException) {
+                // Ignore if location permission was revoked while the flow was active.
+            }
         }
     }
 
@@ -84,4 +96,25 @@ public fun FusedLocationProviderClient.fusedLocationEvents(
         .setMinUpdateDistanceMeters(minUpdateDistanceM)
         .build()
     return locationEvents(request, looper)
+}
+
+/**
+ * Adapts a Google Play Services [FusedLocationProviderClient] into a multiplatform
+ * [LocationSource] that can be consumed from shared `commonMain` code.
+ */
+@RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+public fun FusedLocationProviderClient.asLocationSource(
+    looper: Looper = Looper.getMainLooper()
+): LocationSource = LocationSource { intervalMs, minUpdateDistanceM, priority ->
+    val playPriority = when (priority) {
+        LocationPriority.HIGH_ACCURACY -> Priority.PRIORITY_HIGH_ACCURACY
+        LocationPriority.BALANCED_POWER_ACCURACY -> Priority.PRIORITY_BALANCED_POWER_ACCURACY
+        LocationPriority.LOW_POWER -> Priority.PRIORITY_LOW_POWER
+    }
+    fusedLocationEvents(
+        intervalMs = intervalMs,
+        minUpdateDistanceM = minUpdateDistanceM,
+        priority = playPriority,
+        looper = looper
+    )
 }

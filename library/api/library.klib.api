@@ -6,6 +6,22 @@
 // - Show declarations: true
 
 // Library unique name: <com.google.maps.android:library>
+final enum class com.google.maps.android.location/LocationPriority : kotlin/Enum<com.google.maps.android.location/LocationPriority> { // com.google.maps.android.location/LocationPriority|null[0]
+    enum entry BALANCED_POWER_ACCURACY // com.google.maps.android.location/LocationPriority.BALANCED_POWER_ACCURACY|null[0]
+    enum entry HIGH_ACCURACY // com.google.maps.android.location/LocationPriority.HIGH_ACCURACY|null[0]
+    enum entry LOW_POWER // com.google.maps.android.location/LocationPriority.LOW_POWER|null[0]
+
+    final val entries // com.google.maps.android.location/LocationPriority.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.google.maps.android.location/LocationPriority> // com.google.maps.android.location/LocationPriority.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.google.maps.android.location/LocationPriority // com.google.maps.android.location/LocationPriority.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.google.maps.android.location/LocationPriority> // com.google.maps.android.location/LocationPriority.values|values#static(){}[0]
+}
+
+abstract fun interface com.google.maps.android.location/LocationSource { // com.google.maps.android.location/LocationSource|null[0]
+    abstract fun locationEvents(kotlin/Long, kotlin/Float, com.google.maps.android.location/LocationPriority): kotlinx.coroutines.flow/Flow<platform.CoreLocation/CLLocation> // com.google.maps.android.location/LocationSource.locationEvents|locationEvents(kotlin.Long;kotlin.Float;com.google.maps.android.location.LocationPriority){}[0]
+}
+
 final object com.google.maps.android/MathUtil { // com.google.maps.android/MathUtil|null[0]
     final const val EARTH_RADIUS // com.google.maps.android/MathUtil.EARTH_RADIUS|{}EARTH_RADIUS[0]
         final fun <get-EARTH_RADIUS>(): kotlin/Double // com.google.maps.android/MathUtil.EARTH_RADIUS.<get-EARTH_RADIUS>|<get-EARTH_RADIUS>(){}[0]
@@ -54,3 +70,26 @@ final object com.google.maps.android/SphericalUtil { // com.google.maps.android/
     final fun getPolylinePrefix(kotlin.collections/List<com.google.maps.android.model/LatLng>, kotlin/Double): kotlin.collections/List<com.google.maps.android.model/LatLng> // com.google.maps.android/SphericalUtil.getPolylinePrefix|getPolylinePrefix(kotlin.collections.List<com.google.maps.android.model.LatLng>;kotlin.Double){}[0]
     final fun interpolate(com.google.maps.android.model/LatLng, com.google.maps.android.model/LatLng, kotlin/Double): com.google.maps.android.model/LatLng // com.google.maps.android/SphericalUtil.interpolate|interpolate(com.google.maps.android.model.LatLng;com.google.maps.android.model.LatLng;kotlin.Double){}[0]
 }
+
+final val com.google.maps.android.location/accuracyMeters // com.google.maps.android.location/accuracyMeters|@platform.CoreLocation.CLLocation{}accuracyMeters[0]
+    final fun (platform.CoreLocation/CLLocation).<get-accuracyMeters>(): kotlin/Float // com.google.maps.android.location/accuracyMeters.<get-accuracyMeters>|<get-accuracyMeters>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/altitudeMeters // com.google.maps.android.location/altitudeMeters|@platform.CoreLocation.CLLocation{}altitudeMeters[0]
+    final fun (platform.CoreLocation/CLLocation).<get-altitudeMeters>(): kotlin/Double // com.google.maps.android.location/altitudeMeters.<get-altitudeMeters>|<get-altitudeMeters>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/bearingDegrees // com.google.maps.android.location/bearingDegrees|@platform.CoreLocation.CLLocation{}bearingDegrees[0]
+    final fun (platform.CoreLocation/CLLocation).<get-bearingDegrees>(): kotlin/Float // com.google.maps.android.location/bearingDegrees.<get-bearingDegrees>|<get-bearingDegrees>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/latLng // com.google.maps.android.location/latLng|@platform.CoreLocation.CLLocation{}latLng[0]
+    final fun (platform.CoreLocation/CLLocation).<get-latLng>(): com.google.maps.android.model/LatLng // com.google.maps.android.location/latLng.<get-latLng>|<get-latLng>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/latitude // com.google.maps.android.location/latitude|@platform.CoreLocation.CLLocation{}latitude[0]
+    final fun (platform.CoreLocation/CLLocation).<get-latitude>(): kotlin/Double // com.google.maps.android.location/latitude.<get-latitude>|<get-latitude>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/longitude // com.google.maps.android.location/longitude|@platform.CoreLocation.CLLocation{}longitude[0]
+    final fun (platform.CoreLocation/CLLocation).<get-longitude>(): kotlin/Double // com.google.maps.android.location/longitude.<get-longitude>|<get-longitude>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/speedMetersPerSecond // com.google.maps.android.location/speedMetersPerSecond|@platform.CoreLocation.CLLocation{}speedMetersPerSecond[0]
+    final fun (platform.CoreLocation/CLLocation).<get-speedMetersPerSecond>(): kotlin/Float // com.google.maps.android.location/speedMetersPerSecond.<get-speedMetersPerSecond>|<get-speedMetersPerSecond>@platform.CoreLocation.CLLocation(){}[0]
+final val com.google.maps.android.location/timestampMillis // com.google.maps.android.location/timestampMillis|@platform.CoreLocation.CLLocation{}timestampMillis[0]
+    final fun (platform.CoreLocation/CLLocation).<get-timestampMillis>(): kotlin/Long // com.google.maps.android.location/timestampMillis.<get-timestampMillis>|<get-timestampMillis>@platform.CoreLocation.CLLocation(){}[0]
+
+final fun (com.google.maps.android.location/LocationSource).com.google.maps.android.location/locationEvents(kotlin/Long = ..., kotlin/Float = ..., com.google.maps.android.location/LocationPriority = ...): kotlinx.coroutines.flow/Flow<platform.CoreLocation/CLLocation> // com.google.maps.android.location/locationEvents|locationEvents@com.google.maps.android.location.LocationSource(kotlin.Long;kotlin.Float;com.google.maps.android.location.LocationPriority){}[0]
+final fun (platform.CoreLocation/CLLocationManager).com.google.maps.android.location/asLocationSource(): com.google.maps.android.location/LocationSource // com.google.maps.android.location/asLocationSource|asLocationSource@platform.CoreLocation.CLLocationManager(){}[0]
+final fun (platform.CoreLocation/CLLocationManager).com.google.maps.android.location/coarseLocationEvents(kotlin/Float = ...): kotlinx.coroutines.flow/Flow<platform.CoreLocation/CLLocation> // com.google.maps.android.location/coarseLocationEvents|coarseLocationEvents@platform.CoreLocation.CLLocationManager(kotlin.Float){}[0]
+final fun (platform.CoreLocation/CLLocationManager).com.google.maps.android.location/fineLocationEvents(kotlin/Float = ...): kotlinx.coroutines.flow/Flow<platform.CoreLocation/CLLocation> // com.google.maps.android.location/fineLocationEvents|fineLocationEvents@platform.CoreLocation.CLLocationManager(kotlin.Float){}[0]
+final fun (platform.CoreLocation/CLLocationManager).com.google.maps.android.location/locationEvents(kotlin/Float = ..., kotlin/Double = ...): kotlinx.coroutines.flow/Flow<platform.CoreLocation/CLLocation> // com.google.maps.android.location/locationEvents|locationEvents@platform.CoreLocation.CLLocationManager(kotlin.Float;kotlin.Double){}[0]

@@ -33,7 +33,8 @@ import kotlinx.coroutines.flow.callbackFlow
  *
  * The location updates start streaming ONLY when the flow is collected, and stop streaming immediately
  * when the collector cancels or closes the subscription. When the underlying location provider is unavailable
- * or disabled, the flow completes normally.
+ * or disabled, the flow completes normally. Without location permission the flow fails with a
+ * [SecurityException].
  *
  * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
@@ -71,16 +72,25 @@ public fun LocationManager.coarseLocationEvents(
             }
         }
 
-        requestLocationUpdates(
-            LocationManager.NETWORK_PROVIDER,
-            minTimeMs,
-            minDistanceM,
-            listener,
-            looper
-        )
+        try {
+            requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                minTimeMs,
+                minDistanceM,
+                listener,
+                looper
+            )
+        } catch (e: SecurityException) {
+            close(e)
+            return@callbackFlow
+        }
 
         awaitClose {
-            removeUpdates(listener)
+            try {
+                removeUpdates(listener)
+            } catch (_: SecurityException) {
+                // Ignore if location permission was revoked while the flow was active.
+            }
         }
     }
 
@@ -89,7 +99,8 @@ public fun LocationManager.coarseLocationEvents(
  *
  * The location updates start streaming ONLY when the flow is collected, and stop streaming immediately
  * when the collector cancels or closes the subscription. When the underlying location provider is unavailable
- * or disabled, the flow completes normally.
+ * or disabled, the flow completes normally. Without location permission the flow fails with a
+ * [SecurityException].
  *
  * **Warning**: This is a cold flow wrapping a single-listener SDK callback. Concurrently subscribing
  * multiple collectors will result in listener hijacking, and cancelling any observer will unregister
@@ -127,15 +138,24 @@ public fun LocationManager.fineLocationEvents(
             }
         }
 
-        requestLocationUpdates(
-            LocationManager.GPS_PROVIDER,
-            minTimeMs,
-            minDistanceM,
-            listener,
-            looper
-        )
+        try {
+            requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                minTimeMs,
+                minDistanceM,
+                listener,
+                looper
+            )
+        } catch (e: SecurityException) {
+            close(e)
+            return@callbackFlow
+        }
 
         awaitClose {
-            removeUpdates(listener)
+            try {
+                removeUpdates(listener)
+            } catch (_: SecurityException) {
+                // Ignore if location permission was revoked while the flow was active.
+            }
         }
     }
