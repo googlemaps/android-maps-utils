@@ -38,11 +38,7 @@ package com.google.maps.android.clustering.algo
  * @param ids Array of entity indices to index. This array is partitioned in-place during construction.
  * @param nodeSize Maximum leaf size before partitioning (default 64).
  */
-internal class FlatKdTree(
-    private val coords: DoubleArray,
-    val ids: IntArray,
-    private val nodeSize: Int = 64,
-) {
+internal class FlatKdTree(private val coords: DoubleArray, val ids: IntArray, private val nodeSize: Int = 64) {
     val size: Int = ids.size
 
     init {
@@ -110,13 +106,7 @@ internal class FlatKdTree(
      * @param maxY Maximum Y boundary
      * @param consumer Callback invoked for each matching entity ID without allocating objects.
      */
-    fun queryRange(
-        minX: Double,
-        minY: Double,
-        maxX: Double,
-        maxY: Double,
-        consumer: (Int) -> Unit,
-    ) {
+    fun queryRange(minX: Double, minY: Double, maxX: Double, maxY: Double, consumer: (Int) -> Unit) {
         if (ids.isEmpty()) return
         queryRange(0, ids.size - 1, 0, minX, minY, maxX, maxY, consumer)
     }
@@ -173,12 +163,7 @@ internal class FlatKdTree(
      * @param radius Search radius
      * @param consumer Callback invoked for each matching entity ID without allocating objects.
      */
-    fun queryRadius(
-        qx: Double,
-        qy: Double,
-        radius: Double,
-        consumer: (Int) -> Unit,
-    ) {
+    fun queryRadius(qx: Double, qy: Double, radius: Double, consumer: (Int) -> Unit) {
         if (ids.isEmpty()) return
         val r2 = radius * radius
         val minX = qx - radius

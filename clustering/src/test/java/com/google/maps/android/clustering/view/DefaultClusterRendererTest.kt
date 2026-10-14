@@ -18,13 +18,18 @@ package com.google.maps.android.clustering.view
 
 import android.content.Context
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.StaticCluster
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,13 +47,12 @@ class DefaultClusterRendererTest {
         override val zIndex: Float? = null,
     ) : ClusterItem
 
-    private class TestRenderer(
-        context: Context,
-        map: GoogleMap,
-        clusterManager: ClusterManager<Item>,
-    ) : DefaultClusterRenderer<Item>(context, map, clusterManager) {
+    private open class TestRenderer(context: Context, map: GoogleMap, clusterManager: ClusterManager<Item>) :
+        DefaultClusterRenderer<Item>(context, map, clusterManager) {
         public override fun getClusterText(bucketOrSize: Int): String = super.getClusterText(bucketOrSize)
         public override fun getBucket(cluster: Cluster<Item>): Int = super.getBucket(cluster)
+        public override fun getDescriptorForCluster(cluster: Cluster<Item>): BitmapDescriptor =
+            super.getDescriptorForCluster(cluster)
     }
 
     private lateinit var renderer: TestRenderer
@@ -156,7 +160,7 @@ class DefaultClusterRendererTest {
 
     @Test
     fun customBuckets_partitionsClusterSizesAccurately() {
-        renderer.buckets = intArrayOf(10, 50, 250, 1_000, 10_000, 100_000, 1_000_000)
+        renderer.buckets = listOf(10, 50, 250, 1_000, 10_000, 100_000, 1_000_000)
 
         fun createClusterWithSize(clusterSize: Int): Cluster<Item> = object : Cluster<Item> {
             override val position: LatLng = LatLng(0.0, 0.0)
@@ -172,5 +176,35 @@ class DefaultClusterRendererTest {
         assertThat(renderer.getBucket(createClusterWithSize(50_000))).isEqualTo(10_000)
         assertThat(renderer.getBucket(createClusterWithSize(500_000))).isEqualTo(100_000)
         assertThat(renderer.getBucket(createClusterWithSize(5_000_000))).isEqualTo(1_000_000)
+    }
+
+    @Test
+    fun defaultDescriptor_invokesGetBucketWhenMaxNonZeroDigitsIsZero() {
+        mockkStatic(BitmapDescriptorFactory::class)
+        every { BitmapDescriptorFactory.fromBitmap(any()) } returns mockk()
+        try {
+            var bucketCalled = false
+            val customRenderer = object : TestRenderer(
+                RuntimeEnvironment.getApplication(),
+                mockk(relaxed = true),
+                ClusterManager(RuntimeEnvironment.getApplication(), mockk(relaxed = true)),
+            ) {
+                override fun getBucket(cluster: Cluster<Item>): Int {
+                    bucketCalled = true
+                    return 42
+                }
+            }
+
+            val testCluster = object : Cluster<Item> {
+                override val position: LatLng = LatLng(0.0, 0.0)
+                override val items: Collection<Item> = emptyList()
+                override val size: Int = 350
+            }
+
+            customRenderer.getDescriptorForCluster(testCluster)
+            assertThat(bucketCalled).isTrue()
+        } finally {
+            unmockkStatic(BitmapDescriptorFactory::class)
+        }
     }
 }

@@ -26,9 +26,11 @@ import com.google.maps.android.geometry.Point
 import com.google.maps.android.projection.SphericalMercatorProjection
 import java.util.ArrayList
 import java.util.LinkedHashSet
+import java.util.concurrent.atomic.AtomicReferenceArray
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 // [START maps_android_utils_supercluster_algorithm]
 /**
@@ -67,14 +69,22 @@ import kotlin.math.pow
  * @param viewHeight Initial map viewport height in dp/pixels (0 for full-world unbounded queries).
  */
 public class SuperClusterAlgorithm<T : ClusterItem>(
-    public var minZoom: Int = DEFAULT_MIN_ZOOM,
-    public var maxZoom: Int = DEFAULT_MAX_ZOOM,
+    public val minZoom: Int = DEFAULT_MIN_ZOOM,
+    public val maxZoom: Int = DEFAULT_MAX_ZOOM,
     radius: Double = DEFAULT_RADIUS,
-    public var extent: Double = DEFAULT_EXTENT,
+    public val extent: Double = DEFAULT_EXTENT,
     public var viewWidth: Int = 0,
     public var viewHeight: Int = 0,
 ) : AbstractAlgorithm<T>(),
-    ScreenBasedAlgorithm<T> {
+    ScreenBasedAlgorithm<T>,
+    ProgressAwareAlgorithm<T> {
+
+    init {
+        require(minZoom >= 0) { "minZoom ($minZoom) must be >= 0" }
+        require(minZoom <= maxZoom) { "minZoom ($minZoom) must be <= maxZoom ($maxZoom)" }
+        require(radius > 0.0) { "radius ($radius) must be > 0" }
+        require(extent > 0.0) { "extent ($extent) must be > 0" }
+    }
 
     private var mRadius: Double = radius
     private var mReclusterOnMapMovement: Boolean = true
@@ -84,12 +94,13 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
     private var mItems = ArrayList<T>()
     private var mRawCoordinates: DoubleArray? = null
     private var mItemFactory: ((index: Int, position: LatLng) -> T)? = null
+    private var mLeafItemCache: AtomicReferenceArray<T>? = null
     private var mNeedsRebuild = true
 
     /**
      * Optional listener invoked during index building to report progress.
      */
-    public var onProgressListener: ClusterManager.OnClusteringProgressListener? = null
+    public override var onProgressListener: ClusterManager.OnClusteringProgressListener? = null
 
     private class ZoomLevel(
         val tree: FlatKdTree,
@@ -100,8 +111,40 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         val childIndices: Array<IntArray?>?,
     )
 
+    private class LeafSource<T : ClusterItem>(
+        val items: List<T>,
+        val rawCoordinates: DoubleArray?,
+        val itemFactory: ((index: Int, position: LatLng) -> T)?,
+        val leafItemCache: AtomicReferenceArray<T>?,
+    ) {
+        fun resolve(leafIndex: Int): T {
+            if (items.isNotEmpty() && leafIndex in items.indices) {
+                return items[leafIndex]
+            }
+            val cache = leafItemCache
+            if (cache != null && leafIndex in 0 until cache.length()) {
+                val cached = cache.get(leafIndex)
+                if (cached != null) return cached
+                val raw = rawCoordinates
+                if (raw != null && leafIndex * 2 + 1 < raw.size) {
+                    val lat = raw[2 * leafIndex]
+                    val lng = raw[2 * leafIndex + 1]
+                    val pos = LatLng(lat, lng)
+                    val created = itemFactory?.invoke(leafIndex, pos)
+                        ?: throw IllegalStateException("itemFactory is required when using setCoordinates")
+                    cache.compareAndSet(leafIndex, null, created)
+                    return cache.get(leafIndex) ?: created
+                }
+            }
+            throw IllegalStateException("Unable to resolve leaf item for index $leafIndex")
+        }
+    }
+
     @Volatile
     private var mLevels: Array<ZoomLevel?> = emptyArray()
+
+    @Volatile
+    private var mLeafSource: LeafSource<T>? = null
 
     /**
      * Total number of items or raw coordinates currently registered with this algorithm.
@@ -110,7 +153,10 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         get() = if (mItems.isNotEmpty()) mItems.size else ((mRawCoordinates?.size ?: 0) / 2)
 
     /**
-     * Cluster radius in pixels. Updating this property invalidates the pyramid index.
+     * Cluster radius in tile-pixel units at the specified [extent] (default 64.0 on a 512-tile,
+     * equivalent to 32 dp on standard 256 dp world coordinates).
+     *
+     * Updating this property invalidates the pyramid index.
      */
     public var radius: Double
         get() = mRadius
@@ -122,12 +168,16 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         }
 
     /**
-     * Maps to [radius] in pixels to satisfy the [Algorithm] interface contract.
+     * Maps screen dp (256-tile basis) to [radius] in tile-pixel units ([extent]-tile basis)
+     * to satisfy the [Algorithm] interface contract and ensure consistent clustering density
+     * when switching between clustering algorithms.
+     *
+     * With default [extent] = 512.0, 100 dp corresponds to 200 tile pixels.
      */
     public override var maxDistanceBetweenClusteredItems: Int
-        get() = mRadius.toInt()
+        get() = (mRadius * (256.0 / extent)).roundToInt()
         set(value) {
-            radius = value.toDouble()
+            radius = value * (extent / 256.0)
         }
 
     /**
@@ -158,20 +208,21 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
     }
 
     /**
-     * Ingests a raw contiguous buffer of coordinates `[lat0, lng0, lat1, lng1, ...]` with an optional
-     * factory to create [ClusterItem] instances only when unclustered points are rendered.
+     * Ingests a raw contiguous buffer of coordinates `[lat0, lng0, lat1, lng1, ...]` with a
+     * required factory to create [ClusterItem] instances only when unclustered points are rendered.
+     *
+     * Created items are cached by leaf index so subsequent camera idles return identical item
+     * references, preventing marker recreation churn in cluster renderers.
      *
      * This provides zero-allocation ingestion for massive datasets (1,000,000+ points).
      */
-    public fun setCoordinates(
-        coords: DoubleArray,
-        itemFactory: ((index: Int, position: LatLng) -> T)? = null,
-    ) {
+    public fun setCoordinates(coords: DoubleArray, itemFactory: (index: Int, position: LatLng) -> T) {
         lock()
         try {
             mItems.clear()
             mRawCoordinates = coords
             mItemFactory = itemFactory
+            mLeafItemCache = AtomicReferenceArray(coords.size / 2)
             mNeedsRebuild = true
             mLevels = emptyArray()
         } finally {
@@ -184,6 +235,8 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         lock()
         try {
             mRawCoordinates = null
+            mItemFactory = null
+            mLeafItemCache = null
             result = mItems.add(item)
             if (result) {
                 mNeedsRebuild = true
@@ -199,6 +252,8 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         lock()
         try {
             mRawCoordinates = null
+            mItemFactory = null
+            mLeafItemCache = null
             result = mItems.addAll(items)
             if (result) {
                 mNeedsRebuild = true
@@ -214,6 +269,8 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         lock()
         try {
             mRawCoordinates = null
+            mItemFactory = null
+            mLeafItemCache = null
             result = mItems.remove(item)
             if (result) {
                 mNeedsRebuild = true
@@ -229,6 +286,8 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         lock()
         try {
             mRawCoordinates = null
+            mItemFactory = null
+            mLeafItemCache = null
             result = mItems.removeAll(items.toSet())
             if (result) {
                 mNeedsRebuild = true
@@ -244,6 +303,8 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         lock()
         try {
             mRawCoordinates = null
+            mItemFactory = null
+            mLeafItemCache = null
             result = mItems.remove(item)
             if (result) {
                 mItems.add(item)
@@ -261,15 +322,16 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
             mItems.clear()
             mRawCoordinates = null
             mItemFactory = null
+            mLeafItemCache = null
             mNeedsRebuild = true
             mLevels = emptyArray()
+            mLeafSource = null
         } finally {
             unlock()
         }
     }
 
     public override val items: Collection<T>
-        @Suppress("UNCHECKED_CAST")
         get() {
             lock()
             try {
@@ -277,15 +339,11 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
                     return ArrayList(mItems)
                 }
                 val raw = mRawCoordinates ?: return emptyList()
-                val factory = mItemFactory
+                val source = LeafSource(emptyList(), raw, mItemFactory, mLeafItemCache)
                 val count = raw.size / 2
                 val result = ArrayList<T>(count)
                 for (i in 0 until count) {
-                    val lat = raw[2 * i]
-                    val lng = raw[2 * i + 1]
-                    val pos = LatLng(lat, lng)
-                    val item = factory?.invoke(i, pos) ?: (DefaultLeafItem(pos) as T)
-                    result.add(item)
+                    result.add(source.resolve(i))
                 }
                 return result
             } finally {
@@ -323,7 +381,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         }
 
         // 1. Project raw coordinates into flat DoubleArray
-        onProgressListener?.onClusteringProgress(0.05f, "Preparing coordinates...")
+        onProgressListener?.onClusteringProgress(0.05f)
         val rawCoords = DoubleArray(2 * count)
         val raw = mRawCoordinates
         if (raw != null) {
@@ -343,7 +401,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         }
 
         // 2. Build initial spatial index to detect coincident points (distance 0.0)
-        onProgressListener?.onClusteringProgress(0.12f, "Indexing leaf markers...")
+        onProgressListener?.onClusteringProgress(0.12f)
         val initialTree = FlatKdTree(rawCoords, IntArray(count) { it })
         val clustered = BooleanArray(count)
         val neighborBuffer = ArrayList<Int>()
@@ -354,7 +412,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         var leafClusterIds = IntArray(count)
         var leafChildIndices = arrayOfNulls<IntArray>(count)
         var leafCount = 0
-        var idCounter = 0
+        var nextClusterId = -1
 
         for (i in 0 until count) {
             if (clustered[i]) continue
@@ -375,7 +433,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
                 leafCoords[2 * leafCount + 1] = y
                 leafSizes[leafCount] = 1
                 leafIndices[leafCount] = i
-                leafClusterIds[leafCount] = idCounter++
+                leafClusterIds[leafCount] = i
                 leafChildIndices[leafCount] = null
                 leafCount++
             } else {
@@ -389,7 +447,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
                 leafCoords[2 * leafCount + 1] = y
                 leafSizes[leafCount] = neighborBuffer.size
                 leafIndices[leafCount] = -1
-                leafClusterIds[leafCount] = -(idCounter++)
+                leafClusterIds[leafCount] = nextClusterId--
                 leafChildIndices[leafCount] = childArray
                 leafCount++
             }
@@ -412,15 +470,13 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         )
 
         var currentLevel = levels[maxZoom + 1]!!
-        var nextClusterId = -1
 
         // 3. Bottom-up aggregation: cluster level z + 1 into level z using flat primitive arrays
         val totalZoomSteps = maxZoom - minZoom + 1
         for (z in maxZoom downTo minZoom) {
             val step = maxZoom - z + 1
             val progress = 0.15f + 0.82f * (step.toFloat() / totalZoomSteps.toFloat())
-            val pct = (progress * 100).toInt()
-            onProgressListener?.onClusteringProgress(progress, "Building zoom level $z/$maxZoom ($pct%)")
+            onProgressListener?.onClusteringProgress(progress)
 
             val currentCount = currentLevel.sizes.size
             val currentTree = currentLevel.tree
@@ -487,7 +543,13 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
             val finalSizes = if (outCount == currentCount) nextSizes else nextSizes.copyOf(outCount)
             val finalLeafIndices = if (outCount == currentCount) nextLeafIndices else nextLeafIndices.copyOf(outCount)
             val finalClusterIds = if (outCount == currentCount) nextClusterIds else nextClusterIds.copyOf(outCount)
-            val finalChildIndices = if (outCount == currentCount) nextChildIndices else nextChildIndices.copyOf(outCount)
+            val finalChildIndices = if (outCount ==
+                currentCount
+            ) {
+                nextChildIndices
+            } else {
+                nextChildIndices.copyOf(outCount)
+            }
 
             val levelTree = FlatKdTree(finalCoords, IntArray(outCount) { it })
             val newLevel = ZoomLevel(
@@ -502,9 +564,15 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
             currentLevel = newLevel
         }
 
+        mLeafSource = LeafSource(
+            items = if (mItems.isNotEmpty()) ArrayList(mItems) else emptyList(),
+            rawCoordinates = mRawCoordinates,
+            itemFactory = mItemFactory,
+            leafItemCache = mLeafItemCache,
+        )
         mLevels = levels
         mNeedsRebuild = false
-        onProgressListener?.onClusteringProgress(1.0f, "Indexing complete")
+        onProgressListener?.onClusteringProgress(1.0f)
     }
 
     public override fun getClusters(zoom: Float): Set<Cluster<T>> {
@@ -523,19 +591,21 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
                 zoom.toInt().coerceIn(minZoom, maxZoom)
             }
 
-            val level = mLevels.getOrNull(z) ?: return emptySet()
+            val levelsSnapshot = mLevels
+            val leafSourceSnapshot = mLeafSource ?: return emptySet()
+            val level = levelsSnapshot.getOrNull(z) ?: return emptySet()
 
             // Viewport culling if camera center and view dimensions are defined
             val center = mMapCenter
             if (center != null && viewWidth > 0 && viewHeight > 0) {
                 val bounds = calculateVisibleMercatorBounds(center, zoom, viewWidth, viewHeight)
-                return queryBoundsInternal(z, level, bounds)
+                return queryBoundsInternal(z, level, bounds, levelsSnapshot, leafSourceSnapshot)
             }
 
             // Unbounded: return all clusters at zoom level z
             val result = LinkedHashSet<Cluster<T>>(level.sizes.size)
             for (id in 0 until level.sizes.size) {
-                result.add(createSuperCluster(z, id, level))
+                result.add(createSuperCluster(z, id, level, levelsSnapshot, leafSourceSnapshot))
             }
             return result
         } finally {
@@ -566,8 +636,10 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
                 zoom.toInt().coerceIn(minZoom, maxZoom)
             }
 
-            val level = mLevels.getOrNull(z) ?: return emptySet()
-            return queryBoundsInternal(z, level, bounds)
+            val levelsSnapshot = mLevels
+            val leafSourceSnapshot = mLeafSource ?: return emptySet()
+            val level = levelsSnapshot.getOrNull(z) ?: return emptySet()
+            return queryBoundsInternal(z, level, bounds, levelsSnapshot, leafSourceSnapshot)
         } finally {
             unlock()
         }
@@ -577,34 +649,42 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         z: Int,
         level: ZoomLevel,
         bounds: Bounds,
+        levelsSnapshot: Array<ZoomLevel?>,
+        leafSourceSnapshot: LeafSource<T>,
     ): Set<Cluster<T>> {
         val result = LinkedHashSet<Cluster<T>>()
 
         // Handle antimeridian wrapping
         if (bounds.minX < 0.0) {
             level.tree.queryRange(bounds.minX + 1.0, bounds.minY, 1.0, bounds.maxY) { id ->
-                result.add(createSuperCluster(z, id, level))
+                result.add(createSuperCluster(z, id, level, levelsSnapshot, leafSourceSnapshot))
             }
             level.tree.queryRange(0.0, bounds.minY, bounds.maxX, bounds.maxY) { id ->
-                result.add(createSuperCluster(z, id, level))
+                result.add(createSuperCluster(z, id, level, levelsSnapshot, leafSourceSnapshot))
             }
         } else if (bounds.maxX > 1.0) {
             level.tree.queryRange(bounds.minX, bounds.minY, 1.0, bounds.maxY) { id ->
-                result.add(createSuperCluster(z, id, level))
+                result.add(createSuperCluster(z, id, level, levelsSnapshot, leafSourceSnapshot))
             }
             level.tree.queryRange(0.0, bounds.minY, bounds.maxX - 1.0, bounds.maxY) { id ->
-                result.add(createSuperCluster(z, id, level))
+                result.add(createSuperCluster(z, id, level, levelsSnapshot, leafSourceSnapshot))
             }
         } else {
             level.tree.queryRange(bounds.minX, bounds.minY, bounds.maxX, bounds.maxY) { id ->
-                result.add(createSuperCluster(z, id, level))
+                result.add(createSuperCluster(z, id, level, levelsSnapshot, leafSourceSnapshot))
             }
         }
 
         return result
     }
 
-    private fun createSuperCluster(z: Int, id: Int, level: ZoomLevel): SuperCluster<T> {
+    private fun createSuperCluster(
+        z: Int,
+        id: Int,
+        level: ZoomLevel,
+        levelsSnapshot: Array<ZoomLevel?>,
+        leafSourceSnapshot: LeafSource<T>,
+    ): SuperCluster<T> {
         val size = level.sizes[id]
         val clusterId = level.clusterIds[id]
         val x = level.coords[2 * id]
@@ -612,7 +692,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
 
         return if (size == 1 && level.leafIndices[id] >= 0) {
             val leafIndex = level.leafIndices[id]
-            val item = resolveLeafItem(leafIndex, x, y)
+            val item = leafSourceSnapshot.resolve(leafIndex)
             SuperCluster(
                 clusterId = clusterId,
                 mercatorX = x,
@@ -632,40 +712,29 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
                 children = null,
                 zoom = z,
                 itemsProvider = {
-                    collectLeafItemsForCluster(z, id)
+                    collectLeafItemsForCluster(levelsSnapshot, leafSourceSnapshot, z, id)
                 },
             )
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun resolveLeafItem(leafIndex: Int, mercatorX: Double, mercatorY: Double): T {
-        if (mItems.isNotEmpty() && leafIndex in mItems.indices) {
-            return mItems[leafIndex]
-        }
-        val raw = mRawCoordinates
-        if (raw != null && leafIndex * 2 + 1 < raw.size) {
-            val lat = raw[2 * leafIndex]
-            val lng = raw[2 * leafIndex + 1]
-            val pos = LatLng(lat, lng)
-            return mItemFactory?.invoke(leafIndex, pos) ?: (DefaultLeafItem(pos) as T)
-        }
-        val pos = PROJECTION.toLatLng(Point(mercatorX, mercatorY))
-        return DefaultLeafItem(pos) as T
-    }
-
-    private fun collectLeafItemsForCluster(startZoom: Int, startIndex: Int): List<T> {
+    private fun collectLeafItemsForCluster(
+        levels: Array<ZoomLevel?>,
+        leafSource: LeafSource<T>,
+        startZoom: Int,
+        startIndex: Int,
+    ): List<T> {
         val result = ArrayList<T>()
         fun recurse(z: Int, idx: Int) {
-            val lvl = mLevels.getOrNull(z) ?: return
+            val lvl = levels.getOrNull(z) ?: return
             val size = lvl.sizes[idx]
             if (size == 1 && lvl.leafIndices[idx] >= 0) {
                 val leafIdx = lvl.leafIndices[idx]
-                result.add(resolveLeafItem(leafIdx, lvl.coords[2 * idx], lvl.coords[2 * idx + 1]))
+                result.add(leafSource.resolve(leafIdx))
             } else if (z == maxZoom + 1 && lvl.childIndices?.get(idx) != null) {
                 val rawLeafChildren = lvl.childIndices[idx]!!
                 for (childIdx in rawLeafChildren) {
-                    result.add(resolveLeafItem(childIdx, lvl.coords[2 * idx], lvl.coords[2 * idx + 1]))
+                    result.add(leafSource.resolve(childIdx))
                 }
             } else {
                 val children = lvl.childIndices?.get(idx) ?: return
@@ -678,12 +747,7 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
         return result
     }
 
-    private fun calculateVisibleMercatorBounds(
-        center: LatLng,
-        zoom: Float,
-        width: Int,
-        height: Int,
-    ): Bounds {
+    private fun calculateVisibleMercatorBounds(center: LatLng, zoom: Float, width: Int, height: Int): Bounds {
         val centerPoint = PROJECTION.toPoint(center)
         val spanFactor = 2.0.pow(zoom.toDouble()) * 256.0
         // Apply 25% safety buffer so edge markers don't clip abruptly while panning
@@ -697,13 +761,6 @@ public class SuperClusterAlgorithm<T : ClusterItem>(
             (centerPoint.y + halfH).coerceIn(0.0, 1.0),
         )
     }
-
-    private data class DefaultLeafItem(
-        override val position: LatLng,
-        override val title: String? = null,
-        override val snippet: String? = null,
-        override val zIndex: Float? = null,
-    ) : ClusterItem
 
     public companion object {
         public const val DEFAULT_MIN_ZOOM: Int = 0
