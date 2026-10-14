@@ -19,8 +19,9 @@ package com.google.maps.android.clustering.algo
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
-import java.util.Random
+import org.junit.Ignore
 import org.junit.Test
+import java.util.Random
 
 /**
  * Comparative performance benchmark evaluating [SuperClusterAlgorithm] against traditional
@@ -29,11 +30,7 @@ import org.junit.Test
  */
 class ClusteringPerformanceComparisonTest {
 
-    private class BenchItem(
-        lat: Double,
-        lng: Double,
-        val id: Int,
-    ) : ClusterItem {
+    private class BenchItem(lat: Double, lng: Double, val id: Int) : ClusterItem {
         override val position: LatLng = LatLng(lat, lng)
         override val title: String? = null
         override val snippet: String? = null
@@ -136,6 +133,7 @@ class ClusteringPerformanceComparisonTest {
     }
     // [END maps_android_utils_benchmark_comparison_runner]
 
+    @Ignore("Long-running comparative performance benchmark; numbers preserved in README")
     @Test
     fun runComprehensiveComparisonBenchmark() {
         println("\n=========================================================================================")
@@ -171,11 +169,15 @@ class ClusteringPerformanceComparisonTest {
             results.add(benchmarkAlgorithm("GridBasedAlgorithm", gridBased, items))
 
             // Print Markdown Table for this scale
-            println("| Algorithm | addItems | Index Build | Zoom 4.0 | Zoom 8.0 | Zoom 12.0 | Zoom 16.0 | Total Query | Memory |")
+            println(
+                "| Algorithm | addItems | Index Build | Zoom 4.0 | Zoom 8.0 | Zoom 12.0 | Zoom 16.0 | Total Query | Memory |",
+            )
             println("| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+            val rowFmt =
+                "| %-24s | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %6.1f MB |"
             for (res in results) {
                 println(
-                    "| %-24s | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %8.2f ms | %6.1f MB |".format(
+                    rowFmt.format(
                         res.algorithmName,
                         res.addItemsMs,
                         res.indexBuildMs,

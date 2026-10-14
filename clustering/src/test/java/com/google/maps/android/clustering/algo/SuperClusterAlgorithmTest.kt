@@ -22,8 +22,8 @@ import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.geometry.Bounds
-import kotlin.random.Random
 import org.junit.Test
+import kotlin.random.Random
 
 class SuperClusterAlgorithmTest {
 
@@ -326,10 +326,10 @@ class SuperClusterAlgorithmTest {
     @Test
     fun onProgressListenerReportsProgressAccurately() {
         val algorithm = SuperClusterAlgorithm<SimpleItem>()
-        val progressReports = ArrayList<Pair<Float, String>>()
+        val progressReports = ArrayList<Float>()
 
-        algorithm.onProgressListener = ClusterManager.OnClusteringProgressListener { progress, status ->
-            progressReports.add(Pair(progress, status))
+        algorithm.onProgressListener = ClusterManager.OnClusteringProgressListener { progress ->
+            progressReports.add(progress)
         }
 
         val items = List(100) { i ->
@@ -339,8 +339,96 @@ class SuperClusterAlgorithmTest {
         algorithm.buildIndexIfNeeded()
 
         assertThat(progressReports).isNotEmpty()
-        assertThat(progressReports.first().first).isGreaterThan(0.0f)
-        assertThat(progressReports.last().first).isEqualTo(1.0f)
-        assertThat(progressReports.last().second).isEqualTo("Indexing complete")
+        assertThat(progressReports.first()).isGreaterThan(0.0f)
+        assertThat(progressReports.last()).isEqualTo(1.0f)
+    }
+
+    @Test
+    fun clusterIds_areUniqueAndNegativeAcrossCoincidentAndAggregatedLevels() {
+        val algorithm = SuperClusterAlgorithm<SimpleItem>(minZoom = 0, maxZoom = 5)
+        // Add coincident points to trigger leaf-level clustering
+        val coincident = listOf(
+            SimpleItem("c1", LatLng(37.0, -122.0)),
+            SimpleItem("c2", LatLng(37.0, -122.0)),
+            SimpleItem("c3", LatLng(37.0, -122.0)),
+            SimpleItem("d1", LatLng(37.1, -122.1)),
+            SimpleItem("d2", LatLng(37.1, -122.1)),
+        )
+        algorithm.addItems(coincident)
+
+        val leafClusters = algorithm.getClusters(6f).map { it as SuperCluster<SimpleItem> }
+        assertThat(leafClusters).hasSize(2)
+        val leafIds = leafClusters.map { it.clusterId }.toSet()
+        assertThat(leafIds).hasSize(2)
+        for (id in leafIds) {
+            assertThat(id).isLessThan(0)
+        }
+
+        // At zoom 0, the two coincident groups merge into a single 5-item cluster with a new ID
+        val rootClusters = algorithm.getClusters(0f).map { it as SuperCluster<SimpleItem> }
+        assertThat(rootClusters).hasSize(1)
+        val rootId = rootClusters.first().clusterId
+        assertThat(rootId).isLessThan(0)
+        assertThat(leafIds).doesNotContain(rootId)
+    }
+
+    @Test
+    fun leafItemCaching_returnsIdenticalItemReferencesAcrossQueries() {
+        val algorithm = SuperClusterAlgorithm<SimpleItem>()
+        val coords = doubleArrayOf(10.0, 10.0, 20.0, 20.0)
+        algorithm.setCoordinates(coords) { id, pos ->
+            SimpleItem("item_$id", pos)
+        }
+
+        val firstPass = algorithm.getClusters(16f).toList()
+        val secondPass = algorithm.getClusters(16f).toList()
+
+        assertThat(firstPass).hasSize(2)
+        assertThat(secondPass).hasSize(2)
+
+        val item1A = (firstPass[0] as SuperCluster<SimpleItem>).items.first()
+        val item1B = (secondPass[0] as SuperCluster<SimpleItem>).items.first()
+        assertThat(item1A).isSameInstanceAs(item1B)
+    }
+
+    @Test
+    fun clusterItems_safeAfterClearOrRebuild() {
+        val algorithm = SuperClusterAlgorithm<SimpleItem>(minZoom = 0, maxZoom = 5)
+        algorithm.addItems(
+            listOf(
+                SimpleItem("a", LatLng(37.0, -122.0)),
+                SimpleItem("b", LatLng(37.0001, -122.0001)),
+            ),
+        )
+
+        val clustersBeforeClear = algorithm.getClusters(0f)
+        assertThat(clustersBeforeClear).hasSize(1)
+        val clusterSnapshot = clustersBeforeClear.first()
+
+        // Mutate and clear the algorithm before resolving items on the captured cluster
+        algorithm.clearItems()
+        algorithm.setCoordinates(doubleArrayOf(10.0, 10.0)) { id, pos ->
+            SimpleItem("new_$id", pos)
+        }
+        algorithm.getClusters(0f)
+
+        val resolvedItems = clusterSnapshot.items.map { it.id }
+        assertThat(resolvedItems).containsExactly("a", "b")
+    }
+
+    @Test
+    fun maxDistanceBetweenClusteredItems_convertsBetweenDpAndExtentUnits() {
+        val algorithm = SuperClusterAlgorithm<SimpleItem>(radius = 64.0, extent = 512.0)
+        // 64 tile pixels on a 512-extent tile equals 32 dp on a 256-dp world basis
+        assertThat(algorithm.maxDistanceBetweenClusteredItems).isEqualTo(32)
+
+        algorithm.maxDistanceBetweenClusteredItems = 100
+        assertThat(algorithm.radius).isEqualTo(200.0)
+        assertThat(algorithm.maxDistanceBetweenClusteredItems).isEqualTo(100)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun initValidation_throwsWhenMinZoomGreaterThanMaxZoom() {
+        SuperClusterAlgorithm<SimpleItem>(minZoom = 15, maxZoom = 5)
     }
 }

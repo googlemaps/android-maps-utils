@@ -19,9 +19,9 @@ package com.google.maps.android.clustering.algo
 import com.google.android.gms.maps.model.LatLng
 import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.ClusterItem
+import org.junit.Test
 import java.util.IdentityHashMap
 import java.util.Random
-import org.junit.Test
 
 /**
  * Formal verification proving that [SuperClusterAlgorithm] maintains strict conservation of items

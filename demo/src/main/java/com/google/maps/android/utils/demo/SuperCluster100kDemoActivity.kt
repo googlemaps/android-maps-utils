@@ -46,14 +46,14 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.algo.SuperClusterAlgorithm
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.utils.demo.model.MyItem
-import java.util.ArrayList
-import java.util.Locale
-import kotlin.math.ln
-import kotlin.random.Random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.ArrayList
+import java.util.Locale
+import kotlin.math.ln
+import kotlin.random.Random
 
 /**
  * A demo activity showcasing mega-scale clustering of 100,000 to 1,000,000 markers using [SuperClusterAlgorithm].
@@ -73,6 +73,7 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
     private lateinit var gremlinRenderer: GremlinClusterRenderer
     private var currentDataset: DatasetMode = DatasetMode.DATASET_100K_SF
     private var loadJob: Job? = null
+    private var indexingStartTime: Long = 0L
 
     override fun getLayoutId(): Int = R.layout.activity_supercluster_100k
 
@@ -110,7 +111,7 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
             false
         }
 
-        // 2. Configure SuperClusterAlgorithm with a wider cluster radius (140px)
+        // 2. Configure SuperClusterAlgorithm with a wider cluster radius (140 tile pixels at extent 512 = 70 dp)
         // to keep on-screen cluster density low and uncluttered.
         superClusterAlgorithm = SuperClusterAlgorithm(
             minZoom = 0,
@@ -123,23 +124,39 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
         clusterManager.setAlgorithm(superClusterAlgorithm)
 
         // 3. Connect progress listener to display real-time spatial indexing feedback
-        clusterManager.onClusteringProgressListener = ClusterManager.OnClusteringProgressListener { progress, status ->
+        clusterManager.onClusteringProgressListener = ClusterManager.OnClusteringProgressListener { progress ->
             lifecycleScope.launch(Dispatchers.Main) {
                 val progressContainer = findViewById<View>(R.id.layout_progress_container)
                 val progressBar = findViewById<LinearProgressIndicator>(R.id.progress_clustering)
                 val textProgress = findViewById<TextView>(R.id.text_clustering_progress)
 
+                val pct = (progress * 100).toInt()
                 if (progress >= 1.0f) {
                     progressBar?.setProgressCompat(100, true)
-                    textProgress?.text = status
+                    textProgress?.text = "Indexing complete (100%)"
                     progressContainer?.postDelayed({
                         progressContainer.visibility = View.GONE
                     }, 500)
+
+                    if (indexingStartTime > 0L) {
+                        val elapsedMs = System.currentTimeMillis() - indexingStartTime
+                        indexingStartTime = 0L
+                        val is100k = currentDataset == DatasetMode.DATASET_100K_SF
+                        val countFormatted = if (is100k) "100,000" else "1,000,000"
+                        val region = if (is100k) "SF Bay Area" else "United States"
+                        val msg =
+                            "Indexed $countFormatted gremlins across $region in ${elapsedMs}ms! " +
+                                "Tap any cluster for exact count."
+                        Toast.makeText(
+                            this@SuperCluster100kDemoActivity,
+                            msg,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
                 } else {
                     progressContainer?.visibility = View.VISIBLE
-                    val pct = (progress * 100).toInt()
                     progressBar?.setProgressCompat(pct, true)
-                    textProgress?.text = status
+                    textProgress?.text = "Building spatial pyramid ($pct%)"
                 }
             }
         }
@@ -176,7 +193,7 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
             toggleGroup?.check(targetButtonId)
         }
 
-        if (currentDataset == mode && clusterManager.algorithm.items.isNotEmpty()) {
+        if (currentDataset == mode && superClusterAlgorithm.totalItemCount > 0) {
             return
         }
         currentDataset = mode
@@ -203,7 +220,6 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(39.8283, -98.5795), 4.2f))
             }
 
-            val startBuild = System.currentTimeMillis()
             if (mode == DatasetMode.DATASET_100K_SF) {
                 val items = withContext(Dispatchers.Default) { generate100kItems() }
                 clusterManager.clearItems()
@@ -215,20 +231,11 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
                     MyItem(pos.latitude, pos.longitude, "Gremlin #$id", "1M US Supercluster Point")
                 }
             }
-            val elapsedMs = System.currentTimeMillis() - startBuild
-
             gremlinRenderer.clearIconCache()
+            indexingStartTime = System.currentTimeMillis()
             clusterManager.cluster()
 
             toggleGroup?.isEnabled = true
-
-            val countFormatted = if (mode == DatasetMode.DATASET_100K_SF) "100,000" else "1,000,000"
-            val region = if (mode == DatasetMode.DATASET_100K_SF) "SF Bay Area" else "United States"
-            Toast.makeText(
-                this@SuperCluster100kDemoActivity,
-                "Indexed $countFormatted gremlins across $region in ${elapsedMs}ms! Tap any cluster for exact count.",
-                Toast.LENGTH_LONG,
-            ).show()
         }
     }
 
@@ -303,7 +310,8 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
                 gremlinRenderer.clearIconCache()
                 clusterManager.cluster()
 
-                val selectedDataset = if (radio100k.isChecked) DatasetMode.DATASET_100K_SF else DatasetMode.DATASET_1M_USA
+                val selectedDataset =
+                    if (radio100k.isChecked) DatasetMode.DATASET_100K_SF else DatasetMode.DATASET_1M_USA
                 if (selectedDataset != currentDataset) {
                     switchDataset(selectedDataset)
                 }
@@ -335,11 +343,8 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
             .show()
     }
 
-    private class GremlinClusterRenderer(
-        context: Context,
-        map: GoogleMap,
-        clusterManager: ClusterManager<MyItem>,
-    ) : DefaultClusterRenderer<MyItem>(context, map, clusterManager) {
+    private class GremlinClusterRenderer(context: Context, map: GoogleMap, clusterManager: ClusterManager<MyItem>) :
+        DefaultClusterRenderer<MyItem>(context, map, clusterManager) {
 
         private val gremlinIcon: BitmapDescriptor =
             BitmapDescriptorFactory.fromResource(R.drawable.gremlin_marker)
@@ -389,21 +394,22 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
         }
 
         companion object {
-            private val MEGA_BUCKETS = intArrayOf(
-                10, 25, 50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000, 25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000,
+            private val MEGA_BUCKETS = listOf(
+                10, 25, 50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000,
+                25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000,
             )
 
             private class ColorStop(val size: Int, val color: Int)
 
             private val COLOR_STOPS = listOf(
-                ColorStop(2, Color.rgb(30, 136, 229)),       // Blue (2-10)
-                ColorStop(10, Color.rgb(0, 172, 193)),      // Teal / Cyan (10-25)
-                ColorStop(25, Color.rgb(67, 160, 71)),      // Vibrant Green (25-50)
-                ColorStop(100, Color.rgb(124, 179, 66)),    // Lime Green (50-200)
-                ColorStop(500, Color.rgb(251, 192, 45)),    // Sunny Yellow (250-500)
-                ColorStop(1_500, Color.rgb(251, 140, 0)),   // Vivid Orange (1k-2.5k)
-                ColorStop(5_000, Color.rgb(229, 57, 53)),   // Crimson Red (2.5k-10k)
-                ColorStop(15_000, Color.rgb(216, 27, 96)),  // Deep Magenta (10k-25k)
+                ColorStop(2, Color.rgb(30, 136, 229)), // Blue (2-10)
+                ColorStop(10, Color.rgb(0, 172, 193)), // Teal / Cyan (10-25)
+                ColorStop(25, Color.rgb(67, 160, 71)), // Vibrant Green (25-50)
+                ColorStop(100, Color.rgb(124, 179, 66)), // Lime Green (50-200)
+                ColorStop(500, Color.rgb(251, 192, 45)), // Sunny Yellow (250-500)
+                ColorStop(1_500, Color.rgb(251, 140, 0)), // Vivid Orange (1k-2.5k)
+                ColorStop(5_000, Color.rgb(229, 57, 53)), // Crimson Red (2.5k-10k)
+                ColorStop(15_000, Color.rgb(216, 27, 96)), // Deep Magenta (10k-25k)
                 ColorStop(40_000, Color.rgb(142, 36, 170)), // Royal Purple (25k-50k)
                 ColorStop(100_000, Color.rgb(49, 27, 146)), // Deep Midnight Indigo (50k-100k)
                 ColorStop(300_000, Color.rgb(74, 20, 140)), // Deep Violet (100k-300k)
@@ -437,30 +443,30 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
 
         // Metropolitan population centers across the United States [lat, lng, spreadDeg]
         val hubs = arrayOf(
-            doubleArrayOf(40.71, -74.00, 1.2),  // New York / Tri-State
+            doubleArrayOf(40.71, -74.00, 1.2), // New York / Tri-State
             doubleArrayOf(34.05, -118.24, 1.3), // Los Angeles / SoCal
-            doubleArrayOf(41.87, -87.63, 1.0),  // Chicago / Great Lakes
-            doubleArrayOf(29.76, -95.36, 1.2),  // Houston
-            doubleArrayOf(32.77, -96.79, 1.0),  // Dallas-Fort Worth
+            doubleArrayOf(41.87, -87.63, 1.0), // Chicago / Great Lakes
+            doubleArrayOf(29.76, -95.36, 1.2), // Houston
+            doubleArrayOf(32.77, -96.79, 1.0), // Dallas-Fort Worth
             doubleArrayOf(37.77, -122.41, 0.8), // SF Bay Area
-            doubleArrayOf(33.74, -84.38, 1.1),  // Atlanta
-            doubleArrayOf(25.76, -80.19, 0.9),  // Miami / South Florida
+            doubleArrayOf(33.74, -84.38, 1.1), // Atlanta
+            doubleArrayOf(25.76, -80.19, 0.9), // Miami / South Florida
             doubleArrayOf(47.60, -122.33, 0.9), // Seattle / Puget Sound
             doubleArrayOf(39.73, -104.99, 0.9), // Denver / Front Range
             doubleArrayOf(33.44, -112.07, 0.9), // Phoenix / Valley of the Sun
-            doubleArrayOf(42.36, -71.05, 0.8),  // Boston / New England
-            doubleArrayOf(38.90, -77.03, 1.0),  // Washington DC / Baltimore
-            doubleArrayOf(44.97, -93.26, 0.8),  // Minneapolis-St. Paul
-            doubleArrayOf(38.62, -90.19, 0.9),  // St. Louis
-            doubleArrayOf(36.16, -86.78, 0.8),  // Nashville
-            doubleArrayOf(30.26, -97.74, 0.8),  // Austin / Central Texas
+            doubleArrayOf(42.36, -71.05, 0.8), // Boston / New England
+            doubleArrayOf(38.90, -77.03, 1.0), // Washington DC / Baltimore
+            doubleArrayOf(44.97, -93.26, 0.8), // Minneapolis-St. Paul
+            doubleArrayOf(38.62, -90.19, 0.9), // St. Louis
+            doubleArrayOf(36.16, -86.78, 0.8), // Nashville
+            doubleArrayOf(30.26, -97.74, 0.8), // Austin / Central Texas
             doubleArrayOf(45.51, -122.67, 0.8), // Portland / Willamette
-            doubleArrayOf(35.22, -80.84, 0.8),  // Charlotte
-            doubleArrayOf(28.53, -81.37, 0.8),  // Orlando / Central Florida
-            doubleArrayOf(39.95, -75.16, 0.9),  // Philadelphia
-            doubleArrayOf(42.33, -83.04, 0.9),  // Detroit
-            doubleArrayOf(39.76, -86.15, 0.8),  // Indianapolis
-            doubleArrayOf(39.09, -94.57, 0.8),  // Kansas City
+            doubleArrayOf(35.22, -80.84, 0.8), // Charlotte
+            doubleArrayOf(28.53, -81.37, 0.8), // Orlando / Central Florida
+            doubleArrayOf(39.95, -75.16, 0.9), // Philadelphia
+            doubleArrayOf(42.33, -83.04, 0.9), // Detroit
+            doubleArrayOf(39.76, -86.15, 0.8), // Indianapolis
+            doubleArrayOf(39.09, -94.57, 0.8), // Kansas City
             doubleArrayOf(36.17, -115.13, 0.8), // Las Vegas
             doubleArrayOf(40.76, -111.89, 0.8), // Salt Lake City
         )
@@ -479,7 +485,7 @@ class SuperCluster100kDemoActivity : BaseDemoActivity() {
         val broadCount = count - hubCount
         for (i in 0 until broadCount) {
             val idx = hubCount + i
-            val lat = 25.5 + random.nextDouble() * 23.0  // 25.5°N to 48.5°N
+            val lat = 25.5 + random.nextDouble() * 23.0 // 25.5°N to 48.5°N
             val lng = -124.0 + random.nextDouble() * 57.0 // -124.0°W to -67.0°W
             coords[2 * idx] = lat
             coords[2 * idx + 1] = lng
