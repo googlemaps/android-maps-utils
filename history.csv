@@ -143,3 +143,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-10-12T18:41:15Z,5440784,1815,ci: move coverage history off main and retry pushes,unit,library,1023,1172,87.29,311,374,83.16,5880,6562,89.61
 2026-10-12T18:41:15Z,5440784,1815,ci: move coverage history off main and retry pushes,unit,ui,122,151,80.79,48,68,70.59,639,791,80.78
 2026-10-12T18:41:15Z,5440784,1815,ci: move coverage history off main and retry pushes,unit,TOTAL,3973,6436,61.73,1688,3917,43.09,24597,40594,60.59
+2026-10-14T15:25:13Z,4731758,1819,build: add Spotless with ktlint formatting checks,unit,clustering,603,1886,31.97,181,852,21.24,3429,10289,33.33
+2026-10-14T15:25:13Z,4731758,1819,build: add Spotless with ktlint formatting checks,unit,data,1953,2968,65.8,1014,2461,41.2,12820,20976,61.12
+2026-10-14T15:25:13Z,4731758,1819,build: add Spotless with ktlint formatting checks,unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-10-14T15:25:13Z,4731758,1819,build: add Spotless with ktlint formatting checks,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
+2026-10-14T15:25:13Z,4731758,1819,build: add Spotless with ktlint formatting checks,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-10-14T15:25:13Z,4731758,1819,build: add Spotless with ktlint formatting checks,unit,TOTAL,3955,6488,60.96,1688,3917,43.09,24659,40756,60.5
