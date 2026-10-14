@@ -25,15 +25,11 @@ import kotlinx.serialization.encoding.Encoder
 internal object BooleanSerializer : KSerializer<Boolean> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Boolean", PrimitiveKind.STRING)
 
-    override fun serialize(
-        encoder: Encoder,
-        value: Boolean,
-    ) {
+    override fun serialize(encoder: Encoder, value: Boolean) {
         encoder.encodeString(if (value) "1" else "0")
     }
 
-    override fun deserialize(decoder: Decoder): Boolean =
-        decoder.decodeString().let {
-            it.equals("true", ignoreCase = true) || it == "1"
-        }
+    override fun deserialize(decoder: Decoder): Boolean = decoder.decodeString().let {
+        it.equals("true", ignoreCase = true) || it == "1"
+    }
 }

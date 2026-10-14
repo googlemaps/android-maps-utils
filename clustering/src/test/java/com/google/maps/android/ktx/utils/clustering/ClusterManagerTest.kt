@@ -52,19 +52,24 @@ public class ClusterManagerTest {
     private lateinit var clusterClickListener: ArgumentCaptor<ClusterManager.OnClusterClickListener<ClusterItem>>
 
     @Captor
-    private lateinit var clusterItemClickListener: ArgumentCaptor<ClusterManager.OnClusterItemClickListener<ClusterItem>>
+    private lateinit var clusterItemClickListener:
+        ArgumentCaptor<ClusterManager.OnClusterItemClickListener<ClusterItem>>
 
     @Captor
-    private lateinit var clusterInfoWindowClickListener: ArgumentCaptor<ClusterManager.OnClusterInfoWindowClickListener<ClusterItem>>
+    private lateinit var clusterInfoWindowClickListener:
+        ArgumentCaptor<ClusterManager.OnClusterInfoWindowClickListener<ClusterItem>>
 
     @Captor
-    private lateinit var clusterInfoWindowLongClickListener: ArgumentCaptor<ClusterManager.OnClusterInfoWindowLongClickListener<ClusterItem>>
+    private lateinit var clusterInfoWindowLongClickListener:
+        ArgumentCaptor<ClusterManager.OnClusterInfoWindowLongClickListener<ClusterItem>>
 
     @Captor
-    private lateinit var clusterItemInfoWindowClickListener: ArgumentCaptor<ClusterManager.OnClusterItemInfoWindowClickListener<ClusterItem>>
+    private lateinit var clusterItemInfoWindowClickListener:
+        ArgumentCaptor<ClusterManager.OnClusterItemInfoWindowClickListener<ClusterItem>>
 
     @Captor
-    private lateinit var clusterItemInfoWindowLongClickListener: ArgumentCaptor<ClusterManager.OnClusterItemInfoWindowLongClickListener<ClusterItem>>
+    private lateinit var clusterItemInfoWindowLongClickListener:
+        ArgumentCaptor<ClusterManager.OnClusterItemInfoWindowLongClickListener<ClusterItem>>
 
     @Test
     public fun testClusterClickEvents(): Unit = runTest {
@@ -127,7 +132,9 @@ public class ClusterManagerTest {
             clusterManager.clusterItemInfoWindowLongClickEvents().first()
         }
         advanceUntilIdle()
-        verify(clusterManager).setOnClusterItemInfoWindowLongClickListener(clusterItemInfoWindowLongClickListener.capture())
+        verify(
+            clusterManager,
+        ).setOnClusterItemInfoWindowLongClickListener(clusterItemInfoWindowLongClickListener.capture())
         clusterItemInfoWindowLongClickListener.value.onClusterItemInfoWindowLongClick(clusterItem)
         assertThat(deferred.await()).isEqualTo(clusterItem)
     }

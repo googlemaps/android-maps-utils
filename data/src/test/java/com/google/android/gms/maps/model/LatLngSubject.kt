@@ -38,13 +38,12 @@ import kotlin.math.abs
 
 fun assertThat(latLng: LatLng): LatLngSubject = Truth.assertAbout(latLngSubjectFactory()).that(latLng)
 
-fun latLngSubjectFactory(): Subject.Factory<LatLngSubject, LatLng> =
-    Subject.Factory { metaData, target ->
-        LatLngSubject(
-            metaData,
-            target,
-        )
-    }
+fun latLngSubjectFactory(): Subject.Factory<LatLngSubject, LatLng> = Subject.Factory { metaData, target ->
+    LatLngSubject(
+        metaData,
+        target,
+    )
+}
 
 /**
  * A custom Truth subject for asserting properties of [LatLng] objects.
@@ -56,10 +55,7 @@ fun latLngSubjectFactory(): Subject.Factory<LatLngSubject, LatLng> =
  * assertThat(actual).isNear(expected)
  * ```
  */
-class LatLngSubject(
-    failureMetadata: FailureMetadata,
-    private val actual: LatLng?,
-) : Subject(failureMetadata, actual) {
+class LatLngSubject(failureMetadata: FailureMetadata, private val actual: LatLng?) : Subject(failureMetadata, actual) {
     /**
      * Asserts that the actual [LatLng] is within a small tolerance of the expected value.
      * This is useful for accounting for floating-point inaccuracies.
@@ -88,9 +84,7 @@ class LatLngSubject(
     /**
      * A subject for asserting the distance between two [LatLng] objects.
      */
-    inner class LatLngDistanceSubject(
-        private val tolerance: Double,
-    ) {
+    inner class LatLngDistanceSubject(private val tolerance: Double) {
         /**
          * Asserts that the actual [LatLng] is within [tolerance] meters of the [expected] [LatLng].
          */

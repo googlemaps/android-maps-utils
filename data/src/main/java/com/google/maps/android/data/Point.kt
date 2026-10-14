@@ -21,9 +21,7 @@ import com.google.android.gms.maps.model.LatLng
  * Legacy Point wrapper bridging to the new data layer.
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
-public open class Point(
-    private val latLng: LatLng,
-) : Geometry {
+public open class Point(private val latLng: LatLng) : Geometry {
     override fun getGeometryType(): String = "Point"
 
     override fun getGeometryObject(): LatLng = latLng

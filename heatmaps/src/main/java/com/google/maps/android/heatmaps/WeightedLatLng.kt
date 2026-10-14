@@ -20,11 +20,8 @@ import com.google.maps.android.geometry.Point
 import com.google.maps.android.projection.SphericalMercatorProjection
 import com.google.maps.android.quadtree.PointQuadTree
 
-public data class WeightedLatLng(
-    public val latLng: LatLng,
-    override val point: Point,
-    public val intensity: Double,
-) : PointQuadTree.Item {
+public data class WeightedLatLng(public val latLng: LatLng, override val point: Point, public val intensity: Double) :
+    PointQuadTree.Item {
     /**
      * Constructor that uses default value for intensity
      *

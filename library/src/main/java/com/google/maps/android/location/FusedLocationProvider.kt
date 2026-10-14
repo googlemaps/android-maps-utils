@@ -47,23 +47,22 @@ import kotlinx.coroutines.flow.callbackFlow
 @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
 public fun FusedLocationProviderClient.locationEvents(
     locationRequest: LocationRequest,
-    looper: Looper = Looper.getMainLooper()
-): Flow<Location> =
-    callbackFlow {
-        val callback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                for (location in result.locations) {
-                    trySend(location)
-                }
+    looper: Looper = Looper.getMainLooper(),
+): Flow<Location> = callbackFlow {
+    val callback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult) {
+            for (location in result.locations) {
+                trySend(location)
             }
         }
-
-        requestLocationUpdates(locationRequest, callback, looper)
-
-        awaitClose {
-            removeLocationUpdates(callback)
-        }
     }
+
+    requestLocationUpdates(locationRequest, callback, looper)
+
+    awaitClose {
+        removeLocationUpdates(callback)
+    }
+}
 
 /**
  * Simplified helper returning a cold flow that emits device location updates from [FusedLocationProviderClient].
@@ -78,7 +77,7 @@ public fun FusedLocationProviderClient.fusedLocationEvents(
     intervalMs: Long = 2_000L,
     minUpdateDistanceM: Float = 1f,
     priority: Int = Priority.PRIORITY_HIGH_ACCURACY,
-    looper: Looper = Looper.getMainLooper()
+    looper: Looper = Looper.getMainLooper(),
 ): Flow<Location> {
     val request = LocationRequest.Builder(priority, intervalMs)
         .setMinUpdateDistanceMeters(minUpdateDistanceM)

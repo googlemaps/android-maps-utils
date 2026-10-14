@@ -31,20 +31,15 @@ import org.jetbrains.uast.UCallExpression
 class GoogleMapDetector :
     Detector(),
     SourceCodeScanner {
-    override fun getApplicableMethodNames(): List<String>? =
-        listOf(
-            "setInfoWindowAdapter",
-            "setOnInfoWindowClickListener",
-            "setOnInfoWindowLongClickListener",
-            "setOnMarkerClickListener",
-            "setOnMarkerDragListener",
-        )
+    override fun getApplicableMethodNames(): List<String>? = listOf(
+        "setInfoWindowAdapter",
+        "setOnInfoWindowClickListener",
+        "setOnInfoWindowLongClickListener",
+        "setOnMarkerClickListener",
+        "setOnMarkerDragListener",
+    )
 
-    override fun visitMethodCall(
-        context: JavaContext,
-        node: UCallExpression,
-        method: PsiMethod,
-    ) {
+    override fun visitMethodCall(context: JavaContext, node: UCallExpression, method: PsiMethod) {
         val evaluator = context.evaluator
         if (!evaluator.isMemberInClass(method, "com.google.android.gms.maps.GoogleMap")) {
             return
@@ -64,37 +59,37 @@ class GoogleMapDetector :
             Issue.create(
                 id = "PotentialBehaviorOverride",
                 briefDescription =
-                    "Using this method may override behaviors set by the Maps SDK for " +
-                        "Android Utility Library. If you are not using clustering, GeoJson, or KML, you " +
-                        "can safely suppress this warning, otherwise, refer to the utility " +
-                        "library's migration guide: $migrationGuideUrl",
+                "Using this method may override behaviors set by the Maps SDK for " +
+                    "Android Utility Library. If you are not using clustering, GeoJson, or KML, you " +
+                    "can safely suppress this warning, otherwise, refer to the utility " +
+                    "library's migration guide: $migrationGuideUrl",
                 explanation = """
                 This lint warns for potential behavior override while using clustering, GeoJson, or
                 KML since these features use this method in their internal implementations. As such,
                 to achieve the desired behavior requires using an alternative API.
-                
+
                 For example, if you are using the clustering feature and want to set a custom info
                 window, rather than invoking `GoogleMap#setInfoWindowAdapter(...)`, you would need
                 to set the custom info window on the MarkerManager.Collection object instead.
-                
+
                 e.g.
-                
+
                 ```
                 ClusterManager clusterManager = // ...
                 MarkerManager.Collection collection = clusterManager.getMarkerCollection();
                 collection.setInfoWindowAdapter(...);
                 ```
-                
+
                 Refer to the migration guide for more info: $migrationGuideUrl
             """,
                 category = Category.CORRECTNESS,
                 priority = 6,
                 severity = Severity.WARNING,
                 implementation =
-                    Implementation(
-                        GoogleMapDetector::class.java,
-                        Scope.JAVA_FILE_SCOPE,
-                    ),
+                Implementation(
+                    GoogleMapDetector::class.java,
+                    Scope.JAVA_FILE_SCOPE,
+                ),
             )
     }
 }

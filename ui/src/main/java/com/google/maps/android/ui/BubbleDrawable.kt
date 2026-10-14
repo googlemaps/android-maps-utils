@@ -28,9 +28,7 @@ import androidx.core.content.ContextCompat
 /**
  * Draws a bubble with a shadow, filled with any color.
  */
-internal class BubbleDrawable(
-    context: Context,
-) : Drawable() {
+internal class BubbleDrawable(context: Context) : Drawable() {
     private val shadow: Drawable? = ContextCompat.getDrawable(context, R.drawable.amu_bubble_shadow)
     private val mask: Drawable? = ContextCompat.getDrawable(context, R.drawable.amu_bubble_mask)
     private var color: Int = Color.WHITE
@@ -55,12 +53,7 @@ internal class BubbleDrawable(
     )
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 
-    override fun setBounds(
-        left: Int,
-        top: Int,
-        right: Int,
-        bottom: Int,
-    ) {
+    override fun setBounds(left: Int, top: Int, right: Int, bottom: Int) {
         mask?.setBounds(left, top, right, bottom)
         shadow?.setBounds(left, top, right, bottom)
     }

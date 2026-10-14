@@ -27,6 +27,15 @@ import com.google.maps.android.collections.PolylineManager
 import com.google.maps.android.data.Geometry
 import com.google.maps.android.data.Layer
 import com.google.maps.android.data.MultiGeometry
+import com.google.maps.android.data.parser.geojson.GeoJsonParser
+import com.google.maps.android.data.renderer.UrlIconProvider
+import com.google.maps.android.data.renderer.mapview.MapViewRenderer
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import java.io.InputStream
+import java.util.IdentityHashMap
+import java.util.Observer
 import com.google.maps.android.data.parser.geojson.GeoJsonFeature as ParserGeoJsonFeature
 import com.google.maps.android.data.parser.geojson.GeoJsonFeatureCollection as ParserGeoJsonFeatureCollection
 import com.google.maps.android.data.parser.geojson.GeoJsonGeometry as ParserGeoJsonGeometry
@@ -35,11 +44,8 @@ import com.google.maps.android.data.parser.geojson.GeoJsonLineString as ParserGe
 import com.google.maps.android.data.parser.geojson.GeoJsonMultiLineString as ParserGeoJsonMultiLineString
 import com.google.maps.android.data.parser.geojson.GeoJsonMultiPoint as ParserGeoJsonMultiPoint
 import com.google.maps.android.data.parser.geojson.GeoJsonMultiPolygon as ParserGeoJsonMultiPolygon
-import com.google.maps.android.data.parser.geojson.GeoJsonParser
 import com.google.maps.android.data.parser.geojson.GeoJsonPoint as ParserGeoJsonPoint
 import com.google.maps.android.data.parser.geojson.GeoJsonPolygon as ParserGeoJsonPolygon
-import com.google.maps.android.data.renderer.UrlIconProvider
-import com.google.maps.android.data.renderer.mapview.MapViewRenderer
 import com.google.maps.android.data.renderer.model.CompositeStyle as ModelCompositeStyle
 import com.google.maps.android.data.renderer.model.Feature as ModelFeature
 import com.google.maps.android.data.renderer.model.Geometry as ModelGeometry
@@ -51,13 +57,6 @@ import com.google.maps.android.data.renderer.model.PointGeometry as ModelPointGe
 import com.google.maps.android.data.renderer.model.PointStyle as ModelPointStyle
 import com.google.maps.android.data.renderer.model.Polygon as ModelPolygon
 import com.google.maps.android.data.renderer.model.PolygonStyle as ModelPolygonStyle
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
-import java.io.InputStream
-import java.util.IdentityHashMap
-import java.util.Observer
-
 
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class GeoJsonLayer : Layer {
@@ -181,7 +180,10 @@ public class GeoJsonLayer : Layer {
             return
         }
         if (mManagersMap == null &&
-            (mMarkerManager != null || mPolygonManager != null || mPolylineManager != null || mGroundOverlayManager != null)
+            (
+                mMarkerManager != null || mPolygonManager != null || mPolylineManager != null ||
+                    mGroundOverlayManager != null
+                )
         ) {
             mManagersMap = map
             mMarkerCollection = mMarkerManager?.newCollection()
@@ -204,37 +206,44 @@ public class GeoJsonLayer : Layer {
         mRenderer = renderer
     }
 
-    private fun toLegacyGeometry(geometry: ParserGeoJsonGeometry): Geometry =
-        when (geometry) {
-            is ParserGeoJsonPoint -> {
-                GeoJsonPoint(LatLng(geometry.coordinates.lat, geometry.coordinates.lng), geometry.coordinates.alt)
-            }
-
-            is ParserGeoJsonLineString -> {
-                GeoJsonLineString(geometry.coordinates.map { LatLng(it.lat, it.lng) }, geometry.coordinates.mapNotNull { it.alt })
-            }
-
-            is ParserGeoJsonPolygon -> {
-                GeoJsonPolygon(geometry.coordinates.map { ring -> ring.map { LatLng(it.lat, it.lng) } })
-            }
-
-            is ParserGeoJsonMultiPoint -> {
-                GeoJsonMultiPoint(geometry.coordinates.map { GeoJsonPoint(LatLng(it.lat, it.lng), it.alt) })
-            }
-
-            is ParserGeoJsonMultiLineString -> {
-                GeoJsonMultiLineString(geometry.coordinates.map { GeoJsonLineString(it.map { c -> LatLng(c.lat, c.lng) }) })
-            }
-
-            is ParserGeoJsonMultiPolygon -> {
-                GeoJsonMultiPolygon(geometry.coordinates.map { GeoJsonPolygon(it.map { ring -> ring.map { c -> LatLng(c.lat, c.lng) } }) })
-            }
-
-            is ParserGeoJsonGeometryCollection -> {
-                GeoJsonGeometryCollection(geometry.geometries.map { toLegacyGeometry(it) })
-            }
+    private fun toLegacyGeometry(geometry: ParserGeoJsonGeometry): Geometry = when (geometry) {
+        is ParserGeoJsonPoint -> {
+            GeoJsonPoint(LatLng(geometry.coordinates.lat, geometry.coordinates.lng), geometry.coordinates.alt)
         }
 
+        is ParserGeoJsonLineString -> {
+            GeoJsonLineString(
+                geometry.coordinates.map {
+                    LatLng(it.lat, it.lng)
+                },
+                geometry.coordinates.mapNotNull { it.alt },
+            )
+        }
+
+        is ParserGeoJsonPolygon -> {
+            GeoJsonPolygon(geometry.coordinates.map { ring -> ring.map { LatLng(it.lat, it.lng) } })
+        }
+
+        is ParserGeoJsonMultiPoint -> {
+            GeoJsonMultiPoint(geometry.coordinates.map { GeoJsonPoint(LatLng(it.lat, it.lng), it.alt) })
+        }
+
+        is ParserGeoJsonMultiLineString -> {
+            GeoJsonMultiLineString(geometry.coordinates.map { GeoJsonLineString(it.map { c -> LatLng(c.lat, c.lng) }) })
+        }
+
+        is ParserGeoJsonMultiPolygon -> {
+            GeoJsonMultiPolygon(
+                geometry.coordinates.map {
+                    GeoJsonPolygon(it.map { ring -> ring.map { c -> LatLng(c.lat, c.lng) } })
+                },
+            )
+        }
+
+        is ParserGeoJsonGeometryCollection -> {
+            GeoJsonGeometryCollection(geometry.geometries.map { toLegacyGeometry(it) })
+        }
+    }
 
     private fun calculateBoundingBox() {
         val boundsBuilder = LatLngBounds.builder()
@@ -273,10 +282,7 @@ public class GeoJsonLayer : Layer {
         }
     }
 
-    private fun includeMultiGeometryBounds(
-        multiGeometry: MultiGeometry,
-        builder: LatLngBounds.Builder,
-    ) {
+    private fun includeMultiGeometryBounds(multiGeometry: MultiGeometry, builder: LatLngBounds.Builder) {
         multiGeometry.getGeometryObject().forEach { geom ->
             when (geom) {
                 is GeoJsonPoint -> builder.include(geom.getCoordinates())
@@ -286,7 +292,6 @@ public class GeoJsonLayer : Layer {
             }
         }
     }
-
 
     override fun getMap(): GoogleMap? = mGoogleMap
 
@@ -399,13 +404,19 @@ public class GeoJsonLayer : Layer {
         val style =
             when (modelGeometry) {
                 is ModelPointGeometry -> buildPointStyle(feature)
+
                 is ModelLineString -> buildLineStyle(feature)
+
                 is ModelPolygon -> buildPolygonStyle(feature)
+
                 is ModelMultiGeometry -> {
                     when (geometry) {
                         is GeoJsonMultiPolygon -> buildPolygonStyle(feature)
+
                         is GeoJsonMultiLineString -> buildLineStyle(feature)
+
                         is GeoJsonMultiPoint -> buildPointStyle(feature)
+
                         else ->
                             ModelCompositeStyle(
                                 pointStyle = buildPointStyle(feature),
@@ -414,6 +425,7 @@ public class GeoJsonLayer : Layer {
                             )
                     }
                 }
+
                 else -> null
             }
 
@@ -423,53 +435,51 @@ public class GeoJsonLayer : Layer {
         return modelFeature
     }
 
-    private fun toModelGeometry(geometry: Geometry): ModelGeometry =
-        when (geometry) {
-            is GeoJsonPoint -> {
-                ModelPointGeometry(
-                    ModelPoint(
-                        geometry.getCoordinates().latitude,
-                        geometry.getCoordinates().longitude,
-                        geometry.getAltitude(),
-                    ),
-                )
-            }
-
-            is GeoJsonLineString -> {
-                ModelLineString(
-                    geometry.getCoordinates().map {
-                        ModelPoint(it.latitude, it.longitude)
-                    },
-                )
-            }
-
-            is GeoJsonPolygon -> {
-                ModelPolygon(
-                    geometry.getOuterBoundaryCoordinates().map {
-                        ModelPoint(
-                            it.latitude,
-                            it.longitude,
-                        )
-                    },
-                    geometry.getInnerBoundaryCoordinates().map { inner ->
-                        inner.map {
-                            ModelPoint(it.latitude, it.longitude)
-                        }
-                    },
-                )
-            }
-
-            is MultiGeometry -> {
-                ModelMultiGeometry(
-                    geometry.getGeometryObject().map { toModelGeometry(it) },
-                )
-            }
-
-            else -> {
-                throw IllegalArgumentException("Unknown geometry type")
-            }
+    private fun toModelGeometry(geometry: Geometry): ModelGeometry = when (geometry) {
+        is GeoJsonPoint -> {
+            ModelPointGeometry(
+                ModelPoint(
+                    geometry.getCoordinates().latitude,
+                    geometry.getCoordinates().longitude,
+                    geometry.getAltitude(),
+                ),
+            )
         }
 
+        is GeoJsonLineString -> {
+            ModelLineString(
+                geometry.getCoordinates().map {
+                    ModelPoint(it.latitude, it.longitude)
+                },
+            )
+        }
+
+        is GeoJsonPolygon -> {
+            ModelPolygon(
+                geometry.getOuterBoundaryCoordinates().map {
+                    ModelPoint(
+                        it.latitude,
+                        it.longitude,
+                    )
+                },
+                geometry.getInnerBoundaryCoordinates().map { inner ->
+                    inner.map {
+                        ModelPoint(it.latitude, it.longitude)
+                    }
+                },
+            )
+        }
+
+        is MultiGeometry -> {
+            ModelMultiGeometry(
+                geometry.getGeometryObject().map { toModelGeometry(it) },
+            )
+        }
+
+        else -> {
+            throw IllegalArgumentException("Unknown geometry type")
+        }
+    }
 
     override val features: Iterable<GeoJsonFeature>
         get() = mFeatures
@@ -563,10 +573,9 @@ public class GeoJsonLayer : Layer {
 
     override fun isLayerOnMap(): Boolean = mIsLayerOnMap
 
-    override fun toString(): String =
-        StringBuilder("Collection{")
-            .apply {
-                append("\n Bounding box=").append(mBoundingBox)
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("Collection{")
+        .apply {
+            append("\n Bounding box=").append(mBoundingBox)
+            append("\n}\n")
+        }.toString()
 }

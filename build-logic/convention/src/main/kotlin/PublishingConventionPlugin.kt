@@ -23,7 +23,9 @@ import kotlinx.validation.KotlinApiCompareTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.register
 
 class PublishingConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -60,8 +62,8 @@ class PublishingConventionPlugin : Plugin<Project> {
                 AndroidSingleVariantLibrary(
                     variant = "release",
                     sourcesJar = true,
-                    publishJavadocJar = true
-                )
+                    publishJavadocJar = true,
+                ),
             )
 
             publishToMavenCentral()
@@ -122,7 +124,7 @@ class PublishingConventionPlugin : Plugin<Project> {
         afterEvaluate {
             val bundleTask = tasks.findByName("bundleLibCompileToJarRelease") ?: return@afterEvaluate
             val classesJar = layout.buildDirectory.file(
-                "intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar"
+                "intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
             )
 
             val apiBuild = tasks.register<KotlinApiBuildTask>("apiBuild") {
@@ -155,7 +157,8 @@ class PublishingConventionPlugin : Plugin<Project> {
 
             val apiCheck = tasks.register<KotlinApiCompareTask>("apiCheck") {
                 group = "verification"
-                description = "Checks public API declarations of $projectName against the committed api/$projectName.api."
+                description =
+                    "Checks public API declarations of $projectName against the committed api/$projectName.api."
                 projectApiFile.set(apiFile)
                 generatedApiFile.set(apiBuild.flatMap { it.outputApiFile })
                 dependsOn(apiBuild)

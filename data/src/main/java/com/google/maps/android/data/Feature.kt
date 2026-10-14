@@ -44,10 +44,8 @@ public open class Feature(
 
     public fun hasGeometry(): Boolean = geometry != null
 
-    protected open fun setProperty(
-        property: String,
-        propertyValue: String,
-    ): String? = mProperties.put(property, propertyValue)
+    protected open fun setProperty(property: String, propertyValue: String): String? =
+        mProperties.put(property, propertyValue)
 
     protected open fun removeProperty(property: String): String? = mProperties.remove(property)
 

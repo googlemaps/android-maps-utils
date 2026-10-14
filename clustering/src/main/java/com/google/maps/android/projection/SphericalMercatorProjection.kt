@@ -16,11 +16,13 @@
 package com.google.maps.android.projection
 
 import com.google.android.gms.maps.model.LatLng
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.atan
+import kotlin.math.exp
+import kotlin.math.ln
+import kotlin.math.sin
 
-public class SphericalMercatorProjection public constructor(
-    private val worldWidth: Double,
-) {
+public class SphericalMercatorProjection public constructor(private val worldWidth: Double) {
     public fun toPoint(latLng: LatLng): com.google.maps.android.geometry.Point {
         val x = latLng.longitude / 360 + .5
         val siny = sin(Math.toRadians(latLng.latitude))

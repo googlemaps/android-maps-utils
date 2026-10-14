@@ -39,18 +39,13 @@ public object MathUtil {
      * Restrict x to the range [low, high].
      */
     @JvmStatic
-    public fun clamp(
-        x: Double,
-        low: Double,
-        high: Double,
-    ): Double =
-        if (x < low) {
-            low
-        } else if (x > high) {
-            high
-        } else {
-            x
-        }
+    public fun clamp(x: Double, low: Double, high: Double): Double = if (x < low) {
+        low
+    } else if (x > high) {
+        high
+    } else {
+        x
+    }
 
     /**
      * Wraps the given value into the inclusive-exclusive interval between min and max.
@@ -60,11 +55,8 @@ public object MathUtil {
      * @param max The maximum.
      */
     @JvmStatic
-    public fun wrap(
-        n: Double,
-        min: Double,
-        max: Double,
-    ): Double = if (n >= min && n < max) n else mod(n - min, max - min) + min
+    public fun wrap(n: Double, min: Double, max: Double): Double =
+        if (n >= min && n < max) n else mod(n - min, max - min) + min
 
     /**
      * Returns the non-negative remainder of x / m.
@@ -73,10 +65,7 @@ public object MathUtil {
      * @param m The modulus.
      */
     @JvmStatic
-    public fun mod(
-        x: Double,
-        m: Double,
-    ): Double = (x % m + m) % m
+    public fun mod(x: Double, m: Double): Double = (x % m + m) % m
 
     /**
      * Returns mercator Y corresponding to latitude.
@@ -130,10 +119,7 @@ public object MathUtil {
 
     // Returns sin(arcHav(x) + arcHav(y)).
     @JvmStatic
-    public fun sinSumFromHav(
-        x: Double,
-        y: Double,
-    ): Double {
+    public fun sinSumFromHav(x: Double, y: Double): Double {
         val a = sqrt(x * (1 - x))
         val b = sqrt(y * (1 - y))
         return 2 * (a + b - 2 * (a * y + b * x))
@@ -143,9 +129,6 @@ public object MathUtil {
      * Returns hav() of distance from (lat1, lng1) to (lat2, lng2) on the unit sphere.
      */
     @JvmStatic
-    public fun havDistance(
-        lat1: Double,
-        lat2: Double,
-        dLng: Double,
-    ): Double = hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2)
+    public fun havDistance(lat1: Double, lat2: Double, dLng: Double): Double =
+        hav(lat1 - lat2) + hav(dLng) * cos(lat1) * cos(lat2)
 }

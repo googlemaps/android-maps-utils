@@ -30,9 +30,7 @@ import com.google.maps.android.renderer.model.Polyline
 /**
  * A [Renderer] implementation that draws to a [GoogleMap].
  */
-public class GoogleMapRenderer public constructor(
-    private val map: GoogleMap,
-) : Renderer {
+public class GoogleMapRenderer public constructor(private val map: GoogleMap) : Renderer {
     private val layers = mutableSetOf<Layer>()
 
     // Map to keep track of the GoogleMap SDK objects created for each MapObject

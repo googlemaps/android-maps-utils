@@ -27,7 +27,13 @@ import com.google.maps.android.data.kml.KmlLayer
 import java.io.InputStream
 import com.google.maps.android.data.kml.kmlLayer as canonicalKmlLayer
 
-@Deprecated("Moved to com.google.maps.android.data.kml.kmlLayer", ReplaceWith("kmlLayer(map, resourceId, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)", "com.google.maps.android.data.kml.kmlLayer"))
+@Deprecated(
+    "Moved to com.google.maps.android.data.kml.kmlLayer",
+    ReplaceWith(
+        "kmlLayer(map, resourceId, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)",
+        "com.google.maps.android.data.kml.kmlLayer",
+    ),
+)
 public fun kmlLayer(
     map: GoogleMap,
     @RawRes resourceId: Int,
@@ -36,10 +42,25 @@ public fun kmlLayer(
     polygonManager: PolygonManager = PolygonManager(map),
     polylineManager: PolylineManager = PolylineManager(map),
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
-    imagesCache: Renderer.ImagesCache? = null
-): KmlLayer = canonicalKmlLayer(map, resourceId, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)
+    imagesCache: Renderer.ImagesCache? = null,
+): KmlLayer = canonicalKmlLayer(
+    map,
+    resourceId,
+    context,
+    markerManager,
+    polygonManager,
+    polylineManager,
+    groundOverlayManager,
+    imagesCache,
+)
 
-@Deprecated("Moved to com.google.maps.android.data.kml.kmlLayer", ReplaceWith("kmlLayer(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)", "com.google.maps.android.data.kml.kmlLayer"))
+@Deprecated(
+    "Moved to com.google.maps.android.data.kml.kmlLayer",
+    ReplaceWith(
+        "kmlLayer(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)",
+        "com.google.maps.android.data.kml.kmlLayer",
+    ),
+)
 public fun kmlLayer(
     map: GoogleMap,
     stream: InputStream,
@@ -48,6 +69,14 @@ public fun kmlLayer(
     polygonManager: PolygonManager = PolygonManager(map),
     polylineManager: PolylineManager = PolylineManager(map),
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
-    imagesCache: Renderer.ImagesCache? = null
-): KmlLayer = canonicalKmlLayer(map, stream, context, markerManager, polygonManager, polylineManager, groundOverlayManager, imagesCache)
-
+    imagesCache: Renderer.ImagesCache? = null,
+): KmlLayer = canonicalKmlLayer(
+    map,
+    stream,
+    context,
+    markerManager,
+    polygonManager,
+    polylineManager,
+    groundOverlayManager,
+    imagesCache,
+)

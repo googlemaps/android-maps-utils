@@ -21,8 +21,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.TextView
-import java.io.File
-import java.io.FileOutputStream
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -31,6 +29,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import java.io.File
+import java.io.FileOutputStream
 
 /**
  * Unit tests for [IconGenerator].
@@ -67,7 +67,11 @@ class IconGeneratorTest {
         val bitmap = iconGenerator.makeIcon(labelText)
 
         assertNotNull("Generated bitmap should be non-null", bitmap)
-        assertEquals("makeIcon(text) should set text on the underlying TextView", labelText, customTextView.text.toString())
+        assertEquals(
+            "makeIcon(text) should set text on the underlying TextView",
+            labelText,
+            customTextView.text.toString(),
+        )
         assertTrue("Generated bitmap width should be > 0", bitmap.width > 0)
         assertTrue("Generated bitmap height should be > 0", bitmap.height > 0)
 
@@ -190,7 +194,8 @@ class IconGeneratorTest {
         iconGenerator.setStyle(IconGenerator.STYLE_BLUE)
         iconGenerator.makeIcon()
 
-        val actualBitmap = renderToBitmap(customView.text.toString(), customView.currentTextColor, Color.parseColor("#0099CC"))
+        val actualBitmap =
+            renderToBitmap(customView.text.toString(), customView.currentTextColor, Color.parseColor("#0099CC"))
         val goldenBitmap = loadGoldenBitmap("golden/icon_custom_view.png")
         assertNotNull("Golden reference custom view bitmap should exist and be non-null", goldenBitmap)
         assertBitmapsEqual(goldenBitmap!!, actualBitmap)
@@ -222,7 +227,10 @@ class IconGeneratorTest {
         val img = java.awt.image.BufferedImage(imgWidth, imgHeight, java.awt.image.BufferedImage.TYPE_INT_ARGB)
         val g2 = img.createGraphics()
         g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-        g2.setRenderingHint(java.awt.RenderingHints.KEY_TEXT_ANTIALIASING, java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+        g2.setRenderingHint(
+            java.awt.RenderingHints.KEY_TEXT_ANTIALIASING,
+            java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON,
+        )
 
         g2.color = java.awt.Color(bgColor, true)
         g2.fillRoundRect(0, 0, bubbleWidth, bubbleHeight, cornerRadius, cornerRadius)
@@ -280,7 +288,9 @@ class IconGeneratorTest {
                 val diffR = Math.abs(Color.red(exp) - Color.red(act))
                 val diffG = Math.abs(Color.green(exp) - Color.green(act))
                 val diffB = Math.abs(Color.blue(exp) - Color.blue(act))
-                if (diffA <= maxPixelTolerance && diffR <= maxPixelTolerance && diffG <= maxPixelTolerance && diffB <= maxPixelTolerance) {
+                if (diffA <= maxPixelTolerance && diffR <= maxPixelTolerance && diffG <= maxPixelTolerance &&
+                    diffB <= maxPixelTolerance
+                ) {
                     matchingPixels++
                 }
             }

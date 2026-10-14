@@ -29,9 +29,7 @@ public sealed interface Geometry {
  *
  * @property point The Point object representing the location.
  */
-public data class PointGeometry(
-    public val point: Point,
-) : Geometry {
+public data class PointGeometry(public val point: Point) : Geometry {
     public override val type: String = "Point"
 }
 
@@ -40,9 +38,7 @@ public data class PointGeometry(
  *
  * @property points The list of Points that make up the line.
  */
-public data class LineString(
-    public val points: List<Point>,
-) : Geometry {
+public data class LineString(public val points: List<Point>) : Geometry {
     public override val type: String = "LineString"
 }
 
@@ -64,8 +60,6 @@ public data class Polygon(
  *
  * @property geometries The list of Geometry objects.
  */
-public data class MultiGeometry(
-    public val geometries: List<Geometry>,
-) : Geometry {
+public data class MultiGeometry(public val geometries: List<Geometry>) : Geometry {
     public override val type: String = "MultiGeometry"
 }

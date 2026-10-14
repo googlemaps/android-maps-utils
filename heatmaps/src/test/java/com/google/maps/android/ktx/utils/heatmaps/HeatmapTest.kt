@@ -32,7 +32,7 @@ internal class HeatmapTest {
         weightedLatLngEquals(WeightedLatLng(latLng), latLng.toWeightedLatLng())
         weightedLatLngEquals(
             WeightedLatLng(latLng, 2.0),
-            latLng.toWeightedLatLng(intensity = 2.0)
+            latLng.toWeightedLatLng(intensity = 2.0),
         )
     }
 

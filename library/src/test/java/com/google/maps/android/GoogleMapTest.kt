@@ -46,7 +46,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
-
 /**
  * Unit test suite for Kotlin extensions on [GoogleMap], covering reactive `Flow` event streams,
  * coroutine suspension helpers, and Kotlin DSL option builders.
@@ -204,7 +203,6 @@ public class GoogleMapTest {
         assertThat(deferred.await()).isEqualTo(Unit)
     }
 
-
     /**
      * **Purpose:** Verifies [GoogleMap.cameraMoveEvents] converts camera move callbacks into a Flow.
      * **How it works:** Subscribes to `cameraMoveEvents().first()`, captures `OnCameraMoveListener`, and calls `onCameraMove()`.
@@ -252,7 +250,6 @@ public class GoogleMapTest {
         cameraMoveCanceledListener.value.onCameraMoveCanceled()
         assertThat(deferred.await()).isEqualTo(Unit)
     }
-
 
     /**
      * **Purpose:** Verifies [GoogleMap.mapClickEvents] emits clicked [LatLng] coordinates.
@@ -540,7 +537,6 @@ public class GoogleMapTest {
         cancelableCallback.value.onFinish()
         assertThat(deferredWithDuration.await()).isEqualTo(Unit)
     }
-
 
     /**
      * **Purpose:** Verifies [GoogleMap.awaitSnapshot] suspends until a bitmap snapshot is ready.

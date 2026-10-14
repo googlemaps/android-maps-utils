@@ -42,12 +42,11 @@ public class KmlPlacemark(
 
     public fun getPolylineOptions(): PolylineOptions? = inlineStyle?.getPolylineOptions()
 
-    override fun toString(): String =
-        StringBuilder("Placemark")
-            .apply {
-                append("{")
-                append("\n style id=").append(style)
-                append(",\n inline style=").append(inlineStyle)
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("Placemark")
+        .apply {
+            append("{")
+            append("\n style id=").append(style)
+            append(",\n inline style=").append(inlineStyle)
+            append("\n}\n")
+        }.toString()
 }

@@ -35,77 +35,73 @@ import java.util.concurrent.atomic.AtomicInteger
 @RunWith(RobolectricTestRunner::class)
 class UrlIconProviderTest {
     @Test
-    fun loadIcon_returnsBitmap() =
-        runTest {
-            val testDispatcher = StandardTestDispatcher(testScheduler)
-            val provider = TestableUrlIconProvider(testDispatcher)
-            val url = "http://example.com/icon.png"
+    fun loadIcon_returnsBitmap() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher)
+        val url = "http://example.com/icon.png"
 
-            val bitmap = provider.loadIcon(url)
+        val bitmap = provider.loadIcon(url)
 
-            assertNotNull(bitmap)
-            assertEquals(1, provider.loadCount.get())
-        }
-
-    @Test
-    fun loadIcon_cachesBitmap() =
-        runTest {
-            val testDispatcher = StandardTestDispatcher(testScheduler)
-            val provider = TestableUrlIconProvider(testDispatcher)
-            val url = "http://example.com/icon.png"
-
-            val bitmap1 = provider.loadIcon(url)
-            val bitmap2 = provider.loadIcon(url)
-
-            assertNotNull(bitmap1)
-            assertSame(bitmap1, bitmap2)
-            assertEquals(1, provider.loadCount.get())
-        }
+        assertNotNull(bitmap)
+        assertEquals(1, provider.loadCount.get())
+    }
 
     @Test
-    fun loadIcon_deduplicatesRequests() =
-        runTest {
-            val testDispatcher = StandardTestDispatcher(testScheduler)
-            val provider = TestableUrlIconProvider(testDispatcher, delayMillis = 1000)
-            val url = "http://example.com/icon.png"
+    fun loadIcon_cachesBitmap() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher)
+        val url = "http://example.com/icon.png"
 
-            // Launch multiple requests concurrently
-            val deferred1 = async { provider.loadIcon(url) }
-            val deferred2 = async { provider.loadIcon(url) }
-            val deferred3 = async { provider.loadIcon(url) }
+        val bitmap1 = provider.loadIcon(url)
+        val bitmap2 = provider.loadIcon(url)
 
-            // Advance time to finish the single underlying request
-            advanceTimeBy(1001)
-
-            val results = awaitAll(deferred1, deferred2, deferred3)
-
-            // Verify all got the same bitmap
-            val firstBitmap = results[0]
-            results.forEach { assertSame(firstBitmap, it) }
-
-            // Verify only one actual load happened
-            assertEquals(1, provider.loadCount.get())
-        }
+        assertNotNull(bitmap1)
+        assertSame(bitmap1, bitmap2)
+        assertEquals(1, provider.loadCount.get())
+    }
 
     @Test
-    fun loadIcon_handlesFailures() =
-        runTest {
-            val testDispatcher = StandardTestDispatcher(testScheduler)
-            val provider = TestableUrlIconProvider(testDispatcher, shouldFail = true)
-            val url = "http://example.com/error.png"
+    fun loadIcon_deduplicatesRequests() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher, delayMillis = 1000)
+        val url = "http://example.com/icon.png"
 
-            val bitmap = provider.loadIcon(url)
+        // Launch multiple requests concurrently
+        val deferred1 = async { provider.loadIcon(url) }
+        val deferred2 = async { provider.loadIcon(url) }
+        val deferred3 = async { provider.loadIcon(url) }
 
-            assertEquals(null, bitmap)
-            assertEquals(1, provider.loadCount.get())
+        // Advance time to finish the single underlying request
+        advanceTimeBy(1001)
 
-            // Retry should trigger another load attempt (since failure wasn't cached)
-            provider.shouldFail = false
-            val retryBitmap = provider.loadIcon(url)
+        val results = awaitAll(deferred1, deferred2, deferred3)
 
-            assertNotNull(retryBitmap)
-            assertEquals(2, provider.loadCount.get())
-        }
+        // Verify all got the same bitmap
+        val firstBitmap = results[0]
+        results.forEach { assertSame(firstBitmap, it) }
+
+        // Verify only one actual load happened
+        assertEquals(1, provider.loadCount.get())
+    }
+
+    @Test
+    fun loadIcon_handlesFailures() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher, shouldFail = true)
+        val url = "http://example.com/error.png"
+
+        val bitmap = provider.loadIcon(url)
+
+        assertEquals(null, bitmap)
+        assertEquals(1, provider.loadCount.get())
+
+        // Retry should trigger another load attempt (since failure wasn't cached)
+        provider.shouldFail = false
+        val retryBitmap = provider.loadIcon(url)
+
+        assertNotNull(retryBitmap)
+        assertEquals(2, provider.loadCount.get())
+    }
 
     // Subclass to mock network calls
     private class TestableUrlIconProvider(
