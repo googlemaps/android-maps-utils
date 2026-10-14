@@ -103,12 +103,7 @@ public class KmlStyle : Style() {
         mStylesSet.add("heading")
     }
 
-    public fun setHotSpot(
-        x: Float,
-        y: Float,
-        xUnits: String,
-        yUnits: String,
-    ) {
+    public fun setHotSpot(x: Float, y: Float, xUnits: String, yUnits: String) {
         setMarkerHotSpot(x, y, xUnits, yUnits)
         mStylesSet.add("hotSpot")
     }
@@ -160,39 +155,36 @@ public class KmlStyle : Style() {
         return newMarkerOption
     }
 
-    public fun getPolylineOptions(): PolylineOptions =
-        PolylineOptions().apply {
-            color(mPolylineOptions.color)
-            width(mPolylineOptions.width)
-            clickable(mPolylineOptions.isClickable)
-        }
+    public fun getPolylineOptions(): PolylineOptions = PolylineOptions().apply {
+        color(mPolylineOptions.color)
+        width(mPolylineOptions.width)
+        clickable(mPolylineOptions.isClickable)
+    }
 
-    public fun getPolygonOptions(): PolygonOptions =
-        PolygonOptions().apply {
-            if (mFill) {
-                fillColor(mPolygonOptions.fillColor)
-            }
-            var strokeW = 0.0f
-            if (mOutline) {
-                strokeColor(mPolygonOptions.strokeColor)
-                strokeW = mPolygonOptions.strokeWidth
-            }
-            strokeWidth(strokeW)
-            clickable(mPolygonOptions.isClickable)
+    public fun getPolygonOptions(): PolygonOptions = PolygonOptions().apply {
+        if (mFill) {
+            fillColor(mPolygonOptions.fillColor)
         }
+        var strokeW = 0.0f
+        if (mOutline) {
+            strokeColor(mPolygonOptions.strokeColor)
+            strokeW = mPolygonOptions.strokeWidth
+        }
+        strokeWidth(strokeW)
+        clickable(mPolygonOptions.isClickable)
+    }
 
-    public override fun toString(): String =
-        StringBuilder("Style")
-            .apply {
-                append("{")
-                append("\n balloon options=").append(mBalloonOptions)
-                append(",\n fill=").append(mFill)
-                append(",\n outline=").append(mOutline)
-                append(",\n icon url=").append(mIconUrl)
-                append(",\n scale=").append(mScale)
-                append(",\n style id=").append(mStyleId)
-                append("\n}\n")
-            }.toString()
+    public override fun toString(): String = StringBuilder("Style")
+        .apply {
+            append("{")
+            append("\n balloon options=").append(mBalloonOptions)
+            append(",\n fill=").append(mFill)
+            append(",\n outline=").append(mOutline)
+            append(",\n icon url=").append(mIconUrl)
+            append(",\n scale=").append(mScale)
+            append(",\n style id=").append(mStyleId)
+            append("\n}\n")
+        }.toString()
 
     public companion object {
         private const val HSV_VALUES = 3

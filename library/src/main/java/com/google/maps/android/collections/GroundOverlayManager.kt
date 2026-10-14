@@ -50,15 +50,13 @@ public open class GroundOverlayManager(map: GoogleMap) :
     }
 
     /** A collection of [GroundOverlay]s on the map with its own set of listeners. */
-    public open inner class Collection :
-        MapObjectManager<GroundOverlay, Collection>.Collection() {
+    public open inner class Collection : MapObjectManager<GroundOverlay, Collection>.Collection() {
         internal var mGroundOverlayClickListener: GoogleMap.OnGroundOverlayClickListener? = null
 
         public open fun addGroundOverlay(opts: GroundOverlayOptions): GroundOverlay =
             checkAndAdd(mMap.addGroundOverlay(opts), "GroundOverlay")
 
-        public open fun addAll(opts: KotlinCollection<GroundOverlayOptions>): Unit =
-            addAll(opts, ::addGroundOverlay)
+        public open fun addAll(opts: KotlinCollection<GroundOverlayOptions>): Unit = addAll(opts, ::addGroundOverlay)
 
         public open fun addAll(opts: KotlinCollection<GroundOverlayOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addGroundOverlay)

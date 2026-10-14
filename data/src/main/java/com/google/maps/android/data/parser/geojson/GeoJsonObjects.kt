@@ -42,58 +42,43 @@ public sealed interface GeoJsonObject {
 // Sealed interface for Geometry objects
 public sealed interface GeoJsonGeometry : GeoJsonObject
 
-public data class GeoJsonPoint(
-    public val coordinates: Coordinates
-) : GeoJsonGeometry {
+public data class GeoJsonPoint(public val coordinates: Coordinates) : GeoJsonGeometry {
     public override val type: String = "Point"
 }
 
-public data class GeoJsonMultiPoint(
-    public val coordinates: List<Coordinates>
-) : GeoJsonGeometry {
+public data class GeoJsonMultiPoint(public val coordinates: List<Coordinates>) : GeoJsonGeometry {
     public override val type: String = "MultiPoint"
 }
 
-public data class GeoJsonLineString(
-    public val coordinates: List<Coordinates>
-) : GeoJsonGeometry {
+public data class GeoJsonLineString(public val coordinates: List<Coordinates>) : GeoJsonGeometry {
     public override val type: String = "LineString"
 }
 
-public data class GeoJsonMultiLineString(
-    public val coordinates: List<List<Coordinates>>
-) : GeoJsonGeometry {
+public data class GeoJsonMultiLineString(public val coordinates: List<List<Coordinates>>) : GeoJsonGeometry {
     public override val type: String = "MultiLineString"
 }
 
-public data class GeoJsonPolygon(
-    public val coordinates: List<List<Coordinates>>
-) : GeoJsonGeometry {
+public data class GeoJsonPolygon(public val coordinates: List<List<Coordinates>>) : GeoJsonGeometry {
     public override val type: String = "Polygon"
 }
 
-public data class GeoJsonMultiPolygon(
-    public val coordinates: List<List<List<Coordinates>>>
-) : GeoJsonGeometry {
+public data class GeoJsonMultiPolygon(public val coordinates: List<List<List<Coordinates>>>) : GeoJsonGeometry {
     public override val type: String = "MultiPolygon"
 }
 
-public data class GeoJsonGeometryCollection(
-    public val geometries: List<GeoJsonGeometry>
-) : GeoJsonGeometry {
+public data class GeoJsonGeometryCollection(public val geometries: List<GeoJsonGeometry>) : GeoJsonGeometry {
     public override val type: String = "GeometryCollection"
 }
 
 public data class GeoJsonFeature(
     public val geometry: GeoJsonGeometry?,
     public val properties: Map<String, String?>?,
-    public val id: String? = null // id is optional and can be string or number
+    // id is optional and can be string or number
+    public val id: String? = null,
 ) : GeoJsonObject {
     public override val type: String = "Feature"
 }
 
-public data class GeoJsonFeatureCollection(
-    public val features: List<GeoJsonFeature>
-) : GeoJsonObject {
+public data class GeoJsonFeatureCollection(public val features: List<GeoJsonFeature>) : GeoJsonObject {
     public override val type: String = "FeatureCollection"
 }

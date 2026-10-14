@@ -15,23 +15,9 @@
  */
 package com.google.maps.android.data.renderer.model
 
-/**
- * A data class representing a collection of features to be rendered.
- *
- * This acts as a top-level container for all geometric objects and their styles within a single renderable unit.
- *
- * @property features The list of [Feature] objects contained within this scene. Defaults to an empty list.
- */
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
-/**
- * A data class representing a collection of features to be rendered.
- *
- * This acts as a top-level container for all geometric objects and their styles within a single renderable unit.
- *
- * @property features The list of [Feature] objects contained within this scene. Defaults to an empty list.
- */
 /**
  * A data class representing a collection of layers to be rendered.
  *
@@ -42,9 +28,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 public data class DataScene(public val layers: List<DataLayer> = emptyList()) {
 
     public companion object {
-        public fun fromFeatures(features: List<Feature>): DataScene {
-            return DataScene(listOf(DataLayer(features)))
-        }
+        public fun fromFeatures(features: List<Feature>): DataScene = DataScene(listOf(DataLayer(features)))
     }
 
     public val features: List<Feature>

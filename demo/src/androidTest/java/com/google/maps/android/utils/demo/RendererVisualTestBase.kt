@@ -43,14 +43,18 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
             element.click()
         } else {
             val scrollable = androidx.test.uiautomator.UiScrollable(
-                androidx.test.uiautomator.UiSelector().scrollable(true)
+                androidx.test.uiautomator.UiSelector().scrollable(true),
             )
             val scrolled = try {
                 if (scrollable.exists()) {
                     scrollable.setAsHorizontalList()
                     scrollable.scrollTextIntoView(label)
-                } else false
-            } catch (e: Exception) { false }
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                false
+            }
 
             val scrolledElement = uiDevice.findObject(By.textContains(label))
             if (scrolledElement != null) {
@@ -92,9 +96,9 @@ abstract class RendererVisualTestBase : BaseVisualTest() {
             Analyze this screenshot of a map app.
             Check if the following condition is met:
             "$description"
-            
+
             Also check if the bottom sheet is collapsed (showing only the top "peek" area with "Load File"/"Clear" buttons and "Presets" header, but NOT the full list of chips).
-            
+
             CRITICAL: Start your response with YES if BOTH the condition is met AND the bottom sheet is collapsed.
             Start your response with NO if ANY condition is not met.
             Then explain your reasoning.

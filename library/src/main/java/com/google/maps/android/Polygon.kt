@@ -30,8 +30,7 @@ import com.google.maps.android.SphericalUtil
  *
  * @see PolyUtil.containsLocation
  */
-public fun Polygon.contains(latLng: LatLng): Boolean =
-    PolyUtil.containsLocation(latLng, this.points, this.isGeodesic)
+public fun Polygon.contains(latLng: LatLng): Boolean = PolyUtil.containsLocation(latLng, this.points, this.isGeodesic)
 
 /**
  * Checks whether or not [latLng] lies on or is near the edge of this Polygon within a tolerance

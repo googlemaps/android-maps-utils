@@ -23,7 +23,7 @@ import com.google.maps.android.model.cameraPosition as canonicalCameraPosition
 @Deprecated(
     message = "Use com.google.maps.android.model.cameraPosition instead",
     replaceWith = ReplaceWith("cameraPosition(optionsActions)", "com.google.maps.android.model.cameraPosition"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public inline fun cameraPosition(optionsActions: CameraPosition.Builder.() -> Unit): CameraPosition = canonicalCameraPosition(optionsActions)
-
+public inline fun cameraPosition(optionsActions: CameraPosition.Builder.() -> Unit): CameraPosition =
+    canonicalCameraPosition(optionsActions)

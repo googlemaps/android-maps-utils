@@ -18,7 +18,6 @@ package com.google.maps.android.data.renderer.mapper
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import com.google.maps.android.data.parser.kml.Folder
-
 import com.google.maps.android.data.parser.kml.Kml
 import com.google.maps.android.data.parser.kml.Placemark
 import com.google.maps.android.data.renderer.model.DataLayer
@@ -117,10 +116,7 @@ public object KmlMapper {
 
 public fun Kml.toLayer(): DataLayer = KmlMapper.toLayer(this)
 
-private fun Placemark.toRendererFeature(
-    styles: Map<String, KmlStyle>,
-    styleMaps: Map<String, KmlStyleMap>,
-): Feature {
+private fun Placemark.toRendererFeature(styles: Map<String, KmlStyle>, styleMaps: Map<String, KmlStyleMap>): Feature {
     val geometry = toGeometry(this)
     var style: Style? = null
 
@@ -237,51 +233,46 @@ private fun KmlGroundOverlay.toRendererGeometry(): GroundOverlay {
     )
 }
 
-private fun bearing(
-    from: LatLng,
-    to: LatLng,
-): Double {
+private fun bearing(from: LatLng, to: LatLng): Double {
     val h = SphericalUtil.computeHeading(from, to)
     return if (h < 0) h + 360.0 else h
 }
 
-
-private fun KmlStyle.toRendererStyle(geometry: Geometry): Style? =
-    when (geometry) {
-        is PointGeometry -> {
-            iconStyle?.let {
-                PointStyle(
-                    scale = it.scale.takeIf { s -> s.isFinite() && s >= 0f } ?: 1.0f,
-                    iconUrl = it.icon?.href,
-                    // TODO: Map other properties like heading, hotSpot if needed
-                )
-            }
-        }
-
-        is RendererLineString -> {
-            lineStyle?.let {
-                LineStyle(
-                    color = convertKmlColor(it.color ?: 0xFF000000.toInt()),
-                    width = it.width?.takeIf { w -> w.isFinite() && w >= 0f } ?: 1.0f,
-                )
-            }
-        }
-
-        is RendererPolygon -> {
-            polyStyle?.let {
-                PolygonStyle(
-                    fillColor = if (it.fill) convertKmlColor(it.color ?: 0x00000000) else 0x00000000,
-                    strokeColor = convertKmlColor(lineStyle?.color ?: 0xFF000000.toInt()),
-                    strokeWidth = lineStyle?.width?.takeIf { w -> w.isFinite() && w >= 0f } ?: 1.0f,
-                    // TODO: Handle outline property
-                )
-            }
-        }
-
-        else -> {
-            null
+private fun KmlStyle.toRendererStyle(geometry: Geometry): Style? = when (geometry) {
+    is PointGeometry -> {
+        iconStyle?.let {
+            PointStyle(
+                scale = it.scale.takeIf { s -> s.isFinite() && s >= 0f } ?: 1.0f,
+                iconUrl = it.icon?.href,
+                // TODO: Map other properties like heading, hotSpot if needed
+            )
         }
     }
+
+    is RendererLineString -> {
+        lineStyle?.let {
+            LineStyle(
+                color = convertKmlColor(it.color ?: 0xFF000000.toInt()),
+                width = it.width?.takeIf { w -> w.isFinite() && w >= 0f } ?: 1.0f,
+            )
+        }
+    }
+
+    is RendererPolygon -> {
+        polyStyle?.let {
+            PolygonStyle(
+                fillColor = if (it.fill) convertKmlColor(it.color ?: 0x00000000) else 0x00000000,
+                strokeColor = convertKmlColor(lineStyle?.color ?: 0xFF000000.toInt()),
+                strokeWidth = lineStyle?.width?.takeIf { w -> w.isFinite() && w >= 0f } ?: 1.0f,
+                // TODO: Handle outline property
+            )
+        }
+    }
+
+    else -> {
+        null
+    }
+}
 
 /**
  * Converts KML color (AABBGGRR) to Android color (AARRGGBB).
@@ -342,25 +333,23 @@ private fun com.google.maps.android.data.parser.kml.MultiTrack.toRendererMultiGe
     return RendererMultiGeometry(geometries)
 }
 
-private fun KmlPoint.toPointGeometry(): PointGeometry =
-    PointGeometry(
-        RendererPoint(
-            lat = coordinates.latitude,
-            lng = coordinates.longitude,
-            alt = coordinates.altitude,
-        ),
-    )
+private fun KmlPoint.toPointGeometry(): PointGeometry = PointGeometry(
+    RendererPoint(
+        lat = coordinates.latitude,
+        lng = coordinates.longitude,
+        alt = coordinates.altitude,
+    ),
+)
 
-private fun KmlLineString.toRendererLineString(): RendererLineString =
-    RendererLineString(
-        coordinates.map {
-            RendererPoint(
-                lat = it.latitude,
-                lng = it.longitude,
-                alt = it.altitude,
-            )
-        },
-    )
+private fun KmlLineString.toRendererLineString(): RendererLineString = RendererLineString(
+    coordinates.map {
+        RendererPoint(
+            lat = it.latitude,
+            lng = it.longitude,
+            alt = it.altitude,
+        )
+    },
+)
 
 private fun KmlPolygon.toRendererPolygon(): RendererPolygon {
     val outerBoundary =

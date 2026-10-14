@@ -121,9 +121,15 @@ class MarkerManagerTest {
         var dragging = false
         var dragEnded = false
         collection.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
-            override fun onMarkerDragStart(m: Marker) { dragStarted = true }
-            override fun onMarkerDrag(m: Marker) { dragging = true }
-            override fun onMarkerDragEnd(m: Marker) { dragEnded = true }
+            override fun onMarkerDragStart(m: Marker) {
+                dragStarted = true
+            }
+            override fun onMarkerDrag(m: Marker) {
+                dragging = true
+            }
+            override fun onMarkerDragEnd(m: Marker) {
+                dragEnded = true
+            }
         })
 
         val mockView = mockk<View>()

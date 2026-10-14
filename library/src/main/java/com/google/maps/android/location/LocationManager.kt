@@ -44,45 +44,44 @@ import kotlinx.coroutines.flow.callbackFlow
 public fun LocationManager.coarseLocationEvents(
     minTimeMs: Long = 1_000L,
     minDistanceM: Float = 1f,
-    looper: Looper = Looper.getMainLooper()
-): Flow<Location> =
-    callbackFlow {
-        if (!allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+    looper: Looper = Looper.getMainLooper(),
+): Flow<Location> = callbackFlow {
+    if (!allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+        close()
+        return@callbackFlow
+    }
+
+    val listener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            trySend(location)
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            // Deprecated in API 29, left empty for backward compatibility with minSdk 23
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            // Left empty for backward compatibility
+        }
+
+        override fun onProviderDisabled(provider: String) {
             close()
-            return@callbackFlow
-        }
-
-        val listener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                trySend(location)
-            }
-
-            @Deprecated("Deprecated in Java")
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                // Deprecated in API 29, left empty for backward compatibility with minSdk 23
-            }
-
-            override fun onProviderEnabled(provider: String) {
-                // Left empty for backward compatibility
-            }
-
-            override fun onProviderDisabled(provider: String) {
-                close()
-            }
-        }
-
-        requestLocationUpdates(
-            LocationManager.NETWORK_PROVIDER,
-            minTimeMs,
-            minDistanceM,
-            listener,
-            looper
-        )
-
-        awaitClose {
-            removeUpdates(listener)
         }
     }
+
+    requestLocationUpdates(
+        LocationManager.NETWORK_PROVIDER,
+        minTimeMs,
+        minDistanceM,
+        listener,
+        looper,
+    )
+
+    awaitClose {
+        removeUpdates(listener)
+    }
+}
 
 /**
  * Returns a cold flow that emits the device's fine location updates using [LocationManager.GPS_PROVIDER].
@@ -100,42 +99,41 @@ public fun LocationManager.coarseLocationEvents(
 public fun LocationManager.fineLocationEvents(
     minTimeMs: Long = 1_000L,
     minDistanceM: Float = 1f,
-    looper: Looper = Looper.getMainLooper()
-): Flow<Location> =
-    callbackFlow {
-        if (!allProviders.contains(LocationManager.GPS_PROVIDER)) {
+    looper: Looper = Looper.getMainLooper(),
+): Flow<Location> = callbackFlow {
+    if (!allProviders.contains(LocationManager.GPS_PROVIDER)) {
+        close()
+        return@callbackFlow
+    }
+
+    val listener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            trySend(location)
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            // Deprecated in API 29, left empty for backward compatibility with minSdk 23
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            // Left empty for backward compatibility
+        }
+
+        override fun onProviderDisabled(provider: String) {
             close()
-            return@callbackFlow
-        }
-
-        val listener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                trySend(location)
-            }
-
-            @Deprecated("Deprecated in Java")
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                // Deprecated in API 29, left empty for backward compatibility with minSdk 23
-            }
-
-            override fun onProviderEnabled(provider: String) {
-                // Left empty for backward compatibility
-            }
-
-            override fun onProviderDisabled(provider: String) {
-                close()
-            }
-        }
-
-        requestLocationUpdates(
-            LocationManager.GPS_PROVIDER,
-            minTimeMs,
-            minDistanceM,
-            listener,
-            looper
-        )
-
-        awaitClose {
-            removeUpdates(listener)
         }
     }
+
+    requestLocationUpdates(
+        LocationManager.GPS_PROVIDER,
+        minTimeMs,
+        minDistanceM,
+        listener,
+        looper,
+    )
+
+    awaitClose {
+        removeUpdates(listener)
+    }
+}

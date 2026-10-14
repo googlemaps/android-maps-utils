@@ -72,7 +72,7 @@ public class FusedLocationProviderTest {
         verify(fusedLocationClient).requestLocationUpdates(
             eq(request),
             locationCallbackCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         val result = LocationResult.create(listOf(location))
@@ -93,7 +93,7 @@ public class FusedLocationProviderTest {
                 intervalMs = 2000L,
                 minUpdateDistanceM = 5f,
                 priority = Priority.PRIORITY_BALANCED_POWER_ACCURACY,
-                looper = looper
+                looper = looper,
             ).first()
             assertThat(event).isEqualTo(location)
         }
@@ -102,7 +102,7 @@ public class FusedLocationProviderTest {
         verify(fusedLocationClient).requestLocationUpdates(
             any(LocationRequest::class.java),
             locationCallbackCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         val result = LocationResult.create(listOf(location))

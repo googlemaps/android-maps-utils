@@ -23,9 +23,7 @@ import com.google.maps.android.data.DataPolygon
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
-public class GeoJsonPolygon(
-    private val coordinates: List<List<LatLng>>,
-) : DataPolygon<LatLng> {
+public class GeoJsonPolygon(private val coordinates: List<List<LatLng>>) : DataPolygon<LatLng> {
     init {
         requireNotNull(coordinates) { "Coordinates cannot be null" }
     }

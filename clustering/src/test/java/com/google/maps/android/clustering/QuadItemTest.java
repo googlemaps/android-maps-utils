@@ -151,15 +151,23 @@ public class QuadItemTest {
     TestingItem item1 = new TestingItem("item1", 1.0, 1.0);
     algo.addItem(item1);
 
-    assertEquals("QuadTree should contain item1 at (1, 1)", 1, algo.getQuadTreeItemCount(1.0, 1.0, 0.001));
+    assertEquals(
+        "QuadTree should contain item1 at (1, 1)", 1, algo.getQuadTreeItemCount(1.0, 1.0, 0.001));
 
     // Move item1 far across quadrant boundary to (50.0, 50.0) and update
     item1.setPosition(50.0, 50.0);
     algo.updateItem(item1);
 
-    // Without fix, old QuadItem remains at (1.0, 1.0) in mQuadTree because remove traversed the new coordinates
-    assertEquals("QuadTree should NOT contain stale entry at (1, 1) after update", 0, algo.getQuadTreeItemCount(1.0, 1.0, 0.001));
-    assertEquals("QuadTree should contain item1 at (50, 50)", 1, algo.getQuadTreeItemCount(50.0, 50.0, 0.001));
+    // Without fix, old QuadItem remains at (1.0, 1.0) in mQuadTree because remove traversed the new
+    // coordinates
+    assertEquals(
+        "QuadTree should NOT contain stale entry at (1, 1) after update",
+        0,
+        algo.getQuadTreeItemCount(1.0, 1.0, 0.001));
+    assertEquals(
+        "QuadTree should contain item1 at (50, 50)",
+        1,
+        algo.getQuadTreeItemCount(50.0, 50.0, 0.001));
   }
 
   @Test
@@ -175,7 +183,8 @@ public class QuadItemTest {
     item1.setPosition(10.0, 10.0);
     item2.setPosition(20.0, 20.0);
 
-    assertTrue("removeItems should return true after position change",
+    assertTrue(
+        "removeItems should return true after position change",
         algo.removeItems(java.util.Arrays.asList(item1, item2)));
     assertEquals(0, algo.getItems().size());
     assertEquals(0, algo.getClusters(4.0f).size());
@@ -194,14 +203,16 @@ public class QuadItemTest {
     assertEquals(0, algo.getClusters(4.0f).size());
   }
 
-  private static class TestAlgorithm<T extends ClusterItem> extends NonHierarchicalDistanceBasedAlgorithm<T> {
+  private static class TestAlgorithm<T extends ClusterItem>
+      extends NonHierarchicalDistanceBasedAlgorithm<T> {
     private static final com.google.maps.android.projection.SphericalMercatorProjection PROJ =
         new com.google.maps.android.projection.SphericalMercatorProjection(1.0);
 
     public int getQuadTreeItemCount(double lat, double lng, double span) {
       com.google.maps.android.geometry.Point p = PROJ.toPoint(new LatLng(lat, lng));
-      com.google.maps.android.geometry.Bounds bounds = new com.google.maps.android.geometry.Bounds(
-          p.x - span, p.x + span, p.y - span, p.y + span);
+      com.google.maps.android.geometry.Bounds bounds =
+          new com.google.maps.android.geometry.Bounds(
+              p.x - span, p.x + span, p.y - span, p.y + span);
       return mQuadTree.search(bounds).size();
     }
   }
@@ -219,8 +230,9 @@ public class QuadItemTest {
       mTitle = "";
       mPosition = new LatLng(lat, lng);
     }
+
     public void setPosition(double lat, double lng) {
-    mPosition = new LatLng(lat, lng);
+      mPosition = new LatLng(lat, lng);
     }
 
     @NonNull

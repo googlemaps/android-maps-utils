@@ -28,35 +28,32 @@ import kotlin.math.max
  */
 @SuppressLint("AppCompatCustomView")
 public class SquareTextView
-    @JvmOverloads
-    public constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0,
-    ) : TextView(context, attrs, defStyle) {
-        private var offsetTop = 0
-        private var offsetLeft = 0
+@JvmOverloads
+public constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0,
+) : TextView(context, attrs, defStyle) {
+    private var offsetTop = 0
+    private var offsetLeft = 0
 
-        public override fun onMeasure(
-            widthMeasureSpec: Int,
-            heightMeasureSpec: Int,
-        ) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-            val width = measuredWidth
-            val height = measuredHeight
-            val dimension = max(width, height)
-            if (width > height) {
-                offsetTop = width - height
-                offsetLeft = 0
-            } else {
-                offsetTop = 0
-                offsetLeft = height - width
-            }
-            setMeasuredDimension(dimension, dimension)
+    public override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val width = measuredWidth
+        val height = measuredHeight
+        val dimension = max(width, height)
+        if (width > height) {
+            offsetTop = width - height
+            offsetLeft = 0
+        } else {
+            offsetTop = 0
+            offsetLeft = height - width
         }
-
-        public override fun draw(canvas: Canvas) {
-            canvas.translate(offsetLeft / 2f, offsetTop / 2f)
-            super.draw(canvas)
-        }
+        setMeasuredDimension(dimension, dimension)
     }
+
+    public override fun draw(canvas: Canvas) {
+        canvas.translate(offsetLeft / 2f, offsetTop / 2f)
+        super.draw(canvas)
+    }
+}

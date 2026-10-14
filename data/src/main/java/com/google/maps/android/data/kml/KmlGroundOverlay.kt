@@ -52,13 +52,12 @@ public class KmlGroundOverlay(
 
     internal fun getGroundOverlayOptions(): GroundOverlayOptions = groundOverlayOptions
 
-    override fun toString(): String =
-        StringBuilder("GroundOverlay")
-            .apply {
-                append("{")
-                append("\n properties=").append(properties)
-                append(",\n image url=").append(imageUrl)
-                append(",\n LatLngBox=").append(latLngBox)
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("GroundOverlay")
+        .apply {
+            append("{")
+            append("\n properties=").append(properties)
+            append(",\n image url=").append(imageUrl)
+            append(",\n LatLngBox=").append(latLngBox)
+            append("\n}\n")
+        }.toString()
 }

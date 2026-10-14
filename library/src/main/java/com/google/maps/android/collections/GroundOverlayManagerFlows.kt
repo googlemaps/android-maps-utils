@@ -26,11 +26,10 @@ import kotlinx.coroutines.flow.callbackFlow
  * with the provided [optionsActions].
  */
 public inline fun GroundOverlayManager.Collection.addGroundOverlay(
-    optionsActions: GroundOverlayOptions.() -> Unit
-): GroundOverlay =
-    this.addGroundOverlay(
-        GroundOverlayOptions().apply(optionsActions)
-    )
+    optionsActions: GroundOverlayOptions.() -> Unit,
+): GroundOverlay = this.addGroundOverlay(
+    GroundOverlayOptions().apply(optionsActions),
+)
 
 /**
  * Returns a flow that emits when a ground overlay in this collection is clicked. Using this to observe ground overlay clicks
@@ -46,12 +45,11 @@ public inline fun GroundOverlayManager.Collection.addGroundOverlay(
  * suppressing default SDK behavior. Under backpressure if the buffer is full, `trySend` returns `false`,
  * allowing default SDK click handling to proceed.
  */
-public fun GroundOverlayManager.Collection.clickEvents(): Flow<GroundOverlay> =
-    callbackFlow {
-        setOnGroundOverlayClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnGroundOverlayClickListener(null)
-        }
+public fun GroundOverlayManager.Collection.clickEvents(): Flow<GroundOverlay> = callbackFlow {
+    setOnGroundOverlayClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnGroundOverlayClickListener(null)
+    }
+}

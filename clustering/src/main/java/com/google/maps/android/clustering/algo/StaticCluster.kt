@@ -22,9 +22,7 @@ import com.google.maps.android.clustering.ClusterItem
 /**
  * A cluster whose center is determined upon creation.
  */
-public open class StaticCluster<T : ClusterItem> public constructor(
-    private val mCenter: LatLng,
-) : Cluster<T> {
+public open class StaticCluster<T : ClusterItem> public constructor(private val mCenter: LatLng) : Cluster<T> {
     private val mItems: MutableCollection<T> = LinkedHashSet()
 
     public fun add(t: T): Boolean = mItems.add(t)
@@ -40,11 +38,10 @@ public open class StaticCluster<T : ClusterItem> public constructor(
     override val size: Int
         get() = mItems.size
 
-    override fun toString(): String =
-        "StaticCluster{" +
-            "mCenter=" + mCenter +
-            ", mItems.size=" + mItems.size +
-            '}'
+    override fun toString(): String = "StaticCluster{" +
+        "mCenter=" + mCenter +
+        ", mItems.size=" + mItems.size +
+        '}'
 
     override fun hashCode(): Int = mCenter.hashCode() + mItems.hashCode()
 

@@ -132,7 +132,8 @@ public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : Abstr
     override fun getClusters(zoom: Float): Set<Cluster<T>> {
         val discreteZoom = zoom.toInt()
 
-        val zoomSpecificSpan = maxDistanceBetweenClusteredItems.toDouble() / Math.pow(2.0, discreteZoom.toDouble()) / 256.0
+        val zoomSpecificSpan =
+            maxDistanceBetweenClusteredItems.toDouble() / Math.pow(2.0, discreteZoom.toDouble()) / 256.0
 
         val visitedCandidates = HashSet<QuadItem<T>>()
         val results = HashSet<Cluster<T>>()
@@ -179,10 +180,8 @@ public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : Abstr
         return results
     }
 
-    protected open fun getClusteringItems(
-        quadTree: PointQuadTree<QuadItem<T>>,
-        zoom: Float,
-    ): Collection<QuadItem<T>> = mItems
+    protected open fun getClusteringItems(quadTree: PointQuadTree<QuadItem<T>>, zoom: Float): Collection<QuadItem<T>> =
+        mItems
 
     override val items: Collection<T>
         get() {
@@ -202,10 +201,7 @@ public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : Abstr
      * @param b the second point
      * @return the squared Euclidean distance between [a] and [b]
      */
-    protected fun distanceSquared(
-        a: Point,
-        b: Point,
-    ): Double = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
+    protected fun distanceSquared(a: Point, b: Point): Double = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
 
     /**
      * Creates a square bounding box centered at a point with the specified span.
@@ -214,10 +210,7 @@ public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : Abstr
      * @param span the total width/height of the bounding box
      * @return the [Bounds] object representing the search area
      */
-    protected fun createBoundsFromSpan(
-        p: Point,
-        span: Double,
-    ): Bounds {
+    protected fun createBoundsFromSpan(p: Point, span: Double): Bounds {
         // TODO: Use a span that takes into account the visual size of the marker, not just its
         // LatLng.
         val halfSpan = span / 2
@@ -229,9 +222,8 @@ public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : Abstr
         )
     }
 
-    protected class QuadItem<T : ClusterItem>(
-        @JvmField public val mClusterItem: T,
-    ) : PointQuadTree.Item,
+    protected class QuadItem<T : ClusterItem>(@JvmField public val mClusterItem: T) :
+        PointQuadTree.Item,
         Cluster<T> {
         private val mPoint: Point = PROJECTION.toPoint(mClusterItem.position)
         private val mPosition: LatLng = mClusterItem.position

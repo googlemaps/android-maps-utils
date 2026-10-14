@@ -23,14 +23,14 @@ import com.google.maps.android.data.LineString
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class GeoJsonLineString
-    @JvmOverloads
-    constructor(
-        coordinates: List<LatLng>,
-        private val altitudes: List<Double>? = null,
-    ) : LineString(coordinates) {
-        public fun getType(): String = getGeometryType()
+@JvmOverloads
+constructor(
+    coordinates: List<LatLng>,
+    private val altitudes: List<Double>? = null,
+) : LineString(coordinates) {
+    public fun getType(): String = getGeometryType()
 
-        public fun getCoordinates(): List<LatLng> = getGeometryObject()
+    public fun getCoordinates(): List<LatLng> = getGeometryObject()
 
-        public fun getAltitudes(): List<Double>? = altitudes
-    }
+    public fun getAltitudes(): List<Double>? = altitudes
+}

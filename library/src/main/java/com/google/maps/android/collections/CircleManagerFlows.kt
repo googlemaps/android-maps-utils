@@ -25,10 +25,9 @@ import kotlinx.coroutines.flow.callbackFlow
  * Adds a new [Circle] to the underlying map and to this [CircleManager.Collection] with the
  * provided [optionsActions].
  */
-public inline fun CircleManager.Collection.addCircle(optionsActions: CircleOptions.() -> Unit): Circle =
-    this.addCircle(
-        CircleOptions().apply(optionsActions)
-    )
+public inline fun CircleManager.Collection.addCircle(optionsActions: CircleOptions.() -> Unit): Circle = this.addCircle(
+    CircleOptions().apply(optionsActions),
+)
 
 /**
  * Returns a flow that emits when a circle in this collection is clicked. Using this to observe circle clicks
@@ -44,12 +43,11 @@ public inline fun CircleManager.Collection.addCircle(optionsActions: CircleOptio
  * suppressing default SDK behavior. Under backpressure if the buffer is full, `trySend` returns `false`,
  * allowing default SDK click handling to proceed.
  */
-public fun CircleManager.Collection.clickEvents(): Flow<Circle> =
-    callbackFlow {
-        setOnCircleClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnCircleClickListener(null)
-        }
+public fun CircleManager.Collection.clickEvents(): Flow<Circle> = callbackFlow {
+    setOnCircleClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnCircleClickListener(null)
+    }
+}

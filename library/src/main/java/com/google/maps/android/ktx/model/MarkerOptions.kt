@@ -23,7 +23,7 @@ import com.google.maps.android.model.markerOptions as canonicalMarkerOptions
 @Deprecated(
     message = "Use com.google.maps.android.model.markerOptions instead",
     replaceWith = ReplaceWith("markerOptions(optionsActions)", "com.google.maps.android.model.markerOptions"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public inline fun markerOptions(optionsActions: MarkerOptions.() -> Unit): MarkerOptions = canonicalMarkerOptions(optionsActions)
-
+public inline fun markerOptions(optionsActions: MarkerOptions.() -> Unit): MarkerOptions =
+    canonicalMarkerOptions(optionsActions)

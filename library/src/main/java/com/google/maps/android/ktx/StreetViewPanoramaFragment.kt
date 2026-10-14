@@ -22,7 +22,7 @@ import com.google.maps.android.awaitStreetViewPanorama as canonicalAwaitStreetVi
 @Deprecated(
     message = "Use com.google.maps.android.awaitStreetViewPanorama instead",
     replaceWith = ReplaceWith("awaitStreetViewPanorama()", "com.google.maps.android.awaitStreetViewPanorama"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public suspend fun StreetViewPanoramaFragment.awaitStreetViewPanorama(): StreetViewPanorama = this.canonicalAwaitStreetViewPanorama()
-
+public suspend fun StreetViewPanoramaFragment.awaitStreetViewPanorama(): StreetViewPanorama =
+    this.canonicalAwaitStreetViewPanorama()

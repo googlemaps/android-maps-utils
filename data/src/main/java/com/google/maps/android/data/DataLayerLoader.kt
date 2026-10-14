@@ -48,16 +48,15 @@ public class DataLayerLoader(
      * @param assetName The name of the asset file.
      * @return The loaded DataLayer, or null if loading failed.
      */
-    public suspend fun loadAsset(assetName: String): DataLayer? =
-        withContext(dispatcher) {
-            try {
-                val inputStream = context.assets.open(assetName)
-                loadInputStream(inputStream, assetName)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
+    public suspend fun loadAsset(assetName: String): DataLayer? = withContext(dispatcher) {
+        try {
+            val inputStream = context.assets.open(assetName)
+            loadInputStream(inputStream, assetName)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
+    }
 
     /**
      * Loads a DataLayer from an InputStream.
@@ -66,10 +65,7 @@ public class DataLayerLoader(
      * @param fileName The name of the file (optional), used for extension matching.
      * @return The loaded DataLayer, or null if loading failed.
      */
-    public suspend fun loadInputStream(
-        inputStream: InputStream,
-        fileName: String?,
-    ): DataLayer? {
+    public suspend fun loadInputStream(inputStream: InputStream, fileName: String?): DataLayer? {
         return withContext(dispatcher) {
             try {
                 // 1. Try to match by extension
@@ -105,37 +101,32 @@ public class DataLayerLoader(
         }
     }
 
-    private fun isKnownExtension(extension: String): Boolean =
-        GpxParser.SUPPORTED_EXTENSIONS.contains(extension) ||
-            KmlParser.SUPPORTED_EXTENSIONS.contains(extension) ||
-            KmzParser.SUPPORTED_EXTENSIONS.contains(extension) ||
-            GeoJsonParser.SUPPORTED_EXTENSIONS.contains(extension)
+    private fun isKnownExtension(extension: String): Boolean = GpxParser.SUPPORTED_EXTENSIONS.contains(extension) ||
+        KmlParser.SUPPORTED_EXTENSIONS.contains(extension) ||
+        KmzParser.SUPPORTED_EXTENSIONS.contains(extension) ||
+        GeoJsonParser.SUPPORTED_EXTENSIONS.contains(extension)
 
-    private fun tryParseByExtension(
-        inputStream: InputStream,
-        extension: String,
-    ): DataLayer? =
-        when {
-            GpxParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
-                GpxParser().parse(inputStream).toLayer()
-            }
-
-            KmlParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
-                KmlParser().parse(inputStream).toLayer()
-            }
-
-            KmzParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
-                KmzParser().parse(inputStream).toLayer()
-            }
-
-            GeoJsonParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
-                GeoJsonParser().parse(inputStream)?.toLayer()
-            }
-
-            else -> {
-                null
-            }
+    private fun tryParseByExtension(inputStream: InputStream, extension: String): DataLayer? = when {
+        GpxParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
+            GpxParser().parse(inputStream).toLayer()
         }
+
+        KmlParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
+            KmlParser().parse(inputStream).toLayer()
+        }
+
+        KmzParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
+            KmzParser().parse(inputStream).toLayer()
+        }
+
+        GeoJsonParser.SUPPORTED_EXTENSIONS.contains(extension) -> {
+            GeoJsonParser().parse(inputStream)?.toLayer()
+        }
+
+        else -> {
+            null
+        }
+    }
 
     private fun sniffAndParse(inputStream: InputStream): DataLayer? {
         // This is tricky without buffering. We need to read the header.

@@ -200,10 +200,7 @@ class RendererDemoActivity :
         }
     }
 
-    private fun onChipClicked(
-        chip: Chip,
-        filename: String,
-    ) {
+    private fun onChipClicked(chip: Chip, filename: String) {
         if (chip.isChecked) {
             // Load and add
             val existingLayer = chipLayers[chip.id]
@@ -227,10 +224,7 @@ class RendererDemoActivity :
         }
     }
 
-    private suspend fun loadLayerFromAsset(
-        filename: String,
-        onSuccess: (DataLayer) -> Unit,
-    ) {
+    private suspend fun loadLayerFromAsset(filename: String, onSuccess: (DataLayer) -> Unit) {
         dataLayerLoader.loadAsset(filename)?.let { layer -> onSuccess(layer) }
     }
 
@@ -291,7 +285,11 @@ class RendererDemoActivity :
                     layerCache[cacheKey] = layer
                     addLayerToMap(layer)
                 } else {
-                    Toast.makeText(this@RendererDemoActivity, "Unsupported or failed to parse file", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RendererDemoActivity,
+                        "Unsupported or failed to parse file",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

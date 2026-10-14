@@ -23,10 +23,8 @@ import com.google.maps.android.data.Point
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class KmlPoint
-    @JvmOverloads
-    constructor(
-        coordinates: LatLng,
-        private val altitude: Double? = null,
-    ) : Point(coordinates) {
-        public fun getAltitude(): Double? = altitude
-    }
+@JvmOverloads
+constructor(coordinates: LatLng, private val altitude: Double? = null) :
+    Point(coordinates) {
+    public fun getAltitude(): Double? = altitude
+}

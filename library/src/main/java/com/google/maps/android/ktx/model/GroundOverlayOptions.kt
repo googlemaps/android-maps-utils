@@ -22,8 +22,11 @@ import com.google.maps.android.model.groundOverlayOptions as canonicalGroundOver
 
 @Deprecated(
     message = "Use com.google.maps.android.model.groundOverlayOptions instead",
-    replaceWith = ReplaceWith("groundOverlayOptions(optionsActions)", "com.google.maps.android.model.groundOverlayOptions"),
-    level = DeprecationLevel.WARNING
+    replaceWith = ReplaceWith(
+        "groundOverlayOptions(optionsActions)",
+        "com.google.maps.android.model.groundOverlayOptions",
+    ),
+    level = DeprecationLevel.WARNING,
 )
-public inline fun groundOverlayOptions(optionsActions: GroundOverlayOptions.() -> Unit): GroundOverlayOptions = canonicalGroundOverlayOptions(optionsActions)
-
+public inline fun groundOverlayOptions(optionsActions: GroundOverlayOptions.() -> Unit): GroundOverlayOptions =
+    canonicalGroundOverlayOptions(optionsActions)

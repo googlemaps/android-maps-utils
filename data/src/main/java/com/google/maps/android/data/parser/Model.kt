@@ -21,9 +21,7 @@ import com.google.maps.android.data.parser.kml.Style
  * A generic container for geographic data parsed from any file.
  * It holds a collection of features, each representing a distinct entity on the map.
  */
-public data class GeoData(
-    public val features: List<Feature>,
-)
+public data class GeoData(public val features: List<Feature>)
 
 /**
  * Represents a single, distinct geographic entity, such as a placemark, a route, or a defined area.
@@ -39,24 +37,14 @@ public data class Feature(
  * A sealed interface representing the geometric shape of a feature.
  */
 public sealed interface Geometry {
-    public data class Point(
-        public val lat: Double,
-        public val lon: Double,
-        public val alt: Double?,
-    ) : Geometry
+    public data class Point(public val lat: Double, public val lon: Double, public val alt: Double?) : Geometry
 
-    public data class LineString(
-        public val points: List<Point>,
-    ) : Geometry
+    public data class LineString(public val points: List<Point>) : Geometry
 
-    public data class Polygon(
-        public val shell: List<Point>,
-        public val holes: List<List<Point>> = emptyList(),
-    ) : Geometry
+    public data class Polygon(public val shell: List<Point>, public val holes: List<List<Point>> = emptyList()) :
+        Geometry
 
-    public data class GeometryCollection(
-        public val geometries: List<Geometry>,
-    ) : Geometry
+    public data class GeometryCollection(public val geometries: List<Geometry>) : Geometry
 }
 
 /**

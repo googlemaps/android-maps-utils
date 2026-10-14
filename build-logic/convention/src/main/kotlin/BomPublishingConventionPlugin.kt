@@ -17,14 +17,15 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.configure
 
 class BomPublishingConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.run {
             apply(plugin = "java-platform")
             apply(plugin = "com.vanniktech.maven.publish")
-            
+
             extensions.configure<MavenPublishBaseExtension> {
                 publishToMavenCentral()
                 if (findProperty("signing.keyId")?.toString()?.isNotBlank() == true ||

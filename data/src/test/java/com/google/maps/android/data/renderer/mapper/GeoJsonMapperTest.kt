@@ -82,8 +82,20 @@ class GeoJsonMapperTest {
         val geoJsonPolygon =
             GeoJsonPolygon(
                 listOf(
-                    listOf(Coordinates(0.0, 0.0), Coordinates(10.0, 0.0), Coordinates(10.0, 10.0), Coordinates(0.0, 10.0), Coordinates(0.0, 0.0)),
-                    listOf(Coordinates(2.0, 2.0), Coordinates(8.0, 2.0), Coordinates(8.0, 8.0), Coordinates(2.0, 8.0), Coordinates(2.0, 2.0)),
+                    listOf(
+                        Coordinates(0.0, 0.0),
+                        Coordinates(10.0, 0.0),
+                        Coordinates(10.0, 10.0),
+                        Coordinates(0.0, 10.0),
+                        Coordinates(0.0, 0.0),
+                    ),
+                    listOf(
+                        Coordinates(2.0, 2.0),
+                        Coordinates(8.0, 2.0),
+                        Coordinates(8.0, 8.0),
+                        Coordinates(2.0, 8.0),
+                        Coordinates(2.0, 2.0),
+                    ),
                 ),
             )
         val scene = GeoJsonMapper.toScene(geoJsonPolygon)
