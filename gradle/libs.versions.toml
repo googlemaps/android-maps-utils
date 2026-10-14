@@ -63,6 +63,7 @@ gradle = "9.4.1"
 gradleMavenPublishPlugin = "0.37.0"
 secrets-gradle-plugin = "2.0.1"
 serialization = "1.0.2.1"
+spotless = "8.9.0"
 
 
 [libraries]
@@ -143,3 +144,4 @@ secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.se
 # --- Core Gradle Plugins ---
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
