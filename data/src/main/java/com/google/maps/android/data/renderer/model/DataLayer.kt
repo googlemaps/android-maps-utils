@@ -41,10 +41,7 @@ public data class DataLayer(
         if (hasPoints) boundsBuilder.build() else null
     }
 
-    private fun includeGeometryPoints(
-        geometry: Geometry,
-        boundsBuilder: LatLngBounds.Builder,
-    ): Boolean {
+    private fun includeGeometryPoints(geometry: Geometry, boundsBuilder: LatLngBounds.Builder): Boolean {
         var added = false
         when (geometry) {
             is PointGeometry -> {
@@ -83,4 +80,3 @@ public data class DataLayer(
         return added
     }
 }
-

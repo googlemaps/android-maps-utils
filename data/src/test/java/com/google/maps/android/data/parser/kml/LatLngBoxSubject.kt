@@ -20,28 +20,21 @@ import com.google.common.truth.Fact
 import com.google.common.truth.FailureMetadata
 import com.google.common.truth.Subject
 import com.google.common.truth.Truth
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.math.PI
 
-fun assertThat(latLonBox: LatLonBox?): LatLonBoxSubject {
-    return Truth.assertAbout(latLonBoxSubjectFactory()).that(latLonBox)
+fun assertThat(latLonBox: LatLonBox?): LatLonBoxSubject = Truth.assertAbout(latLonBoxSubjectFactory()).that(latLonBox)
+
+fun latLonBoxSubjectFactory(): Subject.Factory<LatLonBoxSubject, LatLonBox> = Subject.Factory { metaData, target ->
+    LatLonBoxSubject(
+        metaData,
+        target,
+    )
 }
 
-fun latLonBoxSubjectFactory(): Subject.Factory<LatLonBoxSubject, LatLonBox> {
-    return Subject.Factory { metaData, target ->
-        LatLonBoxSubject(
-            metaData,
-            target
-        )
-    }
-}
-
-class LatLonBoxSubject(
-    metadata: FailureMetadata,
-    private val actual: LatLonBox?
-) : Subject(metadata, actual) {
+class LatLonBoxSubject(metadata: FailureMetadata, private val actual: LatLonBox?) : Subject(metadata, actual) {
 
     fun isNear(expected: LatLonBox) {
         if (actual == null) {
@@ -70,7 +63,7 @@ class LatLonBoxSubject(
         ) {
             failWithActual(
                 Fact.fact("expected to be near", expected.toString()),
-                Fact.fact("but was", actual.toString())
+                Fact.fact("but was", actual.toString()),
             )
         }
     }
@@ -95,7 +88,8 @@ class LatLonBoxSubject(
             // --- Rotated Logic ---
             // 1. Calculate the center of the box
             val centerLat = (actual.north + actual.south) / 2.0
-            val centerLon = (actual.east + actual.west) / 2.0 // Note: Assumes simple average (watch for Date Line if box crosses 180)
+            // Note: Assumes simple average (watch for Date Line if box crosses 180)
+            val centerLon = (actual.east + actual.west) / 2.0
 
             // 2. Calculate distance from center to point (dLat, dLon)
             val dLat = expected.latitude - centerLat
@@ -118,13 +112,12 @@ class LatLonBoxSubject(
 
             // Check if the un-rotated point is within the axis-aligned bounds (+ tolerance)
             abs(rotatedLat) <= halfSpanLat + tolerance &&
-                    abs(rotatedLon) <= halfSpanLon + tolerance
-
+                abs(rotatedLon) <= halfSpanLon + tolerance
         } else {
             // --- Standard Logic (No Rotation) ---
             actual.south - tolerance <= expected.latitude &&
-                    expected.latitude <= actual.north + tolerance &&
-                    isLongitudeWithinBounds(expected.longitude, actual, tolerance)
+                expected.latitude <= actual.north + tolerance &&
+                isLongitudeWithinBounds(expected.longitude, actual, tolerance)
         }
 
         if (!contains) {
@@ -136,13 +129,14 @@ class LatLonBoxSubject(
      * Checks if a longitude is within the bounds, correctly handling cases where the bounds
      * cross the antimeridian (e.g., from 160 to -160).
      */
-    private fun isLongitudeWithinBounds(longitude: Double, bounds: LatLonBox, tolerance: Double): Boolean {
-        return if (bounds.west <= bounds.east) {
+    private fun isLongitudeWithinBounds(longitude: Double, bounds: LatLonBox, tolerance: Double): Boolean =
+        if (bounds.west <=
+            bounds.east
+        ) {
             // Standard case (e.g., from 10 to 20).
             longitude >= bounds.west - tolerance && longitude <= bounds.east + tolerance
         } else {
             // Case where the bounds cross the antimeridian (e.g., from 160 to -160).
             longitude >= bounds.west - tolerance || longitude <= bounds.east + tolerance
         }
-    }
 }

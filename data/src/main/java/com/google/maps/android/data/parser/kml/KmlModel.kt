@@ -144,12 +144,9 @@ public data class LatLonQuad(
     public val coordinates: List<LatLngAlt> = emptyList(),
 )
 
-
-
-public fun Kml.findByPlacemarksById(id: String): List<Placemark> =
-    buildList {
-        document?.placemarks?.filter { it.id == id }?.let { addAll(it) }
-    }
+public fun Kml.findByPlacemarksById(id: String): List<Placemark> = buildList {
+    document?.placemarks?.filter { it.id == id }?.let { addAll(it) }
+}
 
 @Serializable
 @XmlSerialName("Document", namespace = KML_NAMESPACE, prefix = "")
@@ -462,9 +459,7 @@ public data class Pair(
 
 @Serializable
 @XmlSerialName("gx:BalloonVisibility", namespace = GOOGLE_KML_NAMESPACE, prefix = "gx")
-public data class BalloonVisibility(
-    public val value: Int = 1,
-)
+public data class BalloonVisibility(public val value: Int = 1)
 
 internal fun String.stripWhitespace(): String = filter { !it.isWhitespace() }
 

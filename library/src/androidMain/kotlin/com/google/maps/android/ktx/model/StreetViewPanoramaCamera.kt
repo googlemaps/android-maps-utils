@@ -22,8 +22,12 @@ import com.google.maps.android.model.streetViewPanoramaCamera as canonicalStreet
 
 @Deprecated(
     message = "Use com.google.maps.android.model.streetViewPanoramaCamera instead",
-    replaceWith = ReplaceWith("streetViewPanoramaCamera(optionsActions)", "com.google.maps.android.model.streetViewPanoramaCamera"),
-    level = DeprecationLevel.WARNING
+    replaceWith = ReplaceWith(
+        "streetViewPanoramaCamera(optionsActions)",
+        "com.google.maps.android.model.streetViewPanoramaCamera",
+    ),
+    level = DeprecationLevel.WARNING,
 )
-public inline fun streetViewPanoramaCamera(optionsActions: StreetViewPanoramaCamera.Builder.() -> Unit): StreetViewPanoramaCamera = canonicalStreetViewPanoramaCamera(optionsActions)
-
+public inline fun streetViewPanoramaCamera(
+    optionsActions: StreetViewPanoramaCamera.Builder.() -> Unit,
+): StreetViewPanoramaCamera = canonicalStreetViewPanoramaCamera(optionsActions)

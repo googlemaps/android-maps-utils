@@ -41,12 +41,7 @@ public abstract class Style : Observable() {
         mMarkerOptions.rotation(rotation)
     }
 
-    public open fun setMarkerHotSpot(
-        x: Float,
-        y: Float,
-        xUnits: String,
-        yUnits: String,
-    ) {
+    public open fun setMarkerHotSpot(x: Float, y: Float, xUnits: String, yUnits: String) {
         var xAnchor = 0.5f
         var yAnchor = 1.0f
 

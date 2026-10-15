@@ -130,10 +130,7 @@ class ClusterManagerTest {
         map: GoogleMap,
         clusterManager: ClusterManager<MutableTestItem>,
     ) : com.google.maps.android.clustering.view.DefaultClusterRenderer<MutableTestItem>(context, map, clusterManager) {
-        fun invokeOnClusterItemUpdated(
-            item: MutableTestItem,
-            marker: Marker,
-        ) {
+        fun invokeOnClusterItemUpdated(item: MutableTestItem, marker: Marker) {
             onClusterItemUpdated(item, marker)
         }
     }

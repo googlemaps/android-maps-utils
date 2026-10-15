@@ -25,11 +25,9 @@ import kotlinx.coroutines.flow.callbackFlow
  * Adds a new [Polyline] to the underlying map and to this [PolylineManager.Collection] with the
  * provided [optionsActions].
  */
-public inline fun PolylineManager.Collection.addPolyline(
-    optionsActions: PolylineOptions.() -> Unit
-): Polyline =
+public inline fun PolylineManager.Collection.addPolyline(optionsActions: PolylineOptions.() -> Unit): Polyline =
     this.addPolyline(
-        PolylineOptions().apply(optionsActions)
+        PolylineOptions().apply(optionsActions),
     )
 
 /**
@@ -46,12 +44,11 @@ public inline fun PolylineManager.Collection.addPolyline(
  * suppressing default SDK behavior. Under backpressure if the buffer is full, `trySend` returns `false`,
  * allowing default SDK click handling to proceed.
  */
-public fun PolylineManager.Collection.clickEvents(): Flow<Polyline> =
-    callbackFlow {
-        setOnPolylineClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnPolylineClickListener(null)
-        }
+public fun PolylineManager.Collection.clickEvents(): Flow<Polyline> = callbackFlow {
+    setOnPolylineClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnPolylineClickListener(null)
+    }
+}

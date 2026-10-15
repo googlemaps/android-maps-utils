@@ -99,7 +99,7 @@ public enum class LocationPriority {
     BALANCED_POWER_ACCURACY,
 
     /** Requests coarse, city/neighborhood-level accuracy with minimal battery impact. */
-    LOW_POWER
+    LOW_POWER,
 }
 
 /**
@@ -122,11 +122,7 @@ public fun interface LocationSource {
      * @param minUpdateDistanceM Minimum displacement in meters before a new update is emitted.
      * @param priority Desired accuracy and power trade-off.
      */
-    public fun locationEvents(
-        intervalMs: Long,
-        minUpdateDistanceM: Float,
-        priority: LocationPriority
-    ): Flow<Location>
+    public fun locationEvents(intervalMs: Long, minUpdateDistanceM: Float, priority: LocationPriority): Flow<Location>
 }
 
 /**
@@ -136,9 +132,9 @@ public fun interface LocationSource {
 public fun LocationSource.locationEvents(
     intervalMs: Long = 2_000L,
     minUpdateDistanceM: Float = 1f,
-    priority: LocationPriority = LocationPriority.HIGH_ACCURACY
+    priority: LocationPriority = LocationPriority.HIGH_ACCURACY,
 ): Flow<Location> = locationEvents(
     intervalMs = intervalMs,
     minUpdateDistanceM = minUpdateDistanceM,
-    priority = priority
+    priority = priority,
 )

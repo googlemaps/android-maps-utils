@@ -21,12 +21,6 @@ package com.google.maps.android.location
 import com.google.maps.android.model.LatLng
 import com.google.maps.android.model.latitude
 import com.google.maps.android.model.longitude
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNotSame
-import kotlin.test.assertNull
-import kotlin.test.assertSame
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -46,6 +40,12 @@ import platform.Foundation.NSDate
 import platform.Foundation.NSError
 import platform.Foundation.dateWithTimeIntervalSince1970
 import platform.darwin.NSObject
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNotSame
+import kotlin.test.assertNull
+import kotlin.test.assertSame
 
 class CLLocationManagerTest {
 
@@ -59,7 +59,7 @@ class CLLocationManagerTest {
             verticalAccuracy = 8.0,
             course = 180.0,
             speed = 12.25,
-            timestamp = NSDate.dateWithTimeIntervalSince1970(timestampSeconds)
+            timestamp = NSDate.dateWithTimeIntervalSince1970(timestampSeconds),
         )
 
         val location: Location = clLocation
@@ -134,7 +134,7 @@ class CLLocationManagerTest {
         val deniedError = NSError.errorWithDomain(
             domain = kCLErrorDomain,
             code = kCLErrorDenied,
-            userInfo = null
+            userInfo = null,
         )
         delegate.locationManager(manager, didFailWithError = deniedError)
 
@@ -154,7 +154,7 @@ class CLLocationManagerTest {
             source.locationEvents(
                 intervalMs = 1_000L,
                 minUpdateDistanceM = 2f,
-                priority = LocationPriority.HIGH_ACCURACY
+                priority = LocationPriority.HIGH_ACCURACY,
             ).first()
         }
 

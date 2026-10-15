@@ -64,10 +64,7 @@ class PolylineProgressDemoActivity :
         bitmapDescriptorFromVector(R.drawable.baseline_airplanemode_active_24, "#FFD700".toColorInt())
     }
 
-    private data class AnimationState(
-        val progress: Int,
-        val direction: Int,
-    )
+    private data class AnimationState(val progress: Int, val direction: Int)
 
     private val animationState = MutableLiveData<AnimationState>()
     private var animationJob: Job? = null
@@ -182,11 +179,7 @@ class PolylineProgressDemoActivity :
         animationJob = null
     }
 
-    override fun onProgressChanged(
-        seekBar: SeekBar?,
-        progress: Int,
-        fromUser: Boolean,
-    ) {
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (fromUser) {
             stopAnimation()
             animationState.value = AnimationState(progress, animationState.value?.direction ?: 1)
@@ -197,10 +190,7 @@ class PolylineProgressDemoActivity :
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) { /* No-op */ }
 
-    private fun updateProgressOnMap(
-        percentage: Double,
-        direction: Int,
-    ) {
+    private fun updateProgressOnMap(percentage: Double, direction: Int) {
         progressPolyline?.remove()
 
         val prefix = SphericalUtil.getPolylinePrefix(polylinePoints, percentage)
@@ -221,11 +211,7 @@ class PolylineProgressDemoActivity :
         }
     }
 
-    private fun updateMarker(
-        point: LatLng,
-        percentage: Double,
-        direction: Int,
-    ) {
+    private fun updateMarker(point: LatLng, percentage: Double, direction: Int) {
         val heading =
             SphericalUtil
                 .getPointOnPolyline(polylinePoints, percentage + 0.0001)
@@ -250,10 +236,7 @@ class PolylineProgressDemoActivity :
         }
     }
 
-    private fun bitmapDescriptorFromVector(
-        vectorResId: Int,
-        color: Int,
-    ): BitmapDescriptor {
+    private fun bitmapDescriptorFromVector(vectorResId: Int, color: Int): BitmapDescriptor {
         val vectorDrawable = ContextCompat.getDrawable(this, vectorResId)!!
         vectorDrawable.setTint(color)
         val bitmap =

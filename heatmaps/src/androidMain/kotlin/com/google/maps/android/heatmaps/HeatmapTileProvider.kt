@@ -31,9 +31,7 @@ import kotlin.math.pow
 /**
  * Tile provider that creates heatmap tiles.
  */
-public class HeatmapTileProvider private constructor(
-    builder: Builder,
-) : TileProvider {
+public class HeatmapTileProvider private constructor(builder: Builder) : TileProvider {
     private var data: Collection<WeightedLatLng>
     private var radius: Int
     private var gradient: Gradient
@@ -218,11 +216,7 @@ public class HeatmapTileProvider private constructor(
         updateData(this.data)
     }
 
-    public override fun getTile(
-        x: Int,
-        y: Int,
-        zoom: Int,
-    ): Tile {
+    public override fun getTile(x: Int, y: Int, zoom: Int): Tile {
         val tileWidth = WORLD_WIDTH / 2.0.pow(zoom.toDouble())
         val padding = tileWidth * radius / TILE_DIM
         val tileWidthPadded = tileWidth + 2 * padding
@@ -291,7 +285,8 @@ public class HeatmapTileProvider private constructor(
             return maxIntensityArray
         }
         for (i in DEFAULT_MIN_ZOOM until DEFAULT_MAX_ZOOM) {
-            maxIntensityArray[i] = getMaxValue(data, bounds, radius, (SCREEN_SIZE * Math.pow(2.0, (i - 3).toDouble())).toInt())
+            maxIntensityArray[i] =
+                getMaxValue(data, bounds, radius, (SCREEN_SIZE * Math.pow(2.0, (i - 3).toDouble())).toInt())
             if (i == DEFAULT_MIN_ZOOM) {
                 for (j in 0 until i) maxIntensityArray[j] = maxIntensityArray[i]
             }
@@ -319,10 +314,7 @@ public class HeatmapTileProvider private constructor(
         public const val MIN_RADIUS: Int = 10
         public const val MAX_RADIUS: Int = 50
 
-        private data class Vector(
-            val x: Int,
-            val y: Int,
-        )
+        private data class Vector(val x: Int, val y: Int)
 
         private fun wrapData(data: Collection<LatLng>): Collection<WeightedLatLng> = data.map { WeightedLatLng(it) }
 
@@ -353,10 +345,7 @@ public class HeatmapTileProvider private constructor(
         }
 
         @JvmStatic
-        public fun generateKernel(
-            radius: Int,
-            sd: Double,
-        ): DoubleArray {
+        public fun generateKernel(radius: Int, sd: Double): DoubleArray {
             val kernel = DoubleArray(radius * 2 + 1)
             for (i in -radius..radius) {
                 kernel[i + radius] = exp(-i * i / (2 * sd * sd))
@@ -365,10 +354,7 @@ public class HeatmapTileProvider private constructor(
         }
 
         @JvmStatic
-        public fun convolve(
-            grid: Array<DoubleArray>,
-            kernel: DoubleArray,
-        ): Array<DoubleArray> {
+        public fun convolve(grid: Array<DoubleArray>, kernel: DoubleArray): Array<DoubleArray> {
             val radius = floor(kernel.size / 2.0).toInt()
             val dimOld = grid.size
             val dim = dimOld - 2 * radius
@@ -403,11 +389,7 @@ public class HeatmapTileProvider private constructor(
             return outputGrid
         }
 
-        internal fun colorize(
-            grid: Array<DoubleArray>,
-            colorMap: IntArray,
-            max: Double,
-        ): Bitmap {
+        internal fun colorize(grid: Array<DoubleArray>, colorMap: IntArray, max: Double): Bitmap {
             val maxColor = colorMap.last()
             val colorMapScaling = (colorMap.size - 1) / max
             val dim = grid.size

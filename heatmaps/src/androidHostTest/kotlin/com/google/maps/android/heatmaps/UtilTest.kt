@@ -55,7 +55,7 @@ class UtilTest {
         0 0 0 0 0
         0 0 0 0 0
         1 0 0 0 1
-        */
+         */
         val grid = Array(5) { DoubleArray(5) }
         grid[0][0] = 1.0
         grid[4][4] = 1.0
@@ -80,7 +80,7 @@ class UtilTest {
         1 0 0 0 1
         0 0 0 0 0
         0 0 1 0 0
-        */
+         */
         val grid = Array(5) { DoubleArray(5) }
         grid[0][2] = 1.0
         grid[2][0] = 1.0
@@ -105,7 +105,7 @@ class UtilTest {
         0 1 2 1 0
         0 0 1 0 0
         0 0 0 0 0
-        */
+         */
         val grid = Array(5) { DoubleArray(5) }
         grid[2][2] = 2.0
         grid[2][1] = 1.0

@@ -40,9 +40,9 @@ class KmlMapperTest {
         val kml =
             Kml(
                 placemark =
-                    Placemark(
-                        point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0)),
-                    ),
+                Placemark(
+                    point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0)),
+                ),
             )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
@@ -56,21 +56,24 @@ class KmlMapperTest {
         val kml =
             Kml(
                 placemark =
-                    Placemark(
-                        lineString =
-                            KmlLineString(
-                                listOf(
-                                    LatLngAlt(2.0, 1.0),
-                                    LatLngAlt(4.0, 3.0),
-                                ),
-                            ),
+                Placemark(
+                    lineString =
+                    KmlLineString(
+                        listOf(
+                            LatLngAlt(2.0, 1.0),
+                            LatLngAlt(4.0, 3.0),
+                        ),
                     ),
+                ),
             )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
         val feature = scene.features[0]
         val geometry = feature.geometry as LineString
-        assertEquals(listOf(Point(lat = 2.0, lng = 1.0, alt = null), Point(lat = 4.0, lng = 3.0, alt = null)), geometry.points)
+        assertEquals(
+            listOf(Point(lat = 2.0, lng = 1.0, alt = null), Point(lat = 4.0, lng = 3.0, alt = null)),
+            geometry.points,
+        )
     }
 
     @Test
@@ -78,23 +81,23 @@ class KmlMapperTest {
         val kml =
             Kml(
                 placemark =
-                    Placemark(
-                        polygon =
-                            KmlPolygon(
-                                outerBoundaryIs =
-                                    Boundary(
-                                        linearRing =
-                                            LinearRing(
-                                                listOf(
-                                                    LatLngAlt(1.0, 2.0),
-                                                    LatLngAlt(3.0, 4.0),
-                                                    LatLngAlt(5.0, 6.0),
-                                                    LatLngAlt(1.0, 2.0),
-                                                ),
-                                            ),
-                                    ),
+                Placemark(
+                    polygon =
+                    KmlPolygon(
+                        outerBoundaryIs =
+                        Boundary(
+                            linearRing =
+                            LinearRing(
+                                listOf(
+                                    LatLngAlt(1.0, 2.0),
+                                    LatLngAlt(3.0, 4.0),
+                                    LatLngAlt(5.0, 6.0),
+                                    LatLngAlt(1.0, 2.0),
+                                ),
                             ),
+                        ),
                     ),
+                ),
             )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
@@ -117,39 +120,39 @@ class KmlMapperTest {
         val kml =
             Kml(
                 placemark =
-                    Placemark(
-                        polygon =
-                            KmlPolygon(
-                                outerBoundaryIs =
-                                    Boundary(
-                                        linearRing =
-                                            LinearRing(
-                                                listOf(
-                                                    LatLngAlt(0.0, 0.0, 0.0),
-                                                    LatLngAlt(0.0, 10.0, 0.0),
-                                                    LatLngAlt(10.0, 10.0, 0.0),
-                                                    LatLngAlt(10.0, 0.0, 0.0),
-                                                    LatLngAlt(0.0, 0.0, 0.0),
-                                                ),
-                                            ),
-                                    ),
-                                innerBoundaryIs =
-                                    listOf(
-                                        Boundary(
-                                            linearRing =
-                                                LinearRing(
-                                                    listOf(
-                                                        LatLngAlt(2.0, 2.0, 0.0),
-                                                        LatLngAlt(2.0, 8.0, 0.0),
-                                                        LatLngAlt(8.0, 8.0, 0.0),
-                                                        LatLngAlt(8.0, 2.0, 0.0),
-                                                        LatLngAlt(2.0, 2.0, 0.0),
-                                                    ),
-                                                ),
-                                        ),
-                                    ),
+                Placemark(
+                    polygon =
+                    KmlPolygon(
+                        outerBoundaryIs =
+                        Boundary(
+                            linearRing =
+                            LinearRing(
+                                listOf(
+                                    LatLngAlt(0.0, 0.0, 0.0),
+                                    LatLngAlt(0.0, 10.0, 0.0),
+                                    LatLngAlt(10.0, 10.0, 0.0),
+                                    LatLngAlt(10.0, 0.0, 0.0),
+                                    LatLngAlt(0.0, 0.0, 0.0),
+                                ),
                             ),
+                        ),
+                        innerBoundaryIs =
+                        listOf(
+                            Boundary(
+                                linearRing =
+                                LinearRing(
+                                    listOf(
+                                        LatLngAlt(2.0, 2.0, 0.0),
+                                        LatLngAlt(2.0, 8.0, 0.0),
+                                        LatLngAlt(8.0, 8.0, 0.0),
+                                        LatLngAlt(8.0, 2.0, 0.0),
+                                        LatLngAlt(2.0, 2.0, 0.0),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
+                ),
             )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
@@ -183,14 +186,14 @@ class KmlMapperTest {
         val kml =
             Kml(
                 document =
-                    Document(
-                        placemarks =
-                            listOf(
-                                Placemark(
-                                    point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0)),
-                                ),
-                            ),
+                Document(
+                    placemarks =
+                    listOf(
+                        Placemark(
+                            point = KmlPoint(LatLngAlt(2.0, 1.0, 3.0)),
+                        ),
                     ),
+                ),
             )
         val scene = KmlMapper.toScene(kml)
         assertEquals(1, scene.features.size)
@@ -282,4 +285,3 @@ class KmlMapperTest {
         assertEquals(0.0f, geometry.rotation, 0.001f)
     }
 }
-

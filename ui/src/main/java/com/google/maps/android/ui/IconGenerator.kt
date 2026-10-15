@@ -91,11 +91,14 @@ public class IconGenerator(private val context: Context) {
         val canvas = Canvas(r)
         when (rotation) {
             0 -> {}
+
             1 -> {
                 canvas.translate(measuredWidth.toFloat(), 0f)
                 canvas.rotate(90f)
             }
+
             2 -> canvas.rotate(180f, measuredWidth / 2f, measuredHeight / 2f)
+
             3 -> {
                 canvas.translate(0f, measuredHeight.toFloat())
                 canvas.rotate(270f)
@@ -139,28 +142,22 @@ public class IconGenerator(private val context: Context) {
     /**
      * @return u coordinate of the anchor, with rotation applied.
      */
-    public fun getAnchorU(): Float {
-        return rotateAnchor(anchorU, anchorV)
-    }
+    public fun getAnchorU(): Float = rotateAnchor(anchorU, anchorV)
 
     /**
      * @return v coordinate of the anchor, with rotation applied.
      */
-    public fun getAnchorV(): Float {
-        return rotateAnchor(anchorV, anchorU)
-    }
+    public fun getAnchorV(): Float = rotateAnchor(anchorV, anchorU)
 
     /**
      * Rotates the anchor around (u, v) = (0, 0).
      */
-    private fun rotateAnchor(u: Float, v: Float): Float {
-        return when (rotation) {
-            0 -> u
-            1 -> 1 - v
-            2 -> 1 - u
-            3 -> v
-            else -> throw IllegalStateException()
-        }
+    private fun rotateAnchor(u: Float, v: Float): Float = when (rotation) {
+        0 -> u
+        1 -> 1 - v
+        2 -> 1 - u
+        3 -> v
+        else -> throw IllegalStateException()
     }
 
     /**
@@ -242,24 +239,20 @@ public class IconGenerator(private val context: Context) {
         public const val STYLE_PURPLE: Int = 6
         public const val STYLE_ORANGE: Int = 7
 
-        private fun getStyleColor(style: Int): Int {
-            return when (style) {
-                STYLE_DEFAULT, STYLE_WHITE -> -0x1
-                STYLE_RED -> -0x340000
-                STYLE_BLUE -> -0xff6634
-                STYLE_GREEN -> -0x996700
-                STYLE_PURPLE -> -0x66cc34
-                STYLE_ORANGE -> -0x7800
-                else -> -0x1
-            }
+        private fun getStyleColor(style: Int): Int = when (style) {
+            STYLE_DEFAULT, STYLE_WHITE -> -0x1
+            STYLE_RED -> -0x340000
+            STYLE_BLUE -> -0xff6634
+            STYLE_GREEN -> -0x996700
+            STYLE_PURPLE -> -0x66cc34
+            STYLE_ORANGE -> -0x7800
+            else -> -0x1
         }
 
-        private fun getTextStyle(style: Int): Int {
-            return when (style) {
-                STYLE_DEFAULT, STYLE_WHITE -> R.style.amu_Bubble_TextAppearance_Dark
-                STYLE_RED, STYLE_BLUE, STYLE_GREEN, STYLE_PURPLE, STYLE_ORANGE -> R.style.amu_Bubble_TextAppearance_Light
-                else -> R.style.amu_Bubble_TextAppearance_Dark
-            }
+        private fun getTextStyle(style: Int): Int = when (style) {
+            STYLE_DEFAULT, STYLE_WHITE -> R.style.amu_Bubble_TextAppearance_Dark
+            STYLE_RED, STYLE_BLUE, STYLE_GREEN, STYLE_PURPLE, STYLE_ORANGE -> R.style.amu_Bubble_TextAppearance_Light
+            else -> R.style.amu_Bubble_TextAppearance_Dark
         }
     }
 }

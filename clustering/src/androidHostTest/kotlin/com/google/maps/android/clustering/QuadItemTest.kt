@@ -208,11 +208,7 @@ class QuadItemTest {
         }
     }
 
-    private class TestingItem(
-        override var title: String,
-        lat: Double,
-        lng: Double,
-    ) : ClusterItem {
+    private class TestingItem(override var title: String, lat: Double, lng: Double) : ClusterItem {
         override var position: LatLng = LatLng(lat, lng)
             private set
 

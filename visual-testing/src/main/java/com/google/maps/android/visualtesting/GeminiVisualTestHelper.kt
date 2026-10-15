@@ -63,19 +63,15 @@ class GeminiVisualTestHelper {
      * Executes a UI action based on a natural language prompt.
      * It analyzes the current UI hierarchy and asks Gemini to determine the best action.
      */
-    suspend fun performActionFromPrompt(
-        prompt: String,
-        uiDevice: UiDevice,
-        apiKey: String,
-    ) {
+    suspend fun performActionFromPrompt(prompt: String, uiDevice: UiDevice, apiKey: String) {
         val hierarchyStream = ByteArrayOutputStream()
         uiDevice.dumpWindowHierarchy(hierarchyStream)
         val hierarchyXml = hierarchyStream.toString("UTF-8")
 
         val systemPrompt =
             """
-            You are an expert Android QA automaton. Your task is to translate a natural language command 
-            into a specific action to be performed on a UI. Given a UI hierarchy (in XML format), 
+            You are an expert Android QA automaton. Your task is to translate a natural language command
+            into a specific action to be performed on a UI. Given a UI hierarchy (in XML format),
             determine the correct action and selector.
 
             The available actions are: "click", "longClick", "setText".
@@ -100,15 +96,23 @@ class GeminiVisualTestHelper {
         var response: HttpResponse? = null
         while (attempts < 3) {
             attempts++
-            response = client.post("https://generativelanguage.googleapis.com/v1/models/$modelName:generateContent?key=$apiKey") {
-                contentType(ContentType.Application.Json)
-                setBody(request)
-            }
+            response =
+                client.post(
+                    "https://generativelanguage.googleapis.com/v1/models/$modelName:generateContent?key=$apiKey",
+                ) {
+                    contentType(ContentType.Application.Json)
+                    setBody(request)
+                }
             if (response.status == HttpStatusCode.OK) {
                 break
             }
-            if (response.status == HttpStatusCode.ServiceUnavailable || response.status == HttpStatusCode.TooManyRequests) {
-                Log.w("GeminiVisualTestHelper", "Transient Action API error ${response.status}. Retrying attempt $attempts/3...")
+            if (response.status == HttpStatusCode.ServiceUnavailable ||
+                response.status == HttpStatusCode.TooManyRequests
+            ) {
+                Log.w(
+                    "GeminiVisualTestHelper",
+                    "Transient Action API error ${response.status}. Retrying attempt $attempts/3...",
+                )
                 kotlinx.coroutines.delay(2000L * attempts)
             } else {
                 break
@@ -144,9 +148,14 @@ class GeminiVisualTestHelper {
                 aiAction.selector.let {
                     when {
                         it.text != null -> By.text(it.text)
+
                         it.contentDescription != null -> By.desc(it.contentDescription)
+
                         it.resourceId != null -> By.res(it.resourceId)
-                        else -> throw IllegalArgumentException("Selector must have text, contentDescription, or resourceId.")
+
+                        else -> throw IllegalArgumentException(
+                            "Selector must have text, contentDescription, or resourceId.",
+                        )
                     }
                 }
 
@@ -164,7 +173,8 @@ class GeminiVisualTestHelper {
                 }
 
                 "settext" -> {
-                    val textToSet = aiAction.textValue ?: throw Exception("Action 'setText' requires a 'textValue' field.")
+                    val textToSet =
+                        aiAction.textValue ?: throw Exception("Action 'setText' requires a 'textValue' field.")
                     uiObject.text = textToSet
                 }
 
@@ -183,7 +193,9 @@ class GeminiVisualTestHelper {
      */
     suspend fun listAvailableModels(apiKey: String) {
         try {
-            val response: ModelsListResponse = client.get("https://generativelanguage.googleapis.com/v1/models?key=$apiKey").body()
+            val response: ModelsListResponse = client.get(
+                "https://generativelanguage.googleapis.com/v1/models?key=$apiKey",
+            ).body()
             val modelNames = response.models.joinToString("\n") { " - ${it.name} (Display Name: ${it.displayName})" }
             Log.i("GeminiVisualTestHelper", "Available Gemini Models:\n$modelNames")
         } catch (e: Exception) {
@@ -194,11 +206,7 @@ class GeminiVisualTestHelper {
     /**
      * Analyzes an image with a given prompt using the Gemini API.
      */
-    suspend fun analyzeImage(
-        bitmap: Bitmap,
-        prompt: String,
-        apiKey: String,
-    ): String? {
+    suspend fun analyzeImage(bitmap: Bitmap, prompt: String, apiKey: String): String? {
         // Log available models first for easier debugging.
         listAvailableModels(apiKey)
 
@@ -206,21 +214,21 @@ class GeminiVisualTestHelper {
         val request =
             GeminiRequest(
                 contents =
-                    listOf(
-                        Content(
-                            parts =
-                                listOf(
-                                    Part(text = prompt),
-                                    Part(
-                                        inlineData =
-                                            InlineData(
-                                                mimeType = "image/jpeg",
-                                                data = base64Image,
-                                            ),
-                                    ),
+                listOf(
+                    Content(
+                        parts =
+                        listOf(
+                            Part(text = prompt),
+                            Part(
+                                inlineData =
+                                InlineData(
+                                    mimeType = "image/jpeg",
+                                    data = base64Image,
                                 ),
+                            ),
                         ),
                     ),
+                ),
             )
 
         var attempts = 0
@@ -228,15 +236,23 @@ class GeminiVisualTestHelper {
         while (attempts < 3) {
             attempts++
             val model = System.getenv("GEMINI_MODEL") ?: "gemini-3.8-flash"
-            response = client.post("https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey") {
-                contentType(ContentType.Application.Json)
-                setBody(request)
-            }
+            response =
+                client.post(
+                    "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey",
+                ) {
+                    contentType(ContentType.Application.Json)
+                    setBody(request)
+                }
             if (response.status == HttpStatusCode.OK) {
                 break
             }
-            if (response.status == HttpStatusCode.ServiceUnavailable || response.status == HttpStatusCode.TooManyRequests) {
-                Log.w("GeminiVisualTestHelper", "Transient API error ${response.status}. Retrying attempt $attempts/3...")
+            if (response.status == HttpStatusCode.ServiceUnavailable ||
+                response.status == HttpStatusCode.TooManyRequests
+            ) {
+                Log.w(
+                    "GeminiVisualTestHelper",
+                    "Transient API error ${response.status}. Retrying attempt $attempts/3...",
+                )
                 kotlinx.coroutines.delay(2000L * attempts)
             } else {
                 break
@@ -256,7 +272,9 @@ class GeminiVisualTestHelper {
         if (geminiResponse.candidates.isEmpty()) {
             val rawBody = response.bodyAsText()
             Log.w("GeminiVisualTestHelper", "Gemini API returned empty candidates. Full response: $rawBody")
-            throw Exception("Gemini API returned no candidates. This might be due to safety settings or an issue with the prompt.")
+            throw Exception(
+                "Gemini API returned no candidates. This might be due to safety settings or an issue with the prompt.",
+            )
         }
 
         return geminiResponse.candidates
@@ -277,24 +295,14 @@ class GeminiVisualTestHelper {
 
 // --- Data classes for AI Action ---
 @Serializable
-data class AiAction(
-    val action: String,
-    val selector: AiSelector,
-    val textValue: String? = null,
-)
+data class AiAction(val action: String, val selector: AiSelector, val textValue: String? = null)
 
 @Serializable
-data class AiSelector(
-    val text: String? = null,
-    val contentDescription: String? = null,
-    val resourceId: String? = null,
-)
+data class AiSelector(val text: String? = null, val contentDescription: String? = null, val resourceId: String? = null)
 
 // --- Data classes for Model Listing ---
 @Serializable
-data class ModelsListResponse(
-    val models: List<ModelInfo> = emptyList(),
-)
+data class ModelsListResponse(val models: List<ModelInfo> = emptyList())
 
 @Serializable
 data class ModelInfo(
@@ -305,14 +313,10 @@ data class ModelInfo(
 
 // --- Data classes for Gemini Request/Response ---
 @Serializable
-data class GeminiRequest(
-    val contents: List<Content>,
-)
+data class GeminiRequest(val contents: List<Content>)
 
 @Serializable
-data class Content(
-    val parts: List<Part>,
-)
+data class Content(val parts: List<Part>)
 
 @Serializable
 data class Part(
@@ -329,11 +333,7 @@ data class InlineData(
 )
 
 @Serializable
-data class GeminiResponse(
-    val candidates: List<Candidate> = emptyList(),
-)
+data class GeminiResponse(val candidates: List<Candidate> = emptyList())
 
 @Serializable
-data class Candidate(
-    val content: Content,
-)
+data class Candidate(val content: Content)

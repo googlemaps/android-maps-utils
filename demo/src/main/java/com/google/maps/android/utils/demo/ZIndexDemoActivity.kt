@@ -95,22 +95,20 @@ data class PolygonShape(
     private val nativePolygon: Polygon? = null,
 ) : MapShape {
 
-    override fun drawOrRefresh(map: GoogleMap): PolygonShape {
-        return if (nativePolygon != null) {
-            // Update the existing native object's zIndex directly without recreating the GL shape
-            nativePolygon.zIndex = zIndex
-            this
-        } else {
-            val polygon = map.addPolygon(
-                PolygonOptions()
-                    .addAll(points)
-                    .fillColor(fillColor)
-                    .strokeColor(strokeColor)
-                    .strokeWidth(strokeWidth)
-                    .zIndex(zIndex)
-            )
-            copy(nativePolygon = polygon)
-        }
+    override fun drawOrRefresh(map: GoogleMap): PolygonShape = if (nativePolygon != null) {
+        // Update the existing native object's zIndex directly without recreating the GL shape
+        nativePolygon.zIndex = zIndex
+        this
+    } else {
+        val polygon = map.addPolygon(
+            PolygonOptions()
+                .addAll(points)
+                .fillColor(fillColor)
+                .strokeColor(strokeColor)
+                .strokeWidth(strokeWidth)
+                .zIndex(zIndex),
+        )
+        copy(nativePolygon = polygon)
     }
 
     override fun remove() {
@@ -141,21 +139,19 @@ data class PolylineShape(
     private val nativePolyline: Polyline? = null,
 ) : MapShape {
 
-    override fun drawOrRefresh(map: GoogleMap): PolylineShape {
-        return if (nativePolyline != null) {
-            // Update the existing native object's zIndex directly in place
-            nativePolyline.zIndex = zIndex
-            this
-        } else {
-            val polyline = map.addPolyline(
-                PolylineOptions()
-                    .addAll(points)
-                    .color(color)
-                    .width(width)
-                    .zIndex(zIndex)
-            )
-            copy(nativePolyline = polyline)
-        }
+    override fun drawOrRefresh(map: GoogleMap): PolylineShape = if (nativePolyline != null) {
+        // Update the existing native object's zIndex directly in place
+        nativePolyline.zIndex = zIndex
+        this
+    } else {
+        val polyline = map.addPolyline(
+            PolylineOptions()
+                .addAll(points)
+                .color(color)
+                .width(width)
+                .zIndex(zIndex),
+        )
+        copy(nativePolyline = polyline)
     }
 
     override fun remove() {
@@ -192,21 +188,19 @@ data class MarkerShape(
     private val nativeMarker: Marker? = null,
 ) : MapShape {
 
-    override fun drawOrRefresh(map: GoogleMap): MarkerShape {
-        return if (nativeMarker != null) {
-            // Update the existing native marker's zIndex directly in place
-            nativeMarker.zIndex = zIndex
-            this
-        } else {
-            val marker = map.addMarker(
-                MarkerOptions()
-                    .position(position)
-                    .title(title)
-                    .icon(BitmapDescriptorFactory.defaultMarker(hue))
-                    .zIndex(zIndex)
-            )
-            copy(nativeMarker = marker)
-        }
+    override fun drawOrRefresh(map: GoogleMap): MarkerShape = if (nativeMarker != null) {
+        // Update the existing native marker's zIndex directly in place
+        nativeMarker.zIndex = zIndex
+        this
+    } else {
+        val marker = map.addMarker(
+            MarkerOptions()
+                .position(position)
+                .title(title)
+                .icon(BitmapDescriptorFactory.defaultMarker(hue))
+                .zIndex(zIndex),
+        )
+        copy(nativeMarker = marker)
     }
 
     override fun remove() {
@@ -218,6 +212,7 @@ data class MarkerShape(
 // [END maps_android_utils_zindex_shape_interface]
 
 // [START maps_android_utils_zindex_sample]
+
 /**
  * Demonstrates how to control the visual layering (z-index) of overlapping map objects
  * (polygons, polylines, and markers) using a unified [MapShape] architecture.
@@ -393,7 +388,7 @@ class ZIndexDemoActivity : BaseDemoActivity() {
     private fun showInfoDialog() {
         val messageHtml = HtmlCompat.fromHtml(
             getString(R.string.zindex_dialog_message),
-            HtmlCompat.FROM_HTML_MODE_LEGACY
+            HtmlCompat.FROM_HTML_MODE_LEGACY,
         )
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.zindex_dialog_title)

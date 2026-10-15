@@ -86,9 +86,7 @@ public class StreetViewUtils {
     }
 }
 
-public data class ResponseStreetView(
-    public val status: Status,
-)
+public data class ResponseStreetView(public val status: Status)
 
 public enum class Status {
     OK,
@@ -100,9 +98,7 @@ public enum class Status {
     UNKNOWN_ERROR,
 }
 
-public enum class Source(
-    public var value: String,
-) {
+public enum class Source(public var value: String) {
     DEFAULT("default"),
     OUTDOOR("outdoor"),
 }

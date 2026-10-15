@@ -88,20 +88,21 @@ public actual val Location.timestampMillis: Long
 //  lastKnownLocation on collection start and merge coarseLocationEvents as an indoor / coarse-only
 //  permission fallback for HIGH_ACCURACY so Android callers match iOS CLLocationManager semantics.
 @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
-public fun LocationManager.asLocationSource(
-    looper: Looper = Looper.getMainLooper()
-): LocationSource = LocationSource { intervalMs, minUpdateDistanceM, priority ->
-    when (priority) {
-        LocationPriority.HIGH_ACCURACY -> fineLocationEvents(
-            minTimeMs = intervalMs,
-            minDistanceM = minUpdateDistanceM,
-            looper = looper
-        )
-        LocationPriority.BALANCED_POWER_ACCURACY,
-        LocationPriority.LOW_POWER -> coarseLocationEvents(
-            minTimeMs = intervalMs,
-            minDistanceM = minUpdateDistanceM,
-            looper = looper
-        )
+public fun LocationManager.asLocationSource(looper: Looper = Looper.getMainLooper()): LocationSource =
+    LocationSource { intervalMs, minUpdateDistanceM, priority ->
+        when (priority) {
+            LocationPriority.HIGH_ACCURACY -> fineLocationEvents(
+                minTimeMs = intervalMs,
+                minDistanceM = minUpdateDistanceM,
+                looper = looper,
+            )
+
+            LocationPriority.BALANCED_POWER_ACCURACY,
+            LocationPriority.LOW_POWER,
+            -> coarseLocationEvents(
+                minTimeMs = intervalMs,
+                minDistanceM = minUpdateDistanceM,
+                looper = looper,
+            )
+        }
     }
-}

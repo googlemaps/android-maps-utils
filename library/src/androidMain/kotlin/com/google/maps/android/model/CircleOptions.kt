@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.CircleOptions
  *
  * @return the constructed [CircleOptions]
  */
-public inline fun circleOptions(optionsActions: CircleOptions.() -> Unit): CircleOptions =
-    CircleOptions().apply(
-        optionsActions
-    )
+public inline fun circleOptions(optionsActions: CircleOptions.() -> Unit): CircleOptions = CircleOptions().apply(
+    optionsActions,
+)

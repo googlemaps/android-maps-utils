@@ -109,7 +109,9 @@ public abstract class BaseDemoActivity extends FragmentActivity implements OnMap
     // Get the map asynchronously. We use reflection because the fragment type
     // depends on the build flavor (SupportMapFragment or SupportNavigationFragment).
     try {
-      mapFragment.getClass().getMethod("getMapAsync", OnMapReadyCallback.class)
+      mapFragment
+          .getClass()
+          .getMethod("getMapAsync", OnMapReadyCallback.class)
           .invoke(mapFragment, this);
     } catch (Exception e) {
       e.printStackTrace();

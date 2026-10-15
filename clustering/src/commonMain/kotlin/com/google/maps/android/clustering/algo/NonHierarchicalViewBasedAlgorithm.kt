@@ -15,13 +15,13 @@
  */
 package com.google.maps.android.clustering.algo
 
-import com.google.maps.android.model.CameraPosition
-import com.google.maps.android.model.LatLng
-import com.google.maps.android.model.target
-import com.google.maps.android.model.longitude
-import com.google.maps.android.model.latitude
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.geometry.Bounds
+import com.google.maps.android.model.CameraPosition
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
+import com.google.maps.android.model.target
 import com.google.maps.android.projection.SphericalMercatorProjection
 import com.google.maps.android.quadtree.PointQuadTree
 import kotlin.math.pow
@@ -32,13 +32,15 @@ import kotlin.math.pow
  * when camera movement changes the visible area.
  *
  * @param <T> The [ClusterItem] type
-</T> */
-public open class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
-/**
  * @param screenWidth  map width in dp
  * @param screenHeight map height in dp
- */
-    public constructor(private var mViewWidth: Int, private var mViewHeight: Int) : NonHierarchicalDistanceBasedAlgorithm<T>(), ScreenBasedAlgorithm<T> {
+</T> */
+public open class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
+public constructor(
+    private var mViewWidth: Int,
+    private var mViewHeight: Int,
+) : NonHierarchicalDistanceBasedAlgorithm<T>(),
+    ScreenBasedAlgorithm<T> {
 
     private var mMapCenter: LatLng? = null
 
@@ -66,9 +68,7 @@ public open class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
         return items
     }
 
-    override fun shouldReclusterOnMapMovement(): Boolean {
-        return true
-    }
+    override fun shouldReclusterOnMapMovement(): Boolean = true
 
     /**
      * Update view width and height in case map size was changed.
@@ -93,8 +93,10 @@ public open class NonHierarchicalViewBasedAlgorithm<T : ClusterItem>
         val halfHeightSpan = mViewHeight.toDouble() / 2.0.pow(zoom.toDouble()) / 256.0 / 2.0
 
         return Bounds(
-            p.x - halfWidthSpan, p.x + halfWidthSpan,
-            p.y - halfHeightSpan, p.y + halfHeightSpan
+            p.x - halfWidthSpan,
+            p.x + halfWidthSpan,
+            p.y - halfHeightSpan,
+            p.y + halfHeightSpan,
         )
     }
 

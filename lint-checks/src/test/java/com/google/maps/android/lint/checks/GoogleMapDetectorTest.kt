@@ -24,8 +24,7 @@ import com.android.tools.lint.detector.api.TextFormat
 
 @Suppress("UnstableApiUsage")
 class GoogleMapDetectorTest : LintDetectorTest() {
-    override fun lint(): TestLintTask =
-        super.lint().allowMissingSdk()
+    override fun lint(): TestLintTask = super.lint().allowMissingSdk()
 
     fun testSetOnMarkerDragListener() {
         lint()
@@ -33,15 +32,15 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                 testFile(
                     """
                         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                            @Override 
+                            @Override
                             public void onMarkerDragStart(Marker marker) {
                             }
-                            
-                            @Override 
+
+                            @Override
                             public void onMarkerDrag(Marker marker) {
                             }
-                            
-                            @Override 
+
+                            @Override
                             public void onMarkerDragEnd(Marker marker) {
                             }
                       });
@@ -58,7 +57,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                 testFile(
                     """
                         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override 
+                            @Override
                             public boolean onMarkerClick(Marker marker) {
                                 return false;
                             }
@@ -76,7 +75,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                 testFile(
                     """
                         map.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
-                            @Override 
+                            @Override
                             public void onInfoWindowLongClick(Marker marker) {
                             }
                       });
@@ -84,7 +83,9 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                 ),
                 java(GOOGLE_MAP_STUB).indented(),
             ).run()
-            .expect(expectedText("map.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {"))
+            .expect(
+                expectedText("map.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {"),
+            )
     }
 
     fun testSetOnInfoWindowClickListener() {
@@ -93,7 +94,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                 testFile(
                     """
                         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                            @Override 
+                            @Override
                             public void onInfoWindowClick(Marker marker) {
                             }
                       });
@@ -110,7 +111,7 @@ class GoogleMapDetectorTest : LintDetectorTest() {
                 testFile(
                     """
                         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                            @Override 
+                            @Override
                             public View getInfoWindow(Marker marker) {
                                 return null;
                             }
@@ -138,22 +139,21 @@ class GoogleMapDetectorTest : LintDetectorTest() {
         0 errors, 1 warnings
         """
 
-    private fun testFile(containing: String): TestFile =
-        java(
-            """
+    private fun testFile(containing: String): TestFile = java(
+        """
                 package test.pkg;
-                
+
                 import com.google.android.gms.maps.GoogleMap;
-                
+
                 public class TestClass {
                     private GoogleMap map;
-                    
-                    private void foo() { 
+
+                    private void foo() {
                         $containing
                     }
                 }
             """,
-        ).indented()
+    ).indented()
 
     override fun getDetector(): Detector = GoogleMapDetector()
 
@@ -162,9 +162,9 @@ class GoogleMapDetectorTest : LintDetectorTest() {
     companion object {
         val GOOGLE_MAP_STUB = """
         package com.google.android.gms.maps;
-        
+
         import android.view.View;
-        
+
         public class GoogleMap {
            public final void setInfoWindowAdapter(GoogleMap.InfoWindowAdapter adapter) {
              // STUB
@@ -173,38 +173,38 @@ class GoogleMapDetectorTest : LintDetectorTest() {
            public final void setOnInfoWindowClickListener(GoogleMap.OnInfoWindowClickListener l) {
              // STUB
            }
-           
+
            public final void setOnInfoWindowLongClickListener(GoogleMap.OnInfoWindowLongClickListener l) {
              // STUB
            }
-           
+
            public final void setOnMarkerClickListener(GoogleMap.OnMarkerClickListener l) {
              // STUB
            }
-           
-           
+
+
            public final void setOnMarkerDragListener(GoogleMap.OnMarkerDragListener l) {
              // STUB
            }
-           
+
            public interface OnMarkerDragListener {
              void onMarkerDragStart(Marker marker);
              void onMarkerDrag(Marker marker);
              void onMarkerDragEnd(Marker marker);
            }
-           
+
            public interface OnMarkerClickListener {
              boolean onMarkerClick(Marker marker);
            }
-           
+
            public interface OnInfoWindowLongClickListener {
              void onInfoWindowLongClick(Marker marker);
            }
-           
+
            public interface OnInfoWindowClickListener {
              void onInfoWindowClick(Marker marker);
            }
-           
+
            public interface InfoWindowAdapter {
              View getInfoWindow(Marker marker);
              View getInfoContents(Marker marker);

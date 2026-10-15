@@ -120,7 +120,7 @@ public class KmlLayer : Layer {
             if (isKmz) {
                 KmzParser(
                     maxKmzEntryCount = maxKmzEntryCount,
-                    maxKmzUncompressedTotalSize = maxKmzUncompressedTotalSize
+                    maxKmzUncompressedTotalSize = maxKmzUncompressedTotalSize,
                 ).parse(bis)
             } else {
                 KmlParser().parse(bis)
@@ -271,7 +271,9 @@ public class KmlLayer : Layer {
      * Returns null for overlays without a LatLonBox, such as those positioned with gx:LatLonQuad,
      * which a ground overlay on the map cannot represent.
      */
-    private fun toLegacyGroundOverlay(groundOverlay: com.google.maps.android.data.parser.kml.GroundOverlay): KmlGroundOverlay? {
+    private fun toLegacyGroundOverlay(
+        groundOverlay: com.google.maps.android.data.parser.kml.GroundOverlay,
+    ): KmlGroundOverlay? {
         val latLonBox = groundOverlay.latLonBox
         if (latLonBox == null) {
             Log.w(LOG_TAG, "Skipping GroundOverlay ${groundOverlay.name ?: ""} without a LatLonBox")
@@ -296,65 +298,66 @@ public class KmlLayer : Layer {
         )
     }
 
-    private fun toLegacyGeometry(placemark: com.google.maps.android.data.parser.kml.Placemark): Geometry? =
-        when {
-            placemark.point != null -> {
-                KmlPoint(
-                    LatLng(placemark.point.coordinates.latitude, placemark.point.coordinates.longitude),
-                    placemark.point.coordinates.altitude,
-                )
-            }
+    private fun toLegacyGeometry(placemark: com.google.maps.android.data.parser.kml.Placemark): Geometry? = when {
+        placemark.point != null -> {
+            KmlPoint(
+                LatLng(placemark.point.coordinates.latitude, placemark.point.coordinates.longitude),
+                placemark.point.coordinates.altitude,
+            )
+        }
 
-            placemark.lineString != null -> {
-                KmlLineString(
-                    ArrayList(placemark.lineString.coordinates.map { LatLng(it.latitude, it.longitude) }),
-                    ArrayList(placemark.lineString.coordinates.mapNotNull { it.altitude }),
-                )
-            }
+        placemark.lineString != null -> {
+            KmlLineString(
+                ArrayList(placemark.lineString.coordinates.map { LatLng(it.latitude, it.longitude) }),
+                ArrayList(placemark.lineString.coordinates.mapNotNull { it.altitude }),
+            )
+        }
 
-            placemark.polygon != null -> {
-                KmlPolygon(
-                    placemark.polygon.outerBoundaryIs.linearRing.coordinates
-                        .map { LatLng(it.latitude, it.longitude) },
-                    placemark.polygon.innerBoundaryIs.map { ring -> ring.linearRing.coordinates.map { LatLng(it.latitude, it.longitude) } },
-                )
-            }
+        placemark.polygon != null -> {
+            KmlPolygon(
+                placemark.polygon.outerBoundaryIs.linearRing.coordinates
+                    .map { LatLng(it.latitude, it.longitude) },
+                placemark.polygon.innerBoundaryIs.map { ring ->
+                    ring.linearRing.coordinates.map { LatLng(it.latitude, it.longitude) }
+                },
+            )
+        }
 
-            placemark.multiGeometry != null -> {
-                val list = ArrayList<Geometry>()
-                placemark.multiGeometry.points.forEach {
-                    list.add(KmlPoint(LatLng(it.coordinates.latitude, it.coordinates.longitude), it.coordinates.altitude))
-                }
-                placemark.multiGeometry.lineStrings.forEach {
-                    list.add(
-                        KmlLineString(
-                            ArrayList(
-                                it.coordinates.map { c ->
-                                    LatLng(c.latitude, c.longitude)
-                                },
-                            ),
-                        ),
-                    )
-                }
-                placemark.multiGeometry.polygons.forEach {
-                    list.add(
-                        KmlPolygon(
-                            it.outerBoundaryIs.linearRing.coordinates.map { c ->
+        placemark.multiGeometry != null -> {
+            val list = ArrayList<Geometry>()
+            placemark.multiGeometry.points.forEach {
+                list.add(KmlPoint(LatLng(it.coordinates.latitude, it.coordinates.longitude), it.coordinates.altitude))
+            }
+            placemark.multiGeometry.lineStrings.forEach {
+                list.add(
+                    KmlLineString(
+                        ArrayList(
+                            it.coordinates.map { c ->
                                 LatLng(c.latitude, c.longitude)
                             },
-                            it.innerBoundaryIs.map { ring ->
-                                ring.linearRing.coordinates.map { c -> LatLng(c.latitude, c.longitude) }
-                            },
                         ),
-                    )
-                }
-                KmlMultiGeometry(list)
+                    ),
+                )
             }
-
-            else -> {
-                null
+            placemark.multiGeometry.polygons.forEach {
+                list.add(
+                    KmlPolygon(
+                        it.outerBoundaryIs.linearRing.coordinates.map { c ->
+                            LatLng(c.latitude, c.longitude)
+                        },
+                        it.innerBoundaryIs.map { ring ->
+                            ring.linearRing.coordinates.map { c -> LatLng(c.latitude, c.longitude) }
+                        },
+                    ),
+                )
             }
+            KmlMultiGeometry(list)
         }
+
+        else -> {
+            null
+        }
+    }
 
     private fun abgrToArgb(color: Int): Int {
         val a = (color shr 24) and 0xFF
@@ -370,7 +373,10 @@ public class KmlLayer : Layer {
             return
         }
         if (mManagersMap == null &&
-            (mMarkerManager != null || mPolygonManager != null || mPolylineManager != null || mGroundOverlayManager != null)
+            (
+                mMarkerManager != null || mPolygonManager != null || mPolylineManager != null ||
+                    mGroundOverlayManager != null
+                )
         ) {
             mManagersMap = map
             mMarkerCollection = mMarkerManager?.newCollection()
@@ -439,19 +445,13 @@ public class KmlLayer : Layer {
         mIsLayerOnMap = false
     }
 
-    private fun addContainerToMap(
-        container: KmlContainer,
-        renderer: MapViewRenderer,
-    ) {
+    private fun addContainerToMap(container: KmlContainer, renderer: MapViewRenderer) {
         container.getPlacemarks().forEach { p -> renderer.addFeature(toModelFeature(p)) }
         container.getGroundOverlays().forEach { g -> renderer.addFeature(toModelFeature(g)) }
         container.getContainers().forEach { c -> addContainerToMap(c, renderer) }
     }
 
-    private fun removeContainerFromMap(
-        container: KmlContainer,
-        renderer: MapViewRenderer,
-    ) {
+    private fun removeContainerFromMap(container: KmlContainer, renderer: MapViewRenderer) {
         container.getPlacemarks().forEach { p -> renderer.removeFeature(toModelFeature(p)) }
         container.getGroundOverlays().forEach { g -> renderer.removeFeature(toModelFeature(g)) }
         container.getContainers().forEach { c -> removeContainerFromMap(c, renderer) }
@@ -463,8 +463,8 @@ public class KmlLayer : Layer {
             // renderer, which derives the marker's hue and alpha from an ARGB value. Passing the raw
             // hue (or 0) made the alpha channel 0 and rendered every KML point marker invisible.
             color =
-                inline?.mMarkerColor?.let { hue -> Color.HSVToColor(floatArrayOf(hue, 1f, 1f)) }
-                    ?: Color.BLACK,
+            inline?.mMarkerColor?.let { hue -> Color.HSVToColor(floatArrayOf(hue, 1f, 1f)) }
+                ?: Color.BLACK,
             iconUrl = inline?.getIconUrl(),
             zIndex = inline?.mMarkerOptions?.zIndex ?: 0f,
         )
@@ -502,14 +502,18 @@ public class KmlLayer : Layer {
         val style =
             when (modelGeometry) {
                 is com.google.maps.android.data.renderer.model.PointGeometry -> buildPointStyle(inline)
+
                 is com.google.maps.android.data.renderer.model.LineString -> buildLineStyle(inline)
+
                 is com.google.maps.android.data.renderer.model.Polygon -> buildPolygonStyle(inline)
+
                 is com.google.maps.android.data.renderer.model.MultiGeometry ->
                     com.google.maps.android.data.renderer.model.CompositeStyle(
                         pointStyle = buildPointStyle(inline),
                         lineStyle = buildLineStyle(inline),
                         polygonStyle = buildPolygonStyle(inline),
                     )
+
                 else -> null
             }
 
@@ -597,10 +601,7 @@ public class KmlLayer : Layer {
             }
         }
 
-    private fun collectPlacemarks(
-        container: KmlContainer,
-        out: MutableList<KmlPlacemark>,
-    ) {
+    private fun collectPlacemarks(container: KmlContainer, out: MutableList<KmlPlacemark>) {
         out.addAll(container.getPlacemarks())
         container.getContainers().forEach { collectPlacemarks(it, out) }
     }
@@ -615,10 +616,7 @@ public class KmlLayer : Layer {
         return all
     }
 
-    private fun collectGroundOverlays(
-        container: KmlContainer,
-        out: MutableList<KmlGroundOverlay>,
-    ) {
+    private fun collectGroundOverlays(container: KmlContainer, out: MutableList<KmlGroundOverlay>) {
         out.addAll(container.getGroundOverlays())
         container.getContainers().forEach { collectGroundOverlays(it, out) }
     }

@@ -389,10 +389,7 @@ class GeoJsonParserTest {
      * test about stack consumption does not depend on the stack size of the thread the test
      * framework happens to use.
      */
-    private fun parseOnThreadWithStackSize(
-        stackSizeBytes: Long,
-        block: () -> Unit,
-    ) {
+    private fun parseOnThreadWithStackSize(stackSizeBytes: Long, block: () -> Unit) {
         var thrown: Throwable? = null
         val thread =
             Thread(null, {

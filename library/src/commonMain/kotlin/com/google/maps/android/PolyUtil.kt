@@ -15,9 +15,6 @@
  */
 package com.google.maps.android
 
-import com.google.maps.android.model.LatLng
-import com.google.maps.android.model.latitude
-import com.google.maps.android.model.longitude
 import com.google.maps.android.MathUtil.clamp
 import com.google.maps.android.MathUtil.hav
 import com.google.maps.android.MathUtil.havDistance
@@ -28,6 +25,12 @@ import com.google.maps.android.MathUtil.sinFromHav
 import com.google.maps.android.MathUtil.sinSumFromHav
 import com.google.maps.android.MathUtil.wrap
 import com.google.maps.android.SphericalUtil.computeDistanceBetween
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
+import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
@@ -35,9 +38,6 @@ import kotlin.math.round
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
-import kotlin.math.PI
-import kotlin.jvm.JvmStatic
-import kotlin.jvm.JvmOverloads
 
 /**
  * A utility class containing geometric calculations for polygons and polylines.
@@ -65,11 +65,8 @@ public object PolyUtil {
      * @return `true` if the point is inside the polygon, `false` otherwise.
      */
     @JvmStatic
-    public fun containsLocation(
-        point: LatLng,
-        polygon: List<LatLng>,
-        geodesic: Boolean,
-    ): Boolean = containsLocation(point.latitude, point.longitude, polygon, geodesic)
+    public fun containsLocation(point: LatLng, polygon: List<LatLng>, geodesic: Boolean): Boolean =
+        containsLocation(point.latitude, point.longitude, polygon, geodesic)
 
     /**
      * Overload of {@link #containsLocation(LatLng, List, boolean)} that takes latitude and
@@ -299,10 +296,7 @@ public object PolyUtil {
      * @return a simplified poly produced by the Douglas-Peucker algorithm
      */
     @JvmStatic
-    public fun simplify(
-        poly: List<LatLng>,
-        tolerance: Double,
-    ): List<LatLng> {
+    public fun simplify(poly: List<LatLng>, tolerance: Double): List<LatLng> {
         require(poly.isNotEmpty()) { "Polyline must have at least 1 point" }
         require(tolerance > 0) { "Tolerance must be greater than zero" }
 
@@ -347,10 +341,7 @@ public object PolyUtil {
      * @return A boolean array where `true` indicates that the point at the corresponding index
      * should be kept in the simplified polyline.
      */
-    private fun douglasPeucker(
-        poly: List<LatLng>,
-        tolerance: Double,
-    ): BooleanArray {
+    private fun douglasPeucker(poly: List<LatLng>, tolerance: Double): BooleanArray {
         val n = poly.size
         // We start with a boolean array that will mark the points to keep.
         // Initially, only the first and last points are marked for keeping.
@@ -415,11 +406,7 @@ public object PolyUtil {
      * @return the distance in meters (assuming spherical earth)
      */
     @JvmStatic
-    public fun distanceToLine(
-        p: LatLng,
-        start: LatLng,
-        end: LatLng,
-    ): Double {
+    public fun distanceToLine(p: LatLng, start: LatLng, end: LatLng): Double {
         if (start == end) {
             return computeDistanceBetween(end, p)
         }
@@ -514,10 +501,7 @@ public object PolyUtil {
         return result.toString()
     }
 
-    private fun encode(
-        v: Long,
-        result: StringBuilder,
-    ) {
+    private fun encode(v: Long, result: StringBuilder) {
         var value = if (v < 0) (v shl 1).inv() else (v shl 1)
         while (value >= 0x20) {
             result.append((((0x20 or (value and 0x1f).toInt()) + 63)).toChar())
@@ -530,22 +514,14 @@ public object PolyUtil {
      * Returns tan(latitude-at-lng3) on the great circle (lat1, lng1) to (lat2, lng2). lng1==0.
      * See http://williams.best.vwh.net/avform.htm .
      */
-    private fun tanLatGC(
-        lat1: Double,
-        lat2: Double,
-        lng2: Double,
-        lng3: Double,
-    ): Double = (tan(lat1) * sin(lng2 - lng3) + tan(lat2) * sin(lng3)) / sin(lng2)
+    private fun tanLatGC(lat1: Double, lat2: Double, lng2: Double, lng3: Double): Double =
+        (tan(lat1) * sin(lng2 - lng3) + tan(lat2) * sin(lng3)) / sin(lng2)
 
     /**
      * Returns mercator(latitude-at-lng3) on the Rhumb line (lat1, lng1) to (lat2, lng2). lng1==0.
      */
-    private fun mercatorLatRhumb(
-        lat1: Double,
-        lat2: Double,
-        lng2: Double,
-        lng3: Double,
-    ): Double = (mercator(lat1) * (lng2 - lng3) + mercator(lat2) * lng3) / lng2
+    private fun mercatorLatRhumb(lat1: Double, lat2: Double, lng2: Double, lng3: Double): Double =
+        (mercator(lat1) * (lng2 - lng3) + mercator(lat2) * lng3) / lng2
 
     /**
      * Computes whether the vertical segment (lat3, lng3) to South Pole intersects the segment

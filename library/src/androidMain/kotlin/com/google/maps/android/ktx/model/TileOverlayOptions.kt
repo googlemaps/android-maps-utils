@@ -23,7 +23,7 @@ import com.google.maps.android.model.tileOverlayOptions as canonicalTileOverlayO
 @Deprecated(
     message = "Use com.google.maps.android.model.tileOverlayOptions instead",
     replaceWith = ReplaceWith("tileOverlayOptions(optionsActions)", "com.google.maps.android.model.tileOverlayOptions"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public inline fun tileOverlayOptions(optionsActions: TileOverlayOptions.() -> Unit): TileOverlayOptions = canonicalTileOverlayOptions(optionsActions)
-
+public inline fun tileOverlayOptions(optionsActions: TileOverlayOptions.() -> Unit): TileOverlayOptions =
+    canonicalTileOverlayOptions(optionsActions)

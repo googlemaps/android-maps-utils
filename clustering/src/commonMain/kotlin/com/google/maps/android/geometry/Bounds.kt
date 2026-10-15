@@ -32,21 +32,15 @@ public class Bounds(
     @JvmField
     public val midY: Double = (minY + maxY) / 2
 
-    public fun contains(
-        x: Double,
-        y: Double,
-    ): Boolean = minX <= x && x <= maxX && minY <= y && y <= maxY
+    public fun contains(x: Double, y: Double): Boolean = minX <= x && x <= maxX && minY <= y && y <= maxY
 
     public fun contains(point: Point): Boolean = contains(point.x, point.y)
 
-    public fun intersects(
-        minX: Double,
-        maxX: Double,
-        minY: Double,
-        maxY: Double,
-    ): Boolean = minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY
+    public fun intersects(minX: Double, maxX: Double, minY: Double, maxY: Double): Boolean =
+        minX < this.maxX && this.minX < maxX && minY < this.maxY && this.minY < maxY
 
     public fun intersects(bounds: Bounds): Boolean = intersects(bounds.minX, bounds.maxX, bounds.minY, bounds.maxY)
 
-    public fun contains(bounds: Bounds): Boolean = bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY
+    public fun contains(bounds: Bounds): Boolean =
+        bounds.minX >= minX && bounds.maxX <= maxX && bounds.minY >= minY && bounds.maxY <= maxY
 }

@@ -26,10 +26,7 @@ internal object LatLngAltListSerializer : KSerializer<List<LatLngAlt>> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("LatLngAltList", PrimitiveKind.STRING)
 
-    override fun serialize(
-        encoder: Encoder,
-        value: List<LatLngAlt>,
-    ) {
+    override fun serialize(encoder: Encoder, value: List<LatLngAlt>) {
         val string =
             value.joinToString(" ") { latLngAlt ->
                 val altitude = latLngAlt.altitude?.let { ",$it" } ?: ""
@@ -38,10 +35,9 @@ internal object LatLngAltListSerializer : KSerializer<List<LatLngAlt>> {
         encoder.encodeString(string)
     }
 
-    override fun deserialize(decoder: Decoder): List<LatLngAlt> =
-        decoder
-            .decodeString()
-            .split(Regex("""\s+"""))
-            .filter(String::isNotBlank)
-            .map { LatLngAltSerializer.parse(it) }
+    override fun deserialize(decoder: Decoder): List<LatLngAlt> = decoder
+        .decodeString()
+        .split(Regex("""\s+"""))
+        .filter(String::isNotBlank)
+        .map { LatLngAltSerializer.parse(it) }
 }

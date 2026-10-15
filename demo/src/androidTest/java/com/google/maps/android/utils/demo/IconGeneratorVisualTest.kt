@@ -27,13 +27,13 @@ import org.junit.runner.RunWith
 
 private val prompt =
     """
-    Task: Act as a Visual QA system to verify an Android application screenshot. Compare the 
-    provided image against the following technical specifications. Your goal is to determine if the 
+    Task: Act as a Visual QA system to verify an Android application screenshot. Compare the
+    provided image against the following technical specifications. Your goal is to determine if the
     rendering is correct.
 
     1. Map Verification
-    Confirm that a map is visible in the background. The map should be centered on the Sydney, 
-    Australia area. Major landmarks or labels like Sydney, Hornsby, and Cronulla should be visible. 
+    Confirm that a map is visible in the background. The map should be centered on the Sydney,
+    Australia area. Major landmarks or labels like Sydney, Hornsby, and Cronulla should be visible.
     Be flexible with minor labels as they may change, but the general geographic layout must match the reference.
     2. Marker Content and Styling
     There must be exactly six markers on the screen. Verify each of the following:
@@ -59,7 +59,7 @@ private val prompt =
     Provide your response in the following format:
 
     * Status: [PASSED or FAILED]
-    * Justification: Provide a concise explanation for the classification. If FAILED, list the 
+    * Justification: Provide a concise explanation for the classification. If FAILED, list the
     specific markers or map elements that do not meet the criteria.
     """.trimIndent()
 
@@ -74,32 +74,31 @@ class IconGeneratorVisualTest : BaseVisualTest() {
     }
 
     @Test
-    fun testIconMarkers() =
-        runBlocking {
-            // Launch IconGeneratorDemoActivity directly
-            val intent =
-                Intent(context, IconGeneratorDemoActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
-            context.startActivity(intent)
-            uiDevice.wait(Until.hasObject(By.pkg(context.packageName).depth(0)), 10000)
+    fun testIconMarkers() = runBlocking {
+        // Launch IconGeneratorDemoActivity directly
+        val intent =
+            Intent(context, IconGeneratorDemoActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        context.startActivity(intent)
+        uiDevice.wait(Until.hasObject(By.pkg(context.packageName).depth(0)), 10000)
 
-            // Wait for map rendering (Markers are bitmaps, so we can't search for text "Default")
-            waitForMapRendering(5)
+        // Wait for map rendering (Markers are bitmaps, so we can't search for text "Default")
+        waitForMapRendering(5)
 
-            // Capture a screenshot
-            val screenshotBitmap = captureScreenshot("clustering_screenshot.png")
+        // Capture a screenshot
+        val screenshotBitmap = captureScreenshot("clustering_screenshot.png")
 
-            // --- STEP 3: Analyze the image using Gemini ---
-            val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
+        // --- STEP 3: Analyze the image using Gemini ---
+        val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
 
-            // --- STEP 4: Assert on Gemini's response ---
-            println("Gemini's analysis: $geminiResponse")
+        // --- STEP 4: Assert on Gemini's response ---
+        println("Gemini's analysis: $geminiResponse")
 
-            requireNotNull(geminiResponse) { "Gemini response was null, check API key or network connection." }
-            assertTrue(
-                "Gemini validation failed. Response: $geminiResponse",
-                geminiResponse.contains("PASSED", ignoreCase = true),
-            )
-        }
+        requireNotNull(geminiResponse) { "Gemini response was null, check API key or network connection." }
+        assertTrue(
+            "Gemini validation failed. Response: $geminiResponse",
+            geminiResponse.contains("PASSED", ignoreCase = true),
+        )
+    }
 }

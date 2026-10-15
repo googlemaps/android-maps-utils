@@ -23,14 +23,12 @@ import com.google.maps.android.data.Point
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class GeoJsonPoint
-    @JvmOverloads
-    constructor(
-        coordinates: LatLng,
-        private val altitude: Double? = null,
-    ) : Point(coordinates) {
-        public fun getType(): String = getGeometryType()
+@JvmOverloads
+constructor(coordinates: LatLng, private val altitude: Double? = null) :
+    Point(coordinates) {
+    public fun getType(): String = getGeometryType()
 
-        public fun getCoordinates(): LatLng = getGeometryObject()
+    public fun getCoordinates(): LatLng = getGeometryObject()
 
-        public fun getAltitude(): Double? = altitude
-    }
+    public fun getAltitude(): Double? = altitude
+}

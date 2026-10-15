@@ -26,7 +26,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
 import com.google.common.truth.Truth.assertThat
-import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
@@ -40,9 +39,10 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -74,7 +74,7 @@ public class FusedLocationProviderTest {
         verify(fusedLocationClient).requestLocationUpdates(
             eq(request),
             locationCallbackCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         val result = LocationResult.create(listOf(location))
@@ -95,7 +95,7 @@ public class FusedLocationProviderTest {
                 intervalMs = 2000L,
                 minUpdateDistanceM = 5f,
                 priority = Priority.PRIORITY_BALANCED_POWER_ACCURACY,
-                looper = looper
+                looper = looper,
             ).first()
             assertThat(event).isEqualTo(location)
         }
@@ -104,7 +104,7 @@ public class FusedLocationProviderTest {
         verify(fusedLocationClient).requestLocationUpdates(
             any(LocationRequest::class.java),
             locationCallbackCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         val result = LocationResult.create(listOf(location))
@@ -125,8 +125,8 @@ public class FusedLocationProviderTest {
             fusedLocationClient.requestLocationUpdates(
                 eq(request),
                 any(LocationCallback::class.java),
-                eq(looper)
-            )
+                eq(looper),
+            ),
         ).thenThrow(SecurityException("Location permission denied"))
 
         assertFailsWith<SecurityException> {

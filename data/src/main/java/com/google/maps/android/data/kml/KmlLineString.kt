@@ -23,12 +23,12 @@ import com.google.maps.android.data.LineString
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
 public class KmlLineString
-    @JvmOverloads
-    constructor(
-        coordinates: ArrayList<LatLng>,
-        private val altitudes: ArrayList<Double>? = null,
-    ) : LineString(coordinates) {
-        public fun getAltitudes(): ArrayList<Double>? = altitudes
+@JvmOverloads
+constructor(
+    coordinates: ArrayList<LatLng>,
+    private val altitudes: ArrayList<Double>? = null,
+) : LineString(coordinates) {
+    public fun getAltitudes(): ArrayList<Double>? = altitudes
 
-        override fun getGeometryObject(): ArrayList<LatLng> = ArrayList(super.getGeometryObject())
-    }
+    override fun getGeometryObject(): ArrayList<LatLng> = ArrayList(super.getGeometryObject())
+}

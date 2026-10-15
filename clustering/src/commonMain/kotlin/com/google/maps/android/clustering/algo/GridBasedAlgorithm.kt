@@ -106,10 +106,6 @@ public open class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
     public companion object {
         private const val DEFAULT_GRID_SIZE = 100
 
-        private fun getCoord(
-            numCells: Long,
-            x: Double,
-            y: Double,
-        ): Long = (numCells * floor(x) + floor(y)).toLong()
+        private fun getCoord(numCells: Long, x: Double, y: Double): Long = (numCells * floor(x) + floor(y)).toLong()
     }
 }

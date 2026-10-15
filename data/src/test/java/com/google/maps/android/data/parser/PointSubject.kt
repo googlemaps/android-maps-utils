@@ -26,28 +26,21 @@ import kotlin.math.abs
 
 fun assertThat(point: Point?): PointSubject = Truth.assertAbout(pointSubjectFactory()).that(point)
 
-fun pointSubjectFactory(): Subject.Factory<PointSubject, Point> =
-    Subject.Factory { metaData, target ->
-        PointSubject(
-            metaData,
-            target,
-        )
-    }
+fun pointSubjectFactory(): Subject.Factory<PointSubject, Point> = Subject.Factory { metaData, target ->
+    PointSubject(
+        metaData,
+        target,
+    )
+}
 
-class PointSubject(
-    metadata: FailureMetadata,
-    private val actual: Point?,
-) : Subject(metadata, actual) {
+class PointSubject(metadata: FailureMetadata, private val actual: Point?) : Subject(metadata, actual) {
     fun hasAltitude() {
         if (actual?.alt == null) {
             failWithActual(Fact.simpleFact("expected to have altitude, but was null"))
         }
     }
 
-    fun hasAltitudeWithin(
-        tolerance: Double,
-        expected: Double,
-    ) {
+    fun hasAltitudeWithin(tolerance: Double, expected: Double) {
         hasAltitude()
         if (actual?.alt?.let { abs(it - expected) > tolerance } == true) {
             failWithActual(
@@ -90,9 +83,7 @@ class PointSubject(
 
     fun isWithin(tolerance: Number): PointDistanceSubject = PointDistanceSubject(tolerance.toDouble())
 
-    inner class PointDistanceSubject(
-        private val tolerance: Double,
-    ) {
+    inner class PointDistanceSubject(private val tolerance: Double) {
         fun of(expected: Point) {
             if (actual == null) {
                 failWithActual(Fact.simpleFact("expected a non-null Point, but was null"))

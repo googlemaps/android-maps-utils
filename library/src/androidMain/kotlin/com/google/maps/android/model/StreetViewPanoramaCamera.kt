@@ -26,8 +26,7 @@ import com.google.android.gms.maps.model.StreetViewPanoramaCamera
  * @return the constructed [StreetViewPanoramaCamera]
  */
 public inline fun streetViewPanoramaCamera(
-    optionsActions: StreetViewPanoramaCamera.Builder.() -> Unit
-): StreetViewPanoramaCamera =
-    StreetViewPanoramaCamera.Builder().apply(
-        optionsActions
-    ).build()
+    optionsActions: StreetViewPanoramaCamera.Builder.() -> Unit,
+): StreetViewPanoramaCamera = StreetViewPanoramaCamera.Builder().apply(
+    optionsActions,
+).build()

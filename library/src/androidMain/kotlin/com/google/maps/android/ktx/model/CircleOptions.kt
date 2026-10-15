@@ -23,7 +23,7 @@ import com.google.maps.android.model.circleOptions as canonicalCircleOptions
 @Deprecated(
     message = "Use com.google.maps.android.model.circleOptions instead",
     replaceWith = ReplaceWith("circleOptions(optionsActions)", "com.google.maps.android.model.circleOptions"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public inline fun circleOptions(optionsActions: CircleOptions.() -> Unit): CircleOptions = canonicalCircleOptions(optionsActions)
-
+public inline fun circleOptions(optionsActions: CircleOptions.() -> Unit): CircleOptions =
+    canonicalCircleOptions(optionsActions)

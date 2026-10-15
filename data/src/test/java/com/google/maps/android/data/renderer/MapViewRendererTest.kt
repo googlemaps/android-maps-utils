@@ -21,8 +21,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polygon as MapPolygon
-
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
@@ -36,7 +34,6 @@ import com.google.maps.android.data.renderer.model.PointGeometry
 import com.google.maps.android.data.renderer.model.PointStyle
 import com.google.maps.android.data.renderer.model.Polygon
 import com.google.maps.android.data.renderer.model.PolygonStyle
-
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -48,6 +45,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Before
 import org.junit.Test
+import com.google.android.gms.maps.model.Polygon as MapPolygon
 
 /**
  * Unit tests for [MapViewRenderer] verifying correct translation of platform-agnostic
@@ -189,12 +187,12 @@ class MapViewRendererTest {
         val feature =
             Feature(
                 geometry =
-                    MultiGeometry(
-                        listOf(
-                            Polygon(listOf(Point(0.0, 0.0), Point(0.0, 1.0), Point(1.0, 1.0))),
-                            Polygon(listOf(Point(2.0, 2.0), Point(2.0, 3.0), Point(3.0, 3.0))),
-                        ),
+                MultiGeometry(
+                    listOf(
+                        Polygon(listOf(Point(0.0, 0.0), Point(0.0, 1.0), Point(1.0, 1.0))),
+                        Polygon(listOf(Point(2.0, 2.0), Point(2.0, 3.0), Point(3.0, 3.0))),
                     ),
+                ),
             )
 
         // When
@@ -221,11 +219,11 @@ class MapViewRendererTest {
         val feature =
             Feature(
                 geometry =
-                    MultiGeometry(
-                        listOf(
-                            LineString(listOf(Point(0.0, 0.0), Point(1.0, 1.0))),
-                        ),
+                MultiGeometry(
+                    listOf(
+                        LineString(listOf(Point(0.0, 0.0), Point(1.0, 1.0))),
                     ),
+                ),
             )
 
         // When: a hide/show cycle (remove + re-add) followed by a final remove.
@@ -253,7 +251,7 @@ class MapViewRendererTest {
 
         val childPolygon = Polygon(
             outerBoundary = listOf(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 0.0)),
-            innerBoundaries = emptyList()
+            innerBoundaries = emptyList(),
         )
         val multiGeometry = MultiGeometry(geometries = listOf(childPolygon))
         val style = PolygonStyle(
@@ -373,7 +371,7 @@ class MapViewRendererTest {
 
         val childPolygon = Polygon(
             outerBoundary = listOf(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 0.0)),
-            innerBoundaries = emptyList()
+            innerBoundaries = emptyList(),
         )
         val multiGeometry = MultiGeometry(geometries = listOf(childPolygon))
         val feature = Feature(geometry = multiGeometry, style = PolygonStyle(fillColor = 0xFF00FF00.toInt()))

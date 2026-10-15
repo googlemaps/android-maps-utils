@@ -24,20 +24,14 @@ public object RendererLogger {
     private var isEnabled = false
 
     @JvmStatic
-    public fun d(
-        tag: String,
-        msg: String,
-    ) {
+    public fun d(tag: String, msg: String) {
         if (isEnabled) {
             Log.d(tag, msg)
         }
     }
 
     @JvmStatic
-    public fun e(
-        tag: String,
-        msg: String,
-    ) {
+    public fun e(tag: String, msg: String) {
         if (isEnabled) {
             Log.e(tag, msg)
         }

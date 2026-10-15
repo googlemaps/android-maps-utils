@@ -15,9 +15,9 @@
  */
 package com.google.maps.android.clustering.algo
 
-import com.google.maps.android.model.CameraPosition
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.model.CameraPosition
 
 public open class ScreenBasedAlgorithmAdapter<T : ClusterItem> public constructor(
     private val algorithm: Algorithm<T>,
