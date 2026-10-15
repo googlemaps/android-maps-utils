@@ -39,76 +39,74 @@ class ClusteringVisualTest : BaseVisualTest() {
     }
 
     @Test
-    fun naturalLanguageClickTest() =
-        runBlocking {
-            // Use a natural language prompt to perform the click action
-            helper.performActionFromPrompt("Click the CLUSTERING button", uiDevice, geminiApiKey)
+    fun naturalLanguageClickTest() = runBlocking {
+        // Use a natural language prompt to perform the click action
+        helper.performActionFromPrompt("Click the CLUSTERING button", uiDevice, geminiApiKey)
 
-            // Wait for the clustering screen to load and map to render
-            TimeUnit.SECONDS.sleep(5)
+        // Wait for the clustering screen to load and map to render
+        TimeUnit.SECONDS.sleep(5)
 
-            // Capture a screenshot to verify the result of the action
-            val screenshotBitmap = captureScreenshot("natural_lang_click_screenshot.png")
+        // Capture a screenshot to verify the result of the action
+        val screenshotBitmap = captureScreenshot("natural_lang_click_screenshot.png")
 
-            // --- Perform a visual assertion on the new screen ---
-            val prompt =
-                "Does this image show a map with several markers clustered together? Answer only YES or NO."
-            verifyScreenshotWithGoldenFallback(
-                testName = "Clustering_NaturalLanguageClick",
-                screenshotBitmap = screenshotBitmap,
-                prompt = prompt,
-                passCondition = { it.contains("YES", ignoreCase = true) },
-            )
-        }
+        // --- Perform a visual assertion on the new screen ---
+        val prompt =
+            "Does this image show a map with several markers clustered together? Answer only YES or NO."
+        verifyScreenshotWithGoldenFallback(
+            testName = "Clustering_NaturalLanguageClick",
+            screenshotBitmap = screenshotBitmap,
+            prompt = prompt,
+            passCondition = { it.contains("YES", ignoreCase = true) },
+        )
+    }
 
     @Test
-    fun verifyClusteringScreenContent() =
-        runBlocking {
-            // Wait for the app to load and find the "Clustering" button
-            val clusteringButton = uiDevice.wait(Until.findObject(By.text("CLUSTERING")), 10000)
+    fun verifyClusteringScreenContent() = runBlocking {
+        // Wait for the app to load and find the "Clustering" button
+        val clusteringButton = uiDevice.wait(Until.findObject(By.text("CLUSTERING")), 10000)
 
-            if (clusteringButton == null) {
-                // Dump window hierarchy to logcat for debugging
-                val outputStream = ByteArrayOutputStream()
-                uiDevice.dumpWindowHierarchy(outputStream)
-                Log.e(
-                    "ClusteringVisualTest",
-                    "Could not find clustering button. UI Hierarchy:\n${outputStream.toString("UTF-8")}",
-                )
-
-                // Take a screenshot for visual inspection
-                val screenshotFile = File(context.cacheDir, "test_failure_screenshot.png")
-                uiDevice.takeScreenshot(screenshotFile)
-                Log.e("ClusteringVisualTest", "Debug screenshot saved to device cache.")
-            }
-
-            assertNotNull(
-                "Clustering button not found. Check logcat for UI hierarchy dump and debug screenshot.",
-                clusteringButton,
+        if (clusteringButton == null) {
+            // Dump window hierarchy to logcat for debugging
+            val outputStream = ByteArrayOutputStream()
+            uiDevice.dumpWindowHierarchy(outputStream)
+            Log.e(
+                "ClusteringVisualTest",
+                "Could not find clustering button. UI Hierarchy:\n${outputStream.toString("UTF-8")}",
             )
-            clusteringButton.click()
 
-            // Wait for the clustering screen to load and map to render
-            TimeUnit.SECONDS.sleep(5)
+            // Take a screenshot for visual inspection
+            val screenshotFile = File(context.cacheDir, "test_failure_screenshot.png")
+            uiDevice.takeScreenshot(screenshotFile)
+            Log.e("ClusteringVisualTest", "Debug screenshot saved to device cache.")
+        }
 
-            // Capture a screenshot
-            val screenshotBitmap = captureScreenshot("clustering_screenshot.png")
+        assertNotNull(
+            "Clustering button not found. Check logcat for UI hierarchy dump and debug screenshot.",
+            clusteringButton,
+        )
+        clusteringButton.click()
 
-            // --- STEP 2: Define your verification prompt ---
-            val prompt =
-                """
+        // Wait for the clustering screen to load and map to render
+        TimeUnit.SECONDS.sleep(5)
+
+        // Capture a screenshot
+        val screenshotBitmap = captureScreenshot("clustering_screenshot.png")
+
+        // --- STEP 2: Define your verification prompt ---
+        val prompt =
+            """
                 Please act as a UI tester and analyze this screenshot to verify the application is rendering correctly. Check the image against the following three acceptance criteria:
                 Geographic Bounds: Confirm the map is centered on North London and Hertfordshire, specifically showing landmarks like St Albans, Enfield, and the M25 ring road.
                 Primary Cluster: Verify the presence of either a Red cluster marker labeled '200+' or a Green cluster marker labeled '100+' located centrally over the North London area.
                 Secondary Cluster: Verify the presence of a Blue cluster marker labeled '10+' located to the southwest of the green marker.
                 If all three elements are present and legible, just confirm that the visual test has PASSED. If any element is missing or incorrect, please detail the discrepancy.
-                """.trimIndent()
+            """.trimIndent()
 
-            verifyScreenshotWithGoldenFallback(
-                testName = "Clustering_ScreenContent",
-                screenshotBitmap = screenshotBitmap,
-                prompt = prompt,
-                passCondition = { it.contains("PASSED", ignoreCase = true) },
-            )
-        }
+        verifyScreenshotWithGoldenFallback(
+            testName = "Clustering_ScreenContent",
+            screenshotBitmap = screenshotBitmap,
+            prompt = prompt,
+            passCondition = { it.contains("PASSED", ignoreCase = true) },
+        )
+    }
 }

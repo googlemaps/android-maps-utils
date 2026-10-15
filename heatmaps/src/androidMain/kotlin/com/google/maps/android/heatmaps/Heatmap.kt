@@ -25,9 +25,7 @@ import com.google.maps.android.heatmaps.WeightedLatLng
 /**
  * Converts this LatLng to a [WeightedLatLng]
  */
-public fun LatLng.toWeightedLatLng(
-    intensity: Double = WeightedLatLng.DEFAULT_INTENSITY
-): WeightedLatLng =
+public fun LatLng.toWeightedLatLng(intensity: Double = WeightedLatLng.DEFAULT_INTENSITY): WeightedLatLng =
     WeightedLatLng(this, intensity)
 
 /**
@@ -41,16 +39,14 @@ public fun heatmapTileProviderWithData(
     radius: Int = HeatmapTileProvider.DEFAULT_RADIUS,
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
     opacity: Double = HeatmapTileProvider.DEFAULT_OPACITY,
-    maxIntensity: Double = 0.0
-) : HeatmapTileProvider {
-    return HeatmapTileProvider.Builder()
-        .data(latLngs)
-        .radius(radius)
-        .gradient(gradient)
-        .opacity(opacity)
-        .maxIntensity(maxIntensity)
-        .build()
-}
+    maxIntensity: Double = 0.0,
+): HeatmapTileProvider = HeatmapTileProvider.Builder()
+    .data(latLngs)
+    .radius(radius)
+    .gradient(gradient)
+    .opacity(opacity)
+    .maxIntensity(maxIntensity)
+    .build()
 
 /**
  * Constructs a [HeatmapTileProvider].
@@ -63,13 +59,11 @@ public fun heatmapTileProviderWithWeightedData(
     radius: Int = HeatmapTileProvider.DEFAULT_RADIUS,
     gradient: Gradient = HeatmapTileProvider.DEFAULT_GRADIENT,
     opacity: Double = HeatmapTileProvider.DEFAULT_OPACITY,
-    maxIntensity: Double = 0.0
-) : HeatmapTileProvider {
-    return HeatmapTileProvider.Builder()
-        .weightedData(latLngs)
-        .radius(radius)
-        .gradient(gradient)
-        .opacity(opacity)
-        .maxIntensity(maxIntensity)
-        .build()
-}
+    maxIntensity: Double = 0.0,
+): HeatmapTileProvider = HeatmapTileProvider.Builder()
+    .weightedData(latLngs)
+    .radius(radius)
+    .gradient(gradient)
+    .opacity(opacity)
+    .maxIntensity(maxIntensity)
+    .build()

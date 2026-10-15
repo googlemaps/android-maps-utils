@@ -58,7 +58,8 @@ class GeoJsonLayerOnMapTest {
     @Test
     fun addLayerToMap_routesThroughObjectManagersAndAppliesFullStyles() {
         io.mockk.mockkStatic(com.google.android.gms.maps.model.BitmapDescriptorFactory::class)
-        io.mockk.every { com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(any()) } returns mockk()
+        io.mockk.every { com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(any()) } returns
+            mockk()
         try {
             val mockMap = mockk<GoogleMap>(relaxed = true)
             val markerSlot = io.mockk.slot<com.google.android.gms.maps.model.MarkerOptions>()
@@ -73,7 +74,8 @@ class GeoJsonLayerOnMapTest {
             val polygonManager = com.google.maps.android.collections.PolygonManager(mockMap)
             val polylineManager = com.google.maps.android.collections.PolylineManager(mockMap)
 
-            val layer = GeoJsonLayer(mockMap, emptyFeatureCollection, markerManager, polygonManager, polylineManager, null)
+            val layer =
+                GeoJsonLayer(mockMap, emptyFeatureCollection, markerManager, polygonManager, polylineManager, null)
             layer.addLayerToMap()
 
             val customIcon = mockk<com.google.android.gms.maps.model.BitmapDescriptor>()

@@ -23,7 +23,7 @@ import com.google.maps.android.model.polylineOptions as canonicalPolylineOptions
 @Deprecated(
     message = "Use com.google.maps.android.model.polylineOptions instead",
     replaceWith = ReplaceWith("polylineOptions(optionsActions)", "com.google.maps.android.model.polylineOptions"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public inline fun polylineOptions(optionsActions: PolylineOptions.() -> Unit): PolylineOptions = canonicalPolylineOptions(optionsActions)
-
+public inline fun polylineOptions(optionsActions: PolylineOptions.() -> Unit): PolylineOptions =
+    canonicalPolylineOptions(optionsActions)

@@ -15,17 +15,14 @@
  */
 package com.google.maps.android.heatmaps
 
-import com.google.maps.android.model.LatLng
-import kotlin.jvm.JvmOverloads
 import com.google.maps.android.geometry.Point
+import com.google.maps.android.model.LatLng
 import com.google.maps.android.projection.SphericalMercatorProjection
 import com.google.maps.android.quadtree.PointQuadTree
+import kotlin.jvm.JvmOverloads
 
-public data class WeightedLatLng(
-    public val latLng: LatLng,
-    override val point: Point,
-    public val intensity: Double,
-) : PointQuadTree.Item {
+public data class WeightedLatLng(public val latLng: LatLng, override val point: Point, public val intensity: Double) :
+    PointQuadTree.Item {
     /**
      * Constructor that uses default value for intensity
      *

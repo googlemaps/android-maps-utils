@@ -21,11 +21,11 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.libraries.navigation.SupportNavigationFragment;
 
 public class MapFragmentProvider {
-    public static Fragment getFragment(GoogleMapOptions options) {
-        if (options == null) {
-            return SupportNavigationFragment.newInstance();
-        } else {
-            return SupportNavigationFragment.newInstance(options);
-        }
+  public static Fragment getFragment(GoogleMapOptions options) {
+    if (options == null) {
+      return SupportNavigationFragment.newInstance();
+    } else {
+      return SupportNavigationFragment.newInstance(options);
     }
+  }
 }

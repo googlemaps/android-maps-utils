@@ -60,7 +60,10 @@ internal class LatLngTest {
 
     @Test
     fun `simplify endpoints are still equal`() {
-        val lineEncoded = "elfjD~a}uNOnFN~Em@fJv@tEMhGDjDe@hG^nF??@lA?n@IvAC`Ay@A{@DwCA{CF_EC{CEi@PBTFDJBJ?V?n@?D@?A@?@?F?F?LAf@?n@@`@@T@~@FpA?fA?p@?r@?vAH`@OR@^ETFJCLD?JA^?J?P?fAC`B@d@?b@A\\@`@Ad@@\\?`@?f@?V?H?DD@DDBBDBD?D?B?B@B@@@B@B@B@D?D?JAF@H@FCLADBDBDCFAN?b@Af@@x@@"
+        val lineEncoded =
+            "elfjD~a}uNOnFN~Em@fJv@tEMhGDjDe@hG^nF??@lA?n@IvAC`Ay@A{@DwCA{CF_EC{CEi@PBTFDJBJ?V?n@?D@?A@" +
+                "?@?F?F?LAf@?n@@`@@T@~@FpA?fA?p@?r@?vAH`@OR@^ETFJCLD?JA^?J?P?fAC`B@d@?b@A\\@`@Ad@@\\?`@?f@?" +
+                "V?H?DD@DDBBDBD?D?B?B@B@@@B@B@B@D?D?JAF@H@FCLADBDBDCFAN?b@Af@@x@@"
         val line = lineEncoded.toLatLngList()
         val simplifiedLine = line.simplify(tolerance = 5.0)
         assertThat(simplifiedLine).hasSize(20)
@@ -90,7 +93,7 @@ internal class LatLngTest {
 
         val result = LatLng(0.0, 45.0).computeSphericalOffsetOrigin(
             distance = Math.PI * earthRadius / 4.0,
-            heading = 90.0
+            heading = 90.0,
         )!!
         assertThat(result.latitude).isWithin(1e-6).of(0.0)
         assertThat(result.longitude).isWithin(1e-6).of(0.0)

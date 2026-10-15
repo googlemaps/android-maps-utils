@@ -70,8 +70,10 @@ class StreetViewDemoActivity : AppCompatActivity() {
             val response2 = StreetViewUtils.fetchStreetViewData(LatLng(8.1425918, 11.5386121), BuildConfig.MAPS_API_KEY)
 
             // Update the UI with the results.
-            findViewById<TextView>(R.id.textViewFirstLocation).text = "Location 1 is supported in StreetView: $response1"
-            findViewById<TextView>(R.id.textViewSecondLocation).text = "Location 2 is  supported in StreetView: $response2"
+            findViewById<TextView>(R.id.textViewFirstLocation).text =
+                "Location 1 is supported in StreetView: $response1"
+            findViewById<TextView>(R.id.textViewSecondLocation).text =
+                "Location 2 is  supported in StreetView: $response2"
         }
     }
 }

@@ -15,13 +15,14 @@
  */
 package com.google.maps.android
 
-import com.google.maps.android.model.LatLng
-import com.google.maps.android.model.latitude
-import com.google.maps.android.model.longitude
 import com.google.maps.android.MathUtil.EARTH_RADIUS
 import com.google.maps.android.MathUtil.arcHav
 import com.google.maps.android.MathUtil.havDistance
 import com.google.maps.android.MathUtil.wrap
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
+import kotlin.jvm.JvmStatic
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.asin
@@ -30,7 +31,6 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
-import kotlin.jvm.JvmStatic
 
 public object SphericalUtil {
     /**
@@ -40,10 +40,7 @@ public object SphericalUtil {
      * @return The heading in degrees clockwise from north.
      */
     @JvmStatic
-    public fun computeHeading(
-        from: LatLng,
-        to: LatLng,
-    ): Double {
+    public fun computeHeading(from: LatLng, to: LatLng): Double {
         // http://williams.best.vwh.net/avform.htm#Crs
         val fromLat = toRadians(from.latitude)
         val fromLng = toRadians(from.longitude)
@@ -67,11 +64,7 @@ public object SphericalUtil {
      * @param heading  The heading in degrees clockwise from north.
      */
     @JvmStatic
-    public fun computeOffset(
-        from: LatLng,
-        distance: Double,
-        heading: Double,
-    ): LatLng {
+    public fun computeOffset(from: LatLng, distance: Double, heading: Double): LatLng {
         var distance = distance
         var heading = heading
         distance /= EARTH_RADIUS
@@ -103,11 +96,7 @@ public object SphericalUtil {
      * @param heading  The heading in degrees clockwise from north.
      */
     @JvmStatic
-    public fun computeOffsetOrigin(
-        to: LatLng,
-        distance: Double,
-        heading: Double,
-    ): LatLng? {
+    public fun computeOffsetOrigin(to: LatLng, distance: Double, heading: Double): LatLng? {
         var distance = distance
         var heading = heading
         heading = toRadians(heading)
@@ -155,11 +144,7 @@ public object SphericalUtil {
      * @return The interpolated LatLng.
      */
     @JvmStatic
-    public fun interpolate(
-        from: LatLng,
-        to: LatLng,
-        fraction: Double,
-    ): LatLng {
+    public fun interpolate(from: LatLng, to: LatLng, fraction: Double): LatLng {
         // http://en.wikipedia.org/wiki/Slerp
         val fromLat = toRadians(from.latitude)
         val fromLng = toRadians(from.longitude)
@@ -194,37 +179,26 @@ public object SphericalUtil {
     /**
      * Returns distance on the unit sphere; the arguments are in radians.
      */
-    private fun distanceRadians(
-        lat1: Double,
-        lng1: Double,
-        lat2: Double,
-        lng2: Double,
-    ): Double = arcHav(havDistance(lat1, lat2, lng1 - lng2))
+    private fun distanceRadians(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double =
+        arcHav(havDistance(lat1, lat2, lng1 - lng2))
 
     /**
      * Returns the angle between two LatLngs, in radians. This is the same as the distance
      * on the unit sphere.
      */
     @JvmStatic
-    public fun computeAngleBetween(
-        from: LatLng,
-        to: LatLng,
-    ): Double =
-        distanceRadians(
-            toRadians(from.latitude),
-            toRadians(from.longitude),
-            toRadians(to.latitude),
-            toRadians(to.longitude),
-        )
+    public fun computeAngleBetween(from: LatLng, to: LatLng): Double = distanceRadians(
+        toRadians(from.latitude),
+        toRadians(from.longitude),
+        toRadians(to.latitude),
+        toRadians(to.longitude),
+    )
 
     /**
      * Returns the distance between two LatLngs, in meters.
      */
     @JvmStatic
-    public fun computeDistanceBetween(
-        from: LatLng,
-        to: LatLng,
-    ): Double = computeAngleBetween(from, to) * EARTH_RADIUS
+    public fun computeDistanceBetween(from: LatLng, to: LatLng): Double = computeAngleBetween(from, to) * EARTH_RADIUS
 
     /**
      * Returns the length of the given path, in meters, on Earth.
@@ -275,10 +249,7 @@ public object SphericalUtil {
      * Used by SphericalUtilTest.
      */
     @JvmStatic
-    public fun computeSignedArea(
-        path: List<LatLng>,
-        radius: Double,
-    ): Double {
+    public fun computeSignedArea(path: List<LatLng>, radius: Double): Double {
         val size = path.size
         if (size < 3) {
             return 0.0
@@ -306,12 +277,7 @@ public object SphericalUtil {
      * See http://books.google.com/books?id=3uBHAAAAIAAJ&pg=PA71
      * The arguments named "tan" are tan((pi/2 - latitude)/2).
      */
-    private fun polarTriangleArea(
-        tan1: Double,
-        lng1: Double,
-        tan2: Double,
-        lng2: Double,
-    ): Double {
+    private fun polarTriangleArea(tan1: Double, lng1: Double, tan2: Double, lng2: Double): Double {
         val deltaLng = lng1 - lng2
         val t = tan1 * tan2
         return 2 * atan2(t * sin(deltaLng), 1 + t * cos(deltaLng))
@@ -327,10 +293,8 @@ public object SphericalUtil {
      * the percentage is outside the range [0, 1]
      */
     @JvmStatic
-    public fun getPointOnPolyline(
-        polyline: List<LatLng>,
-        percentage: Double,
-    ): LatLng? = getPolylinePrefix(polyline, percentage).lastOrNull()
+    public fun getPointOnPolyline(polyline: List<LatLng>, percentage: Double): LatLng? =
+        getPolylinePrefix(polyline, percentage).lastOrNull()
 
     /**
      * Returns a new polyline that is a prefix of the original polyline, representing a given
@@ -345,10 +309,7 @@ public object SphericalUtil {
      * is empty or the percentage is outside the range [0, 1]
      */
     @JvmStatic
-    public fun getPolylinePrefix(
-        polyline: List<LatLng>,
-        percentage: Double,
-    ): List<LatLng> {
+    public fun getPolylinePrefix(polyline: List<LatLng>, percentage: Double): List<LatLng> {
         if (polyline.isEmpty() || percentage !in 0.0..1.0) {
             return emptyList()
         }

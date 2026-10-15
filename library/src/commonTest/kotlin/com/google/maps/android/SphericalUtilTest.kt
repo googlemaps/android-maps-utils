@@ -399,7 +399,6 @@ class SphericalUtilTest {
         private fun computeTriangleArea(a: LatLng, b: LatLng, c: LatLng): Double =
             abs(computeSignedTriangleArea(a, b, c))
 
-        private fun isCCW(a: LatLng, b: LatLng, c: LatLng): Int =
-            if (computeSignedTriangleArea(a, b, c) > 0) 1 else -1
+        private fun isCCW(a: LatLng, b: LatLng, c: LatLng): Int = if (computeSignedTriangleArea(a, b, c) > 0) 1 else -1
     }
 }

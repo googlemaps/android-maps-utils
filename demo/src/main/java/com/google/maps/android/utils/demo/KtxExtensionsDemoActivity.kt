@@ -43,8 +43,8 @@ import com.google.maps.android.addMarker
 import com.google.maps.android.awaitAnimateCamera
 import com.google.maps.android.awaitMap
 import com.google.maps.android.awaitMapsSdkInitialized
-import com.google.maps.android.ktx.addCircle as deprecatedBridgeAddCircle
 import com.google.maps.android.mapClickEvents
+import com.google.maps.android.ktx.addCircle as deprecatedBridgeAddCircle
 
 /**
  * A demo activity illustrating the consolidated reactive Coroutine/Flow/Builder extensions
@@ -118,7 +118,7 @@ class KtxExtensionsDemoActivity : ComponentActivity() {
                     Toast.makeText(
                         context,
                         "Clicked at: ${latLng.latitude}, ${latLng.longitude}",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
             }

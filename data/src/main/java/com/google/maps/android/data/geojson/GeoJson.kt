@@ -38,14 +38,14 @@ public fun geoJsonLayer(
     markerManager: MarkerManager? = null,
     polygonManager: PolygonManager? = null,
     polylineManager: PolylineManager? = null,
-    groundOverlayManager: GroundOverlayManager? = null
+    groundOverlayManager: GroundOverlayManager? = null,
 ): GeoJsonLayer = GeoJsonLayer(
     map,
     geoJsonFile,
     markerManager,
     polygonManager,
     polylineManager,
-    groundOverlayManager
+    groundOverlayManager,
 )
 
 /**
@@ -59,7 +59,7 @@ public fun geoJsonLayer(
     markerManager: MarkerManager? = null,
     polygonManager: PolygonManager? = null,
     polylineManager: PolylineManager? = null,
-    groundOverlayManager: GroundOverlayManager? = null
+    groundOverlayManager: GroundOverlayManager? = null,
 ): GeoJsonLayer = GeoJsonLayer(
     map,
     resourceId,
@@ -67,5 +67,5 @@ public fun geoJsonLayer(
     markerManager,
     polygonManager,
     polylineManager,
-    groundOverlayManager
+    groundOverlayManager,
 )

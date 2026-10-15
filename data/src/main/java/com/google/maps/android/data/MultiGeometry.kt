@@ -20,9 +20,7 @@ package com.google.maps.android.data
  * GeoJsonMultiPoint, and GeoJsonMultiPolygon.
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
-public open class MultiGeometry(
-    private val geometries: List<Geometry>,
-) : Geometry {
+public open class MultiGeometry(private val geometries: List<Geometry>) : Geometry {
     private var _geometryType = "MultiGeometry"
 
     override fun getGeometryType(): String = _geometryType

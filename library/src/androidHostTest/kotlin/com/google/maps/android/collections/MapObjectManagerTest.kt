@@ -35,8 +35,7 @@ class MapObjectManagerTest {
         var isVisible: Boolean = true
     }
 
-    private class ConcreteManager(map: GoogleMap) :
-        MapObjectManager<TestObject, ConcreteManager.Collection>(map) {
+    private class ConcreteManager(map: GoogleMap) : MapObjectManager<TestObject, ConcreteManager.Collection>(map) {
 
         val removedObjects = mutableListOf<TestObject>()
 
@@ -57,11 +56,9 @@ class MapObjectManagerTest {
                 super.add(obj)
             }
 
-            fun addTestObject(id: String): TestObject =
-                checkAndAdd(TestObject(id), "TestObject")
+            fun addTestObject(id: String): TestObject = checkAndAdd(TestObject(id), "TestObject")
 
-            fun addAll(ids: kotlin.collections.Collection<String>) =
-                addAll(ids, ::addTestObject)
+            fun addAll(ids: kotlin.collections.Collection<String>) = addAll(ids, ::addTestObject)
 
             fun addAll(ids: kotlin.collections.Collection<String>, defaultVisible: Boolean) =
                 addAll(ids, defaultVisible, ::addTestObject)
@@ -168,10 +165,7 @@ class MapObjectManagerTest {
 
                 override fun removeObjectFromMap(mapObject: TestObject) {}
 
-                override fun setVisible(
-                    mapObject: TestObject,
-                    visible: Boolean,
-                ) {}
+                override fun setVisible(mapObject: TestObject, visible: Boolean) {}
             }
         assertThat(syncManager).isNotNull()
         assertThat(listenersRegistered).isTrue()

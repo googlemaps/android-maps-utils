@@ -33,12 +33,11 @@ import org.robolectric.RobolectricTestRunner
 @Suppress("DEPRECATION")
 @RunWith(RobolectricTestRunner::class)
 class KmlLayerParsingTest {
-    private fun layerOf(kml: String): KmlLayer =
-        KmlLayer(
-            mockk<GoogleMap>(relaxed = true),
-            kml.trimIndent().byteInputStream(),
-            ApplicationProvider.getApplicationContext<Context>(),
-        )
+    private fun layerOf(kml: String): KmlLayer = KmlLayer(
+        mockk<GoogleMap>(relaxed = true),
+        kml.trimIndent().byteInputStream(),
+        ApplicationProvider.getApplicationContext<Context>(),
+    )
 
     private fun kml(body: String): String =
         """
@@ -63,8 +62,8 @@ class KmlLayerParsingTest {
                   </Folder>
                   <Folder><name>Day 2</name></Folder>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         assertThat(layer.hasContainers()).isTrue()
@@ -98,7 +97,7 @@ class KmlLayerParsingTest {
     @Test
     fun `top level placemark without a document is a layer placemark`() {
         val layer = layerOf(
-            kml("<Placemark><name>Solo</name><Point><coordinates>1.0,2.0</coordinates></Point></Placemark>")
+            kml("<Placemark><name>Solo</name><Point><coordinates>1.0,2.0</coordinates></Point></Placemark>"),
         )
 
         assertThat(layer.hasContainers()).isFalse()
@@ -123,8 +122,8 @@ class KmlLayerParsingTest {
                     <Point><coordinates>86.925,27.988,8848</coordinates></Point>
                   </Placemark>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         val placemark = layer.getContainers().single().getPlacemarks().single()
@@ -148,8 +147,8 @@ class KmlLayerParsingTest {
                     </LinearRing></outerBoundaryIs></Polygon>
                   </Placemark>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         val root = layer.getContainers().single()
@@ -170,8 +169,8 @@ class KmlLayerParsingTest {
                     <Pair><key>highlight</key><styleUrl>#blue</styleUrl></Pair>
                   </StyleMap>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         assertThat(layer.getContainers().single().getStyleIdFromMap("highlightable"))
@@ -201,8 +200,8 @@ class KmlLayerParsingTest {
                     </LinearRing></outerBoundaryIs></Polygon>
                   </Placemark>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         val placemark = layer.getContainers().single().getPlacemarks().single()
@@ -225,8 +224,8 @@ class KmlLayerParsingTest {
                     </LinearRing></outerBoundaryIs></Polygon>
                   </Placemark>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         val placemark = layer.getContainers().single().getPlacemarks().single()
@@ -251,8 +250,8 @@ class KmlLayerParsingTest {
                     </LinearRing></innerBoundaryIs>
                   </Polygon>
                 </Placemark>
-                """
-            )
+                """,
+            ),
         )
 
         val polygon = layer.getPlacemarks().single().getGeometry() as KmlPolygon
@@ -288,8 +287,8 @@ class KmlLayerParsingTest {
                     </LatLonBox>
                   </GroundOverlay>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         val overlay = layer.getContainers().single().getGroundOverlays().single()
@@ -314,8 +313,8 @@ class KmlLayerParsingTest {
                     </Folder>
                   </Folder>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         assertThat(layer.getAllPlacemarks().map { it.getProperty("name") }).containsExactly("a", "b", "c")
@@ -333,8 +332,8 @@ class KmlLayerParsingTest {
                   <Style><PolyStyle><color>ff0000ff</color></PolyStyle></Style>
                   <Placemark><Point><coordinates>0,0</coordinates></Point></Placemark>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         assertThat(layer.getContainers().single().hasPlacemarks()).isTrue()
@@ -358,8 +357,8 @@ class KmlLayerParsingTest {
                   </GroundOverlay>
                   <Placemark><Point><coordinates>0,0</coordinates></Point></Placemark>
                 </Document>
-                """
-            )
+                """,
+            ),
         )
 
         assertThat(layer.getContainers().single().hasPlacemarks()).isTrue()

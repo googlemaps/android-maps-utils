@@ -32,10 +32,7 @@ public class KmlContainer(
 ) {
     internal fun getStyles(): HashMap<String, KmlStyle> = styles
 
-    internal fun setPlacemark(
-        placemark: KmlPlacemark,
-        obj: Any?,
-    ) {
+    internal fun setPlacemark(placemark: KmlPlacemark, obj: Any?) {
         placemarks[placemark] = obj
     }
 
@@ -69,16 +66,15 @@ public class KmlContainer(
 
     public fun getGroundOverlays(): Iterable<KmlGroundOverlay> = groundOverlays.keys
 
-    override fun toString(): String =
-        StringBuilder("Container")
-            .apply {
-                append("{")
-                append("\n properties=").append(properties)
-                append(",\n placemarks=").append(placemarks)
-                append(",\n containers=").append(containers)
-                append(",\n ground overlays=").append(groundOverlays)
-                append(",\n style maps=").append(styleMap)
-                append(",\n styles=").append(styles)
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("Container")
+        .apply {
+            append("{")
+            append("\n properties=").append(properties)
+            append(",\n placemarks=").append(placemarks)
+            append(",\n containers=").append(containers)
+            append(",\n ground overlays=").append(groundOverlays)
+            append(",\n style maps=").append(styleMap)
+            append(",\n styles=").append(styles)
+            append("\n}\n")
+        }.toString()
 }

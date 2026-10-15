@@ -26,5 +26,5 @@ import com.google.android.gms.maps.model.PolylineOptions
  */
 public inline fun polylineOptions(optionsActions: PolylineOptions.() -> Unit): PolylineOptions =
     PolylineOptions().apply(
-        optionsActions
+        optionsActions,
     )

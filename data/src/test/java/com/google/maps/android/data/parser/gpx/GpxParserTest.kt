@@ -76,25 +76,25 @@ class GpxParserTest {
         val gpx =
             Gpx(
                 waypoints =
-                    listOf(
-                        Wpt(lat = 1.0, lon = 2.0, ele = 3.0, name = "Wpt1"),
-                    ),
+                listOf(
+                    Wpt(lat = 1.0, lon = 2.0, ele = 3.0, name = "Wpt1"),
+                ),
                 tracks =
-                    listOf(
-                        Trk(
-                            name = "Trk1",
-                            trackSegments =
+                listOf(
+                    Trk(
+                        name = "Trk1",
+                        trackSegments =
+                        listOf(
+                            TrkSeg(
+                                trackPoints =
                                 listOf(
-                                    TrkSeg(
-                                        trackPoints =
-                                            listOf(
-                                                Wpt(lat = 1.0, lon = 2.0),
-                                                Wpt(lat = 3.0, lon = 4.0),
-                                            ),
-                                    ),
+                                    Wpt(lat = 1.0, lon = 2.0),
+                                    Wpt(lat = 3.0, lon = 4.0),
                                 ),
+                            ),
                         ),
                     ),
+                ),
             )
 
         val layer = GpxMapper.toLayer(gpx)

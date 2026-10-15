@@ -53,20 +53,16 @@ public open class PolylineManager(map: GoogleMap) :
     public open inner class Collection : MapObjectManager<Polyline, Collection>.Collection() {
         internal var mPolylineClickListener: GoogleMap.OnPolylineClickListener? = null
 
-        public open fun addPolyline(opts: PolylineOptions): Polyline =
-            checkAndAdd(mMap.addPolyline(opts), "Polyline")
+        public open fun addPolyline(opts: PolylineOptions): Polyline = checkAndAdd(mMap.addPolyline(opts), "Polyline")
 
-        public open fun addAll(opts: KotlinCollection<PolylineOptions>): Unit =
-            addAll(opts, ::addPolyline)
+        public open fun addAll(opts: KotlinCollection<PolylineOptions>): Unit = addAll(opts, ::addPolyline)
 
         public open fun addAll(opts: KotlinCollection<PolylineOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addPolyline)
 
         public open fun getPolylines(): KotlinCollection<Polyline> = getObjects()
 
-        public open fun setOnPolylineClickListener(
-            polylineClickListener: GoogleMap.OnPolylineClickListener?,
-        ) {
+        public open fun setOnPolylineClickListener(polylineClickListener: GoogleMap.OnPolylineClickListener?) {
             mPolylineClickListener = polylineClickListener
         }
     }

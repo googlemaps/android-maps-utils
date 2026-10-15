@@ -22,16 +22,13 @@ import com.google.maps.android.data.MultiGeometry
  * Represents a KML MultiGeometry. Contains an array of Geometry objects.
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
-public class KmlMultiGeometry(
-    geometries: ArrayList<Geometry>,
-) : MultiGeometry(geometries) {
+public class KmlMultiGeometry(geometries: ArrayList<Geometry>) : MultiGeometry(geometries) {
     override fun getGeometryObject(): ArrayList<Geometry> = ArrayList(super.getGeometryObject())
 
-    override fun toString(): String =
-        StringBuilder(getGeometryType())
-            .apply {
-                append("{")
-                append("\n geometries=").append(getGeometryObject())
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder(getGeometryType())
+        .apply {
+            append("{")
+            append("\n geometries=").append(getGeometryObject())
+            append("\n}\n")
+        }.toString()
 }

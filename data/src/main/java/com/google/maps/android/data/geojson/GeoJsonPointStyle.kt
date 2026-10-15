@@ -40,10 +40,7 @@ public class GeoJsonPointStyle :
 
     public fun getAnchorV(): Float = mMarkerOptions.anchorV
 
-    public fun setAnchor(
-        anchorU: Float,
-        anchorV: Float,
-    ) {
+    public fun setAnchor(anchorU: Float, anchorV: Float) {
         setMarkerHotSpot(anchorU, anchorV, "fraction", "fraction")
         styleChanged()
     }
@@ -73,10 +70,7 @@ public class GeoJsonPointStyle :
 
     public fun getInfoWindowAnchorV(): Float = mMarkerOptions.infoWindowAnchorV
 
-    public fun setInfoWindowAnchor(
-        infoWindowAnchorU: Float,
-        infoWindowAnchorV: Float,
-    ) {
+    public fun setInfoWindowAnchor(infoWindowAnchorU: Float, infoWindowAnchorV: Float) {
         mMarkerOptions.infoWindowAnchor(infoWindowAnchorU, infoWindowAnchorV)
         styleChanged()
     }
@@ -121,39 +115,37 @@ public class GeoJsonPointStyle :
         notifyObservers()
     }
 
-    public fun toMarkerOptions(): MarkerOptions =
-        MarkerOptions().apply {
-            alpha(mMarkerOptions.alpha)
-            anchor(mMarkerOptions.anchorU, mMarkerOptions.anchorV)
-            draggable(mMarkerOptions.isDraggable)
-            flat(mMarkerOptions.isFlat)
-            icon(mMarkerOptions.icon)
-            infoWindowAnchor(mMarkerOptions.infoWindowAnchorU, mMarkerOptions.infoWindowAnchorV)
-            rotation(mMarkerOptions.rotation)
-            snippet(mMarkerOptions.snippet)
-            title(mMarkerOptions.title)
-            visible(mMarkerOptions.isVisible)
-            zIndex(mMarkerOptions.zIndex)
-        }
+    public fun toMarkerOptions(): MarkerOptions = MarkerOptions().apply {
+        alpha(mMarkerOptions.alpha)
+        anchor(mMarkerOptions.anchorU, mMarkerOptions.anchorV)
+        draggable(mMarkerOptions.isDraggable)
+        flat(mMarkerOptions.isFlat)
+        icon(mMarkerOptions.icon)
+        infoWindowAnchor(mMarkerOptions.infoWindowAnchorU, mMarkerOptions.infoWindowAnchorV)
+        rotation(mMarkerOptions.rotation)
+        snippet(mMarkerOptions.snippet)
+        title(mMarkerOptions.title)
+        visible(mMarkerOptions.isVisible)
+        zIndex(mMarkerOptions.zIndex)
+    }
 
-    override fun toString(): String =
-        StringBuilder("PointStyle{")
-            .apply {
-                append("\n geometry type=").append(GEOMETRY_TYPE.contentToString())
-                append(",\n alpha=").append(getAlpha())
-                append(",\n anchor U=").append(getAnchorU())
-                append(",\n anchor V=").append(getAnchorV())
-                append(",\n draggable=").append(isDraggable())
-                append(",\n flat=").append(isFlat())
-                append(",\n info window anchor U=").append(getInfoWindowAnchorU())
-                append(",\n info window anchor V=").append(getInfoWindowAnchorV())
-                append(",\n rotation=").append(getRotation())
-                append(",\n snippet=").append(getSnippet())
-                append(",\n title=").append(getTitle())
-                append(",\n visible=").append(isVisible())
-                append(",\n z index=").append(getZIndex())
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("PointStyle{")
+        .apply {
+            append("\n geometry type=").append(GEOMETRY_TYPE.contentToString())
+            append(",\n alpha=").append(getAlpha())
+            append(",\n anchor U=").append(getAnchorU())
+            append(",\n anchor V=").append(getAnchorV())
+            append(",\n draggable=").append(isDraggable())
+            append(",\n flat=").append(isFlat())
+            append(",\n info window anchor U=").append(getInfoWindowAnchorU())
+            append(",\n info window anchor V=").append(getInfoWindowAnchorV())
+            append(",\n rotation=").append(getRotation())
+            append(",\n snippet=").append(getSnippet())
+            append(",\n title=").append(getTitle())
+            append(",\n visible=").append(isVisible())
+            append(",\n z index=").append(getZIndex())
+            append("\n}\n")
+        }.toString()
 
     public companion object {
         private val GEOMETRY_TYPE = arrayOf("Point", "MultiPoint", "GeometryCollection")

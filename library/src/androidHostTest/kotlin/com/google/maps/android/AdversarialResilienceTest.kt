@@ -166,23 +166,22 @@ internal class AdversarialResilienceTest {
         }
 
     @Test
-    fun `awaitSnapshot survives post-cancellation and duplicate callbacks`() =
-        runTest(UnconfinedTestDispatcher()) {
-            val googleMap = mock(GoogleMap::class.java)
-            val bitmap = mock(Bitmap::class.java)
-            val callbackCaptor = ArgumentCaptor.forClass(GoogleMap.SnapshotReadyCallback::class.java)
+    fun `awaitSnapshot survives post-cancellation and duplicate callbacks`() = runTest(UnconfinedTestDispatcher()) {
+        val googleMap = mock(GoogleMap::class.java)
+        val bitmap = mock(Bitmap::class.java)
+        val callbackCaptor = ArgumentCaptor.forClass(GoogleMap.SnapshotReadyCallback::class.java)
 
-            val job = launch {
-                googleMap.awaitSnapshot(bitmap)
-            }
-            verify(googleMap).snapshot(callbackCaptor.capture(), eq(bitmap))
-
-            job.cancel()
-
-            // Late callback after cancellation must not throw IllegalStateException
-            callbackCaptor.value.onSnapshotReady(bitmap)
-            callbackCaptor.value.onSnapshotReady(bitmap)
+        val job = launch {
+            googleMap.awaitSnapshot(bitmap)
         }
+        verify(googleMap).snapshot(callbackCaptor.capture(), eq(bitmap))
+
+        job.cancel()
+
+        // Late callback after cancellation must not throw IllegalStateException
+        callbackCaptor.value.onSnapshotReady(bitmap)
+        callbackCaptor.value.onSnapshotReady(bitmap)
+    }
 
     @Test
     fun `awaitAnimateCamera survives post-cancellation onFinish and duplicate callbacks`() =
@@ -197,7 +196,7 @@ internal class AdversarialResilienceTest {
             verify(googleMap).animateCamera(
                 eq(cameraUpdate),
                 eq(500),
-                callbackCaptor.capture()
+                callbackCaptor.capture(),
             )
 
             // Caller cancels coroutine while camera animation is in-flight
@@ -220,7 +219,7 @@ internal class AdversarialResilienceTest {
                     MapsInitializer.initialize(
                         eq(context),
                         isNull(),
-                        any()
+                        any(),
                     )
                 }.thenAnswer { invocation ->
                     capturedCallback = invocation.getArgument(2)
@@ -241,6 +240,7 @@ internal class AdversarialResilienceTest {
         }
 
     @Test
+    @Suppress("ktlint:standard:max-line-length")
     fun `rapid cancellation and resubscription to GoogleMap flows cleans up listeners without dropping active collector`() =
         runTest(UnconfinedTestDispatcher()) {
             val googleMap = mock(GoogleMap::class.java)

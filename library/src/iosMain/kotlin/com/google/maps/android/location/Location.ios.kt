@@ -111,7 +111,7 @@ public actual val Location.timestampMillis: Long
  */
 public fun CLLocationManager.locationEvents(
     minDistanceM: Float = 1f,
-    desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
+    desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest,
 ): Flow<Location> = callbackFlow {
     val currentStatus = authorizationStatus
     // TODO(https://github.com/googlemaps/android-maps-utils/issues/1818): Consider invoking
@@ -166,22 +166,18 @@ public fun CLLocationManager.locationEvents(
  * Returns a cold [Flow] that emits coarse location updates on iOS using
  * [kCLLocationAccuracyHundredMeters], mirroring Android's `LocationManager.coarseLocationEvents`.
  */
-public fun CLLocationManager.coarseLocationEvents(
-    minDistanceM: Float = 1f
-): Flow<Location> = locationEvents(
+public fun CLLocationManager.coarseLocationEvents(minDistanceM: Float = 1f): Flow<Location> = locationEvents(
     minDistanceM = minDistanceM,
-    desiredAccuracy = kCLLocationAccuracyHundredMeters
+    desiredAccuracy = kCLLocationAccuracyHundredMeters,
 )
 
 /**
  * Returns a cold [Flow] that emits fine (GPS-grade) location updates on iOS using
  * [kCLLocationAccuracyBest], mirroring Android's `LocationManager.fineLocationEvents`.
  */
-public fun CLLocationManager.fineLocationEvents(
-    minDistanceM: Float = 1f
-): Flow<Location> = locationEvents(
+public fun CLLocationManager.fineLocationEvents(minDistanceM: Float = 1f): Flow<Location> = locationEvents(
     minDistanceM = minDistanceM,
-    desiredAccuracy = kCLLocationAccuracyBest
+    desiredAccuracy = kCLLocationAccuracyBest,
 )
 
 /**
@@ -189,15 +185,14 @@ public fun CLLocationManager.fineLocationEvents(
  * from shared `commonMain` code alongside Android's `LocationManager` and
  * `FusedLocationProviderClient`.
  */
-public fun CLLocationManager.asLocationSource(): LocationSource =
-    LocationSource { _, minUpdateDistanceM, priority ->
-        val accuracy = when (priority) {
-            LocationPriority.HIGH_ACCURACY -> kCLLocationAccuracyBest
-            LocationPriority.BALANCED_POWER_ACCURACY -> kCLLocationAccuracyNearestTenMeters
-            LocationPriority.LOW_POWER -> kCLLocationAccuracyHundredMeters
-        }
-        locationEvents(
-            minDistanceM = minUpdateDistanceM,
-            desiredAccuracy = accuracy
-        )
+public fun CLLocationManager.asLocationSource(): LocationSource = LocationSource { _, minUpdateDistanceM, priority ->
+    val accuracy = when (priority) {
+        LocationPriority.HIGH_ACCURACY -> kCLLocationAccuracyBest
+        LocationPriority.BALANCED_POWER_ACCURACY -> kCLLocationAccuracyNearestTenMeters
+        LocationPriority.LOW_POWER -> kCLLocationAccuracyHundredMeters
     }
+    locationEvents(
+        minDistanceM = minUpdateDistanceM,
+        desiredAccuracy = accuracy,
+    )
+}

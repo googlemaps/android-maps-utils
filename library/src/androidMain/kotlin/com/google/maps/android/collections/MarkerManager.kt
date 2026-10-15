@@ -92,14 +92,12 @@ public open class MarkerManager(map: GoogleMap) :
         internal var mMarkerDragListener: GoogleMap.OnMarkerDragListener? = null
         internal var mInfoWindowAdapter: GoogleMap.InfoWindowAdapter? = null
 
-        public open fun addMarker(opts: MarkerOptions): Marker =
-            checkAndAdd(mMap.addMarker(opts), "Marker")
+        public open fun addMarker(opts: MarkerOptions): Marker = checkAndAdd(mMap.addMarker(opts), "Marker")
 
         public open fun addMarker(opts: AdvancedMarkerOptions): Marker =
             checkAndAdd(mMap.addMarker(opts), "AdvancedMarker")
 
-        public open fun addAll(opts: KotlinCollection<MarkerOptions>): Unit =
-            addAll(opts, ::addMarker)
+        public open fun addAll(opts: KotlinCollection<MarkerOptions>): Unit = addAll(opts, ::addMarker)
 
         public open fun addAll(opts: KotlinCollection<MarkerOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addMarker)
@@ -110,7 +108,9 @@ public open class MarkerManager(map: GoogleMap) :
             mInfoWindowClickListener = infoWindowClickListener
         }
 
-        public open fun setOnInfoWindowLongClickListener(infoWindowLongClickListener: GoogleMap.OnInfoWindowLongClickListener?) {
+        public open fun setOnInfoWindowLongClickListener(
+            infoWindowLongClickListener: GoogleMap.OnInfoWindowLongClickListener?,
+        ) {
             mInfoWindowLongClickListener = infoWindowLongClickListener
         }
 

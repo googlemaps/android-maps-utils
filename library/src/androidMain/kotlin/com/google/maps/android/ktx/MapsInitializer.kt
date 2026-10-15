@@ -29,11 +29,10 @@ import com.google.maps.android.awaitMapsSdkInitialized as canonicalAwaitMapsSdkI
     message = "Use com.google.maps.android.awaitMapsSdkInitialized instead",
     replaceWith = ReplaceWith(
         "awaitMapsSdkInitialized(preferredRenderer)",
-        "com.google.maps.android.awaitMapsSdkInitialized"
+        "com.google.maps.android.awaitMapsSdkInitialized",
     ),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
 public suspend fun Context.awaitMapsSdkInitialized(
-    preferredRenderer: MapsInitializer.Renderer? = null
+    preferredRenderer: MapsInitializer.Renderer? = null,
 ): MapsInitializer.Renderer = this.canonicalAwaitMapsSdkInitialized(preferredRenderer)
-

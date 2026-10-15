@@ -53,11 +53,9 @@ public open class CircleManager(map: GoogleMap) :
     public open inner class Collection : MapObjectManager<Circle, Collection>.Collection() {
         internal var mCircleClickListener: GoogleMap.OnCircleClickListener? = null
 
-        public open fun addCircle(opts: CircleOptions): Circle =
-            checkAndAdd(mMap.addCircle(opts), "Circle")
+        public open fun addCircle(opts: CircleOptions): Circle = checkAndAdd(mMap.addCircle(opts), "Circle")
 
-        public open fun addAll(opts: KotlinCollection<CircleOptions>): Unit =
-            addAll(opts, ::addCircle)
+        public open fun addAll(opts: KotlinCollection<CircleOptions>): Unit = addAll(opts, ::addCircle)
 
         public open fun addAll(opts: KotlinCollection<CircleOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addCircle)

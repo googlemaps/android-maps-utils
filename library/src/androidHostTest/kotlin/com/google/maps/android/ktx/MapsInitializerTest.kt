@@ -79,7 +79,7 @@ public class MapsInitializerTest {
             MapsInitializer.initialize(
                 eq(context),
                 eq(MapsInitializer.Renderer.LATEST),
-                any(OnMapsSdkInitializedCallback::class.java)
+                any(OnMapsSdkInitializedCallback::class.java),
             )
         }.thenAnswer { invocation ->
             invocation.getArgument<OnMapsSdkInitializedCallback>(2)
@@ -103,7 +103,7 @@ public class MapsInitializerTest {
             MapsInitializer.initialize(
                 eq(context),
                 eq(MapsInitializer.Renderer.LATEST),
-                any(OnMapsSdkInitializedCallback::class.java)
+                any(OnMapsSdkInitializedCallback::class.java),
             )
         }.thenReturn(ConnectionResult.SERVICE_MISSING)
 

@@ -198,10 +198,10 @@ class FlexiblePolylineUtilTest {
             FlexiblePolylineUtil.decode(
                 FlexiblePolylineUtil.encode(
                     points =
-                        listOf(
-                            FlexiblePoint(12.345, -12.345, 10.5),
-                            FlexiblePoint(0.0, 0.0, -10.5),
-                        ),
+                    listOf(
+                        FlexiblePoint(12.345, -12.345, 10.5),
+                        FlexiblePoint(0.0, 0.0, -10.5),
+                    ),
                     precision = 2,
                     thirdDimension = ThirdDimension.ALTITUDE,
                     thirdDimensionPrecision = 0,
@@ -375,10 +375,10 @@ class FlexiblePolylineUtilTest {
             assertThrows(IllegalArgumentException::class.java) {
                 FlexiblePolylineUtil.encode(
                     points =
-                        listOf(
-                            FlexiblePoint(50.10228, 8.69821, 10.0),
-                            FlexiblePoint(50.10201, 8.69567),
-                        ),
+                    listOf(
+                        FlexiblePoint(50.10228, 8.69821, 10.0),
+                        FlexiblePoint(50.10201, 8.69567),
+                    ),
                     thirdDimension = ThirdDimension.ALTITUDE,
                     thirdDimensionPrecision = 1,
                 )

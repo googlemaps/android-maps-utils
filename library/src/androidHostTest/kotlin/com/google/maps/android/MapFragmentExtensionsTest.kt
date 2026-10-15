@@ -29,8 +29,6 @@ import com.google.android.gms.maps.model.StreetViewPanoramaCamera
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation
 import com.google.android.gms.maps.model.StreetViewPanoramaOrientation
 import com.google.common.truth.Truth.assertThat
-import com.google.maps.android.ktx.awaitMap as ktxAwaitMap
-import com.google.maps.android.ktx.awaitStreetViewPanorama as ktxAwaitStreetViewPanorama
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -43,6 +41,8 @@ import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+import com.google.maps.android.ktx.awaitMap as ktxAwaitMap
+import com.google.maps.android.ktx.awaitStreetViewPanorama as ktxAwaitStreetViewPanorama
 
 /**
  * Unit test suite for Kotlin coroutine extensions on Map and StreetViewPanorama Fragments/Views.
@@ -112,7 +112,8 @@ class MapFragmentExtensionsTest {
     private lateinit var onStreetViewPanoramaReadyCallback: ArgumentCaptor<OnStreetViewPanoramaReadyCallback>
 
     @Captor
-    private lateinit var cameraChangeListener: ArgumentCaptor<StreetViewPanorama.OnStreetViewPanoramaCameraChangeListener>
+    private lateinit var cameraChangeListener:
+        ArgumentCaptor<StreetViewPanorama.OnStreetViewPanoramaCameraChangeListener>
 
     @Captor
     private lateinit var changeListener: ArgumentCaptor<StreetViewPanorama.OnStreetViewPanoramaChangeListener>
@@ -200,7 +201,9 @@ class MapFragmentExtensionsTest {
             panorama = supportStreetViewPanoramaFragment.awaitStreetViewPanorama()
         }
         advanceUntilIdle()
-        verify(supportStreetViewPanoramaFragment).getStreetViewPanoramaAsync(onStreetViewPanoramaReadyCallback.capture())
+        verify(
+            supportStreetViewPanoramaFragment,
+        ).getStreetViewPanoramaAsync(onStreetViewPanoramaReadyCallback.capture())
         onStreetViewPanoramaReadyCallback.value.onStreetViewPanoramaReady(streetViewPanorama)
         advanceUntilIdle()
         assertThat(panorama).isEqualTo(streetViewPanorama)
@@ -322,7 +325,9 @@ class MapFragmentExtensionsTest {
             panorama = supportStreetViewPanoramaFragment.ktxAwaitStreetViewPanorama()
         }
         advanceUntilIdle()
-        verify(supportStreetViewPanoramaFragment).getStreetViewPanoramaAsync(onStreetViewPanoramaReadyCallback.capture())
+        verify(
+            supportStreetViewPanoramaFragment,
+        ).getStreetViewPanoramaAsync(onStreetViewPanoramaReadyCallback.capture())
         onStreetViewPanoramaReadyCallback.value.onStreetViewPanoramaReady(streetViewPanorama)
         advanceUntilIdle()
         assertThat(panorama).isEqualTo(streetViewPanorama)

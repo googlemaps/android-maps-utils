@@ -60,10 +60,7 @@ public class GeoJsonFeature(
             value?.let { checkRedrawFeature(it) }
         }
 
-    override fun setProperty(
-        property: String,
-        propertyValue: String,
-    ): String? {
+    override fun setProperty(property: String, propertyValue: String): String? {
         val old = super.setProperty(property, propertyValue)
         setChanged()
         notifyObservers()
@@ -99,23 +96,19 @@ public class GeoJsonFeature(
 
     public fun getBoundingBox(): LatLngBounds? = boundingBox
 
-    override fun toString(): String =
-        StringBuilder("Feature{")
-            .apply {
-                append("\n bounding box=").append(boundingBox)
-                append(",\n geometry=").append(getGeometry())
-                append(",\n point style=").append(pointStyle)
-                append(",\n line string style=").append(lineStringStyle)
-                append(",\n polygon style=").append(polygonStyle)
-                append(",\n id=").append(mId)
-                append(",\n properties=").append(getProperties())
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("Feature{")
+        .apply {
+            append("\n bounding box=").append(boundingBox)
+            append(",\n geometry=").append(getGeometry())
+            append(",\n point style=").append(pointStyle)
+            append(",\n line string style=").append(lineStringStyle)
+            append(",\n polygon style=").append(polygonStyle)
+            append(",\n id=").append(mId)
+            append(",\n properties=").append(getProperties())
+            append("\n}\n")
+        }.toString()
 
-    override fun update(
-        observable: Observable?,
-        data: Any?,
-    ) {
+    override fun update(observable: Observable?, data: Any?) {
         if (observable is GeoJsonStyle) {
             checkRedrawFeature(observable)
         }

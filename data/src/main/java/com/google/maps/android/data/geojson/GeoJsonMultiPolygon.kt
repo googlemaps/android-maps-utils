@@ -21,9 +21,7 @@ import com.google.maps.android.data.MultiGeometry
  * A GeoJsonMultiPolygon geometry contains a number of GeoJsonPolygons.
  */
 @Deprecated("Use the new platform-agnostic data layer and renderer instead.")
-public class GeoJsonMultiPolygon(
-    geoJsonPolygons: List<GeoJsonPolygon>,
-) : MultiGeometry(geoJsonPolygons) {
+public class GeoJsonMultiPolygon(geoJsonPolygons: List<GeoJsonPolygon>) : MultiGeometry(geoJsonPolygons) {
     init {
         setGeometryType("MultiPolygon")
     }

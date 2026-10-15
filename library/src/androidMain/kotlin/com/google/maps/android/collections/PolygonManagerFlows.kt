@@ -25,11 +25,9 @@ import kotlinx.coroutines.flow.callbackFlow
  * Adds a new [Polygon] to the underlying map and to this [PolygonManager.Collection] with the
  * provided [optionsActions].
  */
-public inline fun PolygonManager.Collection.addPolygon(
-    optionsActions: PolygonOptions.() -> Unit
-): Polygon =
+public inline fun PolygonManager.Collection.addPolygon(optionsActions: PolygonOptions.() -> Unit): Polygon =
     this.addPolygon(
-        PolygonOptions().apply(optionsActions)
+        PolygonOptions().apply(optionsActions),
     )
 
 /**
@@ -46,12 +44,11 @@ public inline fun PolygonManager.Collection.addPolygon(
  * suppressing default SDK behavior. Under backpressure if the buffer is full, `trySend` returns `false`,
  * allowing default SDK click handling to proceed.
  */
-public fun PolygonManager.Collection.clickEvents(): Flow<Polygon> =
-    callbackFlow {
-        setOnPolygonClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnPolygonClickListener(null)
-        }
+public fun PolygonManager.Collection.clickEvents(): Flow<Polygon> = callbackFlow {
+    setOnPolygonClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnPolygonClickListener(null)
+    }
+}

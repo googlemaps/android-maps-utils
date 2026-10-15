@@ -61,160 +61,149 @@ import java.util.IdentityHashMap
  * @property map The [GoogleMap] instance to render features on.
  */
 public class MapViewRenderer
-    internal constructor(
-        private val map: GoogleMap,
-        private val iconProvider: IconProvider,
-        internal val markerCollection: MarkerManager.Collection?,
-        internal val polygonCollection: PolygonManager.Collection?,
-        internal val polylineCollection: PolylineManager.Collection?,
-        internal val groundOverlayCollection: GroundOverlayManager.Collection?,
-    ) : DataRenderer {
-        @JvmOverloads
-        public constructor(
-            map: GoogleMap,
-            iconProvider: IconProvider,
-            markerManager: MarkerManager? = null,
-            polygonManager: PolygonManager? = null,
-            polylineManager: PolylineManager? = null,
-            groundOverlayManager: GroundOverlayManager? = null,
-        ) : this(
-            map = map,
-            iconProvider = iconProvider,
-            markerCollection = markerManager?.newCollection(),
-            polygonCollection = polygonManager?.newCollection(),
-            polylineCollection = polylineManager?.newCollection(),
-            groundOverlayCollection = groundOverlayManager?.newCollection(),
-        )
+internal constructor(
+    private val map: GoogleMap,
+    private val iconProvider: IconProvider,
+    internal val markerCollection: MarkerManager.Collection?,
+    internal val polygonCollection: PolygonManager.Collection?,
+    internal val polylineCollection: PolylineManager.Collection?,
+    internal val groundOverlayCollection: GroundOverlayManager.Collection?,
+) : DataRenderer {
+    @JvmOverloads
+    public constructor(
+        map: GoogleMap,
+        iconProvider: IconProvider,
+        markerManager: MarkerManager? = null,
+        polygonManager: PolygonManager? = null,
+        polylineManager: PolylineManager? = null,
+        groundOverlayManager: GroundOverlayManager? = null,
+    ) : this(
+        map = map,
+        iconProvider = iconProvider,
+        markerCollection = markerManager?.newCollection(),
+        polygonCollection = polygonManager?.newCollection(),
+        polylineCollection = polylineManager?.newCollection(),
+        groundOverlayCollection = groundOverlayManager?.newCollection(),
+    )
 
-        // Scope for all coroutines launched by this renderer.
-        // Using SupervisorJob so that failure of one icon load doesn't cancel others.
-        private val rendererScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    // Scope for all coroutines launched by this renderer.
+    // Using SupervisorJob so that failure of one icon load doesn't cancel others.
+    private val rendererScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
-        /**
-         * Controls whether to use the new Advanced Markers API (if available) or legacy Markers.
-         * Default is false (legacy Markers).
-         */
-        public var useAdvancedMarkers: Boolean = false
+    /**
+     * Controls whether to use the new Advanced Markers API (if available) or legacy Markers.
+     * Default is false (legacy Markers).
+     */
+    public var useAdvancedMarkers: Boolean = false
 
-        // Cache for local images (e.g. from KMZ files)
-        private val localImages = mutableMapOf<String, android.graphics.Bitmap>()
+    // Cache for local images (e.g. from KMZ files)
+    private val localImages = mutableMapOf<String, android.graphics.Bitmap>()
 
-        // Cache for pre-constructed BitmapDescriptors (e.g. from legacy GeoJsonPointStyle)
-        private val localDescriptors = mutableMapOf<String, com.google.android.gms.maps.model.BitmapDescriptor>()
+    // Cache for pre-constructed BitmapDescriptors (e.g. from legacy GeoJsonPointStyle)
+    private val localDescriptors = mutableMapOf<String, com.google.android.gms.maps.model.BitmapDescriptor>()
 
-        /**
-         * Caches an image for a specific URL.
-         * This is useful for KMZ files or other scenarios where images are loaded locally
-         * and should be used instead of fetching from the network.
-         *
-         * @param url The URL associated with the image.
-         * @param bitmap The bitmap to cache.
-         */
-        public fun cacheImageData(
-            url: String,
-            bitmap: android.graphics.Bitmap,
-        ) {
-            localImages[url] = bitmap
+    /**
+     * Caches an image for a specific URL.
+     * This is useful for KMZ files or other scenarios where images are loaded locally
+     * and should be used instead of fetching from the network.
+     *
+     * @param url The URL associated with the image.
+     * @param bitmap The bitmap to cache.
+     */
+    public fun cacheImageData(url: String, bitmap: android.graphics.Bitmap) {
+        localImages[url] = bitmap
+    }
+
+    internal fun cacheIconDescriptor(url: String, descriptor: com.google.android.gms.maps.model.BitmapDescriptor) {
+        localDescriptors[url] = descriptor
+    }
+
+    // Track rendered map objects for each feature so we can remove them later
+    private val renderedFeatures = IdentityHashMap<Feature, MutableList<Any>>()
+
+    public override fun render(scene: DataScene) {
+        scene.layers.forEach { renderLayer(it) }
+    }
+
+    public override fun addLayer(layer: DataLayer) {
+        renderLayer(layer)
+    }
+
+    public override fun removeLayer(layer: DataLayer) {
+        layer.features.forEach { removeFeature(it) }
+    }
+
+    private fun renderLayer(layer: DataLayer) {
+        layer.features.forEach { feature ->
+            addFeature(feature)
         }
+    }
 
-        internal fun cacheIconDescriptor(
-            url: String,
-            descriptor: com.google.android.gms.maps.model.BitmapDescriptor,
-        ) {
-            localDescriptors[url] = descriptor
+    public override fun addFeature(feature: Feature) {
+        removeFeature(feature)
+        val mapObjects = mutableListOf<Any>()
+        addGeometry(feature.geometry, feature, mapObjects)
+        if (mapObjects.isNotEmpty()) {
+            renderedFeatures[feature] = mapObjects
         }
+    }
 
-        // Track rendered map objects for each feature so we can remove them later
-        private val renderedFeatures = IdentityHashMap<Feature, MutableList<Any>>()
-
-        public override fun render(scene: DataScene) {
-            scene.layers.forEach { renderLayer(it) }
-        }
-
-        public override fun addLayer(layer: DataLayer) {
-            renderLayer(layer)
-        }
-
-        public override fun removeLayer(layer: DataLayer) {
-            layer.features.forEach { removeFeature(it) }
-        }
-
-        private fun renderLayer(layer: DataLayer) {
-            layer.features.forEach { feature ->
-                addFeature(feature)
-            }
-        }
-
-        public override fun addFeature(feature: Feature) {
-            removeFeature(feature)
-            val mapObjects = mutableListOf<Any>()
-            addGeometry(feature.geometry, feature, mapObjects)
-            if (mapObjects.isNotEmpty()) {
-                renderedFeatures[feature] = mapObjects
-            }
-        }
-
-
-        /**
-         * Renders a single [geometry] (recursing into [MultiGeometry] members) with [feature]'s style and
-         * properties, accumulating every created map object into [mapObjects] so nested geometries stay
-         * associated with the original [feature] and can be removed later via [removeFeature].
-         */
-        private fun addGeometry(
-            geometry: Geometry,
-            feature: Feature,
-            mapObjects: MutableList<Any>,
-        ) {
-            when (geometry) {
-                is PointGeometry -> {
-                    val point = geometry.point
-                    val style = (feature.style as? PointStyle) ?: (feature.style as? CompositeStyle)?.pointStyle
-                    if (useAdvancedMarkers) {
-                        val markerOptions = createAdvancedMarkerOptions(point, style, feature.properties)
-                        val marker = (markerCollection?.addMarker(markerOptions) ?: map.addMarker(markerOptions))!!
-                        mapObjects.add(marker)
-                        style?.iconUrl?.let { url ->
-                            if (localDescriptors.containsKey(url)) return@let
-                            val localBitmap = localImages[url]
-                            if (localBitmap != null) {
-                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
-                            } else {
-                                rendererScope.launch {
-                                    val bitmap = iconProvider.loadIcon(url)
-                                    if (bitmap != null) {
-                                        try {
-                                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                        } catch (e: Exception) {
-                                            // Marker might have been removed or other issue
-                                        }
+    /**
+     * Renders a single [geometry] (recursing into [MultiGeometry] members) with [feature]'s style and
+     * properties, accumulating every created map object into [mapObjects] so nested geometries stay
+     * associated with the original [feature] and can be removed later via [removeFeature].
+     */
+    private fun addGeometry(geometry: Geometry, feature: Feature, mapObjects: MutableList<Any>) {
+        when (geometry) {
+            is PointGeometry -> {
+                val point = geometry.point
+                val style = (feature.style as? PointStyle) ?: (feature.style as? CompositeStyle)?.pointStyle
+                if (useAdvancedMarkers) {
+                    val markerOptions = createAdvancedMarkerOptions(point, style, feature.properties)
+                    val marker = (markerCollection?.addMarker(markerOptions) ?: map.addMarker(markerOptions))!!
+                    mapObjects.add(marker)
+                    style?.iconUrl?.let { url ->
+                        if (localDescriptors.containsKey(url)) return@let
+                        val localBitmap = localImages[url]
+                        if (localBitmap != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                        } else {
+                            rendererScope.launch {
+                                val bitmap = iconProvider.loadIcon(url)
+                                if (bitmap != null) {
+                                    try {
+                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                    } catch (e: Exception) {
+                                        // Marker might have been removed or other issue
                                     }
                                 }
                             }
                         }
-                    } else {
-                        val markerOptions = createMarkerOptions(point, style, feature.properties)
-                        val marker = (markerCollection?.addMarker(markerOptions) ?: map.addMarker(markerOptions))!!
-                        mapObjects.add(marker)
-                        style?.iconUrl?.let { url ->
-                            if (localDescriptors.containsKey(url)) return@let
-                            val localBitmap = localImages[url]
-                            if (localBitmap != null) {
-                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
-                            } else {
-                                rendererScope.launch {
-                                    val bitmap = iconProvider.loadIcon(url)
-                                    if (bitmap != null) {
-                                        try {
-                                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                                        } catch (e: Exception) {
-                                            // Marker might have been removed
-                                        }
+                    }
+                } else {
+                    val markerOptions = createMarkerOptions(point, style, feature.properties)
+                    val marker = (markerCollection?.addMarker(markerOptions) ?: map.addMarker(markerOptions))!!
+                    mapObjects.add(marker)
+                    style?.iconUrl?.let { url ->
+                        if (localDescriptors.containsKey(url)) return@let
+                        val localBitmap = localImages[url]
+                        if (localBitmap != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(localBitmap))
+                        } else {
+                            rendererScope.launch {
+                                val bitmap = iconProvider.loadIcon(url)
+                                if (bitmap != null) {
+                                    try {
+                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                    } catch (e: Exception) {
+                                        // Marker might have been removed
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
 
             is LineString -> {
                 val style = (feature.style as? LineStyle) ?: (feature.style as? CompositeStyle)?.lineStyle
@@ -245,7 +234,8 @@ public class MapViewRenderer
                     val localBitmap = localImages[url]
                     if (localBitmap != null) {
                         options.image(BitmapDescriptorFactory.fromBitmap(localBitmap))
-                        val mapOverlay = groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
+                        val mapOverlay =
+                            groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
                         if (mapOverlay != null) {
                             mapObjects.add(mapOverlay)
                         }
@@ -255,7 +245,8 @@ public class MapViewRenderer
                         options.image(BitmapDescriptorFactory.fromBitmap(TRANSPARENT_BITMAP))
                         options.visible(false) // Hide until loaded
 
-                        val mapOverlay = groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
+                        val mapOverlay =
+                            groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
                         if (mapOverlay != null) {
                             mapObjects.add(mapOverlay)
                             rendererScope.launch {
@@ -292,11 +283,10 @@ public class MapViewRenderer
     /**
      * Finds the model Feature associated with a specific rendered Google Map object.
      */
-    public fun getFeatureForMapObject(mapObject: Any): Feature? =
-        renderedFeatures.entries
-            .firstOrNull { entry ->
-                entry.value.contains(mapObject)
-            }?.key
+    public fun getFeatureForMapObject(mapObject: Any): Feature? = renderedFeatures.entries
+        .firstOrNull { entry ->
+            entry.value.contains(mapObject)
+        }?.key
 
     public override fun clear() {
         rendererScope.cancel()
@@ -313,16 +303,19 @@ public class MapViewRenderer
                     mapObject.remove()
                 }
             }
+
             is com.google.android.gms.maps.model.Polyline -> {
                 if (polylineCollection == null || !polylineCollection.remove(mapObject)) {
                     mapObject.remove()
                 }
             }
+
             is com.google.android.gms.maps.model.Polygon -> {
                 if (polygonCollection == null || !polygonCollection.remove(mapObject)) {
                     mapObject.remove()
                 }
             }
+
             is com.google.android.gms.maps.model.GroundOverlay -> {
                 if (groundOverlayCollection == null || !groundOverlayCollection.remove(mapObject)) {
                     mapObject.remove()
@@ -338,11 +331,7 @@ public class MapViewRenderer
      * and 'description' or 'snippet' for its snippet) from the feature's properties. This ensures
      * that the rendered markers are fully interactive and display information on-click.
      */
-    private fun createMarkerOptions(
-        point: Point,
-        style: PointStyle?,
-        properties: Map<String, Any>,
-    ): MarkerOptions {
+    private fun createMarkerOptions(point: Point, style: PointStyle?, properties: Map<String, Any>): MarkerOptions {
         val markerOptions = MarkerOptions().position(LatLng(point.lat, point.lng))
 
         // Sniff out title and description from style or properties to enable click interaction/Info Window
@@ -420,10 +409,7 @@ public class MapViewRenderer
      * geodesic curvature, and [LineStyle.zIndex] (which determines its draw order
      * relative to other map features).
      */
-    private fun createPolylineOptions(
-        lineString: LineString,
-        style: LineStyle?,
-    ): PolylineOptions {
+    private fun createPolylineOptions(lineString: LineString, style: LineStyle?): PolylineOptions {
         val polylineOptions = PolylineOptions()
         lineString.points.map { LatLng(it.lat, it.lng) }.forEach { polylineOptions.add(it) }
         polylineOptions.clickable(style?.clickable ?: true)
@@ -444,10 +430,7 @@ public class MapViewRenderer
      * stroke width, geodesic curvature, and [PolygonStyle.zIndex] (which determines its draw order
      * relative to other map features).
      */
-    private fun createPolygonOptions(
-        polygon: Polygon,
-        style: PolygonStyle?,
-    ): PolygonOptions {
+    private fun createPolygonOptions(polygon: Polygon, style: PolygonStyle?): PolygonOptions {
         val polygonOptions = PolygonOptions()
 
         polygon.outerBoundary.map { LatLng(it.lat, it.lng) }.forEach { polygonOptions.add(it) }

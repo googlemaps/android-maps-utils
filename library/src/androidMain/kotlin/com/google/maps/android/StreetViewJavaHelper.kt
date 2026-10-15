@@ -51,11 +51,7 @@ public object StreetViewJavaHelper {
      * @param callback The callback to receive the result.
      */
     @JvmStatic
-    public fun fetchStreetViewData(
-        latLng: LatLng,
-        apiKey: String,
-        callback: StreetViewCallback,
-    ) {
+    public fun fetchStreetViewData(latLng: LatLng, apiKey: String, callback: StreetViewCallback) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val status = StreetViewUtils.fetchStreetViewData(latLng, apiKey)

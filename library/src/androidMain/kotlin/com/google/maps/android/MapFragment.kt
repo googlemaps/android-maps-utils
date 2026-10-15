@@ -22,18 +22,16 @@ import com.google.android.gms.maps.MapFragment
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-
 /**
  * A suspending function that provides an instance of a [GoogleMap] from this [MapFragment].
  * This is an alternative to [MapFragment.getMapAsync] by using coroutines to obtain a [GoogleMap].
  *
  * @return the [GoogleMap] instance
  */
-public suspend fun MapFragment.awaitMap(): GoogleMap =
-    suspendCancellableCoroutine { continuation ->
-        getMapAsync {
-            if (continuation.isActive) {
-                continuation.resume(it)
-            }
+public suspend fun MapFragment.awaitMap(): GoogleMap = suspendCancellableCoroutine { continuation ->
+    getMapAsync {
+        if (continuation.isActive) {
+            continuation.resume(it)
         }
     }
+}

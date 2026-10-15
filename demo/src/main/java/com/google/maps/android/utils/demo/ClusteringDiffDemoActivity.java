@@ -161,7 +161,8 @@ public class ClusteringDiffDemoActivity extends BaseDemoActivity
   }
 
   private void addItems() {
-    // Add 60 filler background markers across Greater London to force PointQuadTree to split into quadrants (MAX_ELEMENTS = 50)
+    // Add 60 filler background markers across Greater London to force PointQuadTree to split into
+    // quadrants (MAX_ELEMENTS = 50)
     for (int i = 0; i < 60; i++) {
       double lat = 51.3 + (i % 10) * 0.05;
       double lng = -0.4 + (i / 10) * 0.08;

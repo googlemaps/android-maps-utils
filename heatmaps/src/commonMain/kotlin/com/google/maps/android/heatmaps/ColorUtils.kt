@@ -32,8 +32,7 @@ internal object ColorUtils {
 
     fun blue(color: Int): Int = color and 0xFF
 
-    fun argb(alpha: Int, red: Int, green: Int, blue: Int): Int =
-        (alpha shl 24) or (red shl 16) or (green shl 8) or blue
+    fun argb(alpha: Int, red: Int, green: Int, blue: Int): Int = (alpha shl 24) or (red shl 16) or (green shl 8) or blue
 
     fun rgbToHsv(red: Int, green: Int, blue: Int, hsv: FloatArray) {
         require(hsv.size >= 3) { "3 components required for hsv" }

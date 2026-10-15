@@ -50,15 +50,14 @@ import kotlin.coroutines.resumeWithException
  * [ConnectionResult.SUCCESS] without invoking the callback
  */
 public suspend fun Context.awaitMapsSdkInitialized(
-    preferredRenderer: MapsInitializer.Renderer? = null
-): MapsInitializer.Renderer =
-    suspendCancellableCoroutine { continuation ->
-        val status = MapsInitializer.initialize(this, preferredRenderer) { renderer ->
-            if (continuation.isActive) {
-                continuation.resume(renderer)
-            }
-        }
-        if (continuation.isActive && status != ConnectionResult.SUCCESS) {
-            continuation.resumeWithException(GooglePlayServicesNotAvailableException(status))
+    preferredRenderer: MapsInitializer.Renderer? = null,
+): MapsInitializer.Renderer = suspendCancellableCoroutine { continuation ->
+    val status = MapsInitializer.initialize(this, preferredRenderer) { renderer ->
+        if (continuation.isActive) {
+            continuation.resume(renderer)
         }
     }
+    if (continuation.isActive && status != ConnectionResult.SUCCESS) {
+        continuation.resumeWithException(GooglePlayServicesNotAvailableException(status))
+    }
+}

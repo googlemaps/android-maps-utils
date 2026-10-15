@@ -23,18 +23,14 @@ import kotlin.math.abs
 
 fun assertThat(latLngAlt: LatLngAlt?): LatLngAltSubject = Truth.assertAbout(latLngAltSubjectFactory()).that(latLngAlt)
 
-fun latLngAltSubjectFactory(): Subject.Factory<LatLngAltSubject, LatLngAlt> =
-    Subject.Factory { metaData, target ->
-        LatLngAltSubject(
-            metaData,
-            target,
-        )
-    }
+fun latLngAltSubjectFactory(): Subject.Factory<LatLngAltSubject, LatLngAlt> = Subject.Factory { metaData, target ->
+    LatLngAltSubject(
+        metaData,
+        target,
+    )
+}
 
-class LatLngAltSubject(
-    metadata: FailureMetadata,
-    private val actual: LatLngAlt?,
-) : Subject(metadata, actual) {
+class LatLngAltSubject(metadata: FailureMetadata, private val actual: LatLngAlt?) : Subject(metadata, actual) {
     fun isNear(expected: LatLngAlt) {
         if (actual == null) {
             failWithActual(Fact.simpleFact("expected a non-null LatLngAlt, but was null"))

@@ -51,11 +51,8 @@ public operator fun LatLng.component2(): Double = this.longitude
  *
  * @see PolyUtil.isLocationOnPath
  */
-public fun List<LatLng>.isLocationOnPath(
-    latLng: LatLng,
-    geodesic: Boolean,
-    tolerance: Double = 0.1
-): Boolean = PolyUtil.isLocationOnPath(latLng, this, geodesic, tolerance)
+public fun List<LatLng>.isLocationOnPath(latLng: LatLng, geodesic: Boolean, tolerance: Double = 0.1): Boolean =
+    PolyUtil.isLocationOnPath(latLng, this, geodesic, tolerance)
 
 /**
  * Checks whether or not [latLng] lies on or is near the edge of this polygon within the [tolerance]
@@ -68,11 +65,8 @@ public fun List<LatLng>.isLocationOnPath(
  *
  * @see PolyUtil.isLocationOnEdge
  */
-public fun List<LatLng>.isOnEdge(
-    latLng: LatLng,
-    geodesic: Boolean,
-    tolerance: Double = 0.1
-): Boolean = PolyUtil.isLocationOnEdge(latLng, this, geodesic, tolerance)
+public fun List<LatLng>.isOnEdge(latLng: LatLng, geodesic: Boolean, tolerance: Double = 0.1): Boolean =
+    PolyUtil.isLocationOnEdge(latLng, this, geodesic, tolerance)
 
 /**
  * Computes whether the [latLng] lies inside this.
@@ -101,8 +95,7 @@ public fun List<LatLng>.containsLocation(latLng: LatLng, geodesic: Boolean): Boo
  *
  * @see PolyUtil.simplify
  */
-public fun List<LatLng>.simplify(tolerance: Double): List<LatLng> =
-    PolyUtil.simplify(this, tolerance)
+public fun List<LatLng>.simplify(tolerance: Double): List<LatLng> = PolyUtil.simplify(this, tolerance)
 
 /**
  * Decodes this encoded string into a [LatLng] list.
@@ -162,8 +155,7 @@ public fun List<LatLng>.sphericalPolygonSignedArea(): Double = SphericalUtil.com
  *
  * @see SphericalUtil.computeHeading
  */
-public fun LatLng.sphericalHeading(toLatLng: LatLng): Double =
-    SphericalUtil.computeHeading(this, toLatLng)
+public fun LatLng.sphericalHeading(toLatLng: LatLng): Double = SphericalUtil.computeHeading(this, toLatLng)
 
 /**
  * Offsets this LatLng from the provided [distance] and [heading] and returns the result.
@@ -209,5 +201,4 @@ public fun LatLng.withSphericalLinearInterpolation(to: LatLng, fraction: Double)
  * @param to the LatLng to compute the distance to
  * @return the distance between this and [to] in meters
  */
-public fun LatLng.sphericalDistance(to: LatLng): Double =
-    SphericalUtil.computeDistanceBetween(this, to)
+public fun LatLng.sphericalDistance(to: LatLng): Double = SphericalUtil.computeDistanceBetween(this, to)

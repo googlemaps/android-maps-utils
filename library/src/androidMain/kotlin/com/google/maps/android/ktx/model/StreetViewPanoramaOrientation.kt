@@ -22,8 +22,12 @@ import com.google.maps.android.model.streetViewPanoramaOrientation as canonicalS
 
 @Deprecated(
     message = "Use com.google.maps.android.model.streetViewPanoramaOrientation instead",
-    replaceWith = ReplaceWith("streetViewPanoramaOrientation(optionsActions)", "com.google.maps.android.model.streetViewPanoramaOrientation"),
-    level = DeprecationLevel.WARNING
+    replaceWith = ReplaceWith(
+        "streetViewPanoramaOrientation(optionsActions)",
+        "com.google.maps.android.model.streetViewPanoramaOrientation",
+    ),
+    level = DeprecationLevel.WARNING,
 )
-public inline fun streetViewPanoramaOrientation(optionsActions: StreetViewPanoramaOrientation.Builder.() -> Unit): StreetViewPanoramaOrientation = canonicalStreetViewPanoramaOrientation(optionsActions)
-
+public inline fun streetViewPanoramaOrientation(
+    optionsActions: StreetViewPanoramaOrientation.Builder.() -> Unit,
+): StreetViewPanoramaOrientation = canonicalStreetViewPanoramaOrientation(optionsActions)

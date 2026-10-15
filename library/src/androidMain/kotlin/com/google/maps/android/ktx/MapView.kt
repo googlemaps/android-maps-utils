@@ -22,7 +22,6 @@ import com.google.maps.android.awaitMap as canonicalAwaitMap
 @Deprecated(
     message = "Use com.google.maps.android.awaitMap instead",
     replaceWith = ReplaceWith("awaitMap()", "com.google.maps.android.awaitMap"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
 public suspend fun MapView.awaitMap(): GoogleMap = this.canonicalAwaitMap()
-

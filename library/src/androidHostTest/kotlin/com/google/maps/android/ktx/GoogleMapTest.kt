@@ -95,4 +95,3 @@ public class GoogleMapTest {
         assertThat(deferredWithDuration.await()).isEqualTo(Unit)
     }
 }
-

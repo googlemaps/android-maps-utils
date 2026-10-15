@@ -18,8 +18,8 @@
 
 package com.google.maps.android.ktx.utils.geometry
 
-import com.google.maps.android.geometry.Point
 import com.google.common.truth.Truth.assertThat
+import com.google.maps.android.geometry.Point
 import org.junit.Before
 import org.junit.Test
 

@@ -39,7 +39,7 @@ public fun kmlLayer(
     polygonManager: PolygonManager = PolygonManager(map),
     polylineManager: PolylineManager = PolylineManager(map),
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
-    imagesCache: Renderer.ImagesCache? = null
+    imagesCache: Renderer.ImagesCache? = null,
 ): KmlLayer = KmlLayer(
     map,
     resourceId,
@@ -48,7 +48,7 @@ public fun kmlLayer(
     polygonManager,
     polylineManager,
     groundOverlayManager,
-    imagesCache
+    imagesCache,
 )
 
 /**
@@ -62,7 +62,7 @@ public fun kmlLayer(
     polygonManager: PolygonManager = PolygonManager(map),
     polylineManager: PolylineManager = PolylineManager(map),
     groundOverlayManager: GroundOverlayManager = GroundOverlayManager(map),
-    imagesCache: Renderer.ImagesCache? = null
+    imagesCache: Renderer.ImagesCache? = null,
 ): KmlLayer = KmlLayer(
     map,
     stream,
@@ -71,5 +71,5 @@ public fun kmlLayer(
     polygonManager,
     polylineManager,
     groundOverlayManager,
-    imagesCache
+    imagesCache,
 )

@@ -24,10 +24,7 @@ import androidx.annotation.StringRes
  * @property titleResId The string resource ID for the demo title.
  * @property activityClass The Activity class to launch when this demo is selected.
  */
-data class Demo(
-    @StringRes val titleResId: Int,
-    val activityClass: Class<out Activity>,
-)
+data class Demo(@StringRes val titleResId: Int, val activityClass: Class<out Activity>)
 
 /**
  * Represents a group of related demos (e.g., "Clustering", "Data Layers").
@@ -35,7 +32,4 @@ data class Demo(
  * @property titleResId The string resource ID for the group header.
  * @property demos The list of demos contained within this group.
  */
-data class DemoGroup(
-    @StringRes val titleResId: Int,
-    val demos: List<Demo>,
-)
+data class DemoGroup(@StringRes val titleResId: Int, val demos: List<Demo>)

@@ -15,8 +15,8 @@
  */
 package com.google.maps.android.clustering.algo
 
-import com.google.maps.android.model.CameraPosition
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.model.CameraPosition
 
 /**
  * This abstract interface provides two methods: one to determine if the map should recluster when

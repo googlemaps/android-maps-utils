@@ -92,62 +92,61 @@ class MainActivity : ComponentActivity() {
  *
  * This is also the source of truth for `DemoSmokeTest`, which opens every demo listed here.
  */
-internal fun demoGroups(): List<DemoGroup> =
-    listOf(
-        DemoGroup(
-            R.string.category_clustering,
-            listOf(
-                Demo(R.string.demo_title_clustering_advanced, CustomAdvancedMarkerClusteringDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_algorithms, ClusterAlgorithmsDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_default, ClusteringDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_custom_look, CustomMarkerClusteringDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_diff, ClusteringDiffDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_2k, BigClusteringDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_20k, VisibleClusteringDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_viewmodel, ClusteringViewModelDemoActivity::class.java),
-                Demo(R.string.demo_title_clustering_force_zoom, ZoomClusteringDemoActivity::class.java),
-            ),
+internal fun demoGroups(): List<DemoGroup> = listOf(
+    DemoGroup(
+        R.string.category_clustering,
+        listOf(
+            Demo(R.string.demo_title_clustering_advanced, CustomAdvancedMarkerClusteringDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_algorithms, ClusterAlgorithmsDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_default, ClusteringDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_custom_look, CustomMarkerClusteringDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_diff, ClusteringDiffDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_2k, BigClusteringDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_20k, VisibleClusteringDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_viewmodel, ClusteringViewModelDemoActivity::class.java),
+            Demo(R.string.demo_title_clustering_force_zoom, ZoomClusteringDemoActivity::class.java),
         ),
-        DemoGroup(
-            R.string.category_data_layers,
-            listOf(
-                Demo(R.string.demo_title_geojson, GeoJsonDemoActivity::class.java),
-                Demo(R.string.demo_title_kml, KmlDemoActivity::class.java),
-                Demo(R.string.demo_title_heatmaps, HeatmapsDemoActivity::class.java),
-                Demo(R.string.demo_title_heatmaps_places, HeatmapsPlacesDemoActivity::class.java),
-                Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
-                Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
-                Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java),
-                Demo(R.string.demo_title_zindex, ZIndexDemoActivity::class.java),
-            ),
+    ),
+    DemoGroup(
+        R.string.category_data_layers,
+        listOf(
+            Demo(R.string.demo_title_geojson, GeoJsonDemoActivity::class.java),
+            Demo(R.string.demo_title_kml, KmlDemoActivity::class.java),
+            Demo(R.string.demo_title_heatmaps, HeatmapsDemoActivity::class.java),
+            Demo(R.string.demo_title_heatmaps_places, HeatmapsPlacesDemoActivity::class.java),
+            Demo(R.string.demo_title_multi_layer, MultiLayerDemoActivity::class.java),
+            Demo(R.string.demo_title_transit_layer, TransitLayerDemoActivity::class.java),
+            Demo(R.string.demo_title_renderer, RendererDemoActivity::class.java),
+            Demo(R.string.demo_title_zindex, ZIndexDemoActivity::class.java),
         ),
-        DemoGroup(
-            R.string.category_geometry,
-            listOf(
-                Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
-                Demo(R.string.demo_title_flexible_polyline, FlexiblePolylineDemoActivity::class.java),
-                Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
-                Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
-                Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java),
-            ),
+    ),
+    DemoGroup(
+        R.string.category_geometry,
+        listOf(
+            Demo(R.string.demo_title_poly_decode, PolyDecodeDemoActivity::class.java),
+            Demo(R.string.demo_title_flexible_polyline, FlexiblePolylineDemoActivity::class.java),
+            Demo(R.string.demo_title_poly_simplify, PolySimplifyDemoActivity::class.java),
+            Demo(R.string.demo_title_polyline_progress, PolylineProgressDemoActivity::class.java),
+            Demo(R.string.demo_title_spherical_distance, DistanceDemoActivity::class.java),
         ),
-        DemoGroup(
-            R.string.category_utilities,
-            listOf(
-                Demo(R.string.demo_title_icon_generator, IconGeneratorDemoActivity::class.java),
-                Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
-                Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java),
-                Demo(R.string.demo_title_reactive_extensions, KtxExtensionsDemoActivity::class.java),
-            ),
+    ),
+    DemoGroup(
+        R.string.category_utilities,
+        listOf(
+            Demo(R.string.demo_title_icon_generator, IconGeneratorDemoActivity::class.java),
+            Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
+            Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java),
+            Demo(R.string.demo_title_reactive_extensions, KtxExtensionsDemoActivity::class.java),
         ),
-        DemoGroup(
-            R.string.category_street_view,
-            listOf(
-                Demo(R.string.demo_title_street_view, StreetViewDemoActivity::class.java),
-                Demo(R.string.demo_title_street_view_java, StreetViewDemoJavaActivity::class.java),
-            ),
+    ),
+    DemoGroup(
+        R.string.category_street_view,
+        listOf(
+            Demo(R.string.demo_title_street_view, StreetViewDemoActivity::class.java),
+            Demo(R.string.demo_title_street_view_java, StreetViewDemoJavaActivity::class.java),
         ),
-    )
+    ),
+)
 
 /** Test tag for a group header in [DemoList], used by the instrumented smoke test. */
 internal fun groupTestTag(group: DemoGroup): String = "group:${group.titleResId}"
@@ -163,11 +162,7 @@ internal fun demoTestTag(demo: Demo): String = "demo:${demo.activityClass.name}"
  * @param onDemoClick Callback when a specific demo is clicked.
  */
 @Composable
-fun DemoList(
-    groups: List<DemoGroup>,
-    contentPadding: PaddingValues,
-    onDemoClick: (Class<out Activity>) -> Unit,
-) {
+fun DemoList(groups: List<DemoGroup>, contentPadding: PaddingValues, onDemoClick: (Class<out Activity>) -> Unit) {
     // We use rememberSaveable to preserve the expanded state across configuration changes (e.g. rotation).
     // Storing the ID of the expanded group ensures only one group is open at a time (accordion style).
     var expandedGroupResId by rememberSaveable { mutableStateOf<Int?>(null) }
@@ -210,12 +205,12 @@ fun DemoGroupItem(
         // Group Header
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .testTag(groupTestTag(group))
-                    .clickable(onClick = onHeaderClick)
-                    .background(MaterialTheme.colorScheme.surfaceVariant) // Use semantic color
-                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+            Modifier
+                .fillMaxWidth()
+                .testTag(groupTestTag(group))
+                .clickable(onClick = onHeaderClick)
+                .background(MaterialTheme.colorScheme.surfaceVariant) // Use semantic color
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -229,7 +224,13 @@ fun DemoGroupItem(
             val rotation by animateFloatAsState(if (isExpanded) 180f else 0f, label = "arrowRotation")
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = if (isExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand),
+                contentDescription = if (isExpanded) {
+                    stringResource(
+                        R.string.collapse,
+                    )
+                } else {
+                    stringResource(R.string.expand)
+                },
                 modifier = Modifier.rotate(rotation),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -243,14 +244,14 @@ fun DemoGroupItem(
                     Text(
                         text = stringResource(demo.titleResId),
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .testTag(demoTestTag(demo))
-                                .clickable { onDemoClick(demo.activityClass) }
-                                .padding(
-                                    horizontal = dimensionResource(id = R.dimen.padding_large),
-                                    vertical = dimensionResource(id = R.dimen.padding_medium),
-                                ),
+                        Modifier
+                            .fillMaxWidth()
+                            .testTag(demoTestTag(demo))
+                            .clickable { onDemoClick(demo.activityClass) }
+                            .padding(
+                                horizontal = dimensionResource(id = R.dimen.padding_large),
+                                vertical = dimensionResource(id = R.dimen.padding_medium),
+                            ),
                         // Indented for hierarchy
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,

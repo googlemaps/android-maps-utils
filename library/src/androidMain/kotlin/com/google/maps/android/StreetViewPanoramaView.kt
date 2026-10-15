@@ -48,57 +48,53 @@ public suspend fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewP
  * observe panorama camera change events will override an existing listener (if any) to
  * [StreetViewPanorama.setOnStreetViewPanoramaCameraChangeListener].
  */
-public fun StreetViewPanorama.cameraChangeEvents(): Flow<StreetViewPanoramaCamera> =
-    callbackFlow {
-        setOnStreetViewPanoramaCameraChangeListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnStreetViewPanoramaCameraChangeListener(null)
-        }
+public fun StreetViewPanorama.cameraChangeEvents(): Flow<StreetViewPanoramaCamera> = callbackFlow {
+    setOnStreetViewPanoramaCameraChangeListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnStreetViewPanoramaCameraChangeListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the street view panorama loads a new panorama. Using this to
  * observe panorama load change events will override an existing listener (if any) to
  * [StreetViewPanorama.setOnStreetViewPanoramaChangeListener].
  */
-public fun StreetViewPanorama.changeEvents(): Flow<StreetViewPanoramaLocation> =
-    callbackFlow {
-        setOnStreetViewPanoramaChangeListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnStreetViewPanoramaChangeListener(null)
-        }
+public fun StreetViewPanorama.changeEvents(): Flow<StreetViewPanoramaLocation> = callbackFlow {
+    setOnStreetViewPanoramaChangeListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnStreetViewPanoramaChangeListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the street view panorama is clicked. Using this to
  * observe panorama click events will override an existing listener (if any) to
  * [StreetViewPanorama.setOnStreetViewPanoramaClickListener].
  */
-public fun StreetViewPanorama.clickEvents(): Flow<StreetViewPanoramaOrientation> =
-    callbackFlow {
-        setOnStreetViewPanoramaClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnStreetViewPanoramaClickListener(null)
-        }
+public fun StreetViewPanorama.clickEvents(): Flow<StreetViewPanoramaOrientation> = callbackFlow {
+    setOnStreetViewPanoramaClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnStreetViewPanoramaClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the street view panorama is long clicked. Using this to
  * observe panorama long click events will override an existing listener (if any) to
  * [StreetViewPanorama.setOnStreetViewPanoramaLongClickListener].
  */
-public fun StreetViewPanorama.longClickEvents(): Flow<StreetViewPanoramaOrientation> =
-    callbackFlow {
-        setOnStreetViewPanoramaLongClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnStreetViewPanoramaLongClickListener(null)
-        }
+public fun StreetViewPanorama.longClickEvents(): Flow<StreetViewPanoramaOrientation> = callbackFlow {
+    setOnStreetViewPanoramaLongClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnStreetViewPanoramaLongClickListener(null)
+    }
+}

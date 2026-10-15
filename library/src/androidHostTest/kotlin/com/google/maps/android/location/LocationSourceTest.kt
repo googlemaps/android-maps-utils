@@ -33,8 +33,8 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -87,7 +87,7 @@ public class LocationSourceTest {
             source.locationEvents(
                 intervalMs = 2_000L,
                 minUpdateDistanceM = 3f,
-                priority = LocationPriority.HIGH_ACCURACY
+                priority = LocationPriority.HIGH_ACCURACY,
             ).first()
         }
         advanceUntilIdle()
@@ -97,7 +97,7 @@ public class LocationSourceTest {
             eq(2_000L),
             eq(3f),
             listenerCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         listenerCaptor.value.onLocationChanged(location)

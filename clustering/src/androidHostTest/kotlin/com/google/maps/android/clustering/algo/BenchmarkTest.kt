@@ -22,10 +22,7 @@ import org.junit.Test
 import java.util.Random
 
 class BenchmarkTest {
-    private class MyItem(
-        lat: Double,
-        lng: Double,
-    ) : ClusterItem {
+    private class MyItem(lat: Double, lng: Double) : ClusterItem {
         override val position: LatLng = LatLng(lat, lng)
         override val title: String? = null
         override val snippet: String? = null
@@ -63,13 +60,13 @@ class BenchmarkTest {
 
     @Test
     fun benchmarkPreCachingAlgorithmDecorator() {
-        runBenchmark(PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm()), "PreCachingAlgorithmDecorator")
+        runBenchmark(
+            PreCachingAlgorithmDecorator(NonHierarchicalDistanceBasedAlgorithm()),
+            "PreCachingAlgorithmDecorator",
+        )
     }
 
-    private fun runBenchmark(
-        algorithm: Algorithm<MyItem>,
-        name: String,
-    ) {
+    private fun runBenchmark(algorithm: Algorithm<MyItem>, name: String) {
         println("--- Benchmarking $name ---")
         val count = 50000
         val items = generateItems(count)

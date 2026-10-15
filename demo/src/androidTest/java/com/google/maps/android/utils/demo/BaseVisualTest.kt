@@ -81,10 +81,10 @@ abstract class BaseVisualTest {
         testName: String,
         screenshotBitmap: Bitmap,
         prompt: String,
-        passCondition: (String) -> Boolean
+        passCondition: (String) -> Boolean,
     ) {
         val goldenFile = File(context.getExternalFilesDir(null), "goldens/$testName.png")
-        
+
         var isPixelMatch = false
         if (goldenFile.exists()) {
             val goldenBitmap = BitmapFactory.decodeFile(goldenFile.absolutePath)
@@ -98,18 +98,21 @@ abstract class BaseVisualTest {
 
         Log.w("VisualTest", "Screenshot did not match golden for '$testName'. Falling back to Gemini.")
         val geminiResponse = helper.analyzeImage(screenshotBitmap, prompt, geminiApiKey)
-        
+
         requireNotNull(geminiResponse) { "Gemini response was null for test '$testName'" }
-        
+
         val passed = passCondition(geminiResponse)
-        
+
         if (passed) {
             // Update golden since Gemini approved it
             goldenFile.parentFile?.mkdirs()
             FileOutputStream(goldenFile).use { out ->
                 screenshotBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             }
-            Log.w("VisualTest", "Gemini approved the new UI state for '$testName'. Golden image updated at ${goldenFile.absolutePath}. Please review this image manually to prevent baking in hallucinations.")
+            Log.w(
+                "VisualTest",
+                "Gemini approved the new UI state for '$testName'. Golden image updated at ${goldenFile.absolutePath}. Please review this image manually to prevent baking in hallucinations.",
+            )
         } else {
             fail("Visual verification failed for '$testName'. Gemini response: $geminiResponse")
         }

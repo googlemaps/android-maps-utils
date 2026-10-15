@@ -21,9 +21,9 @@ package com.google.maps.android.ktx.utils
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polygon
 import com.google.common.truth.Truth.assertThat
+import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.junit.Test
 
 internal class PolygonTest {
     @Test

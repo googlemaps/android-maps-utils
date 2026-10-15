@@ -163,4 +163,3 @@ class GeoJsonIntegrationTest {
         assertEquals(-73.9600, bounds.northeast.longitude, 0.0001)
     }
 }
-

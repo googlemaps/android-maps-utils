@@ -15,11 +15,11 @@
  */
 package com.google.maps.android.clustering.algo
 
-import com.google.maps.android.model.LatLng
-import com.google.maps.android.model.longitude
-import com.google.maps.android.model.latitude
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
 
 /**
  * A variant of [NonHierarchicalDistanceBasedAlgorithm] that clusters items
@@ -32,7 +32,8 @@ import com.google.maps.android.clustering.ClusterItem
  *
  * @param <T> the type of cluster item
 </T> */
-public open class CentroidNonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : NonHierarchicalDistanceBasedAlgorithm<T>() {
+public open class CentroidNonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> :
+    NonHierarchicalDistanceBasedAlgorithm<T>() {
     /**
      * Computes the centroid (average latitude and longitude) of a collection of cluster items.
      *

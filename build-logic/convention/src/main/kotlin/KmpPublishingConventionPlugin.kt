@@ -87,7 +87,7 @@ class KmpPublishingConventionPlugin : Plugin<Project> {
                     KotlinMultiplatform(
                         javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml"),
                         sourcesJar = SourcesJar.Sources(),
-                    )
+                    ),
                 )
                 configureMapsUtilsPublishing(project)
             }
@@ -104,7 +104,7 @@ class KmpPublishingConventionPlugin : Plugin<Project> {
         afterEvaluate {
             val bundleTask = tasks.findByName("bundleAndroidMainClassesToCompileJar") ?: return@afterEvaluate
             val classesJar = layout.buildDirectory.file(
-                "intermediates/compile_library_classes_jar/androidMain/bundleAndroidMainClassesToCompileJar/classes.jar"
+                "intermediates/compile_library_classes_jar/androidMain/bundleAndroidMainClassesToCompileJar/classes.jar",
             )
 
             val androidApiBuild = tasks.register<KotlinApiBuildTask>("androidApiBuild") {
@@ -131,7 +131,8 @@ class KmpPublishingConventionPlugin : Plugin<Project> {
 
             val androidApiCheck = tasks.register<KotlinApiCompareTask>("androidApiCheck") {
                 group = "verification"
-                description = "Checks the public Android API of $projectName against the committed api/$projectName.api."
+                description =
+                    "Checks the public Android API of $projectName against the committed api/$projectName.api."
                 projectApiFile.set(apiFile)
                 generatedApiFile.set(androidApiBuild.flatMap { it.outputApiFile })
                 dependsOn(androidApiBuild)

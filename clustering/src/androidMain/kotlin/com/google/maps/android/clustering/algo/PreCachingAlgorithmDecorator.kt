@@ -122,9 +122,7 @@ public open class PreCachingAlgorithmDecorator<T : ClusterItem> public construct
         }
     }
 
-    private inner class PrecacheRunnable(
-        private val zoom: Int,
-    ) : Runnable {
+    private inner class PrecacheRunnable(private val zoom: Int) : Runnable {
         override fun run() {
             try {
                 // Wait between 500 - 1000 ms.

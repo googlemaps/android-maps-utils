@@ -57,7 +57,7 @@ import kotlin.coroutines.resume
 @IntDef(
     GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE,
     GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION,
-    GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION
+    GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION,
 )
 @Retention(AnnotationRetention.SOURCE)
 public annotation class MoveStartedReason
@@ -141,27 +141,26 @@ public data class IndoorLevelActivatedEvent(val building: IndoorBuilding) : Indo
 @Deprecated(
     message = "Use cameraIdleEvents(), cameraMoveCanceledEvents(), cameraMoveEvents() or cameraMoveStartedEvents",
 )
-public fun GoogleMap.cameraEvents(): Flow<CameraEvent> =
-    callbackFlow {
-        setOnCameraIdleListener {
-            trySend(CameraIdleEvent)
-        }
-        setOnCameraMoveCanceledListener {
-            trySend(CameraMoveCanceledEvent)
-        }
-        setOnCameraMoveListener {
-            trySend(CameraMoveEvent)
-        }
-        setOnCameraMoveStartedListener {
-            trySend(CameraMoveStartedEvent(it))
-        }
-        awaitClose {
-            setOnCameraIdleListener(null)
-            setOnCameraMoveCanceledListener(null)
-            setOnCameraMoveListener(null)
-            setOnCameraMoveStartedListener(null)
-        }
+public fun GoogleMap.cameraEvents(): Flow<CameraEvent> = callbackFlow {
+    setOnCameraIdleListener {
+        trySend(CameraIdleEvent)
     }
+    setOnCameraMoveCanceledListener {
+        trySend(CameraMoveCanceledEvent)
+    }
+    setOnCameraMoveListener {
+        trySend(CameraMoveEvent)
+    }
+    setOnCameraMoveStartedListener {
+        trySend(CameraMoveStartedEvent(it))
+    }
+    awaitClose {
+        setOnCameraIdleListener(null)
+        setOnCameraMoveCanceledListener(null)
+        setOnCameraMoveListener(null)
+        setOnCameraMoveStartedListener(null)
+    }
+}
 
 /**
  * A suspending function that awaits the completion of the [cameraUpdate] animation.
@@ -169,10 +168,7 @@ public fun GoogleMap.cameraEvents(): Flow<CameraEvent> =
  * @param cameraUpdate the [CameraUpdate] to apply on the map
  * @param durationMs the duration in milliseconds of the animation, or `null` to use the Maps SDK default duration
  */
-public suspend fun GoogleMap.awaitAnimateCamera(
-    cameraUpdate: CameraUpdate,
-    durationMs: Int? = null
-): Unit =
+public suspend fun GoogleMap.awaitAnimateCamera(cameraUpdate: CameraUpdate, durationMs: Int? = null): Unit =
     suspendCancellableCoroutine { continuation ->
         val callback = object : GoogleMap.CancelableCallback {
             override fun onFinish() {
@@ -198,60 +194,56 @@ public suspend fun GoogleMap.awaitAnimateCamera(
  * A suspending function that awaits for the map to be loaded. Uses
  * [GoogleMap.setOnMapLoadedCallback].
  */
-public suspend fun GoogleMap.awaitMapLoad(): Unit =
-    suspendCancellableCoroutine { continuation ->
-        setOnMapLoadedCallback {
-            if (continuation.isActive) {
-                continuation.resume(Unit)
-            }
-        }
-        continuation.invokeOnCancellation {
-            setOnMapLoadedCallback(null)
+public suspend fun GoogleMap.awaitMapLoad(): Unit = suspendCancellableCoroutine { continuation ->
+    setOnMapLoadedCallback {
+        if (continuation.isActive) {
+            continuation.resume(Unit)
         }
     }
+    continuation.invokeOnCancellation {
+        setOnMapLoadedCallback(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the camera is idle. Using this to observe camera idle events will
  * override an existing listener (if any) to [GoogleMap.setOnCameraIdleListener].
  */
-public fun GoogleMap.cameraIdleEvents(): Flow<Unit> =
-    callbackFlow {
-        setOnCameraIdleListener {
-            trySend(Unit)
-        }
-        awaitClose {
-            setOnCameraIdleListener(null)
-        }
+public fun GoogleMap.cameraIdleEvents(): Flow<Unit> = callbackFlow {
+    setOnCameraIdleListener {
+        trySend(Unit)
     }
+    awaitClose {
+        setOnCameraIdleListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a camera move is canceled. Using this to observe camera move
  * cancel events will override an existing listener (if any) to
  * [GoogleMap.setOnCameraMoveCanceledListener].
  */
-public fun GoogleMap.cameraMoveCanceledEvents(): Flow<Unit> =
-    callbackFlow {
-        setOnCameraMoveCanceledListener {
-            trySend(Unit)
-        }
-        awaitClose {
-            setOnCameraMoveCanceledListener(null)
-        }
+public fun GoogleMap.cameraMoveCanceledEvents(): Flow<Unit> = callbackFlow {
+    setOnCameraMoveCanceledListener {
+        trySend(Unit)
     }
+    awaitClose {
+        setOnCameraMoveCanceledListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the camera moves. Using this to observe camera move events will
  * override an existing listener (if any) to [GoogleMap.setOnCameraMoveListener].
  */
-public fun GoogleMap.cameraMoveEvents(): Flow<Unit> =
-    callbackFlow {
-        setOnCameraMoveListener {
-            trySend(Unit)
-        }
-        awaitClose {
-            setOnCameraMoveListener(null)
-        }
+public fun GoogleMap.cameraMoveEvents(): Flow<Unit> = callbackFlow {
+    setOnCameraMoveListener {
+        trySend(Unit)
     }
+    awaitClose {
+        setOnCameraMoveListener(null)
+    }
+}
 
 /**
  * A suspending function that returns a bitmap snapshot of the current view of the map. Uses
@@ -268,7 +260,7 @@ public suspend fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? =
                     continuation.resume(it)
                 }
             },
-            bitmap
+            bitmap,
         )
     }
 
@@ -276,250 +268,233 @@ public suspend fun GoogleMap.awaitSnapshot(bitmap: Bitmap? = null): Bitmap? =
  * Returns a flow that emits when a camera move started. Using this to observe camera move start
  * events will override an existing listener (if any) to [GoogleMap.setOnCameraMoveStartedListener].
  */
-public fun GoogleMap.cameraMoveStartedEvents(): Flow<Int> =
-    callbackFlow {
-        setOnCameraMoveStartedListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnCameraMoveStartedListener(null)
-        }
+public fun GoogleMap.cameraMoveStartedEvents(): Flow<Int> = callbackFlow {
+    setOnCameraMoveStartedListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnCameraMoveStartedListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a circle is clicked. Using this to observe circle clicks events
  * will override an existing listener (if any) to [GoogleMap.setOnCircleClickListener].
  */
-public fun GoogleMap.circleClickEvents(): Flow<Circle> =
-    callbackFlow {
-        setOnCircleClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnCircleClickListener(null)
-        }
+public fun GoogleMap.circleClickEvents(): Flow<Circle> = callbackFlow {
+    setOnCircleClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnCircleClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a ground overlay is clicked. Using this to observe ground overlay
  * clicks events will override an existing listener (if any) to
  * [GoogleMap.setOnGroundOverlayClickListener].
  */
-public fun GoogleMap.groundOverlayClicks(): Flow<GroundOverlay> =
-    callbackFlow {
-        setOnGroundOverlayClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnGroundOverlayClickListener(null)
-        }
+public fun GoogleMap.groundOverlayClicks(): Flow<GroundOverlay> = callbackFlow {
+    setOnGroundOverlayClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnGroundOverlayClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the indoor state changes. Using this to observe indoor state
  * change events will override an existing listener (if any) to
  * [GoogleMap.setOnIndoorStateChangeListener]
  */
-public fun GoogleMap.indoorStateChangeEvents(): Flow<IndoorChangeEvent> =
-    callbackFlow {
-        setOnIndoorStateChangeListener(object : GoogleMap.OnIndoorStateChangeListener {
-            override fun onIndoorBuildingFocused() {
-                trySend(IndoorBuildingFocusedEvent)
-            }
-
-            override fun onIndoorLevelActivated(indoorBuilding: IndoorBuilding) {
-                trySend(IndoorLevelActivatedEvent(building = indoorBuilding))
-            }
-        })
-        awaitClose {
-            setOnIndoorStateChangeListener(null)
+public fun GoogleMap.indoorStateChangeEvents(): Flow<IndoorChangeEvent> = callbackFlow {
+    setOnIndoorStateChangeListener(object : GoogleMap.OnIndoorStateChangeListener {
+        override fun onIndoorBuildingFocused() {
+            trySend(IndoorBuildingFocusedEvent)
         }
+
+        override fun onIndoorLevelActivated(indoorBuilding: IndoorBuilding) {
+            trySend(IndoorLevelActivatedEvent(building = indoorBuilding))
+        }
+    })
+    awaitClose {
+        setOnIndoorStateChangeListener(null)
     }
+}
 
 /**
  * Returns a flow that emits when a marker's info window is clicked. Using this to observe info
  * info window clicks will override an existing listener (if any) to
  * [GoogleMap.setOnInfoWindowClickListener]
  */
-public fun GoogleMap.infoWindowClickEvents(): Flow<Marker> =
-    callbackFlow {
-        setOnInfoWindowClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnInfoWindowClickListener(null)
-        }
+public fun GoogleMap.infoWindowClickEvents(): Flow<Marker> = callbackFlow {
+    setOnInfoWindowClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnInfoWindowClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a marker's info window is closed. Using this to observe info
  * window closes will override an existing listener (if any) to
  * [GoogleMap.setOnInfoWindowCloseListener]
  */
-public fun GoogleMap.infoWindowCloseEvents(): Flow<Marker> =
-    callbackFlow {
-        setOnInfoWindowCloseListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnInfoWindowCloseListener(null)
-        }
+public fun GoogleMap.infoWindowCloseEvents(): Flow<Marker> = callbackFlow {
+    setOnInfoWindowCloseListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnInfoWindowCloseListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a marker's info window is long pressed. Using this to observe info
  * window long presses will override an existing listener (if any) to
  * [GoogleMap.setOnInfoWindowLongClickListener]
  */
-public fun GoogleMap.infoWindowLongClickEvents(): Flow<Marker> =
-    callbackFlow {
-        setOnInfoWindowLongClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnInfoWindowLongClickListener(null)
-        }
+public fun GoogleMap.infoWindowLongClickEvents(): Flow<Marker> = callbackFlow {
+    setOnInfoWindowLongClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnInfoWindowLongClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the map is clicked. Using this to observe map click events will
  * override an existing listener (if any) to [GoogleMap.setOnMapClickListener]
  */
-public fun GoogleMap.mapClickEvents(): Flow<LatLng> =
-    callbackFlow {
-        setOnMapClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnMapClickListener(null)
-        }
+public fun GoogleMap.mapClickEvents(): Flow<LatLng> = callbackFlow {
+    setOnMapClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnMapClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the map is long clicked. Using this to observe map click events
  * will override an existing listener (if any) to [GoogleMap.setOnMapLongClickListener]
  */
-public fun GoogleMap.mapLongClickEvents(): Flow<LatLng> =
-    callbackFlow {
-        setOnMapLongClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnMapLongClickListener(null)
-        }
+public fun GoogleMap.mapLongClickEvents(): Flow<LatLng> = callbackFlow {
+    setOnMapLongClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnMapLongClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a marker on the map is clicked. Using this to observe marker click
  * events will override an existing listener (if any) to [GoogleMap.setOnMarkerClickListener]
  */
-public fun GoogleMap.markerClickEvents(): Flow<Marker> =
-    callbackFlow {
-        setOnMarkerClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnMarkerClickListener(null)
-        }
+public fun GoogleMap.markerClickEvents(): Flow<Marker> = callbackFlow {
+    setOnMarkerClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnMarkerClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a marker is dragged. Using this to observer marker drag events
  * will override existing listeners (if any) to [GoogleMap.setOnMarkerDragListener]
  */
-public fun GoogleMap.markerDragEvents(): Flow<OnMarkerDragEvent> =
-    callbackFlow {
-        setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
-            override fun onMarkerDragStart(marker: Marker) {
-                trySend(MarkerDragStartEvent(marker = marker))
-            }
-
-            override fun onMarkerDrag(marker: Marker) {
-                trySend(MarkerDragEvent(marker = marker))
-            }
-
-            override fun onMarkerDragEnd(marker: Marker) {
-                trySend(MarkerDragEndEvent(marker = marker))
-            }
-
-        })
-        awaitClose {
-            setOnMarkerDragListener(null)
+public fun GoogleMap.markerDragEvents(): Flow<OnMarkerDragEvent> = callbackFlow {
+    setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
+        override fun onMarkerDragStart(marker: Marker) {
+            trySend(MarkerDragStartEvent(marker = marker))
         }
+
+        override fun onMarkerDrag(marker: Marker) {
+            trySend(MarkerDragEvent(marker = marker))
+        }
+
+        override fun onMarkerDragEnd(marker: Marker) {
+            trySend(MarkerDragEndEvent(marker = marker))
+        }
+    })
+    awaitClose {
+        setOnMarkerDragListener(null)
     }
+}
 
 /**
  * Returns a flow that emits when the my location button is clicked. Using this to observe my
  * location button click events will override an existing listener (if any) to
  * [GoogleMap.setOnMyLocationButtonClickListener]
  */
-public fun GoogleMap.myLocationButtonClickEvents(): Flow<Unit> =
-    callbackFlow {
-        setOnMyLocationButtonClickListener {
-            trySend(Unit).isSuccess
-        }
-        awaitClose {
-            setOnMyLocationButtonClickListener(null)
-        }
+public fun GoogleMap.myLocationButtonClickEvents(): Flow<Unit> = callbackFlow {
+    setOnMyLocationButtonClickListener {
+        trySend(Unit).isSuccess
     }
+    awaitClose {
+        setOnMyLocationButtonClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when the my location blue dot is clicked. Using this to observe my
  * location blue dot click events will override an existing listener (if any) to
  * [GoogleMap.setOnMyLocationClickListener]
  */
-public fun GoogleMap.myLocationClickEvents(): Flow<Location> =
-    callbackFlow {
-        setOnMyLocationClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnMyLocationClickListener(null)
-        }
+public fun GoogleMap.myLocationClickEvents(): Flow<Location> = callbackFlow {
+    setOnMyLocationClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnMyLocationClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a PointOfInterest is clicked. Using this to observe
  * PointOfInterest click events will override an existing listener (if any) to
  * [GoogleMap.setOnPoiClickListener]
  */
-public fun GoogleMap.poiClickEvents(): Flow<PointOfInterest> =
-    callbackFlow {
-         setOnPoiClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnPoiClickListener(null)
-        }
+public fun GoogleMap.poiClickEvents(): Flow<PointOfInterest> = callbackFlow {
+    setOnPoiClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnPoiClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a Polygon is clicked. Using this to observe Polygon click events
  * will override an existing listener (if any) to [GoogleMap.setOnPolygonClickListener]
  */
-public fun GoogleMap.polygonClickEvents(): Flow<Polygon> =
-    callbackFlow {
-        setOnPolygonClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnPolygonClickListener(null)
-        }
+public fun GoogleMap.polygonClickEvents(): Flow<Polygon> = callbackFlow {
+    setOnPolygonClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnPolygonClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a Polyline is clicked. Using this to observe Polyline click events
  * will override an existing listener (if any) to [GoogleMap.setOnPolylineClickListener]
  */
-public fun GoogleMap.polylineClickEvents(): Flow<Polyline> =
-    callbackFlow {
-        setOnPolylineClickListener {
-            trySend(it)
-        }
-        awaitClose {
-            setOnPolylineClickListener(null)
-        }
+public fun GoogleMap.polylineClickEvents(): Flow<Polyline> = callbackFlow {
+    setOnPolylineClickListener {
+        trySend(it)
     }
+    awaitClose {
+        setOnPolylineClickListener(null)
+    }
+}
 
 /**
  * Builds a new [GoogleMapOptions] using the provided [optionsActions].
@@ -528,7 +503,7 @@ public fun GoogleMap.polylineClickEvents(): Flow<Polyline> =
  */
 public inline fun buildGoogleMapOptions(optionsActions: GoogleMapOptions.() -> Unit): GoogleMapOptions =
     GoogleMapOptions().apply(
-        optionsActions
+        optionsActions,
     )
 
 /**
@@ -536,10 +511,9 @@ public inline fun buildGoogleMapOptions(optionsActions: GoogleMapOptions.() -> U
  *
  * @return the added [Circle]
  */
-public inline fun GoogleMap.addCircle(optionsActions: CircleOptions.() -> Unit): Circle =
-    this.addCircle(
-        circleOptions(optionsActions)
-    )
+public inline fun GoogleMap.addCircle(optionsActions: CircleOptions.() -> Unit): Circle = this.addCircle(
+    circleOptions(optionsActions),
+)
 
 /**
  * Adds a [GroundOverlay] to this [GoogleMap] using the function literal with receiver
@@ -549,7 +523,7 @@ public inline fun GoogleMap.addCircle(optionsActions: CircleOptions.() -> Unit):
  */
 public inline fun GoogleMap.addGroundOverlay(optionsActions: GroundOverlayOptions.() -> Unit): GroundOverlay? =
     this.addGroundOverlay(
-        groundOverlayOptions(optionsActions)
+        groundOverlayOptions(optionsActions),
     )
 
 /**
@@ -557,30 +531,27 @@ public inline fun GoogleMap.addGroundOverlay(optionsActions: GroundOverlayOption
  *
  * @return the added [Marker]
  */
-public inline fun GoogleMap.addMarker(optionsActions: MarkerOptions.() -> Unit): Marker? =
-    this.addMarker(
-        markerOptions(optionsActions)
-    )
+public inline fun GoogleMap.addMarker(optionsActions: MarkerOptions.() -> Unit): Marker? = this.addMarker(
+    markerOptions(optionsActions),
+)
 
 /**
  * Adds a [Polygon] to this [GoogleMap] using the function literal with receiver [optionsActions].
  *
  * @return the added [Polygon]
  */
-public inline fun GoogleMap.addPolygon(optionsActions: PolygonOptions.() -> Unit): Polygon =
-    this.addPolygon(
-        polygonOptions(optionsActions)
-    )
+public inline fun GoogleMap.addPolygon(optionsActions: PolygonOptions.() -> Unit): Polygon = this.addPolygon(
+    polygonOptions(optionsActions),
+)
 
 /**
  * Adds a [Polyline] to this [GoogleMap] using the function literal with receiver [optionsActions].
  *
  * @return the added [Polyline]
  */
-public inline fun GoogleMap.addPolyline(optionsActions: PolylineOptions.() -> Unit): Polyline =
-    this.addPolyline(
-        polylineOptions(optionsActions)
-    )
+public inline fun GoogleMap.addPolyline(optionsActions: PolylineOptions.() -> Unit): Polyline = this.addPolyline(
+    polylineOptions(optionsActions),
+)
 
 /**
  * Adds a [TileOverlay] to this [GoogleMap] using the function literal with receiver
@@ -590,5 +561,5 @@ public inline fun GoogleMap.addPolyline(optionsActions: PolylineOptions.() -> Un
  */
 public inline fun GoogleMap.addTileOverlay(optionsActions: TileOverlayOptions.() -> Unit): TileOverlay? =
     this.addTileOverlay(
-        tileOverlayOptions(optionsActions)
+        tileOverlayOptions(optionsActions),
     )

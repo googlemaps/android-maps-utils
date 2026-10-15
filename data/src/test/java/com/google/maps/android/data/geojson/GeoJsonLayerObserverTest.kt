@@ -262,11 +262,10 @@ class GeoJsonLayerObserverTest {
         assertEquals(3.5f, options.single().zIndex, 0.001f)
     }
 
-    private fun emptyLayer(map: GoogleMap): GeoJsonLayer =
-        GeoJsonLayer(
-            map,
-            JSONObject("""{"type":"FeatureCollection","features":[]}"""),
-        )
+    private fun emptyLayer(map: GoogleMap): GeoJsonLayer = GeoJsonLayer(
+        map,
+        JSONObject("""{"type":"FeatureCollection","features":[]}"""),
+    )
 
     private fun polygonFeature(fillColor: Int): Pair<GeoJsonFeature, GeoJsonPolygonStyle> {
         val geometry =
@@ -304,17 +303,16 @@ class GeoJsonLayerObserverTest {
             .also { it.polygonStyle = style } to style
     }
 
-    private fun polygon(offset: Double): GeoJsonPolygon =
-        GeoJsonPolygon(
+    private fun polygon(offset: Double): GeoJsonPolygon = GeoJsonPolygon(
+        listOf(
             listOf(
-                listOf(
-                    LatLng(offset, offset),
-                    LatLng(offset, offset + 1.0),
-                    LatLng(offset + 1.0, offset + 1.0),
-                    LatLng(offset, offset),
-                ),
+                LatLng(offset, offset),
+                LatLng(offset, offset + 1.0),
+                LatLng(offset + 1.0, offset + 1.0),
+                LatLng(offset, offset),
             ),
-        )
+        ),
+    )
 
     private companion object {
         const val INITIAL_COLOR = -15654349

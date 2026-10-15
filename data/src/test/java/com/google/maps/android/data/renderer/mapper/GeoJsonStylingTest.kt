@@ -386,4 +386,3 @@ class GeoJsonStylingTest {
         org.junit.Assert.assertNotNull(feature)
     }
 }
-

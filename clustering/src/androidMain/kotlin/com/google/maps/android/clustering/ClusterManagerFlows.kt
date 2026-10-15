@@ -38,15 +38,14 @@ import kotlinx.coroutines.flow.callbackFlow
  * suppressing default SDK behavior (such as zooming). Under backpressure if the buffer is full,
  * `trySend` returns `false`, allowing default SDK click handling to proceed.
  */
-public fun <T : ClusterItem> ClusterManager<T>.clusterClickEvents(): Flow<Cluster<T>> =
-    callbackFlow {
-        setOnClusterClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnClusterClickListener(null)
-        }
+public fun <T : ClusterItem> ClusterManager<T>.clusterClickEvents(): Flow<Cluster<T>> = callbackFlow {
+    setOnClusterClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnClusterClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a cluster item is clicked. Using this to observe cluster item clicks
@@ -62,15 +61,14 @@ public fun <T : ClusterItem> ClusterManager<T>.clusterClickEvents(): Flow<Cluste
  * suppressing default SDK behavior. Under backpressure if the buffer is full, `trySend` returns `false`,
  * allowing default SDK click handling to proceed.
  */
-public fun <T : ClusterItem> ClusterManager<T>.clusterItemClickEvents(): Flow<T> =
-    callbackFlow {
-        setOnClusterItemClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnClusterItemClickListener(null)
-        }
+public fun <T : ClusterItem> ClusterManager<T>.clusterItemClickEvents(): Flow<T> = callbackFlow {
+    setOnClusterItemClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnClusterItemClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a cluster's info window is clicked. Using this to observe cluster info window clicks
@@ -81,15 +79,14 @@ public fun <T : ClusterItem> ClusterManager<T>.clusterItemClickEvents(): Flow<T>
  * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
  * for multi-observer configurations.
  */
-public fun <T : ClusterItem> ClusterManager<T>.clusterInfoWindowClickEvents(): Flow<Cluster<T>> =
-    callbackFlow {
-        setOnClusterInfoWindowClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnClusterInfoWindowClickListener(null)
-        }
+public fun <T : ClusterItem> ClusterManager<T>.clusterInfoWindowClickEvents(): Flow<Cluster<T>> = callbackFlow {
+    setOnClusterInfoWindowClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnClusterInfoWindowClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a cluster's info window is long clicked. Using this to observe cluster info window long clicks
@@ -100,15 +97,14 @@ public fun <T : ClusterItem> ClusterManager<T>.clusterInfoWindowClickEvents(): F
  * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
  * for multi-observer configurations.
  */
-public fun <T : ClusterItem> ClusterManager<T>.clusterInfoWindowLongClickEvents(): Flow<Cluster<T>> =
-    callbackFlow {
-        setOnClusterInfoWindowLongClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnClusterInfoWindowLongClickListener(null)
-        }
+public fun <T : ClusterItem> ClusterManager<T>.clusterInfoWindowLongClickEvents(): Flow<Cluster<T>> = callbackFlow {
+    setOnClusterInfoWindowLongClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnClusterInfoWindowLongClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a cluster item's info window is clicked. Using this to observe cluster item info window clicks
@@ -119,15 +115,14 @@ public fun <T : ClusterItem> ClusterManager<T>.clusterInfoWindowLongClickEvents(
  * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
  * for multi-observer configurations.
  */
-public fun <T : ClusterItem> ClusterManager<T>.clusterItemInfoWindowClickEvents(): Flow<T> =
-    callbackFlow {
-        setOnClusterItemInfoWindowClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnClusterItemInfoWindowClickListener(null)
-        }
+public fun <T : ClusterItem> ClusterManager<T>.clusterItemInfoWindowClickEvents(): Flow<T> = callbackFlow {
+    setOnClusterItemInfoWindowClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnClusterItemInfoWindowClickListener(null)
+    }
+}
 
 /**
  * Returns a flow that emits when a cluster item's info window is long clicked. Using this to observe cluster item info window long clicks
@@ -138,12 +133,11 @@ public fun <T : ClusterItem> ClusterManager<T>.clusterItemInfoWindowClickEvents(
  * the active listener completely. Always share this flow (e.g. using [kotlinx.coroutines.flow.shareIn])
  * for multi-observer configurations.
  */
-public fun <T : ClusterItem> ClusterManager<T>.clusterItemInfoWindowLongClickEvents(): Flow<T> =
-    callbackFlow {
-        setOnClusterItemInfoWindowLongClickListener {
-            trySend(it).isSuccess
-        }
-        awaitClose {
-            setOnClusterItemInfoWindowLongClickListener(null)
-        }
+public fun <T : ClusterItem> ClusterManager<T>.clusterItemInfoWindowLongClickEvents(): Flow<T> = callbackFlow {
+    setOnClusterItemInfoWindowLongClickListener {
+        trySend(it).isSuccess
     }
+    awaitClose {
+        setOnClusterItemInfoWindowLongClickListener(null)
+    }
+}

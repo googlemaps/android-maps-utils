@@ -25,10 +25,7 @@ import kotlinx.serialization.encoding.Encoder
 internal object ColorSerializer : KSerializer<Int> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Color", PrimitiveKind.STRING)
 
-    override fun serialize(
-        encoder: Encoder,
-        value: Int,
-    ) {
+    override fun serialize(encoder: Encoder, value: Int) {
         val argb =
             String.format("#%08x", value) // returns aabbggrr, e.g. #ff0000ff for blue
         val a = argb.substring(1..2)

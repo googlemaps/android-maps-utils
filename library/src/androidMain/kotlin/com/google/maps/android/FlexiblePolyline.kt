@@ -24,9 +24,7 @@ import kotlin.math.pow
  *
  * @property value The numeric type identifier used on the wire.
  */
-public enum class ThirdDimension(
-    public val value: Int,
-) {
+public enum class ThirdDimension(public val value: Int) {
     /** No third value is present; the polyline is purely two dimensional. */
     ABSENT(0),
 
@@ -61,9 +59,8 @@ public enum class ThirdDimension(
          *
          * @throws IllegalArgumentException if [value] is outside the range `0..7`.
          */
-        fun fromValue(value: Int): ThirdDimension =
-            entries.firstOrNull { it.value == value }
-                ?: throw IllegalArgumentException("Unsupported third dimension type: $value")
+        fun fromValue(value: Int): ThirdDimension = entries.firstOrNull { it.value == value }
+            ?: throw IllegalArgumentException("Unsupported third dimension type: $value")
     }
 }
 
@@ -76,19 +73,19 @@ public enum class ThirdDimension(
  * carries no third dimension. The unit is defined by the polyline's [ThirdDimension].
  */
 public data class FlexiblePoint
-    @JvmOverloads
-    public constructor(
-        public val latitude: Double,
-        public val longitude: Double,
-        public val thirdDimensionValue: Double? = null,
-    ) {
-        /**
-         * Returns this point as a [LatLng], discarding [thirdDimensionValue].
-         *
-         * @return The two dimensional position of this point.
-         */
-        public fun toLatLng(): LatLng = LatLng(latitude, longitude)
-    }
+@JvmOverloads
+public constructor(
+    public val latitude: Double,
+    public val longitude: Double,
+    public val thirdDimensionValue: Double? = null,
+) {
+    /**
+     * Returns this point as a [LatLng], discarding [thirdDimensionValue].
+     *
+     * @return The two dimensional position of this point.
+     */
+    public fun toLatLng(): LatLng = LatLng(latitude, longitude)
+}
 
 /**
  * A decoded flexible polyline, together with the parameters read from its header.
@@ -165,14 +162,10 @@ public object FlexiblePolylineUtil {
      */
     @JvmStatic
     @JvmOverloads
-    public fun encodeLatLngs(
-        path: List<LatLng>,
-        precision: Int = 7,
-    ): String =
-        encode(
-            points = path.map { FlexiblePoint(it.latitude, it.longitude) },
-            precision = precision,
-        )
+    public fun encodeLatLngs(path: List<LatLng>, precision: Int = 7): String = encode(
+        points = path.map { FlexiblePoint(it.latitude, it.longitude) },
+        precision = precision,
+    )
 
     /**
      * Encodes a sequence of points as a flexible polyline.
@@ -340,11 +333,7 @@ public object FlexiblePolylineUtil {
     }
 
     /** Packs the header parameters into the single value that follows the version. */
-    private fun headerContent(
-        precision: Int,
-        thirdDimension: ThirdDimension,
-        thirdDimensionPrecision: Int,
-    ): Long =
+    private fun headerContent(precision: Int, thirdDimension: ThirdDimension, thirdDimensionPrecision: Int): Long =
         ((thirdDimensionPrecision shl 7) or (thirdDimension.value shl 4) or precision).toLong()
 
     /**
@@ -353,10 +342,7 @@ public object FlexiblePolylineUtil {
      * Ties round half away from zero, as the reference implementation does, so that values
      * such as `2.5` at precision `0` encode to the same string as other encoders.
      */
-    private fun scale(
-        value: Double,
-        multiplier: Double,
-    ): Long {
+    private fun scale(value: Double, multiplier: Double): Long {
         val scaled = value * multiplier
         val magnitude = Math.round(abs(scaled))
         return if (scaled < 0) -magnitude else magnitude
@@ -367,10 +353,7 @@ public object FlexiblePolylineUtil {
      *
      * [value] is treated as unsigned, so a zigzag value with the top bit set still encodes.
      */
-    private fun encodeUnsignedVarint(
-        value: Long,
-        result: StringBuilder,
-    ) {
+    private fun encodeUnsignedVarint(value: Long, result: StringBuilder) {
         var remaining = value
         while ((remaining and VALUE_MASK.inv()) != 0L) {
             result.append(ENCODING_TABLE[((remaining and VALUE_MASK) or CONTINUATION_BIT).toInt()])
@@ -380,10 +363,7 @@ public object FlexiblePolylineUtil {
     }
 
     /** Appends [value] as a zigzag mapped varint, so small negatives stay short. */
-    private fun encodeSignedVarint(
-        value: Long,
-        result: StringBuilder,
-    ) {
+    private fun encodeSignedVarint(value: Long, result: StringBuilder) {
         val zigzag = if (value < 0) (value shl 1).inv() else (value shl 1)
         encodeUnsignedVarint(zigzag, result)
     }
@@ -411,9 +391,7 @@ public object FlexiblePolylineUtil {
     }
 
     /** Tracks the read position while decoding, and validates the alphabet. */
-    private class Cursor(
-        private val encoded: String,
-    ) {
+    private class Cursor(private val encoded: String) {
         var index: Int = 0
             private set
 

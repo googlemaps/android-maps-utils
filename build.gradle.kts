@@ -20,6 +20,30 @@ import java.util.Properties
 plugins {
     id("com.vanniktech.maven.publish") version libs.versions.gradleMavenPublishPlugin.get() apply false
     alias(libs.plugins.binary.compatibility.validator)
+    alias(libs.plugins.spotless)
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("**/build/**")
+        ktlint().editorConfigOverride(
+            mapOf(
+                "indent_size" to "4",
+                "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
+                "max_line_length" to "120",
+                // Keep existing file names (e.g. test Subjects) to avoid renames in this formatting-only change.
+                "ktlint_standard_filename" to "disabled",
+            ),
+        )
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    java {
+        target("**/*.java")
+        targetExclude("**/build/**")
+        googleJavaFormat()
+    }
 }
 
 apiValidation {
@@ -59,7 +83,7 @@ buildscript {
     }
 }
 
-tasks.register<Delete>("clean") {
+tasks.named<Delete>("clean") {
     delete(layout.buildDirectory)
 }
 

@@ -26,5 +26,5 @@ import com.google.android.gms.maps.model.TileOverlayOptions
  */
 public inline fun tileOverlayOptions(optionsActions: TileOverlayOptions.() -> Unit): TileOverlayOptions =
     TileOverlayOptions().apply(
-        optionsActions
+        optionsActions,
     )

@@ -58,10 +58,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
 
         memoryCache =
             object : LruCache<String, Bitmap>(cacheSize) {
-                override fun sizeOf(
-                    key: String,
-                    bitmap: Bitmap,
-                ): Int {
+                override fun sizeOf(key: String, bitmap: Bitmap): Int {
                     // The cache size will be measured in kilobytes rather than
                     // number of items.
                     return bitmap.byteCount / 1024
@@ -97,58 +94,59 @@ public open class UrlIconProvider @JvmOverloads public constructor(
         return deferred.await()
     }
 
-    protected open suspend fun loadBitmapFromUrl(urlString: String): Bitmap? =
-        withContext(dispatcher) {
-            try {
-                // Follow redirects manually, re-validating every hop through the sanitizer, so a
-                // 30x to an internal host cannot bypass the host check (redirect-based SSRF) while
-                // still supporting legitimate redirects (CDNs, signed S3/GCS URLs).
-                var current: String = urlString
-                var redirectsLeft = MAX_REDIRECTS
-                while (true) {
-                    // Validate the (untrusted) href before issuing any request. `null` => blocked.
-                    val safeUrl =
-                        if (urlSanitizer != null) {
-                            urlSanitizer.sanitizeUrl(current) ?: return@withContext null
-                        } else {
-                            current
-                        }
-                    val url = URL(safeUrl)
-                    val connection = url.openConnection() as HttpURLConnection
-                    try {
-                        // Do not auto-follow: we re-run each redirect target through the sanitizer.
-                        connection.instanceFollowRedirects = false
-                        connection.doInput = true
-                        connection.connect()
-                        val code = connection.responseCode
-                        when {
-                            code in 200..299 -> {
-                                return@withContext connection.inputStream.use {
-                                    BitmapFactory.decodeStream(it)
-                                }
-                            }
-                            code in 300..399 -> {
-                                if (redirectsLeft-- <= 0) return@withContext null
-                                val location =
-                                    connection.getHeaderField("Location")
-                                        ?: return@withContext null
-                                // Resolve relative redirects against the current URL; the next loop
-                                // iteration re-sanitizes the resolved absolute URL before connecting.
-                                current = URL(url, location).toString()
-                            }
-                            else -> return@withContext null
-                        }
-                    } finally {
-                        connection.disconnect()
+    protected open suspend fun loadBitmapFromUrl(urlString: String): Bitmap? = withContext(dispatcher) {
+        try {
+            // Follow redirects manually, re-validating every hop through the sanitizer, so a
+            // 30x to an internal host cannot bypass the host check (redirect-based SSRF) while
+            // still supporting legitimate redirects (CDNs, signed S3/GCS URLs).
+            var current: String = urlString
+            var redirectsLeft = MAX_REDIRECTS
+            while (true) {
+                // Validate the (untrusted) href before issuing any request. `null` => blocked.
+                val safeUrl =
+                    if (urlSanitizer != null) {
+                        urlSanitizer.sanitizeUrl(current) ?: return@withContext null
+                    } else {
+                        current
                     }
+                val url = URL(safeUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                try {
+                    // Do not auto-follow: we re-run each redirect target through the sanitizer.
+                    connection.instanceFollowRedirects = false
+                    connection.doInput = true
+                    connection.connect()
+                    val code = connection.responseCode
+                    when {
+                        code in 200..299 -> {
+                            return@withContext connection.inputStream.use {
+                                BitmapFactory.decodeStream(it)
+                            }
+                        }
+
+                        code in 300..399 -> {
+                            if (redirectsLeft-- <= 0) return@withContext null
+                            val location =
+                                connection.getHeaderField("Location")
+                                    ?: return@withContext null
+                            // Resolve relative redirects against the current URL; the next loop
+                            // iteration re-sanitizes the resolved absolute URL before connecting.
+                            current = URL(url, location).toString()
+                        }
+
+                        else -> return@withContext null
+                    }
+                } finally {
+                    connection.disconnect()
                 }
-                @Suppress("UNREACHABLE_CODE")
-                null
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
             }
+            @Suppress("UNREACHABLE_CODE")
+            null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
+    }
 
     private companion object {
         /** Maximum number of redirects to follow before giving up. */

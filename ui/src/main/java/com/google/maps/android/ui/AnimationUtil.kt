@@ -37,11 +37,7 @@ public object AnimationUtil {
      */
     @JvmOverloads
     @JvmStatic
-    public fun animateMarkerTo(
-        marker: Marker,
-        finalPosition: LatLng,
-        durationInMs: Long = 2000,
-    ) {
+    public fun animateMarkerTo(marker: Marker, finalPosition: LatLng, durationInMs: Long = 2000) {
         if (durationInMs <= 0L) {
             marker.position = finalPosition
             return
@@ -75,18 +71,10 @@ public object AnimationUtil {
      * For other LatLngInterpolator interpolators, see [link here](https://gist.github.com/broady/6314689)
      */
     public interface LatLngInterpolator {
-        public fun interpolate(
-            fraction: Float,
-            a: LatLng,
-            b: LatLng,
-        ): LatLng
+        public fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng
 
         public class Linear : LatLngInterpolator {
-            public override fun interpolate(
-                fraction: Float,
-                a: LatLng,
-                b: LatLng,
-            ): LatLng {
+            public override fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng {
                 val lat = (b.latitude - a.latitude) * fraction + a.latitude
                 var lngDelta = b.longitude - a.longitude
 

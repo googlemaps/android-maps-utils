@@ -66,7 +66,7 @@ private class DepthLimitingReader(delegate: XmlReader) : XmlDelegatingReader(del
     private fun checkDepth(event: EventType): EventType {
         if (event == EventType.START_ELEMENT && depth > KmlParser.MAX_ELEMENT_DEPTH) {
             throw XmlException(
-                "KML element nesting exceeds the maximum depth of ${KmlParser.MAX_ELEMENT_DEPTH}"
+                "KML element nesting exceeds the maximum depth of ${KmlParser.MAX_ELEMENT_DEPTH}",
             )
         }
         return event

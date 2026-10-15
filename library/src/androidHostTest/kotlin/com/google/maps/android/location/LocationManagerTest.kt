@@ -23,7 +23,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Looper
 import com.google.common.truth.Truth.assertThat
-import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -39,10 +38,11 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Captor
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -75,7 +75,7 @@ public class LocationManagerTest {
             eq(1_000L),
             eq(1f),
             locationListenerCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         locationListenerCaptor.value.onLocationChanged(location)
@@ -99,7 +99,7 @@ public class LocationManagerTest {
             anyLong(),
             anyFloat(),
             locationListenerCaptor.capture(),
-            any()
+            any(),
         )
 
         locationListenerCaptor.value.onLocationChanged(location)
@@ -123,7 +123,7 @@ public class LocationManagerTest {
             anyLong(),
             anyFloat(),
             any<LocationListener>(),
-            any<Looper>()
+            any<Looper>(),
         )
     }
 
@@ -142,7 +142,7 @@ public class LocationManagerTest {
             eq(2_000L),
             eq(2f),
             locationListenerCaptor.capture(),
-            eq(looper)
+            eq(looper),
         )
 
         locationListenerCaptor.value.onLocationChanged(location)
@@ -164,7 +164,7 @@ public class LocationManagerTest {
             anyLong(),
             anyFloat(),
             any<LocationListener>(),
-            any<Looper>()
+            any<Looper>(),
         )
     }
 
@@ -178,8 +178,8 @@ public class LocationManagerTest {
                 anyLong(),
                 anyFloat(),
                 any<LocationListener>(),
-                any<Looper>()
-            )
+                any<Looper>(),
+            ),
         ).thenThrow(SecurityException("Location permission denied"))
 
         assertFailsWith<SecurityException> {
@@ -197,8 +197,8 @@ public class LocationManagerTest {
                 anyLong(),
                 anyFloat(),
                 any<LocationListener>(),
-                any<Looper>()
-            )
+                any<Looper>(),
+            ),
         ).thenThrow(SecurityException("Location permission denied"))
 
         assertFailsWith<SecurityException> {

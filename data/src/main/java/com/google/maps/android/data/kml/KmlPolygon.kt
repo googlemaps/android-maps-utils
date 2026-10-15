@@ -46,14 +46,13 @@ public class KmlPolygon(
 
     public override fun getInnerBoundaryCoordinates(): List<List<LatLng>> = innerBoundaryCoordinates ?: emptyList()
 
-    public override fun toString(): String =
-        StringBuilder(GEOMETRY_TYPE)
-            .apply {
-                append("{")
-                append("\n outer coordinates=").append(outerBoundaryCoordinates)
-                append(",\n inner coordinates=").append(innerBoundaryCoordinates)
-                append("\n}\n")
-            }.toString()
+    public override fun toString(): String = StringBuilder(GEOMETRY_TYPE)
+        .apply {
+            append("{")
+            append("\n outer coordinates=").append(outerBoundaryCoordinates)
+            append(",\n inner coordinates=").append(innerBoundaryCoordinates)
+            append("\n}\n")
+        }.toString()
 
     public companion object {
         public const val GEOMETRY_TYPE: String = "Polygon"

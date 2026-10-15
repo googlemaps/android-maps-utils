@@ -90,34 +90,32 @@ public class GeoJsonPolygonStyle :
         notifyObservers()
     }
 
-    public fun toPolygonOptions(): PolygonOptions =
-        PolygonOptions().apply {
-            fillColor(mPolygonOptions.fillColor)
-            geodesic(mPolygonOptions.isGeodesic)
-            strokeColor(mPolygonOptions.strokeColor)
-            strokeJointType(mPolygonOptions.strokeJointType)
-            strokePattern(mPolygonOptions.strokePattern)
-            strokeWidth(mPolygonOptions.strokeWidth)
-            visible(mPolygonOptions.isVisible)
-            zIndex(mPolygonOptions.zIndex)
-            clickable(mPolygonOptions.isClickable)
-        }
+    public fun toPolygonOptions(): PolygonOptions = PolygonOptions().apply {
+        fillColor(mPolygonOptions.fillColor)
+        geodesic(mPolygonOptions.isGeodesic)
+        strokeColor(mPolygonOptions.strokeColor)
+        strokeJointType(mPolygonOptions.strokeJointType)
+        strokePattern(mPolygonOptions.strokePattern)
+        strokeWidth(mPolygonOptions.strokeWidth)
+        visible(mPolygonOptions.isVisible)
+        zIndex(mPolygonOptions.zIndex)
+        clickable(mPolygonOptions.isClickable)
+    }
 
-    override fun toString(): String =
-        StringBuilder("PolygonStyle{")
-            .apply {
-                append("\n geometry type=").append(GEOMETRY_TYPE.contentToString())
-                append(",\n fill color=").append(fillColor)
-                append(",\n geodesic=").append(isGeodesic())
-                append(",\n stroke color=").append(getStrokeColor())
-                append(",\n stroke joint type=").append(getStrokeJointType())
-                append(",\n stroke pattern=").append(getStrokePattern())
-                append(",\n stroke width=").append(getStrokeWidth())
-                append(",\n visible=").append(isVisible())
-                append(",\n z index=").append(getZIndex())
-                append(",\n clickable=").append(isClickable())
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("PolygonStyle{")
+        .apply {
+            append("\n geometry type=").append(GEOMETRY_TYPE.contentToString())
+            append(",\n fill color=").append(fillColor)
+            append(",\n geodesic=").append(isGeodesic())
+            append(",\n stroke color=").append(getStrokeColor())
+            append(",\n stroke joint type=").append(getStrokeJointType())
+            append(",\n stroke pattern=").append(getStrokePattern())
+            append(",\n stroke width=").append(getStrokeWidth())
+            append(",\n visible=").append(isVisible())
+            append(",\n z index=").append(getZIndex())
+            append(",\n clickable=").append(isClickable())
+            append("\n}\n")
+        }.toString()
 
     public fun setClickable(clickable: Boolean) {
         mPolygonOptions.clickable(clickable)

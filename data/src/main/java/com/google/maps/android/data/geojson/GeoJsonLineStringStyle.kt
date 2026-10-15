@@ -77,36 +77,34 @@ public class GeoJsonLineStringStyle :
         notifyObservers()
     }
 
-    public fun toPolylineOptions(): PolylineOptions =
-        PolylineOptions().apply {
-            color(mPolylineOptions.color)
-            clickable(mPolylineOptions.isClickable)
-            geodesic(mPolylineOptions.isGeodesic)
-            visible(mPolylineOptions.isVisible)
-            width(mPolylineOptions.width)
-            zIndex(mPolylineOptions.zIndex)
-            // Read from mPolylineOptions: inside apply, getPattern() and the cap getters would
-            // resolve to the new PolylineOptions instead of this style.
-            pattern(mPolylineOptions.pattern)
-            startCap(mPolylineOptions.startCap)
-            endCap(mPolylineOptions.endCap)
-        }
+    public fun toPolylineOptions(): PolylineOptions = PolylineOptions().apply {
+        color(mPolylineOptions.color)
+        clickable(mPolylineOptions.isClickable)
+        geodesic(mPolylineOptions.isGeodesic)
+        visible(mPolylineOptions.isVisible)
+        width(mPolylineOptions.width)
+        zIndex(mPolylineOptions.zIndex)
+        // Read from mPolylineOptions: inside apply, getPattern() and the cap getters would
+        // resolve to the new PolylineOptions instead of this style.
+        pattern(mPolylineOptions.pattern)
+        startCap(mPolylineOptions.startCap)
+        endCap(mPolylineOptions.endCap)
+    }
 
-    override fun toString(): String =
-        StringBuilder("LineStringStyle{")
-            .apply {
-                append("\n geometry type=").append(GEOMETRY_TYPE.contentToString())
-                append(",\n color=").append(color)
-                append(",\n clickable=").append(isClickable())
-                append(",\n geodesic=").append(isGeodesic())
-                append(",\n visible=").append(isVisible())
-                append(",\n width=").append(getWidth())
-                append(",\n z index=").append(getZIndex())
-                append(",\n pattern=").append(getPattern())
-                append(",\n startCap=").append(getStartCap())
-                append(",\n endCap=").append(getEndCap())
-                append("\n}\n")
-            }.toString()
+    override fun toString(): String = StringBuilder("LineStringStyle{")
+        .apply {
+            append("\n geometry type=").append(GEOMETRY_TYPE.contentToString())
+            append(",\n color=").append(color)
+            append(",\n clickable=").append(isClickable())
+            append(",\n geodesic=").append(isGeodesic())
+            append(",\n visible=").append(isVisible())
+            append(",\n width=").append(getWidth())
+            append(",\n z index=").append(getZIndex())
+            append(",\n pattern=").append(getPattern())
+            append(",\n startCap=").append(getStartCap())
+            append(",\n endCap=").append(getEndCap())
+            append("\n}\n")
+        }.toString()
 
     public fun getPattern(): List<PatternItem>? = mPolylineOptions.pattern
 

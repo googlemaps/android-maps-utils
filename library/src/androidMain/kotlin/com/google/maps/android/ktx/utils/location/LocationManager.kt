@@ -25,17 +25,29 @@ import com.google.maps.android.location.coarseLocationEvents as canonicalCoarseL
 import com.google.maps.android.location.fineLocationEvents as canonicalFineLocationEvents
 
 @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-@Deprecated("Moved to com.google.maps.android.location.coarseLocationEvents", ReplaceWith("coarseLocationEvents(minTimeMs, minDistanceM, looper)", "com.google.maps.android.location.coarseLocationEvents"))
+@Deprecated(
+    "Moved to com.google.maps.android.location.coarseLocationEvents",
+    ReplaceWith(
+        "coarseLocationEvents(minTimeMs, minDistanceM, looper)",
+        "com.google.maps.android.location.coarseLocationEvents",
+    ),
+)
 public fun LocationManager.coarseLocationEvents(
     minTimeMs: Long = 1_000L,
     minDistanceM: Float = 1f,
-    looper: Looper = Looper.getMainLooper()
+    looper: Looper = Looper.getMainLooper(),
 ): Flow<Location> = this.canonicalCoarseLocationEvents(minTimeMs, minDistanceM, looper)
 
 @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-@Deprecated("Moved to com.google.maps.android.location.fineLocationEvents", ReplaceWith("fineLocationEvents(minTimeMs, minDistanceM, looper)", "com.google.maps.android.location.fineLocationEvents"))
+@Deprecated(
+    "Moved to com.google.maps.android.location.fineLocationEvents",
+    ReplaceWith(
+        "fineLocationEvents(minTimeMs, minDistanceM, looper)",
+        "com.google.maps.android.location.fineLocationEvents",
+    ),
+)
 public fun LocationManager.fineLocationEvents(
     minTimeMs: Long = 1_000L,
     minDistanceM: Float = 1f,
-    looper: Looper = Looper.getMainLooper()
+    looper: Looper = Looper.getMainLooper(),
 ): Flow<Location> = this.canonicalFineLocationEvents(minTimeMs, minDistanceM, looper)

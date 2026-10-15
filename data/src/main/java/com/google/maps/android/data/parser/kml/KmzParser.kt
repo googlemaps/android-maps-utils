@@ -52,10 +52,7 @@ public class KmzParser @JvmOverloads public constructor(
      * Wrapper for an InputStream that counts the number of bytes read and throws an IOException
      * if the limit is exceeded.
      */
-    private class CountingInputStream(
-        private val mIn: InputStream,
-        private val mMaxBytes: Long,
-    ) : InputStream() {
+    private class CountingInputStream(private val mIn: InputStream, private val mMaxBytes: Long) : InputStream() {
         private var mTotalBytes: Long = 0
 
         @Throws(IOException::class)
@@ -121,7 +118,9 @@ public class KmzParser @JvmOverloads public constructor(
                     // Directory entries in a ZIP archive must never carry a data payload.
                     // Reading even a single byte detects rogue payloads without decompressing large streams.
                     if (countingStream.read() != -1) {
-                        throw IOException("Zip bomb or malformed KMZ detected: directory entry '$name' contains unexpected data payload.")
+                        throw IOException(
+                            "Zip bomb or malformed KMZ detected: directory entry '$name' contains unexpected data payload.",
+                        )
                     }
                 } else if (name.endsWith(".kml", ignoreCase = true) && kml == null) {
                     // Found the KML file (first one found is usually the main one in KMZ)

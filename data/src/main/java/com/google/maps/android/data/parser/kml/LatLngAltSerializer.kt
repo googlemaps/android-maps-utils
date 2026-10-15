@@ -25,10 +25,7 @@ import kotlinx.serialization.encoding.Encoder
 internal object LatLngAltSerializer : KSerializer<LatLngAlt> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LatLngAlt", PrimitiveKind.STRING)
 
-    override fun serialize(
-        encoder: Encoder,
-        value: LatLngAlt,
-    ) {
+    override fun serialize(encoder: Encoder, value: LatLngAlt) {
         val altitude = value.altitude?.let { ",$it" } ?: ""
         encoder.encodeString("${value.longitude},${value.latitude}$altitude")
     }

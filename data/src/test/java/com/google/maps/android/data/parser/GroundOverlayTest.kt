@@ -84,4 +84,3 @@ class GroundOverlayTest {
         assertEquals(0.0f, groundOverlay.rotation, 0.001f)
     }
 }
-

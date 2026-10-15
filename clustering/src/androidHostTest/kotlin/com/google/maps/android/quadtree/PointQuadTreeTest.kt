@@ -235,10 +235,7 @@ class PointQuadTreeTest {
 
     private fun searchAll(): Collection<Item> = mTree.search(Bounds(0.0, 1.0, 0.0, 1.0))
 
-    private class Item(
-        x: Double,
-        y: Double,
-    ) : PointQuadTree.Item {
+    private class Item(x: Double, y: Double) : PointQuadTree.Item {
         override val point: Point = Point(x, y)
     }
 }

@@ -128,12 +128,14 @@ private fun checkStructuralDepth(json: String, maxDepth: Int) {
         }
         when (c) {
             '"' -> inString = true
+
             '[', '{' -> {
                 depth++
                 require(depth <= maxDepth) {
                     "GeoJSON structural nesting exceeds the maximum depth of $maxDepth"
                 }
             }
+
             ']', '}' -> if (depth > 0) depth--
         }
     }
@@ -173,10 +175,7 @@ private fun parseFeature(json: JsonElement): GeoJsonFeature {
     return GeoJsonFeature(geometry, properties, id)
 }
 
-internal fun parseGeometry(
-    json: JsonElement,
-    maxDepth: Int = GeoJsonParser.MAX_GEOMETRY_DEPTH,
-): GeoJsonGeometry? {
+internal fun parseGeometry(json: JsonElement, maxDepth: Int = GeoJsonParser.MAX_GEOMETRY_DEPTH): GeoJsonGeometry? {
     if (maxDepth < 0) return null
     val type = json.jsonObject["type"]?.jsonPrimitive?.content ?: return null
     val coordinates = json.jsonObject["coordinates"]?.jsonArray
@@ -208,35 +207,27 @@ private fun parseCoordinates(coordinates: List<JsonElement>): Coordinates {
 
 private fun parsePoint(coordinates: List<JsonElement>): Coordinates = parseCoordinates(coordinates)
 
-private fun parseLineString(coordinates: List<JsonElement>): List<Coordinates> =
-    coordinates.map {
-        parseCoordinates(it.jsonArray.toList())
-    }
+private fun parseLineString(coordinates: List<JsonElement>): List<Coordinates> = coordinates.map {
+    parseCoordinates(it.jsonArray.toList())
+}
 
-private fun parsePolygon(coordinates: List<JsonElement>): List<List<Coordinates>> =
-    coordinates.map {
-        parseLineString(it.jsonArray.toList())
-    }
+private fun parsePolygon(coordinates: List<JsonElement>): List<List<Coordinates>> = coordinates.map {
+    parseLineString(it.jsonArray.toList())
+}
 
-private fun parseMultiPoint(coordinates: List<JsonElement>): List<Coordinates> =
-    coordinates.map {
-        parseCoordinates(it.jsonArray.toList())
-    }
+private fun parseMultiPoint(coordinates: List<JsonElement>): List<Coordinates> = coordinates.map {
+    parseCoordinates(it.jsonArray.toList())
+}
 
-private fun parseMultiLineString(coordinates: List<JsonElement>): List<List<Coordinates>> =
-    coordinates.map {
-        parseLineString(it.jsonArray.toList())
-    }
+private fun parseMultiLineString(coordinates: List<JsonElement>): List<List<Coordinates>> = coordinates.map {
+    parseLineString(it.jsonArray.toList())
+}
 
-private fun parseMultiPolygon(coordinates: List<JsonElement>): List<List<List<Coordinates>>> =
-    coordinates.map {
-        parsePolygon(it.jsonArray.toList())
-    }
+private fun parseMultiPolygon(coordinates: List<JsonElement>): List<List<List<Coordinates>>> = coordinates.map {
+    parsePolygon(it.jsonArray.toList())
+}
 
-private fun parseGeometryCollection(
-    geometries: List<JsonElement>,
-    maxDepth: Int,
-): List<GeoJsonGeometry> =
+private fun parseGeometryCollection(geometries: List<JsonElement>, maxDepth: Int): List<GeoJsonGeometry> =
     geometries.mapNotNull {
         parseGeometry(it, maxDepth)
     }

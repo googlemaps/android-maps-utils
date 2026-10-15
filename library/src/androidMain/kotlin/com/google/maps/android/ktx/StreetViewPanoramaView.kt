@@ -30,35 +30,35 @@ import com.google.maps.android.longClickEvents as canonicalLongClickEvents
 @Deprecated(
     message = "Use com.google.maps.android.awaitStreetViewPanorama instead",
     replaceWith = ReplaceWith("awaitStreetViewPanorama()", "com.google.maps.android.awaitStreetViewPanorama"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
-public suspend fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama = this.canonicalAwaitStreetViewPanorama()
-
+public suspend fun StreetViewPanoramaView.awaitStreetViewPanorama(): StreetViewPanorama =
+    this.canonicalAwaitStreetViewPanorama()
 
 @Deprecated(
     message = "Use com.google.maps.android.cameraChangeEvents instead",
     replaceWith = ReplaceWith("cameraChangeEvents()", "com.google.maps.android.cameraChangeEvents"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
 public fun StreetViewPanorama.cameraChangeEvents(): Flow<StreetViewPanoramaCamera> = this.canonicalCameraChangeEvents()
 
 @Deprecated(
     message = "Use com.google.maps.android.changeEvents instead",
     replaceWith = ReplaceWith("changeEvents()", "com.google.maps.android.changeEvents"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
 public fun StreetViewPanorama.changeEvents(): Flow<StreetViewPanoramaLocation> = this.canonicalChangeEvents()
 
 @Deprecated(
     message = "Use com.google.maps.android.clickEvents instead",
     replaceWith = ReplaceWith("clickEvents()", "com.google.maps.android.clickEvents"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
 public fun StreetViewPanorama.clickEvents(): Flow<StreetViewPanoramaOrientation> = this.canonicalClickEvents()
 
 @Deprecated(
     message = "Use com.google.maps.android.longClickEvents instead",
     replaceWith = ReplaceWith("longClickEvents()", "com.google.maps.android.longClickEvents"),
-    level = DeprecationLevel.WARNING
+    level = DeprecationLevel.WARNING,
 )
 public fun StreetViewPanorama.longClickEvents(): Flow<StreetViewPanoramaOrientation> = this.canonicalLongClickEvents()

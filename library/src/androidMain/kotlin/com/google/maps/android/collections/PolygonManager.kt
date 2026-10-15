@@ -53,11 +53,9 @@ public open class PolygonManager(map: GoogleMap) :
     public open inner class Collection : MapObjectManager<Polygon, Collection>.Collection() {
         internal var mPolygonClickListener: GoogleMap.OnPolygonClickListener? = null
 
-        public open fun addPolygon(opts: PolygonOptions): Polygon =
-            checkAndAdd(mMap.addPolygon(opts), "Polygon")
+        public open fun addPolygon(opts: PolygonOptions): Polygon = checkAndAdd(mMap.addPolygon(opts), "Polygon")
 
-        public open fun addAll(opts: KotlinCollection<PolygonOptions>): Unit =
-            addAll(opts, ::addPolygon)
+        public open fun addAll(opts: KotlinCollection<PolygonOptions>): Unit = addAll(opts, ::addPolygon)
 
         public open fun addAll(opts: KotlinCollection<PolygonOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addPolygon)

@@ -22,18 +22,14 @@ import com.google.common.truth.Truth
 
 fun assertThat(point: Point?): PointSubject = Truth.assertAbout(pointSubjectFactory()).that(point)
 
-fun pointSubjectFactory(): Subject.Factory<PointSubject, Point> =
-    Subject.Factory { metaData, target ->
-        PointSubject(
-            metaData,
-            target,
-        )
-    }
+fun pointSubjectFactory(): Subject.Factory<PointSubject, Point> = Subject.Factory { metaData, target ->
+    PointSubject(
+        metaData,
+        target,
+    )
+}
 
-class PointSubject(
-    metadata: FailureMetadata,
-    private val actual: Point?,
-) : Subject(metadata, actual) {
+class PointSubject(metadata: FailureMetadata, private val actual: Point?) : Subject(metadata, actual) {
     fun isNear(expected: LatLngAlt) {
         if (actual == null) {
             failWithActual(Fact.simpleFact("expected a non-null Point, but was null"))

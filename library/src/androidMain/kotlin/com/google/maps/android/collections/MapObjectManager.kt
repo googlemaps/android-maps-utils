@@ -95,8 +95,9 @@ public abstract class MapObjectManager<O : Any, C : MapObjectManager<O, C>.Colle
             mAllObjects[mapObject] = this@Collection as C
         }
 
-        protected open fun checkAndAdd(mapObject: O?, typeName: String): O =
-            checkNotNull(mapObject) { "Failed to add $typeName to GoogleMap" }.also { add(it) }
+        protected open fun checkAndAdd(mapObject: O?, typeName: String): O = checkNotNull(mapObject) {
+            "Failed to add $typeName to GoogleMap"
+        }.also { add(it) }
 
         public open fun showAll() {
             for (mapObject in mObjects) {
