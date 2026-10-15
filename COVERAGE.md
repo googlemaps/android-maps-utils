@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `4731758` (#1819), recorded 2026-10-14T15:25:13Z.
+Measured at `ea74c1b` (#1821), recorded 2026-10-15T16:28:15Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 603/1,886 | 31.97% | `██████░░░░░░░░░░░░░░` | 181/852 | 21.24% |
+| `clustering` | 603/1,886 | 31.97% | `██████░░░░░░░░░░░░░░` | 182/852 | 21.36% |
 | `data` | 1,953/2,968 | 65.80% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,024/1,173 | 87.30% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 3,955/6,488 | 60.96% | `████████████░░░░░░░░` | 1,688/3,917 | 43.09% |
+| **TOTAL** | 3,955/6,488 | 60.96% | `████████████░░░░░░░░` | 1,689/3,917 | 43.12% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-15 | `ea74c1b` | #1821 | 60.96% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 7 updates |
 | 2026-10-14 | `4731758` | #1819 | 60.96% | -0.77 | build: add Spotless with ktlint formatting checks |
 | 2026-10-12 | `5440784` | #1815 | 61.73% | 0.00 | ci: move coverage history off main and retry pushes |
 | 2026-10-09 | `466bfa5` | n/a | 61.73% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates |
