@@ -15,6 +15,7 @@ public class com/google/maps/android/clustering/ClusterManager : com/google/andr
 	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;)V
 	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/collections/MarkerManager;)V
 	public synthetic fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/collections/MarkerManager;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Landroid/content/Context;Lcom/google/android/gms/maps/GoogleMap;Lcom/google/maps/android/collections/MarkerManager;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/CoroutineContext;)V
 	public fun addItem (Lcom/google/maps/android/clustering/ClusterItem;)Z
 	public fun addItems (Ljava/util/Collection;)Z
 	public fun clearItems ()V
