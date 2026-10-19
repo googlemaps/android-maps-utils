@@ -26,6 +26,7 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter
 import com.google.maps.android.clustering.view.ClusterRenderer
 import com.google.maps.android.collections.MarkerManager
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -137,10 +138,37 @@ class ClusterManagerTest {
         val renderer = mockk<ClusterRenderer<TestItem>>(relaxed = true)
         manager.renderer = renderer
         scheduler.advanceUntilIdle()
+        clearMocks(renderer)
 
         manager.addItem(TestItem(10.0, 10.0))
         manager.cluster()
-        verify(exactly = 1) { renderer.onClustersChanged(any()) }
+        verify(exactly = 0) { renderer.onClustersChanged(any()) }
+
+        scheduler.advanceUntilIdle()
+        verify(exactly = 1) { renderer.onClustersChanged(match { it.size == 1 }) }
+    }
+
+    @Test
+    fun testConstructorWithInjectedContextsDefaultMarkerManager() {
+        val scheduler = TestCoroutineScheduler()
+        val mainDispatcher = StandardTestDispatcher(scheduler)
+        val backgroundDispatcher = StandardTestDispatcher(scheduler)
+        every { map.cameraPosition } returns CameraPosition(LatLng(0.0, 0.0), 10f, 0f, 0f)
+        val manager =
+            ClusterManager<TestItem>(
+                context,
+                map,
+                mainDispatcher,
+                backgroundDispatcher,
+            )
+        val renderer = mockk<ClusterRenderer<TestItem>>(relaxed = true)
+        manager.renderer = renderer
+        scheduler.advanceUntilIdle()
+        clearMocks(renderer)
+
+        manager.addItem(TestItem(10.0, 10.0))
+        manager.cluster()
+        verify(exactly = 0) { renderer.onClustersChanged(any()) }
 
         scheduler.advanceUntilIdle()
         verify(exactly = 1) { renderer.onClustersChanged(match { it.size == 1 }) }
