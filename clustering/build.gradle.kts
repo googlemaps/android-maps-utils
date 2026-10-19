@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.maps.testing.robolectric)
 }
 
 tasks.register("instrumentTest") {
