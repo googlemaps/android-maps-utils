@@ -33,7 +33,7 @@ compose-bom = "2026.09.00"
 # Versions for Google Play Services libraries essential for map functionality.
 play-services-maps = "20.0.0"
 play-services-location = "21.4.0"
-navigation-sdk = "7.9.0"
+navigation-sdk = "8.0.0"
 desugar-jdk-libs = "2.1.5"
 
 # --- Testing ---
