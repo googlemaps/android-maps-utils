@@ -33,6 +33,7 @@ import com.google.maps.android.collections.MarkerManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.locks.ReadWriteLock
@@ -48,7 +49,7 @@ import kotlin.jvm.JvmSuppressWildcards
  * - [com.google.android.gms.maps.GoogleMap.OnMarkerClickListener]
  *
  * @param context the context used to create the default renderer.
- * @param mMap the map the clusters are rendered on.
+ * @param map the map the clusters are rendered on.
  * @param markerManager the manager that owns the marker collections used by this ClusterManager.
  * @param mainContext the coroutine context used to deliver clusters to the renderer. It must
  * dispatch on the main thread.
@@ -58,7 +59,7 @@ import kotlin.jvm.JvmSuppressWildcards
 public open class ClusterManager<T : ClusterItem>
 public constructor(
     context: Context,
-    private val mMap: GoogleMap,
+    private val map: GoogleMap,
     public val markerManager: MarkerManager,
     mainContext: CoroutineContext,
     private val backgroundContext: CoroutineContext,
@@ -82,7 +83,7 @@ public constructor(
     private var mOnClusterItemInfoWindowLongClickListener: OnClusterItemInfoWindowLongClickListener<T>? = null
     private var mOnClusterClickListener: OnClusterClickListener<T>? = null
 
-    private val scope = CoroutineScope(mainContext)
+    private val scope = CoroutineScope(mainContext + SupervisorJob())
 
     /**
      * Creates a ClusterManager that renders on [Dispatchers.Main] and computes clusters on
@@ -100,8 +101,38 @@ public constructor(
         markerManager: MarkerManager = MarkerManager(map),
     ) : this(context, map, markerManager, Dispatchers.Main, Dispatchers.Default)
 
+    /**
+     * Creates a ClusterManager with a default [MarkerManager] and the given coroutine contexts.
+     *
+     * @param context the context used to create the default renderer.
+     * @param map the map the clusters are rendered on.
+     * @param mainContext the coroutine context used to deliver clusters to the renderer. It must
+     * dispatch on the main thread.
+     * @param backgroundContext the coroutine context used to compute clusters off the main thread.
+     */
+    public constructor(
+        context: Context,
+        map: GoogleMap,
+        mainContext: CoroutineContext,
+        backgroundContext: CoroutineContext,
+    ) : this(context, map, MarkerManager(map), mainContext, backgroundContext)
+
+    /**
+     * Creates a ClusterManager with a default [MarkerManager] that renders on [Dispatchers.Main]
+     * and computes clusters on the given context.
+     *
+     * @param context the context used to create the default renderer.
+     * @param map the map the clusters are rendered on.
+     * @param backgroundContext the coroutine context used to compute clusters off the main thread.
+     */
+    public constructor(
+        context: Context,
+        map: GoogleMap,
+        backgroundContext: CoroutineContext,
+    ) : this(context, map, MarkerManager(map), Dispatchers.Main, backgroundContext)
+
     init {
-        mRenderer = DefaultClusterRenderer(context, mMap, this)
+        mRenderer = DefaultClusterRenderer(context, map, this)
         mAlgorithm =
             ScreenBasedAlgorithmAdapter(
                 PreCachingAlgorithmDecorator(
@@ -157,7 +188,7 @@ public constructor(
         }
 
         if (mAlgorithm.shouldReclusterOnMapMovement()) {
-            mAlgorithm.onCameraChange(mMap.cameraPosition)
+            mAlgorithm.onCameraChange(map.cameraPosition)
         }
 
         cluster()
@@ -304,7 +335,7 @@ public constructor(
             mClusterTask?.cancel()
             mClusterTask =
                 scope.launch {
-                    val param = mMap.cameraPosition.zoom
+                    val param = map.cameraPosition.zoom
                     val clusters =
                         withContext(backgroundContext) {
                             val algorithm = this@ClusterManager.algorithm
@@ -330,15 +361,15 @@ public constructor(
             (mRenderer as OnCameraIdleListener).onCameraIdle()
         }
 
-        mAlgorithm.onCameraChange(mMap.cameraPosition)
+        mAlgorithm.onCameraChange(map.cameraPosition)
 
         // delegate clustering to the algorithm
         if (mAlgorithm.shouldReclusterOnMapMovement()) {
             cluster()
 
             // Don't re-compute clusters if the map has just been panned/tilted/rotated.
-        } else if (mPreviousCameraPosition == null || mPreviousCameraPosition!!.zoom != mMap.cameraPosition.zoom) {
-            mPreviousCameraPosition = mMap.cameraPosition
+        } else if (mPreviousCameraPosition == null || mPreviousCameraPosition!!.zoom != map.cameraPosition.zoom) {
+            mPreviousCameraPosition = map.cameraPosition
             cluster()
         }
     }
