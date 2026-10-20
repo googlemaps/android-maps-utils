@@ -31,7 +31,7 @@ compose-bom = "2026.09.00"
 
 # --- Google Services (Maps) ---
 # Versions for Google Play Services libraries essential for map functionality.
-play-services-maps = "20.0.0"
+play-services-maps = "20.1.0"
 play-services-location = "21.4.0"
 navigation-sdk = "7.9.0"
 desugar-jdk-libs = "2.1.5"
@@ -63,7 +63,7 @@ gradle = "9.4.1"
 gradleMavenPublishPlugin = "0.37.0"
 secrets-gradle-plugin = "2.0.1"
 serialization = "1.0.2.1"
-spotless = "8.10.3"
+spotless = "8.10.4"
 
 
 [libraries]
