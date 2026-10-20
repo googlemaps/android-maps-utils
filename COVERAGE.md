@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `ea74c1b` (#1821), recorded 2026-10-15T16:28:15Z.
+Measured at `0f8eb16` (#1820), recorded 2026-10-20T15:23:16Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-20 | `0f8eb16` | #1820 | 60.96% | 0.00 | build(deps): bump actions/upload-artifact |
 | 2026-10-15 | `ea74c1b` | #1821 | 60.96% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 7 updates |
 | 2026-10-14 | `4731758` | #1819 | 60.96% | -0.77 | build: add Spotless with ktlint formatting checks |
 | 2026-10-12 | `5440784` | #1815 | 61.73% | 0.00 | ci: move coverage history off main and retry pushes |

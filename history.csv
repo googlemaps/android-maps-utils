@@ -155,3 +155,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-10-15T16:28:15Z,ea74c1b,1821,build(deps): bump the gradle-minor-and-patch group with 7 updates,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
 2026-10-15T16:28:15Z,ea74c1b,1821,build(deps): bump the gradle-minor-and-patch group with 7 updates,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
 2026-10-15T16:28:15Z,ea74c1b,1821,build(deps): bump the gradle-minor-and-patch group with 7 updates,unit,TOTAL,3955,6488,60.96,1689,3917,43.12,24659,40756,60.5
+2026-10-20T15:23:16Z,0f8eb16,1820,build(deps): bump actions/upload-artifact,unit,clustering,603,1886,31.97,182,852,21.36,3429,10289,33.33
+2026-10-20T15:23:16Z,0f8eb16,1820,build(deps): bump actions/upload-artifact,unit,data,1953,2968,65.8,1014,2461,41.2,12820,20976,61.12
+2026-10-20T15:23:16Z,0f8eb16,1820,build(deps): bump actions/upload-artifact,unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-10-20T15:23:16Z,0f8eb16,1820,build(deps): bump actions/upload-artifact,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
+2026-10-20T15:23:16Z,0f8eb16,1820,build(deps): bump actions/upload-artifact,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-10-20T15:23:16Z,0f8eb16,1820,build(deps): bump actions/upload-artifact,unit,TOTAL,3955,6488,60.96,1689,3917,43.12,24659,40756,60.5
