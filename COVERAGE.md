@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `729bcb9` (#1829), recorded 2026-10-21T14:15:15Z.
+Measured at `65c222c` (#1799), recorded 2026-10-21T17:28:45Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 613/1,891 | 32.42% | `██████░░░░░░░░░░░░░░` | 181/852 | 21.24% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
 | `data` | 1,953/2,968 | 65.80% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,024/1,173 | 87.30% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 3,965/6,493 | 61.07% | `████████████░░░░░░░░` | 1,688/3,917 | 43.09% |
+| **TOTAL** | 4,539/7,199 | 63.05% | `█████████████░░░░░░░` | 1,950/4,313 | 45.21% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-21 | `65c222c` | #1799 | 63.05% | +1.98 | feat(clustering): add SuperClusterAlgorithm for mega-scale marker clustering and configurable badge formatting |
 | 2026-10-21 | `729bcb9` | #1829 | 61.07% | 0.00 | feat!: raise minSdk to 24 and update Maps SDK to 20.1.0 |
 | 2026-10-21 | `8887252` | #1827 | 61.07% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-10-20 | `f1f71f2` | #1822 | 61.07% | +0.11 | feat(clustering): allow injecting coroutine contexts into ClusterManager |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-18 | `9056fd9` | #1785 | 50.55% | +0.02 | feat: add polygon z-index support |
 | 2026-09-16 | `3884f22` | #1783 | 50.53% | 0.00 | build(deps): bump androidx.compose:compose-bom |
 | 2026-09-15 | `6015319` | #1778 | 50.53% | 0.00 | ci: record unit test coverage history |
-| 2026-09-15 | `51e9e43` | #1772 | 50.53% | n/a | chore(ci): harden Gemini issue triage against prompt injection |
