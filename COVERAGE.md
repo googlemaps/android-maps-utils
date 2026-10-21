@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `f1f71f2` (#1822), recorded 2026-10-20T17:22:04Z.
+Measured at `8887252` (#1827), recorded 2026-10-21T05:00:33Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 613/1,891 | 32.42% | `██████░░░░░░░░░░░░░░` | 181/852 | 21.24% |
+| `clustering` | 613/1,891 | 32.42% | `██████░░░░░░░░░░░░░░` | 182/852 | 21.36% |
 | `data` | 1,953/2,968 | 65.80% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,024/1,173 | 87.30% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 3,965/6,493 | 61.07% | `████████████░░░░░░░░` | 1,688/3,917 | 43.09% |
+| **TOTAL** | 3,965/6,493 | 61.07% | `████████████░░░░░░░░` | 1,689/3,917 | 43.12% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-21 | `8887252` | #1827 | 61.07% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-10-20 | `f1f71f2` | #1822 | 61.07% | +0.11 | feat(clustering): allow injecting coroutine contexts into ClusterManager |
 | 2026-10-20 | `0f8eb16` | #1820 | 60.96% | 0.00 | build(deps): bump actions/upload-artifact |
 | 2026-10-15 | `ea74c1b` | #1821 | 60.96% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 7 updates |
