@@ -25,7 +25,7 @@ android {
     }
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = 23
+        minSdk = libs.versions.minimumSdk.get().toInt()
         testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
         consumerProguardFiles("consumer-rules.pro")
     }

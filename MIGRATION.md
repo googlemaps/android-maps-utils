@@ -119,3 +119,17 @@ In `v6.0.0`, the `com.google.maps.android.data.renderer.model.Style` hierarchy w
 - **`PointStyle`**, **`LineStyle`**, and **`PolygonStyle`**: Added default-valued constructor properties (`title`, `snippet`, `draggable`, `flat`, `visible`, `infoWindowAnchorU`, and `infoWindowAnchorV` on `PointStyle`; `clickable` and `visible` on `LineStyle` and `PolygonStyle`). Source calls with named or positional arguments continue to compile unchanged, though recompilation is required against the updated data class `copy()` and constructor signatures.
 - **`CompositeStyle`**: Added `CompositeStyle(pointStyle, lineStyle, polygonStyle)` as a new subtype of the `sealed interface Style` to support heterogeneous `MultiGeometry` features. Exhaustive `when (style)` expressions over `Style` in consumer code should add a `is CompositeStyle ->` branch (or an `else ->` branch).
 
+
+---
+
+## 5. Minimum SDK Raised to API 24
+
+Starting with `v7.0.0`, every module requires **Android API level 24** (Android 7.0) or higher. Maps SDK for Android `20.1.0`, which the library exposes as an `api` dependency, declares `minSdk 24`, so apps can no longer target API 23 while depending on this library.
+
+If your app still declares `minSdk = 23`, the manifest merger fails with:
+
+```
+uses-sdk:minSdkVersion 23 cannot be smaller than version 24 declared in library [com.google.android.gms:play-services-maps:20.1.0]
+```
+
+Raise your app's `minSdk` to `24`. Overriding the check with `tools:overrideLibrary` is not supported and may crash on API 23 devices.

@@ -39,7 +39,7 @@ upgrading from 4.x, see the [migration guide](MIGRATION.md).
 
 ## Requirements
 
-* Android API level 23+
+* Android API level 24+
 * [Sign up with Google Maps Platform]
 * A Google Maps Platform [project] with the **Maps SDK for Android** enabled
 - An [API key] associated with the project above ... follow the [API key instructions] if you're new to the process
