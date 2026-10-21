@@ -23,6 +23,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -164,7 +165,7 @@ class BuildingMegaClusterDemoActivity : BaseDemoActivity() {
             }
         }
 
-        findViewById<android.view.View>(R.id.fab_settings)?.setOnClickListener {
+        findViewById<View>(R.id.fab_settings)?.setOnClickListener {
             showClusterSettingsDialog()
         }
 
@@ -186,6 +187,7 @@ class BuildingMegaClusterDemoActivity : BaseDemoActivity() {
         } catch (_: Exception) {}
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     private fun setupClusterManager(map: GoogleMap, store: BinarySpatialPyramidStore) {
         clusterManager = ClusterManager(this, map)
         renderer = BuildingClusterRenderer(this, map, clusterManager)
@@ -276,8 +278,8 @@ class BuildingMegaClusterDemoActivity : BaseDemoActivity() {
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_cluster_settings, null)
 
         // Hide dataset selection and radius sections since this demo is dedicated to the 2.72M spatial pyramid
-        view.findViewById<android.view.View>(R.id.section_dataset)?.visibility = android.view.View.GONE
-        view.findViewById<android.view.View>(R.id.section_radius)?.visibility = android.view.View.GONE
+        view.findViewById<View>(R.id.section_dataset)?.visibility = View.GONE
+        view.findViewById<View>(R.id.section_radius)?.visibility = View.GONE
 
         val textMinSizeTitle = view.findViewById<TextView>(R.id.text_minsize_title)
         val sliderMinSize = view.findViewById<Slider>(R.id.slider_minsize)

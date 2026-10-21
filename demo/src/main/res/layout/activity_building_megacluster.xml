@@ -56,7 +56,7 @@
                 android:id="@+id/text_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2,719,379 Buildings"
+                android:text="@string/building_megacluster_title"
                 android:textColor="#1F1F1F"
                 android:textStyle="bold"
                 android:textSize="15sp" />
@@ -65,7 +65,7 @@
                 android:id="@+id/text_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Area Callback • Candy House Markers"
+                android:text="@string/building_megacluster_subtitle"
                 android:textColor="#5F6368"
                 android:textSize="12sp" />
 
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Zoom: -- | On Screen: --"
+                android:text="@string/building_megacluster_stats_placeholder"
                 android:textColor="#1A73E8"
                 android:textStyle="bold"
                 android:textSize="12sp" />
@@ -98,7 +98,7 @@
                     android:paddingEnd="12dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="Map"
+                    android:text="@string/map_type_normal"
                     android:textSize="11sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -110,7 +110,7 @@
                     android:paddingEnd="12dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="Satellite"
+                    android:text="@string/map_type_satellite"
                     android:textSize="11sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -122,7 +122,7 @@
                     android:paddingEnd="12dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="Hybrid"
+                    android:text="@string/map_type_hybrid"
                     android:textSize="11sp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
@@ -135,7 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="24dp"
-        android:contentDescription="Clustering Settings"
+        android:contentDescription="@string/clustering_settings_description"
         app:srcCompat="@drawable/ic_tune_24"
         app:elevation="6dp"
         app:tint="#1A73E8"
