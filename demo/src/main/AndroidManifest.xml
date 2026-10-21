@@ -99,6 +99,9 @@
             android:name=".SuperCluster100kDemoActivity"
             android:exported="true" />
         <activity
+            android:name=".BuildingMegaClusterDemoActivity"
+            android:exported="true" />
+        <activity
             android:name=".CustomMarkerClusteringDemoActivity"
             android:exported="true" />
         <activity

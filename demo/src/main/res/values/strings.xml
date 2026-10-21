@@ -54,6 +54,7 @@
     <string name="demo_title_clustering_2k">Clustering: 2K markers</string>
     <string name="demo_title_clustering_20k">Clustering: 20K only visible markers</string>
     <string name="demo_title_clustering_supercluster_100k">Clustering: 100K / 1M markers (Supercluster)</string>
+    <string name="demo_title_clustering_building_megacluster">Clustering: 2.72M Buildings (Area Callback)</string>
     <string name="dataset_100k_label">100K (SF)</string>
     <string name="dataset_1m_label">1M (USA)</string>
     <string name="clustering_settings_dataset_title">Dataset Size</string>
