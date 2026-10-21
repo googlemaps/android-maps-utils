@@ -173,3 +173,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-10-21T05:00:33Z,8887252,1827,build(deps): bump com.google.android.libraries.navigation:navigation,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
 2026-10-21T05:00:33Z,8887252,1827,build(deps): bump com.google.android.libraries.navigation:navigation,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
 2026-10-21T05:00:33Z,8887252,1827,build(deps): bump com.google.android.libraries.navigation:navigation,unit,TOTAL,3965,6493,61.07,1689,3917,43.12,24725,40795,60.61
+2026-10-21T14:15:15Z,729bcb9,1829,feat!: raise minSdk to 24 and update Maps SDK to 20.1.0,unit,clustering,613,1891,32.42,181,852,21.24,3495,10328,33.84
+2026-10-21T14:15:15Z,729bcb9,1829,feat!: raise minSdk to 24 and update Maps SDK to 20.1.0,unit,data,1953,2968,65.8,1014,2461,41.2,12820,20976,61.12
+2026-10-21T14:15:15Z,729bcb9,1829,feat!: raise minSdk to 24 and update Maps SDK to 20.1.0,unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-10-21T14:15:15Z,729bcb9,1829,feat!: raise minSdk to 24 and update Maps SDK to 20.1.0,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
+2026-10-21T14:15:15Z,729bcb9,1829,feat!: raise minSdk to 24 and update Maps SDK to 20.1.0,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-10-21T14:15:15Z,729bcb9,1829,feat!: raise minSdk to 24 and update Maps SDK to 20.1.0,unit,TOTAL,3965,6493,61.07,1688,3917,43.09,24725,40795,60.61
