@@ -137,6 +137,7 @@ internal fun demoGroups(): List<DemoGroup> = listOf(
             Demo(R.string.demo_title_tile_provider, TileProviderAndProjectionDemo::class.java),
             Demo(R.string.demo_title_animation_util, AnimationUtilDemoActivity::class.java),
             Demo(R.string.demo_title_reactive_extensions, KtxExtensionsDemoActivity::class.java),
+            Demo(R.string.demo_title_units, UnitsDemoActivity::class.java),
         ),
     ),
     DemoGroup(

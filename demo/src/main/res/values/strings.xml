@@ -77,6 +77,15 @@
     <string name="demo_title_tile_provider">Generating tiles</string>
     <string name="demo_title_animation_util">AnimationUtil sample</string>
     <string name="demo_title_reactive_extensions">Reactive Extensions &amp; Builders</string>
+    <string name="demo_title_units">Units &amp; Distance Formatting</string>
+
+    <!-- Units Demo -->
+    <string name="units_demo_title">Distance &amp; Elevation Units</string>
+    <string name="units_demo_active_system">Active system: %1$s (Device locale: %2$s)</string>
+    <string name="units_pref_default">Device Default</string>
+    <string name="units_pref_metric">Metric</string>
+    <string name="units_pref_imperial">Imperial</string>
+    <string name="units_demo_logical_formatting_header">Logical Precision Examples</string>
 
     <!-- Demo Titles: Street View -->
     <string name="demo_title_street_view">Street View Demo</string>
@@ -101,9 +110,6 @@
     <!-- Distance Demo -->
     <string name="drag_the_markers">Drag the markers!</string>
     <string name="distance_format">The markers are %s apart.</string>
-    <string name="unit_mm">mm</string>
-    <string name="unit_m">m</string>
-    <string name="unit_km">km</string>
 
     <!-- Clustering Diff Demo -->
     <string name="cluster_info_fmt">%1$d (including %2$s)</string>
