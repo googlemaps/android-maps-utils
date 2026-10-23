@@ -155,6 +155,9 @@
         <activity
             android:name=".KtxExtensionsDemoActivity"
             android:exported="true" />
+        <activity
+            android:name=".UnitsDemoActivity"
+            android:exported="true" />
 
     </application>
 

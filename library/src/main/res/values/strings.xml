@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2026 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<resources>
+    <!--
+    Distance or elevation in feet, formatted to 0 decimal places.
+    For example, 1234.56 feet will be formatted as "1,235 ft".
+    -->
+    <string name="amu_in_feet" translatable="false">%1$,.0f ft</string>
+
+    <!--
+    Distance in miles under 10 miles, formatted to 1 decimal place (at least 2 significant digits
+    for 1.0–9.9 mi, keeping trailing .0).
+    For example, 2.0 miles will be formatted as "2.0 mi" and 1.24 miles as "1.2 mi".
+    -->
+    <string name="amu_in_miles" translatable="false">%1$,.1f mi</string>
+
+    <!--
+    Distance in miles for 10 miles or greater, formatted to 0 decimal places.
+    For example, 12.4 miles will be formatted as "12 mi".
+    -->
+    <string name="amu_in_miles_whole" translatable="false">%1$,.0f mi</string>
+
+    <!--
+    Distance or elevation in meters, formatted to 0 decimal places.
+    For example, 1234.56 meters will be formatted as "1,235 m".
+    -->
+    <string name="amu_in_meters" translatable="false">%1$,.0f m</string>
+
+    <!--
+    Distance in kilometers under 10 kilometers, formatted to 1 decimal place (at least 2
+    significant digits for 1.0–9.9 km, keeping trailing .0).
+    For example, 2.0 kilometers will be formatted as "2.0 km" and 1.94 kilometers as "1.9 km".
+    -->
+    <string name="amu_in_kilometers" translatable="false">%1$,.1f km</string>
+
+    <!--
+    Distance in kilometers for 10 kilometers or greater, formatted to 0 decimal places.
+    For example, 12.4 kilometers will be formatted as "12 km".
+    -->
+    <string name="amu_in_kilometers_whole" translatable="false">%1$,.0f km</string>
+</resources>

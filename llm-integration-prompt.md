@@ -46,6 +46,12 @@ Used for server-client coordinate compression and distance calculations.
 * **Decoding:** `PolyUtil.decode(encodedPathString)`
 * **Distance:** `SphericalUtil.computeDistanceBetween(latLng1, latLng2)`
 
+### Units & Distance/Elevation Formatting
+Used to convert and format distances and elevations in Metric (`m`, `km`) or Imperial (`ft`, `mi`) units based on the device's `Locale` or an explicit `UnitSystem`.
+* **Construct `Meters`:** `450.meters`, `2.0.km`, `0.25.miles`, `14440.feet`
+* **Resolve converter:** `val converter = getUnitsConverter()` (defaults to `Locale.getDefault()`), `getUnitsConverter(UnitSystem.IMPERIAL)`, or `getUnitsConverter("US")`
+* **Format strings:** `distance.toDistanceString(converter)` and `elevation.toElevationString(converter)`
+
 ## 3. Best Practices
 1. **Performance:** For massive datasets (e.g., parsing huge GeoJSON files), do not block the main thread. Parse on a background dispatcher and only call `layer.addLayerToMap()` on the UI thread.
 2. **Custom Renderers:** If the user wants custom cluster icons, extend `DefaultClusterRenderer` and override `onBeforeClusterItemRendered` and `onBeforeClusterRendered`.

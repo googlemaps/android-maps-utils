@@ -29,6 +29,7 @@ upgrading from 4.x, see the [migration guide](MIGRATION.md).
   interoperability with Maps API web services
 - **Spherical geometry** — for example: computeDistance, computeHeading,
   computeArea
+- **Units & logical distance/elevation formatting** — type-safe `Meters` value class, framework-agnostic `UnitSystem` / `UnitsConverter` selection (`MetricUnitsConverter` and `ImperialUnitsConverter`) defaulting to the device's locale, and order-of-magnitude distance formatting
 - **Street View metadata** — checks if a Street View panorama exists at a given location
 - **Reactive Kotlin Extensions & Builders** — coroutine suspensions (`awaitMap()`), reactive `Flow` observers (`mapClickEvents()`), and option builder DSLs (`addMarker { ... }`) consolidated directly into `com.google.maps.android.*`.
 
@@ -165,6 +166,69 @@ Full guides for using the utilities are published in
 
 - Polyline encoding and decoding [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/PolyUtil.kt), [encoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolySimplifyDemoActivity.java), [decoding sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/PolyDecodeDemoActivity.java)
 - Spherical geometry [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/SphericalUtil.kt), [compute distance sample](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/DistanceDemoActivity.java)
+- Units & distance/elevation formatting [source](https://github.com/googlemaps/android-maps-utils/blob/main/library/src/main/java/com/google/maps/android/Units.kt), [sample code](https://github.com/googlemaps/android-maps-utils/blob/main/demo/src/main/java/com/google/maps/android/utils/demo/UnitsDemoActivity.kt)
+
+</details>
+
+<details>
+  <summary>Units & Logical Distance/Elevation Formatting</summary>
+
+### Units & Logical Distance/Elevation Formatting
+
+The `Units` API (`com.google.maps.android`) provides a type-safe `Meters` value class, framework-agnostic `UnitSystem` resolution (defaulting to Imperial for `US`, `LR`, `MM`, and `GB` locales, and Metric elsewhere), and logical significant-digit formatting for distances and elevations:
+
+- **Small distances** (`< 1 km` metric or `< 0.25 mi` imperial) and **all elevations** format as whole integers (`450 m`, `528 ft`, `14,440 ft`).
+- **Medium distances** (`1.0` to `< 10` km, or `0.25` to `< 10` mi) format with 1 decimal digit, keeping trailing `.0` (`0.3 mi`, `1.0 km`, `2.5 mi`).
+- **Large distances** (`>= 10` km or `>= 10` mi) round to whole numbers (`10 km`, `12 mi`).
+
+```kotlin
+import com.google.maps.android.ImperialUnitsConverter
+import com.google.maps.android.MetricUnitsConverter
+import com.google.maps.android.UnitSystem
+import com.google.maps.android.getUnitsConverter
+import com.google.maps.android.km
+import com.google.maps.android.meters
+import com.google.maps.android.miles
+import com.google.maps.android.toDistanceString
+import com.google.maps.android.toElevationString
+
+// Default converter for the device's current Locale (no Android Context required)
+val converter = getUnitsConverter()
+
+// Or explicitly choose a unit system / country code / Locale
+val imperial = getUnitsConverter(UnitSystem.IMPERIAL)
+val metric = getUnitsConverter("FR")
+
+// Format distances and elevations
+val shortWalk = 450.meters.toDistanceString(metric)       // "450 m"
+val quarterMile = 0.25.miles.toDistanceString(imperial)   // "0.3 mi"
+val mediumDrive = 2.0.km.toDistanceString(metric)         // "2.0 km"
+val longTrip = 12.4.km.toDistanceString(metric)           // "12 km"
+val summit = 4401.2.meters.toElevationString(imperial)    // "14,440 ft"
+```
+
+In Java, `Units` exposes static conversion and formatting methods (usable with `import static com.google.maps.android.Units.*;`):
+
+```java
+import static com.google.maps.android.Units.feet;
+import static com.google.maps.android.Units.getUnitsConverter;
+import static com.google.maps.android.Units.km;
+import static com.google.maps.android.Units.meters;
+import static com.google.maps.android.Units.miles;
+import static com.google.maps.android.Units.toDistanceString;
+import static com.google.maps.android.Units.toElevationString;
+import static com.google.maps.android.Units.toFeet;
+
+import com.google.maps.android.UnitSystem;
+import com.google.maps.android.UnitsConverter;
+
+double twelveFeetInMeters = feet(12);                     // 3.6576 m
+double elevationInFeet = toFeet(meters(4401.2));          // 14439.63 ft
+
+UnitsConverter imperial = getUnitsConverter(UnitSystem.IMPERIAL);
+String distance = imperial.toDistanceString(miles(2.5));  // "2.5 mi"
+String summit = toElevationString(meters(4401.2));        // "14,440 ft" (in US locale)
+```
 
 </details>
 

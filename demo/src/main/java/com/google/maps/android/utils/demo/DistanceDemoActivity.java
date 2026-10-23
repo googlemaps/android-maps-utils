@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
+import com.google.maps.android.Units;
+import com.google.maps.android.UnitsConverter;
 import java.util.Arrays;
 
 public class DistanceDemoActivity extends BaseDemoActivity
@@ -35,6 +37,7 @@ public class DistanceDemoActivity extends BaseDemoActivity
   private Marker mMarkerA;
   private Marker mMarkerB;
   private Polyline mPolyline;
+  private UnitsConverter mUnitsConverter;
 
   @Override
   protected int getLayoutId() {
@@ -44,6 +47,7 @@ public class DistanceDemoActivity extends BaseDemoActivity
   @Override
   protected void startDemo(boolean isRestore) {
     mTextView = findViewById(R.id.textView);
+    mUnitsConverter = Units.getUnitsConverter();
 
     if (!isRestore) {
       getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.8256, 151.2395), 10));
@@ -62,28 +66,19 @@ public class DistanceDemoActivity extends BaseDemoActivity
     showDistance();
   }
 
+  // [START maps_android_utils_units_java]
   @SuppressLint("SetTextI18n")
   private void showDistance() {
-    double distance =
+    double distanceMeters =
         SphericalUtil.computeDistanceBetween(mMarkerA.getPosition(), mMarkerB.getPosition());
-    mTextView.setText(getString(R.string.distance_format, formatNumber(distance)));
+    String formattedDistance = mUnitsConverter.toDistanceString(distanceMeters);
+    mTextView.setText(getString(R.string.distance_format, formattedDistance));
   }
+
+  // [END maps_android_utils_units_java]
 
   private void updatePolyline() {
     mPolyline.setPoints(Arrays.asList(mMarkerA.getPosition(), mMarkerB.getPosition()));
-  }
-
-  private String formatNumber(double distance) {
-    String unit = getString(R.string.unit_m);
-    if (distance < 1) {
-      distance *= 1000;
-      unit = getString(R.string.unit_mm);
-    } else if (distance > 1000) {
-      distance /= 1000;
-      unit = getString(R.string.unit_km);
-    }
-
-    return String.format("%4.3f%s", distance, unit);
   }
 
   @Override
