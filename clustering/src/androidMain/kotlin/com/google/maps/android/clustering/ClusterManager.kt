@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.algo.Algorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator
+import com.google.maps.android.clustering.algo.ProgressAwareAlgorithm
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithm
 import com.google.maps.android.clustering.algo.ScreenBasedAlgorithmAdapter
 import com.google.maps.android.clustering.view.ClusterRenderer
@@ -187,12 +188,32 @@ public constructor(
             algorithm.unlock()
         }
 
+        val algo = mAlgorithm
+        if (algo is ProgressAwareAlgorithm<*>) {
+            algo.onProgressListener = mOnClusteringProgressListener
+        }
+
         if (mAlgorithm.shouldReclusterOnMapMovement()) {
             mAlgorithm.onCameraChange(map.cameraPosition)
         }
 
         cluster()
     }
+
+    private var mOnClusteringProgressListener: OnClusteringProgressListener? = null
+
+    /**
+     * Optional progress listener invoked during intensive spatial indexing passes (e.g. [ProgressAwareAlgorithm]).
+     */
+    public open var onClusteringProgressListener: OnClusteringProgressListener?
+        get() = mOnClusteringProgressListener
+        set(value) {
+            mOnClusteringProgressListener = value
+            val algo = mAlgorithm
+            if (algo is ProgressAwareAlgorithm<*>) {
+                algo.onProgressListener = value
+            }
+        }
 
     public open fun setAnimation(animate: Boolean) {
         mRenderer.setAnimation(animate)
@@ -490,5 +511,15 @@ public constructor(
      */
     public fun interface OnClusterItemInfoWindowLongClickListener<T : ClusterItem> {
         public fun onClusterItemInfoWindowLongClick(item: T)
+    }
+
+    /**
+     * Called during intensive spatial indexing or clustering passes to report progress.
+     */
+    public fun interface OnClusteringProgressListener {
+        /**
+         * @param progress Progress ratio between 0.0f and 1.0f.
+         */
+        public fun onClusteringProgress(progress: Float)
     }
 }

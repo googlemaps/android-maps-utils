@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.1.0](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0...v6.1.0) (2026-10-21)
+
+
+### Features
+
+* **clustering:** allow injecting coroutine contexts into ClusterManager ([#1822](https://github.com/googlemaps/android-maps-utils/issues/1822)) ([f1f71f2](https://github.com/googlemaps/android-maps-utils/commit/f1f71f2de9947d134cea686fee62fa188ffc294d))
+
+
+### Bug Fixes
+
+* **data:** apply StyleMap styles and fix four KML and GeoJSON style bugs ([#1809](https://github.com/googlemaps/android-maps-utils/issues/1809)) ([ab87997](https://github.com/googlemaps/android-maps-utils/commit/ab87997a96f6cef567b568919aa5c283bd1ae7f0))
+
 ## [6.0.0](https://github.com/googlemaps/android-maps-utils/compare/v5.2.0...v6.0.0) (2026-09-30)
 
 

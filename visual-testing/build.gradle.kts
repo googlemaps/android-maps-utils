@@ -33,7 +33,7 @@ android {
             .toInt()
 
     defaultConfig {
-        minSdk = 23
+        minSdk = libs.versions.minimumSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
