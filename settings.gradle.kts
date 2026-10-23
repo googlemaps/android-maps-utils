@@ -29,4 +29,4 @@ pluginManagement {
     }
 }
 
-include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library", "visual-testing", "maps-utils")
+include("demo", "clustering", "maps-model", "heatmaps", "ui", "data", "lint-checks", "library", "visual-testing", "maps-utils")
