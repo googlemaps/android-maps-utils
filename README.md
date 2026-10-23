@@ -206,6 +206,29 @@ val longTrip = 12.4.km.toDistanceString(metric)           // "12 km"
 val summit = 4401.2.meters.toElevationString(imperial)    // "14,440 ft"
 ```
 
+In Java, `Units` exposes static conversion and formatting methods (usable with `import static com.google.maps.android.Units.*;`):
+
+```java
+import static com.google.maps.android.Units.feet;
+import static com.google.maps.android.Units.getUnitsConverter;
+import static com.google.maps.android.Units.km;
+import static com.google.maps.android.Units.meters;
+import static com.google.maps.android.Units.miles;
+import static com.google.maps.android.Units.toDistanceString;
+import static com.google.maps.android.Units.toElevationString;
+import static com.google.maps.android.Units.toFeet;
+
+import com.google.maps.android.UnitSystem;
+import com.google.maps.android.UnitsConverter;
+
+double twelveFeetInMeters = feet(12);                     // 3.6576 m
+double elevationInFeet = toFeet(meters(4401.2));          // 14439.63 ft
+
+UnitsConverter imperial = getUnitsConverter(UnitSystem.IMPERIAL);
+String distance = imperial.toDistanceString(miles(2.5));  // "2.5 mi"
+String summit = toElevationString(meters(4401.2));        // "14,440 ft" (in US locale)
+```
+
 </details>
 
 <details>

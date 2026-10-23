@@ -100,50 +100,62 @@ public value class Meters(public val value: Double) : Comparable<Meters> {
 }
 
 /** Creates a [Meters] measurement from a [Number] of meters. */
+@get:JvmName("meters")
 public inline val Number.meters: Meters
     get() = Meters(value = this.toDouble())
 
 /** Shorthand to create a [Meters] measurement from a [Number] of meters. */
+@get:JvmName("m")
 public inline val Number.m: Meters
     get() = Meters(value = this.toDouble())
 
 /** Creates a [Meters] measurement from a [Number] of kilometers. */
+@get:JvmName("kilometers")
 public inline val Number.kilometers: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_KILOMETER)
 
 /** Shorthand to create a [Meters] measurement from a [Number] of kilometers. */
+@get:JvmName("km")
 public inline val Number.km: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_KILOMETER)
 
 /** Creates a [Meters] measurement from a [Number] of international feet. */
+@get:JvmName("feet")
 public inline val Number.feet: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_FOOT)
 
 /** Shorthand to create a [Meters] measurement from a [Number] of international feet. */
+@get:JvmName("ft")
 public inline val Number.ft: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_FOOT)
 
 /** Creates a [Meters] measurement from a [Number] of statute miles. */
+@get:JvmName("miles")
 public inline val Number.miles: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_MILE)
 
 /** Shorthand to create a [Meters] measurement from a [Number] of statute miles. */
+@get:JvmName("mi")
 public inline val Number.mi: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_MILE)
 
 /** Returns the value of this [Meters] measurement in meters as a [Double]. */
+@get:JvmName("toMeters")
 public inline val Meters.toMeters: Double
     get() = value
 
 /** Returns the equivalent number of kilometers for this [Meters] measurement. */
+@get:JvmName("toKilometers")
 public inline val Meters.toKilometers: Double
     get() = value / METERS_PER_KILOMETER
 
 /** Returns the equivalent number of international feet for this [Meters] measurement. */
+@get:JvmName("toFeet")
 public inline val Meters.toFeet: Double
     get() = value * FEET_PER_METER
 
 /** Returns the equivalent number of statute miles for this [Meters] measurement. */
+@get:JvmName("toMiles")
 public inline val Meters.toMiles: Double
     get() = value * MILES_PER_METER
 // [END maps_android_utils_units_meters]
@@ -613,6 +625,8 @@ public fun formatDistanceValue(value: Double, locale: Locale = Locale.getDefault
  * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter] for [locale]).
  * @return The formatted distance string.
  */
+@JvmName("toDistanceString")
+@JvmOverloads
 public fun Meters.toDistanceString(
     locale: Locale = Locale.getDefault(),
     converter: UnitsConverter = getUnitsConverter(locale),
@@ -626,6 +640,8 @@ public fun Meters.toDistanceString(
  * @param symbols The [NumberFormatSymbols] used for grouping and decimal separators.
  * @return The formatted distance string.
  */
+@JvmName("toDistanceString")
+@JvmOverloads
 public fun Meters.toDistanceString(
     converter: UnitsConverter,
     symbols: NumberFormatSymbols = NumberFormatSymbols.fromLocale(),
@@ -638,6 +654,8 @@ public fun Meters.toDistanceString(
  * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter]).
  * @return The formatted distance string.
  */
+@JvmName("toDistanceString")
+@JvmOverloads
 public fun Meters.toDistanceString(resources: Resources, converter: UnitsConverter = getUnitsConverter()): String =
     converter.toDistanceString(resources, this)
 
@@ -648,6 +666,8 @@ public fun Meters.toDistanceString(resources: Resources, converter: UnitsConvert
  * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter] for [locale]).
  * @return The formatted elevation string.
  */
+@JvmName("toElevationString")
+@JvmOverloads
 public fun Meters.toElevationString(
     locale: Locale = Locale.getDefault(),
     converter: UnitsConverter = getUnitsConverter(locale),
@@ -661,6 +681,8 @@ public fun Meters.toElevationString(
  * @param symbols The [NumberFormatSymbols] used for grouping and decimal separators.
  * @return The formatted elevation string.
  */
+@JvmName("toElevationString")
+@JvmOverloads
 public fun Meters.toElevationString(
     converter: UnitsConverter,
     symbols: NumberFormatSymbols = NumberFormatSymbols.fromLocale(),
@@ -673,6 +695,8 @@ public fun Meters.toElevationString(
  * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter]).
  * @return The formatted elevation string.
  */
+@JvmName("toElevationString")
+@JvmOverloads
 public fun Meters.toElevationString(resources: Resources, converter: UnitsConverter = getUnitsConverter()): String =
     converter.toElevationString(resources, this)
 

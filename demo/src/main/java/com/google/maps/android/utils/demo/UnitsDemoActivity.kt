@@ -15,7 +15,6 @@
  */
 package com.google.maps.android.utils.demo
 
-import android.graphics.Color
 import android.view.View
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +38,7 @@ import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -117,7 +117,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
         currentMap.addPolyline(
             PolylineOptions()
                 .addAll(coordinates)
-                .color(Color.parseColor("#1A73E8"))
+                .color("#1A73E8".toColorInt())
                 .width(10f)
                 .geodesic(true),
         )
