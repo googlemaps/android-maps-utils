@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `3e6935f` (#1831), recorded 2026-10-22T04:37:33Z.
+Measured at `b7b09e6` (#1828), recorded 2026-10-23T14:45:38Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-23 | `b7b09e6` | #1828 | 63.05% | 0.00 | build(deps): bump github/codeql-action/upload-sarif |
 | 2026-10-22 | `3e6935f` | #1831 | 63.05% | 0.00 | build(deps): bump com.diffplug.spotless |
 | 2026-10-21 | `65c222c` | #1799 | 63.05% | +1.98 | feat(clustering): add SuperClusterAlgorithm for mega-scale marker clustering and configurable badge formatting |
 | 2026-10-21 | `729bcb9` | #1829 | 61.07% | 0.00 | feat!: raise minSdk to 24 and update Maps SDK to 20.1.0 |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-21 | `5557301` | #1762 | 50.55% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-09-18 | `a70f257` | #1781 | 50.55% | 0.00 | build(deps): bump actions/setup-java from 5.7.0 to 6.0.1 |
 | 2026-09-18 | `9056fd9` | #1785 | 50.55% | +0.02 | feat: add polygon z-index support |
-| 2026-09-16 | `3884f22` | #1783 | 50.53% | 0.00 | build(deps): bump androidx.compose:compose-bom |
