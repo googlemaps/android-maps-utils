@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -179,8 +180,9 @@ class UnitsDemoActivity : BaseDemoActivity() {
         onPreferenceSelected: (UnitPreference) -> Unit,
         onPanelHeightChanged: (Int) -> Unit = {},
     ) {
+        val currentLocale = LocalLocale.current.platformLocale
         // [START maps_android_utils_units_demo_formatting]
-        val converter = preference.resolveConverter()
+        val converter = preference.resolveConverter(currentLocale)
         val firstLegDistance: Meters = peaks[0].position.sphericalDistance(peaks[1].position).meters
         val totalRouteDistance: Meters = peaks.map { it.position }.sphericalPathLength().meters
         val elevationDifference: Meters = peaks[0].elevation - peaks.last().elevation
@@ -206,7 +208,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
                     text = stringResource(
                         R.string.units_demo_active_system,
                         converter.unitSystem.name,
-                        Locale.getDefault().country.ifEmpty { "default" },
+                        currentLocale.country.ifEmpty { "default" },
                     ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -234,19 +236,19 @@ class UnitsDemoActivity : BaseDemoActivity() {
 
                 SummaryRow(
                     label = "${peaks[0].name} Elevation",
-                    value = peaks[0].elevation.toElevationString(converter),
+                    value = peaks[0].elevation.toElevationString(currentLocale, converter),
                 )
                 SummaryRow(
                     label = "Elevation Delta (${peaks[0].name} → ${peaks.last().name})",
-                    value = elevationDifference.toElevationString(converter),
+                    value = elevationDifference.toElevationString(currentLocale, converter),
                 )
                 SummaryRow(
                     label = "Leg 1 (${peaks[0].name} → ${peaks[1].name})",
-                    value = firstLegDistance.toDistanceString(converter),
+                    value = firstLegDistance.toDistanceString(currentLocale, converter),
                 )
                 SummaryRow(
                     label = "Total Geodesic Route",
-                    value = totalRouteDistance.toDistanceString(converter),
+                    value = totalRouteDistance.toDistanceString(currentLocale, converter),
                 )
 
                 HorizontalDivider()
@@ -259,7 +261,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
                 for ((label, distance) in sampleDistances) {
                     SummaryRow(
                         label = label,
-                        value = distance.toDistanceString(converter),
+                        value = distance.toDistanceString(currentLocale, converter),
                     )
                 }
             }
