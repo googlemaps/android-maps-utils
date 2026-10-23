@@ -124,7 +124,6 @@ android {
         }
         create("navigation") {
             dimension = "sdk"
-            minSdk = 24 // Navigation SDK 7.x requires API 24+
         }
     }
 }
