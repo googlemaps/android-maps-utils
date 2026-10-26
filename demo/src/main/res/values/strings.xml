@@ -172,4 +172,8 @@ Demonstrates how to dynamically control the visual layering (stacking order) of 
 
     <!-- Flexible Polyline demo -->
     <string name="flexible_polyline_summary">Decoded points: %1$d</string>
+    <string name="flexible_polyline_track_title">4D Track: Sydney Harbour Bridge Climb</string>
+    <string name="flexible_polyline_header_fmt">%1$d pts • precision %2$d • %3$s (prec %4$d) • time (prec %5$d)</string>
+    <string name="flexible_polyline_telemetry_fmt">Elev: %1$.2f m  •  Time: +%2$.3f s / %3$.3f s</string>
+    <string name="flexible_polyline_play">Play</string>
 </resources>
