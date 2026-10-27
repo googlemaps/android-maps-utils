@@ -133,3 +133,19 @@ uses-sdk:minSdkVersion 23 cannot be smaller than version 24 declared in library 
 ```
 
 Raise your app's `minSdk` to `24`. Overriding the check with `tools:overrideLibrary` is not supported and may crash on API 23 devices.
+
+---
+
+## 6. Data Parsers Declare `IOException` for Java Callers
+
+Starting with `v7.0.0`, `KmzParser.parse`, `KmlParser.parse`, `KmlParser.parseAsKml`, `GpxParser.parse` and `GeoJsonParser.parse` are annotated with `@Throws(IOException::class)`. These methods always propagated `IOException` at runtime (stream failures and the KMZ entry count and size limits), but the Java signatures did not declare it, so Java callers could not write `catch (IOException e)`.
+
+Kotlin callers are unaffected, and so is binary compatibility. Java callers that recompile must now catch or declare `IOException`:
+
+```java
+try {
+    Kml kml = new KmzParser().parse(inputStream);
+} catch (IOException e) {
+    // Handle the read failure or rejected KMZ
+}
+```
