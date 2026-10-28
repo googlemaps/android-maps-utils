@@ -20,6 +20,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import java.time.Instant
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Tests for [FlexiblePolylineUtil], [FlexiblePolyline], and [FlexiblePoint].
@@ -651,5 +653,55 @@ class FlexiblePolylineUtilTest {
             }
 
         assertThat(exception).hasMessageThat().contains("timestampMillis")
+    }
+
+    @Test
+    fun `synthetic 1000-point 4D alpine trail encodes to ~6 bytes per point with sub-metre and sub-second accuracy`() {
+        val baseTimeMillis = 1_767_254_400_000L // 2026-01-01T08:00:00Z
+        var currentMillis = baseTimeMillis
+        val points =
+            (0 until 1_000).map { step ->
+                val progress = step / 999.0
+                val lat = 46.786000 + progress * 0.032000 + 0.001200 * sin(progress * 24.0)
+                val lng = -121.735000 + progress * 0.018000 + 0.001800 * cos(progress * 24.0)
+                val elevation = 1_650.0 + 750.0 * sin(progress * Math.PI) + 18.0 * sin(progress * 36.0)
+                if (step > 0) {
+                    // Grade-dependent step duration between 1.2 s and 2.8 s in 100 ms increments
+                    val stepDurationMillis = 1_200L + ((step * 37) % 17) * 100L
+                    currentMillis += stepDurationMillis
+                }
+                FlexiblePoint(
+                    latitude = lat,
+                    longitude = lng,
+                    thirdDimensionValue = elevation,
+                    timestampMillis = currentMillis,
+                )
+            }
+
+        val encoded =
+            FlexiblePolylineUtil.encode(
+                points = points,
+                thirdDimension = ThirdDimension.ELEVATION,
+                thirdDimensionPrecision = 1,
+            )
+
+        // ~6.7 bytes per 4D point (< 7 KB total vs > 250 KB in GPX XML)
+        assertThat(encoded.length).isLessThan(7_000)
+
+        val decoded = FlexiblePolylineUtil.decode(encoded)
+        assertThat(decoded.points).hasSize(1_000)
+        assertThat(decoded.precision).isEqualTo(6)
+        assertThat(decoded.thirdDimension).isEqualTo(ThirdDimension.ELEVATION)
+        assertThat(decoded.thirdDimensionPrecision).isEqualTo(1)
+        assertThat(decoded.hasTime).isTrue()
+        assertThat(decoded.timePrecision).isEqualTo(1)
+
+        decoded.points.forEachIndexed { index, actual ->
+            val original = points[index]
+            val horizontalErrorMetres = SphericalUtil.computeDistanceBetween(original.toLatLng(), actual.toLatLng())
+            assertThat(horizontalErrorMetres).isLessThan(0.10)
+            assertThat(actual.thirdDimensionValue!!).isWithin(0.051).of(original.thirdDimensionValue!!)
+            assertThat(actual.timestampMillis!!).isEqualTo(original.timestampMillis!!)
+        }
     }
 }

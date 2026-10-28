@@ -50,13 +50,44 @@
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/presetHikeButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/flexible_polyline_preset_hike" />
+
+                <Button
+                    android:id="@+id/presetBikeButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/flexible_polyline_preset_bike" />
+
+                <Button
+                    android:id="@+id/presetFlightButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/flexible_polyline_preset_flight" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/headerMetaText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="4dp"
                 android:textAppearance="?attr/textAppearanceBodySmall"
-                tools:text="10 pts • lat/lng 1e-7 • ELEVATION 1e-2 m • time 1 ms" />
+                tools:text="240 pts • 1,420 B encoded • ELEVATION (prec 1) • time (prec 1)" />
 
             <TextView
                 android:id="@+id/telemetryText"
@@ -65,7 +96,7 @@
                 android:layout_marginTop="8dp"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textStyle="bold"
-                tools:text="Elev: 134.00 m  •  Time: +22.500 s / 45.000 s" />
+                tools:text="ELEVATION: 1,920.4 m  •  Time: +14:22.0 / 45:00.0" />
 
             <SeekBar
                 android:id="@+id/timeSeekBar"

@@ -17,6 +17,7 @@ package com.google.maps.android.utils.demo
 
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.annotation.StringRes
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -32,12 +33,14 @@ import com.google.maps.android.utils.demo.databinding.ActivityFlexiblePolylineDe
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
- * Demonstrates encoding, decoding, and scrubbing a 4D flexible polyline track carrying
- * sub-metre coordinates (`precision = 6`, ~11 cm), decimetre elevation
- * ([ThirdDimension.ELEVATION], `thirdDimensionPrecision = 1`, 10 cm), and sub-second timestamps
- * (`timePrecision = 1`, 100 ms).
+ * Demonstrates encoding, decoding, and scrubbing synthetic 4D flexible polyline tracks carrying
+ * sub-metre coordinates (`precision = 6`, ~11 cm), decimetre vertical height
+ * ([ThirdDimension.ELEVATION] or [ThirdDimension.ALTITUDE], `thirdDimensionPrecision = 1`, 10 cm),
+ * and sub-second timestamps (`timePrecision = 1`, 100 ms).
  */
 class FlexiblePolylineDemoActivity :
     BaseDemoActivity(),
@@ -45,6 +48,7 @@ class FlexiblePolylineDemoActivity :
 
     private lateinit var binding: ActivityFlexiblePolylineDemoBinding
     private lateinit var decodedTrack: FlexiblePolyline
+    private var backgroundPolyline: Polyline? = null
     private var activePolyline: Polyline? = null
     private var positionMarker: Marker? = null
     private var playbackJob: Job? = null
@@ -53,37 +57,18 @@ class FlexiblePolylineDemoActivity :
     override fun getLayoutId(): Int = R.layout.activity_flexible_polyline_demo
 
     override fun startDemo(isRestore: Boolean) {
-        val map = map ?: return
         val rootView = findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
         binding = ActivityFlexiblePolylineDemoBinding.bind(rootView)
 
-        val encodedTrack =
-            FlexiblePolylineUtil.encode(
-                points = BRIDGE_CLIMB_TRACK,
-                precision = 6,
-                thirdDimension = ThirdDimension.ELEVATION,
-                thirdDimensionPrecision = 1,
-                hasTime = true,
-                timePrecision = 1,
-            )
-        decodedTrack = FlexiblePolylineUtil.decode(encodedTrack)
-
-        binding.headerMetaText.text =
-            getString(
-                R.string.flexible_polyline_header_fmt,
-                decodedTrack.points.size,
-                decodedTrack.precision,
-                decodedTrack.thirdDimension.name,
-                decodedTrack.thirdDimensionPrecision,
-                decodedTrack.timePrecision,
-            )
-
-        map.addPolyline(
-            PolylineOptions()
-                .addAll(decodedTrack.toLatLngs())
-                .width(BACKGROUND_POLYLINE_WIDTH)
-                .color(BACKGROUND_POLYLINE_COLOR),
-        )
+        binding.presetHikeButton.setOnClickListener {
+            loadPreset(TrackPreset.ALPINE_RUN, moveCamera = true)
+        }
+        binding.presetBikeButton.setOnClickListener {
+            loadPreset(TrackPreset.BIKE_CLIMB, moveCamera = true)
+        }
+        binding.presetFlightButton.setOnClickListener {
+            loadPreset(TrackPreset.SCENIC_FLIGHT, moveCamera = true)
+        }
 
         binding.timeSeekBar.setOnSeekBarChangeListener(this)
         binding.restartButton.setOnClickListener {
@@ -99,8 +84,53 @@ class FlexiblePolylineDemoActivity :
             }
         }
 
-        if (!isRestore) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(CAMERA_TARGET, CAMERA_ZOOM))
+        loadPreset(TrackPreset.ALPINE_RUN, moveCamera = !isRestore)
+    }
+
+    private fun loadPreset(preset: TrackPreset, moveCamera: Boolean) {
+        val map = map ?: return
+        stopPlayback()
+
+        binding.trackTitleText.setText(preset.titleResId)
+
+        // [START maps_android_utils_flexible_polyline_encode_4d]
+        val encodedTrack =
+            FlexiblePolylineUtil.encode(
+                points = preset.points,
+                precision = 6, // ~11 cm lat/lng resolution
+                thirdDimension = preset.thirdDimension,
+                thirdDimensionPrecision = 1, // 10 cm vertical resolution
+                hasTime = true,
+                timePrecision = 1, // 100 ms timestamp resolution
+            )
+        // [END maps_android_utils_flexible_polyline_encode_4d]
+
+        // [START maps_android_utils_flexible_polyline_decode_4d]
+        decodedTrack = FlexiblePolylineUtil.decode(encodedTrack)
+        // [END maps_android_utils_flexible_polyline_decode_4d]
+
+        binding.headerMetaText.text =
+            getString(
+                R.string.flexible_polyline_header_fmt,
+                decodedTrack.points.size,
+                encodedTrack.length,
+                decodedTrack.precision,
+                decodedTrack.thirdDimension.name,
+                decodedTrack.thirdDimensionPrecision,
+                decodedTrack.timePrecision,
+            )
+
+        backgroundPolyline?.remove()
+        backgroundPolyline =
+            map.addPolyline(
+                PolylineOptions()
+                    .addAll(decodedTrack.toLatLngs())
+                    .width(BACKGROUND_POLYLINE_WIDTH)
+                    .color(BACKGROUND_POLYLINE_COLOR),
+            )
+
+        if (moveCamera) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(preset.cameraTarget, preset.cameraZoom))
         }
 
         updateScrubber(0.0)
@@ -136,20 +166,24 @@ class FlexiblePolylineDemoActivity :
         val durationMillis = decodedTrack.durationMillis ?: return
         val targetMillis = startMillis + (durationMillis * fraction).toLong()
 
+        // [START maps_android_utils_flexible_polyline_interpolate]
         val currentPoint = decodedTrack.interpolateAtTime(targetMillis) ?: return
-        val elevationMeters = currentPoint.thirdDimensionValue ?: 0.0
+        val prefixLatLngs = decodedTrack.getPrefixAtTime(targetMillis).map(FlexiblePoint::toLatLng)
+        // [END maps_android_utils_flexible_polyline_interpolate]
+
+        val verticalMeters = currentPoint.thirdDimensionValue ?: 0.0
         val elapsedSeconds = (targetMillis - startMillis) / 1000.0
         val totalSeconds = durationMillis / 1000.0
 
         binding.telemetryText.text =
             getString(
                 R.string.flexible_polyline_telemetry_fmt,
-                elevationMeters,
+                decodedTrack.thirdDimension.name,
+                verticalMeters,
                 elapsedSeconds,
                 totalSeconds,
             )
 
-        val prefixLatLngs = decodedTrack.getPrefixAtTime(targetMillis).map(FlexiblePoint::toLatLng)
         activePolyline?.remove()
         if (prefixLatLngs.isNotEmpty()) {
             activePolyline =
@@ -169,10 +203,11 @@ class FlexiblePolylineDemoActivity :
                 map?.addMarker(
                     MarkerOptions()
                         .position(latLng)
-                        .title(getString(R.string.flexible_polyline_track_title)),
+                        .title(binding.trackTitleText.text.toString()),
                 )
         } else {
             marker.position = latLng
+            marker.title = binding.trackTitleText.text.toString()
         }
     }
 
@@ -189,35 +224,99 @@ class FlexiblePolylineDemoActivity :
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
 
+    /**
+     * Purely synthetic 4D track presets illustrating [ThirdDimension.ELEVATION] and
+     * [ThirdDimension.ALTITUDE] with sub-second timestamps.
+     */
+    private enum class TrackPreset(
+        @StringRes val titleResId: Int,
+        val thirdDimension: ThirdDimension,
+        val cameraTarget: LatLng,
+        val cameraZoom: Float,
+        val points: List<FlexiblePoint>,
+    ) {
+        ALPINE_RUN(
+            titleResId = R.string.flexible_polyline_title_hike,
+            thirdDimension = ThirdDimension.ELEVATION,
+            cameraTarget = LatLng(46.7980, -121.7280),
+            cameraZoom = 13.5f,
+            points = generateAlpineTrailTrack(),
+        ),
+        BIKE_CLIMB(
+            titleResId = R.string.flexible_polyline_title_bike,
+            thirdDimension = ThirdDimension.ELEVATION,
+            cameraTarget = LatLng(37.8285, -122.4995),
+            cameraZoom = 14.2f,
+            points = generateBikeClimbTrack(),
+        ),
+        SCENIC_FLIGHT(
+            titleResId = R.string.flexible_polyline_title_flight,
+            thirdDimension = ThirdDimension.ALTITUDE,
+            cameraTarget = LatLng(-33.8540, 151.2150),
+            cameraZoom = 13.2f,
+            points = generateScenicFlightTrack(),
+        ),
+    }
+
     private companion object {
-        const val BASE_TIME_MILLIS = 1_761_403_200_000L
-
-        /**
-         * Ten 4D points across the Sydney Harbour Bridge arch: `(lat, lng, elevationMeters, timestampMillis)`.
-         * Elevation rises from deck level (~52 m) to the summit of the arch (134.00 m) and back down.
-         */
-        val BRIDGE_CLIMB_TRACK =
-            listOf(
-                FlexiblePoint(-33.8496000, 151.2116300, 52.10, BASE_TIME_MILLIS),
-                FlexiblePoint(-33.8504500, 151.2114500, 68.45, BASE_TIME_MILLIS + 4_850L),
-                FlexiblePoint(-33.8513000, 151.2112700, 91.20, BASE_TIME_MILLIS + 9_925L),
-                FlexiblePoint(-33.8521500, 151.2110900, 114.80, BASE_TIME_MILLIS + 15_120L),
-                FlexiblePoint(-33.8530000, 151.2109100, 131.65, BASE_TIME_MILLIS + 20_375L),
-                FlexiblePoint(-33.8538500, 151.2107300, 134.00, BASE_TIME_MILLIS + 25_000L),
-                FlexiblePoint(-33.8547000, 151.2105500, 119.35, BASE_TIME_MILLIS + 30_150L),
-                FlexiblePoint(-33.8555500, 151.2103700, 95.70, BASE_TIME_MILLIS + 35_280L),
-                FlexiblePoint(-33.8564000, 151.2101900, 71.15, BASE_TIME_MILLIS + 40_110L),
-                FlexiblePoint(-33.8572500, 151.2100200, 53.00, BASE_TIME_MILLIS + 45_000L),
-            )
-
-        val CAMERA_TARGET = LatLng(-33.85343, 151.21083)
-        const val CAMERA_ZOOM = 15f
+        const val BASE_TIME_MILLIS = 1_767_254_400_000L // 2026-01-01T08:00:00Z
+        const val POINT_COUNT = 240
         const val BACKGROUND_POLYLINE_WIDTH = 10f
         const val ACTIVE_POLYLINE_WIDTH = 14f
         const val BACKGROUND_POLYLINE_COLOR = 0x665F6368
         const val ACTIVE_POLYLINE_COLOR = 0xFF1A73E8.toInt()
         const val SEEK_BAR_MAX = 1000
-        const val PLAYBACK_STEP = 0.01
-        const val PLAYBACK_DELAY_MS = 60L
+        const val PLAYBACK_STEP = 0.008
+        const val PLAYBACK_DELAY_MS = 50L
+
+        /** Generates a synthetic 240-point alpine switchback trail near Mount Rainier. */
+        fun generateAlpineTrailTrack(): List<FlexiblePoint> {
+            var currentMillis = BASE_TIME_MILLIS
+            return (0 until POINT_COUNT).map { step ->
+                val p = step / (POINT_COUNT - 1.0)
+                val lat = 46.786000 + p * 0.024000 + 0.001600 * sin(p * 18.0)
+                val lng = -121.736000 + p * 0.016000 + 0.002200 * cos(p * 18.0)
+                val elevation = 1_650.0 + 630.0 * sin(p * Math.PI) + 14.0 * sin(p * 28.0)
+                if (step > 0) {
+                    // Pace slows during the first-half climb and quickens on the descent
+                    val stepDurationMillis = if (p < 0.5) 2_400L else 1_500L
+                    currentMillis += stepDurationMillis
+                }
+                FlexiblePoint(lat, lng, elevation, currentMillis)
+            }
+        }
+
+        /** Generates a synthetic 240-point hairpin cycling loop in the Marin Headlands. */
+        fun generateBikeClimbTrack(): List<FlexiblePoint> {
+            var currentMillis = BASE_TIME_MILLIS
+            return (0 until POINT_COUNT).map { step ->
+                val p = step / (POINT_COUNT - 1.0)
+                val angle = p * 2.0 * Math.PI
+                val lat = 37.828500 + 0.008500 * sin(angle) + 0.001200 * sin(angle * 6.0)
+                val lng = -122.499500 + 0.011000 * cos(angle) + 0.001200 * cos(angle * 6.0)
+                val elevation = 25.0 + 255.0 * sin(p * Math.PI)
+                if (step > 0) {
+                    val stepDurationMillis = if (p < 0.5) 1_800L else 700L
+                    currentMillis += stepDurationMillis
+                }
+                FlexiblePoint(lat, lng, elevation, currentMillis)
+            }
+        }
+
+        /** Generates a synthetic 240-point scenic flight circuit over Sydney Harbour. */
+        fun generateScenicFlightTrack(): List<FlexiblePoint> {
+            var currentMillis = BASE_TIME_MILLIS
+            return (0 until POINT_COUNT).map { step ->
+                val p = step / (POINT_COUNT - 1.0)
+                val angle = p * 2.0 * Math.PI
+                val lat = -33.854000 + 0.014000 * sin(angle)
+                val lng = 151.215000 + 0.020000 * cos(angle) * cos(angle * 0.5)
+                val altitude = 15.0 + 835.0 * sin(p * Math.PI)
+                if (step > 0) {
+                    currentMillis += 500L
+                }
+                FlexiblePoint(lat, lng, altitude, currentMillis)
+            }
+        }
     }
 }
