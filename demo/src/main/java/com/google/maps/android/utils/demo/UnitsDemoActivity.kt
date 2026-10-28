@@ -35,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalLocale
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import androidx.core.view.doOnLayout
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -49,7 +51,7 @@ import com.google.maps.android.Meters
 import com.google.maps.android.UnitSystem
 import com.google.maps.android.UnitsConverter
 import com.google.maps.android.getUnitsConverter
-import com.google.maps.android.km
+import com.google.maps.android.kilometers
 import com.google.maps.android.meters
 import com.google.maps.android.miles
 import com.google.maps.android.sphericalDistance
@@ -82,10 +84,31 @@ class UnitsDemoActivity : BaseDemoActivity() {
         IMPERIAL,
         ;
 
+        fun resolveDistanceUnits(locale: Locale = Locale.getDefault()): UnitSystem = when (this) {
+            DEVICE_DEFAULT -> UnitSystem.distanceFromLocale(locale)
+            METRIC -> UnitSystem.METRIC
+            IMPERIAL -> UnitSystem.IMPERIAL
+        }
+
+        fun resolveElevationUnits(locale: Locale = Locale.getDefault()): UnitSystem = when (this) {
+            DEVICE_DEFAULT -> UnitSystem.elevationFromLocale(locale)
+            METRIC -> UnitSystem.METRIC
+            IMPERIAL -> UnitSystem.IMPERIAL
+        }
+
         fun resolveConverter(locale: Locale = Locale.getDefault()): UnitsConverter = when (this) {
             DEVICE_DEFAULT -> getUnitsConverter(locale)
             METRIC -> getUnitsConverter(UnitSystem.METRIC)
             IMPERIAL -> getUnitsConverter(UnitSystem.IMPERIAL)
+        }
+        fun resolveSystemSummary(locale: Locale = Locale.getDefault()): String {
+            val distance = resolveDistanceUnits(locale)
+            val elevation = resolveElevationUnits(locale)
+            return if (distance == elevation) {
+                distance.name
+            } else {
+                "${distance.name} / ${elevation.name}"
+            }
         }
     }
 
@@ -99,9 +122,9 @@ class UnitsDemoActivity : BaseDemoActivity() {
     private val sampleDistances = listOf(
         "Short (< 0.25 mi)" to 150.meters,
         "Quarter mile (0.25 mi)" to 0.25.miles,
-        "Medium (2.0 km)" to 2.0.km,
+        "Medium (2.0 km)" to 2.0.kilometers,
         "Multi-mile (2.5 mi)" to 2.5.miles,
-        "Long (>= 10 km)" to 12.4.km,
+        "Long (>= 10 km)" to 12.4.kilometers,
     )
     // [END maps_android_utils_units_demo_model]
 
@@ -156,7 +179,9 @@ class UnitsDemoActivity : BaseDemoActivity() {
                             currentMap.setPadding(0, 0, 0, heightPx)
                             if (!hasCenteredCamera) {
                                 hasCenteredCamera = true
-                                currentMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 140))
+                                findViewById<View>(R.id.map).doOnLayout {
+                                    currentMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 140))
+                                }
                             }
                         }
                     },
@@ -181,6 +206,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
         onPanelHeightChanged: (Int) -> Unit = {},
     ) {
         val currentLocale = LocalLocale.current.platformLocale
+        val currentResources = LocalResources.current
         // [START maps_android_utils_units_demo_formatting]
         val converter = preference.resolveConverter(currentLocale)
         val firstLegDistance: Meters = peaks[0].position.sphericalDistance(peaks[1].position).meters
@@ -207,7 +233,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
                 Text(
                     text = stringResource(
                         R.string.units_demo_active_system,
-                        converter.unitSystem.name,
+                        preference.resolveSystemSummary(currentLocale),
                         currentLocale.country.ifEmpty { "default" },
                     ),
                     style = MaterialTheme.typography.bodySmall,
@@ -236,19 +262,19 @@ class UnitsDemoActivity : BaseDemoActivity() {
 
                 SummaryRow(
                     label = "${peaks[0].name} Elevation",
-                    value = peaks[0].elevation.toElevationString(currentLocale, converter),
+                    value = peaks[0].elevation.toElevationString(currentResources, converter),
                 )
                 SummaryRow(
                     label = "Elevation Delta (${peaks[0].name} → ${peaks.last().name})",
-                    value = elevationDifference.toElevationString(currentLocale, converter),
+                    value = elevationDifference.toElevationString(currentResources, converter),
                 )
                 SummaryRow(
                     label = "Leg 1 (${peaks[0].name} → ${peaks[1].name})",
-                    value = firstLegDistance.toDistanceString(currentLocale, converter),
+                    value = firstLegDistance.toDistanceString(currentResources, converter),
                 )
                 SummaryRow(
                     label = "Total Geodesic Route",
-                    value = totalRouteDistance.toDistanceString(currentLocale, converter),
+                    value = totalRouteDistance.toDistanceString(currentResources, converter),
                 )
 
                 HorizontalDivider()
@@ -261,7 +287,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
                 for ((label, distance) in sampleDistances) {
                     SummaryRow(
                         label = label,
-                        value = distance.toDistanceString(currentLocale, converter),
+                        value = distance.toDistanceString(currentResources, converter),
                     )
                 }
             }

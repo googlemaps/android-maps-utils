@@ -112,10 +112,12 @@ public final class com/google/maps/android/GoogleMapKt {
 
 public final class com/google/maps/android/ImperialUnitsConverter : com/google/maps/android/UnitsConverter {
 	public static final field INSTANCE Lcom/google/maps/android/ImperialUnitsConverter;
-	public final fun getMILES_THRESHOLD-NA-LpbA ()D
-	public fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
-	public fun toDistanceUnits-5-sh_3o (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
-	public fun toElevationUnits-5-sh_3o (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
+	public final fun getMilesThreshold ()D
+	public final fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
+	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 }
 
 public final class com/google/maps/android/IndoorBuildingFocusedEvent : com/google/maps/android/IndoorChangeEvent {
@@ -223,6 +225,10 @@ public final class com/google/maps/android/MathUtil {
 	public static final fun wrap (DDD)D
 }
 
+public abstract interface class com/google/maps/android/MeasurementFormatter {
+	public abstract fun format (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+}
+
 public final class com/google/maps/android/Meters : java/lang/Comparable {
 	public static final synthetic fun box-impl (D)Lcom/google/maps/android/Meters;
 	public synthetic fun compareTo (Ljava/lang/Object;)I
@@ -248,10 +254,12 @@ public final class com/google/maps/android/Meters : java/lang/Comparable {
 
 public final class com/google/maps/android/MetricUnitsConverter : com/google/maps/android/UnitsConverter {
 	public static final field INSTANCE Lcom/google/maps/android/MetricUnitsConverter;
-	public final fun getKILOMETERS_THRESHOLD-NA-LpbA ()D
-	public fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
-	public fun toDistanceUnits-5-sh_3o (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
-	public fun toElevationUnits-5-sh_3o (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
+	public final fun getKilometersThreshold ()D
+	public final fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
+	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 }
 
 public abstract interface annotation class com/google/maps/android/MoveStartedReason : java/lang/annotation/Annotation {
@@ -269,6 +277,10 @@ public final class com/google/maps/android/NumberFormatSymbols {
 	public final fun copy (CCI)Lcom/google/maps/android/NumberFormatSymbols;
 	public static synthetic fun copy$default (Lcom/google/maps/android/NumberFormatSymbols;CCIILjava/lang/Object;)Lcom/google/maps/android/NumberFormatSymbols;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun formatDistanceValue (D)Ljava/lang/String;
+	public final fun formatFixedDecimal (D)Ljava/lang/String;
+	public final fun formatFixedDecimal (DI)Ljava/lang/String;
+	public static synthetic fun formatFixedDecimal$default (Lcom/google/maps/android/NumberFormatSymbols;DIILjava/lang/Object;)Ljava/lang/String;
 	public static final fun fromLocale ()Lcom/google/maps/android/NumberFormatSymbols;
 	public static final fun fromLocale (Ljava/util/Locale;)Lcom/google/maps/android/NumberFormatSymbols;
 	public final fun getDecimalSeparator ()C
@@ -327,10 +339,8 @@ public final class com/google/maps/android/PolylineKt {
 public final class com/google/maps/android/R$string {
 	public static field amu_in_feet I
 	public static field amu_in_kilometers I
-	public static field amu_in_kilometers_whole I
 	public static field amu_in_meters I
 	public static field amu_in_miles I
-	public static field amu_in_miles_whole I
 }
 
 public final class com/google/maps/android/ResponseStreetView {
@@ -442,9 +452,18 @@ public final class com/google/maps/android/UnitSystem : java/lang/Enum {
 	public static final field Companion Lcom/google/maps/android/UnitSystem$Companion;
 	public static final field IMPERIAL Lcom/google/maps/android/UnitSystem;
 	public static final field METRIC Lcom/google/maps/android/UnitSystem;
+	public static final fun distanceFromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
+	public static final fun distanceFromLocale ()Lcom/google/maps/android/UnitSystem;
+	public static final fun distanceFromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
+	public static final fun distanceFromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
+	public static final fun elevationFromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
+	public static final fun elevationFromLocale ()Lcom/google/maps/android/UnitSystem;
+	public static final fun elevationFromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
+	public static final fun elevationFromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
 	public static final fun fromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
 	public static final fun fromLocale ()Lcom/google/maps/android/UnitSystem;
 	public static final fun fromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
+	public static final fun fromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
 	public final fun getConverter ()Lcom/google/maps/android/UnitsConverter;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
@@ -452,11 +471,23 @@ public final class com/google/maps/android/UnitSystem : java/lang/Enum {
 }
 
 public final class com/google/maps/android/UnitSystem$Companion {
+	public final fun distanceFromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
+	public final fun distanceFromLocale ()Lcom/google/maps/android/UnitSystem;
+	public final fun distanceFromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
+	public static synthetic fun distanceFromLocale$default (Lcom/google/maps/android/UnitSystem$Companion;Ljava/util/Locale;ILjava/lang/Object;)Lcom/google/maps/android/UnitSystem;
+	public final fun distanceFromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
+	public final fun elevationFromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
+	public final fun elevationFromLocale ()Lcom/google/maps/android/UnitSystem;
+	public final fun elevationFromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
+	public static synthetic fun elevationFromLocale$default (Lcom/google/maps/android/UnitSystem$Companion;Ljava/util/Locale;ILjava/lang/Object;)Lcom/google/maps/android/UnitSystem;
+	public final fun elevationFromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
 	public final fun fromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
 	public final fun fromLocale ()Lcom/google/maps/android/UnitSystem;
 	public final fun fromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
 	public static synthetic fun fromLocale$default (Lcom/google/maps/android/UnitSystem$Companion;Ljava/util/Locale;ILjava/lang/Object;)Lcom/google/maps/android/UnitSystem;
+	public final fun fromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
 	public final fun getIMPERIAL_COUNTRY_CODES ()Ljava/util/Set;
+	public final fun getIMPERIAL_ELEVATION_COUNTRY_CODES ()Ljava/util/Set;
 }
 
 public final class com/google/maps/android/Units {
@@ -466,22 +497,36 @@ public final class com/google/maps/android/Units {
 	public static final field METERS_PER_KILOMETER I
 	public static final field METERS_PER_MILE D
 	public static final field MILES_PER_METER D
+	public static final fun UnitsConverter (Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun UnitsConverter (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
+	public static final synthetic fun UnitsConverter (Lcom/google/maps/android/UnitsConverter;Lkotlin/jvm/functions/Function2;)Lcom/google/maps/android/UnitsConverter;
+	public static final synthetic fun UnitsConverter (Lkotlin/jvm/functions/Function2;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
+	public static final synthetic fun UnitsConverter (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;)Lcom/google/maps/android/UnitsConverter;
 	public static final fun feet (Ljava/lang/Number;)D
 	public static final fun formatDistanceValue (D)Ljava/lang/String;
 	public static final fun formatDistanceValue (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public static final fun formatDistanceValue (DLjava/util/Locale;)Ljava/lang/String;
 	public static synthetic fun formatDistanceValue$default (DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public static final fun ft (Ljava/lang/Number;)D
 	public static final fun getUnitsConverter ()Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Landroid/content/res/Resources;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Landroid/content/res/Resources;Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
 	public static final fun getUnitsConverter (Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
 	public static final fun getUnitsConverter (Ljava/lang/String;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Ljava/lang/String;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Ljava/lang/String;Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
 	public static final fun getUnitsConverter (Ljava/util/Locale;)Lcom/google/maps/android/UnitsConverter;
-	public static synthetic fun getUnitsConverter$default (Ljava/util/Locale;ILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Ljava/util/Locale;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun getUnitsConverter (Ljava/util/Locale;Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public static synthetic fun getUnitsConverter$default (Landroid/content/res/Resources;Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;ILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
+	public static synthetic fun getUnitsConverter$default (Ljava/lang/String;Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;ILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
+	public static synthetic fun getUnitsConverter$default (Ljava/util/Locale;Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;ILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun inFeet (D)D
+	public static final fun inKilometers (D)D
+	public static final fun inMeters (D)D
+	public static final fun inMiles (D)D
 	public static final fun kilometers (Ljava/lang/Number;)D
-	public static final fun km (Ljava/lang/Number;)D
-	public static final fun m (Ljava/lang/Number;)D
 	public static final fun meters (Ljava/lang/Number;)D
-	public static final fun mi (Ljava/lang/Number;)D
 	public static final fun miles (Ljava/lang/Number;)D
 	public static final fun toDistanceString (D)Ljava/lang/String;
 	public static final fun toDistanceString (DLandroid/content/res/Resources;)Ljava/lang/String;
@@ -503,50 +548,48 @@ public final class com/google/maps/android/Units {
 	public static synthetic fun toElevationString$default (DLandroid/content/res/Resources;Lcom/google/maps/android/UnitsConverter;ILjava/lang/Object;)Ljava/lang/String;
 	public static synthetic fun toElevationString$default (DLcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/NumberFormatSymbols;ILjava/lang/Object;)Ljava/lang/String;
 	public static synthetic fun toElevationString$default (DLjava/util/Locale;Lcom/google/maps/android/UnitsConverter;ILjava/lang/Object;)Ljava/lang/String;
-	public static final fun toFeet (D)D
-	public static final fun toKilometers (D)D
-	public static final fun toMeters (D)D
-	public static final fun toMiles (D)D
 }
 
 public abstract class com/google/maps/android/UnitsConverter {
+	public static final field Companion Lcom/google/maps/android/UnitsConverter$Companion;
 	public fun <init> ()V
-	public abstract fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
+	public static final fun create (Lcom/google/maps/android/MeasurementFormatter;Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun create (Lcom/google/maps/android/MeasurementFormatter;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun create (Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun create (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
+	public static final fun create (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
 	public final fun toDistanceString (D)Ljava/lang/String;
 	public final fun toDistanceString (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toDistanceString (DLjava/util/Locale;)Ljava/lang/String;
 	public final fun toDistanceString (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public static synthetic fun toDistanceString$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public final fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
-	public final fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public abstract fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toDistanceString-s1HjgZ8 (DLjava/util/Locale;)Ljava/lang/String;
 	public static synthetic fun toDistanceString-s1HjgZ8$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public final fun toDistanceUnits (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
-	public abstract fun toDistanceUnits-5-sh_3o (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
 	public final fun toElevationString (D)Ljava/lang/String;
 	public final fun toElevationString (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toElevationString (DLjava/util/Locale;)Ljava/lang/String;
 	public final fun toElevationString (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public static synthetic fun toElevationString$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public final fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
-	public final fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public abstract fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toElevationString-s1HjgZ8 (DLjava/util/Locale;)Ljava/lang/String;
 	public static synthetic fun toElevationString-s1HjgZ8$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public final fun toElevationUnits (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
-	public abstract fun toElevationUnits-5-sh_3o (D)Lcom/google/maps/android/ValueWithUnitsTemplate;
+	public final fun withDistanceConverter (Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun withDistanceFormatter (Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun withDistanceUnits (Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public final fun withElevationConverter (Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun withElevationFormatter (Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun withElevationUnits (Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
 }
 
-public final class com/google/maps/android/ValueWithUnitsTemplate {
-	public fun <init> (DI)V
-	public final fun component1 ()D
-	public final fun component2 ()I
-	public final fun copy (DI)Lcom/google/maps/android/ValueWithUnitsTemplate;
-	public static synthetic fun copy$default (Lcom/google/maps/android/ValueWithUnitsTemplate;DIILjava/lang/Object;)Lcom/google/maps/android/ValueWithUnitsTemplate;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getUnitsTemplate ()I
-	public final fun getValue ()D
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
+public final class com/google/maps/android/UnitsConverter$Companion {
+	public final fun create (Lcom/google/maps/android/MeasurementFormatter;Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun create (Lcom/google/maps/android/MeasurementFormatter;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun create (Lcom/google/maps/android/UnitSystem;Lcom/google/maps/android/UnitSystem;)Lcom/google/maps/android/UnitsConverter;
+	public final fun create (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
+	public final fun create (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
 }
 
 public class com/google/maps/android/collections/CircleManager : com/google/maps/android/collections/MapObjectManager, com/google/android/gms/maps/GoogleMap$OnCircleClickListener {

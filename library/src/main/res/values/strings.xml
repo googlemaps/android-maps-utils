@@ -16,40 +16,22 @@
 -->
 <resources>
     <!--
-    Distance or elevation in feet, formatted to 0 decimal places.
-    For example, 1234.56 feet will be formatted as "1,235 ft".
+    Distance or elevation in feet. %1$s is the pre-formatted numeric value (e.g., "528" or "14,440").
     -->
-    <string name="amu_in_feet" translatable="false">%1$,.0f ft</string>
+    <string name="amu_in_feet">%1$s ft</string>
 
     <!--
-    Distance in miles under 10 miles, formatted to 1 decimal place (at least 2 significant digits
-    for 1.0–9.9 mi, keeping trailing .0).
-    For example, 2.0 miles will be formatted as "2.0 mi" and 1.24 miles as "1.2 mi".
+    Distance in miles. %1$s is the pre-formatted numeric value (e.g., "0.3", "2.0", or "12").
     -->
-    <string name="amu_in_miles" translatable="false">%1$,.1f mi</string>
+    <string name="amu_in_miles">%1$s mi</string>
 
     <!--
-    Distance in miles for 10 miles or greater, formatted to 0 decimal places.
-    For example, 12.4 miles will be formatted as "12 mi".
+    Distance or elevation in meters. %1$s is the pre-formatted numeric value (e.g., "450" or "4,401").
     -->
-    <string name="amu_in_miles_whole" translatable="false">%1$,.0f mi</string>
+    <string name="amu_in_meters">%1$s m</string>
 
     <!--
-    Distance or elevation in meters, formatted to 0 decimal places.
-    For example, 1234.56 meters will be formatted as "1,235 m".
+    Distance in kilometers. %1$s is the pre-formatted numeric value (e.g., "1.0", "2.5", or "10").
     -->
-    <string name="amu_in_meters" translatable="false">%1$,.0f m</string>
-
-    <!--
-    Distance in kilometers under 10 kilometers, formatted to 1 decimal place (at least 2
-    significant digits for 1.0–9.9 km, keeping trailing .0).
-    For example, 2.0 kilometers will be formatted as "2.0 km" and 1.94 kilometers as "1.9 km".
-    -->
-    <string name="amu_in_kilometers" translatable="false">%1$,.1f km</string>
-
-    <!--
-    Distance in kilometers for 10 kilometers or greater, formatted to 0 decimal places.
-    For example, 12.4 kilometers will be formatted as "12 km".
-    -->
-    <string name="amu_in_kilometers_whole" translatable="false">%1$,.0f km</string>
+    <string name="amu_in_kilometers">%1$s km</string>
 </resources>

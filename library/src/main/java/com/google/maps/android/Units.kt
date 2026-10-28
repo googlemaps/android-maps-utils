@@ -18,7 +18,7 @@
 package com.google.maps.android
 
 import android.content.res.Resources
-import androidx.annotation.StringRes
+import androidx.core.os.ConfigurationCompat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -33,7 +33,7 @@ import kotlin.math.roundToLong
 // By international agreement (1959 International Yard and Pound Agreement), one international foot
 // is defined as exactly 0.3048 meters (12 inches * 2.54 cm/inch / 100 cm/meter).
 // All derived imperial-to-metric and metric-to-imperial conversion constants below are grounded in
-// this exact definition so that round-trip conversions (e.g., `1.miles.toMiles`, `5280.feet.toMiles`)
+// this exact definition so that round-trip conversions (e.g., `1.miles.inMiles`, `5280.feet.inMiles`)
 // remain mathematically consistent.
 
 // [START maps_android_utils_units_constants]
@@ -70,9 +70,9 @@ public const val MILES_PER_METER: Double = 1.0 / METERS_PER_MILE
 /**
  * An inline value class representing a length, distance, or elevation measurement in meters.
  *
- * Construct instances using the [Number] extension properties ([meters], [m], [kilometers], [km],
- * [feet], [ft], [miles], [mi]) and convert back to raw scalar units via [toMeters], [toKilometers],
- * [toFeet], and [toMiles].
+ * Construct instances using the [Number] extension properties ([meters], [kilometers], [feet],
+ * [miles]) and convert back to raw scalar units via [inMeters], [inKilometers], [inFeet], and
+ * [inMiles].
  *
  * @property value The underlying measurement in meters.
  */
@@ -104,19 +104,9 @@ public value class Meters(public val value: Double) : Comparable<Meters> {
 public inline val Number.meters: Meters
     get() = Meters(value = this.toDouble())
 
-/** Shorthand to create a [Meters] measurement from a [Number] of meters. */
-@get:JvmName("m")
-public inline val Number.m: Meters
-    get() = Meters(value = this.toDouble())
-
 /** Creates a [Meters] measurement from a [Number] of kilometers. */
 @get:JvmName("kilometers")
 public inline val Number.kilometers: Meters
-    get() = Meters(value = this.toDouble() * METERS_PER_KILOMETER)
-
-/** Shorthand to create a [Meters] measurement from a [Number] of kilometers. */
-@get:JvmName("km")
-public inline val Number.km: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_KILOMETER)
 
 /** Creates a [Meters] measurement from a [Number] of international feet. */
@@ -124,39 +114,29 @@ public inline val Number.km: Meters
 public inline val Number.feet: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_FOOT)
 
-/** Shorthand to create a [Meters] measurement from a [Number] of international feet. */
-@get:JvmName("ft")
-public inline val Number.ft: Meters
-    get() = Meters(value = this.toDouble() * METERS_PER_FOOT)
-
 /** Creates a [Meters] measurement from a [Number] of statute miles. */
 @get:JvmName("miles")
 public inline val Number.miles: Meters
     get() = Meters(value = this.toDouble() * METERS_PER_MILE)
 
-/** Shorthand to create a [Meters] measurement from a [Number] of statute miles. */
-@get:JvmName("mi")
-public inline val Number.mi: Meters
-    get() = Meters(value = this.toDouble() * METERS_PER_MILE)
-
 /** Returns the value of this [Meters] measurement in meters as a [Double]. */
-@get:JvmName("toMeters")
-public inline val Meters.toMeters: Double
+@get:JvmName("inMeters")
+public inline val Meters.inMeters: Double
     get() = value
 
 /** Returns the equivalent number of kilometers for this [Meters] measurement. */
-@get:JvmName("toKilometers")
-public inline val Meters.toKilometers: Double
+@get:JvmName("inKilometers")
+public inline val Meters.inKilometers: Double
     get() = value / METERS_PER_KILOMETER
 
 /** Returns the equivalent number of international feet for this [Meters] measurement. */
-@get:JvmName("toFeet")
-public inline val Meters.toFeet: Double
+@get:JvmName("inFeet")
+public inline val Meters.inFeet: Double
     get() = value * FEET_PER_METER
 
 /** Returns the equivalent number of statute miles for this [Meters] measurement. */
-@get:JvmName("toMiles")
-public inline val Meters.toMiles: Double
+@get:JvmName("inMiles")
+public inline val Meters.inMiles: Double
     get() = value * MILES_PER_METER
 // [END maps_android_utils_units_meters]
 
@@ -198,38 +178,127 @@ public enum class UnitSystem {
 
     public companion object {
         /**
-         * ISO 3166-1 alpha-2 country codes that default to [IMPERIAL] units for road distances
-         * and elevations: United States (`"US"`), Liberia (`"LR"`), Myanmar (`"MM"`), and
-         * United Kingdom (`"GB"`).
+         * ISO 3166-1 alpha-2 country codes that default to [IMPERIAL] units for road distances:
+         * United States (`"US"`), Liberia (`"LR"`), Myanmar (`"MM"`), and United Kingdom (`"GB"`).
+         *
+         * Note: While the United Kingdom uses miles and feet for road distances (per the UK
+         * *Traffic Signs Regulations and General Directions*), UK topographic maps (Ordnance Survey)
+         * display elevations in meters. Therefore, `"GB"` resolves to [IMPERIAL] for distances
+         * ([distanceFromCountryCode]) and [METRIC] for elevations ([elevationFromCountryCode]), and
+         * [getUnitsConverter] for `"GB"` / [Locale.UK] automatically returns a converter that
+         * formats distances in feet/miles and elevations in meters.
          */
         public val IMPERIAL_COUNTRY_CODES: Set<String> = setOf("US", "LR", "MM", "GB")
 
         /**
-         * Returns the preferred [UnitSystem] for the given [locale].
+         * ISO 3166-1 alpha-2 country codes that default to [IMPERIAL] units for elevations:
+         * United States (`"US"`), Liberia (`"LR"`), and Myanmar (`"MM"`).
+         */
+        public val IMPERIAL_ELEVATION_COUNTRY_CODES: Set<String> = setOf("US", "LR", "MM")
+
+        /**
+         * Returns the preferred distance [UnitSystem] for the given [locale].
          *
-         * Defaults to [Locale.getDefault], providing a framework-agnostic way to select the
-         * device's appropriate unit system without requiring an Android `Context`.
+         * Note: For `"GB"` ([Locale.UK]), this returns [IMPERIAL] (the UK road-distance system),
+         * whereas [elevationFromLocale] returns [METRIC]. To obtain a [UnitsConverter] that
+         * automatically handles mixed distance/elevation locales like `"GB"`, use [getUnitsConverter].
          *
          * @param locale The [Locale] whose country code determines the unit system.
          * @return [IMPERIAL] if the locale's country is in [IMPERIAL_COUNTRY_CODES], otherwise [METRIC].
          */
         @JvmStatic
         @JvmOverloads
-        public fun fromLocale(locale: Locale = Locale.getDefault()): UnitSystem = fromCountryCode(locale.country)
+        public fun fromLocale(locale: Locale = Locale.getDefault()): UnitSystem = distanceFromLocale(locale)
 
         /**
-         * Returns the preferred [UnitSystem] for the given ISO 3166-1 alpha-2 [countryCode].
+         * Returns the preferred distance [UnitSystem] for the given [locale] (defaulting to [Locale.getDefault]).
+         *
+         * @param locale The [Locale] whose country code determines the distance unit system.
+         * @return [IMPERIAL] for `"US"`, `"LR"`, `"MM"`, and `"GB"`, or [METRIC] otherwise.
+         */
+        @JvmStatic
+        @JvmOverloads
+        public fun distanceFromLocale(locale: Locale = Locale.getDefault()): UnitSystem =
+            distanceFromCountryCode(locale.country)
+
+        /**
+         * Returns the preferred elevation [UnitSystem] for the given [locale] (defaulting to [Locale.getDefault]).
+         *
+         * @param locale The [Locale] whose country code determines the elevation unit system.
+         * @return [IMPERIAL] for `"US"`, `"LR"`, and `"MM"`, or [METRIC] otherwise (including `"GB"`).
+         */
+        @JvmStatic
+        @JvmOverloads
+        public fun elevationFromLocale(locale: Locale = Locale.getDefault()): UnitSystem =
+            elevationFromCountryCode(locale.country)
+
+        /**
+         * Returns the preferred distance [UnitSystem] for the primary locale of the given Android [resources].
+         *
+         * @param resources The Android [Resources] whose configuration locale determines the unit system.
+         * @return [IMPERIAL] if the primary locale's country is in [IMPERIAL_COUNTRY_CODES], otherwise [METRIC].
+         */
+        @JvmStatic
+        public fun fromResources(resources: Resources): UnitSystem = distanceFromResources(resources)
+
+        /**
+         * Returns the preferred distance [UnitSystem] for the primary locale of the given Android [resources].
+         *
+         * @param resources The Android [Resources] whose configuration locale determines the distance unit system.
+         * @return [IMPERIAL] for `"US"`, `"LR"`, `"MM"`, and `"GB"`, or [METRIC] otherwise.
+         */
+        @JvmStatic
+        public fun distanceFromResources(resources: Resources): UnitSystem =
+            distanceFromLocale(primaryLocale(resources))
+
+        /**
+         * Returns the preferred elevation [UnitSystem] for the primary locale of the given Android [resources].
+         *
+         * @param resources The Android [Resources] whose configuration locale determines the elevation unit system.
+         * @return [IMPERIAL] for `"US"`, `"LR"`, and `"MM"`, or [METRIC] otherwise (including `"GB"`).
+         */
+        @JvmStatic
+        public fun elevationFromResources(resources: Resources): UnitSystem =
+            elevationFromLocale(primaryLocale(resources))
+
+        /**
+         * Returns the preferred distance [UnitSystem] for the given ISO 3166-1 alpha-2 [countryCode].
          *
          * Comparison is case-insensitive. If [countryCode] is `null`, blank, or not in
          * [IMPERIAL_COUNTRY_CODES], [METRIC] is returned.
          *
          * @param countryCode The two-letter country code (e.g., `"US"`, `"GB"`, `"FR"`).
-         * @return The corresponding [UnitSystem].
+         * @return The corresponding distance [UnitSystem].
          */
         @JvmStatic
-        public fun fromCountryCode(countryCode: String?): UnitSystem {
+        public fun fromCountryCode(countryCode: String?): UnitSystem = distanceFromCountryCode(countryCode)
+
+        /**
+         * Returns the preferred distance [UnitSystem] for the given ISO 3166-1 alpha-2 [countryCode].
+         *
+         * @param countryCode The two-letter country code (e.g., `"US"`, `"GB"`, `"FR"`).
+         * @return [IMPERIAL] if [countryCode] is in [IMPERIAL_COUNTRY_CODES], otherwise [METRIC].
+         */
+        @JvmStatic
+        public fun distanceFromCountryCode(countryCode: String?): UnitSystem {
             if (countryCode.isNullOrBlank()) return METRIC
-            return if (countryCode.uppercase() in IMPERIAL_COUNTRY_CODES) {
+            return if (countryCode.uppercase(Locale.ROOT) in IMPERIAL_COUNTRY_CODES) {
+                IMPERIAL
+            } else {
+                METRIC
+            }
+        }
+
+        /**
+         * Returns the preferred elevation [UnitSystem] for the given ISO 3166-1 alpha-2 [countryCode].
+         *
+         * @param countryCode The two-letter country code (e.g., `"US"`, `"GB"`, `"FR"`).
+         * @return [IMPERIAL] if [countryCode] is in [IMPERIAL_ELEVATION_COUNTRY_CODES], otherwise [METRIC].
+         */
+        @JvmStatic
+        public fun elevationFromCountryCode(countryCode: String?): UnitSystem {
+            if (countryCode.isNullOrBlank()) return METRIC
+            return if (countryCode.uppercase(Locale.ROOT) in IMPERIAL_ELEVATION_COUNTRY_CODES) {
                 IMPERIAL
             } else {
                 METRIC
@@ -256,6 +325,33 @@ public data class NumberFormatSymbols(
     public val decimalSeparator: Char = '.',
     public val groupingSize: Int = 3,
 ) {
+    /**
+     * Formats [value] rounded to [decimals] fractional digits with thousands grouping according to
+     * this [NumberFormatSymbols] instance using pure Kotlin integer arithmetic (`roundToLong`, `/`,
+     * `%`) and `buildString`, avoiding any dependency on `java.util.Formatter` (`String.format`).
+     *
+     * @param value The numeric value to format.
+     * @param decimals Number of digits after the decimal separator (must be `>= 0`; defaults to `0`).
+     * @return The formatted numeric string without a unit suffix (e.g., `"1,235"`, `"1,234.50"`).
+     * @throws IllegalArgumentException if [decimals] is negative.
+     */
+    @JvmOverloads
+    public fun formatFixedDecimal(value: Double, decimals: Int = 0): String =
+        formatFixedDecimal(value = value, decimals = decimals, symbols = this)
+
+    /**
+     * Formats a scalar distance [value] (in large units such as kilometers or miles) using logical
+     * precision based on order of magnitude and this [NumberFormatSymbols] instance:
+     * - Values `< 10` (when rounded to 1 decimal place) are formatted with `1` decimal digit,
+     *   keeping the trailing `.0` (e.g., `"0.3"`, `"1.0"`, `"2.5"`, `"9.9"`).
+     * - Values `>= 10` are formatted as whole integers with `0` decimal digits and thousands
+     *   grouping (e.g., `"10"`, `"1,250"`).
+     *
+     * @param value The numeric value in target units (e.g., kilometers or miles).
+     * @return The formatted numeric string without a unit suffix.
+     */
+    public fun formatDistanceValue(value: Double): String = formatDistanceValue(value = value, symbols = this)
+
     public companion object {
         /**
          * Standard English number formatting symbols (`','` thousands separator, `'.'` decimal
@@ -278,7 +374,7 @@ public data class NumberFormatSymbols(
             val groupingSize = if (decimalFormat != null && decimalFormat.isGroupingUsed) {
                 decimalFormat.groupingSize
             } else {
-                3
+                0
             }
             return NumberFormatSymbols(
                 groupingSeparator = dfs.groupingSeparator,
@@ -306,50 +402,32 @@ public data class NumberFormatSymbols(
 //    places, e.g., `"10 km"`, `"12 mi"`).
 
 /**
- * Pairs a converted numeric measurement [value] with the Android string resource ID
- * ([unitsTemplate]) used to format it.
+ * Functional (SAM) interface for formatting a measurement in [meters] into a localized string
+ * using the provided [symbols].
  *
- * @property value The converted numerical value in the target unit (e.g., feet, miles, meters, or kilometers).
- * @property unitsTemplate The `@StringRes` resource ID for formatting [value] with its unit label.
+ * Used by [UnitsConverter.create] to allow Java and Kotlin callers to supply custom distance or
+ * elevation formatters (or method references such as `MetricUnitsConverter.INSTANCE::toElevationString`).
  */
-public data class ValueWithUnitsTemplate(
-    public val value: Double,
-    @param:StringRes @field:StringRes @get:StringRes public val unitsTemplate: Int,
-)
+public fun interface MeasurementFormatter {
+    /**
+     * Formats a measurement of [meters] (in raw meters) using [symbols].
+     *
+     * @param meters The measurement value in meters.
+     * @param symbols The [NumberFormatSymbols] used for grouping and decimal separators.
+     * @return The formatted measurement string with units.
+     */
+    public fun format(meters: Double, symbols: NumberFormatSymbols): String
+}
 
 /**
  * Strategy for converting and formatting [Meters] measurements into human-readable distance and
  * elevation strings.
  *
- * Obtain an instance via [getUnitsConverter], [UnitSystem.converter], or directly reference
- * [MetricUnitsConverter] or [ImperialUnitsConverter].
+ * Obtain a standard instance via [getUnitsConverter], [UnitSystem.converter], [MetricUnitsConverter],
+ * or [ImperialUnitsConverter], or construct a composite/custom converter via [UnitsConverter] (Kotlin)
+ * or [UnitsConverter.create] (Java/Kotlin).
  */
 public abstract class UnitsConverter {
-    /** The [UnitSystem] implemented by this converter. */
-    public abstract val unitSystem: UnitSystem
-
-    /**
-     * Converts a distance in [meters] to a [ValueWithUnitsTemplate] containing the scaled numeric
-     * value and the appropriate string resource template ID.
-     */
-    public abstract fun toDistanceUnits(meters: Meters): ValueWithUnitsTemplate
-
-    /**
-     * Converts a distance in [meters] (as a raw [Double]) to a [ValueWithUnitsTemplate].
-     */
-    public fun toDistanceUnits(meters: Double): ValueWithUnitsTemplate = toDistanceUnits(Meters(meters))
-
-    /**
-     * Converts an elevation in [meters] to a [ValueWithUnitsTemplate] containing the scaled numeric
-     * value and the appropriate string resource template ID.
-     */
-    public abstract fun toElevationUnits(meters: Meters): ValueWithUnitsTemplate
-
-    /**
-     * Converts an elevation in [meters] (as a raw [Double]) to a [ValueWithUnitsTemplate].
-     */
-    public fun toElevationUnits(meters: Double): ValueWithUnitsTemplate = toElevationUnits(Meters(meters))
-
     /**
      * Formats a distance in [meters] into a human-readable string with units using pure Kotlin
      * number formatting and the given [symbols].
@@ -358,10 +436,7 @@ public abstract class UnitsConverter {
      * @param symbols The [NumberFormatSymbols] used for grouping and decimal separators.
      * @return The formatted distance string (e.g., `"450 m"`, `"2.0 km"`, `"10 km"`, `"528 ft"`, `"2.5 mi"`).
      */
-    public fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String {
-        val (value, resourceId) = toDistanceUnits(meters)
-        return formatWithTemplate(resourceId, value, symbols)
-    }
+    public abstract fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String
 
     /**
      * Formats a distance in [meters] (as a raw [Double]) using the given [symbols].
@@ -374,8 +449,7 @@ public abstract class UnitsConverter {
         toDistanceString(Meters(meters), symbols)
 
     /**
-     * Formats a distance in [meters] into a localized string with units without requiring Android
-     * [Resources].
+     * Formats a distance in [meters] into a localized string with units.
      *
      * @param meters The distance to format.
      * @param locale The [Locale] used for number formatting rules (defaults to [Locale.getDefault]).
@@ -385,8 +459,7 @@ public abstract class UnitsConverter {
         toDistanceString(meters, NumberFormatSymbols.fromLocale(locale))
 
     /**
-     * Formats a distance in [meters] (as a raw [Double]) into a localized string with units without
-     * requiring Android [Resources].
+     * Formats a distance in [meters] (as a raw [Double]) into a localized string with units.
      *
      * @param meters The distance in meters to format.
      * @param locale The [Locale] used for number formatting rules (defaults to [Locale.getDefault]).
@@ -397,21 +470,21 @@ public abstract class UnitsConverter {
         toDistanceString(Meters(meters), NumberFormatSymbols.fromLocale(locale))
 
     /**
-     * Formats a distance in [meters] using the provided Android [resources].
+     * Formats a distance in [meters] into a localized string using the translated unit templates
+     * (`R.string.amu_in_*`) and primary locale of the given Android [resources].
      *
-     * @param resources Android [Resources] used to resolve the unit string template.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The distance to format.
-     * @return The formatted distance string.
+     * @return The formatted distance string (e.g., `"450 m"`, `"2.0 km"`, `"528 フィート"`, `"2,5 ми"`).
      */
-    public fun toDistanceString(resources: Resources, meters: Meters): String {
-        val (value, resourceId) = toDistanceUnits(meters = meters)
-        return resources.getString(resourceId, value)
-    }
+    public open fun toDistanceString(resources: Resources, meters: Meters): String =
+        toDistanceString(meters, NumberFormatSymbols.fromLocale(primaryLocale(resources)))
 
     /**
-     * Formats a distance in [meters] (as a raw [Double]) using the provided Android [resources].
+     * Formats a distance in [meters] (as a raw [Double]) into a localized string using the
+     * translated unit templates (`R.string.amu_in_*`) and primary locale of [resources].
      *
-     * @param resources Android [Resources] used to resolve the unit string template.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The distance in meters to format.
      * @return The formatted distance string.
      */
@@ -426,10 +499,7 @@ public abstract class UnitsConverter {
      * @param symbols The [NumberFormatSymbols] used for grouping and decimal separators.
      * @return The formatted elevation string (e.g., `"4,401 m"` or `"14,440 ft"`).
      */
-    public fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String {
-        val (value, resourceId) = toElevationUnits(meters)
-        return formatWithTemplate(resourceId, value, symbols)
-    }
+    public abstract fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String
 
     /**
      * Formats an elevation in [meters] (as a raw [Double]) using the given [symbols].
@@ -442,8 +512,7 @@ public abstract class UnitsConverter {
         toElevationString(Meters(meters), symbols)
 
     /**
-     * Formats an elevation in [meters] into a localized string with units without requiring Android
-     * [Resources].
+     * Formats an elevation in [meters] into a localized string with units.
      *
      * @param meters The elevation to format.
      * @param locale The [Locale] used for number formatting rules (defaults to [Locale.getDefault]).
@@ -453,8 +522,7 @@ public abstract class UnitsConverter {
         toElevationString(meters, NumberFormatSymbols.fromLocale(locale))
 
     /**
-     * Formats an elevation in [meters] (as a raw [Double]) into a localized string with units
-     * without requiring Android [Resources].
+     * Formats an elevation in [meters] (as a raw [Double]) into a localized string with units.
      *
      * @param meters The elevation in meters to format.
      * @param locale The [Locale] used for number formatting rules (defaults to [Locale.getDefault]).
@@ -465,26 +533,241 @@ public abstract class UnitsConverter {
         toElevationString(Meters(meters), NumberFormatSymbols.fromLocale(locale))
 
     /**
-     * Formats an elevation in [meters] using the provided Android [resources].
+     * Formats an elevation in [meters] into a localized string using the translated unit templates
+     * (`R.string.amu_in_*`) and primary locale of the given Android [resources].
      *
-     * @param resources Android [Resources] used to resolve the unit string template.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The elevation to format.
-     * @return The formatted elevation string.
+     * @return The formatted elevation string (e.g., `"4,401 m"`, `"14,440 ft"`, `"14,440 フィート"`).
      */
-    public fun toElevationString(resources: Resources, meters: Meters): String {
-        val (value, resourceId) = toElevationUnits(meters = meters)
-        return resources.getString(resourceId, value)
-    }
+    public open fun toElevationString(resources: Resources, meters: Meters): String =
+        toElevationString(meters, NumberFormatSymbols.fromLocale(primaryLocale(resources)))
 
     /**
-     * Formats an elevation in [meters] (as a raw [Double]) using the provided Android [resources].
+     * Formats an elevation in [meters] (as a raw [Double]) into a localized string using the
+     * translated unit templates (`R.string.amu_in_*`) and primary locale of [resources].
      *
-     * @param resources Android [Resources] used to resolve the unit string template.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The elevation in meters to format.
      * @return The formatted elevation string.
      */
     public fun toElevationString(resources: Resources, meters: Double): String =
         toElevationString(resources, Meters(meters))
+
+    /**
+     * Returns a [UnitsConverter] that formats distances using [distanceUnits] while preserving
+     * this converter's elevation formatting.
+     *
+     * @param distanceUnits The preferred [UnitSystem] for distances ([UnitSystem.METRIC] or [UnitSystem.IMPERIAL]).
+     * @return A [UnitsConverter] with the updated distance unit system.
+     */
+    public fun withDistanceUnits(distanceUnits: UnitSystem): UnitsConverter =
+        withDistanceConverter(distanceUnits.converter)
+
+    /**
+     * Returns a [UnitsConverter] that formats elevations using [elevationUnits] while preserving
+     * this converter's distance formatting.
+     *
+     * @param elevationUnits The preferred [UnitSystem] for elevations ([UnitSystem.METRIC] or [UnitSystem.IMPERIAL]).
+     * @return A [UnitsConverter] with the updated elevation unit system.
+     */
+    public fun withElevationUnits(elevationUnits: UnitSystem): UnitsConverter =
+        withElevationConverter(elevationUnits.converter)
+
+    /**
+     * Returns a [UnitsConverter] that delegates distance formatting to [distanceConverter] while
+     * preserving this converter's elevation formatting.
+     *
+     * @param distanceConverter The converter to use for [toDistanceString].
+     * @return A composite [UnitsConverter].
+     */
+    public fun withDistanceConverter(distanceConverter: UnitsConverter): UnitsConverter =
+        create(distanceConverter = distanceConverter, elevationConverter = this)
+
+    /**
+     * Returns a [UnitsConverter] that delegates elevation formatting to [elevationConverter] while
+     * preserving this converter's distance formatting.
+     *
+     * @param elevationConverter The converter to use for [toElevationString].
+     * @return A composite [UnitsConverter].
+     */
+    public fun withElevationConverter(elevationConverter: UnitsConverter): UnitsConverter =
+        create(distanceConverter = this, elevationConverter = elevationConverter)
+
+    /**
+     * Returns a [UnitsConverter] that uses [distanceFormatter] for distances while preserving
+     * this converter's elevation formatting.
+     *
+     * @param distanceFormatter Custom formatter for distances.
+     * @return A composite [UnitsConverter].
+     */
+    public fun withDistanceFormatter(distanceFormatter: MeasurementFormatter): UnitsConverter =
+        create(distanceFormatter = distanceFormatter, elevationConverter = this)
+
+    /**
+     * Returns a [UnitsConverter] that uses [elevationFormatter] for elevations while preserving
+     * this converter's distance formatting.
+     *
+     * @param elevationFormatter Custom formatter for elevations.
+     * @return A composite [UnitsConverter].
+     */
+    public fun withElevationFormatter(elevationFormatter: MeasurementFormatter): UnitsConverter =
+        create(distanceConverter = this, elevationFormatter = elevationFormatter)
+
+    public companion object {
+        private val IMPERIAL_DISTANCE_METRIC_ELEVATION_CONVERTER: UnitsConverter by lazy(
+            LazyThreadSafetyMode.PUBLICATION,
+        ) {
+            CompositeUnitsConverter(
+                distanceFormatter = ImperialUnitsConverter::toDistanceString,
+                elevationFormatter = MetricUnitsConverter::toElevationString,
+                distanceResourcesFormatter = ImperialUnitsConverter::toDistanceString,
+                elevationResourcesFormatter = MetricUnitsConverter::toElevationString,
+                distanceDelegate = ImperialUnitsConverter,
+                elevationDelegate = MetricUnitsConverter,
+            )
+        }
+
+        private val METRIC_DISTANCE_IMPERIAL_ELEVATION_CONVERTER: UnitsConverter by lazy(
+            LazyThreadSafetyMode.PUBLICATION,
+        ) {
+            CompositeUnitsConverter(
+                distanceFormatter = MetricUnitsConverter::toDistanceString,
+                elevationFormatter = ImperialUnitsConverter::toElevationString,
+                distanceResourcesFormatter = MetricUnitsConverter::toDistanceString,
+                elevationResourcesFormatter = ImperialUnitsConverter::toElevationString,
+                distanceDelegate = MetricUnitsConverter,
+                elevationDelegate = ImperialUnitsConverter,
+            )
+        }
+
+        /**
+         * Creates a [UnitsConverter] using the specified [distanceUnits] and [elevationUnits].
+         *
+         * @param distanceUnits The [UnitSystem] to use for distances ([UnitSystem.METRIC] or [UnitSystem.IMPERIAL]).
+         * @param elevationUnits The [UnitSystem] to use for elevations ([UnitSystem.METRIC] or [UnitSystem.IMPERIAL]).
+         * @return The corresponding [UnitsConverter].
+         */
+        @JvmStatic
+        public fun create(distanceUnits: UnitSystem, elevationUnits: UnitSystem): UnitsConverter =
+            create(distanceUnits.converter, elevationUnits.converter)
+
+        /**
+         * Creates a composite [UnitsConverter] that delegates distance formatting to
+         * [distanceConverter] and elevation formatting to [elevationConverter].
+         *
+         * For example, to format road distances in Imperial units (`ft` / `mi`) and elevations in
+         * Metric units (`m`) for the UK:
+         * ```java
+         * UnitsConverter ukConverter = UnitsConverter.create(
+         *     ImperialUnitsConverter.INSTANCE,
+         *     MetricUnitsConverter.INSTANCE
+         * );
+         * ```
+         */
+        @JvmStatic
+        public fun create(distanceConverter: UnitsConverter, elevationConverter: UnitsConverter): UnitsConverter {
+            val resolvedDistance =
+                (distanceConverter as? CompositeUnitsConverter)?.distanceDelegate ?: distanceConverter
+            val resolvedElevation =
+                (elevationConverter as? CompositeUnitsConverter)?.elevationDelegate ?: elevationConverter
+            return when {
+                resolvedDistance === MetricUnitsConverter && resolvedElevation === MetricUnitsConverter ->
+                    MetricUnitsConverter
+
+                resolvedDistance === ImperialUnitsConverter && resolvedElevation === ImperialUnitsConverter ->
+                    ImperialUnitsConverter
+
+                resolvedDistance === ImperialUnitsConverter && resolvedElevation === MetricUnitsConverter ->
+                    IMPERIAL_DISTANCE_METRIC_ELEVATION_CONVERTER
+
+                resolvedDistance === MetricUnitsConverter && resolvedElevation === ImperialUnitsConverter ->
+                    METRIC_DISTANCE_IMPERIAL_ELEVATION_CONVERTER
+
+                else ->
+                    CompositeUnitsConverter(
+                        distanceFormatter = resolvedDistance::toDistanceString,
+                        elevationFormatter = resolvedElevation::toElevationString,
+                        distanceResourcesFormatter = resolvedDistance::toDistanceString,
+                        elevationResourcesFormatter = resolvedElevation::toElevationString,
+                        distanceDelegate = resolvedDistance,
+                        elevationDelegate = resolvedElevation,
+                    )
+            }
+        }
+
+        /**
+         * Creates a custom [UnitsConverter] using the supplied [distanceFormatter] and
+         * [elevationFormatter].
+         */
+        @JvmStatic
+        public fun create(
+            distanceFormatter: MeasurementFormatter,
+            elevationFormatter: MeasurementFormatter,
+        ): UnitsConverter = CompositeUnitsConverter(
+            distanceFormatter = { meters, symbols -> distanceFormatter.format(meters.value, symbols) },
+            elevationFormatter = { meters, symbols -> elevationFormatter.format(meters.value, symbols) },
+        )
+
+        /**
+         * Creates a composite [UnitsConverter] that delegates distance formatting to
+         * [distanceConverter] and uses [elevationFormatter] for elevations.
+         */
+        @JvmStatic
+        public fun create(
+            distanceConverter: UnitsConverter,
+            elevationFormatter: MeasurementFormatter,
+        ): UnitsConverter {
+            val resolvedDistance =
+                (distanceConverter as? CompositeUnitsConverter)?.distanceDelegate ?: distanceConverter
+            return CompositeUnitsConverter(
+                distanceFormatter = resolvedDistance::toDistanceString,
+                elevationFormatter = { meters, symbols -> elevationFormatter.format(meters.value, symbols) },
+                distanceResourcesFormatter = resolvedDistance::toDistanceString,
+                distanceDelegate = resolvedDistance,
+            )
+        }
+
+        /**
+         * Creates a composite [UnitsConverter] that uses [distanceFormatter] for distances and
+         * delegates elevation formatting to [elevationConverter].
+         */
+        @JvmStatic
+        public fun create(
+            distanceFormatter: MeasurementFormatter,
+            elevationConverter: UnitsConverter,
+        ): UnitsConverter {
+            val resolvedElevation =
+                (elevationConverter as? CompositeUnitsConverter)?.elevationDelegate ?: elevationConverter
+            return CompositeUnitsConverter(
+                distanceFormatter = { meters, symbols -> distanceFormatter.format(meters.value, symbols) },
+                elevationFormatter = resolvedElevation::toElevationString,
+                elevationResourcesFormatter = resolvedElevation::toElevationString,
+                elevationDelegate = resolvedElevation,
+            )
+        }
+    }
+}
+
+private class CompositeUnitsConverter(
+    private val distanceFormatter: (Meters, NumberFormatSymbols) -> String,
+    private val elevationFormatter: (Meters, NumberFormatSymbols) -> String,
+    private val distanceResourcesFormatter: ((Resources, Meters) -> String)? = null,
+    private val elevationResourcesFormatter: ((Resources, Meters) -> String)? = null,
+    internal val distanceDelegate: UnitsConverter? = null,
+    internal val elevationDelegate: UnitsConverter? = null,
+) : UnitsConverter() {
+    override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String =
+        distanceFormatter(meters, symbols)
+
+    override fun toDistanceString(resources: Resources, meters: Meters): String =
+        distanceResourcesFormatter?.invoke(resources, meters) ?: super.toDistanceString(resources, meters)
+
+    override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
+        elevationFormatter(meters, symbols)
+
+    override fun toElevationString(resources: Resources, meters: Meters): String =
+        elevationResourcesFormatter?.invoke(resources, meters) ?: super.toElevationString(resources, meters)
 }
 
 // [START maps_android_utils_units_converters]
@@ -492,38 +775,70 @@ public abstract class UnitsConverter {
 /**
  * Renders distance and elevation measurements in Imperial units (`ft` and `mi`).
  *
- * - **Distances** below `0.25` miles (`1,320` feet) are displayed in whole feet (`ft`).
+ * - **Distances** rounding to below `0.25` miles (`1,320` feet) are displayed in whole feet (`ft`).
  * - **Distances** from `0.25` miles up to `< 10` miles are displayed in miles (`mi`) with `1`
  *   decimal digit (keeping trailing `.0`, e.g., `"0.3 mi"`, `"1.0 mi"`, `"2.5 mi"`).
  * - **Distances** of `10` miles or greater are displayed in whole miles (`mi`, e.g., `"10 mi"`).
  * - **Elevations** are always displayed in whole feet (`ft`).
  */
 public object ImperialUnitsConverter : UnitsConverter() {
+    private const val THRESHOLD_FEET: Long = 1_320L
+
     /** Threshold (`0.25` miles = `1,320` feet) at which imperial distances switch from feet to miles. */
+    @get:JvmName("getMilesThreshold")
     public val MILES_THRESHOLD: Meters = 0.25.miles
 
-    override val unitSystem: UnitSystem = UnitSystem.IMPERIAL
+    /** The [UnitSystem] implemented by this converter ([UnitSystem.IMPERIAL]). */
+    public val unitSystem: UnitSystem = UnitSystem.IMPERIAL
 
-    override fun toDistanceUnits(meters: Meters): ValueWithUnitsTemplate =
-        if (abs(meters.value) < MILES_THRESHOLD.value) {
-            ValueWithUnitsTemplate(normalizeZero(meters.toFeet, decimals = 0), R.string.amu_in_feet)
+    override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String = formatDistance(
+        meters = meters,
+        symbols = symbols,
+        formatFeet = { "$it ft" },
+        formatMiles = { "$it mi" },
+    )
+
+    override fun toDistanceString(resources: Resources, meters: Meters): String = formatDistance(
+        meters = meters,
+        symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
+        formatFeet = { resources.getString(R.string.amu_in_feet, it) },
+        formatMiles = { resources.getString(R.string.amu_in_miles, it) },
+    )
+
+    override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
+        "${symbols.formatFixedDecimal(meters.inFeet, decimals = 0)} ft"
+
+    override fun toElevationString(resources: Resources, meters: Meters): String {
+        val symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources))
+        return resources.getString(R.string.amu_in_feet, symbols.formatFixedDecimal(meters.inFeet, decimals = 0))
+    }
+
+    private inline fun formatDistance(
+        meters: Meters,
+        symbols: NumberFormatSymbols,
+        formatFeet: (String) -> String,
+        formatMiles: (String) -> String,
+    ): String {
+        val feet = meters.inFeet
+        return if (abs(feet).roundToLong() < THRESHOLD_FEET) {
+            formatFeet(symbols.formatFixedDecimal(feet, decimals = 0))
         } else {
-            val miles = meters.toMiles
-            if (isUnderTenAtOneDecimal(miles)) {
-                ValueWithUnitsTemplate(normalizeZero(miles, decimals = 1), R.string.amu_in_miles)
-            } else {
-                ValueWithUnitsTemplate(normalizeZero(miles, decimals = 0), R.string.amu_in_miles_whole)
-            }
+            val rawMiles = meters.inMiles
+            val miles =
+                if (abs(rawMiles) < 0.25) {
+                    if (rawMiles < 0.0) -0.25 else 0.25
+                } else {
+                    rawMiles
+                }
+            formatMiles(symbols.formatDistanceValue(miles))
         }
-
-    override fun toElevationUnits(meters: Meters): ValueWithUnitsTemplate =
-        ValueWithUnitsTemplate(normalizeZero(meters.toFeet, decimals = 0), R.string.amu_in_feet)
+    }
 }
 
 /**
  * Renders distance and elevation measurements in Metric units (`m` and `km`).
  *
- * - **Distances** below `1,000` meters are displayed in whole meters (`m`).
+ * - **Distances** rounding to below `1,000` meters are displayed in whole meters (`m`).
  * - **Distances** from `1,000` meters (`1.0` km) up to `< 10` kilometers are displayed in
  *   kilometers (`km`) with `1` decimal digit (keeping trailing `.0`, e.g., `"1.0 km"`, `"2.5 km"`).
  * - **Distances** of `10` kilometers or greater are displayed in whole kilometers (`km`, e.g., `"10 km"`).
@@ -531,24 +846,47 @@ public object ImperialUnitsConverter : UnitsConverter() {
  */
 public object MetricUnitsConverter : UnitsConverter() {
     /** Threshold (`1,000` meters = `1` kilometer) at which metric distances switch from meters to kilometers. */
+    @get:JvmName("getKilometersThreshold")
     public val KILOMETERS_THRESHOLD: Meters = METERS_PER_KILOMETER.meters
 
-    override val unitSystem: UnitSystem = UnitSystem.METRIC
+    /** The [UnitSystem] implemented by this converter ([UnitSystem.METRIC]). */
+    public val unitSystem: UnitSystem = UnitSystem.METRIC
 
-    override fun toDistanceUnits(meters: Meters): ValueWithUnitsTemplate =
-        if (abs(meters.value) < KILOMETERS_THRESHOLD.value) {
-            ValueWithUnitsTemplate(normalizeZero(meters.toMeters, decimals = 0), R.string.amu_in_meters)
+    override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String = formatDistance(
+        meters = meters,
+        symbols = symbols,
+        formatMeters = { "$it m" },
+        formatKilometers = { "$it km" },
+    )
+
+    override fun toDistanceString(resources: Resources, meters: Meters): String = formatDistance(
+        meters = meters,
+        symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
+        formatMeters = { resources.getString(R.string.amu_in_meters, it) },
+        formatKilometers = { resources.getString(R.string.amu_in_kilometers, it) },
+    )
+
+    override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
+        "${symbols.formatFixedDecimal(meters.inMeters, decimals = 0)} m"
+
+    override fun toElevationString(resources: Resources, meters: Meters): String {
+        val symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources))
+        return resources.getString(R.string.amu_in_meters, symbols.formatFixedDecimal(meters.inMeters, decimals = 0))
+    }
+
+    private inline fun formatDistance(
+        meters: Meters,
+        symbols: NumberFormatSymbols,
+        formatMeters: (String) -> String,
+        formatKilometers: (String) -> String,
+    ): String {
+        val metersValue = meters.inMeters
+        return if (abs(metersValue).roundToLong() < METERS_PER_KILOMETER) {
+            formatMeters(symbols.formatFixedDecimal(metersValue, decimals = 0))
         } else {
-            val kilometers = meters.toKilometers
-            if (isUnderTenAtOneDecimal(kilometers)) {
-                ValueWithUnitsTemplate(normalizeZero(kilometers, decimals = 1), R.string.amu_in_kilometers)
-            } else {
-                ValueWithUnitsTemplate(normalizeZero(kilometers, decimals = 0), R.string.amu_in_kilometers_whole)
-            }
+            formatKilometers(symbols.formatDistanceValue(meters.inKilometers))
         }
-
-    override fun toElevationUnits(meters: Meters): ValueWithUnitsTemplate =
-        ValueWithUnitsTemplate(normalizeZero(meters.toMeters, decimals = 0), R.string.amu_in_meters)
+    }
 }
 // [END maps_android_utils_units_converters]
 
@@ -557,29 +895,167 @@ public object MetricUnitsConverter : UnitsConverter() {
 // =================================================================================================
 
 /**
- * Returns the appropriate [UnitsConverter] for the given [locale] (defaulting to [Locale.getDefault]).
+ * Constructs a [UnitsConverter] using the specified [distanceUnits] and [elevationUnits].
  *
- * @param locale The [Locale] used to determine the preferred unit system.
- * @return [ImperialUnitsConverter] for imperial locales (`US`, `LR`, `MM`, `GB`), or
- *   [MetricUnitsConverter] otherwise.
+ * @param distanceUnits The [UnitSystem] to use for distances ([UnitSystem.METRIC] or [UnitSystem.IMPERIAL]).
+ * @param elevationUnits The [UnitSystem] to use for elevations ([UnitSystem.METRIC] or [UnitSystem.IMPERIAL]).
+ * @return The corresponding [UnitsConverter].
+ */
+public fun UnitsConverter(distanceUnits: UnitSystem, elevationUnits: UnitSystem): UnitsConverter =
+    UnitsConverter.create(distanceUnits, elevationUnits)
+
+/**
+ * Constructs a composite [UnitsConverter] that delegates distance formatting to
+ * [distanceConverter] and elevation formatting to [elevationConverter].
+ *
+ * Example (Imperial road distances with Metric elevations for the UK):
+ * ```kotlin
+ * val ukConverter = UnitsConverter(
+ *     distanceConverter = ImperialUnitsConverter,
+ *     elevationConverter = MetricUnitsConverter,
+ * )
+ * ```
+ *
+ * @param distanceConverter Converter used for [UnitsConverter.toDistanceString].
+ * @param elevationConverter Converter used for [UnitsConverter.toElevationString].
+ * @return A composite [UnitsConverter].
+ */
+public fun UnitsConverter(distanceConverter: UnitsConverter, elevationConverter: UnitsConverter): UnitsConverter =
+    UnitsConverter.create(distanceConverter, elevationConverter)
+
+/**
+ * Constructs a custom [UnitsConverter] using the provided [distanceFormatter] and
+ * [elevationFormatter] lambdas (or method references such as `MetricUnitsConverter::toElevationString`).
+ *
+ * Example:
+ * ```kotlin
+ * val customConverter = UnitsConverter(
+ *     distanceFormatter = { meters, symbols ->
+ *         "${symbols.formatFixedDecimal(meters.inKilometers, decimals = 2)} km"
+ *     },
+ *     elevationFormatter = MetricUnitsConverter::toElevationString,
+ * )
+ * ```
+ *
+ * @param distanceFormatter Lambda formatting a [Meters] distance with [NumberFormatSymbols].
+ * @param elevationFormatter Lambda formatting a [Meters] elevation with [NumberFormatSymbols].
+ * @return A custom [UnitsConverter].
+ */
+@JvmSynthetic
+public fun UnitsConverter(
+    distanceFormatter: (Meters, NumberFormatSymbols) -> String,
+    elevationFormatter: (Meters, NumberFormatSymbols) -> String,
+): UnitsConverter = CompositeUnitsConverter(
+    distanceFormatter = distanceFormatter,
+    elevationFormatter = elevationFormatter,
+)
+
+/**
+ * Constructs a composite [UnitsConverter] that delegates distance formatting to
+ * [distanceConverter] and uses [elevationFormatter] for elevations.
+ *
+ * @param distanceConverter Converter used for [UnitsConverter.toDistanceString].
+ * @param elevationFormatter Lambda formatting a [Meters] elevation with [NumberFormatSymbols].
+ * @return A composite [UnitsConverter].
+ */
+@JvmSynthetic
+public fun UnitsConverter(
+    distanceConverter: UnitsConverter,
+    elevationFormatter: (Meters, NumberFormatSymbols) -> String,
+): UnitsConverter {
+    val resolvedDistance = (distanceConverter as? CompositeUnitsConverter)?.distanceDelegate ?: distanceConverter
+    return CompositeUnitsConverter(
+        distanceFormatter = resolvedDistance::toDistanceString,
+        elevationFormatter = elevationFormatter,
+        distanceResourcesFormatter = resolvedDistance::toDistanceString,
+        distanceDelegate = resolvedDistance,
+    )
+}
+
+/**
+ * Constructs a composite [UnitsConverter] that uses [distanceFormatter] for distances and
+ * delegates elevation formatting to [elevationConverter].
+ *
+ * @param distanceFormatter Lambda formatting a [Meters] distance with [NumberFormatSymbols].
+ * @param elevationConverter Converter used for [UnitsConverter.toElevationString].
+ * @return A composite [UnitsConverter].
+ */
+@JvmSynthetic
+public fun UnitsConverter(
+    distanceFormatter: (Meters, NumberFormatSymbols) -> String,
+    elevationConverter: UnitsConverter,
+): UnitsConverter {
+    val resolvedElevation = (elevationConverter as? CompositeUnitsConverter)?.elevationDelegate ?: elevationConverter
+    return CompositeUnitsConverter(
+        distanceFormatter = distanceFormatter,
+        elevationFormatter = resolvedElevation::toElevationString,
+        elevationResourcesFormatter = resolvedElevation::toElevationString,
+        elevationDelegate = resolvedElevation,
+    )
+}
+
+/**
+ * Returns the appropriate [UnitsConverter] for the given [locale] (defaulting to [Locale.getDefault]),
+ * with optional overrides for [distanceUnits] or [elevationUnits].
+ *
+ * For `"GB"` ([Locale.UK]), distances default to [UnitSystem.IMPERIAL] (`ft` / `mi`) and elevations
+ * default to [UnitSystem.METRIC] (`m`).
+ *
+ * @param locale The [Locale] used to determine the default distance and elevation unit systems.
+ * @param distanceUnits Preferred [UnitSystem] for distances (defaults to [UnitSystem.distanceFromLocale]).
+ * @param elevationUnits Preferred [UnitSystem] for elevations (defaults to [UnitSystem.elevationFromLocale]).
+ * @return The resolved [UnitsConverter].
  */
 @JvmOverloads
-public fun getUnitsConverter(locale: Locale = Locale.getDefault()): UnitsConverter =
-    UnitSystem.fromLocale(locale).converter
+public fun getUnitsConverter(
+    locale: Locale = Locale.getDefault(),
+    distanceUnits: UnitSystem = UnitSystem.distanceFromLocale(locale),
+    elevationUnits: UnitSystem = UnitSystem.elevationFromLocale(locale),
+): UnitsConverter = UnitsConverter.create(distanceUnits, elevationUnits)
 
 /**
- * Returns the appropriate [UnitsConverter] for the given ISO 3166-1 alpha-2 [countryCode].
+ * Returns the appropriate [UnitsConverter] for the primary locale of the given Android [resources],
+ * with optional overrides for [distanceUnits] or [elevationUnits].
+ *
+ * For `"GB"` ([Locale.UK]), distances default to [UnitSystem.IMPERIAL] (`ft` / `mi`) and elevations
+ * default to [UnitSystem.METRIC] (`m`).
+ *
+ * @param resources The Android [Resources] whose configuration locale determines the default unit systems.
+ * @param distanceUnits Preferred [UnitSystem] for distances (defaults to [UnitSystem.distanceFromResources]).
+ * @param elevationUnits Preferred [UnitSystem] for elevations (defaults to [UnitSystem.elevationFromResources]).
+ * @return The resolved [UnitsConverter].
+ */
+@JvmOverloads
+public fun getUnitsConverter(
+    resources: Resources,
+    distanceUnits: UnitSystem = UnitSystem.distanceFromResources(resources),
+    elevationUnits: UnitSystem = UnitSystem.elevationFromResources(resources),
+): UnitsConverter = UnitsConverter.create(distanceUnits, elevationUnits)
+
+/**
+ * Returns the appropriate [UnitsConverter] for the given ISO 3166-1 alpha-2 [countryCode],
+ * with optional overrides for [distanceUnits] or [elevationUnits].
+ *
+ * For `"GB"`, distances default to [UnitSystem.IMPERIAL] (`ft` / `mi`) and elevations default to
+ * [UnitSystem.METRIC] (`m`).
  *
  * @param countryCode The two-letter country code (case-insensitive), or `null`.
- * @return [ImperialUnitsConverter] if [countryCode] is in [UnitSystem.IMPERIAL_COUNTRY_CODES],
- *   otherwise [MetricUnitsConverter].
+ * @param distanceUnits Preferred [UnitSystem] for distances (defaults to [UnitSystem.distanceFromCountryCode]).
+ * @param elevationUnits Preferred [UnitSystem] for elevations (defaults to [UnitSystem.elevationFromCountryCode]).
+ * @return The resolved [UnitsConverter].
  */
-public fun getUnitsConverter(countryCode: String?): UnitsConverter = UnitSystem.fromCountryCode(countryCode).converter
+@JvmOverloads
+public fun getUnitsConverter(
+    countryCode: String?,
+    distanceUnits: UnitSystem = UnitSystem.distanceFromCountryCode(countryCode),
+    elevationUnits: UnitSystem = UnitSystem.elevationFromCountryCode(countryCode),
+): UnitsConverter = UnitsConverter.create(distanceUnits, elevationUnits)
 
 /**
- * Returns the [UnitsConverter] corresponding to the specified [unitSystem].
+ * Returns the [UnitsConverter] corresponding to the specified [unitSystem] for both distances
+ * and elevations.
  *
- * @param unitSystem The desired [UnitSystem].
+ * @param unitSystem The desired [UnitSystem] for both distances and elevations.
  * @return [MetricUnitsConverter] or [ImperialUnitsConverter].
  */
 public fun getUnitsConverter(unitSystem: UnitSystem): UnitsConverter = unitSystem.converter
@@ -648,16 +1124,19 @@ public fun Meters.toDistanceString(
 ): String = converter.toDistanceString(this, symbols)
 
 /**
- * Formats this [Meters] measurement as a human-readable distance string using Android [resources].
+ * Formats this [Meters] measurement as a localized distance string using the translated unit
+ * templates (`R.string.amu_in_*`) and primary locale of [resources].
  *
- * @param resources Android [Resources] used to resolve the unit string template.
- * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter]).
+ * @param resources The Android [Resources] used for unit selection, number formatting, and localized unit labels.
+ * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter] for [resources]).
  * @return The formatted distance string.
  */
 @JvmName("toDistanceString")
 @JvmOverloads
-public fun Meters.toDistanceString(resources: Resources, converter: UnitsConverter = getUnitsConverter()): String =
-    converter.toDistanceString(resources, this)
+public fun Meters.toDistanceString(
+    resources: Resources,
+    converter: UnitsConverter = getUnitsConverter(resources),
+): String = converter.toDistanceString(resources, this)
 
 /**
  * Formats this [Meters] measurement as a human-readable elevation string using [locale] and [converter].
@@ -689,20 +1168,26 @@ public fun Meters.toElevationString(
 ): String = converter.toElevationString(this, symbols)
 
 /**
- * Formats this [Meters] measurement as a human-readable elevation string using Android [resources].
+ * Formats this [Meters] measurement as a localized elevation string using the translated unit
+ * templates (`R.string.amu_in_*`) and primary locale of [resources].
  *
- * @param resources Android [Resources] used to resolve the unit string template.
- * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter]).
+ * @param resources The Android [Resources] used for unit selection, number formatting, and localized unit labels.
+ * @param converter The [UnitsConverter] to use (defaults to [getUnitsConverter] for [resources]).
  * @return The formatted elevation string.
  */
 @JvmName("toElevationString")
 @JvmOverloads
-public fun Meters.toElevationString(resources: Resources, converter: UnitsConverter = getUnitsConverter()): String =
-    converter.toElevationString(resources, this)
+public fun Meters.toElevationString(
+    resources: Resources,
+    converter: UnitsConverter = getUnitsConverter(resources),
+): String = converter.toElevationString(resources, this)
 
 // =================================================================================================
 // § 6. Internal Pure-Kotlin Formatting Helpers
 // =================================================================================================
+
+private fun primaryLocale(resources: Resources): Locale =
+    ConfigurationCompat.getLocales(resources.configuration)[0] ?: Locale.getDefault()
 
 // [START maps_android_utils_units_pure_kotlin_formatter]
 
@@ -714,29 +1199,17 @@ public fun Meters.toElevationString(resources: Resources, converter: UnitsConver
 private fun isUnderTenAtOneDecimal(value: Double): Boolean = (abs(value) * 10.0).roundToLong() < 100L
 
 /**
- * Prevents negative values that round to zero at the given [decimals] precision from formatting
- * as `"-0"` or `"-0.0"`.
- */
-private fun normalizeZero(value: Double, decimals: Int): Double {
-    val factor = if (decimals == 0) 1.0 else 10.0
-    if (abs(value) * factor < 0.5) return 0.0
-    return value
-}
-
-/**
- * Formats [value] with `0` or `1` decimal places and locale-specific thousands grouping using pure
+ * Formats [value] with [decimals] fractional digits and locale-specific thousands grouping using pure
  * `kotlin.math` integer arithmetic (`roundToLong`, `/`, `%`) and `buildString`, avoiding any
  * dependency on `java.util.Formatter` (`String.format`).
  */
-internal fun formatFixedDecimal(
-    value: Double,
-    decimals: Int,
-    symbols: NumberFormatSymbols = NumberFormatSymbols.DEFAULT,
-): String {
-    val factor = if (decimals <= 0) 1L else 10L
+internal fun formatFixedDecimal(value: Double, decimals: Int, symbols: NumberFormatSymbols): String {
+    require(decimals >= 0) { "decimals must be non-negative, was $decimals" }
+    var factor = 1L
+    repeat(decimals) { factor *= 10L }
     val scaled = (abs(value) * factor).roundToLong()
     val isNegative = value < 0.0 && scaled > 0L
-    val integerPart = if (decimals <= 0) scaled else scaled / 10L
+    val integerPart = scaled / factor
     val groupedInteger = formatGroupedInteger(
         value = integerPart,
         groupingSeparator = symbols.groupingSeparator,
@@ -747,7 +1220,7 @@ internal fun formatFixedDecimal(
         append(groupedInteger)
         if (decimals > 0) {
             append(symbols.decimalSeparator)
-            append(scaled % 10L)
+            append((scaled % factor).toString().padStart(decimals, '0'))
         }
     }
 }
@@ -756,7 +1229,7 @@ internal fun formatFixedDecimal(
  * Formats a non-negative integer [value] with [groupingSeparator] inserted every [groupingSize]
  * digits from the right.
  */
-internal fun formatGroupedInteger(value: Long, groupingSeparator: Char, groupingSize: Int = 3): String {
+internal fun formatGroupedInteger(value: Long, groupingSeparator: Char, groupingSize: Int): String {
     val digits = value.toString()
     if (groupingSize <= 0 || digits.length <= groupingSize) {
         return digits
@@ -771,18 +1244,3 @@ internal fun formatGroupedInteger(value: Long, groupingSeparator: Char, grouping
     }
 }
 // [END maps_android_utils_units_pure_kotlin_formatter]
-
-/**
- * Formats [value] with its unit suffix according to [resourceId] and [symbols] without requiring
- * Android [Resources] or `java.util.Formatter`.
- */
-private fun formatWithTemplate(@StringRes resourceId: Int, value: Double, symbols: NumberFormatSymbols): String =
-    when (resourceId) {
-        R.string.amu_in_feet -> "${formatFixedDecimal(value, decimals = 0, symbols)} ft"
-        R.string.amu_in_miles -> "${formatFixedDecimal(value, decimals = 1, symbols)} mi"
-        R.string.amu_in_miles_whole -> "${formatFixedDecimal(value, decimals = 0, symbols)} mi"
-        R.string.amu_in_meters -> "${formatFixedDecimal(value, decimals = 0, symbols)} m"
-        R.string.amu_in_kilometers -> "${formatFixedDecimal(value, decimals = 1, symbols)} km"
-        R.string.amu_in_kilometers_whole -> "${formatFixedDecimal(value, decimals = 0, symbols)} km"
-        else -> formatFixedDecimal(value, decimals = 1, symbols)
-    }

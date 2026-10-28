@@ -174,36 +174,67 @@ Full guides for using the utilities are published in
 
 ### Units & Logical Distance/Elevation Formatting
 
-The `Units` API (`com.google.maps.android`) provides a type-safe `Meters` value class, framework-agnostic `UnitSystem` resolution (defaulting to Imperial for `US`, `LR`, `MM`, and `GB` locales, and Metric elsewhere), and logical significant-digit formatting for distances and elevations:
+The `Units` API (`com.google.maps.android`) provides a type-safe `Meters` value class, locale- and `Resources`-aware `UnitSystem` resolution, and logical significant-digit formatting for distances and elevations:
 
-- **Small distances** (`< 1 km` metric or `< 0.25 mi` imperial) and **all elevations** format as whole integers (`450 m`, `528 ft`, `14,440 ft`).
-- **Medium distances** (`1.0` to `< 10` km, or `0.25` to `< 10` mi) format with 1 decimal digit, keeping trailing `.0` (`0.3 mi`, `1.0 km`, `2.5 mi`).
-- **Large distances** (`>= 10` km or `>= 10` mi) round to whole numbers (`10 km`, `12 mi`).
+- **Locale Defaults**:
+  - `US`, `LR`, and `MM` default to **Imperial** (`ft`, `mi`) for both road distances and elevations.
+  - `GB` (`Locale.UK`) defaults out-of-the-box to **Imperial road distances** (`ft`, `mi`) and **Metric elevations** (`m`).
+  - All other locales default to **Metric** (`m`, `km`) for both road distances and elevations.
+- **Logical Precision Rules**:
+  - **Small distances** (`< 1 km` metric or `< 0.25 mi` imperial) and **all elevations** format as whole integers (`450 m`, `528 ft`, `14,440 ft`).
+  - **Medium distances** (`1.0` to `< 10` km, or `0.25` to `< 10` mi) format with 1 decimal digit, keeping trailing `.0` (`0.3 mi`, `1.0 km`, `2.5 mi`).
+  - **Large distances** (`>= 10` km or `>= 10` mi) round to whole numbers (`10 km`, `12 mi`).
 
 ```kotlin
 import com.google.maps.android.ImperialUnitsConverter
 import com.google.maps.android.MetricUnitsConverter
 import com.google.maps.android.UnitSystem
+import com.google.maps.android.UnitsConverter
 import com.google.maps.android.getUnitsConverter
-import com.google.maps.android.km
+import com.google.maps.android.inFeet
+import com.google.maps.android.inKilometers
+import com.google.maps.android.kilometers
 import com.google.maps.android.meters
 import com.google.maps.android.miles
 import com.google.maps.android.toDistanceString
 import com.google.maps.android.toElevationString
+import java.util.Locale
 
-// Default converter for the device's current Locale (no Android Context required)
-val converter = getUnitsConverter()
+// 1. Default formatting using device Locale, explicit Locale, or Android Resources (for localized unit templates)
+val distanceText = 450.meters.toDistanceString()                       // Uses Locale.getDefault()
+val localizedText = 450.meters.toDistanceString(context.resources)     // Uses localized R.string.amu_in_* templates
+val ukDistance = 1.miles.toDistanceString(Locale.UK)                   // "1.0 mi"
+val ukElevation = 1345.meters.toElevationString(Locale.UK)             // "1,345 m" (GB defaults to miles/ft + metres)
 
-// Or explicitly choose a unit system / country code / Locale
+// 2. Override both distance and elevation to Metric or Imperial
 val imperial = getUnitsConverter(UnitSystem.IMPERIAL)
-val metric = getUnitsConverter("FR")
+val metric = getUnitsConverter(UnitSystem.METRIC)
 
-// Format distances and elevations
-val shortWalk = 450.meters.toDistanceString(metric)       // "450 m"
-val quarterMile = 0.25.miles.toDistanceString(imperial)   // "0.3 mi"
-val mediumDrive = 2.0.km.toDistanceString(metric)         // "2.0 km"
-val longTrip = 12.4.km.toDistanceString(metric)           // "12 km"
-val summit = 4401.2.meters.toElevationString(imperial)    // "14,440 ft"
+val summitFeet = 4401.2.meters.inFeet                                  // 14439.6325...
+val shortWalk = 450.meters.toDistanceString(metric)                    // "450 m"
+val quarterMile = 0.25.miles.toDistanceString(imperial)                // "0.3 mi"
+val mediumDrive = 2.0.kilometers.toDistanceString(metric)              // "2.0 km"
+val longTrip = 12.4.kilometers.toDistanceString(metric)                // "12 km"
+val summit = 4401.2.meters.toElevationString(imperial)                 // "14,440 ft"
+
+// 3. Override only distance or only elevation (via factory parameters, fluent copy methods, or UnitSystem pair)
+val usMetricElevation = getUnitsConverter(Locale.US, elevationUnits = UnitSystem.METRIC)
+val ukImperialElevation = getUnitsConverter(Locale.UK).withElevationUnits(UnitSystem.IMPERIAL)
+val hybridBySystem = UnitsConverter(
+    distanceUnits = UnitSystem.IMPERIAL,
+    elevationUnits = UnitSystem.METRIC,
+)
+
+// 4. Mix & match converters or supply custom MeasurementFormatter lambdas
+val customConverter = UnitsConverter(
+    distanceFormatter = { meters, symbols ->
+        "${symbols.formatFixedDecimal(meters.inKilometers, decimals = 2)} km"
+    },
+    elevationConverter = MetricUnitsConverter,
+)
+val customElevation = getUnitsConverter().withElevationFormatter { meters, symbols ->
+    "${symbols.formatInteger(meters.value)} MASL"
+}
 ```
 
 In Java, `Units` exposes static conversion and formatting methods (usable with `import static com.google.maps.android.Units.*;`):
@@ -211,22 +242,50 @@ In Java, `Units` exposes static conversion and formatting methods (usable with `
 ```java
 import static com.google.maps.android.Units.feet;
 import static com.google.maps.android.Units.getUnitsConverter;
-import static com.google.maps.android.Units.km;
+import static com.google.maps.android.Units.inFeet;
+import static com.google.maps.android.Units.inKilometers;
+import static com.google.maps.android.Units.kilometers;
 import static com.google.maps.android.Units.meters;
 import static com.google.maps.android.Units.miles;
 import static com.google.maps.android.Units.toDistanceString;
 import static com.google.maps.android.Units.toElevationString;
-import static com.google.maps.android.Units.toFeet;
 
+import com.google.maps.android.ImperialUnitsConverter;
+import com.google.maps.android.MetricUnitsConverter;
 import com.google.maps.android.UnitSystem;
 import com.google.maps.android.UnitsConverter;
+import java.util.Locale;
 
-double twelveFeetInMeters = feet(12);                     // 3.6576 m
-double elevationInFeet = toFeet(meters(4401.2));          // 14439.63 ft
+double twelveFeetInMeters = feet(12);                                       // 3.6576 m
+double elevationInFeet = inFeet(meters(4401.2));                            // 14439.63 ft
 
+// 1. Default formatting (Locale or Android Resources)
+String defaultDistance = toDistanceString(miles(2.5));                      // "2.5 mi" (in US/GB locale)
+String localizedDistance = toDistanceString(miles(2.5), context.getResources());
+String ukElevation = toElevationString(meters(1345), Locale.UK);            // "1,345 m"
+
+// 2. Override both distance and elevation
 UnitsConverter imperial = getUnitsConverter(UnitSystem.IMPERIAL);
-String distance = imperial.toDistanceString(miles(2.5));  // "2.5 mi"
-String summit = toElevationString(meters(4401.2));        // "14,440 ft" (in US locale)
+String distance = imperial.toDistanceString(miles(2.5));                    // "2.5 mi"
+String summit = imperial.toElevationString(meters(4401.2));                 // "14,440 ft"
+
+// 3. Override only distance or only elevation
+UnitsConverter usMetricElevation = getUnitsConverter(Locale.US)
+    .withElevationUnits(UnitSystem.METRIC);
+UnitsConverter hybridBySystem = UnitsConverter.create(
+    UnitSystem.IMPERIAL,
+    UnitSystem.METRIC
+);
+
+// 4. Mix & match converters or supply custom MeasurementFormatter lambdas
+UnitsConverter ukConverter = UnitsConverter.create(
+    ImperialUnitsConverter.INSTANCE,
+    MetricUnitsConverter.INSTANCE
+);
+UnitsConverter customConverter = UnitsConverter.create(
+    (meters, symbols) -> symbols.formatFixedDecimal(inKilometers(meters), 2) + " km",
+    MetricUnitsConverter.INSTANCE::toElevationString
+);
 ```
 
 </details>

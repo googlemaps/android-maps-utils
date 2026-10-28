@@ -18,6 +18,8 @@ package com.google.maps.android.utils.demo
 import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.ImperialUnitsConverter
 import com.google.maps.android.MetricUnitsConverter
+import com.google.maps.android.UnitSystem
+import com.google.maps.android.meters
 import com.google.maps.android.utils.demo.UnitsDemoActivity.UnitPreference
 import org.junit.Test
 import java.util.Locale
@@ -27,8 +29,16 @@ class UnitsDemoTest {
     fun unitPreference_resolvesExpectedConverter() {
         assertThat(UnitPreference.DEVICE_DEFAULT.resolveConverter(Locale.US))
             .isSameInstanceAs(ImperialUnitsConverter)
-        assertThat(UnitPreference.DEVICE_DEFAULT.resolveConverter(Locale.UK))
-            .isSameInstanceAs(ImperialUnitsConverter)
+
+        // UK (GB) defaults to Imperial road distances (ft/mi) + Metric elevations (m)
+        assertThat(UnitPreference.DEVICE_DEFAULT.resolveDistanceUnits(Locale.UK))
+            .isEqualTo(UnitSystem.IMPERIAL)
+        assertThat(UnitPreference.DEVICE_DEFAULT.resolveElevationUnits(Locale.UK))
+            .isEqualTo(UnitSystem.METRIC)
+        val ukConverter = UnitPreference.DEVICE_DEFAULT.resolveConverter(Locale.UK)
+        assertThat(ukConverter.toDistanceString(2_000.meters, Locale.UK)).isEqualTo("1.2 mi")
+        assertThat(ukConverter.toElevationString(1_345.meters, Locale.UK)).isEqualTo("1,345 m")
+
         assertThat(UnitPreference.DEVICE_DEFAULT.resolveConverter(Locale.FRANCE))
             .isSameInstanceAs(MetricUnitsConverter)
 
