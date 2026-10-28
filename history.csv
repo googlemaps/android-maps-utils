@@ -197,3 +197,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-10-23T14:45:38Z,b7b09e6,1828,build(deps): bump github/codeql-action/upload-sarif,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
 2026-10-23T14:45:38Z,b7b09e6,1828,build(deps): bump github/codeql-action/upload-sarif,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
 2026-10-23T14:45:38Z,b7b09e6,1828,build(deps): bump github/codeql-action/upload-sarif,unit,TOTAL,4539,7199,63.05,1950,4313,45.21,27929,44667,62.53
+2026-10-28T11:31:48Z,2e459fd,1837,build(deps): bump the github-actions-minor-and-patch group with 2 updates,unit,clustering,1187,2597,45.71,442,1248,35.42,6699,14200,47.18
+2026-10-28T11:31:48Z,2e459fd,1837,build(deps): bump the github-actions-minor-and-patch group with 2 updates,unit,data,1953,2968,65.8,1014,2461,41.2,12820,20976,61.12
+2026-10-28T11:31:48Z,2e459fd,1837,build(deps): bump the github-actions-minor-and-patch group with 2 updates,unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-10-28T11:31:48Z,2e459fd,1837,build(deps): bump the github-actions-minor-and-patch group with 2 updates,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
+2026-10-28T11:31:48Z,2e459fd,1837,build(deps): bump the github-actions-minor-and-patch group with 2 updates,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-10-28T11:31:48Z,2e459fd,1837,build(deps): bump the github-actions-minor-and-patch group with 2 updates,unit,TOTAL,4539,7199,63.05,1949,4313,45.19,27929,44667,62.53

@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `b7b09e6` (#1828), recorded 2026-10-23T14:45:38Z.
+Measured at `2e459fd` (#1837), recorded 2026-10-28T11:31:48Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 442/1,248 | 35.42% |
 | `data` | 1,953/2,968 | 65.80% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,024/1,173 | 87.30% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,539/7,199 | 63.05% | `█████████████░░░░░░░` | 1,950/4,313 | 45.21% |
+| **TOTAL** | 4,539/7,199 | 63.05% | `█████████████░░░░░░░` | 1,949/4,313 | 45.19% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-28 | `2e459fd` | #1837 | 63.05% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
 | 2026-10-23 | `b7b09e6` | #1828 | 63.05% | 0.00 | build(deps): bump github/codeql-action/upload-sarif |
 | 2026-10-22 | `3e6935f` | #1831 | 63.05% | 0.00 | build(deps): bump com.diffplug.spotless |
 | 2026-10-21 | `65c222c` | #1799 | 63.05% | +1.98 | feat(clustering): add SuperClusterAlgorithm for mega-scale marker clustering and configurable badge formatting |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-22 | `c3fa410` | #1787 | 51.91% | +1.36 | feat: add z-index support across geometry styles and layer mappers |
 | 2026-09-21 | `5557301` | #1762 | 50.55% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-09-18 | `a70f257` | #1781 | 50.55% | 0.00 | build(deps): bump actions/setup-java from 5.7.0 to 6.0.1 |
-| 2026-09-18 | `9056fd9` | #1785 | 50.55% | +0.02 | feat: add polygon z-index support |
