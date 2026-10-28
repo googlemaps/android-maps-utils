@@ -23,12 +23,22 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import java.io.IOException
 import java.io.InputStream
 
 public class GeoJsonParser @JvmOverloads public constructor(
     private val maxInputSize: Long = DEFAULT_MAX_INPUT_SIZE,
     private val maxStructuralDepth: Int = DEFAULT_MAX_STRUCTURAL_DEPTH,
 ) {
+    /**
+     * Parses a GeoJSON document from an InputStream.
+     *
+     * @param inputStream The InputStream of the GeoJSON document, read as UTF-8.
+     * @return The parsed GeoJSON object, or `null` if the top-level `type` is not recognized.
+     * @throws IOException If the stream cannot be read.
+     * @throws IllegalArgumentException If the document exceeds the size or nesting limits.
+     */
+    @Throws(IOException::class)
     public fun parse(inputStream: InputStream): GeoJsonObject? {
         // Bound the untrusted input *before* materialising it. [Json.parseToJsonElement] reads the
         // whole document into an in-memory tree, so without these guards a hostile document can
