@@ -17,17 +17,17 @@ package com.google.maps.android.quadtree
 
 import com.google.maps.android.geometry.Bounds
 import com.google.maps.android.geometry.Point
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
-import java.util.Random
+import kotlin.random.Random
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class PointQuadTreeTest {
     private lateinit var mTree: PointQuadTree<Item>
 
-    @Before
+    @BeforeTest
     fun setUp() {
         mTree = PointQuadTree(0.0, 1.0, 0.0, 1.0)
     }
@@ -105,7 +105,6 @@ class PointQuadTreeTest {
 
     @Test
     fun testSearch() {
-        System.gc()
         for (i in 0..9999) {
             mTree.add(Item(i / 20000.0, i / 20000.0))
         }
@@ -117,7 +116,6 @@ class PointQuadTreeTest {
         )
         assertEquals(0, mTree.search(Bounds(.7, .8, .7, .8)).size)
         mTree.clear()
-        System.gc()
     }
 
     @Test
@@ -136,7 +134,6 @@ class PointQuadTreeTest {
      */
     @Test
     fun testVeryDeepTree() {
-        System.gc()
         repeat(30000) {
             mTree.add(Item(0.0, 0.0))
         }
@@ -146,7 +143,6 @@ class PointQuadTreeTest {
         assertEquals(0, mTree.search(Bounds(.1, 1.0, .1, 1.0)).size)
 
         mTree.clear()
-        System.gc()
     }
 
     /**
@@ -155,7 +151,6 @@ class PointQuadTreeTest {
      */
     @Test
     fun testManyPoints() {
-        System.gc()
         for (i in 0..199) {
             for (j in 0..1999) {
                 mTree.add(Item(i / 200.0, j / 2000.0))
@@ -183,7 +178,6 @@ class PointQuadTreeTest {
 
         mTree.clear()
         assertEquals(0, searchAll().size)
-        System.gc()
     }
 
     @Test
@@ -211,11 +205,9 @@ class PointQuadTreeTest {
      */
     @Test
     fun testRandomPoints() {
-        System.gc()
-        Random().apply {
-            repeat(100000) {
-                mTree.add(Item(nextDouble(), nextDouble()))
-            }
+        val random = Random(0)
+        repeat(100000) {
+            mTree.add(Item(random.nextDouble(), random.nextDouble()))
         }
         searchAll()
 
@@ -230,7 +222,6 @@ class PointQuadTreeTest {
         mTree.search(Bounds(0.111, 0.222, 0.333, 0.444))
 
         mTree.clear()
-        System.gc()
     }
 
     private fun searchAll(): Collection<Item> = mTree.search(Bounds(0.0, 1.0, 0.0, 1.0))

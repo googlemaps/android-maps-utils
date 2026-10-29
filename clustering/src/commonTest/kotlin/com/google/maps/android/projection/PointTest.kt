@@ -15,24 +15,23 @@
  */
 package com.google.maps.android.projection
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 
-@RunWith(RobolectricTestRunner::class)
 class PointTest {
     @Test
     fun testPointConstruction() {
         val point = Point(1.0, 2.0)
-        assertThat(point).isNotNull()
-        assertThat(point.x).isEqualTo(1.0)
-        assertThat(point.y).isEqualTo(2.0)
+        assertNotNull(point)
+        assertEquals(1.0, point.x)
+        assertEquals(2.0, point.y)
     }
 
     @Test
     fun testPointIsInstanceOfGeometryPoint() {
-        val point = Point(1.0, 2.0)
-        assertThat(point).isInstanceOf(com.google.maps.android.geometry.Point::class.java)
+        val point: Any = Point(1.0, 2.0)
+        assertIs<com.google.maps.android.geometry.Point>(point)
     }
 }

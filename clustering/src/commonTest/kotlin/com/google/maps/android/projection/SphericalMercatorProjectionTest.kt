@@ -16,9 +16,11 @@
 
 package com.google.maps.android.projection
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * Unit tests for [SphericalMercatorProjection].
@@ -33,8 +35,8 @@ class SphericalMercatorProjectionTest {
         val point = projection.toPoint(original)
         val reconstructed = projection.toLatLng(point)
 
-        assertThat(reconstructed.latitude).isWithin(1e-6).of(original.latitude)
-        assertThat(reconstructed.longitude).isWithin(1e-6).of(original.longitude)
+        assertEquals(original.latitude, reconstructed.latitude, 1e-6)
+        assertEquals(original.longitude, reconstructed.longitude, 1e-6)
     }
 
     @Test
@@ -43,11 +45,11 @@ class SphericalMercatorProjectionTest {
         val center = LatLng(0.0, 0.0)
 
         val point = projection.toPoint(center)
-        assertThat(point.x).isWithin(1e-6).of(0.5)
-        assertThat(point.y).isWithin(1e-6).of(0.5)
+        assertEquals(0.5, point.x, 1e-6)
+        assertEquals(0.5, point.y, 1e-6)
 
         val reconstructed = projection.toLatLng(point)
-        assertThat(reconstructed.latitude).isWithin(1e-6).of(0.0)
-        assertThat(reconstructed.longitude).isWithin(1e-6).of(0.0)
+        assertEquals(0.0, reconstructed.latitude, 1e-6)
+        assertEquals(0.0, reconstructed.longitude, 1e-6)
     }
 }

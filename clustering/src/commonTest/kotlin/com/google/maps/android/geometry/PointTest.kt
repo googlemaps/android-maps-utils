@@ -15,9 +15,9 @@
  */
 package com.google.maps.android.geometry
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 class PointTest {
     @Test
