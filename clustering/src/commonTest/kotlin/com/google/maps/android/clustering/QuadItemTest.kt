@@ -15,14 +15,16 @@
  */
 package com.google.maps.android.clustering
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.geometry.Bounds
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
 import com.google.maps.android.projection.SphericalMercatorProjection
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class QuadItemTest {
     @Test
@@ -100,7 +102,7 @@ class QuadItemTest {
         item.setPosition(10.0, 10.0)
 
         // Call updateItem
-        assertTrue("updateItem should return true after position change", algo.updateItem(item))
+        assertTrue(algo.updateItem(item), "updateItem should return true after position change")
         assertEquals(1, algo.items.size)
 
         // Verify that the old QuadItem at (0, 0) was removed from the tree
@@ -123,7 +125,7 @@ class QuadItemTest {
         item.setPosition(10.0, 10.0)
 
         // Removing the item should succeed and remove it from the tree
-        assertTrue("removeItem should return true after position change", algo.removeItem(item))
+        assertTrue(algo.removeItem(item), "removeItem should return true after position change")
         assertEquals(0, algo.items.size)
         assertEquals(0, algo.getClusters(4.0f).size)
     }
@@ -142,9 +144,9 @@ class QuadItemTest {
         algo.addItem(item1)
 
         assertEquals(
-            "QuadTree should contain item1 at (1, 1)",
             1,
             algo.getQuadTreeItemCount(1.0, 1.0, 0.001),
+            "QuadTree should contain item1 at (1, 1)",
         )
 
         // Move item1 far across quadrant boundary to (50.0, 50.0) and update
@@ -153,14 +155,14 @@ class QuadItemTest {
 
         // Without fix, old QuadItem remains at (1.0, 1.0) in mQuadTree because remove traversed the new coordinates
         assertEquals(
-            "QuadTree should NOT contain stale entry at (1, 1) after update",
             0,
             algo.getQuadTreeItemCount(1.0, 1.0, 0.001),
+            "QuadTree should NOT contain stale entry at (1, 1) after update",
         )
         assertEquals(
-            "QuadTree should contain item1 at (50, 50)",
             1,
             algo.getQuadTreeItemCount(50.0, 50.0, 0.001),
+            "QuadTree should contain item1 at (50, 50)",
         )
     }
 
@@ -177,8 +179,8 @@ class QuadItemTest {
         item2.setPosition(20.0, 20.0)
 
         assertTrue(
-            "removeItems should return true after position change",
             algo.removeItems(listOf(item1, item2)),
+            "removeItems should return true after position change",
         )
         assertEquals(0, algo.items.size)
         assertEquals(0, algo.getClusters(4.0f).size)

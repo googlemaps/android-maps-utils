@@ -16,10 +16,13 @@
 
 package com.google.maps.android.clustering
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.algo.StaticCluster
-import org.junit.Test
+import com.google.maps.android.model.LatLng
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotSame
+import kotlin.test.assertTrue
 
 /**
  * Unit tests for [StaticCluster].
@@ -38,9 +41,9 @@ class StaticClusterTest {
         val cluster1 = StaticCluster<ClusterItem>(LatLng(0.1, 0.5))
         val cluster2 = StaticCluster<ClusterItem>(LatLng(0.1, 0.5))
 
-        assertThat(cluster1).isEqualTo(cluster2)
-        assertThat(cluster1).isNotSameInstanceAs(cluster2)
-        assertThat(cluster1.hashCode()).isEqualTo(cluster2.hashCode())
+        assertEquals(cluster2, cluster1)
+        assertNotSame(cluster2, cluster1)
+        assertEquals(cluster2.hashCode(), cluster1.hashCode())
     }
 
     @Test
@@ -48,10 +51,10 @@ class StaticClusterTest {
         val cluster1 = StaticCluster<ClusterItem>(LatLng(0.1, 0.5))
         val cluster2 = StaticCluster<ClusterItem>(LatLng(0.2, 0.3))
 
-        assertThat(cluster1).isNotEqualTo(cluster2)
-        assertThat(cluster1.hashCode()).isNotEqualTo(cluster2.hashCode())
-        assertThat(cluster1).isNotEqualTo(null)
-        assertThat(cluster1).isNotEqualTo("not a cluster")
+        assertNotEquals(cluster2, cluster1)
+        assertNotEquals(cluster2.hashCode(), cluster1.hashCode())
+        assertNotEquals<Any?>(null, cluster1)
+        assertNotEquals<Any>("not a cluster", cluster1)
     }
 
     @Test
@@ -59,18 +62,18 @@ class StaticClusterTest {
         val center = LatLng(10.0, 20.0)
         val cluster = StaticCluster<ClusterItem>(center)
 
-        assertThat(cluster.position).isEqualTo(center)
-        assertThat(cluster.size).isEqualTo(0)
-        assertThat(cluster.items).isEmpty()
+        assertEquals(center, cluster.position)
+        assertEquals(0, cluster.size)
+        assertTrue(cluster.items.isEmpty())
 
         val item = TestItem(10.0, 20.0)
         cluster.add(item)
-        assertThat(cluster.size).isEqualTo(1)
-        assertThat(cluster.items).containsExactly(item)
-        assertThat(cluster.toString()).contains("StaticCluster")
+        assertEquals(1, cluster.size)
+        assertEquals(listOf<ClusterItem>(item), cluster.items.toList())
+        assertTrue(cluster.toString().contains("StaticCluster"))
 
         cluster.remove(item)
-        assertThat(cluster.size).isEqualTo(0)
-        assertThat(cluster.items).isEmpty()
+        assertEquals(0, cluster.size)
+        assertTrue(cluster.items.isEmpty())
     }
 }

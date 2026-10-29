@@ -16,11 +16,11 @@
 
 package com.google.maps.android.clustering.algo
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
-import org.junit.Test
+import com.google.maps.android.model.LatLng
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 /**
  * Unit tests for [AbstractAlgorithm].
@@ -56,6 +56,6 @@ class AbstractAlgorithmTest {
         } finally {
             algorithm.unlock()
         }
-        assertThat(lockExecuted).isTrue()
+        assertTrue(lockExecuted)
     }
 }

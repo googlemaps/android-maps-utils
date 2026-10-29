@@ -15,11 +15,13 @@
  */
 package com.google.maps.android.clustering.algo
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import com.google.maps.android.model.LatLng
+import com.google.maps.android.model.latitude
+import com.google.maps.android.model.longitude
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ContinuousZoomEuclideanCentroidAlgorithmTest {
     class TestClusterItem(lat: Double, lng: Double) : ClusterItem {

@@ -17,29 +17,28 @@
 
 package com.google.maps.android.geometry
 
-import com.google.common.truth.Truth.assertThat
-import com.google.maps.android.geometry.Point
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class PointExtensionsTest {
 
     private lateinit var point: Point
 
-    @Before
+    @BeforeTest
     fun setUp() {
         point = Point(1.0, 2.0)
     }
 
     @Test
-    fun `destructure x`() {
+    fun destructureX() {
         val (x, _) = point
-        assertThat(x).isWithin(1e-6).of(1.0)
+        assertEquals(1.0, x, 1e-6)
     }
 
     @Test
-    fun `destructure y`() {
+    fun destructureY() {
         val (_, y) = point
-        assertThat(y).isWithin(1e-6).of(2.0)
+        assertEquals(2.0, y, 1e-6)
     }
 }

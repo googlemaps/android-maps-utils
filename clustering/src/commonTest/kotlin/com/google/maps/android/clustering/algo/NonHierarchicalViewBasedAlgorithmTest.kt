@@ -16,12 +16,14 @@
 
 package com.google.maps.android.clustering.algo
 
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.ClusterItem
-import org.junit.Before
-import org.junit.Test
+import com.google.maps.android.model.CameraPosition
+import com.google.maps.android.model.LatLng
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * Unit tests for [NonHierarchicalViewBasedAlgorithm].
@@ -41,7 +43,7 @@ class NonHierarchicalViewBasedAlgorithmTest {
 
     private lateinit var algorithm: NonHierarchicalViewBasedAlgorithm<TestItem>
 
-    @Before
+    @BeforeTest
     fun setUp() {
         // Initial viewport: 1000dp width x 1000dp height
         algorithm = NonHierarchicalViewBasedAlgorithm(1000, 1000)
@@ -49,7 +51,7 @@ class NonHierarchicalViewBasedAlgorithmTest {
 
     @Test
     fun testShouldReclusterOnMapMovement() {
-        assertThat(algorithm.shouldReclusterOnMapMovement()).isTrue()
+        assertTrue(algorithm.shouldReclusterOnMapMovement())
     }
 
     @Test
@@ -59,7 +61,7 @@ class NonHierarchicalViewBasedAlgorithmTest {
 
         // With no camera position established, visible bounds default to (0,0,0,0)
         val clusters = algorithm.getClusters(10f)
-        assertThat(clusters).isEmpty()
+        assertTrue(clusters.isEmpty())
     }
 
     @Test
@@ -71,13 +73,13 @@ class NonHierarchicalViewBasedAlgorithmTest {
         algorithm.addItem(farItem)
 
         // Set camera directly centered on visibleItem at high zoom
-        algorithm.onCameraChange(CameraPosition.builder().target(LatLng(0.0, 0.0)).zoom(10f).build())
+        algorithm.onCameraChange(CameraPosition(LatLng(0.0, 0.0), 10f, 0f, 0f))
 
         val clusters = algorithm.getClusters(10f)
-        assertThat(clusters).hasSize(1)
+        assertEquals(1, clusters.size)
         val cluster = clusters.first()
-        assertThat(cluster.items).contains(visibleItem)
-        assertThat(cluster.items).doesNotContain(farItem)
+        assertTrue(cluster.items.contains(visibleItem))
+        assertFalse(cluster.items.contains(farItem))
     }
 
     @Test
@@ -87,10 +89,10 @@ class NonHierarchicalViewBasedAlgorithmTest {
 
         // Center on -179.9 with huge viewport to force visibleBounds.minX < 0
         algorithm.updateViewSize(2000, 1000)
-        algorithm.onCameraChange(CameraPosition.builder().target(LatLng(0.0, -179.9)).zoom(1f).build())
+        algorithm.onCameraChange(CameraPosition(LatLng(0.0, -179.9), 1f, 0f, 0f))
 
         val clusters = algorithm.getClusters(1f)
-        assertThat(clusters).isNotEmpty()
+        assertTrue(clusters.isNotEmpty())
     }
 
     @Test
@@ -100,21 +102,21 @@ class NonHierarchicalViewBasedAlgorithmTest {
 
         // Center on +179.9 with huge viewport to force visibleBounds.maxX > 1
         algorithm.updateViewSize(2000, 1000)
-        algorithm.onCameraChange(CameraPosition.builder().target(LatLng(0.0, 179.9)).zoom(1f).build())
+        algorithm.onCameraChange(CameraPosition(LatLng(0.0, 179.9), 1f, 0f, 0f))
 
         val clusters = algorithm.getClusters(1f)
-        assertThat(clusters).isNotEmpty()
+        assertTrue(clusters.isNotEmpty())
     }
 
     @Test
     fun testUpdateViewSize() {
         algorithm.updateViewSize(500, 500)
-        algorithm.onCameraChange(CameraPosition.builder().target(LatLng(0.0, 0.0)).zoom(10f).build())
+        algorithm.onCameraChange(CameraPosition(LatLng(0.0, 0.0), 10f, 0f, 0f))
 
         val item = TestItem(0.0, 0.0)
         algorithm.addItem(item)
 
         val clusters = algorithm.getClusters(10f)
-        assertThat(clusters).hasSize(1)
+        assertEquals(1, clusters.size)
     }
 }

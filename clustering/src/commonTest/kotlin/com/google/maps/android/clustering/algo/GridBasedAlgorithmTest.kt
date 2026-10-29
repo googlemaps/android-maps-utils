@@ -16,11 +16,13 @@
 
 package com.google.maps.android.clustering.algo
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.ClusterItem
-import org.junit.Before
-import org.junit.Test
+import com.google.maps.android.model.LatLng
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * Unit tests for [GridBasedAlgorithm].
@@ -38,7 +40,7 @@ class GridBasedAlgorithmTest {
 
     private lateinit var algorithm: GridBasedAlgorithm<TestItem>
 
-    @Before
+    @BeforeTest
     fun setUp() {
         algorithm = GridBasedAlgorithm()
     }
@@ -50,40 +52,40 @@ class GridBasedAlgorithmTest {
         val farItem = TestItem(50.0, 50.0) // Far away -> separate cell
 
         algorithm.addItems(listOf(item1, item2, farItem))
-        assertThat(algorithm.items).hasSize(3)
+        assertEquals(3, algorithm.items.size)
 
         // Low zoom: item1 and item2 cluster together into 1 cell, farItem into another
         val clusters = algorithm.getClusters(3f)
-        assertThat(clusters).hasSize(2)
+        assertEquals(2, clusters.size)
     }
 
     @Test
     fun testUpdateAndRemoveItems() {
         val item = TestItem(10.0, 10.0)
         algorithm.addItem(item)
-        assertThat(algorithm.items).hasSize(1)
+        assertEquals(1, algorithm.items.size)
 
-        assertThat(algorithm.updateItem(item)).isTrue()
-        assertThat(algorithm.items).hasSize(1)
+        assertTrue(algorithm.updateItem(item))
+        assertEquals(1, algorithm.items.size)
 
         val nonExistent = TestItem(20.0, 20.0)
-        assertThat(algorithm.updateItem(nonExistent)).isFalse()
+        assertFalse(algorithm.updateItem(nonExistent))
 
-        assertThat(algorithm.removeItem(item)).isTrue()
-        assertThat(algorithm.items).isEmpty()
+        assertTrue(algorithm.removeItem(item))
+        assertTrue(algorithm.items.isEmpty())
 
         algorithm.addItems(listOf(item, nonExistent))
-        assertThat(algorithm.removeItems(listOf(item, nonExistent))).isTrue()
-        assertThat(algorithm.items).isEmpty()
+        assertTrue(algorithm.removeItems(listOf(item, nonExistent)))
+        assertTrue(algorithm.items.isEmpty())
 
         algorithm.addItem(item)
         algorithm.clearItems()
-        assertThat(algorithm.items).isEmpty()
+        assertTrue(algorithm.items.isEmpty())
     }
 
     @Test
     fun testMaxDistanceProperty() {
         algorithm.maxDistanceBetweenClusteredItems = 150
-        assertThat(algorithm.maxDistanceBetweenClusteredItems).isEqualTo(150)
+        assertEquals(150, algorithm.maxDistanceBetweenClusteredItems)
     }
 }

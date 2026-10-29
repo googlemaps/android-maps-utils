@@ -15,36 +15,35 @@
  */
 package com.google.maps.android.heatmaps
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import com.google.maps.android.model.LatLng
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 
-@RunWith(RobolectricTestRunner::class)
 class WeightedLatLngTest {
     @Test
     fun testConstructorWithIntensity() {
         val latLng = LatLng(10.0, 20.0)
         val weighted = WeightedLatLng(latLng, 5.0)
-        assertThat(weighted.latLng).isEqualTo(latLng)
-        assertThat(weighted.intensity).isEqualTo(5.0)
-        assertThat(weighted.point).isNotNull()
+        assertEquals(latLng, weighted.latLng)
+        assertEquals(5.0, weighted.intensity)
+        assertNotNull(weighted.point)
     }
 
     @Test
     fun testConstructorWithDefaultIntensity() {
         val latLng = LatLng(10.0, 20.0)
         val weighted = WeightedLatLng(latLng)
-        assertThat(weighted.latLng).isEqualTo(latLng)
-        assertThat(weighted.intensity).isEqualTo(WeightedLatLng.DEFAULT_INTENSITY)
+        assertEquals(latLng, weighted.latLng)
+        assertEquals(WeightedLatLng.DEFAULT_INTENSITY, weighted.intensity)
     }
 
     @Test
     fun testConstructorWithNegativeIntensity() {
         val latLng = LatLng(10.0, 20.0)
         val weighted = WeightedLatLng(latLng, -1.0)
-        assertThat(weighted.intensity).isEqualTo(WeightedLatLng.DEFAULT_INTENSITY)
+        assertEquals(WeightedLatLng.DEFAULT_INTENSITY, weighted.intensity)
     }
 
     @Test
@@ -55,16 +54,16 @@ class WeightedLatLngTest {
         val weighted3 = WeightedLatLng(latLng1, 4.0)
 
         // Test equals()
-        assertThat(weighted1).isEqualTo(weighted2)
-        assertThat(weighted1).isNotEqualTo(weighted3)
+        assertEquals(weighted2, weighted1)
+        assertNotEquals(weighted3, weighted1)
 
         // Test hashCode()
-        assertThat(weighted1.hashCode()).isEqualTo(weighted2.hashCode())
-        assertThat(weighted1.hashCode()).isNotEqualTo(weighted3.hashCode())
+        assertEquals(weighted2.hashCode(), weighted1.hashCode())
+        assertNotEquals(weighted3.hashCode(), weighted1.hashCode())
 
         // Test copy()
         val weightedCopy = weighted1.copy(intensity = 5.0)
-        assertThat(weightedCopy.latLng).isEqualTo(latLng1)
-        assertThat(weightedCopy.intensity).isEqualTo(5.0)
+        assertEquals(latLng1, weightedCopy.latLng)
+        assertEquals(5.0, weightedCopy.intensity)
     }
 }
