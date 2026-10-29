@@ -36,12 +36,22 @@ Android-only and use `PublishingConventionPlugin`.
   lives in `src/commonMain`. Anything touching the Maps SDK, Android or
   `java.*` APIs goes in `src/androidMain`. Host tests are in
   `src/androidHostTest`, shared tests in `src/commonTest`.
+- Test common code in `src/commonTest` with `kotlin.test`, so it runs on the
+  Android host and on iOS. Keep `src/androidHostTest` for tests that need
+  Robolectric, mocks or Android-only classes.
+- `commonMain` has no `synchronized`, `java.util.concurrent` or Android
+  types. Use `PlatformLock` for locking, `kotlin.math` and stdlib
+  collections, and the `com.google.maps.android.model` types instead of the
+  Play Services ones.
 - The Android API must not change: `apiCheck` compares the Android API against
   `api/<module>.api` and the iOS ABI against `api/<module>.klib.api`.
 - Building or publishing the iOS targets needs macOS with Xcode. On Linux they
   are skipped, which is why `publish.yml` and `publish-snapshot.yml` run on
   `macos-latest`.
-- Run the shared tests on iOS with `./gradlew :library:iosSimulatorArm64Test`.
+- Run the shared tests on the Android host and the iOS simulator with
+  `./gradlew :library:allTests :clustering:allTests :heatmaps:allTests`. Off
+  macOS only the host tests run, so say so in the pull request instead of
+  reporting the change as tested on iOS.
 
 ## Building and testing
 
