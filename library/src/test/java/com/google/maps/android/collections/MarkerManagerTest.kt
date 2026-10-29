@@ -55,11 +55,11 @@ class MarkerManagerTest {
         val added = collection.addMarker(opts)
 
         assertThat(added).isEqualTo(mockMarker)
-        assertThat(collection.getMarkers()).containsExactly(mockMarker)
+        assertThat(collection.markers).containsExactly(mockMarker)
 
         collection.remove(added)
         verify { mockMarker.remove() }
-        assertThat(collection.getMarkers()).isEmpty()
+        assertThat(collection.markers).isEmpty()
     }
 
     @Test
@@ -72,7 +72,7 @@ class MarkerManagerTest {
         val added = collection.addMarker(opts)
 
         assertThat(added).isEqualTo(mockMarker)
-        assertThat(collection.getMarkers()).containsExactly(mockMarker)
+        assertThat(collection.markers).containsExactly(mockMarker)
     }
 
     @Test
@@ -84,7 +84,7 @@ class MarkerManagerTest {
         val collection = markerManager.newCollection()
         collection.addAll(listOf(MarkerOptions(), MarkerOptions()), defaultVisible = false)
 
-        assertThat(collection.getMarkers()).hasSize(2)
+        assertThat(collection.markers).hasSize(2)
         verify { marker1.isVisible = false }
         verify { marker2.isVisible = false }
 

@@ -102,7 +102,8 @@ public open class MarkerManager(map: GoogleMap) :
         public open fun addAll(opts: KotlinCollection<MarkerOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addMarker)
 
-        public open fun getMarkers(): KotlinCollection<Marker> = getObjects()
+        public open val markers: KotlinCollection<Marker>
+            get() = getObjects()
 
         public open fun setOnInfoWindowClickListener(infoWindowClickListener: GoogleMap.OnInfoWindowClickListener?) {
             mInfoWindowClickListener = infoWindowClickListener

@@ -52,11 +52,11 @@ class PolygonManagerTest {
         val poly = collection.addPolygon(PolygonOptions())
 
         assertThat(poly).isEqualTo(mockPolygon)
-        assertThat(collection.getPolygons()).containsExactly(mockPolygon)
+        assertThat(collection.polygons).containsExactly(mockPolygon)
 
         collection.remove(poly)
         verify { mockPolygon.remove() }
-        assertThat(collection.getPolygons()).isEmpty()
+        assertThat(collection.polygons).isEmpty()
     }
 
     @Test
@@ -68,7 +68,7 @@ class PolygonManagerTest {
         val collection = manager.newCollection()
         collection.addAll(listOf(PolygonOptions(), PolygonOptions()), defaultVisible = false)
 
-        assertThat(collection.getPolygons()).hasSize(2)
+        assertThat(collection.polygons).hasSize(2)
         verify { p1.isVisible = false }
         verify { p2.isVisible = false }
 

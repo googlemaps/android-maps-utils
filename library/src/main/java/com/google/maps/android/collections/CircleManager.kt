@@ -60,7 +60,8 @@ public open class CircleManager(map: GoogleMap) :
         public open fun addAll(opts: KotlinCollection<CircleOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addCircle)
 
-        public open fun getCircles(): KotlinCollection<Circle> = getObjects()
+        public open val circles: KotlinCollection<Circle>
+            get() = getObjects()
 
         public open fun setOnCircleClickListener(circleClickListener: GoogleMap.OnCircleClickListener?) {
             mCircleClickListener = circleClickListener

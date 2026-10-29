@@ -60,7 +60,8 @@ public open class PolygonManager(map: GoogleMap) :
         public open fun addAll(opts: KotlinCollection<PolygonOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addPolygon)
 
-        public open fun getPolygons(): KotlinCollection<Polygon> = getObjects()
+        public open val polygons: KotlinCollection<Polygon>
+            get() = getObjects()
 
         public open fun setOnPolygonClickListener(polygonClickListener: GoogleMap.OnPolygonClickListener?) {
             mPolygonClickListener = polygonClickListener

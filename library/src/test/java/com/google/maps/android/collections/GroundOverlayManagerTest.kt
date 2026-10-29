@@ -52,11 +52,11 @@ class GroundOverlayManagerTest {
         val overlay = collection.addGroundOverlay(GroundOverlayOptions())
 
         assertThat(overlay).isEqualTo(mockOverlay)
-        assertThat(collection.getGroundOverlays()).containsExactly(mockOverlay)
+        assertThat(collection.groundOverlays).containsExactly(mockOverlay)
 
         collection.remove(overlay)
         verify { mockOverlay.remove() }
-        assertThat(collection.getGroundOverlays()).isEmpty()
+        assertThat(collection.groundOverlays).isEmpty()
     }
 
     @Test
@@ -68,7 +68,7 @@ class GroundOverlayManagerTest {
         val collection = manager.newCollection()
         collection.addAll(listOf(GroundOverlayOptions(), GroundOverlayOptions()), defaultVisible = false)
 
-        assertThat(collection.getGroundOverlays()).hasSize(2)
+        assertThat(collection.groundOverlays).hasSize(2)
         verify { o1.isVisible = false }
         verify { o2.isVisible = false }
 

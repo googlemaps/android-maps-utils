@@ -61,7 +61,8 @@ public open class GroundOverlayManager(map: GoogleMap) :
         public open fun addAll(opts: KotlinCollection<GroundOverlayOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addGroundOverlay)
 
-        public open fun getGroundOverlays(): KotlinCollection<GroundOverlay> = getObjects()
+        public open val groundOverlays: KotlinCollection<GroundOverlay>
+            get() = getObjects()
 
         public open fun setOnGroundOverlayClickListener(
             groundOverlayClickListener: GoogleMap.OnGroundOverlayClickListener?,

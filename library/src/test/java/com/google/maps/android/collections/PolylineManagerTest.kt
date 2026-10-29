@@ -52,11 +52,11 @@ class PolylineManagerTest {
         val line = collection.addPolyline(PolylineOptions())
 
         assertThat(line).isEqualTo(mockPolyline)
-        assertThat(collection.getPolylines()).containsExactly(mockPolyline)
+        assertThat(collection.polylines).containsExactly(mockPolyline)
 
         collection.remove(line)
         verify { mockPolyline.remove() }
-        assertThat(collection.getPolylines()).isEmpty()
+        assertThat(collection.polylines).isEmpty()
     }
 
     @Test
@@ -68,7 +68,7 @@ class PolylineManagerTest {
         val collection = manager.newCollection()
         collection.addAll(listOf(PolylineOptions(), PolylineOptions()), defaultVisible = false)
 
-        assertThat(collection.getPolylines()).hasSize(2)
+        assertThat(collection.polylines).hasSize(2)
         verify { l1.isVisible = false }
         verify { l2.isVisible = false }
 

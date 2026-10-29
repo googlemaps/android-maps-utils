@@ -52,11 +52,11 @@ class CircleManagerTest {
         val circle = collection.addCircle(CircleOptions())
 
         assertThat(circle).isEqualTo(mockCircle)
-        assertThat(collection.getCircles()).containsExactly(mockCircle)
+        assertThat(collection.circles).containsExactly(mockCircle)
 
         collection.remove(circle)
         verify { mockCircle.remove() }
-        assertThat(collection.getCircles()).isEmpty()
+        assertThat(collection.circles).isEmpty()
     }
 
     @Test
@@ -68,7 +68,7 @@ class CircleManagerTest {
         val collection = circleManager.newCollection()
         collection.addAll(listOf(CircleOptions(), CircleOptions()), defaultVisible = false)
 
-        assertThat(collection.getCircles()).hasSize(2)
+        assertThat(collection.circles).hasSize(2)
         verify { circle1.isVisible = false }
         verify { circle2.isVisible = false }
 

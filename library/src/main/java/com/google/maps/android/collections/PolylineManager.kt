@@ -60,7 +60,8 @@ public open class PolylineManager(map: GoogleMap) :
         public open fun addAll(opts: KotlinCollection<PolylineOptions>, defaultVisible: Boolean): Unit =
             addAll(opts, defaultVisible, ::addPolyline)
 
-        public open fun getPolylines(): KotlinCollection<Polyline> = getObjects()
+        public open val polylines: KotlinCollection<Polyline>
+            get() = getObjects()
 
         public open fun setOnPolylineClickListener(polylineClickListener: GoogleMap.OnPolylineClickListener?) {
             mPolylineClickListener = polylineClickListener
