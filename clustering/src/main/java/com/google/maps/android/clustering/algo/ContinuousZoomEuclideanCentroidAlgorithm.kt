@@ -44,7 +44,7 @@ public open class ContinuousZoomEuclideanCentroidAlgorithm<T : ClusterItem> :
 
         synchronized(mQuadTree) {
             for (candidate in getClusteringItems(mQuadTree, zoom)) {
-                if (visitedCandidates.contains(candidate)) {
+                if (candidate in visitedCandidates) {
                     // Candidate is already part of another cluster.
                     continue
                 }

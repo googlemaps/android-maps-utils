@@ -45,7 +45,7 @@ public class HeatmapTileProvider private constructor(builder: Builder) : TilePro
     private lateinit var maxIntensity: DoubleArray
 
     init {
-        data = builder.weightedData!!
+        data = checkNotNull(builder.weightedData)
         radius = builder.radius
         gradient = builder.gradient
         opacity = builder.opacity
@@ -230,14 +230,18 @@ public class HeatmapTileProvider private constructor(builder: Builder) : TilePro
         var xOffset = 0.0
         var wrappedPoints: Collection<WeightedLatLng> = emptyList()
 
-        if (minX < 0) {
-            val overlapBounds = Bounds(minX + WORLD_WIDTH, WORLD_WIDTH, minY, maxY)
-            xOffset = -WORLD_WIDTH
-            wrappedPoints = tree.search(overlapBounds)
-        } else if (maxX > WORLD_WIDTH) {
-            val overlapBounds = Bounds(0.0, maxX - WORLD_WIDTH, minY, maxY)
-            xOffset = WORLD_WIDTH
-            wrappedPoints = tree.search(overlapBounds)
+        when {
+            minX < 0 -> {
+                val overlapBounds = Bounds(minX + WORLD_WIDTH, WORLD_WIDTH, minY, maxY)
+                xOffset = -WORLD_WIDTH
+                wrappedPoints = tree.search(overlapBounds)
+            }
+
+            maxX > WORLD_WIDTH -> {
+                val overlapBounds = Bounds(0.0, maxX - WORLD_WIDTH, minY, maxY)
+                xOffset = WORLD_WIDTH
+                wrappedPoints = tree.search(overlapBounds)
+            }
         }
 
         val tileBounds = Bounds(minX, maxX, minY, maxY)

@@ -250,10 +250,11 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
     }
 
     private fun makeClusterBackground(): LayerDrawable {
-        mColoredCircleBackground = ShapeDrawable(OvalShape())
+        val coloredCircleBackground = ShapeDrawable(OvalShape())
+        mColoredCircleBackground = coloredCircleBackground
         val outline = ShapeDrawable(OvalShape())
         outline.paint.color = -0x7f000001 // Transparent white.
-        val background = LayerDrawable(arrayOf<Drawable>(outline, mColoredCircleBackground!!))
+        val background = LayerDrawable(arrayOf<Drawable>(outline, coloredCircleBackground))
         val strokeWidth = (mDensity * 3).toInt()
         background.setLayerInset(1, strokeWidth, strokeWidth, strokeWidth, strokeWidth)
         return background
@@ -487,7 +488,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
         @SuppressLint("NewApi")
         override fun run() {
             if (!shouldRender(immutableOf(this@DefaultClusterRenderer.mClusters), immutableOf(clusters))) {
-                mCallback!!.run()
+                mCallback?.run()
                 return
             }
 
@@ -501,7 +502,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
             // Prevent crashes: https://issuetracker.google.com/issues/35827242
             var visibleBounds: LatLngBounds
             try {
-                visibleBounds = mProjection!!.visibleRegion.latLngBounds
+                visibleBounds = checkNotNull(mProjection).visibleRegion.latLngBounds
             } catch (e: Exception) {
                 e.printStackTrace()
                 visibleBounds =
@@ -518,10 +519,11 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
             // Find all of the existing clusters that are on-screen. These are candidates for
             // markers to animate from.
             var existingClustersOnScreen: MutableList<Point>? = null
-            if (this@DefaultClusterRenderer.mClusters != null && animate) {
+            val currentClusters = this@DefaultClusterRenderer.mClusters
+            if (currentClusters != null && animate) {
                 existingClustersOnScreen = ArrayList()
-                for (c in this@DefaultClusterRenderer.mClusters!!) {
-                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.position)) {
+                for (c in currentClusters) {
+                    if (shouldRenderAsCluster(c) && c.position in visibleBounds) {
                         val point = sphericalMercatorProjection.toPoint(c.position)
                         existingClustersOnScreen.add(point)
                     }
@@ -534,7 +536,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
                     ConcurrentHashMap<MarkerWithPosition, Boolean>(),
                 )
             for (c in clusters) {
-                val onScreen = visibleBounds.contains(c.position)
+                val onScreen = c.position in visibleBounds
                 if (zoomingIn && onScreen && animate) {
                     val point = sphericalMercatorProjection.toPoint(c.position)
                     val closest = findClosestCluster(existingClustersOnScreen, point)
@@ -562,7 +564,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
             if (animate) {
                 newClustersOnScreen = ArrayList()
                 for (c in clusters) {
-                    if (shouldRenderAsCluster(c) && visibleBounds.contains(c.position)) {
+                    if (shouldRenderAsCluster(c) && c.position in visibleBounds) {
                         val p = sphericalMercatorProjection.toPoint(c.position)
                         newClustersOnScreen.add(p)
                     }
@@ -571,7 +573,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
 
             // Remove the old markers, animating them into clusters if zooming out.
             for (marker in markersToRemove) {
-                val onScreen = visibleBounds.contains(marker.position)
+                val onScreen = marker.position in visibleBounds
                 // Don't animate when zooming out more than 3 zoom levels.
                 // TODO: drop animation based on speed of device & number of markers to animate.
                 if (!zoomingIn && zoomDelta > -3 && onScreen && animate) {
@@ -594,7 +596,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
             this@DefaultClusterRenderer.mClusters = clusters
             mZoom = zoom
 
-            mCallback!!.run()
+            mCallback?.run()
         }
     }
 
@@ -905,17 +907,21 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
      * @param markerOptions the markerOptions representing the provided item
      */
     protected open fun onBeforeClusterItemRendered(item: T, markerOptions: MarkerOptions) {
-        if (item.title != null && item.snippet != null) {
-            markerOptions.title(item.title)
-            markerOptions.snippet(item.snippet)
-        } else if (item.title != null) {
-            markerOptions.title(item.title)
-        } else if (item.snippet != null) {
-            markerOptions.title(item.snippet)
+        when {
+            item.title != null && item.snippet != null -> {
+                markerOptions.title(item.title)
+                markerOptions.snippet(item.snippet)
+            }
+
+            item.title != null -> {
+                markerOptions.title(item.title)
+            }
+
+            item.snippet != null -> {
+                markerOptions.title(item.snippet)
+            }
         }
-        if (item.zIndex != null) {
-            markerOptions.zIndex(item.zIndex!!)
-        }
+        item.zIndex?.let { markerOptions.zIndex(it) }
     }
 
     /**
@@ -940,32 +946,38 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
     protected open fun onClusterItemUpdated(item: T, marker: Marker) {
         var changed = false
         // Update marker text if the item text changed - same logic as adding marker in onBeforeClusterItemRendered()
-        if (item.title != null && item.snippet != null) {
-            if (item.title != marker.title) {
-                marker.title = item.title
-                changed = true
+        when {
+            item.title != null && item.snippet != null -> {
+                if (item.title != marker.title) {
+                    marker.title = item.title
+                    changed = true
+                }
+                if (item.snippet != marker.snippet) {
+                    marker.snippet = item.snippet
+                    changed = true
+                }
             }
-            if (item.snippet != marker.snippet) {
-                marker.snippet = item.snippet
-                changed = true
+
+            item.snippet != null -> {
+                if (item.snippet != marker.title) {
+                    marker.title = item.snippet
+                    changed = true
+                }
+                if (marker.snippet != null) {
+                    marker.snippet = null
+                    changed = true
+                }
             }
-        } else if (item.snippet != null) {
-            if (item.snippet != marker.title) {
-                marker.title = item.snippet
-                changed = true
-            }
-            if (marker.snippet != null) {
-                marker.snippet = null
-                changed = true
-            }
-        } else if (item.title != null) {
-            if (item.title != marker.title) {
-                marker.title = item.title
-                changed = true
-            }
-            if (marker.snippet != null) {
-                marker.snippet = null
-                changed = true
+
+            item.title != null -> {
+                if (item.title != marker.title) {
+                    marker.title = item.title
+                    changed = true
+                }
+                if (marker.snippet != null) {
+                    marker.snippet = null
+                    changed = true
+                }
             }
         }
         // Update marker position if the item changed position
@@ -1029,7 +1041,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
         }
         var descriptor = mIcons[key]
         if (descriptor == null) {
-            mColoredCircleBackground!!.paint.color = getColor(key)
+            mColoredCircleBackground?.paint?.color = getColor(key)
             mIconGenerator.setTextAppearance(getClusterTextAppearance(key))
             descriptor = BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon(getClusterText(key)))
             mIcons.put(key, descriptor)
@@ -1128,9 +1140,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
                             markerOptions.position(animateFrom)
                         } else {
                             markerOptions.position(item.position)
-                            if (item.zIndex != null) {
-                                markerOptions.zIndex(item.zIndex!!)
-                            }
+                            item.zIndex?.let { markerOptions.zIndex(it) }
                         }
                         onBeforeClusterItemRendered(item, markerOptions)
                         marker = mClusterManager.markerCollection.addMarker(markerOptions)
@@ -1212,7 +1222,7 @@ public open class DefaultClusterRenderer<T : ClusterItem> @JvmOverloads public c
             if (mRemoveOnComplete) {
                 mMarkerCache.remove(marker)
                 mClusterMarkerCache.remove(marker)
-                mMarkerManager!!.remove(marker)
+                mMarkerManager?.remove(marker)
             }
             markerWithPosition.position = to
         }

@@ -103,12 +103,13 @@ public constructor(
         var interval = colorIntervals[0]
         var start = 0
         for (i in 0 until colorMapSize) {
-            if (colorIntervals.containsKey(i)) {
+            if (i in colorIntervals) {
                 interval = colorIntervals[i]
                 start = i
             }
-            val ratio = (i - start) / interval!!.duration
-            colorMap[i] = interpolateColor(interval.color1, interval.color2, ratio)
+            val currentInterval = checkNotNull(interval)
+            val ratio = (i - start) / currentInterval.duration
+            colorMap[i] = interpolateColor(currentInterval.color1, currentInterval.color2, ratio)
         }
         if (opacity != 1.0) {
             for (i in 0 until colorMapSize) {
@@ -146,10 +147,9 @@ public constructor(
             Color.RGBToHSV(Color.red(color2), Color.green(color2), Color.blue(color2), hsv2)
 
             // adjust so that the shortest path on the color wheel will be taken
-            if (hsv1[0] - hsv2[0] > 180) {
-                hsv2[0] += 360f
-            } else if (hsv2[0] - hsv1[0] > 180) {
-                hsv1[0] += 360f
+            when {
+                hsv1[0] - hsv2[0] > 180 -> hsv2[0] += 360f
+                hsv2[0] - hsv1[0] > 180 -> hsv1[0] += 360f
             }
 
             // Interpolate using calculated ratio

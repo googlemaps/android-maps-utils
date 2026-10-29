@@ -81,11 +81,9 @@ public constructor(
     }
 
     private fun getVisibleBounds(zoom: Float): Bounds {
-        if (mMapCenter == null) {
-            return Bounds(0.0, 0.0, 0.0, 0.0)
-        }
+        val mapCenter = mMapCenter ?: return Bounds(0.0, 0.0, 0.0, 0.0)
 
-        val p = PROJECTION.toPoint(mMapCenter!!)
+        val p = PROJECTION.toPoint(mapCenter)
 
         val halfWidthSpan = mViewWidth.toDouble() / 2.0.pow(zoom.toDouble()) / 256.0 / 2.0
         val halfHeightSpan = mViewHeight.toDouble() / 2.0.pow(zoom.toDouble()) / 256.0 / 2.0

@@ -142,7 +142,7 @@ public open class NonHierarchicalDistanceBasedAlgorithm<T : ClusterItem> : Abstr
 
         synchronized(mQuadTree) {
             for (candidate in getClusteringItems(mQuadTree, zoom)) {
-                if (visitedCandidates.contains(candidate)) {
+                if (candidate in visitedCandidates) {
                     // Candidate is already part of another cluster.
                     continue
                 }

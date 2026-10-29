@@ -46,7 +46,7 @@ public fun LocationManager.coarseLocationEvents(
     minDistanceM: Float = 1f,
     looper: Looper = Looper.getMainLooper(),
 ): Flow<Location> = callbackFlow {
-    if (!allProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+    if (LocationManager.NETWORK_PROVIDER !in allProviders) {
         close()
         return@callbackFlow
     }
@@ -101,7 +101,7 @@ public fun LocationManager.fineLocationEvents(
     minDistanceM: Float = 1f,
     looper: Looper = Looper.getMainLooper(),
 ): Flow<Location> = callbackFlow {
-    if (!allProviders.contains(LocationManager.GPS_PROVIDER)) {
+    if (LocationManager.GPS_PROVIDER !in allProviders) {
         close()
         return@callbackFlow
     }

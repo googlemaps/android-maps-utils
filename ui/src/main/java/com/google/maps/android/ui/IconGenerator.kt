@@ -26,7 +26,6 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.ViewCompat
 import androidx.core.widget.TextViewCompat
 
 /**
@@ -63,9 +62,7 @@ public class IconGenerator(private val context: Context) {
      * @param text the text content to display inside the icon.
      */
     public fun makeIcon(text: CharSequence?): Bitmap {
-        if (textView != null) {
-            textView!!.text = text
-        }
+        textView?.text = text
         return makeIcon()
     }
 
@@ -204,7 +201,7 @@ public class IconGenerator(private val context: Context) {
      * @param background the Drawable to use as the background, or null to remove the background.
      */
     public fun setBackground(background: Drawable?) {
-        ViewCompat.setBackground(container, background)
+        container.background = background
 
         // Force setting of padding.
         // setBackgroundDrawable does not call setPadding if the background has 0 padding.

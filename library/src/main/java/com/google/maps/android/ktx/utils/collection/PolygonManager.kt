@@ -23,8 +23,6 @@ import com.google.maps.android.collections.PolygonManager
 import kotlinx.coroutines.flow.Flow
 import com.google.maps.android.collections.addPolygon as canonicalAddPolygon
 import com.google.maps.android.collections.clickEvents as canonicalClickEvents
-import com.google.maps.android.collections.infoWindowClickEvents as canonicalInfoWindowClickEvents
-import com.google.maps.android.collections.infoWindowLongClickEvents as canonicalInfoWindowLongClickEvents
 
 @Deprecated(
     message = "Use com.google.maps.android.collections.addPolygon instead",

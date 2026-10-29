@@ -55,16 +55,22 @@ public constructor(
             super.dispatchDraw(canvas)
             return
         }
-        if (rotation == 1) {
-            canvas.translate(width.toFloat(), 0f)
-            canvas.rotate(90f, width / 2f, 0f)
-            canvas.translate(height / 2f, width / 2f)
-        } else if (rotation == 2) {
-            canvas.rotate(180f, width / 2f, height / 2f)
-        } else {
-            canvas.translate(0f, height.toFloat())
-            canvas.rotate(270f, width / 2f, 0f)
-            canvas.translate(height / 2f, -width / 2f)
+        when (rotation) {
+            1 -> {
+                canvas.translate(width.toFloat(), 0f)
+                canvas.rotate(90f, width / 2f, 0f)
+                canvas.translate(height / 2f, width / 2f)
+            }
+
+            2 -> {
+                canvas.rotate(180f, width / 2f, height / 2f)
+            }
+
+            else -> {
+                canvas.translate(0f, height.toFloat())
+                canvas.rotate(270f, width / 2f, 0f)
+                canvas.translate(height / 2f, -width / 2f)
+            }
         }
         super.dispatchDraw(canvas)
     }

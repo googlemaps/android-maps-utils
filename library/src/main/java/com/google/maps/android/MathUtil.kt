@@ -39,12 +39,10 @@ public object MathUtil {
      * Restrict x to the range [low, high].
      */
     @JvmStatic
-    public fun clamp(x: Double, low: Double, high: Double): Double = if (x < low) {
-        low
-    } else if (x > high) {
-        high
-    } else {
-        x
+    public fun clamp(x: Double, low: Double, high: Double): Double = when {
+        x < low -> low
+        x > high -> high
+        else -> x
     }
 
     /**

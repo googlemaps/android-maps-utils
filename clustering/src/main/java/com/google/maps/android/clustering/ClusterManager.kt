@@ -243,7 +243,7 @@ public constructor(
         val algorithm = algorithm
         algorithm.lock()
         try {
-            return algorithm.addItems(items!!)
+            return algorithm.addItems(requireNotNull(items))
         } finally {
             algorithm.unlock()
         }
@@ -306,7 +306,7 @@ public constructor(
         val algorithm = algorithm
         algorithm.lock()
         try {
-            return algorithm.removeItems(items!!)
+            return algorithm.removeItems(requireNotNull(items))
         } finally {
             algorithm.unlock()
         }
@@ -385,13 +385,17 @@ public constructor(
         mAlgorithm.onCameraChange(map.cameraPosition)
 
         // delegate clustering to the algorithm
-        if (mAlgorithm.shouldReclusterOnMapMovement()) {
-            cluster()
+        val previousCameraPosition = mPreviousCameraPosition
+        when {
+            mAlgorithm.shouldReclusterOnMapMovement() -> {
+                cluster()
+            }
 
             // Don't re-compute clusters if the map has just been panned/tilted/rotated.
-        } else if (mPreviousCameraPosition == null || mPreviousCameraPosition!!.zoom != map.cameraPosition.zoom) {
-            mPreviousCameraPosition = map.cameraPosition
-            cluster()
+            previousCameraPosition == null || previousCameraPosition.zoom != map.cameraPosition.zoom -> {
+                mPreviousCameraPosition = map.cameraPosition
+                cluster()
+            }
         }
     }
 

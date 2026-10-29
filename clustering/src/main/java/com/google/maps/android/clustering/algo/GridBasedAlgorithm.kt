@@ -81,7 +81,7 @@ public open class GridBasedAlgorithm<T : ClusterItem> : AbstractAlgorithm<T>() {
                 val p = proj.toPoint(item.position)
                 val coord = getCoord(numCells, p.x, p.y)
 
-                var cluster = sparseArray.get(coord)
+                var cluster = sparseArray[coord]
                 if (cluster == null) {
                     cluster =
                         StaticCluster(

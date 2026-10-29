@@ -57,27 +57,26 @@ public constructor(
     }
 
     private fun insert(x: Double, y: Double, item: T) {
-        if (this.mChildren != null) {
+        val children = this.mChildren
+        if (children != null) {
             if (y < mBounds.midY) {
                 if (x < mBounds.midX) { // top left
-                    mChildren!![0].insert(x, y, item)
+                    children[0].insert(x, y, item)
                 } else { // top right
-                    mChildren!![1].insert(x, y, item)
+                    children[1].insert(x, y, item)
                 }
             } else {
                 if (x < mBounds.midX) { // bottom left
-                    mChildren!![2].insert(x, y, item)
+                    children[2].insert(x, y, item)
                 } else {
-                    mChildren!![3].insert(x, y, item)
+                    children[3].insert(x, y, item)
                 }
             }
             return
         }
-        if (mItems == null) {
-            mItems = LinkedHashSet()
-        }
-        mItems!!.add(item)
-        if (mItems!!.size > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
+        val items = mItems ?: LinkedHashSet<T>().also { mItems = it }
+        items.add(item)
+        if (items.size > MAX_ELEMENTS && mDepth < MAX_DEPTH) {
             split()
         }
     }
@@ -86,11 +85,13 @@ public constructor(
      * Split this quad.
      */
     private fun split() {
-        mChildren = ArrayList(4)
-        mChildren!!.add(PointQuadTree(Bounds(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY), mDepth + 1))
-        mChildren!!.add(PointQuadTree(Bounds(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY), mDepth + 1))
-        mChildren!!.add(PointQuadTree(Bounds(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY), mDepth + 1))
-        mChildren!!.add(PointQuadTree(Bounds(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY), mDepth + 1))
+        val children = ArrayList<PointQuadTree<T>>(4).apply {
+            add(PointQuadTree(Bounds(mBounds.minX, mBounds.midX, mBounds.minY, mBounds.midY), mDepth + 1))
+            add(PointQuadTree(Bounds(mBounds.midX, mBounds.maxX, mBounds.minY, mBounds.midY), mDepth + 1))
+            add(PointQuadTree(Bounds(mBounds.minX, mBounds.midX, mBounds.midY, mBounds.maxY), mDepth + 1))
+            add(PointQuadTree(Bounds(mBounds.midX, mBounds.maxX, mBounds.midY, mBounds.maxY), mDepth + 1))
+        }
+        mChildren = children
 
         val items = mItems
         mItems = null
@@ -117,25 +118,24 @@ public constructor(
         }
     }
 
-    private fun remove(x: Double, y: Double, item: T): Boolean = if (this.mChildren != null) {
-        if (y < mBounds.midY) {
-            if (x < mBounds.midX) { // top left
-                mChildren!![0].remove(x, y, item)
-            } else { // top right
-                mChildren!![1].remove(x, y, item)
-            }
-        } else {
-            if (x < mBounds.midX) { // bottom left
-                mChildren!![2].remove(x, y, item)
+    private fun remove(x: Double, y: Double, item: T): Boolean {
+        val children = this.mChildren
+        return if (children != null) {
+            if (y < mBounds.midY) {
+                if (x < mBounds.midX) { // top left
+                    children[0].remove(x, y, item)
+                } else { // top right
+                    children[1].remove(x, y, item)
+                }
             } else {
-                mChildren!![3].remove(x, y, item)
+                if (x < mBounds.midX) { // bottom left
+                    children[2].remove(x, y, item)
+                } else {
+                    children[3].remove(x, y, item)
+                }
             }
-        }
-    } else {
-        if (mItems == null) {
-            false
         } else {
-            mItems!!.remove(item)
+            mItems?.remove(item) ?: false
         }
     }
 
@@ -144,9 +144,7 @@ public constructor(
      */
     public fun clear() {
         mChildren = null
-        if (mItems != null) {
-            mItems!!.clear()
-        }
+        mItems?.clear()
     }
 
     /**
@@ -163,17 +161,23 @@ public constructor(
             return
         }
 
-        if (this.mChildren != null) {
-            for (quad in mChildren!!) {
-                quad.search(searchBounds, results)
+        val children = this.mChildren
+        val items = this.mItems
+        when {
+            children != null -> {
+                for (quad in children) {
+                    quad.search(searchBounds, results)
+                }
             }
-        } else if (mItems != null) {
-            if (searchBounds.contains(mBounds)) {
-                results.addAll(mItems!!)
-            } else {
-                for (item in mItems!!) {
-                    if (searchBounds.contains(item.point)) {
-                        results.add(item)
+
+            items != null -> {
+                if (searchBounds.contains(mBounds)) {
+                    results.addAll(items)
+                } else {
+                    for (item in items) {
+                        if (searchBounds.contains(item.point)) {
+                            results.add(item)
+                        }
                     }
                 }
             }

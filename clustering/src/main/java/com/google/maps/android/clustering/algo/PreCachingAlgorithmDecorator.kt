@@ -88,10 +88,10 @@ public open class PreCachingAlgorithmDecorator<T : ClusterItem> public construct
         val discreteZoom = zoom.toInt()
         val results = getClustersInternal(discreteZoom)
         // TODO: Check if requests are already in-flight.
-        if (mCache.get(discreteZoom + 1) == null) {
+        if (mCache[discreteZoom + 1] == null) {
             mExecutor.execute(PrecacheRunnable(discreteZoom + 1))
         }
-        if (mCache.get(discreteZoom - 1) == null) {
+        if (mCache[discreteZoom - 1] == null) {
             mExecutor.execute(PrecacheRunnable(discreteZoom - 1))
         }
         return results
@@ -109,14 +109,14 @@ public open class PreCachingAlgorithmDecorator<T : ClusterItem> public construct
 
     private fun getClustersInternal(discreteZoom: Int): Set<Cluster<T>> {
         val cached = mCacheLock.readLock().withLock {
-            mCache.get(discreteZoom)
+            mCache[discreteZoom]
         }
         if (cached != null) {
             return cached
         }
 
         return mCacheLock.writeLock().withLock {
-            mCache.get(discreteZoom) ?: algorithm.getClusters(discreteZoom.toFloat()).also {
+            mCache[discreteZoom] ?: algorithm.getClusters(discreteZoom.toFloat()).also {
                 mCache.put(discreteZoom, it)
             }
         }
