@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `a1f53f3` (#1836), recorded 2026-10-30T17:30:40Z.
+Measured at `eb2b3fe` (#1839), recorded 2026-10-30T19:53:45Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 441/1,248 | 35.34% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,024/1,173 | 87.30% | `█████████████████░░░` | 311/374 | 83.16% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,540/7,200 | 63.06% | `█████████████░░░░░░░` | 1,948/4,313 | 45.17% |
+| **TOTAL** | 4,540/7,200 | 63.06% | `█████████████░░░░░░░` | 1,950/4,313 | 45.21% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-10-30 | `eb2b3fe` | #1839 | 63.06% | 0.00 | chore: add maintainer as code owner of workflow files |
 | 2026-10-30 | `a1f53f3` | #1836 | 63.06% | +0.01 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
 | 2026-10-28 | `2e459fd` | #1837 | 63.05% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
 | 2026-10-23 | `b7b09e6` | #1828 | 63.05% | 0.00 | build(deps): bump github/codeql-action/upload-sarif |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-23 | `651c6e0` | #1791 | 51.91% | 0.00 | build(deps): bump org.robolectric:robolectric |
 | 2026-09-22 | `2e33859` | #1789 | 51.91% | 0.00 | ci: group dependabot minor and patch updates |
 | 2026-09-22 | `c3fa410` | #1787 | 51.91% | +1.36 | feat: add z-index support across geometry styles and layer mappers |
-| 2026-09-21 | `5557301` | #1762 | 50.55% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |

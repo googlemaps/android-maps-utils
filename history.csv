@@ -209,3 +209,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-10-30T17:30:40Z,a1f53f3,1836,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
 2026-10-30T17:30:40Z,a1f53f3,1836,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
 2026-10-30T17:30:40Z,a1f53f3,1836,build(deps): bump the gradle-minor-and-patch group with 2 updates,unit,TOTAL,4540,7200,63.06,1948,4313,45.17,27943,44681,62.54
+2026-10-30T19:53:45Z,eb2b3fe,1839,chore: add maintainer as code owner of workflow files,unit,clustering,1187,2597,45.71,443,1248,35.5,6699,14200,47.18
+2026-10-30T19:53:45Z,eb2b3fe,1839,chore: add maintainer as code owner of workflow files,unit,data,1954,2969,65.81,1014,2461,41.2,12834,20990,61.14
+2026-10-30T19:53:45Z,eb2b3fe,1839,chore: add maintainer as code owner of workflow files,unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-10-30T19:53:45Z,eb2b3fe,1839,chore: add maintainer as code owner of workflow files,unit,library,1024,1173,87.3,311,374,83.16,5927,6613,89.63
+2026-10-30T19:53:45Z,eb2b3fe,1839,chore: add maintainer as code owner of workflow files,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-10-30T19:53:45Z,eb2b3fe,1839,chore: add maintainer as code owner of workflow files,unit,TOTAL,4540,7200,63.06,1950,4313,45.21,27943,44681,62.54
