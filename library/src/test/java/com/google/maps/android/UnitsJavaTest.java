@@ -171,4 +171,31 @@ public class UnitsJavaTest {
     assertThat(toElevationString(meters(4401.2), jaResources, ImperialUnitsConverter.INSTANCE))
         .isEqualTo("14,440 フィート");
   }
+
+  @Test
+  public void compactSymbols_andCustomThresholds_workFromJava() {
+    UnitsConverter scaleBarImperial = ImperialUnitsConverter.withMilesThreshold(miles(1));
+    assertThat(
+            toDistanceString(
+                meters(1900), MetricUnitsConverter.INSTANCE, NumberFormatSymbols.COMPACT))
+        .isEqualTo("1.9 km");
+    assertThat(
+            toDistanceString(
+                meters(1000), MetricUnitsConverter.INSTANCE, NumberFormatSymbols.COMPACT))
+        .isEqualTo("1 km");
+    assertThat(
+            toDistanceString(
+                meters(3456780), MetricUnitsConverter.INSTANCE, NumberFormatSymbols.COMPACT))
+        .isEqualTo("3457 km");
+    assertThat(toDistanceString(meters(500), scaleBarImperial, NumberFormatSymbols.COMPACT))
+        .isEqualTo("1640 ft");
+    assertThat(toDistanceString(meters(2000), scaleBarImperial, NumberFormatSymbols.COMPACT))
+        .isEqualTo("1.2 mi");
+    assertThat(toDistanceString(meters(3200), scaleBarImperial, NumberFormatSymbols.COMPACT))
+        .isEqualTo("2 mi");
+
+    UnitsConverter halfKmMetric = MetricUnitsConverter.withKilometersThreshold(meters(500));
+    assertThat(toDistanceString(meters(500), halfKmMetric, NumberFormatSymbols.DEFAULT))
+        .isEqualTo("0.5 km");
+  }
 }

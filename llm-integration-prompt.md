@@ -102,7 +102,12 @@ val hybridBySystem = UnitsConverter(
     elevationUnits = UnitSystem.METRIC,
 )
 
-// 4. Mix & match converters or supply custom MeasurementFormatter lambdas
+// 4. Compact formatting & custom unit thresholds (e.g., for a map ScaleBar widget)
+val scaleBarImperial = ImperialUnitsConverter(milesThreshold = 1.miles)
+val compactMetricLabel = 1000.meters.toDistanceString(MetricUnitsConverter, NumberFormatSymbols.COMPACT)   // "1 km"
+val compactImperialLabel = 500.meters.toDistanceString(scaleBarImperial, NumberFormatSymbols.COMPACT)      // "1640 ft"
+
+// 5. Mix & match converters or supply custom MeasurementFormatter lambdas
 val customConverter = UnitsConverter(
     distanceFormatter = { meters, symbols ->
         "${symbols.formatFixedDecimal(meters.inKilometers, decimals = 2)} km"

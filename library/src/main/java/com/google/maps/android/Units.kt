@@ -319,11 +319,13 @@ public enum class UnitSystem {
  * @property groupingSeparator Character used to separate thousands groups (e.g., `','` in `en-US`, `'.'` in `de-DE`).
  * @property decimalSeparator Character used to separate integer and fractional parts (e.g., `'.'` in `en-US`, `','` in `de-DE`).
  * @property groupingSize Number of digits in each group to the left of the decimal point (typically `3`, or `<= 0` to disable grouping).
+ * @property trimTrailingZeros Whether to omit trailing fractional zeros (and the decimal separator when the fractional part rounds to zero, e.g., formatting `1.0` as `"1"` instead of `"1.0"`).
  */
-public data class NumberFormatSymbols(
+public data class NumberFormatSymbols @JvmOverloads constructor(
     public val groupingSeparator: Char = ',',
     public val decimalSeparator: Char = '.',
     public val groupingSize: Int = 3,
+    public val trimTrailingZeros: Boolean = false,
 ) {
     /**
      * Formats [value] rounded to [decimals] fractional digits with thousands grouping according to
@@ -342,8 +344,9 @@ public data class NumberFormatSymbols(
     /**
      * Formats a scalar distance [value] (in large units such as kilometers or miles) using logical
      * precision based on order of magnitude and this [NumberFormatSymbols] instance:
-     * - Values `< 10` (when rounded to 1 decimal place) are formatted with `1` decimal digit,
-     *   keeping the trailing `.0` (e.g., `"0.3"`, `"1.0"`, `"2.5"`, `"9.9"`).
+     * - Values `< 10` (when rounded to 1 decimal place) are formatted with `1` decimal digit
+     *   (keeping the trailing `.0` unless [trimTrailingZeros] is `true`, e.g., `"0.3"`, `"1.0"`,
+     *   `"2.5"`, `"9.9"`).
      * - Values `>= 10` are formatted as whole integers with `0` decimal digits and thousands
      *   grouping (e.g., `"10"`, `"1,250"`).
      *
@@ -355,10 +358,21 @@ public data class NumberFormatSymbols(
     public companion object {
         /**
          * Standard English number formatting symbols (`','` thousands separator, `'.'` decimal
-         * separator, group size `3`).
+         * separator, group size `3`, keeping trailing `.0`).
          */
         @JvmField
         public val DEFAULT: NumberFormatSymbols = NumberFormatSymbols()
+
+        /**
+         * Compact number formatting symbols for space-constrained map widgets (such as a `ScaleBar`):
+         * no thousands grouping (`groupingSize = 0`) and trailing `.0` trimmed (`"1 km"`, `"2 mi"`,
+         * `"1977 km"`).
+         */
+        @JvmField
+        public val COMPACT: NumberFormatSymbols = NumberFormatSymbols(
+            groupingSize = 0,
+            trimTrailingZeros = true,
+        )
 
         /**
          * Resolves the [NumberFormatSymbols] for the given [locale] (defaulting to [Locale.getDefault]).
@@ -782,8 +796,6 @@ private class CompositeUnitsConverter(
  * - **Elevations** are always displayed in whole feet (`ft`).
  */
 public object ImperialUnitsConverter : UnitsConverter() {
-    private const val THRESHOLD_FEET: Long = 1_320L
-
     /** Threshold (`0.25` miles = `1,320` feet) at which imperial distances switch from feet to miles. */
     @get:JvmName("getMilesThreshold")
     public val MILES_THRESHOLD: Meters = 0.25.miles
@@ -791,8 +803,36 @@ public object ImperialUnitsConverter : UnitsConverter() {
     /** The [UnitSystem] implemented by this converter ([UnitSystem.IMPERIAL]). */
     public val unitSystem: UnitSystem = UnitSystem.IMPERIAL
 
+    /**
+     * Returns an Imperial [UnitsConverter] that switches from feet (`ft`) to miles (`mi`) at
+     * [milesThreshold] (for example, `ImperialUnitsConverter(milesThreshold = 1.miles)` for a
+     * `ScaleBar`).
+     *
+     * @param milesThreshold Threshold at which imperial distances switch from feet to miles.
+     * @return An Imperial [UnitsConverter] configured with [milesThreshold].
+     */
+    @JvmSynthetic
+    public operator fun invoke(milesThreshold: Meters = MILES_THRESHOLD): UnitsConverter =
+        withMilesThreshold(milesThreshold)
+
+    /**
+     * Returns an Imperial [UnitsConverter] that switches from feet (`ft`) to miles (`mi`) at
+     * [milesThreshold] (for example, `ImperialUnitsConverter.withMilesThreshold(miles(1))` in Java).
+     *
+     * @param milesThreshold Threshold at which imperial distances switch from feet to miles.
+     * @return An Imperial [UnitsConverter] configured with [milesThreshold].
+     */
+    @JvmStatic
+    @JvmName("withMilesThreshold")
+    public fun withMilesThreshold(milesThreshold: Meters): UnitsConverter = if (milesThreshold == MILES_THRESHOLD) {
+        this
+    } else {
+        ThresholdImperialUnitsConverter(milesThreshold)
+    }
+
     override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String = formatDistance(
         meters = meters,
+        thresholdMeters = MILES_THRESHOLD,
         symbols = symbols,
         formatFeet = { "$it ft" },
         formatMiles = { "$it mi" },
@@ -800,6 +840,7 @@ public object ImperialUnitsConverter : UnitsConverter() {
 
     override fun toDistanceString(resources: Resources, meters: Meters): String = formatDistance(
         meters = meters,
+        thresholdMeters = MILES_THRESHOLD,
         symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
         formatFeet = { resources.getString(R.string.amu_in_feet, it) },
         formatMiles = { resources.getString(R.string.amu_in_miles, it) },
@@ -813,26 +854,54 @@ public object ImperialUnitsConverter : UnitsConverter() {
         return resources.getString(R.string.amu_in_feet, symbols.formatFixedDecimal(meters.inFeet, decimals = 0))
     }
 
-    private inline fun formatDistance(
+    internal inline fun formatDistance(
         meters: Meters,
+        thresholdMeters: Meters,
         symbols: NumberFormatSymbols,
         formatFeet: (String) -> String,
         formatMiles: (String) -> String,
     ): String {
         val feet = meters.inFeet
-        return if (abs(feet).roundToLong() < THRESHOLD_FEET) {
+        val thresholdFeet = thresholdMeters.inFeet.roundToLong()
+        return if (abs(feet).roundToLong() < thresholdFeet) {
             formatFeet(symbols.formatFixedDecimal(feet, decimals = 0))
         } else {
             val rawMiles = meters.inMiles
+            val minMiles = thresholdMeters.inMiles
             val miles =
-                if (abs(rawMiles) < 0.25) {
-                    if (rawMiles < 0.0) -0.25 else 0.25
+                if (abs(rawMiles) < minMiles) {
+                    if (rawMiles < 0.0) -minMiles else minMiles
                 } else {
                     rawMiles
                 }
             formatMiles(symbols.formatDistanceValue(miles))
         }
     }
+}
+
+private class ThresholdImperialUnitsConverter(private val milesThreshold: Meters) : UnitsConverter() {
+    override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String =
+        ImperialUnitsConverter.formatDistance(
+            meters = meters,
+            thresholdMeters = milesThreshold,
+            symbols = symbols,
+            formatFeet = { "$it ft" },
+            formatMiles = { "$it mi" },
+        )
+
+    override fun toDistanceString(resources: Resources, meters: Meters): String = ImperialUnitsConverter.formatDistance(
+        meters = meters,
+        thresholdMeters = milesThreshold,
+        symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
+        formatFeet = { resources.getString(R.string.amu_in_feet, it) },
+        formatMiles = { resources.getString(R.string.amu_in_miles, it) },
+    )
+
+    override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
+        ImperialUnitsConverter.toElevationString(meters, symbols)
+
+    override fun toElevationString(resources: Resources, meters: Meters): String =
+        ImperialUnitsConverter.toElevationString(resources, meters)
 }
 
 /**
@@ -852,8 +921,36 @@ public object MetricUnitsConverter : UnitsConverter() {
     /** The [UnitSystem] implemented by this converter ([UnitSystem.METRIC]). */
     public val unitSystem: UnitSystem = UnitSystem.METRIC
 
+    /**
+     * Returns a Metric [UnitsConverter] that switches from meters (`m`) to kilometers (`km`) at
+     * [kilometersThreshold].
+     *
+     * @param kilometersThreshold Threshold at which metric distances switch from meters to kilometers.
+     * @return A Metric [UnitsConverter] configured with [kilometersThreshold].
+     */
+    @JvmSynthetic
+    public operator fun invoke(kilometersThreshold: Meters = KILOMETERS_THRESHOLD): UnitsConverter =
+        withKilometersThreshold(kilometersThreshold)
+
+    /**
+     * Returns a Metric [UnitsConverter] that switches from meters (`m`) to kilometers (`km`) at
+     * [kilometersThreshold].
+     *
+     * @param kilometersThreshold Threshold at which metric distances switch from meters to kilometers.
+     * @return A Metric [UnitsConverter] configured with [kilometersThreshold].
+     */
+    @JvmStatic
+    @JvmName("withKilometersThreshold")
+    public fun withKilometersThreshold(kilometersThreshold: Meters): UnitsConverter =
+        if (kilometersThreshold == KILOMETERS_THRESHOLD) {
+            this
+        } else {
+            ThresholdMetricUnitsConverter(kilometersThreshold)
+        }
+
     override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String = formatDistance(
         meters = meters,
+        thresholdMeters = KILOMETERS_THRESHOLD,
         symbols = symbols,
         formatMeters = { "$it m" },
         formatKilometers = { "$it km" },
@@ -861,6 +958,7 @@ public object MetricUnitsConverter : UnitsConverter() {
 
     override fun toDistanceString(resources: Resources, meters: Meters): String = formatDistance(
         meters = meters,
+        thresholdMeters = KILOMETERS_THRESHOLD,
         symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
         formatMeters = { resources.getString(R.string.amu_in_meters, it) },
         formatKilometers = { resources.getString(R.string.amu_in_kilometers, it) },
@@ -874,19 +972,54 @@ public object MetricUnitsConverter : UnitsConverter() {
         return resources.getString(R.string.amu_in_meters, symbols.formatFixedDecimal(meters.inMeters, decimals = 0))
     }
 
-    private inline fun formatDistance(
+    internal inline fun formatDistance(
         meters: Meters,
+        thresholdMeters: Meters,
         symbols: NumberFormatSymbols,
         formatMeters: (String) -> String,
         formatKilometers: (String) -> String,
     ): String {
         val metersValue = meters.inMeters
-        return if (abs(metersValue).roundToLong() < METERS_PER_KILOMETER) {
+        val thresholdWholeMeters = thresholdMeters.inMeters.roundToLong()
+        return if (abs(metersValue).roundToLong() < thresholdWholeMeters) {
             formatMeters(symbols.formatFixedDecimal(metersValue, decimals = 0))
         } else {
-            formatKilometers(symbols.formatDistanceValue(meters.inKilometers))
+            val rawKilometers = meters.inKilometers
+            val minKilometers = thresholdMeters.inKilometers
+            val kilometers =
+                if (abs(rawKilometers) < minKilometers) {
+                    if (rawKilometers < 0.0) -minKilometers else minKilometers
+                } else {
+                    rawKilometers
+                }
+            formatKilometers(symbols.formatDistanceValue(kilometers))
         }
     }
+}
+
+private class ThresholdMetricUnitsConverter(private val kilometersThreshold: Meters) : UnitsConverter() {
+    override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String =
+        MetricUnitsConverter.formatDistance(
+            meters = meters,
+            thresholdMeters = kilometersThreshold,
+            symbols = symbols,
+            formatMeters = { "$it m" },
+            formatKilometers = { "$it km" },
+        )
+
+    override fun toDistanceString(resources: Resources, meters: Meters): String = MetricUnitsConverter.formatDistance(
+        meters = meters,
+        thresholdMeters = kilometersThreshold,
+        symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
+        formatMeters = { resources.getString(R.string.amu_in_meters, it) },
+        formatKilometers = { resources.getString(R.string.amu_in_kilometers, it) },
+    )
+
+    override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
+        MetricUnitsConverter.toElevationString(meters, symbols)
+
+    override fun toElevationString(resources: Resources, meters: Meters): String =
+        MetricUnitsConverter.toElevationString(resources, meters)
 }
 // [END maps_android_utils_units_converters]
 
@@ -1219,8 +1352,12 @@ internal fun formatFixedDecimal(value: Double, decimals: Int, symbols: NumberFor
         if (isNegative) append('-')
         append(groupedInteger)
         if (decimals > 0) {
-            append(symbols.decimalSeparator)
-            append((scaled % factor).toString().padStart(decimals, '0'))
+            val fractionPart = scaled % factor
+            if (!symbols.trimTrailingZeros || fractionPart != 0L) {
+                append(symbols.decimalSeparator)
+                val fractionDigits = fractionPart.toString().padStart(decimals, '0')
+                append(if (symbols.trimTrailingZeros) fractionDigits.trimEnd('0') else fractionDigits)
+            }
         }
     }
 }

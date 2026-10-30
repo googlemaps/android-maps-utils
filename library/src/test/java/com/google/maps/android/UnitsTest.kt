@@ -534,6 +534,80 @@ class UnitsTest {
         assertThat(2.0.kilometers.toDistanceString(frResources)).isEqualTo("2,0 km")
     }
 
+    @Test
+    fun scaleBarFormatting_matchesCompactMetricAndImperialScaleBarExpectations() {
+        val scaleBarImperial = ImperialUnitsConverter(milesThreshold = 1.miles)
+        fun formatMetricScaleBar(meters: Int): String =
+            meters.meters.toDistanceString(MetricUnitsConverter, NumberFormatSymbols.COMPACT)
+        fun formatImperialScaleBar(meters: Int): String =
+            meters.meters.toDistanceString(scaleBarImperial, NumberFormatSymbols.COMPACT)
+
+        // 1. Fractional kilometers & miles (with trailing .0 trimmed)
+        assertThat(formatMetricScaleBar(1900)).isEqualTo("1.9 km")
+        assertThat(formatMetricScaleBar(1010)).isEqualTo("1 km")
+        assertThat(formatImperialScaleBar(2000)).isEqualTo("1.2 mi")
+        assertThat(formatImperialScaleBar(3200)).isEqualTo("2 mi")
+
+        // 2. Unit boundaries (1,000 m for metric; 1.0 mi = 5,280 ft for scale bar imperial)
+        assertThat(formatMetricScaleBar(999)).isEqualTo("999 m")
+        assertThat(formatMetricScaleBar(1000)).isEqualTo("1 km")
+        assertThat(formatMetricScaleBar(2000)).isEqualTo("2 km")
+        assertThat(formatImperialScaleBar(500)).isEqualTo("1640 ft")
+        assertThat(formatImperialScaleBar(1609)).isEqualTo("5279 ft")
+        assertThat(5279.6.feet.toDistanceString(scaleBarImperial, NumberFormatSymbols.COMPACT)).isEqualTo("1 mi")
+
+        // 3. Small distances keep whole meters and feet without thousands separators
+        assertThat(formatMetricScaleBar(0)).isEqualTo("0 m")
+        assertThat(formatImperialScaleBar(0)).isEqualTo("0 ft")
+        assertThat(formatMetricScaleBar(100)).isEqualTo("100 m")
+        assertThat(formatImperialScaleBar(100)).isEqualTo("328 ft")
+
+        // 4. Large distances round to whole units without thousands separators
+        assertThat(formatMetricScaleBar(10_400)).isEqualTo("10 km")
+        assertThat(formatMetricScaleBar(11_600)).isEqualTo("12 km")
+        assertThat(formatImperialScaleBar(16_100)).isEqualTo("10 mi")
+        assertThat(formatMetricScaleBar(3_456_780)).isEqualTo("3457 km")
+
+        // 5. ScaleBarRenderingTests equatorial span cases (1,976 m and 1,976,888 m)
+        assertThat(formatMetricScaleBar(1976)).isEqualTo("2 km")
+        assertThat(formatImperialScaleBar(1976)).isEqualTo("1.2 mi")
+        assertThat(formatMetricScaleBar(1_976_888)).isEqualTo("1977 km")
+        assertThat(formatImperialScaleBar(1_976_888)).isEqualTo("1228 mi")
+
+        // 6. Fractional rounding and zero trimming at boundaries
+        assertThat(formatMetricScaleBar(1049)).isEqualTo("1 km")
+        assertThat(formatMetricScaleBar(1050)).isEqualTo("1.1 km")
+        assertThat(formatMetricScaleBar(9949)).isEqualTo("9.9 km")
+        assertThat(formatMetricScaleBar(9950)).isEqualTo("10 km")
+        assertThat(formatMetricScaleBar(9999)).isEqualTo("10 km")
+        assertThat(formatMetricScaleBar(9990)).isEqualTo("10 km")
+        assertThat(formatImperialScaleBar(1)).isEqualTo("3 ft")
+        assertThat(formatImperialScaleBar(2)).isEqualTo("7 ft")
+    }
+
+    @Test
+    fun customThresholds_andTrimTrailingZeros_supportMetricImperialAndResources() {
+        val trimSymbols = NumberFormatSymbols(trimTrailingZeros = true)
+        assertThat(trimSymbols.formatFixedDecimal(1.0, decimals = 1)).isEqualTo("1")
+        assertThat(trimSymbols.formatFixedDecimal(1.20, decimals = 2)).isEqualTo("1.2")
+        assertThat(trimSymbols.formatFixedDecimal(1.25, decimals = 2)).isEqualTo("1.25")
+        assertThat(trimSymbols.formatFixedDecimal(1000.0, decimals = 1)).isEqualTo("1,000")
+
+        // Custom Metric threshold (e.g., switch to km at 500 m)
+        val halfKmMetric = MetricUnitsConverter(kilometersThreshold = 500.meters)
+        assertThat(MetricUnitsConverter(kilometersThreshold = 1.kilometers)).isSameInstanceAs(MetricUnitsConverter)
+        assertThat(499.meters.toDistanceString(halfKmMetric, NumberFormatSymbols.DEFAULT)).isEqualTo("499 m")
+        assertThat(500.meters.toDistanceString(halfKmMetric, NumberFormatSymbols.DEFAULT)).isEqualTo("0.5 km")
+        assertThat(499.6.meters.toDistanceString(halfKmMetric, NumberFormatSymbols.DEFAULT)).isEqualTo("0.5 km")
+
+        // Custom Imperial threshold with Resources
+        val oneMileImperial = ImperialUnitsConverter(milesThreshold = 1.miles)
+        assertThat(ImperialUnitsConverter(milesThreshold = 0.25.miles)).isSameInstanceAs(ImperialUnitsConverter)
+        val jaResources = resourcesForLocale(Locale.JAPAN)
+        assertThat(0.5.miles.toDistanceString(jaResources, oneMileImperial)).isEqualTo("2,640 フィート")
+        assertThat(1.0.miles.toDistanceString(jaResources, oneMileImperial)).isEqualTo("1.0 マイル")
+    }
+
     private fun resourcesForLocale(locale: Locale): Resources {
         val baseContext = RuntimeEnvironment.getApplication()
         val config = Configuration(baseContext.resources.configuration).apply {

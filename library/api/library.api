@@ -114,10 +114,13 @@ public final class com/google/maps/android/ImperialUnitsConverter : com/google/m
 	public static final field INSTANCE Lcom/google/maps/android/ImperialUnitsConverter;
 	public final fun getMilesThreshold ()D
 	public final fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
+	public final synthetic fun invoke-5-sh_3o (D)Lcom/google/maps/android/UnitsConverter;
+	public static synthetic fun invoke-5-sh_3o$default (Lcom/google/maps/android/ImperialUnitsConverter;DILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
 	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+	public static final fun withMilesThreshold (D)Lcom/google/maps/android/UnitsConverter;
 }
 
 public final class com/google/maps/android/IndoorBuildingFocusedEvent : com/google/maps/android/IndoorChangeEvent {
@@ -256,26 +259,34 @@ public final class com/google/maps/android/MetricUnitsConverter : com/google/map
 	public static final field INSTANCE Lcom/google/maps/android/MetricUnitsConverter;
 	public final fun getKilometersThreshold ()D
 	public final fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
+	public final synthetic fun invoke-5-sh_3o (D)Lcom/google/maps/android/UnitsConverter;
+	public static synthetic fun invoke-5-sh_3o$default (Lcom/google/maps/android/MetricUnitsConverter;DILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
 	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
+	public static final fun withKilometersThreshold (D)Lcom/google/maps/android/UnitsConverter;
 }
 
 public abstract interface annotation class com/google/maps/android/MoveStartedReason : java/lang/annotation/Annotation {
 }
 
 public final class com/google/maps/android/NumberFormatSymbols {
+	public static final field COMPACT Lcom/google/maps/android/NumberFormatSymbols;
 	public static final field Companion Lcom/google/maps/android/NumberFormatSymbols$Companion;
 	public static final field DEFAULT Lcom/google/maps/android/NumberFormatSymbols;
 	public fun <init> ()V
+	public fun <init> (C)V
+	public fun <init> (CC)V
 	public fun <init> (CCI)V
-	public synthetic fun <init> (CCIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (CCIZ)V
+	public synthetic fun <init> (CCIZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()C
 	public final fun component2 ()C
 	public final fun component3 ()I
-	public final fun copy (CCI)Lcom/google/maps/android/NumberFormatSymbols;
-	public static synthetic fun copy$default (Lcom/google/maps/android/NumberFormatSymbols;CCIILjava/lang/Object;)Lcom/google/maps/android/NumberFormatSymbols;
+	public final fun component4 ()Z
+	public final fun copy (CCIZ)Lcom/google/maps/android/NumberFormatSymbols;
+	public static synthetic fun copy$default (Lcom/google/maps/android/NumberFormatSymbols;CCIZILjava/lang/Object;)Lcom/google/maps/android/NumberFormatSymbols;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun formatDistanceValue (D)Ljava/lang/String;
 	public final fun formatFixedDecimal (D)Ljava/lang/String;
@@ -286,6 +297,7 @@ public final class com/google/maps/android/NumberFormatSymbols {
 	public final fun getDecimalSeparator ()C
 	public final fun getGroupingSeparator ()C
 	public final fun getGroupingSize ()I
+	public final fun getTrimTrailingZeros ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
