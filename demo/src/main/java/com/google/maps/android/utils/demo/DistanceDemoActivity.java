@@ -16,6 +16,7 @@
 package com.google.maps.android.utils.demo;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -27,14 +28,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
+import com.google.maps.android.Units;
+import com.google.maps.android.UnitsConverter;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class DistanceDemoActivity extends BaseDemoActivity
     implements GoogleMap.OnMarkerDragListener {
+  static final LatLng SYDNEY_SOUTH = new LatLng(-33.9046, 151.155);
+  static final LatLng SYDNEY_NORTH = new LatLng(-33.8291, 151.248);
+
   private TextView mTextView;
   private Marker mMarkerA;
   private Marker mMarkerB;
   private Polyline mPolyline;
+  private UnitsConverter mUnitsConverter;
 
   @Override
   protected int getLayoutId() {
@@ -44,46 +52,52 @@ public class DistanceDemoActivity extends BaseDemoActivity
   @Override
   protected void startDemo(boolean isRestore) {
     mTextView = findViewById(R.id.textView);
+    mUnitsConverter = Units.getUnitsConverter(getResources());
 
     if (!isRestore) {
       getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.8256, 151.2395), 10));
     }
     getMap().setOnMarkerDragListener(this);
 
-    mMarkerA =
-        getMap()
-            .addMarker(new MarkerOptions().position(new LatLng(-33.9046, 151.155)).draggable(true));
-    mMarkerB =
-        getMap()
-            .addMarker(new MarkerOptions().position(new LatLng(-33.8291, 151.248)).draggable(true));
+    mMarkerA = getMap().addMarker(new MarkerOptions().position(SYDNEY_SOUTH).draggable(true));
+    mMarkerB = getMap().addMarker(new MarkerOptions().position(SYDNEY_NORTH).draggable(true));
     mPolyline = getMap().addPolyline(new PolylineOptions().geodesic(true));
 
     Toast.makeText(this, getString(R.string.drag_the_markers), Toast.LENGTH_LONG).show();
     showDistance();
   }
 
+  // [START maps_android_utils_units_java]
   @SuppressLint("SetTextI18n")
   private void showDistance() {
-    double distance =
-        SphericalUtil.computeDistanceBetween(mMarkerA.getPosition(), mMarkerB.getPosition());
-    mTextView.setText(getString(R.string.distance_format, formatNumber(distance)));
+    String formattedDistance =
+        formatDistanceBetween(
+            mMarkerA.getPosition(), mMarkerB.getPosition(), getResources(), mUnitsConverter);
+    mTextView.setText(getString(R.string.distance_format, formattedDistance));
   }
+
+  static String formatDistanceBetween(
+      @NonNull LatLng pointA,
+      @NonNull LatLng pointB,
+      @NonNull Resources resources,
+      @NonNull UnitsConverter converter) {
+    double distanceMeters = SphericalUtil.computeDistanceBetween(pointA, pointB);
+    return converter.toDistanceString(distanceMeters, resources);
+  }
+
+  static String formatDistanceBetween(
+      @NonNull LatLng pointA,
+      @NonNull LatLng pointB,
+      @NonNull Locale locale,
+      @NonNull UnitsConverter converter) {
+    double distanceMeters = SphericalUtil.computeDistanceBetween(pointA, pointB);
+    return converter.toDistanceString(distanceMeters, locale);
+  }
+
+  // [END maps_android_utils_units_java]
 
   private void updatePolyline() {
     mPolyline.setPoints(Arrays.asList(mMarkerA.getPosition(), mMarkerB.getPosition()));
-  }
-
-  private String formatNumber(double distance) {
-    String unit = getString(R.string.unit_m);
-    if (distance < 1) {
-      distance *= 1000;
-      unit = getString(R.string.unit_mm);
-    } else if (distance > 1000) {
-      distance /= 1000;
-      unit = getString(R.string.unit_km);
-    }
-
-    return String.format("%4.3f%s", distance, unit);
   }
 
   @Override
