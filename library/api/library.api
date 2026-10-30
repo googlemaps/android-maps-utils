@@ -116,9 +116,9 @@ public final class com/google/maps/android/ImperialUnitsConverter : com/google/m
 	public final fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
 	public final synthetic fun invoke-5-sh_3o (D)Lcom/google/maps/android/UnitsConverter;
 	public static synthetic fun invoke-5-sh_3o$default (Lcom/google/maps/android/ImperialUnitsConverter;DILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
-	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toDistanceString-s1HjgZ8 (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
-	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toElevationString-s1HjgZ8 (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public static final fun withMilesThreshold (D)Lcom/google/maps/android/UnitsConverter;
 }
@@ -261,9 +261,9 @@ public final class com/google/maps/android/MetricUnitsConverter : com/google/map
 	public final fun getUnitSystem ()Lcom/google/maps/android/UnitSystem;
 	public final synthetic fun invoke-5-sh_3o (D)Lcom/google/maps/android/UnitsConverter;
 	public static synthetic fun invoke-5-sh_3o$default (Lcom/google/maps/android/MetricUnitsConverter;DILjava/lang/Object;)Lcom/google/maps/android/UnitsConverter;
-	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toDistanceString-s1HjgZ8 (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
-	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toElevationString-s1HjgZ8 (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public static final fun withKilometersThreshold (D)Lcom/google/maps/android/UnitsConverter;
 }
@@ -463,6 +463,8 @@ public final class com/google/maps/android/ThirdDimension : java/lang/Enum {
 public final class com/google/maps/android/UnitSystem : java/lang/Enum {
 	public static final field Companion Lcom/google/maps/android/UnitSystem$Companion;
 	public static final field IMPERIAL Lcom/google/maps/android/UnitSystem;
+	public static final field IMPERIAL_COUNTRY_CODES Ljava/util/Set;
+	public static final field IMPERIAL_ELEVATION_COUNTRY_CODES Ljava/util/Set;
 	public static final field METRIC Lcom/google/maps/android/UnitSystem;
 	public static final fun distanceFromCountryCode (Ljava/lang/String;)Lcom/google/maps/android/UnitSystem;
 	public static final fun distanceFromLocale ()Lcom/google/maps/android/UnitSystem;
@@ -498,8 +500,6 @@ public final class com/google/maps/android/UnitSystem$Companion {
 	public final fun fromLocale (Ljava/util/Locale;)Lcom/google/maps/android/UnitSystem;
 	public static synthetic fun fromLocale$default (Lcom/google/maps/android/UnitSystem$Companion;Ljava/util/Locale;ILjava/lang/Object;)Lcom/google/maps/android/UnitSystem;
 	public final fun fromResources (Landroid/content/res/Resources;)Lcom/google/maps/android/UnitSystem;
-	public final fun getIMPERIAL_COUNTRY_CODES ()Ljava/util/Set;
-	public final fun getIMPERIAL_ELEVATION_COUNTRY_CODES ()Ljava/util/Set;
 }
 
 public final class com/google/maps/android/Units {
@@ -571,20 +571,20 @@ public abstract class com/google/maps/android/UnitsConverter {
 	public static final fun create (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/MeasurementFormatter;)Lcom/google/maps/android/UnitsConverter;
 	public static final fun create (Lcom/google/maps/android/UnitsConverter;Lcom/google/maps/android/UnitsConverter;)Lcom/google/maps/android/UnitsConverter;
 	public final fun toDistanceString (D)Ljava/lang/String;
+	public final fun toDistanceString (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public final fun toDistanceString (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toDistanceString (DLjava/util/Locale;)Ljava/lang/String;
-	public final fun toDistanceString (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public static synthetic fun toDistanceString$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public fun toDistanceString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toDistanceString-s1HjgZ8 (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public abstract fun toDistanceString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toDistanceString-s1HjgZ8 (DLjava/util/Locale;)Ljava/lang/String;
 	public static synthetic fun toDistanceString-s1HjgZ8$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
 	public final fun toElevationString (D)Ljava/lang/String;
+	public final fun toElevationString (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public final fun toElevationString (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toElevationString (DLjava/util/Locale;)Ljava/lang/String;
-	public final fun toElevationString (Landroid/content/res/Resources;D)Ljava/lang/String;
 	public static synthetic fun toElevationString$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;
-	public fun toElevationString-o-ZRCEM (Landroid/content/res/Resources;D)Ljava/lang/String;
+	public fun toElevationString-s1HjgZ8 (DLandroid/content/res/Resources;)Ljava/lang/String;
 	public abstract fun toElevationString-s1HjgZ8 (DLcom/google/maps/android/NumberFormatSymbols;)Ljava/lang/String;
 	public final fun toElevationString-s1HjgZ8 (DLjava/util/Locale;)Ljava/lang/String;
 	public static synthetic fun toElevationString-s1HjgZ8$default (Lcom/google/maps/android/UnitsConverter;DLjava/util/Locale;ILjava/lang/Object;)Ljava/lang/String;

@@ -152,7 +152,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
                 MarkerOptions()
                     .position(peak.position)
                     .title(peak.name)
-                    .snippet(converter.toElevationString(resources, peak.elevation)),
+                    .snippet(converter.toElevationString(peak.elevation, resources)),
             )
             if (marker != null) {
                 peakMarkers.add(peak to marker)
@@ -192,7 +192,7 @@ class UnitsDemoActivity : BaseDemoActivity() {
 
     private fun refreshMarkerSnippets(converter: UnitsConverter) {
         for ((peak, marker) in peakMarkers) {
-            marker.snippet = converter.toElevationString(resources, peak.elevation)
+            marker.snippet = converter.toElevationString(peak.elevation, resources)
             if (marker.isInfoWindowShown) {
                 marker.showInfoWindow()
             }

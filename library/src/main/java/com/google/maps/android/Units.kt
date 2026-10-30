@@ -188,12 +188,14 @@ public enum class UnitSystem {
          * [getUnitsConverter] for `"GB"` / [Locale.UK] automatically returns a converter that
          * formats distances in feet/miles and elevations in meters.
          */
+        @JvmField
         public val IMPERIAL_COUNTRY_CODES: Set<String> = setOf("US", "LR", "MM", "GB")
 
         /**
          * ISO 3166-1 alpha-2 country codes that default to [IMPERIAL] units for elevations:
          * United States (`"US"`), Liberia (`"LR"`), and Myanmar (`"MM"`).
          */
+        @JvmField
         public val IMPERIAL_ELEVATION_COUNTRY_CODES: Set<String> = setOf("US", "LR", "MM")
 
         /**
@@ -487,23 +489,23 @@ public abstract class UnitsConverter {
      * Formats a distance in [meters] into a localized string using the translated unit templates
      * (`R.string.amu_in_*`) and primary locale of the given Android [resources].
      *
-     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The distance to format.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @return The formatted distance string (e.g., `"450 m"`, `"2.0 km"`, `"528 フィート"`, `"2,5 ми"`).
      */
-    public open fun toDistanceString(resources: Resources, meters: Meters): String =
+    public open fun toDistanceString(meters: Meters, resources: Resources): String =
         toDistanceString(meters, NumberFormatSymbols.fromLocale(primaryLocale(resources)))
 
     /**
      * Formats a distance in [meters] (as a raw [Double]) into a localized string using the
      * translated unit templates (`R.string.amu_in_*`) and primary locale of [resources].
      *
-     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The distance in meters to format.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @return The formatted distance string.
      */
-    public fun toDistanceString(resources: Resources, meters: Double): String =
-        toDistanceString(resources, Meters(meters))
+    public fun toDistanceString(meters: Double, resources: Resources): String =
+        toDistanceString(Meters(meters), resources)
 
     /**
      * Formats an elevation in [meters] into a human-readable string with units using pure Kotlin
@@ -550,23 +552,23 @@ public abstract class UnitsConverter {
      * Formats an elevation in [meters] into a localized string using the translated unit templates
      * (`R.string.amu_in_*`) and primary locale of the given Android [resources].
      *
-     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The elevation to format.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @return The formatted elevation string (e.g., `"4,401 m"`, `"14,440 ft"`, `"14,440 フィート"`).
      */
-    public open fun toElevationString(resources: Resources, meters: Meters): String =
+    public open fun toElevationString(meters: Meters, resources: Resources): String =
         toElevationString(meters, NumberFormatSymbols.fromLocale(primaryLocale(resources)))
 
     /**
      * Formats an elevation in [meters] (as a raw [Double]) into a localized string using the
      * translated unit templates (`R.string.amu_in_*`) and primary locale of [resources].
      *
-     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @param meters The elevation in meters to format.
+     * @param resources The Android [Resources] used to resolve localized unit templates and number formatting.
      * @return The formatted elevation string.
      */
-    public fun toElevationString(resources: Resources, meters: Double): String =
-        toElevationString(resources, Meters(meters))
+    public fun toElevationString(meters: Double, resources: Resources): String =
+        toElevationString(Meters(meters), resources)
 
     /**
      * Returns a [UnitsConverter] that formats distances using [distanceUnits] while preserving
@@ -766,22 +768,22 @@ public abstract class UnitsConverter {
 private class CompositeUnitsConverter(
     private val distanceFormatter: (Meters, NumberFormatSymbols) -> String,
     private val elevationFormatter: (Meters, NumberFormatSymbols) -> String,
-    private val distanceResourcesFormatter: ((Resources, Meters) -> String)? = null,
-    private val elevationResourcesFormatter: ((Resources, Meters) -> String)? = null,
+    private val distanceResourcesFormatter: ((Meters, Resources) -> String)? = null,
+    private val elevationResourcesFormatter: ((Meters, Resources) -> String)? = null,
     internal val distanceDelegate: UnitsConverter? = null,
     internal val elevationDelegate: UnitsConverter? = null,
 ) : UnitsConverter() {
     override fun toDistanceString(meters: Meters, symbols: NumberFormatSymbols): String =
         distanceFormatter(meters, symbols)
 
-    override fun toDistanceString(resources: Resources, meters: Meters): String =
-        distanceResourcesFormatter?.invoke(resources, meters) ?: super.toDistanceString(resources, meters)
+    override fun toDistanceString(meters: Meters, resources: Resources): String =
+        distanceResourcesFormatter?.invoke(meters, resources) ?: super.toDistanceString(meters, resources)
 
     override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
         elevationFormatter(meters, symbols)
 
-    override fun toElevationString(resources: Resources, meters: Meters): String =
-        elevationResourcesFormatter?.invoke(resources, meters) ?: super.toElevationString(resources, meters)
+    override fun toElevationString(meters: Meters, resources: Resources): String =
+        elevationResourcesFormatter?.invoke(meters, resources) ?: super.toElevationString(meters, resources)
 }
 
 // [START maps_android_utils_units_converters]
@@ -838,7 +840,7 @@ public object ImperialUnitsConverter : UnitsConverter() {
         formatMiles = { "$it mi" },
     )
 
-    override fun toDistanceString(resources: Resources, meters: Meters): String = formatDistance(
+    override fun toDistanceString(meters: Meters, resources: Resources): String = formatDistance(
         meters = meters,
         thresholdMeters = MILES_THRESHOLD,
         symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
@@ -849,7 +851,7 @@ public object ImperialUnitsConverter : UnitsConverter() {
     override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
         "${symbols.formatFixedDecimal(meters.inFeet, decimals = 0)} ft"
 
-    override fun toElevationString(resources: Resources, meters: Meters): String {
+    override fun toElevationString(meters: Meters, resources: Resources): String {
         val symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources))
         return resources.getString(R.string.amu_in_feet, symbols.formatFixedDecimal(meters.inFeet, decimals = 0))
     }
@@ -889,7 +891,7 @@ private class ThresholdImperialUnitsConverter(private val milesThreshold: Meters
             formatMiles = { "$it mi" },
         )
 
-    override fun toDistanceString(resources: Resources, meters: Meters): String = ImperialUnitsConverter.formatDistance(
+    override fun toDistanceString(meters: Meters, resources: Resources): String = ImperialUnitsConverter.formatDistance(
         meters = meters,
         thresholdMeters = milesThreshold,
         symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
@@ -900,8 +902,8 @@ private class ThresholdImperialUnitsConverter(private val milesThreshold: Meters
     override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
         ImperialUnitsConverter.toElevationString(meters, symbols)
 
-    override fun toElevationString(resources: Resources, meters: Meters): String =
-        ImperialUnitsConverter.toElevationString(resources, meters)
+    override fun toElevationString(meters: Meters, resources: Resources): String =
+        ImperialUnitsConverter.toElevationString(meters, resources)
 }
 
 /**
@@ -956,7 +958,7 @@ public object MetricUnitsConverter : UnitsConverter() {
         formatKilometers = { "$it km" },
     )
 
-    override fun toDistanceString(resources: Resources, meters: Meters): String = formatDistance(
+    override fun toDistanceString(meters: Meters, resources: Resources): String = formatDistance(
         meters = meters,
         thresholdMeters = KILOMETERS_THRESHOLD,
         symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
@@ -967,7 +969,7 @@ public object MetricUnitsConverter : UnitsConverter() {
     override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
         "${symbols.formatFixedDecimal(meters.inMeters, decimals = 0)} m"
 
-    override fun toElevationString(resources: Resources, meters: Meters): String {
+    override fun toElevationString(meters: Meters, resources: Resources): String {
         val symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources))
         return resources.getString(R.string.amu_in_meters, symbols.formatFixedDecimal(meters.inMeters, decimals = 0))
     }
@@ -1007,7 +1009,7 @@ private class ThresholdMetricUnitsConverter(private val kilometersThreshold: Met
             formatKilometers = { "$it km" },
         )
 
-    override fun toDistanceString(resources: Resources, meters: Meters): String = MetricUnitsConverter.formatDistance(
+    override fun toDistanceString(meters: Meters, resources: Resources): String = MetricUnitsConverter.formatDistance(
         meters = meters,
         thresholdMeters = kilometersThreshold,
         symbols = NumberFormatSymbols.fromLocale(primaryLocale(resources)),
@@ -1018,8 +1020,8 @@ private class ThresholdMetricUnitsConverter(private val kilometersThreshold: Met
     override fun toElevationString(meters: Meters, symbols: NumberFormatSymbols): String =
         MetricUnitsConverter.toElevationString(meters, symbols)
 
-    override fun toElevationString(resources: Resources, meters: Meters): String =
-        MetricUnitsConverter.toElevationString(resources, meters)
+    override fun toElevationString(meters: Meters, resources: Resources): String =
+        MetricUnitsConverter.toElevationString(meters, resources)
 }
 // [END maps_android_utils_units_converters]
 
@@ -1269,7 +1271,7 @@ public fun Meters.toDistanceString(
 public fun Meters.toDistanceString(
     resources: Resources,
     converter: UnitsConverter = getUnitsConverter(resources),
-): String = converter.toDistanceString(resources, this)
+): String = converter.toDistanceString(this, resources)
 
 /**
  * Formats this [Meters] measurement as a human-readable elevation string using [locale] and [converter].
@@ -1313,7 +1315,7 @@ public fun Meters.toElevationString(
 public fun Meters.toElevationString(
     resources: Resources,
     converter: UnitsConverter = getUnitsConverter(resources),
-): String = converter.toElevationString(resources, this)
+): String = converter.toElevationString(this, resources)
 
 // =================================================================================================
 // § 6. Internal Pure-Kotlin Formatting Helpers
