@@ -172,4 +172,14 @@ Demonstrates how to dynamically control the visual layering (stacking order) of 
 
     <!-- Flexible Polyline demo -->
     <string name="flexible_polyline_summary">Decoded points: %1$d</string>
+    <string name="flexible_polyline_track_title">4D Track: Alpine Trail Run</string>
+    <string name="flexible_polyline_preset_hike">Alpine Run</string>
+    <string name="flexible_polyline_preset_bike">Bike Climb</string>
+    <string name="flexible_polyline_preset_flight">Flight Path</string>
+    <string name="flexible_polyline_title_hike">4D Track: Alpine Trail Run (Mount Rainier)</string>
+    <string name="flexible_polyline_title_bike">4D Track: Mountain Pass Bike Ride (Hawk Hill)</string>
+    <string name="flexible_polyline_title_flight">4D Track: Scenic Flight (Sydney Harbour)</string>
+    <string name="flexible_polyline_header_fmt">%1$d pts • %2$d B encoded • prec %3$d • %4$s (%5$d) • time (%6$d)</string>
+    <string name="flexible_polyline_telemetry_fmt">%1$s: %2$.1f m  •  Time: +%3$.1f s / %4$.1f s</string>
+    <string name="flexible_polyline_play">Play</string>
 </resources>
