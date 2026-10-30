@@ -6,7 +6,7 @@
       "extra-files": [
         "README.md",
         "build.gradle.kts",
-        ".gemini/skills/android-maps-utils/SKILL.md",
+        ".agents/skills/android-maps-utils/SKILL.md",
         "llm-integration-prompt.md",
         "MIGRATION.md"
       ]

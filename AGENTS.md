@@ -69,6 +69,17 @@ Running the `demo` app requires a Maps API key in `secrets.properties` at the
 repo root (see `local.defaults.properties` for the template). Never hardcode
 or commit API keys.
 
+## Agent setup
+
+This file is the shared instruction set for every coding agent. `CLAUDE.md`
+and `GEMINI.md` only import it, and Codex and Copilot read it directly, so put
+new guidance here rather than in a tool-specific file.
+
+Skills live in `.agents/skills/`. `.claude/skills` and `.gemini/skills` are
+symlinks to that folder, so edit the files under `.agents/skills/` only.
+`.agents/skills/android-maps-utils/SKILL.md` teaches agents how apps use this
+library, and release-please bumps its version lines.
+
 ## Code style
 
 - Match the language and idiom of the file you are editing; new code is
@@ -107,6 +118,18 @@ or commit API keys.
 
   The PR title still has to be a valid Conventional Commit. Each line counts
   for the version bump, so a `feat:` or `!` line bumps accordingly.
+- Keep a pull request to what its title says. Once review has started, put
+  new features or unrelated fixes in a separate pull request. If the scope
+  does change, update the type in the title (a `refactor:` that now adds
+  behavior is a `feat:`), since release-please reads it.
+- Answer every review thread before asking for another review: push the
+  change, or reply in the thread with why not. A new commit alone does not
+  tell the reviewer which comments it addresses.
+- Never commit anything that only makes sense on your machine or inside
+  Google: local paths (`file:///`, `/Users/...`, workstation home
+  directories), `go/` links, `b/` bug IDs or API keys. The `Agent leftovers` check fails
+  the pull request on these, and on AI co-author trailers and links to agent
+  chat sessions.
 - Every behavior change needs a unit test in the affected module.
 - All pull requests are to be created as drafts (`gh pr create --draft`) until authorization is explicitly given to mark them ready for review. Always inform the user that the PR was created as a draft.
 - Run the module's tests and `lint` before declaring work done, and report
