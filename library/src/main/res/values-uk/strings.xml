@@ -16,7 +16,7 @@
 -->
 <resources>
     <string name="amu_in_feet">%1$s фт</string>
-    <string name="amu_in_miles">%1$s милі</string>
+    <string name="amu_in_miles">%1$s мил.</string>
     <string name="amu_in_meters">%1$s м</string>
     <string name="amu_in_kilometers">%1$s км</string>
 </resources>

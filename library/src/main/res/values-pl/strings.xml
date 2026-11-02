@@ -15,7 +15,7 @@
  limitations under the License.
 -->
 <resources>
-    <string name="amu_in_feet">%1$s st.</string>
+    <string name="amu_in_feet">%1$s ft</string>
     <string name="amu_in_miles">%1$s mi</string>
     <string name="amu_in_meters">%1$s m</string>
     <string name="amu_in_kilometers">%1$s km</string>

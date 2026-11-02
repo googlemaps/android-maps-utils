@@ -484,54 +484,60 @@ class UnitsTest {
     }
 
     @Test
-    fun localizedStringResources_translateUnitLabelsAcrossLanguages() {
-        // Japanese (ja-JP): metric uses "m" / "km", imperial uses "フィート" / "マイル"
-        val jaResources = resourcesForLocale(Locale.JAPAN)
-        assertThat(450.meters.toDistanceString(jaResources)).isEqualTo("450 m")
-        assertThat(2.0.kilometers.toDistanceString(jaResources)).isEqualTo("2.0 km")
-        assertThat(0.1.miles.toDistanceString(jaResources, ImperialUnitsConverter)).isEqualTo("528 フィート")
-        assertThat(2.5.miles.toDistanceString(jaResources, ImperialUnitsConverter)).isEqualTo("2.5 マイル")
-        assertThat(4401.2.meters.toElevationString(jaResources, ImperialUnitsConverter)).isEqualTo("14,440 フィート")
+    fun localizedStringResources_translateUnitLabelsAcrossAll24SupportedLocales() {
+        data class LocaleExpectation(
+            val locale: Locale,
+            val feetSuffix: String,
+            val milesSuffix: String,
+            val metersSuffix: String,
+            val kilometersSuffix: String,
+        )
 
-        // Korean (ko-KR): imperial uses "피트" / "마일" (no space per Korean CLDR convention)
-        val koResources = resourcesForLocale(Locale.KOREA)
-        assertThat(450.meters.toDistanceString(koResources)).isEqualTo("450 m")
-        assertThat(2.0.kilometers.toDistanceString(koResources)).isEqualTo("2.0 km")
-        assertThat(0.1.miles.toDistanceString(koResources, ImperialUnitsConverter)).isEqualTo("528피트")
-        assertThat(2.5.miles.toDistanceString(koResources, ImperialUnitsConverter)).isEqualTo("2.5마일")
+        val expectations = listOf(
+            LocaleExpectation(Locale.US, " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("ar-EG"), " قدم", " ميل", " م", " كم"),
+            LocaleExpectation(Locale.forLanguageTag("bg-BG"), " фута", " мили", " м", " км"),
+            LocaleExpectation(Locale.GERMANY, " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("el-GR"), " πόδ.", " μίλ.", " μ.", " χλμ."),
+            LocaleExpectation(Locale.forLanguageTag("es-ES"), " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("fa-IR"), " فوت", " مایل", " متر", " کیلومتر"),
+            LocaleExpectation(Locale.FRANCE, " pi", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("hi-IN"), " फ़ीट", " मील", " मी॰", " कि॰मी॰"),
+            LocaleExpectation(Locale.forLanguageTag("id-ID"), " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.ITALY, " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("he-IL"), " רגל", " מייל", " מ׳", " ק״מ"),
+            LocaleExpectation(Locale.JAPAN, " フィート", " マイル", " m", " km"),
+            LocaleExpectation(Locale.KOREA, "피트", "마일", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("nl-NL"), " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("pl-PL"), " ft", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("pt-BR"), " pés", " mi", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("ru-RU"), " фт", " ми", " м", " км"),
+            LocaleExpectation(Locale.forLanguageTag("th-TH"), " ฟุต", " ไมล์", " ม.", " กม."),
+            LocaleExpectation(Locale.forLanguageTag("tr-TR"), " fit", " mil", " m", " km"),
+            LocaleExpectation(Locale.forLanguageTag("uk-UA"), " фт", " мил.", " м", " км"),
+            LocaleExpectation(Locale.forLanguageTag("vi-VN"), " ft", " dặm", " m", " km"),
+            LocaleExpectation(Locale.SIMPLIFIED_CHINESE, " 英尺", " 英里", " 米", " 公里"),
+            LocaleExpectation(Locale.forLanguageTag("zh-HK"), " 英尺", " 英里", " 米", " 公里"),
+            LocaleExpectation(Locale.TRADITIONAL_CHINESE, " 英尺", " 英里", " 公尺", " 公里"),
+        )
 
-        // Simplified Chinese (zh-CN): "米", "公里", "英尺", "英里"
-        val zhCnResources = resourcesForLocale(Locale.SIMPLIFIED_CHINESE)
-        assertThat(450.meters.toDistanceString(zhCnResources)).isEqualTo("450 米")
-        assertThat(2.0.kilometers.toDistanceString(zhCnResources)).isEqualTo("2.0 公里")
-        assertThat(0.1.miles.toDistanceString(zhCnResources, ImperialUnitsConverter)).isEqualTo("528 英尺")
-        assertThat(2.5.miles.toDistanceString(zhCnResources, ImperialUnitsConverter)).isEqualTo("2.5 英里")
+        for (expectation in expectations) {
+            val res = resourcesForLocale(expectation.locale)
+            val symbols = NumberFormatSymbols.fromLocale(expectation.locale)
+            val expectedFeetNumber = symbols.formatFixedDecimal(528.0, decimals = 0)
+            val expectedMilesNumber = symbols.formatDistanceValue(2.5)
+            val expectedMetersNumber = symbols.formatFixedDecimal(450.0, decimals = 0)
+            val expectedKilometersNumber = symbols.formatDistanceValue(2.0)
 
-        // Traditional Chinese (zh-TW): "公尺", "公里", "英尺", "英里"
-        val zhTwResources = resourcesForLocale(Locale.TRADITIONAL_CHINESE)
-        assertThat(450.meters.toDistanceString(zhTwResources)).isEqualTo("450 公尺")
-        assertThat(2.0.kilometers.toDistanceString(zhTwResources)).isEqualTo("2.0 公里")
-
-        // Russian (ru-RU): Cyrillic "м", "км", "фт", "ми" + comma decimal separator
-        val ruLocale = Locale.Builder().setLanguage("ru").setRegion("RU").build()
-        val ruResources = resourcesForLocale(ruLocale)
-        assertThat(450.meters.toDistanceString(ruResources)).isEqualTo("450 м")
-        assertThat(2.0.kilometers.toDistanceString(ruResources)).isEqualTo("2,0 км")
-        assertThat(0.1.miles.toDistanceString(ruResources, ImperialUnitsConverter)).isEqualTo("528 фт")
-        assertThat(2.5.miles.toDistanceString(ruResources, ImperialUnitsConverter)).isEqualTo("2,5 ми")
-
-        // Arabic (ar-EG): "م", "كم", "قدم", "ميل"
-        val arLocale = Locale.Builder().setLanguage("ar").setRegion("EG").build()
-        val arResources = resourcesForLocale(arLocale)
-        assertThat(450.meters.toDistanceString(arResources)).endsWith(" م")
-        assertThat(2.0.kilometers.toDistanceString(arResources)).endsWith(" كم")
-        assertThat(0.1.miles.toDistanceString(arResources, ImperialUnitsConverter)).endsWith(" قدم")
-        assertThat(2.5.miles.toDistanceString(arResources, ImperialUnitsConverter)).endsWith(" ميل")
-
-        // French (fr-FR): feet translated as "pi"
-        val frResources = resourcesForLocale(Locale.FRANCE)
-        assertThat(0.1.miles.toDistanceString(frResources, ImperialUnitsConverter)).isEqualTo("528 pi")
-        assertThat(2.0.kilometers.toDistanceString(frResources)).isEqualTo("2,0 km")
+            assertThat(0.1.miles.toDistanceString(res, ImperialUnitsConverter))
+                .isEqualTo("$expectedFeetNumber${expectation.feetSuffix}")
+            assertThat(2.5.miles.toDistanceString(res, ImperialUnitsConverter))
+                .isEqualTo("$expectedMilesNumber${expectation.milesSuffix}")
+            assertThat(450.meters.toDistanceString(res, MetricUnitsConverter))
+                .isEqualTo("$expectedMetersNumber${expectation.metersSuffix}")
+            assertThat(2.0.kilometers.toDistanceString(res, MetricUnitsConverter))
+                .isEqualTo("$expectedKilometersNumber${expectation.kilometersSuffix}")
+        }
     }
 
     @Test

@@ -17,6 +17,6 @@
 <resources>
     <string name="amu_in_feet">%1$s πόδ.</string>
     <string name="amu_in_miles">%1$s μίλ.</string>
-    <string name="amu_in_meters">%1$s m</string>
+    <string name="amu_in_meters">%1$s μ.</string>
     <string name="amu_in_kilometers">%1$s χλμ.</string>
 </resources>
