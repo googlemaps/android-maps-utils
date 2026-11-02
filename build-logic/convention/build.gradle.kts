@@ -27,6 +27,7 @@ repositories {
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.gradle)
+    implementation(libs.baselineprofile.gradle.plugin)
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.kover.gradle.plugin)
     implementation(libs.gradle.maven.publish.plugin)
@@ -38,6 +39,10 @@ gradlePlugin {
         register("publishingConventionPlugin") {
             id = "android.maps.utils.PublishingConventionPlugin"
             implementationClass = "PublishingConventionPlugin"
+        }
+        register("baselineProfileConventionPlugin") {
+            id = "android.maps.utils.BaselineProfileConventionPlugin"
+            implementationClass = "BaselineProfileConventionPlugin"
         }
         register("bomPublishingConventionPlugin") {
             id = "android.maps.utils.BomPublishingConventionPlugin"
