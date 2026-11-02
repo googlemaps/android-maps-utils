@@ -18,18 +18,34 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 name: release-please
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      prs_created: ${{ steps.release.outputs.prs_created }}
     steps:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+        id: release
         with:
           token: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+
+  # Keeps the Baseline Profiles in line with the code about to be released. The workflow skips the
+  # emulator run when the library sources did not change since the profiles were last regenerated.
+  baseline-profiles:
+    needs: release-please
+    if: needs.release-please.outputs.prs_created == 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/baseline-profiles.yml
+    secrets:
+      ACTIONS_API_KEY: ${{ secrets.ACTIONS_API_KEY }}
+      SYNCED_GITHUB_TOKEN_REPO: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
