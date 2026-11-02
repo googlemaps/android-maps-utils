@@ -70,6 +70,7 @@ buildscript {
 
     dependencies {
         classpath(libs.gradle)
+        classpath(libs.baselineprofile.gradle.plugin)
         classpath(libs.kover.gradle.plugin)
         classpath(libs.secrets.gradle.plugin)
         classpath(libs.kotlin.gradle.plugin)
