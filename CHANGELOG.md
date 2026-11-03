@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.0.0](https://github.com/googlemaps/android-maps-utils/compare/v6.1.0...v7.0.0) (2026-11-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* the minimum supported Android API level is now 24.
+
+### Features
+
+* add Units API for distance and elevation conversion and formatting ([#1832](https://github.com/googlemaps/android-maps-utils/issues/1832)) ([5249dc7](https://github.com/googlemaps/android-maps-utils/commit/5249dc747943543142550fb60183b4ef4e230f7d))
+* **clustering:** add SuperClusterAlgorithm for mega-scale marker clustering and configurable badge formatting ([#1799](https://github.com/googlemaps/android-maps-utils/issues/1799)) ([65c222c](https://github.com/googlemaps/android-maps-utils/commit/65c222c4b23f7a0437515bed120bb4671111ef71))
+* raise minSdk to 24 and update Maps SDK to 20.1.0 ([#1829](https://github.com/googlemaps/android-maps-utils/issues/1829)) ([729bcb9](https://github.com/googlemaps/android-maps-utils/commit/729bcb99e124b29944496bfefc04e479516ea552))
+
 ## [6.1.0](https://github.com/googlemaps/android-maps-utils/compare/v6.0.0...v6.1.0) (2026-10-21)
 
 
