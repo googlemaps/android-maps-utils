@@ -16,16 +16,18 @@
 package com.google.maps.android.data.renderer
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.LruCache
 import com.google.maps.android.data.kml.DefaultKmlUrlSanitizer
 import com.google.maps.android.data.kml.KmlUrlSanitizer
+import com.google.maps.android.data.renderer.SafeBitmapDecoder.allocationKilobytes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
@@ -46,6 +48,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
     private val memoryCache: LruCache<String, Bitmap>
     private val inFlight = ConcurrentHashMap<String, Deferred<Bitmap?>>()
     private val downloadScope = CoroutineScope(SupervisorJob() + dispatcher)
+    private val downloadSemaphore = Semaphore(MAX_CONCURRENT_DOWNLOADS)
 
     init {
         // Get max available VM memory, exceeding this amount will throw an
@@ -61,7 +64,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
                 override fun sizeOf(key: String, bitmap: Bitmap): Int {
                     // The cache size will be measured in kilobytes rather than
                     // number of items.
-                    return bitmap.byteCount / 1024
+                    return bitmap.allocationKilobytes()
                 }
             }
     }
@@ -76,15 +79,19 @@ public open class UrlIconProvider @JvmOverloads public constructor(
             synchronized(inFlight) {
                 inFlight.getOrPut(url) {
                     downloadScope.async {
-                        try {
-                            val bitmap = loadBitmapFromUrl(url)
-                            if (bitmap != null) {
-                                memoryCache.put(url, bitmap)
+                        downloadSemaphore.withPermit {
+                            try {
+                                val bitmap = loadBitmapFromUrl(url)?.let {
+                                    SafeBitmapDecoder.run { it.takeIfWithinAllocationLimit() }
+                                }
+                                if (bitmap != null) {
+                                    memoryCache.put(url, bitmap)
+                                }
+                                bitmap
+                            } finally {
+                                // Always remove from in-flight map when done, success or failure
+                                inFlight.remove(url)
                             }
-                            bitmap
-                        } finally {
-                            // Always remove from in-flight map when done, success or failure
-                            inFlight.remove(url)
                         }
                     }
                 }
@@ -120,7 +127,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
                     when {
                         code in 200..299 -> {
                             return@withContext connection.inputStream.use {
-                                BitmapFactory.decodeStream(it)
+                                SafeBitmapDecoder.decode(it)
                             }
                         }
 
@@ -151,5 +158,8 @@ public open class UrlIconProvider @JvmOverloads public constructor(
     private companion object {
         /** Maximum number of redirects to follow before giving up. */
         private const val MAX_REDIRECTS = 5
+
+        /** Limits simultaneous response buffering and bitmap allocation for distinct URLs. */
+        private const val MAX_CONCURRENT_DOWNLOADS = 2
     }
 }

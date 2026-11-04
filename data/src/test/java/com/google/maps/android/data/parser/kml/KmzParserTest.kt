@@ -17,12 +17,12 @@ package com.google.maps.android.data.parser.kml
 
 import android.graphics.Bitmap
 import io.mockk.every
-import io.mockk.mockkStatic
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -142,6 +142,49 @@ class KmzParserTest {
                 ?.first()
                 ?.name,
         )
+    }
+
+    @Test
+    fun `parse rejects cumulative decoded bitmap memory above limit`() {
+        val bitmapBytes = 16 * 1024 * 1024
+        val bitmaps = List(3) {
+            mockk<Bitmap>(relaxed = true) {
+                every { allocationByteCount } returns bitmapBytes
+            }
+        }
+        var nextBitmap = 0
+        val decoder =
+            object : ImageDecoder {
+                override fun decode(bytes: ByteArray): Bitmap = bitmaps[nextBitmap++]
+            }
+        val kmzStream =
+            createKmzStream(
+                "doc.kml" to "<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document/></kml>".toByteArray(),
+                "one.png" to byteArrayOf(1),
+                "two.png" to byteArrayOf(2),
+                "three.png" to byteArrayOf(3),
+            )
+
+        assertThrows(IOException::class.java) {
+            KmzParser(decoder).parse(kmzStream)
+        }
+        verify(exactly = 1) { bitmaps[0].recycle() }
+        verify(exactly = 1) { bitmaps[1].recycle() }
+        verify(exactly = 1) { bitmaps[2].recycle() }
+    }
+
+    @Test
+    fun `parse recycles decoded images when KMZ has no KML entry`() {
+        val bitmap = mockk<Bitmap>(relaxed = true)
+        val decoder =
+            object : ImageDecoder {
+                override fun decode(bytes: ByteArray): Bitmap = bitmap
+            }
+
+        assertThrows(IllegalArgumentException::class.java) {
+            KmzParser(decoder).parse(createKmzStream("image.png" to byteArrayOf(1)))
+        }
+        verify(exactly = 1) { bitmap.recycle() }
     }
 
     private fun createKmzStream(vararg entries: kotlin.Pair<String, ByteArray>): ByteArrayInputStream {
