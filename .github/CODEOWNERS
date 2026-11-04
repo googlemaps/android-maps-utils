@@ -15,3 +15,4 @@
 # https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
 
 .github/ @googlemaps/googlemaps-admin
+.github/workflows/ @googlemaps/googlemaps-admin @kikoso

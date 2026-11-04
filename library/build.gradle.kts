@@ -60,6 +60,11 @@ kotlin {
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minimumSdk.get().toInt()
 
+        // The Units API formats with the translated amu_in_* strings in androidMain/res.
+        androidResources {
+            enable = true
+        }
+
         optimization {
             consumerKeepRules.publish = true
             consumerKeepRules.file("consumer-rules.pro")

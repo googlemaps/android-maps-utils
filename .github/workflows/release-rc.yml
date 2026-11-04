@@ -54,7 +54,7 @@ jobs:
           sed -i 's/version = "[^"]*"/version = "'"$VERSION"'"/' build.gradle.kts
 
           # Files with x-release-please-version inline marker
-          for file in llm-integration-prompt.md MIGRATION.md .gemini/skills/android-maps-utils/SKILL.md; do
+          for file in llm-integration-prompt.md MIGRATION.md .agents/skills/android-maps-utils/SKILL.md; do
             if [ -f "$file" ]; then
               sed -i "/x-release-please-version/s/[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*[a-zA-Z0-9.-]*/$VERSION/" "$file"
             fi
@@ -70,7 +70,7 @@ jobs:
             build.gradle.kts \
             llm-integration-prompt.md \
             MIGRATION.md \
-            .gemini/skills/android-maps-utils/SKILL.md
+            .agents/skills/android-maps-utils/SKILL.md
           git commit -m "chore: release v${VERSION}"
           git push origin "$BRANCH"
 
