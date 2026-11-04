@@ -98,7 +98,11 @@ public class KmzParser @JvmOverloads public constructor(
      *
      * @param inputStream The InputStream of the KMZ file.
      * @return The parsed KML object, including extracted images.
+     * @throws IOException If the stream cannot be read, or the KMZ exceeds the entry count or
+     *   uncompressed size limits.
+     * @throws IllegalArgumentException If the KMZ does not contain a KML file.
      */
+    @Throws(IOException::class)
     public fun parse(inputStream: InputStream): Kml {
         val images = mutableMapOf<String, Bitmap>()
         var kml: Kml? = null
