@@ -49,6 +49,7 @@ mockk = "1.14.11"
 robolectric = "4.17"
 truth = "1.4.5"
 uiautomator = "2.4.0"
+androidx-benchmark = "1.5.0"
 
 # --- Lint & Analysis ---
 # Versions for code quality and static analysis tools.
@@ -120,6 +121,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 
 # --- Lint & Analysis ---
 # Libraries and tools for static code analysis, linting, and coverage reporting.
@@ -136,6 +138,7 @@ testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 binary-compatibility-validator = { module = "org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "binary-compatibility-validator" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+baselineprofile-gradle-plugin = { module = "androidx.benchmark:benchmark-baseline-profile-gradle-plugin", version.ref = "androidx-benchmark" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
 
