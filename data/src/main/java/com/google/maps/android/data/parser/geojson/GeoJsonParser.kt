@@ -15,6 +15,7 @@
  */
 package com.google.maps.android.data.parser.geojson
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
@@ -30,6 +31,11 @@ public class GeoJsonParser @JvmOverloads public constructor(
     private val maxInputSize: Long = DEFAULT_MAX_INPUT_SIZE,
     private val maxStructuralDepth: Int = DEFAULT_MAX_STRUCTURAL_DEPTH,
 ) {
+    // kotlinx.serialization enforces its own nesting limit (400 by default since 1.12.0). Align it
+    // with [maxStructuralDepth] so [checkStructuralDepth] remains the single bound on nesting.
+    @OptIn(ExperimentalSerializationApi::class)
+    private val jsonParser = Json { maxNestingDepth = maxStructuralDepth }
+
     /**
      * Parses a GeoJSON document from an InputStream.
      *
@@ -46,7 +52,7 @@ public class GeoJsonParser @JvmOverloads public constructor(
         // before the [MAX_GEOMETRY_DEPTH] check — which runs on the already-built tree — can act.
         val json = inputStream.readTextBounded(maxInputSize)
         checkStructuralDepth(json, maxStructuralDepth)
-        val jsonElement = Json.parseToJsonElement(json)
+        val jsonElement = jsonParser.parseToJsonElement(json)
 
         return when (jsonElement.jsonObject["type"]?.jsonPrimitive?.content) {
             "FeatureCollection" -> {
