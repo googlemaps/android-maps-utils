@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `831351b` (#1838), recorded 2026-11-04T16:32:21Z.
+Measured at `469f65c` (#1843), recorded 2026-11-04T18:13:13Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-04 | `469f65c` | #1843 | 64.44% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
 | 2026-11-04 | `831351b` | #1838 | 64.44% | 0.00 | chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check |
 | 2026-11-03 | `5249dc7` | #1832 | 64.44% | +1.38 | feat: add Units API for distance and elevation conversion and formatting |
 | 2026-10-30 | `eb2b3fe` | #1839 | 63.06% | 0.00 | chore: add maintainer as code owner of workflow files |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-30 | `50e88c9` | #1801 | 53.19% | +1.14 | feat(library): add flexible polyline encoding and decoding |
 | 2026-09-24 | `56b3c24` | #1792 | 52.05% | +0.14 | fix(data): enforce decompression limit and reject payload on KMZ directory entries |
 | 2026-09-23 | `51c59bf` | #1775 | 51.91% | 0.00 | ci: support GEMINI_MODEL repository variable in triage-issue workflow |
-| 2026-09-23 | `651c6e0` | #1791 | 51.91% | 0.00 | build(deps): bump org.robolectric:robolectric |
