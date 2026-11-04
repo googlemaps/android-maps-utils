@@ -13,6 +13,7 @@ the 4.x to modular layout mapping.
 | Module | Purpose |
 | --- | --- |
 | `library` | Core utilities shared by the other modules |
+| `maps-model` | Multiplatform `LatLng` and `CameraPosition` (typealiases to the Play Services types on Android) |
 | `clustering` | Marker clustering |
 | `heatmaps` | Heatmap tile overlays |
 | `data` | GeoJSON and KML parsing/rendering |
@@ -24,11 +25,40 @@ the 4.x to modular layout mapping.
 
 Shared Gradle conventions are in `build-logic/` (included build).
 
+### Kotlin Multiplatform modules (experimental)
+
+`maps-model`, `library`, `clustering` and `heatmaps` are Kotlin Multiplatform
+modules targeting Android and iOS (`iosArm64`, `iosSimulatorArm64`, `iosX64`).
+They use `KmpPublishingConventionPlugin`; `data`, `ui` and `maps-utils` stay
+Android-only and use `PublishingConventionPlugin`.
+
+- Platform-independent code (geometry, clustering algorithms, heatmap model)
+  lives in `src/commonMain`. Anything touching the Maps SDK, Android or
+  `java.*` APIs goes in `src/androidMain`. Host tests are in
+  `src/androidHostTest`, shared tests in `src/commonTest`.
+- Test common code in `src/commonTest` with `kotlin.test`, so it runs on the
+  Android host and on iOS. Keep `src/androidHostTest` for tests that need
+  Robolectric, mocks or Android-only classes.
+- `commonMain` has no `synchronized`, `java.util.concurrent` or Android
+  types. Use `PlatformLock` for locking, `kotlin.math` and stdlib
+  collections, and the `com.google.maps.android.model` types instead of the
+  Play Services ones.
+- The Android API must not change: `apiCheck` compares the Android API against
+  `api/<module>.api` and the iOS ABI against `api/<module>.klib.api`.
+- Building or publishing the iOS targets needs macOS with Xcode. On Linux they
+  are skipped, which is why `publish.yml` and `publish-snapshot.yml` run on
+  `macos-latest`.
+- Run the shared tests on the Android host and the iOS simulator with
+  `./gradlew :library:allTests :clustering:allTests :heatmaps:allTests`. Off
+  macOS only the host tests run, so say so in the pull request instead of
+  reporting the change as tested on iOS.
+
 ## Building and testing
 
 ```bash
 ./gradlew assembleDebug                       # build everything
-./gradlew :clustering:testDebugUnitTest       # unit tests for one module
+./gradlew :data:testDebugUnitTest             # unit tests for an Android-only module
+./gradlew :clustering:testAndroidHostTest     # unit tests for a multiplatform module
 ./gradlew test                                # all unit tests
 ./gradlew koverXmlReportDebug                 # all unit tests and coverage reports
 ./gradlew lint                                # Android Lint (includes lint-checks rules)
