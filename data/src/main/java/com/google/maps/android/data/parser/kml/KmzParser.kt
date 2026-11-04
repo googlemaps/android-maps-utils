@@ -16,7 +16,8 @@
 package com.google.maps.android.data.parser.kml
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import com.google.maps.android.data.renderer.SafeBitmapDecoder
+import com.google.maps.android.data.renderer.SafeBitmapDecoder.takeIfWithinAllocationLimit
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.IOException
@@ -35,7 +36,7 @@ public interface ImageDecoder {
  * Default implementation using Android's BitmapFactory.
  */
 public class AndroidImageDecoder public constructor() : ImageDecoder {
-    public override fun decode(bytes: ByteArray): Bitmap? = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    public override fun decode(bytes: ByteArray): Bitmap? = SafeBitmapDecoder.decode(bytes)
 }
 
 /**
@@ -101,6 +102,7 @@ public class KmzParser @JvmOverloads public constructor(
      */
     public fun parse(inputStream: InputStream): Kml {
         val images = mutableMapOf<String, Bitmap>()
+        var decodedImageBytes = 0L
         var kml: Kml? = null
         val zipInputStream = ZipInputStream(BufferedInputStream(inputStream))
         val countingStream = CountingInputStream(zipInputStream, maxKmzUncompressedTotalSize)
@@ -130,9 +132,20 @@ public class KmzParser @JvmOverloads public constructor(
                 } else {
                     // Try to decode as image
                     val bytes = countingStream.readBytes()
-                    val bitmap = imageDecoder.decode(bytes)
+                    val bitmap = imageDecoder.decode(bytes)?.takeIfWithinAllocationLimit()
                     if (bitmap != null) {
-                        images[name] = bitmap
+                        val bitmapBytes = bitmap.allocationByteCount.toLong()
+                        if (bitmapBytes > MAX_DECODED_IMAGE_TOTAL_BYTES - decodedImageBytes) {
+                            bitmap.recycle()
+                            throw IOException(
+                                "KMZ decoded image memory exceeds limit of $MAX_DECODED_IMAGE_TOTAL_BYTES bytes.",
+                            )
+                        }
+                        decodedImageBytes += bitmapBytes
+                        images.put(name, bitmap)?.let { replaced ->
+                            decodedImageBytes -= replaced.allocationByteCount.toLong()
+                            replaced.recycle()
+                        }
                     }
                 }
                 // Drain any unread bytes through countingStream before closing entry to ensure
@@ -141,15 +154,19 @@ public class KmzParser @JvmOverloads public constructor(
                 zipInputStream.closeEntry()
                 entry = zipInputStream.nextEntry
             }
+            if (kml == null) {
+                throw IllegalArgumentException("No KML file found in KMZ stream")
+            }
+
+            return kml.copy(images = images)
+        } catch (exception: Exception) {
+            images.values.forEach { bitmap ->
+                if (!bitmap.isRecycled) bitmap.recycle()
+            }
+            throw exception
         } finally {
             zipInputStream.close()
         }
-
-        if (kml == null) {
-            throw IllegalArgumentException("No KML file found in KMZ stream")
-        }
-
-        return kml.copy(images = images)
     }
 
     /**
@@ -166,6 +183,7 @@ public class KmzParser @JvmOverloads public constructor(
 
     public companion object {
         private const val DRAIN_BUFFER_SIZE = 8192
+        private const val MAX_DECODED_IMAGE_TOTAL_BYTES = 32L * 1024 * 1024
         public val SUPPORTED_EXTENSIONS: Set<String> = setOf("kmz")
 
         public fun canParse(header: String): Boolean {

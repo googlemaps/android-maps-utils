@@ -16,15 +16,20 @@
 package com.google.maps.android.data.renderer
 
 import android.graphics.Bitmap
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -103,6 +108,40 @@ class UrlIconProviderTest {
         assertEquals(2, provider.loadCount.get())
     }
 
+    @Test
+    fun loadIcon_rejectsOversizedBitmapReturnedBySubclass() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val oversized =
+            mockk<Bitmap>(relaxed = true) {
+                every { allocationByteCount } returns (SafeBitmapDecoder.MAX_DECODED_BYTES + 1).toInt()
+            }
+        val provider =
+            object : UrlIconProvider(testDispatcher) {
+                override suspend fun loadBitmapFromUrl(urlString: String): Bitmap = oversized
+            }
+
+        assertNull(provider.loadIcon("http://example.com/oversized.png"))
+        verify(exactly = 1) { oversized.recycle() }
+    }
+
+    @Test
+    fun loadIcon_limitsConcurrentDistinctDownloads() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher, delayMillis = 1000)
+
+        val results =
+            listOf(
+                async { provider.loadIcon("http://example.com/one.png") },
+                async { provider.loadIcon("http://example.com/two.png") },
+                async { provider.loadIcon("http://example.com/three.png") },
+            )
+        advanceUntilIdle()
+        results.awaitAll()
+
+        assertEquals(2, provider.maxActiveLoads.get())
+        assertEquals(3, provider.loadCount.get())
+    }
+
     // Subclass to mock network calls
     private class TestableUrlIconProvider(
         dispatcher: kotlinx.coroutines.CoroutineDispatcher,
@@ -110,16 +149,24 @@ class UrlIconProviderTest {
         var shouldFail: Boolean = false,
     ) : UrlIconProvider(dispatcher) {
         val loadCount = AtomicInteger(0)
+        val activeLoads = AtomicInteger(0)
+        val maxActiveLoads = AtomicInteger(0)
 
         override suspend fun loadBitmapFromUrl(urlString: String): Bitmap? {
             loadCount.incrementAndGet()
-            if (delayMillis > 0) {
-                delay(delayMillis)
+            val active = activeLoads.incrementAndGet()
+            maxActiveLoads.updateAndGet { previous -> maxOf(previous, active) }
+            try {
+                if (delayMillis > 0) {
+                    delay(delayMillis)
+                }
+                if (shouldFail) {
+                    return null
+                }
+                return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+            } finally {
+                activeLoads.decrementAndGet()
             }
-            if (shouldFail) {
-                return null
-            }
-            return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
         }
     }
 }
