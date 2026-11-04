@@ -221,3 +221,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-11-03T16:10:46Z,5249dc7,1832,feat: add Units API for distance and elevation conversion and formatting,unit,library,1342,1512,88.76,416,506,82.21,7622,8467,90.02
 2026-11-03T16:10:46Z,5249dc7,1832,feat: add Units API for distance and elevation conversion and formatting,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
 2026-11-03T16:10:46Z,5249dc7,1832,feat: add Units API for distance and elevation conversion and formatting,unit,TOTAL,4858,7539,64.44,2054,4445,46.21,29638,46535,63.69
+2026-11-04T16:32:21Z,831351b,1838,"chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check",unit,clustering,1187,2597,45.71,442,1248,35.42,6699,14200,47.18
+2026-11-04T16:32:21Z,831351b,1838,"chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check",unit,data,1954,2969,65.81,1014,2461,41.2,12834,20990,61.14
+2026-11-04T16:32:21Z,831351b,1838,"chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check",unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-11-04T16:32:21Z,831351b,1838,"chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check",unit,library,1342,1512,88.76,416,506,82.21,7622,8467,90.02
+2026-11-04T16:32:21Z,831351b,1838,"chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check",unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-11-04T16:32:21Z,831351b,1838,"chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check",unit,TOTAL,4858,7539,64.44,2054,4445,46.21,29638,46535,63.69
