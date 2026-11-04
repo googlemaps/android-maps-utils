@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `469f65c` (#1843), recorded 2026-11-04T18:13:13Z.
+Measured at `172c0dc` (#1842), recorded 2026-11-04T18:29:53Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 442/1,248 | 35.42% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,342/1,512 | 88.76% | `██████████████████░░` | 416/506 | 82.21% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,054/4,445 | 46.21% |
+| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,055/4,445 | 46.23% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-04 | `172c0dc` | #1842 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 4 updates |
 | 2026-11-04 | `469f65c` | #1843 | 64.44% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
 | 2026-11-04 | `831351b` | #1838 | 64.44% | 0.00 | chore: tool-neutral agent setup, AGENTS.md PR rules and agent leftovers check |
 | 2026-11-03 | `5249dc7` | #1832 | 64.44% | +1.38 | feat: add Units API for distance and elevation conversion and formatting |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-30 | `f805f5e` | #1803 | 53.21% | +0.02 | fix(library): match reference rounding and unsigned varints in flexible polyline |
 | 2026-09-30 | `50e88c9` | #1801 | 53.19% | +1.14 | feat(library): add flexible polyline encoding and decoding |
 | 2026-09-24 | `56b3c24` | #1792 | 52.05% | +0.14 | fix(data): enforce decompression limit and reject payload on KMZ directory entries |
-| 2026-09-23 | `51c59bf` | #1775 | 51.91% | 0.00 | ci: support GEMINI_MODEL repository variable in triage-issue workflow |
