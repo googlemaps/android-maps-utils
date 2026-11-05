@@ -64,6 +64,10 @@ if (!secretsFile.exists()) {
 }
 
 android {
+    androidResources {
+        noCompress += listOf("scbin")
+    }
+
     lint {
         sarifOutput = layout.buildDirectory.file("reports/lint-results.sarif").get().asFile
     }
