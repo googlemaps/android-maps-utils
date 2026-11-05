@@ -30,3 +30,4 @@ pluginManagement {
 }
 
 include("demo", "clustering", "heatmaps", "ui", "data", "lint-checks", "library", "visual-testing", "maps-utils")
+
