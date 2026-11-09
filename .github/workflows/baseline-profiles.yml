@@ -157,8 +157,8 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config user.name "googlemaps-bot"
+        git config user.email "googlemaps-bot@users.noreply.github.com"
         git switch -c "$BRANCH"
         for module in $MODULES; do
           git add "$module/src/main/generated/baselineProfiles/baseline-prof.txt"
