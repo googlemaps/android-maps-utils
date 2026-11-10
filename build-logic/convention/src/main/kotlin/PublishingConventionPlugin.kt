@@ -26,11 +26,14 @@ import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 class PublishingConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.run {
             applyPlugins()
+            configureKotlinCompatibility()
             configureKover()
             configureVanniktechPublishing()
             configureBinaryCompatibilityValidator()
@@ -42,6 +45,18 @@ class PublishingConventionPlugin : Plugin<Project> {
         apply(plugin = "org.jetbrains.kotlinx.kover")
         apply(plugin = "org.jetbrains.dokka")
         apply(plugin = "com.vanniktech.maven.publish")
+    }
+
+    // Consumers on an older Kotlin compiler (for example the one bundled with AGP) can only
+    // read metadata one version ahead of their own, so pin what we publish to Kotlin 2.2.
+    private fun Project.configureKotlinCompatibility() {
+        extensions.configure<KotlinAndroidProjectExtension> {
+            coreLibrariesVersion = "2.2.10"
+            compilerOptions {
+                languageVersion.set(KotlinVersion.KOTLIN_2_2)
+                apiVersion.set(KotlinVersion.KOTLIN_2_2)
+            }
+        }
     }
 
     private fun Project.configureKover() {
