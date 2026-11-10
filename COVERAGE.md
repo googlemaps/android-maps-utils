@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `56b5c7a` (#1840), recorded 2026-11-10T23:37:58Z.
+Measured at `4ce363e` (#1847), recorded 2026-11-10T23:58:26Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-10 | `4ce363e` | #1847 | 64.44% | 0.00 | fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library |
 | 2026-11-10 | `56b5c7a` | #1840 | 64.44% | 0.00 | perf: ship Baseline Profiles in the library modules |
 | 2026-11-04 | `172c0dc` | #1842 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 4 updates |
 | 2026-11-04 | `469f65c` | #1843 | 64.44% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-09-30 | `de264f8` | #1716 | 57.39% | +4.18 | feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0) |
 | 2026-09-30 | `657fc55` | #1802 | 53.21% | 0.00 | build(deps): update AGP, Android Lint, Kover, Ktor, and core-ktx to latest stable versions |
 | 2026-09-30 | `f805f5e` | #1803 | 53.21% | +0.02 | fix(library): match reference rounding and unsigned varints in flexible polyline |
-| 2026-09-30 | `50e88c9` | #1801 | 53.19% | +1.14 | feat(library): add flexible polyline encoding and decoding |

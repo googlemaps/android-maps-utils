@@ -245,3 +245,9 @@ timestamp,commit,pr,subject,suite,module,lines_covered,lines_total,line_pct,bran
 2026-11-10T23:37:58Z,56b5c7a,1840,perf: ship Baseline Profiles in the library modules,unit,library,1342,1512,88.76,416,506,82.21,7622,8467,90.02
 2026-11-10T23:37:58Z,56b5c7a,1840,perf: ship Baseline Profiles in the library modules,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
 2026-11-10T23:37:58Z,56b5c7a,1840,perf: ship Baseline Profiles in the library modules,unit,TOTAL,4858,7539,64.44,2055,4445,46.23,29638,46535,63.69
+2026-11-10T23:58:26Z,4ce363e,1847,fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library,unit,clustering,1187,2597,45.71,443,1248,35.5,6699,14201,47.17
+2026-11-10T23:58:26Z,4ce363e,1847,fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library,unit,data,1954,2969,65.81,1014,2461,41.2,12834,20990,61.14
+2026-11-10T23:58:26Z,4ce363e,1847,fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library,unit,heatmaps,253,310,81.61,134,162,82.72,1844,2079,88.7
+2026-11-10T23:58:26Z,4ce363e,1847,fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library,unit,library,1342,1512,88.76,416,506,82.21,7622,8467,90.02
+2026-11-10T23:58:26Z,4ce363e,1847,fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library,unit,ui,122,151,80.79,48,68,70.59,639,799,79.97
+2026-11-10T23:58:26Z,4ce363e,1847,fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library,unit,TOTAL,4858,7539,64.44,2055,4445,46.23,29638,46536,63.69
