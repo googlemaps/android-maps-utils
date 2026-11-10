@@ -145,6 +145,16 @@ android {
     }
 }
 
+androidComponents {
+    // :baselineprofile only runs against the standard flavor, so skip the unminified/benchmark
+    // release variants for the navigation flavor to avoid packaging redundant Navigation SDK APKs.
+    beforeVariants(selector().withFlavor("sdk" to "navigation")) { variantBuilder ->
+        if (variantBuilder.buildType == "nonMinifiedRelease" || variantBuilder.buildType == "benchmarkRelease") {
+            variantBuilder.enable = false
+        }
+    }
+}
+
 configurations.all {
     resolutionStrategy {
         force(libs.kotlinx.coroutines.core)
