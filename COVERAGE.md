@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `4ce363e` (#1847), recorded 2026-11-10T23:58:26Z.
+Measured at `0d39c70` (#1841), recorded 2026-11-11T17:52:02Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 442/1,248 | 35.42% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,342/1,512 | 88.76% | `██████████████████░░` | 416/506 | 82.21% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,055/4,445 | 46.23% |
+| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,054/4,445 | 46.21% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-11 | `0d39c70` | #1841 | 64.44% | 0.00 | ci: regenerate Baseline Profiles before each release |
 | 2026-11-10 | `4ce363e` | #1847 | 64.44% | 0.00 | fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library |
 | 2026-11-10 | `56b5c7a` | #1840 | 64.44% | 0.00 | perf: ship Baseline Profiles in the library modules |
 | 2026-11-04 | `172c0dc` | #1842 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 4 updates |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-01 | `2bd91d5` | #1806 | 57.39% | 0.00 | ci: merge generated docs PRs from the docs workflow |
 | 2026-09-30 | `de264f8` | #1716 | 57.39% | +4.18 | feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0) |
 | 2026-09-30 | `657fc55` | #1802 | 53.21% | 0.00 | build(deps): update AGP, Android Lint, Kover, Ktor, and core-ktx to latest stable versions |
-| 2026-09-30 | `f805f5e` | #1803 | 53.21% | +0.02 | fix(library): match reference rounding and unsigned varints in flexible polyline |
