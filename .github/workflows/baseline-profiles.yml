@@ -1,0 +1,179 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Regenerates the Baseline Profiles of the library modules on an emulator and opens a pull request
+# when they changed, so the profiles shipped in a release match its code. release-please.yml calls
+# it whenever the release pull request is created or updated; it can also be run by hand.
+name: Regenerate Baseline Profiles
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Regenerate even if the library sources did not change since the last profiles
+        type: boolean
+        default: false
+  workflow_call:
+    secrets:
+      ACTIONS_API_KEY:
+        required: true
+      SYNCED_GITHUB_TOKEN_REPO:
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: baseline-profiles
+  cancel-in-progress: true
+
+env:
+  MODULES: library clustering heatmaps data ui
+  BRANCH: chore/regenerate-baseline-profiles
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: main
+        fetch-depth: 0
+        persist-credentials: false
+
+    # The release pull request is updated after almost every merge, so skip the emulator run
+    # unless the library code changed since the profiles were last regenerated.
+    - name: Check whether the profiles are stale
+      id: stale
+      env:
+        FORCE: ${{ inputs.force }}
+      run: |
+        profiles=()
+        sources=()
+        for module in $MODULES; do
+          profiles+=("$module/src/main/generated/baselineProfiles")
+          sources+=("$module/src/main" ":(exclude)$module/src/main/generated")
+        done
+        last=$(git log -1 --format=%H -- "${profiles[@]}")
+        if [ "$FORCE" = "true" ] || [ -z "$last" ] || ! git diff --quiet "$last" HEAD -- "${sources[@]}"; then
+          echo "stale=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "::notice::No library source changes since $last, the profiles are up to date."
+          echo "stale=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    # Without a real key the maps never load and the profiles come out nearly empty.
+    - name: Write Maps API key
+      if: steps.stale.outputs.stale == 'true'
+      env:
+        MAPS_API_KEY: ${{ secrets.ACTIONS_API_KEY }}
+      run: |
+        if [ -z "$MAPS_API_KEY" ]; then
+          echo "::error::ACTIONS_API_KEY is not available, the profiles cannot be generated."
+          exit 1
+        fi
+        echo "MAPS_API_KEY=$MAPS_API_KEY" > secrets.properties
+
+    - name: Keep the committed profiles
+      if: steps.stale.outputs.stale == 'true'
+      run: |
+        for module in $MODULES; do
+          mkdir -p "$RUNNER_TEMP/before/$module"
+          cp "$module/src/main/generated/baselineProfiles/baseline-prof.txt" "$RUNNER_TEMP/before/$module/" || true
+        done
+
+    - name: Set up JDK 21
+      if: steps.stale.outputs.stale == 'true'
+      uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      if: steps.stale.outputs.stale == 'true'
+      uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+    - name: Enable KVM
+      if: steps.stale.outputs.stale == 'true'
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+
+    - name: Build the demo and the generator
+      if: steps.stale.outputs.stale == 'true'
+      run: ./gradlew :demo:assembleStandardNonMinifiedRelease :baselineprofile:assembleNonMinifiedRelease --stacktrace
+
+    - name: Generate Baseline Profiles
+      if: steps.stale.outputs.stale == 'true'
+      uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+      with:
+        # Same image as the demo smoke test, whose bundled Play services runs every demo.
+        api-level: 36
+        target: google_apis
+        arch: x86_64
+        disable-animations: true
+        script: >-
+          ./gradlew :library:generateBaselineProfile :clustering:generateBaselineProfile
+          :heatmaps:generateBaselineProfile :data:generateBaselineProfile
+          :ui:generateBaselineProfile --stacktrace
+
+    - name: Compare with the committed profiles
+      id: compare
+      if: steps.stale.outputs.stale == 'true'
+      run: |
+        # shellcheck disable=SC2086
+        python3 .github/scripts/compare_baseline_profiles.py \
+          --before "$RUNNER_TEMP/before" --summary "$RUNNER_TEMP/summary.md" $MODULES
+        cat "$RUNNER_TEMP/summary.md" >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Upload profiles and test reports
+      if: always() && steps.stale.outputs.stale == 'true'
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: baseline-profiles
+        path: |
+          */src/main/generated/baselineProfiles/baseline-prof.txt
+          baselineprofile/build/reports/androidTests
+          baselineprofile/build/outputs/connected_android_test_additional_output
+
+    # Opened with the bot token so that the pull request triggers the usual checks, which pull
+    # requests opened with GITHUB_TOKEN do not. An open pull request from a previous run is updated.
+    - name: Open or update the pull request
+      if: steps.compare.outputs.significant == 'true'
+      env:
+        GH_TOKEN: ${{ secrets.SYNCED_GITHUB_TOKEN_REPO }}
+      run: |
+        git config user.name "googlemaps-bot"
+        git config user.email "googlemaps-bot@users.noreply.github.com"
+        git switch -c "$BRANCH"
+        for module in $MODULES; do
+          git add "$module/src/main/generated/baselineProfiles/baseline-prof.txt"
+        done
+        git commit -m "chore: regenerate Baseline Profiles"
+        git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$BRANCH"
+
+        {
+          echo "Regenerated by the [Regenerate Baseline Profiles](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) workflow on an API 36 emulator. Merge it before the release pull request so the release ships profiles that match its code."
+          echo
+          cat "$RUNNER_TEMP/summary.md"
+        } > "$RUNNER_TEMP/body.md"
+
+        if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+          gh pr edit "$BRANCH" --body-file "$RUNNER_TEMP/body.md"
+        else
+          gh pr create --base main --head "$BRANCH" --title "chore: regenerate Baseline Profiles" --body-file "$RUNNER_TEMP/body.md"
+        fi
