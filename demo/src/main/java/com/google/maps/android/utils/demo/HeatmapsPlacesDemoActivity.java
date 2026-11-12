@@ -139,15 +139,14 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
   @Override
   protected void startDemo(boolean isRestore) {
     EditText editText = findViewById(R.id.input_text);
-    editText.setOnEditorActionListener(
-        (textView, actionId, keyEvent) -> {
-          boolean handled = false;
-          if (actionId == EditorInfo.IME_ACTION_GO) {
-            submit(null);
-            handled = true;
-          }
-          return handled;
-        });
+    editText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+      boolean handled = false;
+      if (actionId == EditorInfo.IME_ACTION_GO) {
+        submit(null);
+        handled = true;
+      }
+      return handled;
+    });
 
     mCheckboxLayout = findViewById(R.id.checkboxes);
     GoogleMap map = getMap();
@@ -305,15 +304,14 @@ public class HeatmapsPlacesDemoActivity extends BaseDemoActivity {
     checkBox.setText(keyword);
     checkBox.setTextColor(HEATMAP_COLORS[mOverlaysRendered]);
     checkBox.setChecked(true);
-    checkBox.setOnClickListener(
-        view -> {
-          CheckBox c = (CheckBox) view;
-          // Text is the keyword
-          TileOverlay overlay = mOverlays.get(keyword);
-          if (overlay != null) {
-            overlay.setVisible(c.isChecked());
-          }
-        });
+    checkBox.setOnClickListener(view -> {
+      CheckBox c = (CheckBox) view;
+      // Text is the keyword
+      TileOverlay overlay = mOverlays.get(keyword);
+      if (overlay != null) {
+        overlay.setVisible(c.isChecked());
+      }
+    });
     mCheckboxLayout.addView(checkBox);
   }
 

@@ -73,10 +73,9 @@ public class StreetViewDemoJavaActivity extends AppCompatActivity {
           @Override
           public void onStreetViewResult(@NonNull Status status) {
             // Updates the UI with the result on the UI thread.
-            runOnUiThread(
-                () ->
-                    ((TextView) findViewById(R.id.textViewFirstLocation))
-                        .setText("Location 1 is supported in StreetView: " + status));
+            runOnUiThread(() ->
+                ((TextView) findViewById(R.id.textViewFirstLocation))
+                    .setText("Location 1 is supported in StreetView: " + status));
           }
 
           @Override
@@ -99,10 +98,9 @@ public class StreetViewDemoJavaActivity extends AppCompatActivity {
           @Override
           public void onStreetViewResult(@NonNull Status status) {
             // Updates the UI with the result on the UI thread.
-            runOnUiThread(
-                () ->
-                    ((TextView) findViewById(R.id.textViewSecondLocation))
-                        .setText("Location 2 is  supported in StreetView: " + status));
+            runOnUiThread(() ->
+                ((TextView) findViewById(R.id.textViewSecondLocation))
+                    .setText("Location 2 is  supported in StreetView: " + status));
           }
 
           @Override
