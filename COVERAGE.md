@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `0d39c70` (#1841), recorded 2026-11-11T17:52:02Z.
+Measured at `a1863f3` (#1853), recorded 2026-11-12T10:19:38Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-12 | `a1863f3` | #1853 | 64.44% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 3 updates |
 | 2026-11-11 | `0d39c70` | #1841 | 64.44% | 0.00 | ci: regenerate Baseline Profiles before each release |
 | 2026-11-10 | `4ce363e` | #1847 | 64.44% | 0.00 | fix: publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library |
 | 2026-11-10 | `56b5c7a` | #1840 | 64.44% | 0.00 | perf: ship Baseline Profiles in the library modules |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-01 | `48d3371` | #1805 | 57.39% | 0.00 | test: add end-to-end demo smoke test |
 | 2026-10-01 | `2bd91d5` | #1806 | 57.39% | 0.00 | ci: merge generated docs PRs from the docs workflow |
 | 2026-09-30 | `de264f8` | #1716 | 57.39% | +4.18 | feat!: migrate android-maps-ktx into android-maps-utils (v6.0.0) |
-| 2026-09-30 | `657fc55` | #1802 | 53.21% | 0.00 | build(deps): update AGP, Android Lint, Kover, Ktor, and core-ktx to latest stable versions |
