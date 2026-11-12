@@ -209,13 +209,10 @@ public class KmlDemoActivity extends BaseDemoActivity {
   private void addKmlToMap(KmlLayer kmlLayer) {
     if (kmlLayer != null) {
       kmlLayer.addLayerToMap();
-      kmlLayer.setOnFeatureClickListener(
-          feature ->
-              Toast.makeText(
-                      KmlDemoActivity.this,
-                      "Feature clicked: " + feature.getId(),
-                      Toast.LENGTH_SHORT)
-                  .show());
+      kmlLayer.setOnFeatureClickListener(feature ->
+          Toast.makeText(
+                  KmlDemoActivity.this, "Feature clicked: " + feature.getId(), Toast.LENGTH_SHORT)
+              .show());
       moveCameraToKml(kmlLayer);
     }
   }
