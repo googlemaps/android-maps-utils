@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `b8c3b79` (#1850), recorded 2026-11-12T10:38:33Z.
+Measured at `4df2704` (#1852), recorded 2026-11-13T21:45:56Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 442/1,248 | 35.42% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,342/1,512 | 88.76% | `██████████████████░░` | 416/506 | 82.21% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,055/4,445 | 46.23% |
+| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,054/4,445 | 46.21% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-13 | `4df2704` | #1852 | 64.44% | 0.00 | chore(deps): bump Gradle wrapper to 9.9.1 |
 | 2026-11-12 | `b8c3b79` | #1850 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group across 1 directory with 3 updates |
 | 2026-11-12 | `a1863f3` | #1853 | 64.44% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 3 updates |
 | 2026-11-11 | `0d39c70` | #1841 | 64.44% | 0.00 | ci: regenerate Baseline Profiles before each release |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-01 | `145d2fa` | #1807 | 57.39% | 0.00 | ci: add a workflow to publish snapshot builds |
 | 2026-10-01 | `ad2ba13` | #1810 | 57.39% | 0.00 | docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes |
 | 2026-10-01 | `48d3371` | #1805 | 57.39% | 0.00 | test: add end-to-end demo smoke test |
-| 2026-10-01 | `2bd91d5` | #1806 | 57.39% | 0.00 | ci: merge generated docs PRs from the docs workflow |
