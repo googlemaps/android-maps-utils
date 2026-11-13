@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.algo.Algorithm
+import com.google.maps.android.clustering.algo.AreaClusterProviderAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator
 import com.google.maps.android.clustering.algo.ProgressAwareAlgorithm
@@ -346,6 +347,27 @@ public constructor(
     }
 
     /**
+     * Sets an [AreaClusterProvider] to dynamically query clusters and individual markers based on the
+     * visible map viewport and zoom level.
+     *
+     * @param provider The provider callback, or `null` to clear.
+     */
+    public open fun setAreaClusterProvider(provider: AreaClusterProvider<T>?) {
+        if (provider != null) {
+            val algo = AreaClusterProviderAlgorithm(provider)
+            val currentBounds = try {
+                map.projection.visibleRegion.latLngBounds
+            } catch (e: Exception) {
+                null
+            }
+            if (currentBounds != null) {
+                algo.setVisibleBounds(currentBounds)
+            }
+            algorithm = algo
+        }
+    }
+
+    /**
      * Force a re-cluster on the map. You should call this after adding, removing, updating,
      * or clearing item(s).
      */
@@ -354,6 +376,15 @@ public constructor(
         try {
             // Attempt to cancel the in-flight request.
             mClusterTask?.cancel()
+            val currentBounds = try {
+                map.projection.visibleRegion.latLngBounds
+            } catch (e: Exception) {
+                null
+            }
+            if (currentBounds != null && mAlgorithm is AreaClusterProviderAlgorithm<*>) {
+                @Suppress("UNCHECKED_CAST")
+                (mAlgorithm as AreaClusterProviderAlgorithm<T>).setVisibleBounds(currentBounds)
+            }
             mClusterTask =
                 scope.launch {
                     val param = map.cameraPosition.zoom
