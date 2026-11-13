@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.0.1](https://github.com/googlemaps/android-maps-utils/compare/v7.0.0...v7.0.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* publish Kotlin 2.2 compatible metadata so AGP's bundled Kotlin can consume the library ([#1847](https://github.com/googlemaps/android-maps-utils/issues/1847)) ([4ce363e](https://github.com/googlemaps/android-maps-utils/commit/4ce363ee53c805f0100871e676f087b53bb44588)), closes [#1846](https://github.com/googlemaps/android-maps-utils/issues/1846)
+
+
+### Performance Improvements
+
+* ship Baseline Profiles in the library modules ([#1840](https://github.com/googlemaps/android-maps-utils/issues/1840)) ([56b5c7a](https://github.com/googlemaps/android-maps-utils/commit/56b5c7aeed1972cf5cbcf1b78a76af0a7c868eb2))
+
 ## [7.0.0](https://github.com/googlemaps/android-maps-utils/compare/v6.1.0...v7.0.0) (2026-11-03)
 
 
