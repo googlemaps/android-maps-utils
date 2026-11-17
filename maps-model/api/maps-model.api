@@ -1,3 +1,6 @@
+public abstract interface annotation class com/google/maps/android/model/ExperimentalMapsMultiplatformApi : java/lang/annotation/Annotation {
+}
+
 public final class com/google/maps/android/model/Model_androidKt {
 	public static final fun getBearing (Lcom/google/android/gms/maps/model/CameraPosition;)F
 	public static final fun getLatitude (Lcom/google/android/gms/maps/model/LatLng;)D

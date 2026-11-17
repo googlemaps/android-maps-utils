@@ -6,6 +6,10 @@
 // - Show declarations: true
 
 // Library unique name: <com.google.maps.android:maps-model>
+open annotation class com.google.maps.android.model/ExperimentalMapsMultiplatformApi : kotlin/Annotation { // com.google.maps.android.model/ExperimentalMapsMultiplatformApi|null[0]
+    constructor <init>() // com.google.maps.android.model/ExperimentalMapsMultiplatformApi.<init>|<init>(){}[0]
+}
+
 final class com.google.maps.android.model/CameraPosition { // com.google.maps.android.model/CameraPosition|null[0]
     constructor <init>(com.google.maps.android.model/LatLng, kotlin/Float, kotlin/Float, kotlin/Float) // com.google.maps.android.model/CameraPosition.<init>|<init>(com.google.maps.android.model.LatLng;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
 

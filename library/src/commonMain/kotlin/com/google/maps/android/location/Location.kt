@@ -16,6 +16,7 @@
 
 package com.google.maps.android.location
 
+import com.google.maps.android.model.ExperimentalMapsMultiplatformApi
 import com.google.maps.android.model.LatLng
 import kotlinx.coroutines.flow.Flow
 
@@ -38,46 +39,54 @@ public expect class Location
 /**
  * The latitude of this location fix, in degrees.
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.latitude: Double
 
 /**
  * The longitude of this location fix, in degrees.
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.longitude: Double
 
 /**
  * The horizontal accuracy radius of this location fix in meters, or a negative value if
  * horizontal accuracy is unavailable.
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.accuracyMeters: Float
 
 /**
  * The altitude of this location fix in meters above the WGS 84 reference ellipsoid.
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.altitudeMeters: Double
 
 /**
  * The direction of travel in degrees East of true North (`[0.0, 360.0)`), or a negative value
  * if bearing/course is unavailable.
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.bearingDegrees: Float
 
 /**
  * The instantaneous speed of the device in meters per second, or a negative value if speed
  * is unavailable.
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.speedMetersPerSecond: Float
 
 /**
  * The UTC timestamp of this location fix, in milliseconds since the Unix epoch
  * (January 1, 1970 00:00:00 UTC).
  */
+@ExperimentalMapsMultiplatformApi
 public expect val Location.timestampMillis: Long
 
 /**
  * Converts this platform [Location] fix into a multiplatform [LatLng] coordinate for direct use
  * with camera animations, markers, clustering, and spatial geometry utilities.
  */
+@ExperimentalMapsMultiplatformApi
 public val Location.latLng: LatLng
     get() = LatLng(latitude, longitude)
 
@@ -91,6 +100,7 @@ public val Location.latLng: LatLng
  * - On iOS `CLLocationManager`, maps to `kCLLocationAccuracyBest`,
  *   `kCLLocationAccuracyNearestTenMeters`, and `kCLLocationAccuracyHundredMeters`.
  */
+@ExperimentalMapsMultiplatformApi
 public enum class LocationPriority {
     /** Requests the finest location accuracy available (typically GPS). */
     HIGH_ACCURACY,
@@ -109,6 +119,7 @@ public enum class LocationPriority {
  * coupling to Android's `FusedLocationProviderClient` / `LocationManager` or iOS's
  * `CLLocationManager`.
  */
+@ExperimentalMapsMultiplatformApi
 public fun interface LocationSource {
     /**
      * Returns a cold [Flow] that starts streaming [Location] updates when collected and
@@ -129,6 +140,7 @@ public fun interface LocationSource {
  * Convenience overload of [LocationSource.locationEvents] with sensible multiplatform defaults
  * (`2,000 ms` interval, `1 meter` minimum distance, and [LocationPriority.HIGH_ACCURACY]).
  */
+@ExperimentalMapsMultiplatformApi
 public fun LocationSource.locationEvents(
     intervalMs: Long = 2_000L,
     minUpdateDistanceM: Float = 1f,

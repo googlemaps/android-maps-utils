@@ -20,6 +20,7 @@ import android.Manifest
 import android.location.LocationManager
 import android.os.Looper
 import androidx.annotation.RequiresPermission
+import com.google.maps.android.model.ExperimentalMapsMultiplatformApi
 
 /**
  * On Android, [Location] is a direct `typealias` for [android.location.Location].
@@ -33,12 +34,14 @@ public actual typealias Location = android.location.Location
  * Binds to [android.location.Location.getLatitude]. Inside the getter body, Java member/bean
  * property resolution takes precedence over this extension property, avoiding recursion.
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.latitude: Double
     get() = this.latitude
 
 /**
  * Binds to [android.location.Location.getLongitude].
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.longitude: Double
     get() = this.longitude
 
@@ -47,12 +50,14 @@ public actual val Location.longitude: Double
  * [android.location.Location.hasAccuracy] is `false` (matching iOS `CLLocation.horizontalAccuracy`
  * semantics for invalid/unavailable accuracy).
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.accuracyMeters: Float
     get() = if (hasAccuracy()) accuracy else -1f
 
 /**
  * Returns [android.location.Location.getAltitude] in meters when present, or `0.0` otherwise.
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.altitudeMeters: Double
     get() = if (hasAltitude()) altitude else 0.0
 
@@ -60,6 +65,7 @@ public actual val Location.altitudeMeters: Double
  * Returns [android.location.Location.getBearing] in degrees when present, or `-1f` when
  * [android.location.Location.hasBearing] is `false` (matching iOS `CLLocation.course` semantics).
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.bearingDegrees: Float
     get() = if (hasBearing()) bearing else -1f
 
@@ -67,12 +73,14 @@ public actual val Location.bearingDegrees: Float
  * Returns [android.location.Location.getSpeed] in meters/second when present, or `-1f` when
  * [android.location.Location.hasSpeed] is `false` (matching iOS `CLLocation.speed` semantics).
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.speedMetersPerSecond: Float
     get() = if (hasSpeed()) speed else -1f
 
 /**
  * Returns the UTC fix timestamp in milliseconds via [android.location.Location.getTime].
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.timestampMillis: Long
     get() = time
 
@@ -87,6 +95,7 @@ public actual val Location.timestampMillis: Long
 // TODO(https://github.com/googlemaps/android-maps-utils/issues/1818): Emit the freshest cached
 //  lastKnownLocation on collection start and merge coarseLocationEvents as an indoor / coarse-only
 //  permission fallback for HIGH_ACCURACY so Android callers match iOS CLLocationManager semantics.
+@ExperimentalMapsMultiplatformApi
 @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
 public fun LocationManager.asLocationSource(looper: Looper = Looper.getMainLooper()): LocationSource =
     LocationSource { intervalMs, minUpdateDistanceM, priority ->

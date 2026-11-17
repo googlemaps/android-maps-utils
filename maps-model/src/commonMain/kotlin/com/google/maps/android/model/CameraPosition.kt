@@ -22,10 +22,14 @@ package com.google.maps.android.model
  */
 public expect class CameraPosition(target: LatLng, zoom: Float, tilt: Float, bearing: Float)
 
+@ExperimentalMapsMultiplatformApi
 public expect val CameraPosition.target: LatLng
 
+@ExperimentalMapsMultiplatformApi
 public expect val CameraPosition.zoom: Float
 
+@ExperimentalMapsMultiplatformApi
 public expect val CameraPosition.tilt: Float
 
+@ExperimentalMapsMultiplatformApi
 public expect val CameraPosition.bearing: Float

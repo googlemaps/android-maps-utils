@@ -30,6 +30,8 @@ package com.google.maps.android.model
  */
 public expect class LatLng(latitude: Double, longitude: Double)
 
+@ExperimentalMapsMultiplatformApi
 public expect val LatLng.latitude: Double
 
+@ExperimentalMapsMultiplatformApi
 public expect val LatLng.longitude: Double

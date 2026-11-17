@@ -40,8 +40,10 @@ public actual class LatLng actual constructor(latitude: Double, longitude: Doubl
     override fun toString(): String = "lat/lng: ($latitude,$longitude)"
 }
 
+@ExperimentalMapsMultiplatformApi
 public actual val LatLng.latitude: Double get() = this.latitude
 
+@ExperimentalMapsMultiplatformApi
 public actual val LatLng.longitude: Double get() = this.longitude
 
 public actual class CameraPosition actual constructor(
@@ -69,10 +71,14 @@ public actual class CameraPosition actual constructor(
     override fun toString(): String = "CameraPosition{target=$target, zoom=$zoom, tilt=$tilt, bearing=$bearing}"
 }
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.target: LatLng get() = this.target
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.zoom: Float get() = this.zoom
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.tilt: Float get() = this.tilt
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.bearing: Float get() = this.bearing

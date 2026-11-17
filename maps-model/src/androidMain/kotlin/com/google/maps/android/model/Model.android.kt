@@ -19,16 +19,22 @@ public actual typealias LatLng = com.google.android.gms.maps.model.LatLng
 
 // These getters bind to the Java fields of the Play Services classes (member resolution
 // wins over the extension inside the getter body, so this is not self-recursive).
+@ExperimentalMapsMultiplatformApi
 public actual val LatLng.latitude: Double get() = this.latitude
 
+@ExperimentalMapsMultiplatformApi
 public actual val LatLng.longitude: Double get() = this.longitude
 
 public actual typealias CameraPosition = com.google.android.gms.maps.model.CameraPosition
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.target: LatLng get() = this.target
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.zoom: Float get() = this.zoom
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.tilt: Float get() = this.tilt
 
+@ExperimentalMapsMultiplatformApi
 public actual val CameraPosition.bearing: Float get() = this.bearing

@@ -18,6 +18,7 @@
 
 package com.google.maps.android.location
 
+import com.google.maps.android.model.ExperimentalMapsMultiplatformApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.channels.awaitClose
@@ -48,18 +49,21 @@ public actual typealias Location = CLLocation
 /**
  * Extracts the latitude in degrees from the underlying `CLLocationCoordinate2D` C struct.
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.latitude: Double
     get() = coordinate.useContents { latitude }
 
 /**
  * Extracts the longitude in degrees from the underlying `CLLocationCoordinate2D` C struct.
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.longitude: Double
     get() = coordinate.useContents { longitude }
 
 /**
  * Returns `CLLocation.horizontalAccuracy` in meters (negative when horizontal accuracy is invalid).
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.accuracyMeters: Float
     get() = horizontalAccuracy.toFloat()
 
@@ -67,24 +71,28 @@ public actual val Location.accuracyMeters: Float
  * Returns `CLLocation.ellipsoidalAltitude` in meters above the WGS 84 reference ellipsoid, matching
  * Android's `Location.getAltitude()`. (`CLLocation.altitude` is above mean sea level instead.)
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.altitudeMeters: Double
     get() = ellipsoidalAltitude
 
 /**
  * Returns `CLLocation.course` in degrees East of true North (negative when course is invalid).
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.bearingDegrees: Float
     get() = course.toFloat()
 
 /**
  * Returns `CLLocation.speed` in meters per second (negative when speed is invalid).
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.speedMetersPerSecond: Float
     get() = speed.toFloat()
 
 /**
  * Converts `CLLocation.timestamp` (`NSDate`) into UTC milliseconds since the Unix epoch.
  */
+@ExperimentalMapsMultiplatformApi
 public actual val Location.timestampMillis: Long
     get() = (timestamp.timeIntervalSince1970 * 1_000.0).toLong()
 
@@ -109,6 +117,7 @@ public actual val Location.timestampMillis: Long
  * @param desiredAccuracy Desired CoreLocation accuracy constant (for example,
  *   [kCLLocationAccuracyBest] or [kCLLocationAccuracyHundredMeters]).
  */
+@ExperimentalMapsMultiplatformApi
 public fun CLLocationManager.locationEvents(
     minDistanceM: Float = 1f,
     desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest,
@@ -166,6 +175,7 @@ public fun CLLocationManager.locationEvents(
  * Returns a cold [Flow] that emits coarse location updates on iOS using
  * [kCLLocationAccuracyHundredMeters], mirroring Android's `LocationManager.coarseLocationEvents`.
  */
+@ExperimentalMapsMultiplatformApi
 public fun CLLocationManager.coarseLocationEvents(minDistanceM: Float = 1f): Flow<Location> = locationEvents(
     minDistanceM = minDistanceM,
     desiredAccuracy = kCLLocationAccuracyHundredMeters,
@@ -175,6 +185,7 @@ public fun CLLocationManager.coarseLocationEvents(minDistanceM: Float = 1f): Flo
  * Returns a cold [Flow] that emits fine (GPS-grade) location updates on iOS using
  * [kCLLocationAccuracyBest], mirroring Android's `LocationManager.fineLocationEvents`.
  */
+@ExperimentalMapsMultiplatformApi
 public fun CLLocationManager.fineLocationEvents(minDistanceM: Float = 1f): Flow<Location> = locationEvents(
     minDistanceM = minDistanceM,
     desiredAccuracy = kCLLocationAccuracyBest,
@@ -185,6 +196,7 @@ public fun CLLocationManager.fineLocationEvents(minDistanceM: Float = 1f): Flow<
  * from shared `commonMain` code alongside Android's `LocationManager` and
  * `FusedLocationProviderClient`.
  */
+@ExperimentalMapsMultiplatformApi
 public fun CLLocationManager.asLocationSource(): LocationSource = LocationSource { _, minUpdateDistanceM, priority ->
     val accuracy = when (priority) {
         LocationPriority.HIGH_ACCURACY -> kCLLocationAccuracyBest

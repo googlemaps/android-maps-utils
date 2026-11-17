@@ -59,6 +59,10 @@ class KmpPublishingConventionPlugin : Plugin<Project> {
                 iosArm64()
                 iosSimulatorArm64()
                 iosX64()
+                // The library modules build on their own experimental multiplatform API.
+                sourceSets.configureEach {
+                    languageSettings.optIn("com.google.maps.android.model.ExperimentalMapsMultiplatformApi")
+                }
             }
 
             configure<Lint> {

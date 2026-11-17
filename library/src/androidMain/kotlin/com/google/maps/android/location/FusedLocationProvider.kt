@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import com.google.maps.android.model.ExperimentalMapsMultiplatformApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -101,6 +102,7 @@ public fun FusedLocationProviderClient.fusedLocationEvents(
  * Adapts a Google Play Services [FusedLocationProviderClient] into a multiplatform
  * [LocationSource] that can be consumed from shared `commonMain` code.
  */
+@ExperimentalMapsMultiplatformApi
 @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
 public fun FusedLocationProviderClient.asLocationSource(looper: Looper = Looper.getMainLooper()): LocationSource =
     LocationSource { intervalMs, minUpdateDistanceM, priority ->
