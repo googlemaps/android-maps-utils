@@ -19,6 +19,7 @@ plugins {
     
     id("org.jetbrains.dokka")
     id("android.maps.utils.PublishingConventionPlugin")
+    id("android.maps.utils.BaselineProfileConventionPlugin")
     id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
 }
 

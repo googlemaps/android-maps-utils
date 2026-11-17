@@ -17,7 +17,7 @@ core-ktx = "1.19.1"
 kotlin = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.12.0"
-ktor = "3.6.0"
+ktor = "3.6.1"
 lifecycle-extensions = "2.2.0"
 lifecycle-viewmodel-ktx = "2.11.0"
 material = "1.14.0"
@@ -45,10 +45,11 @@ espresso-core = "3.7.0"
 junit = "4.13.2"
 kxml2 = "2.3.0"
 mockito-kotlin = "6.4.0"
-mockk = "1.14.11"
+mockk = "1.14.12"
 robolectric = "4.17"
 truth = "1.4.5"
-uiautomator = "2.4.0"
+uiautomator = "2.4.1"
+androidx-benchmark = "1.5.0"
 
 # --- Lint & Analysis ---
 # Versions for code quality and static analysis tools.
@@ -63,7 +64,7 @@ gradle = "9.4.1"
 gradleMavenPublishPlugin = "0.37.0"
 secrets-gradle-plugin = "2.0.1"
 serialization = "1.0.2.1"
-spotless = "8.10.4"
+spotless = "8.11.0"
 
 
 [libraries]
@@ -121,6 +122,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 
 # --- Lint & Analysis ---
 # Libraries and tools for static code analysis, linting, and coverage reporting.
@@ -137,6 +139,7 @@ testutils = { module = "com.android.tools:testutils", version.ref = "lint" }
 binary-compatibility-validator = { module = "org.jetbrains.kotlinx.binary-compatibility-validator:org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "binary-compatibility-validator" }
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka-gradle-plugin" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+baselineprofile-gradle-plugin = { module = "androidx.benchmark:benchmark-baseline-profile-gradle-plugin", version.ref = "androidx-benchmark" }
 gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
 

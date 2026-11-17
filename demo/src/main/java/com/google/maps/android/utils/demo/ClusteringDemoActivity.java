@@ -64,15 +64,12 @@ public class ClusteringDemoActivity extends BaseDemoActivity {
                 return null;
               }
             });
-    mClusterManager.setOnClusterItemInfoWindowLongClickListener(
-        marker ->
-            Toast.makeText(ClusteringDemoActivity.this, "Info window clicked.", Toast.LENGTH_SHORT)
-                .show());
-    mClusterManager.setOnClusterItemInfoWindowLongClickListener(
-        marker ->
-            Toast.makeText(
-                    ClusteringDemoActivity.this, "Info window long pressed.", Toast.LENGTH_SHORT)
-                .show());
+    mClusterManager.setOnClusterItemInfoWindowLongClickListener(marker ->
+        Toast.makeText(ClusteringDemoActivity.this, "Info window clicked.", Toast.LENGTH_SHORT)
+            .show());
+    mClusterManager.setOnClusterItemInfoWindowLongClickListener(marker ->
+        Toast.makeText(ClusteringDemoActivity.this, "Info window long pressed.", Toast.LENGTH_SHORT)
+            .show());
 
     try {
       readItems();

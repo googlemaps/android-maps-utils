@@ -16,6 +16,7 @@
 
 plugins {
     id("android.maps.utils.KmpPublishingConventionPlugin")
+    id("android.maps.utils.BaselineProfileConventionPlugin")
 }
 
 abstract class GenerateArtifactIdTask : DefaultTask() {

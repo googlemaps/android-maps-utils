@@ -19,6 +19,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
+    // Builds the release variants that :baselineprofile runs to generate the libraries' profiles.
+    id("androidx.baselineprofile")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("org.jetbrains.kotlin.plugin.serialization") version libs.versions.kotlin.get()
     alias(libs.plugins.compose.compiler)
@@ -88,6 +90,21 @@ android {
                 "proguard-rules.pro"
             )
         }
+        // Used by :baselineprofile to generate the libraries' Baseline Profiles and to benchmark them.
+        // The androidx.baselineprofile plugin does not add these on this AGP version, so they are
+        // declared here, matching what it would create: release, not minified, profileable and
+        // signed with the debug key.
+        listOf("nonMinifiedRelease", "benchmarkRelease").forEach { name ->
+            create(name) {
+                initWith(getByName("release"))
+                matchingFallbacks += "release"
+                isMinifyEnabled = false
+                isShrinkResources = false
+                isDebuggable = false
+                isProfileable = true
+                signingConfig = signingConfigs.getByName("debug")
+            }
+        }
     }
 
     testOptions {
@@ -124,6 +141,16 @@ android {
         }
         create("navigation") {
             dimension = "sdk"
+        }
+    }
+}
+
+androidComponents {
+    // :baselineprofile only runs against the standard flavor, so skip the unminified/benchmark
+    // release variants for the navigation flavor to avoid packaging redundant Navigation SDK APKs.
+    beforeVariants(selector().withFlavor("sdk" to "navigation")) { variantBuilder ->
+        if (variantBuilder.buildType == "nonMinifiedRelease" || variantBuilder.buildType == "benchmarkRelease") {
+            variantBuilder.enable = false
         }
     }
 }

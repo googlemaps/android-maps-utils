@@ -136,13 +136,12 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
               groundOverlayManager,
               null);
       kmlPolylineLayer.addLayerToMap();
-      kmlPolylineLayer.setOnFeatureClickListener(
-          feature ->
-              Toast.makeText(
-                      MultiLayerDemoActivity.this,
-                      "KML polyline clicked: " + feature.getProperty("name"),
-                      Toast.LENGTH_SHORT)
-                  .show());
+      kmlPolylineLayer.setOnFeatureClickListener(feature ->
+          Toast.makeText(
+                  MultiLayerDemoActivity.this,
+                  "KML polyline clicked: " + feature.getProperty("name"),
+                  Toast.LENGTH_SHORT)
+              .show());
 
       // KML Polygon & Point
       KmlLayer kmlPolygonLayer =
@@ -156,13 +155,12 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
               groundOverlayManager,
               null);
       kmlPolygonLayer.addLayerToMap();
-      kmlPolygonLayer.setOnFeatureClickListener(
-          feature ->
-              Toast.makeText(
-                      MultiLayerDemoActivity.this,
-                      "KML feature clicked: " + feature.getProperty("name"),
-                      Toast.LENGTH_SHORT)
-                  .show());
+      kmlPolygonLayer.setOnFeatureClickListener(feature ->
+          Toast.makeText(
+                  MultiLayerDemoActivity.this,
+                  "KML feature clicked: " + feature.getProperty("name"),
+                  Toast.LENGTH_SHORT)
+              .show());
     } catch (XmlPullParserException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -176,15 +174,14 @@ public class MultiLayerDemoActivity extends BaseDemoActivity {
             .position(new LatLng(51.150000, -0.150032))
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             .title("Unclustered marker"));
-    markerCollection.setOnMarkerClickListener(
-        marker -> {
-          Toast.makeText(
-                  MultiLayerDemoActivity.this,
-                  "Marker clicked: " + marker.getTitle(),
-                  Toast.LENGTH_SHORT)
-              .show();
-          return false;
-        });
+    markerCollection.setOnMarkerClickListener(marker -> {
+      Toast.makeText(
+              MultiLayerDemoActivity.this,
+              "Marker clicked: " + marker.getTitle(),
+              Toast.LENGTH_SHORT)
+          .show();
+      return false;
+    });
   }
 
   private void addClusterItems(ClusterManager clusterManager) {
