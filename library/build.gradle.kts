@@ -85,7 +85,6 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.maps.testing.robolectric)
     testImplementation(libs.maps.testing.golden)
-    testImplementation(libs.maps.testing.visual)
 }
 
 tasks.register("instrumentTest") {
