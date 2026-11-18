@@ -92,14 +92,25 @@ import com.google.maps.android.myLocationClickEvents
 import com.google.maps.android.poiClickEvents
 import com.google.maps.android.polygonClickEvents
 import com.google.maps.android.polylineClickEvents
-import com.google.maps.android.robolectric.annotation.EnableMapsShadows
 import com.google.maps.android.robolectric.ktx.createTestMapView
 import com.google.maps.android.robolectric.ktx.getMapBlocking
 import com.google.maps.android.robolectric.ktx.shadow
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptor
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptorFactory
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdate
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdateFactory
+import com.google.maps.android.robolectric.shadows.ShadowCircle
 import com.google.maps.android.robolectric.shadows.ShadowGoogleMap
+import com.google.maps.android.robolectric.shadows.ShadowGroundOverlay
 import com.google.maps.android.robolectric.shadows.ShadowMapView
+import com.google.maps.android.robolectric.shadows.ShadowMapsInitializer
+import com.google.maps.android.robolectric.shadows.ShadowMarker
+import com.google.maps.android.robolectric.shadows.ShadowPolygon
+import com.google.maps.android.robolectric.shadows.ShadowPolyline
 import com.google.maps.android.robolectric.shadows.ShadowProjection
 import com.google.maps.android.robolectric.shadows.ShadowSupportMapFragment
+import com.google.maps.android.robolectric.shadows.ShadowTileOverlay
+import com.google.maps.android.robolectric.shadows.ShadowUiSettings
 import com.google.maps.android.robolectric.truth.LatLngSubject
 import com.google.maps.android.robolectric.truth.isWithin
 import com.google.maps.android.robolectric.truth.meters
@@ -158,12 +169,35 @@ import kotlin.math.abs
  * 4. **Spherical Geometry, Polyline Simplification, Projection & Golden Snapshot Diffing**:
  *    Validates [SphericalUtil] and [PolyUtil] mathematics against [ShadowProjection] screen-space
  *    transforms, [LatLngSubject] distance tolerances, and [GoldenImageDiff] pixel-by-pixel diffs.
+ *
+ * Note: Maps shadows are declared directly on `@Config(shadows = [...])` because Robolectric's
+ * `ConfigMerger` does not traverse meta-annotations such as `@EnableMapsShadows`, and scoping
+ * them to this class avoids enabling them globally in `robolectric.properties`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34])
-@EnableMapsShadows
+@Config(
+    sdk = [34],
+    shadows = [
+        ShadowMapView::class,
+        ShadowGoogleMap::class,
+        ShadowCameraUpdate::class,
+        ShadowCameraUpdateFactory::class,
+        ShadowMarker::class,
+        ShadowPolygon::class,
+        ShadowPolyline::class,
+        ShadowProjection::class,
+        ShadowCircle::class,
+        ShadowUiSettings::class,
+        ShadowBitmapDescriptor::class,
+        ShadowBitmapDescriptorFactory::class,
+        ShadowMapsInitializer::class,
+        ShadowSupportMapFragment::class,
+        ShadowGroundOverlay::class,
+        ShadowTileOverlay::class,
+    ],
+)
 class MapsToolkitLibraryTest {
 
     private lateinit var activity: Activity
@@ -339,20 +373,14 @@ class MapsToolkitLibraryTest {
     // ============================================================================================
 
     /**
-     * Verifies all `GoogleMap` KTX cold `callbackFlow` streams (`cameraMoveStartedEvents`,
-     * `cameraMoveEvents`, `cameraIdleEvents`, `cameraMoveCanceledEvents`, `mapClickEvents`,
-     * `mapLongClickEvents`, `markerClickEvents`, `markerDragEvents`, `infoWindowClickEvents`,
-     * `infoWindowLongClickEvents`, `infoWindowCloseEvents`, `polygonClickEvents`,
-     * `polylineClickEvents`, `circleClickEvents`, `groundOverlayClicks`, `poiClickEvents`,
-     * `myLocationButtonClickEvents`, `myLocationClickEvents`, and `awaitMapLoad`) against
-     * synthetic user interactions dispatched by [ShadowGoogleMap].
+     * Verifies `cameraMoveStartedEvents`, `cameraMoveEvents`, `cameraIdleEvents`, and
+     * `cameraMoveCanceledEvents` cold `callbackFlow` streams against [ShadowGoogleMap].
      */
     @Test
-    fun googleMapEventFlows_emitDeterministicallyAndUnregisterOnCancellation() = runTest {
+    fun cameraEventFlows_emitMoveStartedMoveIdleAndCanceledEvents() = runTest {
         val dispatcher = UnconfinedTestDispatcher(testScheduler)
         val origin = LatLng(37.4220, -122.0841)
 
-        // Collect camera lifecycle events
         val moveStartedReasons = mutableListOf<Int>()
         val moveEvents = mutableListOf<Unit>()
         val idleEvents = mutableListOf<Unit>()
@@ -375,8 +403,17 @@ class MapsToolkitLibraryTest {
         assertThat(idleEvents).hasSize(1)
         assertThat(canceledEvents).hasSize(1)
         cameraJobs.forEach { it.cancel() }
+    }
 
-        // Collect map click & long-click events
+    /**
+     * Verifies `mapClickEvents` and `mapLongClickEvents` cold `callbackFlow` streams and confirms
+     * that cancelling the collector job unregisters the underlying [GoogleMap] listeners.
+     */
+    @Test
+    fun mapClickAndLongClickFlows_emitEventsAndUnregisterOnCancellation() = runTest {
+        val dispatcher = UnconfinedTestDispatcher(testScheduler)
+        val origin = LatLng(37.4220, -122.0841)
+
         val mapClicks = mutableListOf<LatLng>()
         val mapLongClicks = mutableListOf<LatLng>()
         val clickJob = launch(dispatcher) { googleMap.mapClickEvents().toList(mapClicks) }
@@ -394,8 +431,18 @@ class MapsToolkitLibraryTest {
         shadowMap.longClickMap(origin)
         assertThat(mapClicks).hasSize(1)
         assertThat(mapLongClicks).hasSize(1)
+    }
 
-        // Marker click, drag, and info window lifecycle flows
+    /**
+     * Verifies `markerClickEvents`, `markerDragEvents`, `infoWindowClickEvents`,
+     * `infoWindowLongClickEvents`, and `infoWindowCloseEvents` against synthetic marker
+     * interactions dispatched by [ShadowGoogleMap].
+     */
+    @Test
+    fun markerEventFlows_emitClickDragAndInfoWindowLifecycleEvents() = runTest {
+        val dispatcher = UnconfinedTestDispatcher(testScheduler)
+        val origin = LatLng(37.4220, -122.0841)
+
         val marker = checkNotNull(googleMap.addMarker { position(origin).title("Googleplex") })
         val markerClicks = mutableListOf<Marker>()
         val dragEvents = mutableListOf<OnMarkerDragEvent>()
@@ -436,8 +483,20 @@ class MapsToolkitLibraryTest {
         assertThat(infoLongClicks).containsExactly(marker)
         assertThat(infoCloses).containsExactly(marker)
         markerJobs.forEach { it.cancel() }
+    }
 
-        // Shape, POI, and MyLocation flows
+    /**
+     * Verifies `polygonClickEvents`, `polylineClickEvents`, `circleClickEvents`,
+     * `groundOverlayClicks`, `poiClickEvents`, `myLocationButtonClickEvents`,
+     * `myLocationClickEvents`, `awaitMapLoad`, and `awaitMapLoaded`.
+     */
+    @Test
+    fun overlayPoiAndMyLocationFlows_emitClicksAndResolveMapLoadCallbacks() = runTest {
+        val dispatcher = UnconfinedTestDispatcher(testScheduler)
+        val origin = LatLng(37.4220, -122.0841)
+        val draggedMid = origin.withSphericalOffset(50.0, 45.0)
+        val draggedEnd = origin.withSphericalOffset(100.0, 45.0)
+
         val polygon = googleMap.addPolygon {
             add(origin, draggedMid, draggedEnd)
             clickable(true)

@@ -15,6 +15,7 @@
  */
 package com.google.maps.android.heatmaps.testing
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import com.google.android.gms.maps.GoogleMap
@@ -27,12 +28,25 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider
 import com.google.maps.android.heatmaps.heatmapTileProviderWithData
 import com.google.maps.android.heatmaps.heatmapTileProviderWithWeightedData
 import com.google.maps.android.heatmaps.toWeightedLatLng
-import com.google.maps.android.robolectric.annotation.EnableMapsShadows
 import com.google.maps.android.robolectric.ktx.createTestMap
 import com.google.maps.android.robolectric.ktx.shadow
 import com.google.maps.android.robolectric.ktx.tileOverlays
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptor
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptorFactory
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdate
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdateFactory
+import com.google.maps.android.robolectric.shadows.ShadowCircle
 import com.google.maps.android.robolectric.shadows.ShadowGoogleMap
+import com.google.maps.android.robolectric.shadows.ShadowGroundOverlay
+import com.google.maps.android.robolectric.shadows.ShadowMapView
+import com.google.maps.android.robolectric.shadows.ShadowMapsInitializer
+import com.google.maps.android.robolectric.shadows.ShadowMarker
+import com.google.maps.android.robolectric.shadows.ShadowPolygon
+import com.google.maps.android.robolectric.shadows.ShadowPolyline
+import com.google.maps.android.robolectric.shadows.ShadowProjection
+import com.google.maps.android.robolectric.shadows.ShadowSupportMapFragment
 import com.google.maps.android.robolectric.shadows.ShadowTileOverlay
+import com.google.maps.android.robolectric.shadows.ShadowUiSettings
 import com.google.maps.android.testing.golden.GoldenImageDiff
 import com.google.maps.android.testing.golden.GoldenTileProvider
 import com.google.maps.android.testing.golden.GoldenTileStrategy
@@ -50,7 +64,7 @@ import kotlin.test.assertFailsWith
  *
  * ## Architectural Scope
  * 1. **Deterministic Raster Tile Verification with [GoldenImageDiff] & [GoldenTileStrategy]**:
- *    Decodes actual 512x512 PNG tiles produced by [HeatmapTileProvider.getTile] into [android.graphics.Bitmap]s
+ *    Decodes actual 512x512 PNG tiles produced by [HeatmapTileProvider.getTile] into [Bitmap]s
  *    and uses [GoldenImageDiff] and [GoldenTileProvider] (`GoldenTileStrategy.Custom`) to prove:
  *    - Bit-for-bit determinism across repeated tile requests.
  *    - Quantifiable pixel diffs when changing radius, opacity, gradient, maxIntensity, or point weights.
@@ -64,11 +78,34 @@ import kotlin.test.assertFailsWith
  *      (antimeridian `±180°`) even when all points in the tile come from `wrappedPoints`.
  *    - `HeatmapTileProvider.setRadius` and `setOpacity` enforce the same parameter validation
  *      bounds as `HeatmapTileProvider.Builder`.
+ *
+ * Note: Maps shadows are declared directly on `@Config(shadows = [...])` because Robolectric's
+ * `ConfigMerger` does not traverse meta-annotations such as `@EnableMapsShadows`, and scoping
+ * them to this class avoids enabling them globally in `robolectric.properties`.
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34])
-@EnableMapsShadows
+@Config(
+    sdk = [34],
+    shadows = [
+        ShadowMapView::class,
+        ShadowGoogleMap::class,
+        ShadowCameraUpdate::class,
+        ShadowCameraUpdateFactory::class,
+        ShadowMarker::class,
+        ShadowPolygon::class,
+        ShadowPolyline::class,
+        ShadowProjection::class,
+        ShadowCircle::class,
+        ShadowUiSettings::class,
+        ShadowBitmapDescriptor::class,
+        ShadowBitmapDescriptorFactory::class,
+        ShadowMapsInitializer::class,
+        ShadowSupportMapFragment::class,
+        ShadowGroundOverlay::class,
+        ShadowTileOverlay::class,
+    ],
+)
 class MapsToolkitHeatmapsTest {
 
     private lateinit var googleMap: GoogleMap

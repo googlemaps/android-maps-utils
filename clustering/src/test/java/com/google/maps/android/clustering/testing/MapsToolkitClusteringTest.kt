@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
@@ -36,13 +37,25 @@ import com.google.maps.android.clustering.clusterItemClickEvents
 import com.google.maps.android.clustering.clusterItemInfoWindowClickEvents
 import com.google.maps.android.clustering.clusterItemInfoWindowLongClickEvents
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import com.google.maps.android.robolectric.annotation.EnableMapsShadows
 import com.google.maps.android.robolectric.ktx.createTestMapView
 import com.google.maps.android.robolectric.ktx.getMapBlocking
 import com.google.maps.android.robolectric.ktx.shadow
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptor
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptorFactory
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdate
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdateFactory
+import com.google.maps.android.robolectric.shadows.ShadowCircle
 import com.google.maps.android.robolectric.shadows.ShadowGoogleMap
+import com.google.maps.android.robolectric.shadows.ShadowGroundOverlay
+import com.google.maps.android.robolectric.shadows.ShadowMapView
+import com.google.maps.android.robolectric.shadows.ShadowMapsInitializer
 import com.google.maps.android.robolectric.shadows.ShadowMarker
+import com.google.maps.android.robolectric.shadows.ShadowPolygon
+import com.google.maps.android.robolectric.shadows.ShadowPolyline
 import com.google.maps.android.robolectric.shadows.ShadowProjection
+import com.google.maps.android.robolectric.shadows.ShadowSupportMapFragment
+import com.google.maps.android.robolectric.shadows.ShadowTileOverlay
+import com.google.maps.android.robolectric.shadows.ShadowUiSettings
 import com.google.maps.android.robolectric.truth.LatLngSubject
 import com.google.maps.android.robolectric.truth.isWithin
 import com.google.maps.android.robolectric.truth.meters
@@ -56,6 +69,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -64,6 +78,11 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.shadows.ShadowLooper
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * End-to-end JVM integration and regression verification suite for the `:clustering` module
@@ -79,22 +98,41 @@ import org.robolectric.shadows.ShadowLooper
  *    [GridBasedAlgorithm], and [PreCachingAlgorithmDecorator] across zoom transitions and
  *    [ClusterManager.diff] mutations.
  * 3. **Cluster & Item Reactive Flows + Golden Snapshot Verification**: Verifies that
- *    [DefaultClusterRenderer] generates real cluster bucket bitmaps via [IconGenerator],
- *    attaches them to `clusterMarkerCollection` or `markerCollection` depending on `minClusterSize`
- *    and zoom level, routes all 6 KTX `ClusterManagerFlows` (`clusterClickEvents`,
- *    `clusterItemClickEvents`, `clusterInfoWindowClickEvents`, `clusterInfoWindowLongClickEvents`,
- *    `clusterItemInfoWindowClickEvents`, `clusterItemInfoWindowLongClickEvents`), and produces
- *    verifiable pixel changes via [GoldenImageDiff].
- * 4. **Cached Marker State Synchronization**: Verifies that `DefaultClusterRenderer.onClusterItemUpdated`
- *    properly clears `marker.snippet` and `marker.title` when a [ClusterItem]'s `snippet` or `title`
- *    is updated to `null`, and applies in-place `zIndex` updates even when the item's `position`
- *    remains unchanged.
+ *    [DefaultClusterRenderer] generates real cluster bucket bitmaps via [IconGenerator], attaches
+ *    them to [ShadowMarker], routes cluster/item clicks through all 6 KTX `callbackFlow` streams,
+ *    and produces verifiable visual changes via [GoldenImageDiff].
+ * 4. **Cached Marker State Synchronization**: Verifies that [DefaultClusterRenderer]
+ *    `onClusterItemUpdated` updates `title`, `snippet` (including clearing to `null`), and `zIndex`
+ *    in-place when an existing item is modified via `ClusterManager.updateItem`.
+ *
+ * Note: Maps shadows are declared directly on `@Config(shadows = [...])` because Robolectric's
+ * `ConfigMerger` does not traverse meta-annotations such as `@EnableMapsShadows`, and scoping
+ * them to this class avoids enabling them globally in `robolectric.properties`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34])
-@EnableMapsShadows
+@Config(
+    sdk = [34],
+    shadows = [
+        ShadowMapView::class,
+        ShadowGoogleMap::class,
+        ShadowCameraUpdate::class,
+        ShadowCameraUpdateFactory::class,
+        ShadowMarker::class,
+        ShadowPolygon::class,
+        ShadowPolyline::class,
+        ShadowProjection::class,
+        ShadowCircle::class,
+        ShadowUiSettings::class,
+        ShadowBitmapDescriptor::class,
+        ShadowBitmapDescriptorFactory::class,
+        ShadowMapsInitializer::class,
+        ShadowSupportMapFragment::class,
+        ShadowGroundOverlay::class,
+        ShadowTileOverlay::class,
+    ],
+)
 class MapsToolkitClusteringTest {
 
     /**
@@ -131,6 +169,8 @@ class MapsToolkitClusteringTest {
     private lateinit var shadowMap: ShadowGoogleMap
     private lateinit var clusterManager: ClusterManager<MutableTestItem>
     private lateinit var renderer: DefaultClusterRenderer<MutableTestItem>
+    private lateinit var renderExecutorService: ExecutorService
+    private val activeRenderLatch = AtomicReference<CountDownLatch?>()
 
     @Before
     fun setUp() {
@@ -148,7 +188,22 @@ class MapsToolkitClusteringTest {
             UnconfinedTestDispatcher(),
             UnconfinedTestDispatcher(),
         )
-        renderer = DefaultClusterRenderer(activity, googleMap, clusterManager).apply {
+        renderExecutorService = Executors.newSingleThreadExecutor()
+        renderer = DefaultClusterRenderer(
+            activity,
+            googleMap,
+            clusterManager,
+        ) { command ->
+            val latch = CountDownLatch(1)
+            activeRenderLatch.set(latch)
+            renderExecutorService.execute {
+                try {
+                    command.run()
+                } finally {
+                    latch.countDown()
+                }
+            }
+        }.apply {
             setAnimation(false)
         }
         clusterManager.renderer = renderer
@@ -162,17 +217,32 @@ class MapsToolkitClusteringTest {
         googleMap.setOnInfoWindowLongClickListener(clusterManager.markerManager)
     }
 
+    @After
+    fun tearDown() {
+        renderExecutorService.shutdownNow()
+    }
+
     /**
-     * Drives [DefaultClusterRenderer.onClustersChanged] and pumps the main looper so the background
+     * Drives [DefaultClusterRenderer.onClustersChanged] and pumps the main looper while waiting on
+     * the injected executor's [CountDownLatch] with a 5-second timeout so the background
      * `RenderTask` thread and the main-thread `MarkerModifier` handler complete their lock/condition
-     * handshake deterministically.
+     * handshake deterministically without fixed sleeps.
      */
     private fun renderClustersAndIdle(clusters: Set<Cluster<MutableTestItem>>) {
+        activeRenderLatch.set(null)
         renderer.onClustersChanged(clusters)
-        repeat(30) {
+        // Drain ViewModifier's RUN_TASK message on the main looper so it submits RenderTask to the executor
+        ShadowLooper.idleMainLooper()
+
+        val latch = activeRenderLatch.get() ?: return
+        val deadlineNanos = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
+        while (!latch.await(1, TimeUnit.MILLISECONDS)) {
             ShadowLooper.idleMainLooper()
-            Thread.sleep(5)
+            check(System.nanoTime() < deadlineNanos) {
+                "Timed out waiting for DefaultClusterRenderer RenderTask to finish"
+            }
         }
+        // Drain ViewModifier's TASK_FINISHED callback and any final main-thread marker operations
         ShadowLooper.idleMainLooper()
     }
 
@@ -182,9 +252,9 @@ class MapsToolkitClusteringTest {
 
     /**
      * Verifies that 6 closely spaced items render as a single aggregated cluster marker with a
-     * generated [com.google.maps.android.ui.IconGenerator] bitmap at low zoom (`zoom = 10f`), and
-     * split into 6 individual markers when zoomed in (`zoom = 19f`), while firing all 6 KTX
-     * `ClusterManagerFlows` and producing distinct golden snapshots.
+     * generated [IconGenerator] bitmap at low zoom (`zoom = 10f`), and split into 6 individual
+     * markers when zoomed in (`zoom = 20f`), while firing all 6 KTX `ClusterManagerFlows` and
+     * producing distinct golden snapshots.
      */
     @Test
     fun clusterRendererAndFlows_transitionFromSingleClusterToIndividualMarkersAcrossZooms() = runTest {
@@ -367,7 +437,7 @@ class MapsToolkitClusteringTest {
      * Verifies that `DefaultClusterRenderer.onClusterItemUpdated` synchronizes all marker properties
      * when a cached [ClusterItem] marker is updated on the map:
      * 1. Clearing `snippet` (or `title`) to `null` clears the corresponding property on the underlying
-     *    [com.google.android.gms.maps.model.Marker] rather than retaining stale text.
+     *    [Marker] rather than retaining stale text.
      * 2. Updating `zIndex` in-place (for example, bringing a selected marker to the front by
      *    updating `zIndex` from `1f` to `100f` without moving its coordinates) updates `marker.zIndex`.
      */

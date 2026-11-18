@@ -23,14 +23,28 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.common.truth.Truth.assertThat
-import com.google.maps.android.robolectric.annotation.EnableMapsShadows
 import com.google.maps.android.robolectric.ktx.createTestMapView
 import com.google.maps.android.robolectric.ktx.getMapBlocking
 import com.google.maps.android.robolectric.ktx.shadow
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptor
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptorFactory
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdate
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdateFactory
+import com.google.maps.android.robolectric.shadows.ShadowCircle
 import com.google.maps.android.robolectric.shadows.ShadowGoogleMap
+import com.google.maps.android.robolectric.shadows.ShadowGroundOverlay
+import com.google.maps.android.robolectric.shadows.ShadowMapView
+import com.google.maps.android.robolectric.shadows.ShadowMapsInitializer
 import com.google.maps.android.robolectric.shadows.ShadowMarker
+import com.google.maps.android.robolectric.shadows.ShadowPolygon
+import com.google.maps.android.robolectric.shadows.ShadowPolyline
+import com.google.maps.android.robolectric.shadows.ShadowProjection
+import com.google.maps.android.robolectric.shadows.ShadowSupportMapFragment
+import com.google.maps.android.robolectric.shadows.ShadowTileOverlay
+import com.google.maps.android.robolectric.shadows.ShadowUiSettings
 import com.google.maps.android.robolectric.truth.LatLngSubject
 import com.google.maps.android.robolectric.truth.isWithin
 import com.google.maps.android.robolectric.truth.kilometers
@@ -80,12 +94,35 @@ import java.util.concurrent.TimeUnit
  *      frame so non-multiple-of-16ms durations land on `finalPosition` without rebounding.
  *    - `IconGenerator.setRotation(degrees)` normalizes negative angles via floor modulo so angles
  *      such as `-450°` map cleanly to `270°` in `getAnchorU()` / `getAnchorV()`.
+ *
+ * Note: Maps shadows are declared directly on `@Config(shadows = [...])` because Robolectric's
+ * `ConfigMerger` does not traverse meta-annotations such as `@EnableMapsShadows`, and scoping
+ * them to this class avoids enabling them globally in `robolectric.properties`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34])
-@EnableMapsShadows
+@Config(
+    sdk = [34],
+    shadows = [
+        ShadowMapView::class,
+        ShadowGoogleMap::class,
+        ShadowCameraUpdate::class,
+        ShadowCameraUpdateFactory::class,
+        ShadowMarker::class,
+        ShadowPolygon::class,
+        ShadowPolyline::class,
+        ShadowProjection::class,
+        ShadowCircle::class,
+        ShadowUiSettings::class,
+        ShadowBitmapDescriptor::class,
+        ShadowBitmapDescriptorFactory::class,
+        ShadowMapsInitializer::class,
+        ShadowSupportMapFragment::class,
+        ShadowGroundOverlay::class,
+        ShadowTileOverlay::class,
+    ],
+)
 class MapsToolkitUiTest {
 
     private lateinit var activity: Activity
@@ -245,7 +282,7 @@ class MapsToolkitUiTest {
     // ============================================================================================
 
     /**
-     * Verifies that [AnimationUtil.animateMarkerTo] smoothly interpolates a [com.google.android.gms.maps.model.Marker]
+     * Verifies that [AnimationUtil.animateMarkerTo] smoothly interpolates a [Marker]
      * across the 180th meridian (International Date Line) using shortest-path longitude wrapping
      * (`+179.0°` to `-179.0°` via `±180.0°` rather than traversing 358° the wrong way around the globe).
      */

@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.common.truth.Truth.assertThat
 import com.google.maps.android.collections.GroundOverlayManager
@@ -40,11 +41,25 @@ import com.google.maps.android.data.geojson.GeoJsonPointStyle
 import com.google.maps.android.data.geojson.geoJsonLayer
 import com.google.maps.android.data.kml.KmlLayer
 import com.google.maps.android.data.kml.kmlLayer
-import com.google.maps.android.robolectric.annotation.EnableMapsShadows
 import com.google.maps.android.robolectric.ktx.createTestMapView
 import com.google.maps.android.robolectric.ktx.getMapBlocking
 import com.google.maps.android.robolectric.ktx.shadow
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptor
+import com.google.maps.android.robolectric.shadows.ShadowBitmapDescriptorFactory
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdate
+import com.google.maps.android.robolectric.shadows.ShadowCameraUpdateFactory
+import com.google.maps.android.robolectric.shadows.ShadowCircle
 import com.google.maps.android.robolectric.shadows.ShadowGoogleMap
+import com.google.maps.android.robolectric.shadows.ShadowGroundOverlay
+import com.google.maps.android.robolectric.shadows.ShadowMapView
+import com.google.maps.android.robolectric.shadows.ShadowMapsInitializer
+import com.google.maps.android.robolectric.shadows.ShadowMarker
+import com.google.maps.android.robolectric.shadows.ShadowPolygon
+import com.google.maps.android.robolectric.shadows.ShadowPolyline
+import com.google.maps.android.robolectric.shadows.ShadowProjection
+import com.google.maps.android.robolectric.shadows.ShadowSupportMapFragment
+import com.google.maps.android.robolectric.shadows.ShadowTileOverlay
+import com.google.maps.android.robolectric.shadows.ShadowUiSettings
 import com.google.maps.android.robolectric.truth.LatLngSubject
 import com.google.maps.android.robolectric.truth.isWithin
 import com.google.maps.android.robolectric.truth.meters
@@ -91,12 +106,35 @@ import java.util.zip.ZipOutputStream
  *   `GeoJsonMultiLineString`, and `GeoJsonMultiPoint` features preserve their styles.
  * - `GeoJsonLayer.toModelFeature` preserves `GeoJsonPointStyle` `title`, `snippet`,
  *   `isDraggable`, `isFlat`, `isVisible`, and custom `icon` (`BitmapDescriptor`).
+ *
+ * Note: Maps shadows are declared directly on `@Config(shadows = [...])` because Robolectric's
+ * `ConfigMerger` does not traverse meta-annotations such as `@EnableMapsShadows`, and scoping
+ * them to this class avoids enabling them globally in `robolectric.properties`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [34])
-@EnableMapsShadows
+@Config(
+    sdk = [34],
+    shadows = [
+        ShadowMapView::class,
+        ShadowGoogleMap::class,
+        ShadowCameraUpdate::class,
+        ShadowCameraUpdateFactory::class,
+        ShadowMarker::class,
+        ShadowPolygon::class,
+        ShadowPolyline::class,
+        ShadowProjection::class,
+        ShadowCircle::class,
+        ShadowUiSettings::class,
+        ShadowBitmapDescriptor::class,
+        ShadowBitmapDescriptorFactory::class,
+        ShadowMapsInitializer::class,
+        ShadowSupportMapFragment::class,
+        ShadowGroundOverlay::class,
+        ShadowTileOverlay::class,
+    ],
+)
 class MapsToolkitDataLayerTest {
 
     private lateinit var activity: Activity
@@ -258,7 +296,7 @@ class MapsToolkitDataLayerTest {
     /**
      * Verifies that [KmlLayer] transparently detects and parses a compressed KMZ archive (`PK` zip header)
      * containing `doc.kml` and an embedded PNG icon (`images/pin.png`), caches the decoded bitmap in
-     * `MapViewRenderer`, and assigns the embedded bitmap icon to the rendered [com.google.android.gms.maps.model.Marker].
+     * `MapViewRenderer`, and assigns the embedded bitmap icon to the rendered [Marker].
      */
     @Test
     fun kmlLayer_withKmzArchive_extractsEmbeddedBitmapAndAppliesToMarker() {
