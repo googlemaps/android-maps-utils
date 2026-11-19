@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `4df2704` (#1852), recorded 2026-11-13T21:45:56Z.
+Measured at `3463954` (#1856), recorded 2026-11-19T21:34:41Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-19 | `3463954` | #1856 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
 | 2026-11-13 | `4df2704` | #1852 | 64.44% | 0.00 | chore(deps): bump Gradle wrapper to 9.9.1 |
 | 2026-11-12 | `b8c3b79` | #1850 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group across 1 directory with 3 updates |
 | 2026-11-12 | `a1863f3` | #1853 | 64.44% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 3 updates |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-05 | `bbdbe83` | #1796 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 5 updates |
 | 2026-10-01 | `145d2fa` | #1807 | 57.39% | 0.00 | ci: add a workflow to publish snapshot builds |
 | 2026-10-01 | `ad2ba13` | #1810 | 57.39% | 0.00 | docs: explain BEGIN_COMMIT_OVERRIDE for PRs with several changes |
-| 2026-10-01 | `48d3371` | #1805 | 57.39% | 0.00 | test: add end-to-end demo smoke test |
