@@ -16,20 +16,31 @@
 package com.google.maps.android.data.renderer
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.LruCache
 import com.google.maps.android.data.kml.DefaultKmlUrlSanitizer
 import com.google.maps.android.data.kml.KmlUrlSanitizer
+import com.google.maps.android.data.renderer.SafeBitmapDecoder.allocationKilobytes
+import com.google.maps.android.data.renderer.SafeBitmapDecoder.takeIfWithinAllocationLimit
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import java.io.Closeable
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Implementation of [IconProvider] that loads icons from URLs.
@@ -46,6 +57,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
     private val memoryCache: LruCache<String, Bitmap>
     private val inFlight = ConcurrentHashMap<String, Deferred<Bitmap?>>()
     private val downloadScope = CoroutineScope(SupervisorJob() + dispatcher)
+    private val downloadSemaphore = Semaphore(MAX_CONCURRENT_DOWNLOADS)
 
     init {
         // Get max available VM memory, exceeding this amount will throw an
@@ -61,7 +73,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
                 override fun sizeOf(key: String, bitmap: Bitmap): Int {
                     // The cache size will be measured in kilobytes rather than
                     // number of items.
-                    return bitmap.byteCount / 1024
+                    return bitmap.allocationKilobytes()
                 }
             }
     }
@@ -76,15 +88,24 @@ public open class UrlIconProvider @JvmOverloads public constructor(
             synchronized(inFlight) {
                 inFlight.getOrPut(url) {
                     downloadScope.async {
+                        // The try/finally wraps the permit acquisition so the in-flight entry is
+                        // removed even if this request is cancelled while queued for a permit.
                         try {
-                            val bitmap = loadBitmapFromUrl(url)
-                            if (bitmap != null) {
-                                memoryCache.put(url, bitmap)
+                            downloadSemaphore.withPermit {
+                                // Use one deadline for the entire download, including redirects.
+                                val bitmap = withTimeoutOrNull(DOWNLOAD_TIMEOUT_MS) {
+                                    loadBitmapFromUrl(url)?.takeIfWithinAllocationLimit()
+                                }
+                                if (bitmap != null) {
+                                    memoryCache.put(url, bitmap)
+                                }
+                                bitmap
                             }
-                            bitmap
                         } finally {
-                            // Always remove from in-flight map when done, success or failure
-                            inFlight.remove(url)
+                            // Always remove from in-flight map when done, success, failure or
+                            // cancellation. Synchronizing with the insertion above guarantees the
+                            // removal cannot run before the entry has been added.
+                            synchronized(inFlight) { inFlight.remove(url) }
                         }
                     }
                 }
@@ -102,6 +123,7 @@ public open class UrlIconProvider @JvmOverloads public constructor(
             var current: String = urlString
             var redirectsLeft = MAX_REDIRECTS
             while (true) {
+                ensureActive()
                 // Validate the (untrusted) href before issuing any request. `null` => blocked.
                 val safeUrl =
                     if (urlSanitizer != null) {
@@ -111,17 +133,27 @@ public open class UrlIconProvider @JvmOverloads public constructor(
                     }
                 val url = URL(safeUrl)
                 val connection = url.openConnection() as HttpURLConnection
-                try {
+                disconnectOnCancellation(connection).use {
                     // Do not auto-follow: we re-run each redirect target through the sanitizer.
                     connection.instanceFollowRedirects = false
                     connection.doInput = true
+                    connection.connectTimeout = CONNECT_TIMEOUT_MS
+                    connection.readTimeout = READ_TIMEOUT_MS
+                    ensureActive()
                     connection.connect()
+                    ensureActive()
                     val code = connection.responseCode
                     when {
                         code in 200..299 -> {
-                            return@withContext connection.inputStream.use {
-                                BitmapFactory.decodeStream(it)
+                            // Fail fast, before streaming, when the server declares an oversized body.
+                            // (Header read directly: HttpURLConnection.getContentLengthLong needs API 24.)
+                            val declaredLength = connection.getHeaderField("Content-Length")?.toLongOrNull()
+                            if (declaredLength != null && declaredLength > SafeBitmapDecoder.MAX_ENCODED_BYTES) {
+                                return@withContext null
                             }
+                            val bytes = connection.inputStream.use { SafeBitmapDecoder.readBounded(it) }
+                            ensureActive()
+                            return@withContext bytes?.let(SafeBitmapDecoder::decode)
                         }
 
                         code in 300..399 -> {
@@ -136,13 +168,14 @@ public open class UrlIconProvider @JvmOverloads public constructor(
 
                         else -> return@withContext null
                     }
-                } finally {
-                    connection.disconnect()
                 }
             }
             @Suppress("UNREACHABLE_CODE")
             null
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            ensureActive()
             e.printStackTrace()
             null
         }
@@ -151,5 +184,37 @@ public open class UrlIconProvider @JvmOverloads public constructor(
     private companion object {
         /** Maximum number of redirects to follow before giving up. */
         private const val MAX_REDIRECTS = 5
+
+        /** Limits simultaneous response buffering and bitmap allocation for distinct URLs. */
+        private const val MAX_CONCURRENT_DOWNLOADS = 4
+
+        /** Maximum time to establish a connection. */
+        private const val CONNECT_TIMEOUT_MS = 10_000
+
+        /** Maximum time to wait for data between reads. */
+        private const val READ_TIMEOUT_MS = 10_000
+
+        /** Overall deadline for one download, guarding against slow-trickle responses. */
+        private const val DOWNLOAD_TIMEOUT_MS = 30_000L
+    }
+}
+
+internal fun CoroutineScope.disconnectOnCancellation(connection: HttpURLConnection): Closeable {
+    val disconnected = AtomicBoolean()
+    val cancellationWatcher = launch(Dispatchers.Default, start = CoroutineStart.UNDISPATCHED) {
+        try {
+            awaitCancellation()
+        } finally {
+            // Android's HTTP implementation cancels the active exchange on disconnect. Run this
+            // on a separate dispatcher so it can unblock a connect or read on the caller's thread.
+            if (disconnected.compareAndSet(false, true)) connection.disconnect()
+        }
+    }
+    return Closeable {
+        try {
+            if (disconnected.compareAndSet(false, true)) connection.disconnect()
+        } finally {
+            cancellationWatcher.cancel()
+        }
     }
 }
