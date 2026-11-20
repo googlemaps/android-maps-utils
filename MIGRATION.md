@@ -138,7 +138,7 @@ Raise your app's `minSdk` to `24`. Overriding the check with `tools:overrideLibr
 
 ## 6. Data Parsers Declare `IOException` for Java Callers
 
-Starting with `v7.0.0`, `KmzParser.parse`, `KmlParser.parse`, `KmlParser.parseAsKml`, `GpxParser.parse` and `GeoJsonParser.parse` are annotated with `@Throws(IOException::class)`. These methods always propagated `IOException` at runtime (stream failures and the KMZ entry count and size limits), but the Java signatures did not declare it, so Java callers could not write `catch (IOException e)`.
+Starting with `v8.0.0`, `KmzParser.parse`, `KmlParser.parse`, `KmlParser.parseAsKml`, `GpxParser.parse` and `GeoJsonParser.parse` are annotated with `@Throws(IOException::class)`. These methods always propagated `IOException` at runtime (stream failures and the KMZ entry count and size limits), but the Java signatures did not declare it, so Java callers could not write `catch (IOException e)`.
 
 Kotlin callers are unaffected, and so is binary compatibility. Java callers that recompile must now catch or declare `IOException`:
 
