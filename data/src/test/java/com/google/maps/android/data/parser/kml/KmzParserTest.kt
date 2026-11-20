@@ -21,6 +21,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -188,9 +189,9 @@ class KmzParserTest {
     }
 
     @Test
-    fun `parse counts a shared bitmap once and recycles it at most once`() {
+    fun `parse counts a shared bitmap once`() {
         val bitmap = mockk<Bitmap>(relaxed = true) {
-            every { allocationByteCount } returns 20 * 1024 * 1024
+            every { allocationByteCount } returns 16 * 1024 * 1024
         }
         val decoder =
             object : ImageDecoder {
@@ -201,32 +202,31 @@ class KmzParserTest {
                 "doc.kml" to "<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document/></kml>".toByteArray(),
                 "pin-a.png" to byteArrayOf(1),
                 "pin-b.png" to byteArrayOf(2),
+                "pin-c.png" to byteArrayOf(3),
             )
 
-        // 2 x 20 MiB would exceed the 32 MiB cap if counted twice.
+        // Each image fits the per-image cap. Counting all three would exceed the total cap.
         val kml = KmzParser(decoder).parse(kmzStream)
 
-        assertEquals(2, kml.images.size)
+        assertEquals(setOf("pin-a.png", "pin-b.png", "pin-c.png"), kml.images.keys)
+        kml.images.values.forEach { assertSame(bitmap, it) }
         verify(exactly = 0) { bitmap.recycle() }
     }
 
     @Test
     fun `parse does not recycle live bitmap when duplicate entry name decodes to same instance`() {
         val bitmap = mockk<Bitmap>(relaxed = true)
-        val decoder =
-            object : ImageDecoder {
-                override fun decode(bytes: ByteArray): Bitmap = bitmap
-            }
-        val kmzStream =
-            createKmzStream(
-                "doc.kml" to "<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document/></kml>".toByteArray(),
-                "dup.png" to byteArrayOf(1),
-                "dup.png" to byteArrayOf(2),
-            )
+        val decoder = mockk<ImageDecoder> {
+            every { decode(any()) } returns bitmap
+        }
+        // ZipOutputStream rejects duplicate names, so read them from an archive fixture.
+        val kmzStream = checkNotNull(javaClass.getResourceAsStream("/duplicate-image-names.kmz"))
 
         val kml = KmzParser(decoder).parse(kmzStream)
 
         assertEquals(1, kml.images.size)
+        assertSame(bitmap, kml.images["dup.png"])
+        verify(exactly = 2) { decoder.decode(any()) }
         verify(exactly = 0) { bitmap.recycle() }
     }
 

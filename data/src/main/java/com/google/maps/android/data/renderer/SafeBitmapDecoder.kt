@@ -57,7 +57,8 @@ internal object SafeBitmapDecoder {
         return null
     }
 
-    internal fun Bitmap.allocationKilobytes(): Int = ((allocationByteCount.toLong() + 1023L) / 1024L).toInt().coerceAtLeast(1)
+    internal fun Bitmap.allocationKilobytes(): Int =
+        ((allocationByteCount.toLong() + 1023L) / 1024L).toInt().coerceAtLeast(1)
 
     internal fun dimensionsFitBudget(width: Int, height: Int): Boolean {
         if (width <= 0 || height <= 0) return false

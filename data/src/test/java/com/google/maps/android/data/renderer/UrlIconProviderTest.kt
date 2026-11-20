@@ -19,9 +19,12 @@ import android.graphics.Bitmap
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
@@ -31,9 +34,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.net.HttpURLConnection
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -161,6 +168,29 @@ class UrlIconProviderTest {
 
         stalled.forEach { assertNull(it.await()) }
         assertNotNull(healthy.await())
+    }
+
+    @Test
+    fun cancellingDownloadDisconnectsWhileReadIsBlocked() = runTest {
+        val enteredRead = CompletableDeferred<Unit>()
+        val readUnblocked = CompletableDeferred<Boolean>()
+        val disconnected = CountDownLatch(1)
+        val connection = mockk<HttpURLConnection>()
+        every { connection.disconnect() } answers { disconnected.countDown() }
+        every { connection.responseCode } answers {
+            enteredRead.complete(Unit)
+            readUnblocked.complete(disconnected.await(5, TimeUnit.SECONDS))
+            HttpURLConnection.HTTP_OK
+        }
+
+        val download = async(Dispatchers.IO) {
+            disconnectOnCancellation(connection).use { connection.responseCode }
+        }
+        enteredRead.await()
+        download.cancelAndJoin()
+
+        assertTrue(readUnblocked.await())
+        verify(exactly = 1) { connection.disconnect() }
     }
 
     @Test
