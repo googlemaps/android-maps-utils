@@ -20,6 +20,7 @@ import android.util.LruCache
 import com.google.maps.android.data.kml.DefaultKmlUrlSanitizer
 import com.google.maps.android.data.kml.KmlUrlSanitizer
 import com.google.maps.android.data.renderer.SafeBitmapDecoder.allocationKilobytes
+import com.google.maps.android.data.renderer.SafeBitmapDecoder.takeIfWithinAllocationLimit
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -29,6 +30,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
@@ -79,19 +81,25 @@ public open class UrlIconProvider @JvmOverloads public constructor(
             synchronized(inFlight) {
                 inFlight.getOrPut(url) {
                     downloadScope.async {
-                        downloadSemaphore.withPermit {
-                            try {
-                                val bitmap = loadBitmapFromUrl(url)?.let {
-                                    SafeBitmapDecoder.run { it.takeIfWithinAllocationLimit() }
+                        // The try/finally wraps the permit acquisition so the in-flight entry is
+                        // removed even if this request is cancelled while queued for a permit.
+                        try {
+                            downloadSemaphore.withPermit {
+                                // Bound total time so a stalled or trickling server releases its
+                                // permit instead of starving every other icon download.
+                                val bitmap = withTimeoutOrNull(DOWNLOAD_TIMEOUT_MS) {
+                                    loadBitmapFromUrl(url)?.takeIfWithinAllocationLimit()
                                 }
                                 if (bitmap != null) {
                                     memoryCache.put(url, bitmap)
                                 }
                                 bitmap
-                            } finally {
-                                // Always remove from in-flight map when done, success or failure
-                                inFlight.remove(url)
                             }
+                        } finally {
+                            // Always remove from in-flight map when done, success, failure or
+                            // cancellation. Synchronizing with the insertion above guarantees the
+                            // removal cannot run before the entry has been added.
+                            synchronized(inFlight) { inFlight.remove(url) }
                         }
                     }
                 }
@@ -122,10 +130,18 @@ public open class UrlIconProvider @JvmOverloads public constructor(
                     // Do not auto-follow: we re-run each redirect target through the sanitizer.
                     connection.instanceFollowRedirects = false
                     connection.doInput = true
+                    connection.connectTimeout = CONNECT_TIMEOUT_MS
+                    connection.readTimeout = READ_TIMEOUT_MS
                     connection.connect()
                     val code = connection.responseCode
                     when {
                         code in 200..299 -> {
+                            // Fail fast, before streaming, when the server declares an oversized body.
+                            // (Header read directly: HttpURLConnection.getContentLengthLong needs API 24.)
+                            val declaredLength = connection.getHeaderField("Content-Length")?.toLongOrNull()
+                            if (declaredLength != null && declaredLength > SafeBitmapDecoder.MAX_ENCODED_BYTES) {
+                                return@withContext null
+                            }
                             return@withContext connection.inputStream.use {
                                 SafeBitmapDecoder.decode(it)
                             }
@@ -160,6 +176,15 @@ public open class UrlIconProvider @JvmOverloads public constructor(
         private const val MAX_REDIRECTS = 5
 
         /** Limits simultaneous response buffering and bitmap allocation for distinct URLs. */
-        private const val MAX_CONCURRENT_DOWNLOADS = 2
+        private const val MAX_CONCURRENT_DOWNLOADS = 4
+
+        /** Maximum time to establish a connection. */
+        private const val CONNECT_TIMEOUT_MS = 10_000
+
+        /** Maximum time to wait for data between reads. */
+        private const val READ_TIMEOUT_MS = 10_000
+
+        /** Overall deadline for one download, guarding against slow-trickle responses. */
+        private const val DOWNLOAD_TIMEOUT_MS = 30_000L
     }
 }

@@ -57,7 +57,7 @@ internal object SafeBitmapDecoder {
         return null
     }
 
-    internal fun Bitmap.allocationKilobytes(): Int = maxOf(1, (allocationByteCount + 1023) / 1024)
+    internal fun Bitmap.allocationKilobytes(): Int = ((allocationByteCount.toLong() + 1023L) / 1024L).toInt().coerceAtLeast(1)
 
     internal fun dimensionsFitBudget(width: Int, height: Int): Boolean {
         if (width <= 0 || height <= 0) return false
@@ -65,7 +65,7 @@ internal object SafeBitmapDecoder {
         return pixelCount <= MAX_DECODED_BYTES / ARGB_8888_BYTES_PER_PIXEL
     }
 
-    private fun readBounded(input: InputStream): ByteArray? {
+    internal fun readBounded(input: InputStream): ByteArray? {
         val output = ByteArrayOutputStream(READ_BUFFER_SIZE)
         val buffer = ByteArray(READ_BUFFER_SIZE)
         var total = 0
