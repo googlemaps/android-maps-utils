@@ -49,14 +49,26 @@ class BaselineProfileConventionPlugin : Plugin<Project> {
      * the profile is copied into src, drop every rule whose class this module does not compile.
      */
     private fun Project.keepOnlyOwnClasses() {
-        val classesDirs = listOf(
-            "intermediates/built_in_kotlinc/release/compileReleaseKotlin/classes",
-            "intermediates/javac/release/compileReleaseJavaWithJavac/classes",
-        ).map { layout.buildDirectory.dir(it) }
-        val profile = layout.projectDirectory.file("src/main/generated/baselineProfiles/baseline-prof.txt").asFile
+        // Multiplatform modules have a single androidMain variant, compiled by kotlinc only.
+        val isKmp = pluginManager.hasPlugin("com.android.kotlin.multiplatform.library")
+        val classesDirs = if (isKmp) {
+            listOf("classes/kotlin/android/main")
+        } else {
+            listOf(
+                "intermediates/built_in_kotlinc/release/compileReleaseKotlin/classes",
+                "intermediates/javac/release/compileReleaseJavaWithJavac/classes",
+            )
+        }.map { layout.buildDirectory.dir(it) }
+        val compileTasks = if (isKmp) {
+            listOf("compileAndroidMain")
+        } else {
+            listOf("compileReleaseKotlin", "compileReleaseJavaWithJavac")
+        }
+        val sourceSet = if (isKmp) "androidMain" else "main"
+        val profile = layout.projectDirectory.file("src/$sourceSet/generated/baselineProfiles/baseline-prof.txt").asFile
 
         tasks.matching { it.name == "copyBaselineProfileIntoSrc" }.configureEach {
-            dependsOn("compileReleaseKotlin", "compileReleaseJavaWithJavac")
+            dependsOn(compileTasks)
             doLast {
                 val roots = classesDirs.map { it.get().asFile }
                 fun isOwnClass(name: String) = roots.any { File(it, "$name.class").exists() }

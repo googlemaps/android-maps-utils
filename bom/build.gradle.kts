@@ -24,6 +24,7 @@ dependencies {
         api(project(":data"))
         api(project(":heatmaps"))
         api(project(":library"))
+        api(project(":maps-model"))
         api(project(":onion"))
         api(project(":ui"))
         api(project(":visual-testing"))
