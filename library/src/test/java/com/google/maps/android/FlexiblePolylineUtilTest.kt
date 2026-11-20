@@ -19,14 +19,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import java.time.Instant
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
- * Tests for [FlexiblePolylineUtil].
+ * Tests for [FlexiblePolylineUtil], [FlexiblePolyline], and [FlexiblePoint].
  *
  * The expected encoded strings are interoperability vectors: the two dimensional case is the
- * worked example published in the format specification, and the remaining cases were produced
- * by a separate implementation written from the same specification, so a regression in the
- * encoder cannot hide behind a matching regression in the decoder.
+ * worked example published in the format specification, and the remaining cases verify three
+ * and four dimensional (elevation + time) encoding, quantization, header inspection, and
+ * temporal interpolation.
  */
 class FlexiblePolylineUtilTest {
     private companion object {
@@ -59,12 +62,16 @@ class FlexiblePolylineUtilTest {
         assertThat(decoded.precision).isEqualTo(5)
         assertThat(decoded.thirdDimension).isEqualTo(ThirdDimension.ABSENT)
         assertThat(decoded.thirdDimensionPrecision).isEqualTo(0)
+        assertThat(decoded.hasTime).isFalse()
+        assertThat(decoded.timePrecision).isEqualTo(0)
+        assertThat(decoded.durationMillis).isNull()
         assertThat(decoded.points).hasSize(4)
         decoded.points.forEachIndexed { index, actual ->
             val expected = SPEC_EXAMPLE_POINTS[index]
             assertThat(actual.latitude).isWithin(EPSILON).of(expected.latitude)
             assertThat(actual.longitude).isWithin(EPSILON).of(expected.longitude)
             assertThat(actual.thirdDimensionValue).isNull()
+            assertThat(actual.timestampMillis).isNull()
         }
     }
 
@@ -99,6 +106,8 @@ class FlexiblePolylineUtilTest {
         assertThat(decoded.precision).isEqualTo(7)
         assertThat(decoded.thirdDimension).isEqualTo(ThirdDimension.ALTITUDE)
         assertThat(decoded.thirdDimensionPrecision).isEqualTo(2)
+        assertThat(decoded.hasTime).isFalse()
+        assertThat(decoded.timePrecision).isEqualTo(0)
         decoded.points.forEachIndexed { index, actual ->
             val expected = points[index]
             assertThat(actual.latitude).isWithin(EPSILON).of(expected.latitude)
@@ -106,7 +115,222 @@ class FlexiblePolylineUtilTest {
             assertThat(actual.thirdDimensionValue!!)
                 .isWithin(EPSILON)
                 .of(expected.thirdDimensionValue!!)
+            assertThat(actual.timestampMillis).isNull()
         }
+    }
+
+    @Test
+    fun `encode and decode round trip a 4D track using default 11cm and 100ms precisions`() {
+        val baseTimeMillis = 1_761_403_200_000L
+        val points =
+            listOf(
+                FlexiblePoint(37.819929, -122.478255, 67.2, baseTimeMillis),
+                FlexiblePoint(37.820412, -122.478491, 68.8, baseTimeMillis + 200L),
+                FlexiblePoint(37.821054, -122.478711, 71.1, baseTimeMillis + 700L),
+                FlexiblePoint(37.821890, -122.478998, 70.4, baseTimeMillis + 1_400L),
+            )
+
+        val encoded =
+            FlexiblePolylineUtil.encode(
+                points = points,
+                thirdDimension = ThirdDimension.ELEVATION,
+                thirdDimensionPrecision = 1,
+            )
+
+        assertThat(FlexiblePolylineUtil.getThirdDimension(encoded)).isEqualTo(ThirdDimension.ELEVATION)
+        assertThat(FlexiblePolylineUtil.hasTime(encoded)).isTrue()
+
+        val decoded = FlexiblePolylineUtil.decode(encoded)
+        assertThat(decoded.precision).isEqualTo(FlexiblePolylineUtil.DEFAULT_PRECISION)
+        assertThat(decoded.precision).isEqualTo(6)
+        assertThat(decoded.thirdDimension).isEqualTo(ThirdDimension.ELEVATION)
+        assertThat(decoded.thirdDimensionPrecision).isEqualTo(1)
+        assertThat(decoded.hasTime).isTrue()
+        assertThat(decoded.timePrecision).isEqualTo(FlexiblePolylineUtil.DEFAULT_TIME_PRECISION)
+        assertThat(decoded.timePrecision).isEqualTo(1)
+        assertThat(decoded.durationMillis).isEqualTo(1_400L)
+        assertThat(decoded.points).hasSize(points.size)
+        decoded.points.forEachIndexed { index, actual ->
+            val expected = points[index]
+            assertThat(actual.latitude).isWithin(1e-6).of(expected.latitude)
+            assertThat(actual.longitude).isWithin(1e-6).of(expected.longitude)
+            assertThat(actual.thirdDimensionValue!!).isWithin(1e-1).of(expected.thirdDimensionValue!!)
+            assertThat(actual.timestampMillis).isEqualTo(expected.timestampMillis)
+        }
+    }
+
+    @Test
+    fun `encode and decode round trip a 4D track with user selected precisions`() {
+        val baseTimeMillis = 1_761_403_200_000L
+        val points =
+            listOf(
+                FlexiblePoint(37.8199286, -122.4782551, 67.25, baseTimeMillis),
+                FlexiblePoint(37.8204123, -122.4784912, 68.80, baseTimeMillis + 250L),
+                FlexiblePoint(37.8210540, -122.4787105, 71.15, baseTimeMillis + 750L),
+                FlexiblePoint(37.8218902, -122.4789980, 70.40, baseTimeMillis + 1_375L),
+            )
+
+        val encoded =
+            FlexiblePolylineUtil.encode(
+                points = points,
+                precision = 7,
+                thirdDimension = ThirdDimension.ELEVATION,
+                thirdDimensionPrecision = 2,
+                hasTime = true,
+                timePrecision = 3,
+            )
+
+        val decoded = FlexiblePolylineUtil.decode(encoded)
+        assertThat(decoded.precision).isEqualTo(7)
+        assertThat(decoded.thirdDimension).isEqualTo(ThirdDimension.ELEVATION)
+        assertThat(decoded.thirdDimensionPrecision).isEqualTo(2)
+        assertThat(decoded.hasTime).isTrue()
+        assertThat(decoded.timePrecision).isEqualTo(3)
+        assertThat(decoded.durationMillis).isEqualTo(1_375L)
+        decoded.points.forEachIndexed { index, actual ->
+            val expected = points[index]
+            assertThat(actual.latitude).isWithin(1e-7).of(expected.latitude)
+            assertThat(actual.longitude).isWithin(1e-7).of(expected.longitude)
+            assertThat(actual.thirdDimensionValue!!).isWithin(1e-2).of(expected.thirdDimensionValue!!)
+            assertThat(actual.timestampMillis).isEqualTo(expected.timestampMillis)
+        }
+    }
+
+    @Test
+    fun `encode and decode round trip a 2D plus time track with Instant overloads`() {
+        val t0 = Instant.parse("2026-10-25T18:00:00.125Z")
+        val t1 = Instant.parse("2026-10-25T18:00:01.625Z")
+        val points =
+            listOf(
+                FlexiblePoint(latitude = 50.10228, longitude = 8.69821, timestamp = t0),
+                FlexiblePoint(latitude = 50.10201, longitude = 8.69567, timestamp = t1),
+            )
+
+        val encoded = FlexiblePolylineUtil.encode(points, precision = 6, timePrecision = 3)
+
+        assertThat(FlexiblePolylineUtil.getThirdDimension(encoded)).isEqualTo(ThirdDimension.ABSENT)
+        assertThat(FlexiblePolylineUtil.hasTime(encoded)).isTrue()
+
+        val decoded = FlexiblePolylineUtil.decode(encoded)
+        assertThat(decoded.hasTime).isTrue()
+        assertThat(decoded.timePrecision).isEqualTo(3)
+        assertThat(decoded.points[0].timestamp).isEqualTo(t0)
+        assertThat(decoded.points[1].timestamp).isEqualTo(t1)
+    }
+
+    @Test
+    fun `encode quantises timestamps and rounds ties half away from zero`() {
+        val points =
+            listOf(
+                FlexiblePoint(50.10228, 8.69821, timestampMillis = 1_500L),
+                FlexiblePoint(50.10201, 8.69567, timestampMillis = -1_500L),
+                FlexiblePoint(50.10063, 8.69150, timestampMillis = 1_499L),
+            )
+
+        val encodedSeconds =
+            FlexiblePolylineUtil.encode(
+                points = points,
+                precision = 5,
+                hasTime = true,
+                timePrecision = 0,
+            )
+        val decodedSeconds = FlexiblePolylineUtil.decode(encodedSeconds)
+        assertThat(decodedSeconds.timePrecision).isEqualTo(0)
+        assertThat(decodedSeconds.points.map { it.timestampMillis })
+            .containsExactly(2_000L, -2_000L, 1_000L)
+            .inOrder()
+
+        val decisecondPoints =
+            listOf(
+                FlexiblePoint(50.10228, 8.69821, timestampMillis = 1_050L),
+                FlexiblePoint(50.10201, 8.69567, timestampMillis = 1_140L),
+            )
+        val decodedDeciseconds =
+            FlexiblePolylineUtil.decode(
+                FlexiblePolylineUtil.encode(
+                    points = decisecondPoints,
+                    precision = 5,
+                    hasTime = true,
+                    timePrecision = 1,
+                ),
+            )
+        assertThat(decodedDeciseconds.timePrecision).isEqualTo(1)
+        assertThat(decodedDeciseconds.points.map { it.timestampMillis })
+            .containsExactly(1_100L, 1_100L)
+            .inOrder()
+    }
+
+    @Test
+    fun `encode and decode support sub-millisecond time precision`() {
+        val points =
+            listOf(
+                FlexiblePoint(50.10228, 8.69821, timestampMillis = 1_700_000_000_123L),
+                FlexiblePoint(50.10201, 8.69567, timestampMillis = 1_700_000_000_456L),
+            )
+
+        val encoded =
+            FlexiblePolylineUtil.encode(
+                points = points,
+                precision = 5,
+                hasTime = true,
+                timePrecision = 6,
+            )
+        val decoded = FlexiblePolylineUtil.decode(encoded)
+
+        assertThat(decoded.timePrecision).isEqualTo(6)
+        assertThat(decoded.points.map { it.timestampMillis })
+            .containsExactly(1_700_000_000_123L, 1_700_000_000_456L)
+            .inOrder()
+    }
+
+    @Test
+    fun `interpolateAtTime and getPrefixAtTime interpolate position and elevation along track`() {
+        val t0 = 1_000L
+        val t1 = 2_000L
+        val t2 = 3_000L
+        val polyline =
+            FlexiblePolyline(
+                points =
+                listOf(
+                    FlexiblePoint(0.0, 0.0, 100.0, t0),
+                    FlexiblePoint(0.0, 1.0, 200.0, t1),
+                    FlexiblePoint(0.0, 2.0, 400.0, t2),
+                ),
+                precision = 7,
+                thirdDimension = ThirdDimension.ELEVATION,
+                thirdDimensionPrecision = 2,
+                hasTime = true,
+                timePrecision = 3,
+            )
+
+        assertThat(polyline.interpolateAtTime(500L)).isEqualTo(polyline.points.first())
+        assertThat(polyline.interpolateAtTime(3_500L)).isEqualTo(polyline.points.last())
+        assertThat(polyline.interpolateAtTime(t1)).isEqualTo(polyline.points[1])
+
+        val mid = polyline.interpolateAtTime(Instant.ofEpochMilli(1_500L))!!
+        assertThat(mid.latitude).isWithin(1e-6).of(0.0)
+        assertThat(mid.longitude).isWithin(1e-6).of(0.5)
+        assertThat(mid.thirdDimensionValue!!).isWithin(1e-6).of(150.0)
+        assertThat(mid.timestampMillis).isEqualTo(1_500L)
+
+        assertThat(polyline.getPrefixAtTime(500L)).isEmpty()
+        assertThat(polyline.getPrefixAtTime(t0)).containsExactly(polyline.points[0])
+
+        val prefixAtMid = polyline.getPrefixAtTime(Instant.ofEpochMilli(1_500L))
+        assertThat(prefixAtMid).hasSize(2)
+        assertThat(prefixAtMid[0]).isEqualTo(polyline.points[0])
+        assertThat(prefixAtMid[1].longitude).isWithin(1e-6).of(0.5)
+        assertThat(prefixAtMid[1].thirdDimensionValue!!).isWithin(1e-6).of(150.0)
+
+        assertThat(polyline.getPrefixAtTime(t2)).isEqualTo(polyline.points)
+    }
+
+    @Test
+    fun `interpolateAtTime and getPrefixAtTime return null or empty when polyline has no time`() {
+        val untimed = FlexiblePolylineUtil.decode(SPEC_EXAMPLE)
+
+        assertThat(untimed.interpolateAtTime(1_000L)).isNull()
+        assertThat(untimed.getPrefixAtTime(1_000L)).isEmpty()
     }
 
     @Test
@@ -274,10 +498,10 @@ class FlexiblePolylineUtilTest {
     }
 
     @Test
-    fun `toLatLngs discards the third dimension`() {
+    fun `toLatLngs discards the third dimension and timestamps`() {
         val encoded =
             FlexiblePolylineUtil.encode(
-                points = listOf(FlexiblePoint(50.10228, 8.69821, 42.0)),
+                points = listOf(FlexiblePoint(50.10228, 8.69821, 42.0, 1_700_000_000_000L)),
                 thirdDimension = ThirdDimension.ALTITUDE,
                 thirdDimensionPrecision = 1,
             )
@@ -285,15 +509,18 @@ class FlexiblePolylineUtilTest {
         val decoded = FlexiblePolylineUtil.decode(encoded)
 
         assertThat(decoded.points.single().thirdDimensionValue).isNotNull()
+        assertThat(decoded.points.single().timestampMillis).isEqualTo(1_700_000_000_000L)
         assertThat(decoded.toLatLngs().single().latitude).isWithin(EPSILON).of(50.10228)
     }
 
     @Test
-    fun `getThirdDimension reads the header without decoding points`() {
+    fun `getThirdDimension and hasTime read the header without decoding points`() {
         assertThat(FlexiblePolylineUtil.getThirdDimension(SPEC_EXAMPLE))
             .isEqualTo(ThirdDimension.ABSENT)
+        assertThat(FlexiblePolylineUtil.hasTime(SPEC_EXAMPLE)).isFalse()
         assertThat(FlexiblePolylineUtil.getThirdDimension("BnJglg07do9-8lFw-B3oFvzxB0hCv-anuxC-8B"))
             .isEqualTo(ThirdDimension.ALTITUDE)
+        assertThat(FlexiblePolylineUtil.hasTime("BnJglg07do9-8lFw-B3oFvzxB0hCv-anuxC-8B")).isFalse()
     }
 
     @Test
@@ -385,5 +612,96 @@ class FlexiblePolylineUtilTest {
             }
 
         assertThat(exception).hasMessageThat().contains("thirdDimensionValue")
+    }
+
+    @Test
+    fun `encode rejects an out of range timePrecision or timePrecision without hasTime`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            FlexiblePolylineUtil.encode(
+                points = SPEC_EXAMPLE_POINTS,
+                hasTime = true,
+                timePrecision = 10,
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            FlexiblePolylineUtil.encode(
+                points = SPEC_EXAMPLE_POINTS,
+                hasTime = true,
+                timePrecision = -1,
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            FlexiblePolylineUtil.encode(
+                points = SPEC_EXAMPLE_POINTS,
+                hasTime = false,
+                timePrecision = 3,
+            )
+        }
+    }
+
+    @Test
+    fun `encode rejects a point missing its timestampMillis when hasTime is true`() {
+        val exception =
+            assertThrows(IllegalArgumentException::class.java) {
+                FlexiblePolylineUtil.encode(
+                    points =
+                    listOf(
+                        FlexiblePoint(50.10228, 8.69821, timestampMillis = 1_700_000_000_000L),
+                        FlexiblePoint(50.10201, 8.69567),
+                    ),
+                )
+            }
+
+        assertThat(exception).hasMessageThat().contains("timestampMillis")
+    }
+
+    @Test
+    fun `synthetic 1000-point 4D alpine trail encodes to ~6 bytes per point with sub-metre and sub-second accuracy`() {
+        val baseTimeMillis = 1_767_254_400_000L // 2026-01-01T08:00:00Z
+        var currentMillis = baseTimeMillis
+        val points =
+            (0 until 1_000).map { step ->
+                val progress = step / 999.0
+                val lat = 46.786000 + progress * 0.032000 + 0.001200 * sin(progress * 24.0)
+                val lng = -121.735000 + progress * 0.018000 + 0.001800 * cos(progress * 24.0)
+                val elevation = 1_650.0 + 750.0 * sin(progress * Math.PI) + 18.0 * sin(progress * 36.0)
+                if (step > 0) {
+                    // Grade-dependent step duration between 1.2 s and 2.8 s in 100 ms increments
+                    val stepDurationMillis = 1_200L + ((step * 37) % 17) * 100L
+                    currentMillis += stepDurationMillis
+                }
+                FlexiblePoint(
+                    latitude = lat,
+                    longitude = lng,
+                    thirdDimensionValue = elevation,
+                    timestampMillis = currentMillis,
+                )
+            }
+
+        val encoded =
+            FlexiblePolylineUtil.encode(
+                points = points,
+                thirdDimension = ThirdDimension.ELEVATION,
+                thirdDimensionPrecision = 1,
+            )
+
+        // ~6.7 bytes per 4D point (< 7 KB total vs > 250 KB in GPX XML)
+        assertThat(encoded.length).isLessThan(7_000)
+
+        val decoded = FlexiblePolylineUtil.decode(encoded)
+        assertThat(decoded.points).hasSize(1_000)
+        assertThat(decoded.precision).isEqualTo(6)
+        assertThat(decoded.thirdDimension).isEqualTo(ThirdDimension.ELEVATION)
+        assertThat(decoded.thirdDimensionPrecision).isEqualTo(1)
+        assertThat(decoded.hasTime).isTrue()
+        assertThat(decoded.timePrecision).isEqualTo(1)
+
+        decoded.points.forEachIndexed { index, actual ->
+            val original = points[index]
+            val horizontalErrorMetres = SphericalUtil.computeDistanceBetween(original.toLatLng(), actual.toLatLng())
+            assertThat(horizontalErrorMetres).isLessThan(0.10)
+            assertThat(actual.thirdDimensionValue!!).isWithin(0.051).of(original.thirdDimensionValue!!)
+            assertThat(actual.timestampMillis!!).isEqualTo(original.timestampMillis!!)
+        }
     }
 }
