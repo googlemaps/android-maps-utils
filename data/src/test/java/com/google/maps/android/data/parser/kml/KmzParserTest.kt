@@ -187,6 +187,70 @@ class KmzParserTest {
         verify(exactly = 1) { bitmap.recycle() }
     }
 
+    @Test
+    fun `parse counts a shared bitmap once and recycles it at most once`() {
+        val bitmap = mockk<Bitmap>(relaxed = true) {
+            every { allocationByteCount } returns 20 * 1024 * 1024
+        }
+        val decoder =
+            object : ImageDecoder {
+                override fun decode(bytes: ByteArray): Bitmap = bitmap
+            }
+        val kmzStream =
+            createKmzStream(
+                "doc.kml" to "<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document/></kml>".toByteArray(),
+                "pin-a.png" to byteArrayOf(1),
+                "pin-b.png" to byteArrayOf(2),
+            )
+
+        // 2 x 20 MiB would exceed the 32 MiB cap if counted twice.
+        val kml = KmzParser(decoder).parse(kmzStream)
+
+        assertEquals(2, kml.images.size)
+        verify(exactly = 0) { bitmap.recycle() }
+    }
+
+    @Test
+    fun `parse does not recycle live bitmap when duplicate entry name decodes to same instance`() {
+        val bitmap = mockk<Bitmap>(relaxed = true)
+        val decoder =
+            object : ImageDecoder {
+                override fun decode(bytes: ByteArray): Bitmap = bitmap
+            }
+        val kmzStream =
+            createKmzStream(
+                "doc.kml" to "<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document/></kml>".toByteArray(),
+                "dup.png" to byteArrayOf(1),
+                "dup.png" to byteArrayOf(2),
+            )
+
+        val kml = KmzParser(decoder).parse(kmzStream)
+
+        assertEquals(1, kml.images.size)
+        verify(exactly = 0) { bitmap.recycle() }
+    }
+
+    @Test
+    fun `parse recycles decoded images when an Error is thrown`() {
+        val bitmap = mockk<Bitmap>(relaxed = true)
+        var calls = 0
+        val decoder =
+            object : ImageDecoder {
+                override fun decode(bytes: ByteArray): Bitmap {
+                    if (calls++ == 0) return bitmap
+                    throw OutOfMemoryError("simulated")
+                }
+            }
+        val kmzStream =
+            createKmzStream(
+                "one.png" to byteArrayOf(1),
+                "two.png" to byteArrayOf(2),
+            )
+
+        assertThrows(OutOfMemoryError::class.java) { KmzParser(decoder).parse(kmzStream) }
+        verify(exactly = 1) { bitmap.recycle() }
+    }
+
     private fun createKmzStream(vararg entries: kotlin.Pair<String, ByteArray>): ByteArrayInputStream {
         val baos = ByteArrayOutputStream()
         val zos = ZipOutputStream(baos)

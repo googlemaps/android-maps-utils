@@ -134,12 +134,46 @@ class UrlIconProviderTest {
                 async { provider.loadIcon("http://example.com/one.png") },
                 async { provider.loadIcon("http://example.com/two.png") },
                 async { provider.loadIcon("http://example.com/three.png") },
+                async { provider.loadIcon("http://example.com/four.png") },
+                async { provider.loadIcon("http://example.com/five.png") },
             )
         advanceUntilIdle()
         results.awaitAll()
 
-        assertEquals(2, provider.maxActiveLoads.get())
-        assertEquals(3, provider.loadCount.get())
+        assertEquals(4, provider.maxActiveLoads.get())
+        assertEquals(5, provider.loadCount.get())
+    }
+
+    @Test
+    fun loadIcon_stalledDownloadTimesOutAndReleasesPermit() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider =
+            object : UrlIconProvider(testDispatcher) {
+                override suspend fun loadBitmapFromUrl(urlString: String): Bitmap? {
+                    if (urlString.contains("stall")) delay(Long.MAX_VALUE)
+                    return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+                }
+            }
+
+        val stalled = List(4) { async { provider.loadIcon("http://example.com/stall$it.png") } }
+        val healthy = async { provider.loadIcon("http://example.com/ok.png") }
+        advanceUntilIdle()
+
+        stalled.forEach { assertNull(it.await()) }
+        assertNotNull(healthy.await())
+    }
+
+    @Test
+    fun loadIcon_failedLoadIsNotLeftInFlight() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher, shouldFail = true)
+        val url = "http://example.com/fail.png"
+
+        assertNull(provider.loadIcon(url))
+        provider.shouldFail = false
+
+        assertNotNull(provider.loadIcon(url))
+        assertEquals(2, provider.loadCount.get())
     }
 
     // Subclass to mock network calls

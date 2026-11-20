@@ -22,6 +22,7 @@ import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.util.IdentityHashMap
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -102,6 +103,9 @@ public class KmzParser @JvmOverloads public constructor(
      */
     public fun parse(inputStream: InputStream): Kml {
         val images = mutableMapOf<String, Bitmap>()
+        // Reference counts keyed by identity: a custom ImageDecoder may hand back the same Bitmap
+        // instance for several entries, which must be counted and recycled only once.
+        val bitmapRefCounts = IdentityHashMap<Bitmap, Int>()
         var decodedImageBytes = 0L
         var kml: Kml? = null
         val zipInputStream = ZipInputStream(BufferedInputStream(inputStream))
@@ -130,21 +134,35 @@ public class KmzParser @JvmOverloads public constructor(
                     val bytes = countingStream.readBytes()
                     kml = KmlParser().parse(ByteArrayInputStream(bytes))
                 } else {
-                    // Try to decode as image
-                    val bytes = countingStream.readBytes()
-                    val bitmap = imageDecoder.decode(bytes)?.takeIfWithinAllocationLimit()
+                    // Try to decode as image. Read with a bound so a large non-image entry is not
+                    // buffered in full; anything over the encoded limit is skipped (and drained below).
+                    val bytes = SafeBitmapDecoder.readBounded(countingStream)
+                    val bitmap = bytes?.let { imageDecoder.decode(it)?.takeIfWithinAllocationLimit() }
                     if (bitmap != null) {
-                        val bitmapBytes = bitmap.allocationByteCount.toLong()
-                        if (bitmapBytes > MAX_DECODED_IMAGE_TOTAL_BYTES - decodedImageBytes) {
-                            bitmap.recycle()
-                            throw IOException(
-                                "KMZ decoded image memory exceeds limit of $MAX_DECODED_IMAGE_TOTAL_BYTES bytes.",
-                            )
+                        val alreadyTracked = bitmapRefCounts.containsKey(bitmap)
+                        if (!alreadyTracked) {
+                            val bitmapBytes = bitmap.allocationByteCount.toLong()
+                            if (bitmapBytes > MAX_DECODED_IMAGE_TOTAL_BYTES - decodedImageBytes) {
+                                bitmap.recycle()
+                                throw IOException(
+                                    "KMZ decoded image memory exceeds limit of $MAX_DECODED_IMAGE_TOTAL_BYTES bytes.",
+                                )
+                            }
+                            decodedImageBytes += bitmapBytes
                         }
-                        decodedImageBytes += bitmapBytes
-                        images.put(name, bitmap)?.let { replaced ->
-                            decodedImageBytes -= replaced.allocationByteCount.toLong()
-                            replaced.recycle()
+                        // Take the new reference before releasing the replaced one so replacing an
+                        // entry with the same instance never recycles the live bitmap.
+                        bitmapRefCounts[bitmap] = (bitmapRefCounts[bitmap] ?: 0) + 1
+                        val replaced = images.put(name, bitmap)
+                        if (replaced != null) {
+                            val remaining = (bitmapRefCounts[replaced] ?: 1) - 1
+                            if (remaining > 0) {
+                                bitmapRefCounts[replaced] = remaining
+                            } else {
+                                bitmapRefCounts.remove(replaced)
+                                decodedImageBytes -= replaced.allocationByteCount.toLong()
+                                replaced.recycle()
+                            }
                         }
                     }
                 }
@@ -159,11 +177,15 @@ public class KmzParser @JvmOverloads public constructor(
             }
 
             return kml.copy(images = images)
-        } catch (exception: Exception) {
-            images.values.forEach { bitmap ->
+        } catch (throwable: Throwable) {
+            // Throwable, not Exception: OutOfMemoryError is an Error and must still release bitmaps.
+            // Recycle each distinct instance once, even if shared across entries.
+            val unique = IdentityHashMap<Bitmap, Boolean>()
+            images.values.forEach { unique[it] = true }
+            unique.keys.forEach { bitmap ->
                 if (!bitmap.isRecycled) bitmap.recycle()
             }
-            throw exception
+            throw throwable
         } finally {
             zipInputStream.close()
         }
