@@ -17,6 +17,7 @@ package com.google.maps.android.data.parser.gpx
 
 import kotlinx.serialization.decodeFromString
 import nl.adaptivity.xmlutil.serialization.XML
+import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
@@ -35,6 +36,14 @@ public class GpxParser public constructor() {
             isCollectingNSAttributes = true
         }
 
+    /**
+     * Parses a GPX document from an InputStream.
+     *
+     * @param inputStream The InputStream of the GPX document, read as UTF-8.
+     * @return The parsed GPX object.
+     * @throws IOException If the stream cannot be read.
+     */
+    @Throws(IOException::class)
     public fun parse(inputStream: InputStream): Gpx {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
         // Normalize GPX 1.0 namespace to 1.1 to allow parsing with the same model
