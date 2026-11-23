@@ -23,6 +23,20 @@ plugins {
     alias(libs.plugins.spotless)
 }
 
+// Guardrail: Android Lint is released from the same tools/base tree as AGP with a +23 major offset
+// (e.g., AGP 9.4.1 <-> Lint 32.4.1). Keep them in lockstep so :lint-checks compiles against the
+// exact Lint API version that AGP executes at runtime.
+run {
+    val agpVersion = libs.versions.gradle.get()
+    val lintVersion = libs.versions.lint.get()
+    val agpMajor = agpVersion.substringBefore('.').toIntOrNull()
+    val expectedLintVersion = agpMajor?.let { "${it + 23}.${agpVersion.substringAfter('.')}" }
+    check(expectedLintVersion != null && lintVersion == expectedLintVersion) {
+        "Android Lint version ($lintVersion) must stay in sync with AGP ($agpVersion): " +
+            "expected lint = \"$expectedLintVersion\" (AGP + 23) in gradle/libs.versions.toml."
+    }
+}
+
 spotless {
     kotlin {
         target("**/*.kt")
