@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `d0dc4f7` (#1855), recorded 2026-11-19T21:48:41Z.
+Measured at `257b42c` (#1862), recorded 2026-11-23T22:36:16Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 442/1,248 | 35.42% |
+| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,342/1,512 | 88.76% | `██████████████████░░` | 416/506 | 82.21% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,054/4,445 | 46.21% |
+| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,055/4,445 | 46.23% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-23 | `257b42c` | #1862 | 64.44% | 0.00 | chore: add maintainer as code owner of .github |
 | 2026-11-19 | `d0dc4f7` | #1855 | 64.44% | 0.00 | build(deps): bump peter-evans/create-pull-request |
 | 2026-11-19 | `3463954` | #1856 | 64.44% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
 | 2026-11-13 | `4df2704` | #1852 | 64.44% | 0.00 | chore(deps): bump Gradle wrapper to 9.9.1 |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-08 | `ab87997` | #1809 | 61.73% | +4.34 | fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs |
 | 2026-10-08 | `6d222ff` | #1812 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 2 updates |
 | 2026-10-05 | `bbdbe83` | #1796 | 57.39% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 5 updates |
-| 2026-10-01 | `145d2fa` | #1807 | 57.39% | 0.00 | ci: add a workflow to publish snapshot builds |
