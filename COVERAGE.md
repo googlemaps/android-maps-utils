@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `18f7fe1` (#1864), recorded 2026-11-24T05:15:36Z.
+Measured at `f1e7ddb` (#1825), recorded 2026-11-24T05:42:42Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
-| `clustering` | 1,187/2,597 | 45.71% | `█████████░░░░░░░░░░░` | 443/1,248 | 35.50% |
+| `clustering` | 1,350/2,597 | 51.98% | `██████████░░░░░░░░░░` | 500/1,248 | 40.06% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
 | `library` | 1,342/1,512 | 88.76% | `██████████████████░░` | 416/506 | 82.21% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 4,858/7,539 | 64.44% | `█████████████░░░░░░░` | 2,055/4,445 | 46.23% |
+| **TOTAL** | 5,021/7,539 | 66.60% | `█████████████░░░░░░░` | 2,112/4,445 | 47.51% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-24 | `f1e7ddb` | #1825 | 66.60% | +2.16 | test(clustering): verify coroutine context injection with Android Maps Testing Toolkit |
 | 2026-11-24 | `18f7fe1` | #1864 | 64.44% | 0.00 | build(lint): enforce Android Lint and AGP + 23 version lockstep |
 | 2026-11-23 | `6eaa508` | #1835 | 64.44% | 0.00 | fix(data)!: declare IOException on data parser entry points |
 | 2026-11-23 | `257b42c` | #1862 | 64.44% | 0.00 | chore: add maintainer as code owner of .github |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-14 | `4731758` | #1819 | 60.96% | -0.77 | build: add Spotless with ktlint formatting checks |
 | 2026-10-12 | `5440784` | #1815 | 61.73% | 0.00 | ci: move coverage history off main and retry pushes |
 | 2026-10-09 | `466bfa5` | n/a | 61.73% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates |
-| 2026-10-08 | `ab87997` | #1809 | 61.73% | +4.34 | fix(data): apply StyleMap styles and fix four KML and GeoJSON style bugs |
