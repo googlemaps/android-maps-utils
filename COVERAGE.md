@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `f1e7ddb` (#1825), recorded 2026-11-24T05:42:42Z.
+Measured at `a3c166a` (#1854), recorded 2026-11-24T05:45:12Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-24 | `a3c166a` | #1854 | 66.60% | 0.00 | chore(deps): weekly minor and patch dependency updates |
 | 2026-11-24 | `f1e7ddb` | #1825 | 66.60% | +2.16 | test(clustering): verify coroutine context injection with Android Maps Testing Toolkit |
 | 2026-11-24 | `18f7fe1` | #1864 | 64.44% | 0.00 | build(lint): enforce Android Lint and AGP + 23 version lockstep |
 | 2026-11-23 | `6eaa508` | #1835 | 64.44% | 0.00 | fix(data)!: declare IOException on data parser entry points |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-15 | `ea74c1b` | #1821 | 60.96% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 7 updates |
 | 2026-10-14 | `4731758` | #1819 | 60.96% | -0.77 | build: add Spotless with ktlint formatting checks |
 | 2026-10-12 | `5440784` | #1815 | 61.73% | 0.00 | ci: move coverage history off main and retry pushes |
-| 2026-10-09 | `466bfa5` | n/a | 61.73% | 0.00 | build(deps): bump the github-actions-minor-and-patch group across 1 directory with 2 updates |
