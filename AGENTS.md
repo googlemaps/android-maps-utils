@@ -102,6 +102,7 @@ library, and release-please bumps its version lines.
 - Do not use wildcard imports (`import foo.*`); use explicit imports.
 - Avoid fully qualified class names in source code whenever possible; declare explicit imports at the file level instead (except to resolve naming collisions).
 - Target **Java 17** (`JavaLanguageVersion.of(17)`) for all project modules. Do not downgrade bytecode to Java 8 or Java 11.
+- **Keep Android Lint in sync with AGP (`Lint = AGP + 23`)**: Never bump `lint` (`com.android.tools.lint:*`, `com.android.tools:testutils`) independently of `gradle` (AGP) in `gradle/libs.versions.toml`. `:lint-checks` compiles against `compileOnly` Lint APIs while AGP supplies the runtime engine, so root `build.gradle.kts` enforces `lint == AGP + 23`.
 - KDoc/Javadoc on all public classes and methods; this is a widely consumed
   library and its docs are published.
 - Public API changes must be additive and backward compatible; deprecate
