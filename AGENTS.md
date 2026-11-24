@@ -101,7 +101,7 @@ library, and release-please bumps its version lines.
 - Formatting follows `.editorconfig`.
 - Do not use wildcard imports (`import foo.*`); use explicit imports.
 - Avoid fully qualified class names in source code whenever possible; declare explicit imports at the file level instead (except to resolve naming collisions).
-- Target **Java 17** (`JavaLanguageVersion.of(17)`) for all project modules. Do not downgrade bytecode to Java 8 or Java 11.
+- Build with the **Java 17** toolchain (`jvmToolchain(17)`), but publish the library modules with **JVM 11** bytecode (`jvmTarget` 11 and Java `sourceCompatibility`/`targetCompatibility` 11). Consumers that target JVM 11 cannot inline Kotlin `inline` functions compiled for a higher target, and android-maps-compose and other dependent libraries inherit that requirement (see discussion #1849). Do not raise the published bytecode target without a discussion first. The `demo` and `baselineprofile` apps are not published and stay on 17.
 - **Keep Android Lint in sync with AGP (`Lint = AGP + 23`)**: Never bump `lint` (`com.android.tools.lint:*`, `com.android.tools:testutils`) independently of `gradle` (AGP) in `gradle/libs.versions.toml`. `:lint-checks` compiles against `compileOnly` Lint APIs while AGP supplies the runtime engine, so root `build.gradle.kts` enforces `lint == AGP + 23`.
 - KDoc/Javadoc on all public classes and methods; this is a widely consumed
   library and its docs are published.
