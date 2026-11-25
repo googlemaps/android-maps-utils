@@ -76,10 +76,10 @@ class SafeBitmapDecoderTest {
     }
 
     @Test
-    fun `decode stream stops after encoded byte limit`() {
+    fun `readBounded stops after encoded byte limit`() {
         val input = CountingInputStream(SafeBitmapDecoder.MAX_ENCODED_BYTES + 1)
 
-        assertNull(SafeBitmapDecoder.decode(input))
+        assertNull(SafeBitmapDecoder.readBounded(input))
         assertEquals(SafeBitmapDecoder.MAX_ENCODED_BYTES + 1, input.bytesRead)
     }
 

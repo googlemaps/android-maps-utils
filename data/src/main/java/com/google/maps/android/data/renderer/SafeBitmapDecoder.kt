@@ -46,11 +46,6 @@ internal object SafeBitmapDecoder {
         return bitmap.takeIfWithinAllocationLimit()
     }
 
-    internal fun decode(input: InputStream): Bitmap? {
-        val encoded = readBounded(input) ?: return null
-        return decode(encoded)
-    }
-
     internal fun Bitmap.takeIfWithinAllocationLimit(): Bitmap? {
         if (allocationByteCount.toLong() <= MAX_DECODED_BYTES) return this
         recycle()

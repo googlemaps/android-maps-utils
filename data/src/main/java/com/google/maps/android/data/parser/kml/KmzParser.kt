@@ -28,6 +28,11 @@ import java.util.zip.ZipInputStream
 
 /**
  * Interface for decoding images, allowing for easier testing.
+ *
+ * Ownership: [KmzParser] takes ownership of every [Bitmap] returned by [decode]. It may call
+ * [Bitmap.recycle] on it when the bitmap exceeds the allocation limits, is replaced by a later
+ * entry with the same name, or the parse fails. Implementations must therefore return a fresh
+ * bitmap on each call and must not hand out bitmaps they keep in their own cache or reuse.
  */
 public interface ImageDecoder {
     public fun decode(bytes: ByteArray): Bitmap?
