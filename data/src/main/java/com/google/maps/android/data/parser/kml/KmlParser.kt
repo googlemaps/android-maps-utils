@@ -21,6 +21,7 @@ import nl.adaptivity.xmlutil.XmlException
 import nl.adaptivity.xmlutil.XmlReader
 import nl.adaptivity.xmlutil.serialization.XML
 import nl.adaptivity.xmlutil.xmlStreaming
+import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
@@ -33,6 +34,14 @@ public class KmlParser public constructor() {
             isCollectingNSAttributes = true
         }
 
+    /**
+     * Parses a KML document from an InputStream.
+     *
+     * @param inputStream The InputStream of the KML document, read as UTF-8.
+     * @return The parsed KML object.
+     * @throws IOException If the stream cannot be read.
+     */
+    @Throws(IOException::class)
     public fun parseAsKml(inputStream: InputStream): Kml {
         val xmlContent = inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
         return DepthLimitingReader(xmlStreaming.newReader(xmlContent)).use { reader ->
@@ -40,6 +49,14 @@ public class KmlParser public constructor() {
         }
     }
 
+    /**
+     * Parses a KML document from an InputStream. Equivalent to [parseAsKml].
+     *
+     * @param inputStream The InputStream of the KML document, read as UTF-8.
+     * @return The parsed KML object.
+     * @throws IOException If the stream cannot be read.
+     */
+    @Throws(IOException::class)
     public fun parse(inputStream: InputStream): Kml = parseAsKml(inputStream)
 
     public companion object {

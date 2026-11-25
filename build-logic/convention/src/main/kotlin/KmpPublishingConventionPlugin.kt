@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.android.build.api.dsl.Lint
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
@@ -28,6 +29,7 @@ import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 /**
@@ -59,6 +61,14 @@ class KmpPublishingConventionPlugin : Plugin<Project> {
                 iosArm64()
                 iosSimulatorArm64()
                 iosX64()
+                // Build with the Java 17 toolchain but publish JVM 11 bytecode on Android, like the
+                // Android-only modules (see AGENTS.md). Consumers targeting JVM 11 cannot inline Kotlin
+                // inline functions compiled for a higher target.
+                targets.withType(KotlinMultiplatformAndroidLibraryTarget::class.java).configureEach {
+                    compilerOptions {
+                        jvmTarget.set(JvmTarget.JVM_11)
+                    }
+                }
                 // The library modules build on their own experimental multiplatform API.
                 sourceSets.configureEach {
                     languageSettings.optIn("com.google.maps.android.model.ExperimentalMapsMultiplatformApi")

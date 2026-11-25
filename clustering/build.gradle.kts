@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.truth)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.mockito.kotlin)
+            implementation(libs.maps.testing.robolectric)
         }
     }
 }
