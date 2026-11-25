@@ -79,5 +79,10 @@ jobs:
           SONATYPE_TOKEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
           SONATYPE_TOKEN_USERNAME: ${{ secrets.SONATYPE_TOKEN }}
 
+      # Branch CI runs the full test suite; this job only guards against publishing a
+      # snapshot whose API drifted from the committed api/*.api dumps.
+      - name: Check API compatibility
+        run: ./gradlew apiCheck --stacktrace
+
       - name: Publish snapshot
         run: ./gradlew publishToMavenCentral --stacktrace

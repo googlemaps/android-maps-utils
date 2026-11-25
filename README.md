@@ -84,6 +84,52 @@ configurations.all {
 }
 ```
 
+### Kotlin Multiplatform (experimental)
+
+`android-maps-utils-core`, `android-maps-utils-clustering` and `android-maps-utils-heatmaps`
+are also published as Kotlin Multiplatform libraries for iOS (`iosArm64`,
+`iosSimulatorArm64`, `iosX64`). The platform-independent parts are available from common
+code: `PolyUtil`, `SphericalUtil` and `MathUtil`, the clustering algorithms, and the heatmap
+`Gradient` and `WeightedLatLng`, on top of a common `LatLng` and `CameraPosition` from
+`android-maps-utils-maps-model`. On Android those are the Maps SDK types, so Android apps
+are not affected. Rendering (`ClusterManager`, `HeatmapTileProvider`, the data layers and UI
+helpers) stays Android-only.
+
+Multiplatform support is **experimental**: the iOS artifacts and the API added for common code
+carry no compatibility promise yet and can change in a minor release. The new API is marked
+with `@ExperimentalMapsMultiplatformApi`; opt in to use it without warnings. The Android API
+of these artifacts keeps its usual guarantees.
+
+To use the utilities from common code, add them to `commonMain`:
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("com.google.maps.android:android-maps-utils-core:7.0.0") // x-release-please-version
+            implementation("com.google.maps.android:android-maps-utils-clustering:7.0.0") // x-release-please-version
+        }
+        all {
+            languageSettings.optIn("com.google.maps.android.model.ExperimentalMapsMultiplatformApi")
+        }
+    }
+}
+```
+
+Gradle picks the right platform variant through Gradle Module Metadata, so Android apps keep
+the same coordinates. Build tools that do not read Gradle Module Metadata (Maven, Bazel with
+`rules_jvm_external`, or Gradle with `@aar` notation) need the Android artifact directly: add
+`-android` to the artifactId of `android-maps-utils-core`, `-clustering`, `-heatmaps` and
+`-maps-model`, for example `android-maps-utils-clustering-android`.
+
+Snapshot builds are published to the Maven Central snapshot repository:
+
+```kotlin
+repositories {
+    maven("https://central.sonatype.com/repository/maven-snapshots/")
+}
+```
+
 ## Sample App
 
 <img src="https://developers.google.com/maps/documentation/android-sdk/images/utility-markercluster.png" width="150" align=right>

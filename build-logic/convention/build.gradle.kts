@@ -40,6 +40,10 @@ gradlePlugin {
             id = "android.maps.utils.PublishingConventionPlugin"
             implementationClass = "PublishingConventionPlugin"
         }
+        register("kmpPublishingConventionPlugin") {
+            id = "android.maps.utils.KmpPublishingConventionPlugin"
+            implementationClass = "KmpPublishingConventionPlugin"
+        }
         register("baselineProfileConventionPlugin") {
             id = "android.maps.utils.BaselineProfileConventionPlugin"
             implementationClass = "BaselineProfileConventionPlugin"
