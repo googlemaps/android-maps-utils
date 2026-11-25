@@ -11,16 +11,16 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `83a75c7` (#1868), recorded 2026-11-25T06:01:12Z.
+Measured at `e261b7a` (#1798), recorded 2026-11-25T19:05:35Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
 | `clustering` | 1,350/2,597 | 51.98% | `██████████░░░░░░░░░░` | 500/1,248 | 40.06% |
 | `data` | 1,954/2,969 | 65.81% | `█████████████░░░░░░░` | 1,014/2,461 | 41.20% |
 | `heatmaps` | 253/310 | 81.61% | `████████████████░░░░` | 134/162 | 82.72% |
-| `library` | 1,342/1,512 | 88.76% | `██████████████████░░` | 416/506 | 82.21% |
+| `library` | 1,358/1,512 | 89.81% | `██████████████████░░` | 416/506 | 82.21% |
 | `ui` | 122/151 | 80.79% | `████████████████░░░░` | 48/68 | 70.59% |
-| **TOTAL** | 5,021/7,539 | 66.60% | `█████████████░░░░░░░` | 2,112/4,445 | 47.51% |
+| **TOTAL** | 5,037/7,539 | 66.81% | `█████████████░░░░░░░` | 2,112/4,445 | 47.51% |
 
 ## Trend (last 30 commits)
 
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-25 | `e261b7a` | #1798 | 66.81% | +0.21 | test(library): integrate Android Maps Testing Toolkit in :library |
 | 2026-11-25 | `83a75c7` | #1868 | 66.60% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
 | 2026-11-24 | `978d59e` | #1867 | 66.60% | 0.00 | fix: publish library modules with JVM 11 bytecode |
 | 2026-11-24 | `a3c166a` | #1854 | 66.60% | 0.00 | chore(deps): weekly minor and patch dependency updates |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-21 | `8887252` | #1827 | 61.07% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-10-20 | `f1f71f2` | #1822 | 61.07% | +0.11 | feat(clustering): allow injecting coroutine contexts into ClusterManager |
 | 2026-10-20 | `0f8eb16` | #1820 | 60.96% | 0.00 | build(deps): bump actions/upload-artifact |
-| 2026-10-15 | `ea74c1b` | #1821 | 60.96% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 7 updates |
