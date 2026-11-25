@@ -18,14 +18,19 @@ package com.google.maps.android.data.renderer
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.AdvancedMarkerOptions
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.GroundOverlayOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.data.parser.kml.KmlParser
+import com.google.maps.android.data.renderer.mapper.KmlMapper
 import com.google.maps.android.data.renderer.mapview.MapViewRenderer
 import com.google.maps.android.data.renderer.model.Feature
+import com.google.maps.android.data.renderer.model.GroundOverlay
+import com.google.maps.android.data.renderer.model.GroundOverlayStyle
 import com.google.maps.android.data.renderer.model.LineString
 import com.google.maps.android.data.renderer.model.LineStyle
 import com.google.maps.android.data.renderer.model.MultiGeometry
@@ -420,5 +425,76 @@ class MapViewRendererTest {
 
         verify(exactly = 1) { firstPolygon.remove() }
         verify(exactly = 1) { secondPolygon.remove() }
+    }
+
+    @Test
+    fun testAddFeatureGroundOverlay_withoutIconUrl_isSkipped() {
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+
+        val overlay = GroundOverlay(north = 37.425, south = 37.420, east = -122.080, west = -122.088)
+        renderer.addFeature(Feature(geometry = overlay, style = GroundOverlayStyle(iconUrl = null)))
+        renderer.addFeature(Feature(geometry = overlay, style = null))
+
+        verify(exactly = 0) { mockMap.addGroundOverlay(any()) }
+    }
+
+    @Test
+    fun testAddFeatureGroundOverlay_withBlankIconUrl_isSkipped() {
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+
+        val overlay = GroundOverlay(north = 37.425, south = 37.420, east = -122.080, west = -122.088)
+        renderer.addFeature(Feature(geometry = overlay, style = GroundOverlayStyle(iconUrl = "")))
+        renderer.addFeature(Feature(geometry = overlay, style = GroundOverlayStyle(iconUrl = "   ")))
+
+        verify(exactly = 0) { mockMap.addGroundOverlay(any()) }
+    }
+
+    @Test
+    fun testAddLayer_kmlGroundOverlayWithoutIcon_skipsOverlayAndRendersOtherFeatures() {
+        val mockMap = mockk<GoogleMap>(relaxed = true)
+        val mockMarker = mockk<Marker>(relaxed = true)
+        val mockIconProvider = mockk<IconProvider>(relaxed = true)
+        every { mockMap.addMarker(any<MarkerOptions>()) } returns mockMarker
+        every { mockMap.addGroundOverlay(any()) } answers {
+            val options = firstArg<GroundOverlayOptions>()
+            if ((options.image as Any?) == null) {
+                throw NullPointerException("BitmapDescriptor must not be null")
+            }
+            mockk(relaxed = true)
+        }
+
+        val kml =
+            """
+            <kml xmlns="http://www.opengis.net/kml/2.2">
+              <Document>
+                <GroundOverlay>
+                  <name>Campus Overlay</name>
+                  <LatLonBox>
+                    <north>37.425</north>
+                    <south>37.420</south>
+                    <east>-122.080</east>
+                    <west>-122.088</west>
+                  </LatLonBox>
+                </GroundOverlay>
+                <Placemark>
+                  <name>Campus Pin</name>
+                  <Point>
+                    <coordinates>-122.084,37.422,0</coordinates>
+                  </Point>
+                </Placemark>
+              </Document>
+            </kml>
+            """.trimIndent()
+
+        val layer = KmlMapper.toLayer(KmlParser().parse(kml.byteInputStream()))
+        val renderer = MapViewRenderer(mockMap, mockIconProvider)
+        renderer.addLayer(layer)
+
+        verify(exactly = 0) { mockMap.addGroundOverlay(any()) }
+        verify(exactly = 1) { mockMap.addMarker(any<MarkerOptions>()) }
     }
 }
