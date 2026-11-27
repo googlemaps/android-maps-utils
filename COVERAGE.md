@@ -11,7 +11,7 @@ be edited by hand.
 
 JVM tests run by `./gradlew koverXmlReportDebug`, covering `library`, `clustering`, `data`, `heatmaps`, `ui`.
 
-Measured at `e261b7a` (#1798), recorded 2026-11-25T19:05:35Z.
+Measured at `90505fb` (#1869), recorded 2026-11-27T05:22:35Z.
 
 | Module | Lines | Line % | | Branches | Branch % |
 | --- | ---: | ---: | --- | ---: | ---: |
@@ -28,6 +28,7 @@ Total line coverage, newest first.
 
 | Date | Commit | PR | Line % | Change | Subject |
 | --- | --- | --- | ---: | ---: | --- |
+| 2026-11-27 | `90505fb` | #1869 | 66.81% | 0.00 | build(deps): bump the gradle-minor-and-patch group with 3 updates |
 | 2026-11-25 | `e261b7a` | #1798 | 66.81% | +0.21 | test(library): integrate Android Maps Testing Toolkit in :library |
 | 2026-11-25 | `83a75c7` | #1868 | 66.60% | 0.00 | build(deps): bump the github-actions-minor-and-patch group with 2 updates |
 | 2026-11-24 | `978d59e` | #1867 | 66.60% | 0.00 | fix: publish library modules with JVM 11 bytecode |
@@ -57,4 +58,3 @@ Total line coverage, newest first.
 | 2026-10-21 | `729bcb9` | #1829 | 61.07% | 0.00 | feat!: raise minSdk to 24 and update Maps SDK to 20.1.0 |
 | 2026-10-21 | `8887252` | #1827 | 61.07% | 0.00 | build(deps): bump com.google.android.libraries.navigation:navigation |
 | 2026-10-20 | `f1f71f2` | #1822 | 61.07% | +0.11 | feat(clustering): allow injecting coroutine contexts into ClusterManager |
-| 2026-10-20 | `0f8eb16` | #1820 | 60.96% | 0.00 | build(deps): bump actions/upload-artifact |
