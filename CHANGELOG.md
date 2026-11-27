@@ -1,5 +1,17 @@
 # Changelog
 
+## [8.0.0](https://github.com/googlemaps/android-maps-utils/compare/v7.0.1...v8.0.0) (2026-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **data:** declare IOException on data parser entry points ([#1835](https://github.com/googlemaps/android-maps-utils/issues/1835))
+
+### Bug Fixes
+
+* **data:** declare IOException on data parser entry points ([#1835](https://github.com/googlemaps/android-maps-utils/issues/1835)) ([6eaa508](https://github.com/googlemaps/android-maps-utils/commit/6eaa508beae5f7eefa36f867509b079114186c10))
+* publish library modules with JVM 11 bytecode ([#1867](https://github.com/googlemaps/android-maps-utils/issues/1867)) ([978d59e](https://github.com/googlemaps/android-maps-utils/commit/978d59e71c28c905d8cb7fdff2d97762cfa86e23)), closes [#1849](https://github.com/googlemaps/android-maps-utils/issues/1849)
+
 ## [7.0.1](https://github.com/googlemaps/android-maps-utils/compare/v7.0.0...v7.0.1) (2026-11-19)
 
 
