@@ -25,6 +25,9 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -42,23 +45,94 @@ jobs:
 
       - name: Create .gpg key
         run: |
-          echo $GPG_KEY_ARMOR | base64 --decode > ./release.asc
-          gpg --quiet --output $GITHUB_WORKSPACE/release.gpg --dearmor ./release.asc
+          echo "$GPG_KEY_ARMOR" | base64 --decode > ./release.asc
+          gpg --quiet --output "$GITHUB_WORKSPACE/release.gpg" --dearmor ./release.asc
 
-          echo "Build and publish"
-          sed -i -e "s,mavenCentralUsername=,mavenCentralUsername=$SONATYPE_TOKEN_USERNAME,g" gradle.properties
-          SONATYPE_TOKEN_PASSWORD_ESCAPED=$(printf '%s\n' "$SONATYPE_TOKEN_PASSWORD" | sed -e 's/[\/&]/\\&/g')
-          sed -i -e "s,mavenCentralPassword=,mavenCentralPassword=$SONATYPE_TOKEN_PASSWORD_ESCAPED,g" gradle.properties
           sed -i -e "s,signing.keyId=,signing.keyId=$GPG_KEY_ID,g" gradle.properties
           sed -i -e "s,signing.password=,signing.password=$GPG_PASSWORD,g" gradle.properties
           sed -i -e "s,signing.secretKeyRingFile=,signing.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg,g" gradle.properties
-
         env:
           GPG_KEY_ARMOR: ${{ secrets.SYNCED_GPG_KEY_ARMOR }}
           GPG_KEY_ID: ${{ secrets.SYNCED_GPG_KEY_ID }}
           GPG_PASSWORD: ${{ secrets.SYNCED_GPG_KEY_PASSWORD }}
-          SONATYPE_TOKEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
-          SONATYPE_TOKEN_USERNAME: ${{ secrets.SONATYPE_TOKEN }}
 
-      - name: Publish to MavenCentral
-        run: ./gradlew publishToMavenCentral --warn --stacktrace
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: 'projects/305452601764/locations/global/workloadIdentityPools/builders/providers/github'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3
+
+      - name: Clean up prior staged artifacts in OSS Exit Gate repository
+        run: |
+          set -euo pipefail
+          EXISTING_PKGS="$(gcloud artifacts packages list \
+            --project=oss-exit-gate-prod \
+            --location=us \
+            --repository=android-maps-utils--mavencentral \
+            --format='value(name)' 2>/dev/null || true)"
+          for pkg in ${EXISTING_PKGS}; do
+            gcloud artifacts packages delete "${pkg}" \
+              --project=oss-exit-gate-prod \
+              --location=us \
+              --repository=android-maps-utils--mavencentral \
+              --quiet || true
+          done
+
+      - name: Stage signed artifacts to OSS Exit Gate
+        run: |
+          set -euo pipefail
+          set +x
+          INIT_SCRIPT="$(mktemp "${RUNNER_TEMP}/exit-gate-init.XXXXXX.gradle")"
+          trap 'rm -f "${INIT_SCRIPT}"' EXIT
+          cat <<'EOF' > "${INIT_SCRIPT}"
+          allprojects {
+            afterEvaluate { proj ->
+              if (proj.plugins.hasPlugin('maven-publish')) {
+                proj.publishing.repositories.maven {
+                  name = 'ExitGateArtifactRegistry'
+                  url = uri('https://us-maven.pkg.dev/oss-exit-gate-prod/android-maps-utils--mavencentral')
+                  credentials {
+                    username = 'oauth2accesstoken'
+                    password = System.getenv('AR_ACCESS_TOKEN')
+                  }
+                }
+              }
+            }
+          }
+          EOF
+          export AR_ACCESS_TOKEN="$(gcloud auth print-access-token)"
+          ./gradlew --no-daemon \
+            --init-script "${INIT_SCRIPT}" \
+            publishAllPublicationsToExitGateArtifactRegistryRepository \
+            --warn --stacktrace
+          unset AR_ACCESS_TOKEN
+
+      - name: Trigger OSS Exit Gate Maven Central release
+        env:
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          cat <<'EOF' > manifest.json
+          {
+            "publish_all": false,
+            "publishing_groups": [
+              {
+                "namespace": "com.google.maps.android",
+                "packages": [
+                { "name": "android-maps-utils" },
+                { "name": "android-maps-utils-clustering" },
+                { "name": "android-maps-utils-core" },
+                { "name": "android-maps-utils-data" },
+                { "name": "android-maps-utils-heatmaps" },
+                { "name": "android-maps-utils-ui" },
+                { "name": "android-maps-utils-visual-testing" }
+                ]
+              }
+            ]
+          }
+          EOF
+          gcloud storage cp manifest.json \
+            "gs://oss-exit-gate-prod-projects-bucket/android-maps-utils/mavencentral/manifests/manifest-${RUN_ID}-${RUN_ATTEMPT}.json"
