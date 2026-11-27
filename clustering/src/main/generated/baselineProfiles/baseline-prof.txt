@@ -192,6 +192,6 @@ HPLcom/google/maps/android/quadtree/PointQuadTree;->add(Lcom/google/maps/android
 HPLcom/google/maps/android/quadtree/PointQuadTree;->insert(DDLcom/google/maps/android/quadtree/PointQuadTree$Item;)V
 PLcom/google/maps/android/quadtree/PointQuadTree;->search(Lcom/google/maps/android/geometry/Bounds;)Ljava/util/Collection;
 PLcom/google/maps/android/quadtree/PointQuadTree;->search(Lcom/google/maps/android/geometry/Bounds;Ljava/util/Collection;)V
-HPLcom/google/maps/android/quadtree/PointQuadTree;->split()V
+PLcom/google/maps/android/quadtree/PointQuadTree;->split()V
 PLcom/google/maps/android/quadtree/PointQuadTree$Companion;-><init>()V
 PLcom/google/maps/android/quadtree/PointQuadTree$Companion;-><init>(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
