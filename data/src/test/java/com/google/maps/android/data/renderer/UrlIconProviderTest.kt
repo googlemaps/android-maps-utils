@@ -16,19 +16,31 @@
 package com.google.maps.android.data.renderer
 
 import android.graphics.Bitmap
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.net.HttpURLConnection
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -103,6 +115,97 @@ class UrlIconProviderTest {
         assertEquals(2, provider.loadCount.get())
     }
 
+    @Test
+    fun loadIcon_rejectsOversizedBitmapReturnedBySubclass() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val oversized =
+            mockk<Bitmap>(relaxed = true) {
+                every { allocationByteCount } returns (SafeBitmapDecoder.MAX_DECODED_BYTES + 1).toInt()
+            }
+        val provider =
+            object : UrlIconProvider(testDispatcher) {
+                override suspend fun loadBitmapFromUrl(urlString: String): Bitmap = oversized
+            }
+
+        assertNull(provider.loadIcon("http://example.com/oversized.png"))
+        verify(exactly = 1) { oversized.recycle() }
+    }
+
+    @Test
+    fun loadIcon_limitsConcurrentDistinctDownloads() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher, delayMillis = 1000)
+
+        val results =
+            listOf(
+                async { provider.loadIcon("http://example.com/one.png") },
+                async { provider.loadIcon("http://example.com/two.png") },
+                async { provider.loadIcon("http://example.com/three.png") },
+                async { provider.loadIcon("http://example.com/four.png") },
+                async { provider.loadIcon("http://example.com/five.png") },
+            )
+        advanceUntilIdle()
+        results.awaitAll()
+
+        assertEquals(4, provider.maxActiveLoads.get())
+        assertEquals(5, provider.loadCount.get())
+    }
+
+    @Test
+    fun loadIcon_stalledDownloadTimesOutAndReleasesPermit() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider =
+            object : UrlIconProvider(testDispatcher) {
+                override suspend fun loadBitmapFromUrl(urlString: String): Bitmap? {
+                    if (urlString.contains("stall")) delay(Long.MAX_VALUE)
+                    return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+                }
+            }
+
+        val stalled = List(4) { async { provider.loadIcon("http://example.com/stall$it.png") } }
+        val healthy = async { provider.loadIcon("http://example.com/ok.png") }
+        advanceUntilIdle()
+
+        stalled.forEach { assertNull(it.await()) }
+        assertNotNull(healthy.await())
+    }
+
+    @Test
+    fun cancellingDownloadDisconnectsWhileReadIsBlocked() = runTest {
+        val enteredRead = CompletableDeferred<Unit>()
+        val readUnblocked = CompletableDeferred<Boolean>()
+        val disconnected = CountDownLatch(1)
+        val connection = mockk<HttpURLConnection>()
+        every { connection.disconnect() } answers { disconnected.countDown() }
+        every { connection.responseCode } answers {
+            enteredRead.complete(Unit)
+            readUnblocked.complete(disconnected.await(5, TimeUnit.SECONDS))
+            HttpURLConnection.HTTP_OK
+        }
+
+        val download = async(Dispatchers.IO) {
+            disconnectOnCancellation(connection).use { connection.responseCode }
+        }
+        enteredRead.await()
+        download.cancelAndJoin()
+
+        assertTrue(readUnblocked.await())
+        verify(exactly = 1) { connection.disconnect() }
+    }
+
+    @Test
+    fun loadIcon_failedLoadIsNotLeftInFlight() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        val provider = TestableUrlIconProvider(testDispatcher, shouldFail = true)
+        val url = "http://example.com/fail.png"
+
+        assertNull(provider.loadIcon(url))
+        provider.shouldFail = false
+
+        assertNotNull(provider.loadIcon(url))
+        assertEquals(2, provider.loadCount.get())
+    }
+
     // Subclass to mock network calls
     private class TestableUrlIconProvider(
         dispatcher: kotlinx.coroutines.CoroutineDispatcher,
@@ -110,16 +213,24 @@ class UrlIconProviderTest {
         var shouldFail: Boolean = false,
     ) : UrlIconProvider(dispatcher) {
         val loadCount = AtomicInteger(0)
+        val activeLoads = AtomicInteger(0)
+        val maxActiveLoads = AtomicInteger(0)
 
         override suspend fun loadBitmapFromUrl(urlString: String): Bitmap? {
             loadCount.incrementAndGet()
-            if (delayMillis > 0) {
-                delay(delayMillis)
+            val active = activeLoads.incrementAndGet()
+            maxActiveLoads.updateAndGet { previous -> maxOf(previous, active) }
+            try {
+                if (delayMillis > 0) {
+                    delay(delayMillis)
+                }
+                if (shouldFail) {
+                    return null
+                }
+                return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+            } finally {
+                activeLoads.decrementAndGet()
             }
-            if (shouldFail) {
-                return null
-            }
-            return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
         }
     }
 }

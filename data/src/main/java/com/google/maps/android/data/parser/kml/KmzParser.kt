@@ -16,16 +16,23 @@
 package com.google.maps.android.data.parser.kml
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import com.google.maps.android.data.renderer.SafeBitmapDecoder
+import com.google.maps.android.data.renderer.SafeBitmapDecoder.takeIfWithinAllocationLimit
 import java.io.BufferedInputStream
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.util.IdentityHashMap
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 /**
  * Interface for decoding images, allowing for easier testing.
+ *
+ * Ownership: [KmzParser] takes ownership of every [Bitmap] returned by [decode]. It may call
+ * [Bitmap.recycle] on it when the bitmap exceeds the allocation limits, is replaced by a later
+ * entry with the same name, or the parse fails. Implementations must therefore return a fresh
+ * bitmap on each call and must not hand out bitmaps they keep in their own cache or reuse.
  */
 public interface ImageDecoder {
     public fun decode(bytes: ByteArray): Bitmap?
@@ -35,7 +42,7 @@ public interface ImageDecoder {
  * Default implementation using Android's BitmapFactory.
  */
 public class AndroidImageDecoder public constructor() : ImageDecoder {
-    public override fun decode(bytes: ByteArray): Bitmap? = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    public override fun decode(bytes: ByteArray): Bitmap? = SafeBitmapDecoder.decode(bytes)
 }
 
 /**
@@ -105,6 +112,10 @@ public class KmzParser @JvmOverloads public constructor(
     @Throws(IOException::class)
     public fun parse(inputStream: InputStream): Kml {
         val images = mutableMapOf<String, Bitmap>()
+        // Reference counts keyed by identity: a custom ImageDecoder may hand back the same Bitmap
+        // instance for several entries, which must be counted and recycled only once.
+        val bitmapRefCounts = IdentityHashMap<Bitmap, Int>()
+        var decodedImageBytes = 0L
         var kml: Kml? = null
         val zipInputStream = ZipInputStream(BufferedInputStream(inputStream))
         val countingStream = CountingInputStream(zipInputStream, maxKmzUncompressedTotalSize)
@@ -132,11 +143,36 @@ public class KmzParser @JvmOverloads public constructor(
                     val bytes = countingStream.readBytes()
                     kml = KmlParser().parse(ByteArrayInputStream(bytes))
                 } else {
-                    // Try to decode as image
-                    val bytes = countingStream.readBytes()
-                    val bitmap = imageDecoder.decode(bytes)
+                    // Try to decode as image. Read with a bound so a large non-image entry is not
+                    // buffered in full; anything over the encoded limit is skipped (and drained below).
+                    val bytes = SafeBitmapDecoder.readBounded(countingStream)
+                    val bitmap = bytes?.let { imageDecoder.decode(it)?.takeIfWithinAllocationLimit() }
                     if (bitmap != null) {
-                        images[name] = bitmap
+                        val alreadyTracked = bitmapRefCounts.containsKey(bitmap)
+                        if (!alreadyTracked) {
+                            val bitmapBytes = bitmap.allocationByteCount.toLong()
+                            if (bitmapBytes > MAX_DECODED_IMAGE_TOTAL_BYTES - decodedImageBytes) {
+                                bitmap.recycle()
+                                throw IOException(
+                                    "KMZ decoded image memory exceeds limit of $MAX_DECODED_IMAGE_TOTAL_BYTES bytes.",
+                                )
+                            }
+                            decodedImageBytes += bitmapBytes
+                        }
+                        // Take the new reference before releasing the replaced one so replacing an
+                        // entry with the same instance never recycles the live bitmap.
+                        bitmapRefCounts[bitmap] = (bitmapRefCounts[bitmap] ?: 0) + 1
+                        val replaced = images.put(name, bitmap)
+                        if (replaced != null) {
+                            val remaining = (bitmapRefCounts[replaced] ?: 1) - 1
+                            if (remaining > 0) {
+                                bitmapRefCounts[replaced] = remaining
+                            } else {
+                                bitmapRefCounts.remove(replaced)
+                                decodedImageBytes -= replaced.allocationByteCount.toLong()
+                                replaced.recycle()
+                            }
+                        }
                     }
                 }
                 // Drain any unread bytes through countingStream before closing entry to ensure
@@ -145,15 +181,23 @@ public class KmzParser @JvmOverloads public constructor(
                 zipInputStream.closeEntry()
                 entry = zipInputStream.nextEntry
             }
+            if (kml == null) {
+                throw IllegalArgumentException("No KML file found in KMZ stream")
+            }
+
+            return kml.copy(images = images)
+        } catch (throwable: Throwable) {
+            // Throwable, not Exception: OutOfMemoryError is an Error and must still release bitmaps.
+            // Recycle each distinct instance once, even if shared across entries.
+            val unique = IdentityHashMap<Bitmap, Boolean>()
+            images.values.forEach { unique[it] = true }
+            unique.keys.forEach { bitmap ->
+                if (!bitmap.isRecycled) bitmap.recycle()
+            }
+            throw throwable
         } finally {
             zipInputStream.close()
         }
-
-        if (kml == null) {
-            throw IllegalArgumentException("No KML file found in KMZ stream")
-        }
-
-        return kml.copy(images = images)
     }
 
     /**
@@ -170,6 +214,7 @@ public class KmzParser @JvmOverloads public constructor(
 
     public companion object {
         private const val DRAIN_BUFFER_SIZE = 8192
+        private const val MAX_DECODED_IMAGE_TOTAL_BYTES = 32L * 1024 * 1024
         public val SUPPORTED_EXTENSIONS: Set<String> = setOf("kmz")
 
         public fun canParse(header: String): Boolean {
