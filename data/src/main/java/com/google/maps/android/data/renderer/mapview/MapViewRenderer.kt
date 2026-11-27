@@ -230,7 +230,8 @@ internal constructor(
                 val style = feature.style as? GroundOverlayStyle
                 val options = createGroundOverlayOptions(groundOverlay, style)
 
-                style?.iconUrl?.let { url ->
+                // Maps SDK requires an image on GroundOverlayOptions; skip overlays without an iconUrl.
+                style?.iconUrl?.takeIf { it.isNotBlank() }?.let { url ->
                     val localBitmap = localImages[url]
                     if (localBitmap != null) {
                         options.image(BitmapDescriptorFactory.fromBitmap(localBitmap))
@@ -261,12 +262,6 @@ internal constructor(
                                 }
                             }
                         }
-                    }
-                } ?: run {
-                    // No iconUrl, add directly
-                    val mapOverlay = groundOverlayCollection?.addGroundOverlay(options) ?: map.addGroundOverlay(options)
-                    if (mapOverlay != null) {
-                        mapObjects.add(mapOverlay)
                     }
                 }
             }
